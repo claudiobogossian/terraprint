@@ -35,8 +35,8 @@
 
 // TerraLib
 #include "../../core/AbstractView.h"
-#include "../../../geometry/Envelope.h"
-#include "../../../geometry/Coord2D.h"
+#include "terralib/geometry/Envelope.h"
+#include "terralib/geometry/Coord2D.h"
 #include "Scene.h"
 #include "../outside/PageSetupOutside.h"
 #include "../outside/SystematicScaleOutside.h"

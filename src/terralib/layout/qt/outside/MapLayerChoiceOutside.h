@@ -27,8 +27,8 @@
 #define __TERRALIB_LAYOUT_INTERNAL_MAP_LAYER_CHOICE_OUTSIDE_H
 
 // TerraLib
-#include "../../../qt/widgets/utils/DoubleListWidget.h"
-#include "../../../maptools/AbstractLayer.h"
+#include "terralib/qt/widgets/utils/DoubleListWidget.h"
+#include "terralib/maptools/AbstractLayer.h"
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 

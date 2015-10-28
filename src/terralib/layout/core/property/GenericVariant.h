@@ -29,12 +29,12 @@
 #define __TERRALIB_LAYOUT_INTERNAL_GENERIC_VARIANT_H
 
 // TerraLib
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../Font.h"
 #include "../enum/EnumType.h"
 #include "../enum/Enums.h"
 #include "../Config.h"
-#include "../../../maptools/AbstractLayer.h"
+#include "terralib/maptools/AbstractLayer.h"
 
 // STL
 #include <vector>

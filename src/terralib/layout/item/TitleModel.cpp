@@ -27,8 +27,8 @@
 
 // TerraLib
 #include "TitleModel.h"
-#include "../../geometry/Envelope.h"
-#include "../../color/RGBAColor.h"
+#include "terralib/geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
 #include "../core/enum/Enums.h"
 #include "../core/property/Property.h"
 #include "../core/property/Properties.h"

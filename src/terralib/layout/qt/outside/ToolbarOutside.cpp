@@ -30,7 +30,7 @@
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/AbstractScene.h"
 #include "../core/Scene.h"
-#include "../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/ContextObject.h"
 #include "ToolbarController.h"

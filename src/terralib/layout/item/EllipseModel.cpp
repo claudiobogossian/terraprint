@@ -29,8 +29,8 @@
 #include "EllipseModel.h"
 #include "../core/enum/Enums.h"
 #include "../core/property/Properties.h"
-#include "../../color/RGBAColor.h"
-#include "../../geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
+#include "terralib/geometry/Envelope.h"
 
 te::layout::EllipseModel::EllipseModel()
   : AbstractItemModel()

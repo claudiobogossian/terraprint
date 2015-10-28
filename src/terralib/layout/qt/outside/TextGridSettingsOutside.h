@@ -34,8 +34,8 @@
 // TerraLib
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/Config.h"
-#include "../../../geometry/Envelope.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../core/enum/AbstractType.h"
 
 namespace Ui { class TextGridSettings; }

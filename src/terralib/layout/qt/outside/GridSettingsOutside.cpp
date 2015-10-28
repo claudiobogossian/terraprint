@@ -34,7 +34,7 @@
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../../core/enum/Enums.h"
 #include "../../outside/GridSettingsModel.h"
-#include "../../../common/StringUtils.h"
+#include "terralib/common/StringUtils.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 
 // STL
@@ -187,11 +187,11 @@ bool te::layout::GridSettingsOutside::checkValidDegreeValue(const QString &value
   std::string              strDegree = "";
 
   strDegree = std::string(value.toLatin1());
-  if((index=strDegree.find("º")) !=std::string::npos)  
+  if((index=strDegree.find("ï¿½")) !=std::string::npos)  
   {
     strDegree.replace(index,1,"");
   }
-  if((index=strDegree.find("°")) !=std::string::npos)
+  if((index=strDegree.find("ï¿½")) !=std::string::npos)
   {
     strDegree.replace(index,1,"");
   }
@@ -476,11 +476,11 @@ QString te::layout::GridSettingsOutside::DD2DMS(QString dd)
   QString output;
   if(degree < 0)
   {
-    output = ("-" + te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str();
+    output = ("-" + te::common::Convert2String(abs(degree)) + "ï¿½" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str();
   }
   else
   {
-    output = (te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str();
+    output = (te::common::Convert2String(abs(degree)) + "ï¿½" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str();
   }
   return output;
 }
@@ -492,7 +492,7 @@ QString te::layout::GridSettingsOutside::DMS2DD(const QString dms)
   {
     pos = 1;
   }
-  int a = dms.indexOf('°');
+  int a = dms.indexOf('ï¿½');
   int b = dms.indexOf('\'');
   int c = dms.indexOf('\'', b + 1);
   double deg = dms.mid(pos, a - pos).replace(QString(" "), QString("")).toDouble();
@@ -518,11 +518,11 @@ void te::layout::GridSettingsOutside::setMask(QLineEdit *lat, QLineEdit *lon)
   }
   else
   {
-    QRegExp regExpLat("[\\+\\-]?[\\d]{1,2}°[\\d]{1,2}'[\\d]{1,2}.[\\d]{1,2}''");
+    QRegExp regExpLat("[\\+\\-]?[\\d]{1,2}ï¿½[\\d]{1,2}'[\\d]{1,2}.[\\d]{1,2}''");
     QValidator* validatorLat = new QRegExpValidator(regExpLat, 0);
     lat->setValidator(validatorLat);
 
-    QRegExp regExpLong("[\\+\\-]?[\\d]{1,3}°[\\d]{1,2}'[ \\d]{1,2}.[ \\d]{1,2}''");
+    QRegExp regExpLong("[\\+\\-]?[\\d]{1,3}ï¿½[\\d]{1,2}'[ \\d]{1,2}.[ \\d]{1,2}''");
     QValidator* validatorLong = new QRegExpValidator(regExpLong, 0);
     lon->setValidator(validatorLong);
   }
@@ -633,7 +633,7 @@ void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
 {
   /*if(checkValidDegreeValue(m_ui->lneHorizontalGap->text()) == false)
   {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0° 1' 0''"));  
+    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0ï¿½ 1' 0''"));  
     m_ui->lneHorizontalGap->setFocus();
     return;
   }*/
@@ -658,7 +658,7 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
 {
   /*if(checkValidDegreeValue(m_ui->lneVerticalGap->text()) == false)
   {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0° 1' 0''"));  
+    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0ï¿½ 1' 0''"));  
     m_ui->lneVerticalGap->setFocus();
     return;
   }*/
@@ -883,7 +883,7 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_edit
   /*  
   if(checkValidDegreeValue(m_ui->yGridInitialPoint_geo_textField->text()) == false)
   {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0° 1' 0''"));  
+    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0ï¿½ 1' 0''"));  
     m_ui->lneVerticalGap->setFocus();
     return;
   }*/
@@ -903,7 +903,7 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editing
 {
   /*if(checkValidDegreeValue(m_ui->xGridInitialPoint_geo_textField->text()) == false)
   {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0° 1' 0''"));  
+    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0ï¿½ 1' 0''"));  
     m_ui->lneVerticalGap->setFocus();
     return;
   }*/

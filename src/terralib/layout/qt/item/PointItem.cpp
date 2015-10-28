@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "PointItem.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumPointType.h"
 
 

@@ -28,9 +28,9 @@
 // TerraLib
 #include "SVGModel.h"
 #include "../core/ContextItem.h"
-#include "../../geometry/Envelope.h"
-#include "../../color/RGBAColor.h"
-#include "../../maptools/Canvas.h"
+#include "terralib/geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
+#include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
 #include "../core/pattern/mvc/AbstractItemModel.h"
 

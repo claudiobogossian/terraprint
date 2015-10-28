@@ -32,11 +32,11 @@
 #include "../core/ItemUtils.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../qt/core/Scene.h"
-#include "../../../qt/widgets/canvas/MapDisplay.h"
-#include "../../../qt/widgets/layer/explorer/TreeItem.h" //rever esta dependencia
-#include "../../../qt/widgets/layer/explorer/LayerItem.h" //rever esta dependencia
-#include "../../../qt/widgets/tools/Pan.h"
-#include "../../../qt/widgets/tools/ZoomWheel.h"
+#include "terralib/qt/widgets/canvas/MapDisplay.h"
+#include "terralib/qt/widgets/layer/explorer/TreeItem.h"
+#include "terralib/qt/widgets/layer/explorer/LayerItem.h"
+#include "terralib/qt/widgets/tools/Pan.h"
+#include "terralib/qt/widgets/tools/ZoomWheel.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneDragDropEvent>

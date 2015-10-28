@@ -30,11 +30,11 @@
 
 // TerraLib
 #include "ParamsCreate.h"
-#include "../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "Utils.h"
-#include "../../maptools/Canvas.h"
+#include "terralib/maptools/Canvas.h"
 #include "Config.h"
-#include "../../geometry/Coord2D.h"
+#include "terralib/geometry/Coord2D.h"
 
 namespace te
 {

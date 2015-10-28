@@ -29,7 +29,7 @@
 #include "EnumType.h"
 #include <ios> 
 #include <iostream>
-#include "../../../common/StringUtils.h"
+#include "terralib/common/StringUtils.h"
 
 
 te::layout::EnumType::EnumType( int id, std::string name, te::layout::AbstractEnum* parent ) :

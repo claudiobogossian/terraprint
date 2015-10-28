@@ -29,7 +29,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_BUILD_GRAPHICS_ITEM_H
 
 // TerraLib
-#include "../../geometry/Coord2D.h"
+#include "terralib/geometry/Coord2D.h"
 #include "property/Properties.h"
 #include "Config.h"
 

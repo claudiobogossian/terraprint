@@ -30,10 +30,10 @@
 #include "../core/enum/Enums.h"
 #include "../core/property/Properties.h"
 #include "../core/property/SharedProperties.h"
-#include "../../maptools/CanvasConfigurer.h"
-#include "../../se/Symbolizer.h"
-#include "../../se/Style.h"
-#include "../../se/Rule.h"
+#include "terralib/maptools/CanvasConfigurer.h"
+#include "terralib/se/Symbolizer.h"
+#include "terralib/se/Style.h"
+#include "terralib/se/Rule.h"
 #include "MapModel.h"
 
 // STL

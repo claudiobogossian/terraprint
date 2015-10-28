@@ -1,1 +1,54 @@
-TerraLib5 Layout
+This is the TerraLib Platform version 5.0 launched as a Long Term Support (LTS) release
+=======================================================================================
+           
+
+TerraLib is a multiplatform C++ framework for GIS application development.
+
+Documents to read before:
+-------------------------
+
+BRANCHES  Notes on how to switch to the right branch to work on: 
+          MASTER, DEVELOP, release-5.0.0 or any other branch or tagged release.
+
+BUILD-INSTRUCTIONS  Notes on how to compile and install Terralib in some platforms.
+
+CHANGELOG      List of changes
+
+COPYING        Licence statement in plain txt format
+
+COPYING.html   Licence statement in HTML format
+
+Main Directories:
+-----------------
+build       Contains the CMake scripts with commands, macros and functions 
+			used to build the environment for compiling libraries and executables
+			in different platforms using the CMake tool.
+            
+examples    Some examples on how to use TerraLib API.
+
+installer   Scripts for creating TerraLib installers.
+            Supported installers: NSIS.
+			
+licenses    Copyright notices of third-party libraries used by terralib.
+
+resources   Fonts, images, sql, xml files among other resources of general use.
+
+share		XML Schema (.xsd), Json, plugins, translations files and OGC specifications.
+               
+src         Contains the source code of TerraLib and TerraView as a module.
+
+unittest    Contains some code to test TerraLib.
+
+Bug reporting:
+--------------
+      
+Any problems should be reported to: 
+terralib-developers@dpi.inpe.br  or terralib-community@dpi.inpe.br
+
+
+                           @-TerraLib Team-@
+            National Institute For Space Research - INPE
+      P. BOX 515 - São Jose dos Campos - SP - Brazil, 12201-970
+                            April 15, 2015 
+              
+ 

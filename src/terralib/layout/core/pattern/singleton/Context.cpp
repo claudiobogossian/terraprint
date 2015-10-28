@@ -30,8 +30,8 @@
 #include "../factory/AbstractItemFactory.h"
 #include "../../Utils.h"
 #include "../factory/AbstractOutsideFactory.h"
-#include "../../../../maptools/Canvas.h"
-#include "../../../../geometry/Envelope.h"
+#include "terralib/maptools/Canvas.h"
+#include "terralib/geometry/Envelope.h"
 #include "../../enum/Enums.h"
 #include "../proxy/AbstractProxyProject.h"
 

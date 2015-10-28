@@ -19,7 +19,7 @@
 
 // TerraLib
 #include "RubberBandTool.h"
-#include "../../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../View.h"
 #include "../Scene.h"
 #include "../../../core/pattern/singleton/Context.h"

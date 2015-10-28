@@ -32,7 +32,7 @@
 
 // TerraLib
 #include "../../Config.h"
-#include "../../../../maptools/AbstractLayer.h"
+#include "terralib/maptools/AbstractLayer.h"
 
 #include <list>
 

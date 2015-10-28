@@ -29,11 +29,11 @@
 #define __TERRALIB_LAYOUT_INTERNAL_UTILS_H
 
 // TerraLib
-#include "../../geometry/Envelope.h"
-#include "../../color/RGBAColor.h"
-#include "../../maptools/WorldDeviceTransformer.h"
-#include "../../common/UnitOfMeasure.h"
-#include "../../maptools/Enums.h"
+#include "terralib/geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
+#include "terralib/maptools/WorldDeviceTransformer.h"
+#include "terralib/common/UnitOfMeasure.h"
+#include "terralib/maptools/Enums.h"
 #include "Config.h"
 
 // STL

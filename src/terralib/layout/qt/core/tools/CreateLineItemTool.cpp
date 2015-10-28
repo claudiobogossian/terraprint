@@ -26,7 +26,7 @@
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../core/enum/Enums.h"
-#include "../../../../geometry/Point.h"
+#include "terralib/geometry/Point.h"
 
 
 // Qt
@@ -97,7 +97,7 @@ bool te::layout::CreateLineItemTool::keyPressEvent( QKeyEvent* keyEvent )
   return true;
 }
 
-// o melhor seria a tool ter um método de desenho de linha para depois atualizar a geometria final no modelo
+// o melhor seria a tool ter um mï¿½todo de desenho de linha para depois atualizar a geometria final no modelo
 void te::layout::CreateLineItemTool::setGeometry()
 {
   // cria lineString apenas para achar o lowerleft
@@ -110,7 +110,7 @@ void te::layout::CreateLineItemTool::setGeometry()
   te::gm::Coord2D lowerLeft = line->getMBR()->getLowerLeft();
   m_item->setPos(lowerLeft.getX(), lowerLeft.getY());
   
-  // atualiza posição dos pontos de acordo com a nova posição do item
+  // atualiza posiï¿½ï¿½o dos pontos de acordo com a nova posiï¿½ï¿½o do item
   for (unsigned int i = 0; i < m_coords.size(); i++)
   {
     QPointF point(m_coords[i].getX(), m_coords[i].getY());

@@ -33,7 +33,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_SCENE_H
 
 // TerraLib
-#include "../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../../core/AbstractScene.h"
 #include "../../core/Config.h"
 #include "../item/MovingItemGroup.h"

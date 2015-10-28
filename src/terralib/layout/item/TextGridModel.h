@@ -32,7 +32,7 @@
 
 // TerraLib
 #include "TitleModel.h"
-#include "../../geometry/Point.h"
+#include "terralib/geometry/Point.h"
 #include "../core/Config.h"
 
 // STL

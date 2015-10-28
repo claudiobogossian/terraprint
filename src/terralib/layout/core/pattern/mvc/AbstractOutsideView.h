@@ -30,7 +30,7 @@
 
 // TerraLib
 #include "../../property/Properties.h"
-#include "../../../../geometry/Coord2D.h"
+#include "terralib/geometry/Coord2D.h"
 #include "../../Config.h"
 
 namespace te

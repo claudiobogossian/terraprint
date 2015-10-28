@@ -33,7 +33,7 @@
 
 // TerraLib
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
-#include "../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../../core/Config.h"
 
 // STL

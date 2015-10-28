@@ -31,10 +31,10 @@
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/GridSettingsConfigProperties.h"
 #include "../core/property/PlanarGridSettingsConfigProperties.h"
-#include "../../common/StringUtils.h"
-#include "../../common/UnitOfMeasure.h"
-#include "../../srs/SpatialReferenceSystemManager.h"
-#include "../../maptools/Utils.h"
+#include "terralib/common/StringUtils.h"
+#include "terralib/common/UnitOfMeasure.h"
+#include "terralib/srs/SpatialReferenceSystemManager.h"
+#include "terralib/maptools/Utils.h"
 
 // STL
 #include <string>

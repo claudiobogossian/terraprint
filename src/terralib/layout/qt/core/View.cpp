@@ -29,7 +29,7 @@
 #include "View.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/enum/Enums.h"
-#include "../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "VisualizationArea.h"
 #include "../item/ItemGroup.h"
 #include "tools/ZoomClickTool.h"

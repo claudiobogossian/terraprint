@@ -27,7 +27,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_LEGEND_CHOICE_OUTSIDE_H
 
 // TerraLib
-#include "../../../qt/widgets/utils/DoubleListWidget.h"
+#include "terralib/qt/widgets/utils/DoubleListWidget.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/Config.h"
 #include "../../core/property/Property.h"

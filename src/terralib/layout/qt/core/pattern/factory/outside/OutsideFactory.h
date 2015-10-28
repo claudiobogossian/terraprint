@@ -28,7 +28,7 @@
 
 // TerraLib
 #include "terralib/geometry/Coord2D.h"
-#include "../../../../../../common/ParameterizedAbstractFactory.h"
+#include "terralib/common/ParameterizedAbstractFactory.h"
 #include "../../../../../core/Config.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideView.h"
 #include "OutsideFactoryParamsCreate.h"

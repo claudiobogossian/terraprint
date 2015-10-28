@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "RectangleItem.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumRectangleType.h"
 
 // Qt

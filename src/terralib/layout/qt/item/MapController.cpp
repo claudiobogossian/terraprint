@@ -24,7 +24,7 @@
 
 #include "MapItem.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../../qt/widgets/canvas/MapDisplay.h"
+#include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/maptools/MapDisplay.h"
 
 

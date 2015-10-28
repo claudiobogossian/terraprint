@@ -28,7 +28,7 @@
 // TerraLib
 #include "ColorDialogOutside.h"
 #include "../../outside/ColorDialogModel.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 

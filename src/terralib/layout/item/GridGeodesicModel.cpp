@@ -30,9 +30,9 @@
 
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/GeodesicGridSettingsConfigProperties.h"
-#include "../../common/StringUtils.h"
-#include "../../common/UnitOfMeasure.h"
-#include "../../srs/SpatialReferenceSystemManager.h"
+#include "terralib/common/StringUtils.h"
+#include "terralib/common/UnitOfMeasure.h"
+#include "terralib/srs/SpatialReferenceSystemManager.h"
 
 // STL
 #include <string>

@@ -31,7 +31,7 @@
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
-#include "../../../maptools/AbstractLayer.h"
+#include "terralib/maptools/AbstractLayer.h"
 
 namespace te
 {

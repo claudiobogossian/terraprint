@@ -29,9 +29,9 @@
 #include "JSON.h"
 #include "../property/Property.h"
 #include "../property/Properties.h"
-#include "../../../common/Exception.h"
-#include "../../../common/STLUtils.h"
-#include "../../../common/Translator.h"
+#include "terralib/common/Exception.h"
+#include "terralib/common/STLUtils.h"
+#include "terralib/common/Translator.h"
 #include "../Config.h"
 #include "../enum/Enums.h"
 

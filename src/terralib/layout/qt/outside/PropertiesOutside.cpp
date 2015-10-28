@@ -30,7 +30,7 @@
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
-#include "../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../core/propertybrowser/PropertyBrowser.h"
 #include "../item/MapItem.h"
 #include "../../core/property/SharedProperties.h"

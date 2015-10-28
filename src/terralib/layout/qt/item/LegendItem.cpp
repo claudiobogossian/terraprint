@@ -29,14 +29,14 @@
 #include "LegendItem.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/singleton/Context.h"
-#include "../../../maptools/GroupingItem.h"
-#include "../../../maptools/Grouping.h"
-#include "../../../maptools/Canvas.h"
-#include "../../../maptools/CanvasConfigurer.h"
-#include "../../../qt/widgets/canvas/Canvas.h"
-#include "../../../se/Symbolizer.h"
-#include "../../../se/PolygonSymbolizer.h"
-#include "../../../se/Fill.h"
+#include "terralib/maptools/GroupingItem.h"
+#include "terralib/maptools/Grouping.h"
+#include "terralib/maptools/Canvas.h"
+#include "terralib/maptools/CanvasConfigurer.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
+#include "terralib/se/Symbolizer.h"
+#include "terralib/se/PolygonSymbolizer.h"
+#include "terralib/se/Fill.h"
 
 // Qt
 #include <QPixmap>

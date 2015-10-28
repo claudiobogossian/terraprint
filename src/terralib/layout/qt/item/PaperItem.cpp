@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "PaperItem.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 
 te::layout::PaperItem::PaperItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)

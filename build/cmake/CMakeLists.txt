@@ -18,7 +18,7 @@
 #  TerraLib Team at <terralib-team@terralib.org>.
 #
 #
-#  Description: Main CMake script for the TerraLib build system.
+#  Description: Main CMake script for the TerraLib Layout build system.
 #
 #  Author: Gilberto Ribeiro de Queiroz <gribeiro@dpi.inpe.br>
 #          Juan Carlos P. Garrido <juan@dpi.inpe.br>
@@ -34,12 +34,12 @@ project(terralib)
 #
 
 # variables that control the system versioning
-set(TERRALIB_VERSION_MAJOR 5)
-set(TERRALIB_VERSION_MINOR 0)
-set(TERRALIB_VERSION_PATCH 1)
-set(TERRALIB_VERSION_STRING "${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}.${TERRALIB_VERSION_PATCH}")
-set(TERRALIB_VERSION "0x050001")
-set(TERRALIB_PKG_VERSION ${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}.${TERRALIB_VERSION_PATCH})
+set(TERRALIB_LAYOUT_VERSION_MAJOR 0)
+set(TERRALIB_LAYOUT_VERSION_MINOR 0)
+set(TERRALIB_LAYOUT_VERSION_PATCH 4)
+set(TERRALIB_LAYOUT_VERSION_STRING "${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}.${TERRALIB_VERSION_PATCH}")
+set(TERRALIB_LAYOUT_VERSION "0x000004")
+set(TERRALIB_LAYOUT_LAYOUT_PKG_VERSION ${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}.${TERRALIB_VERSION_PATCH})
 
 # variable indicating that it will search for 3rd-party libraries and install them
 if(NOT DEFINED TERRALIB_TRACK_3RDPARTY_DEPENDENCIES)
@@ -54,31 +54,13 @@ if(NOT DEFINED TERRALIB_DIR_VAR_NAME)
   set(TERRALIB_DIR_VAR_NAME "TERRALIB_HOME" CACHE STRING "Name of an environment variable with the base installation path of TerraLib")
 endif()
 
-if(APPLE AND TERRALIB_BUILD_AS_BUNDLE AND NOT DEFINED TERRALIB_BASE_DESTINATION_DIR)
-  set(TERRALIB_BASE_DESTINATION_DIR "terraview.app/Contents/")
-elseif(NOT DEFINED TERRALIB_BASE_DESTINATION_DIR)
-  set(TERRALIB_BASE_DESTINATION_DIR "")
-endif()
-
 # variables that control the install location
 if(NOT DEFINED TERRALIB_DESTINATION_PLUGINS)
   set(TERRALIB_DESTINATION_PLUGINS "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/plugins")
 endif()
 
-if(NOT DEFINED TERRALIB_DESTINATION_EXAMPLES)
-  set(TERRALIB_DESTINATION_EXAMPLES "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/examples")
-endif()
-
-if(NOT DEFINED TERRALIB_DESTINATION_UNITTEST)
-  set(TERRALIB_DESTINATION_UNITTEST "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/unittest")
-endif()
-
 if(NOT DEFINED TERRALIB_DESTINATION_LIBRARY)
   set(TERRALIB_DESTINATION_LIBRARY "${TERRALIB_BASE_DESTINATION_DIR}lib")
-endif()
-
-if(NOT DEFINED TERRALIB_DESTINATION_RUNTIME)
-  set(TERRALIB_DESTINATION_RUNTIME "${TERRALIB_BASE_DESTINATION_DIR}bin")
 endif()
 
 if(NOT DEFINED TERRALIB_DESTINATION_ARCHIVE)
@@ -91,23 +73,6 @@ endif()
 
 if(NOT DEFINED TERRALIB_DESTINATION_SHARE)
   set(TERRALIB_DESTINATION_SHARE "${TERRALIB_BASE_DESTINATION_DIR}share")
-endif()
-
-# variables that controls what is built
-if(NOT DEFINED TERRALIB_BUILD_EXAMPLES_ENABLED)
-  set(TERRALIB_BUILD_EXAMPLES_ENABLED ON CACHE BOOL "If on, shows the list of examples to be built")
-endif()
-
-if(NOT DEFINED TERRALIB_BUILD_UNITTEST_ENABLED)
-  set(TERRALIB_BUILD_UNITTEST_ENABLED ON CACHE BOOL "If on, shows the list of unit-tests to be built")
-endif()
-
-if(NOT DEFINED TERRALIB_BUILD_AS_BUNDLE)
-  set(TERRALIB_BUILD_AS_BUNDLE 0 CACHE BOOL "If on, tells that the build will generate a bundle")
-endif()
-
-if(NOT DEFINED TERRALIB_AUTOMATIC_INITIALIZATION)
-  set(TERRALIB_AUTOMATIC_INITIALIZATION 1 CACHE BOOL "Tells that TerraLib should initialize its resources automatically")
 endif()
 
 # variable that set the bundle items as writable before install_name_tool tries to change them (for APPLE platforms)
@@ -164,7 +129,6 @@ else()
   set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-
 #
 # global configurations
 #
@@ -187,60 +151,19 @@ include(CMakeDependentOption)
 # including TerraLib auxiliary macros and functions
 #
 
-include(terralib_macros.cmake)
-
+include(terralib-layout_macros.cmake)
 
 #
 # first check of libraries
 #
+
+find_package ( terralib 5.0.1 )
 
 find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread)
 
 if(NOT Boost_FOUND)
   message(FATAL_ERROR "TerraLib: could not find required Boost libraries!")
 endif()
-
-find_package(Doxygen QUIET)
-
-if(WIN32)
-
-  find_package(ADO)
-
-  find_package(Terralib4)
-
-endif()
-
-find_package(GDAL)
-
-find_package(GEOS)
-
-find_package(GEOSC)
-
-find_package(GNUGettext)
-
-find_package(GNUIConv)
-
-find_package(Log4cxx)
-
-find_package(Lua)
-
-find_package(R)
-
-find_package(PythonLibs)
-
-find_package(LibPQ)
-
-find_package(SWIG)
-
-find_package(Java COMPONENTS Development)
-
-find_package(JNI)
-
-if(NOT LIBPQ_FOUND)
-  find_package(PostgreSQL)
-endif()
-
-find_package(Proj4)
 
 find_package(Qt5 5.1 QUIET COMPONENTS Core Gui Widgets PrintSupport)
 
@@ -255,8 +178,6 @@ if(Qt5_FOUND OR QT4_FOUND)
   find_package(QtPropertyBrowser)
 endif()
 
-find_package(Xerces)
-
 if(NOT QT_QCOLLECTIONGENERATOR_EXECUTABLE)
   find_program(QT_QCOLLECTIONGENERATOR_EXECUTABLE
                NAME qcollectiongenerator
@@ -268,6 +189,280 @@ endif()
 
 find_package(CppUnit)
 
+#
+# TerraLib including folders (Adicionado temporariamente todos os paths da terralib5, pois os arquivos do layout incluiam os paths relativos pois estava
+#na mesma buildtree da TL5. Agora não é mais, aguardando força tarefa para mudar arquivos)
+#
+
+
+include_directories(${terralib_DIR}
+					${terralib_INCLUDE_DIRS}
+					${terralib_INCLUDE_DIRS}/terralib
+					${terralib_INCLUDE_DIRS}/terralib/addressgeocoding
+					${terralib_INCLUDE_DIRS}/terralib/addressgeocoding/qt
+					${terralib_INCLUDE_DIRS}/terralib/addressgeocoding/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/ado
+					${terralib_INCLUDE_DIRS}/terralib/annotationtext
+					${terralib_INCLUDE_DIRS}/terralib/antigrain
+					${terralib_INCLUDE_DIRS}/terralib/attributefill
+					${terralib_INCLUDE_DIRS}/terralib/attributefill/qt
+					${terralib_INCLUDE_DIRS}/terralib/attributefill/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/binding
+					${terralib_INCLUDE_DIRS}/terralib/binding/swig
+					${terralib_INCLUDE_DIRS}/terralib/binding/swig/common
+					${terralib_INCLUDE_DIRS}/terralib/binding/swig/java
+					${terralib_INCLUDE_DIRS}/terralib/binding/swig/lua
+					${terralib_INCLUDE_DIRS}/terralib/binding/swig/python
+					${terralib_INCLUDE_DIRS}/terralib/binding/swig/r
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/common
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/jsi
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/jsi/dataaccess
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/jsi/datatype
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/jsi/geometry
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/jsi/platform
+					${terralib_INCLUDE_DIRS}/terralib/binding/v8/plugin
+					${terralib_INCLUDE_DIRS}/terralib/binding/vm
+					${terralib_INCLUDE_DIRS}/terralib/cellspace
+					${terralib_INCLUDE_DIRS}/terralib/classification
+					${terralib_INCLUDE_DIRS}/terralib/color
+					${terralib_INCLUDE_DIRS}/terralib/common
+					${terralib_INCLUDE_DIRS}/terralib/common/progress
+					${terralib_INCLUDE_DIRS}/terralib/common/URI
+					${terralib_INCLUDE_DIRS}/terralib/datatype
+					${terralib_INCLUDE_DIRS}/terralib/datatype/serialization
+					${terralib_INCLUDE_DIRS}/terralib/datatype/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/edit
+					${terralib_INCLUDE_DIRS}/terralib/edit/qt
+					${terralib_INCLUDE_DIRS}/terralib/edit/qt/core
+					${terralib_INCLUDE_DIRS}/terralib/edit/qt/core/command
+					${terralib_INCLUDE_DIRS}/terralib/edit/qt/tools
+					${terralib_INCLUDE_DIRS}/terralib/edit/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/fe
+					${terralib_INCLUDE_DIRS}/terralib/fe/serialization
+					${terralib_INCLUDE_DIRS}/terralib/fe/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/gdal
+					${terralib_INCLUDE_DIRS}/terralib/geometry
+					${terralib_INCLUDE_DIRS}/terralib/geometry/serialization
+					${terralib_INCLUDE_DIRS}/terralib/geometry/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/gml
+					${terralib_INCLUDE_DIRS}/terralib/graph
+					${terralib_INCLUDE_DIRS}/terralib/graph/builder
+					${terralib_INCLUDE_DIRS}/terralib/graph/cache
+					${terralib_INCLUDE_DIRS}/terralib/graph/core
+					${terralib_INCLUDE_DIRS}/terralib/graph/drivers
+					${terralib_INCLUDE_DIRS}/terralib/graph/drivers/datasource
+					${terralib_INCLUDE_DIRS}/terralib/graph/functions
+					${terralib_INCLUDE_DIRS}/terralib/graph/graphs
+					${terralib_INCLUDE_DIRS}/terralib/graph/iterator
+					${terralib_INCLUDE_DIRS}/terralib/graph/loader
+					${terralib_INCLUDE_DIRS}/terralib/graph/maptools
+					${terralib_INCLUDE_DIRS}/terralib/grib
+					${terralib_INCLUDE_DIRS}/terralib/idl
+					${terralib_INCLUDE_DIRS}/terralib/idl/rp
+					${terralib_INCLUDE_DIRS}/terralib/maptools
+					${terralib_INCLUDE_DIRS}/terralib/maptools/serialization
+					${terralib_INCLUDE_DIRS}/terralib/maptools/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/memory
+					${terralib_INCLUDE_DIRS}/terralib/metadata
+					${terralib_INCLUDE_DIRS}/terralib/metadata/iso19115
+					${terralib_INCLUDE_DIRS}/terralib/metadata/serialization
+					${terralib_INCLUDE_DIRS}/terralib/metadata/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/mnt
+					${terralib_INCLUDE_DIRS}/terralib/mnt/core
+					${terralib_INCLUDE_DIRS}/terralib/mnt/plugin
+					${terralib_INCLUDE_DIRS}/terralib/mnt/qt
+					${terralib_INCLUDE_DIRS}/terralib/mnt/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/ogr
+					${terralib_INCLUDE_DIRS}/terralib/plugin
+					${terralib_INCLUDE_DIRS}/terralib/qt
+					${terralib_INCLUDE_DIRS}/terralib/qt/af
+					${terralib_INCLUDE_DIRS}/terralib/qt/af/connectors
+					${terralib_INCLUDE_DIRS}/terralib/qt/af/events
+					${terralib_INCLUDE_DIRS}/terralib/qt/af/settings
+					${terralib_INCLUDE_DIRS}/terralib/qt/af/settings/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/af/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/designer
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/addressgeocoding
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/attributefill
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/cellspace
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/cellspace/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/ado
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/ado/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/gdal
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/gdal/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/geofile
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/geofile/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/mysql
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/mysql/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/ogr
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/ogr/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/pgis
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/pgis/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/sqlite
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/sqlite/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/terralib4
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/terralib4/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/wcs
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/wcs/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/wfs
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/wfs/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/wms
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/datasource/wms/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/edit
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mnt
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mobile
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mobile/core
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mobile/core/form
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mobile/qt
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mobile/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/mobile/utils
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/rp
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/sa
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/st
+					${terralib_INCLUDE_DIRS}/terralib/qt/plugins/vp
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/canvas
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/canvas/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/charts
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/charts/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/classification
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/classification/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/colorbar
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/colorbar/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/dataset
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/dataset/explorer
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/dataset/selector
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/dataset/selector/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/datasource
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/datasource/connector
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/datasource/core
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/datasource/explorer
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/datasource/selector
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/datasource/selector/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/exchanger
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/exchanger/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/externalTable
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/externalTable/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/help
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/explorer
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/info
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/search
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/search/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/selector
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/utils
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/layer/utils/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/mapdisplay
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/plugin
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/plugin/builder
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/plugin/builder/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/plugin/manager
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/plugin/manager/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/progress
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/property
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/property/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/propertybrowser
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/query
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/query/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/raster
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/raster/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/rp
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/rp/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/se
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/se/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/srs
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/srs/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/st
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/st/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/table
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/table/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/tools
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/utils
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/utils/ui
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/vector
+					${terralib_INCLUDE_DIRS}/terralib/qt/widgets/vector/ui
+					${terralib_INCLUDE_DIRS}/terralib/raster
+					${terralib_INCLUDE_DIRS}/terralib/raster/serialization
+					${terralib_INCLUDE_DIRS}/terralib/raster/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/rp
+					${terralib_INCLUDE_DIRS}/terralib/rp/radar
+					${terralib_INCLUDE_DIRS}/terralib/sa
+					${terralib_INCLUDE_DIRS}/terralib/sa/core
+					${terralib_INCLUDE_DIRS}/terralib/sa/qt
+					${terralib_INCLUDE_DIRS}/terralib/sa/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/sam
+					${terralib_INCLUDE_DIRS}/terralib/sam/kdtree
+					${terralib_INCLUDE_DIRS}/terralib/sam/rtree
+					${terralib_INCLUDE_DIRS}/terralib/se
+					${terralib_INCLUDE_DIRS}/terralib/se/serialization
+					${terralib_INCLUDE_DIRS}/terralib/se/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/sqlite
+					${terralib_INCLUDE_DIRS}/terralib/srs
+					${terralib_INCLUDE_DIRS}/terralib/st
+					${terralib_INCLUDE_DIRS}/terralib/st/core
+					${terralib_INCLUDE_DIRS}/terralib/st/core/coverage
+					${terralib_INCLUDE_DIRS}/terralib/st/core/event
+					${terralib_INCLUDE_DIRS}/terralib/st/core/interpolator
+					${terralib_INCLUDE_DIRS}/terralib/st/core/observation
+					${terralib_INCLUDE_DIRS}/terralib/st/core/timeseries
+					${terralib_INCLUDE_DIRS}/terralib/st/core/trajectory
+					${terralib_INCLUDE_DIRS}/terralib/st/loader
+					${terralib_INCLUDE_DIRS}/terralib/st/maptools
+					${terralib_INCLUDE_DIRS}/terralib/statistics
+					${terralib_INCLUDE_DIRS}/terralib/statistics/core
+					${terralib_INCLUDE_DIRS}/terralib/statistics/qt
+					${terralib_INCLUDE_DIRS}/terralib/statistics/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/stmemory
+					${terralib_INCLUDE_DIRS}/terralib/terralib4
+					${terralib_INCLUDE_DIRS}/terralib/tools
+					${terralib_INCLUDE_DIRS}/terralib/tools/dscopy
+					${terralib_INCLUDE_DIRS}/terralib/tools/dscopy/console
+					${terralib_INCLUDE_DIRS}/terralib/tools/dscopy/core
+					${terralib_INCLUDE_DIRS}/terralib/tools/dscopy/qt
+					${terralib_INCLUDE_DIRS}/terralib/tools/dsinfo
+					${terralib_INCLUDE_DIRS}/terralib/tools/dsinfo/console
+					${terralib_INCLUDE_DIRS}/terralib/tools/dsinfo/core
+					${terralib_INCLUDE_DIRS}/terralib/tools/rastermanager
+					${terralib_INCLUDE_DIRS}/terralib/tools/rastermanager/console
+					${terralib_INCLUDE_DIRS}/terralib/tools/rastermanager/core
+					${terralib_INCLUDE_DIRS}/terralib/tools/rastermanager/qt
+					${terralib_INCLUDE_DIRS}/terralib/vp
+					${terralib_INCLUDE_DIRS}/terralib/vp/qt
+					${terralib_INCLUDE_DIRS}/terralib/vp/qt/ui
+					${terralib_INCLUDE_DIRS}/terralib/wcs
+					${terralib_INCLUDE_DIRS}/terralib/wfs
+					${terralib_INCLUDE_DIRS}/terralib/wms
+					${terralib_INCLUDE_DIRS}/terralib/wms/qt
+					${terralib_INCLUDE_DIRS}/terralib/wms/serialization
+					${terralib_INCLUDE_DIRS}/terralib/wms/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/xerces
+					${terralib_INCLUDE_DIRS}/terralib/xlink
+					${terralib_INCLUDE_DIRS}/terralib/xlink/serialization
+					${terralib_INCLUDE_DIRS}/terralib/xlink/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/xml
+					${terralib_INCLUDE_DIRS}/terralib/xsd
+					${terralib_INCLUDE_DIRS}/terralib/xsd/serialization
+					${terralib_INCLUDE_DIRS}/terralib/xsd/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess/dataset
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess/datasource
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess/query
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess/serialization
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess/serialization/xml
+					${terralib_INCLUDE_DIRS}/terralib/dataaccess/utils
+					${terralib_INCLUDE_DIRS}/terralib/postgis
+					${terralib_INCLUDE_DIRS}/terraview
+					${terralib_INCLUDE_DIRS}/terraview/config
+					${terralib_INCLUDE_DIRS}/terraview/events
+					${terralib_INCLUDE_DIRS}/terraview/settings
+					${terralib_INCLUDE_DIRS}/terraview/settings/ui
+					${terralib_INCLUDE_DIRS}/terraview/ui
+					)
+
 
 #
 # some variables needed in config file
@@ -275,18 +470,6 @@ find_package(CppUnit)
 
 if(Boost_FOUND)
   set(TERRALIB_BOOST_ENABLED ON)
-endif()
-
-if(GDAL_FOUND)
-  set(TERRALIB_GDAL_ENABLED ON)
-endif()
-
-if(GEOS_FOUND)
-  set(TERRALIB_GEOS_ENABLED ON)
-endif()
-
-if(GEOSC_FOUND)
-  set(TERRALIB_GEOSC_ENABLED ON)
 endif()
 
 if(GNUGETTEXT_FOUND)
@@ -321,14 +504,6 @@ else()
 
 endif()
 
-if(LUA_FOUND)
-  set(TERRALIB_LUA_ENABLED ON)
-endif()
-
-if(PYTHONLIBS_FOUND)
-  set(TERRALIB_PYTHON_ENABLED ON)
-endif()
-
 if(LOG4CXX_FOUND)
   set(TERRALIB_APACHE_LOG4CXX_ENABLED ON)
 
@@ -342,14 +517,6 @@ else()
     set(TERRALIB_LOGGER_ENABLED 0 CACHE BOOL "Enable logger?" FORCE)
   endif()
 
-endif()
-
-if((PostgreSQL_INCLUDE_DIRS AND PostgreSQL_LIBRARIES) OR (PostgreSQL_INCLUDE_DIR AND PostgreSQL_LIBRARY))
-  set(TERRALIB_LIBPQ_ENABLED ON)
-endif()
-
-if(PROJ4_FOUND)
-  set(TERRALIB_PROJ4_ENABLED ON)
 endif()
 
 if(QT4_FOUND)
@@ -370,344 +537,41 @@ if(QWT_FOUND)
   set(TERRALIB_QWT_ENABLED ON)
 endif()
 
-if(XERCES_FOUND)
-  set(TERRALIB_XERCES_ENABLED ON)
-endif()
-
-if(CPPUNIT_FOUND)
-  set(TERRALIB_CPPUNIT_ENABLED ON)
-endif()
-
-if(SWIG_FOUND)
-  set(TERRALIB_SWIG_ENABLED ON)
-endif()
-
-if(JAVA_FOUND)
-  set(TERRALIB_JAVA_ENABLED ON)
-endif()
-
-if(JNI_FOUND)
-  set(TERRALIB_JNI_ENABLED ON)
-endif()
-
 #
 # build options
 #
 # warning: please, do not change the order below!
 #
 
-if(DOXYGEN_FOUND)
-  option(TERRALIB_DOXYGEN_ENABLED  "Enable API documentation build?" ON)
-endif()
 
-option(TERRALIB_MOD_COLOR_ENABLED "Build Color module?" ON)
 
-option(TERRALIB_MOD_XML_ENABLED "Build XML module?" ON)
+#CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_ENABLED "Build Layout module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_COLOR_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
 
-option(TERRALIB_MOD_DATATYPE_ENABLED "Build Data Type module?" ON)
+#CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plugin?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
 
-option(TERRALIB_MOD_SRS_ENABLED "Build Spatial Reference System module?" ON)
+option(TERRALIB_MOD_LAYOUT_ENABLED "Build Layout module?" ON)
 
-option(TERRALIB_MOD_XLINK_ENABLED "Build XLink module?" ON)
-
-option(TERRALIB_MOD_XSD_ENABLED "Build XSD module?" ON)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_GEOMETRY_ENABLED "Build Geometry module?" ON "TERRALIB_MOD_DATATYPE_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_SAM_ENABLED "Build Spatial Access Methods?" ON "TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ANNOTATIONTEXT_ENABLED "Build Annotation Text module?" ON "TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_RASTER_ENABLED "Build Raster module?" ON "TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_SRS_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_DATAACCESS_ENABLED "Build Data Access module?" ON "TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_PLUGIN_ENABLED "Build Plugin module?" ON "TERRALIB_MOD_XML_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_XERCES_ENABLED "Build Xerces support?" ON "TERRALIB_XERCES_ENABLED;TERRALIB_MOD_XML_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_POSTGIS_ENABLED "Build PostGIS support?" ON "TERRALIB_LIBPQ_ENABLED;TERRALIB_MOD_XML_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_MEMORY_ENABLED "Build Data Access in Memory support?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ADO_ENABLED "Build Microsoft Access support?" ON "WIN32;ADO_FOUND;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_XML_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_OGR_ENABLED "Build OGR support?" ON "TERRALIB_GDAL_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_GDAL_ENABLED "Build GDAL support?" ON "TERRALIB_GDAL_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_GML_ENABLED "Build OGC GML module?" ON "TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_FILTER_ENABLED "Build OGC Filter module?" ON "TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_GML_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_SYMBOLOGY_ENABLED "Build OGC Symbology module?" ON "TERRALIB_MOD_COLOR_ENABLED;TERRALIB_MOD_FILTER_ENABLED;TERRALIB_MOD_XLINK_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_MAPTOOLS_ENABLED "Build Map Tools module?" ON "TERRALIB_MOD_ANNOTATIONTEXT_ENABLED;TERRALIB_MOD_COLOR_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_FILTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_GML_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_SRS_ENABLED;TERRALIB_MOD_SYMBOLOGY_ENABLED;TERRALIB_MOD_XLINK_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_CLASSIFICATION_ENABLED "Build Classification module?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MEMORY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_METADATA_ENABLED "Build Metadata module?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_GRAPH_ENABLED "Build Graph module?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_SYMBOLOGY_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_STATISTICS_CORE_ENABLED "Build Statistics Core module?" ON "TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_VP_CORE_ENABLED "Build Vector Processing Core module?" ON "TERRALIB_MOD_STATISTICS_CORE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_RP_ENABLED "Build Raster Processing module?" ON "TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_STATISTICS_CORE_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_SA_CORE_ENABLED "Build Spatial Analysis Core module?" ON "TERRALIB_MOD_GRAPH_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_STMEMORY_ENABLED "Build Spatio-Temporal Driver In-Memory module?" ON "TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ST_ENABLED "Build Spatio-Temporal module?" ON "TERRALIB_MOD_STMEMORY_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_WIDGETS_ENABLED "Build Qt Widgets?" ON "TERRALIB_QTPROPERTYBROWSER_ENABLED;TERRALIB_QWT_ENABLED;TERRALIB_QT_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_RP_ENABLED;TERRALIB_MOD_ST_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_QTRANSLATION_ENABLED "Enable translation for Qt Widgets?" ON "TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_APF_ENABLED "Build Qt Application Framework?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_WCS_ENABLED "Build the TerraLib Web Coverage Service?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_GDAL_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_WFS_ENABLED "Build the TerraLib Web Feature Service?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_OGR_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_WMS_CORE_ENABLED "Build the TerraLib Web Map Service?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_WMS_QT_ENABLED "Build the TerraLib Qt Web Map Service?" ON "TERRALIB_MOD_WMS_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_STATISTICS_QT_ENABLED "Build Qt support for Statistics module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_STATISTICS_CORE_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_TERRALIB4_ENABLED "Build Terralib4 driver?" ON "WIN32;TERRALIB4_FOUND;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_VP_QT_ENABLED "Build Vector Processing Qt module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_VP_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_SA_QT_ENABLED "Build Spatial Analysis Qt module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_SA_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_ENABLED "Build Layout module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_COLOR_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plugin?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_ADO_ENABLED "Build ADO Driver Qt plugin?" ON "TERRALIB_MOD_ADO_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_GDAL_ENABLED "Build GDAL Driver Qt plugin?" ON "TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_QT_APF_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_OGR_ENABLED "Build OGR Driver Qt plugin?" ON "TERRALIB_MOD_OGR_ENABLED;TERRALIB_MOD_QT_APF_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_POSTGIS_ENABLED "Build PostGIS Driver Qt plugin?" ON "TERRALIB_MOD_POSTGIS_ENABLED;TERRALIB_MOD_QT_APF_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_TERRALIB4_ENABLED "Build TerraLib4 Driver Qt plugin?" ON "TERRALIB_MOD_TERRALIB4_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_WCS_ENABLED "Build WCS Driver Qt plugin?" ON "TERRALIB_MOD_WCS_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_WFS_ENABLED "Build WFS Driver Qt plugin?" ON "TERRALIB_MOD_WFS_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_WMS_ENABLED "Build WMS Driver Qt plugin?" ON "TERRALIB_MOD_WMS_CORE_ENABLED;TERRALIB_MOD_WMS_QT_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_VP_ENABLED "Build Vector Processing Driver Qt plugin?" ON "TERRALIB_MOD_VP_QT_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_RP_ENABLED "Build Raster Processing Driver Qt plugin?" ON "TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_SA_ENABLED "Build Spatial Analysis Driver Qt plugin?" ON "TERRALIB_MOD_SA_QT_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_ST_ENABLED "Build Spatio-Temporal Driver Qt plugin?" OFF "TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_MOBILE_ENABLED "Build Mobile Qt plugin?" OFF "TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_TERRAVIEW_ENABLED "Build TerraView?" ON "TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_BINDING_JAVA_ENABLED "Build TerraLib bindings?" ON "TERRALIB_MOD_QT_WIDGETS_ENABLED;TERRALIB_SWIG_ENABLED;TERRALIB_JAVA_ENABLED;TERRALIB_JNI_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_BINDING_LUA_ENABLED "Build TerraLib bindings?" ON "TERRALIB_SWIG_ENABLED;TERRALIB_LUA_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_BINDING_PYTHON_ENABLED "Build TerraLib bindings?" ON "TERRALIB_SWIG_ENABLED;TERRALIB_PYTHON_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_CELLSPACE_ENABLED "Build Cellular Spaces module?" ON "TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_CELLSPACE_ENABLED "Build Cellular Spaces Qt Plugin?" ON "TERRALIB_MOD_CELLSPACE_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ATTRIBUTEFILL_CORE_ENABLED "Build Attribute Fill Core module?" ON "TERRALIB_MOD_STATISTICS_CORE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ATTRIBUTEFILL_QT_ENABLED "Build Attribute Fill Qt module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_ATTRIBUTEFILL_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_ATTRIBUTEFILL_ENABLED "Build Attribute Fill Driver Qt plugin?" ON "TERRALIB_MOD_ATTRIBUTEFILL_QT_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ADDRESSGEOCODING_CORE_ENABLED "Build Address Geocoding Core module?" OFF "TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_ADDRESSGEOCODING_QT_ENABLED "Build Address Geocoding Qt module?" OFF "TERRALIB_QT_ENABLED;TERRALIB_MOD_ADDRESSGEOCODING_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_ADDRESSGEOCODING_ENABLED "Build Address Geocoding Driver Qt plugin?" OFF "TERRALIB_MOD_ADDRESSGEOCODING_QT_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_EDIT_CORE_ENABLED "Build Edit module?" ON "TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_EDIT_QT_ENABLED "Build Edit Qt module?" ON "TERRALIB_MOD_EDIT_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_EDIT_ENABLED "Build Edit Qt plugin?" ON "TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED;TERRALIB_MOD_EDIT_QT_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_MNT_CORE_ENABLED "Build MNT Processing Core module?" ON "TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_MNT_QT_ENABLED "Build MNT Processing Qt module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_MNT_CORE_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_MNT_ENABLED "Build MNT Processing Driver Qt plugin?" ON "TERRALIB_MOD_MNT_QT_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
-
-if(QT_QCOLLECTIONGENERATOR_EXECUTABLE)
-  CMAKE_DEPENDENT_OPTION(TERRALIB_QHELP_ENABLED  "Enable Qt-Help build?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-endif()
-
-#
-# build options for the TerraLib examples
-#
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_ADO_ENABLED "Build the ADO example?" ON "WIN32;TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_ATTRIBUTEFILL_ENABLED "Build the Attribute Fill example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_ATTRIBUTEFILL_CORE_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_COLORBAR_ENABLED "Build the color bar example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_COMMON_ENABLED "Build the common module example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_BINDING_LUA_ENABLED "Build the lua binding module example?" ON "TERRALIB_MOD_BINDING_LUA_ENABLED" OFF)#TERRALIB_BUILD_EXAMPLES_ENABLED)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_CPPPLUGIN_ENABLED "Build the C++ plugins example" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_DATAACCESS_ENABLED "Build the Data Access example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_FACTORY_ENABLED "Build the factory example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_GEOMETRY_ENABLED "Build the Geometry example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_GRAPH_ENABLED "Build the Graph example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_GRAPH_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_HELP_ENABLED "Build the TerraLib Help example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_LAYEREXPLORER_ENABLED "Build the Layer Explorer example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_MAPTOOLS_ENABLED "Build the MapTools example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_PROGRESS_ENABLED "Build the Progress example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_CANVAS_ENABLED "Build the Qt Canvas example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_CHARTS_ENABLED "Build the Qt Charts example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_DATASOURCE_ENABLED "Build the examples for the Qt Data Source?" ON "NOT WIN32;TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_OGR_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_POSTGIS_ENABLED;TERRALIB_MOD_QT_PLUGINS_DATASOURCE_OGR_ENABLED;TERRALIB_MOD_QT_PLUGINS_DATASOURCE_GDAL_ENABLED;TERRALIB_MOD_QT_PLUGINS_DATASOURCE_POSTGIS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_QUERY_ENABLED "Build the Qt Query example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_RASTER_VISUAL_ENABLED "Build the Qt Raster Visual example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_RP_ENABLED "Build the Qt Raster Processing example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_SYMBOLOGY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_SE_ENABLED "Build the Qt Symbology Encoding example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_SYMBOLOGY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_SRS_ENABLED "Build the Qt SRS example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_TOOLS_ENABLED "Build the Qt Tools example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_QT_UTILS_ENABLED "Build the Qt Utils example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_RASTER_ENABLED "Build the Raster example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_RP_ENABLED "Build the Raster Processing example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_SAM_ENABLED "Build the SAM example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_SERIALIZATION_ENABLED "Build the Serialization example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_FILTER_ENABLED;TERRALIB_MOD_SYMBOLOGY_ENABLED;TERRALIB_MOD_XML_ENABLED;TERRALIB_MOD_XSD_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_SRS_ENABLED "Build the SRS example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_SRS_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_XERCES_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_ST_ENABLED "Build the Spatial Temporal example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_ST_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_VP_ENABLED "Build the Vector Processing example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_VP_CORE_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_XERCES_ENABLED "Build the Xerces example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_XML_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_EXAMPLE_TIN_ENABLED "Build the TIN Processing example?" ON "TERRALIB_BUILD_EXAMPLES_ENABLED;TERRALIB_MOD_MNT_CORE_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED" OFF)
-
-#
-# build options for the TerraLib Unit Test
-#
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_COMMON_ENABLED "Build the unit test for the Common module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_DATAACCESS_ENABLED "Build the unit test for the Data Access module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_DATATYPE_ENABLED "Build the unit test for the Data Type module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_DATATYPE_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_FIXGEOMETRIES_ENABLED "Build the unit test for the fix geometries?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_GEOMETRY_ENABLED "Build the unit test for the Geometry module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_MEMORY_ENABLED "Build the unit test for the Memory module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RASTER_ENABLED "Build the unit test for the Raster module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_RASTER_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_BLENDER_ENABLED "Build the unit test for the RP Blender?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_CLASSIFIER_ENABLED "Build the unit test for the RP Classifier?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_ARITHMETIC_OPERATIONS_ENABLED "Build the unit test for the RP Arithmetic Operations?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_TEXTURE_ENABLED "Build the unit test for the RP Texture?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GDAL_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_CONTRAST_ENABLED "Build the unit test for the RP Contrast?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_FILTER_ENABLED "Build the unit test for the RP Filter?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_FUNCTIONS_ENABLED "Build the unit test for the RP Functions?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_FUSION_ENABLED "Build the unit test for the RP Fusion?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_MATRIX_ENABLED "Build the unit test for the RP Matrix?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_MIXTUREMODEL_ENABLED "Build the unit test for the RP Mixture model?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_MOSAIC_ENABLED "Build the unit test for the RP Mosaic?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_REGISTER_ENABLED "Build the unit test for the RP Register?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_SEGMENTER_ENABLED "Build the unit test for the RP Segmenter?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_SKELETON_ENABLED "Build the unit test for the RP Skeleton?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_TIEPOINTSLOCATOR_ENABLED "Build the unit test for the RP Tie Points Locator?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_RP_RADAR_FUNCTIONS_ENABLED "Build the unit test for the RP Radar Functions?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_RASTER_ENABLED;TERRALIB_MOD_RP_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_SAM_ENABLED "Build the unit test for the SAM module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_SRS_ENABLED "Build the unit test for the SRS module?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
-
-CMAKE_DEPENDENT_OPTION(TERRALIB_UNITTEST_VP_ENABLED "Build the unit test for the vector processing?" ON "TERRALIB_CPPUNIT_ENABLED;TERRALIB_BUILD_UNITTEST_ENABLED;TERRALIB_MOD_GEOMETRY_ENABLED" OFF)
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plugin?" ON "TERRALIB_MOD_LAYOUT_ENABLED" OFF)
 
 
 #
 # process TERRALIB configuration files
 #
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-config-pkg.cmake.in
-               ${CMAKE_BINARY_DIR}/pkg/terralib-config.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-config-pkg.cmake.in
+               ${CMAKE_BINARY_DIR}/pkg/terralib-layout-config.cmake @ONLY)
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-config-version.cmake.in
-               ${CMAKE_BINARY_DIR}/terralib-config-version.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-config-version.cmake.in
+               ${CMAKE_BINARY_DIR}/terralib-layout-config-version.cmake @ONLY)
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-config.cmake.in
-               ${CMAKE_BINARY_DIR}/terralib-config.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-config.cmake.in
+               ${CMAKE_BINARY_DIR}/terralib-layout-config.cmake @ONLY)
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/BuildConfig.h.in
-               ${CMAKE_BINARY_DIR}/terralib_buildconfig.h @ONLY)
-
-configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/Defines.h.in
-               ${CMAKE_BINARY_DIR}/terralib_defines.h @ONLY)
+               ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h @ONLY)
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/Version.h.in
-               ${CMAKE_BINARY_DIR}/terralib_version.h @ONLY)
-
-configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/examples/Config.h.in
-               ${CMAKE_BINARY_DIR}/terralib_examples_config.h @ONLY)
-
-configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/Config.h.in
-               ${CMAKE_BINARY_DIR}/terralib_unittest_config.h @ONLY)
+               ${CMAKE_BINARY_DIR}/terralib_layout_version.h @ONLY)
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/COPYING ${CMAKE_BINARY_DIR}/COPYING.txt COPYONLY)
 
@@ -715,570 +579,18 @@ configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/COPYING ${CMAKE_BINARY_DIR}/COPYING
 # build modules
 #
 
-if(TERRALIB_DOXYGEN_ENABLED)
-  add_subdirectory(terralib_doxygen)
-endif()
-
-if(TERRALIB_QHELP_ENABLED)
-  add_subdirectory(terralib_qhelp)
-endif()
-
-if(Qt5LinguistTools_FOUND AND TERRALIB_MOD_QT_WIDGETS_ENABLED AND TERRALIB_QTRANSLATION_ENABLED)
-  add_subdirectory(terralib_qtranslations)
-endif()
-
-if(TERRALIB_MOD_ADO_ENABLED)
-  add_subdirectory(terralib_mod_ado)
-endif()
-
-if(TERRALIB_MOD_TERRALIB4_ENABLED)
-  add_subdirectory(terralib_mod_terralib4)
-endif()
-
 # Turn on multi process compilation
 if(MSVC)
   add_definitions(/MP)
-endif()
-
-if(TERRALIB_MOD_ANNOTATIONTEXT_ENABLED)
-  add_subdirectory(terralib_mod_annotationtext)
-endif()
-
-if(TERRALIB_MOD_BINDING_JAVA_ENABLED)
-  add_subdirectory(terralib_mod_binding_java)
-endif()
-
-if(TERRALIB_MOD_BINDING_LUA_ENABLED)
-  add_subdirectory(terralib_mod_binding_lua)
-endif()
-
-if(TERRALIB_MOD_BINDING_PYTHON_ENABLED)
-message ("python")
-  add_subdirectory(terralib_mod_binding_python)
-endif()
-
-if(TERRALIB_MOD_BINDING_R_ENABLED)
-  add_subdirectory(terralib_mod_binding_r)
-endif()
-
-if(TERRALIB_MOD_CELLSPACE_ENABLED)
-  add_subdirectory(terralib_mod_cellspace)
-endif()
-
-if(TERRALIB_MOD_CLASSIFICATION_ENABLED)
-  add_subdirectory(terralib_mod_classification)
-endif()
-
-if(TERRALIB_MOD_COLOR_ENABLED)
-  add_subdirectory(terralib_mod_color)
-endif()
-
-add_subdirectory(terralib_mod_common)
-
-if(TERRALIB_MOD_DATAACCESS_ENABLED)
-  add_subdirectory(terralib_mod_dataaccess)
-endif()
-
-if(TERRALIB_MOD_DATATYPE_ENABLED)
-  add_subdirectory(terralib_mod_datatype)
-endif()
-
-if(TERRALIB_MOD_FILTER_ENABLED)
-  add_subdirectory(terralib_mod_filter)
-endif()
-
-if(TERRALIB_MOD_GDAL_ENABLED)
-  add_subdirectory(terralib_mod_gdal)
-endif()
-
-if(TERRALIB_MOD_GEOMETRY_ENABLED)
-  add_subdirectory(terralib_mod_geometry)
-endif()
-
-if(TERRALIB_MOD_GML_ENABLED)
-  add_subdirectory(terralib_mod_gml)
-endif()
-
-if(TERRALIB_MOD_GRAPH_ENABLED)
-  add_subdirectory(terralib_mod_graph)
 endif()
 
 if(TERRALIB_MOD_LAYOUT_ENABLED)
   add_subdirectory(terralib_mod_layout)
 endif()
 
-if(TERRALIB_MOD_MAPTOOLS_ENABLED)
-  add_subdirectory(terralib_mod_maptools)
-endif()
-
-if(TERRALIB_MOD_METADATA_ENABLED)
-  add_subdirectory(terralib_mod_metadata)
-endif()
-
-if(TERRALIB_MOD_MEMORY_ENABLED)
-  add_subdirectory(terralib_mod_memory)
-endif()
-
-if(TERRALIB_MOD_OGR_ENABLED)
-  add_subdirectory(terralib_mod_ogr)
-endif()
-
-if(TERRALIB_MOD_PLUGIN_ENABLED)
-  add_subdirectory(terralib_mod_plugin)
-endif()
-
-if(TERRALIB_MOD_POSTGIS_ENABLED)
-  add_subdirectory(terralib_mod_postgis)
-endif()
-
-if(TERRALIB_MOD_ATTRIBUTEFILL_CORE_ENABLED)
-  add_subdirectory(terralib_mod_attributefill_core)
-endif()
-
-if(TERRALIB_MOD_ATTRIBUTEFILL_QT_ENABLED)
-  add_subdirectory(terralib_mod_attributefill_qt)
-endif()
-
-if(TERRALIB_MOD_ADDRESSGEOCODING_CORE_ENABLED)
-  add_subdirectory(terralib_mod_addressgeocoding_core)
-endif()
-
-if(TERRALIB_MOD_ADDRESSGEOCODING_QT_ENABLED)
-  add_subdirectory(terralib_mod_addressgeocoding_qt)
-endif()
-
-if(TERRALIB_MOD_QT_APF_ENABLED)
-  add_subdirectory(terralib_mod_qt_apf)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_CELLSPACE_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_cellspace)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_ADO_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_ado)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_GDAL_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_gdal)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_TERRALIB4_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_terralib4)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_OGR_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_ogr)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_POSTGIS_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_pgis)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_WCS_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_wcs)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_WFS_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_wfs)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_DATASOURCE_WMS_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_datasource_wms)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_ADDRESSGEOCODING_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_addressgeocoding)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_ATTRIBUTEFILL_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_attributefill)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_VP_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_vp)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_RP_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_rp)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_SA_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_sa)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_ST_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_st)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_MOBILE_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_mobile)
-endif()
-
 if(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED)
   add_subdirectory(terralib_mod_qt_plugins_layout)
 endif()
-
-if(TERRALIB_MOD_QT_WIDGETS_ENABLED)
-  add_subdirectory(terralib_mod_qt_widgets)
-endif()
-
-if(TERRALIB_MOD_RASTER_ENABLED)
-  add_subdirectory(terralib_mod_raster)
-endif()
-
-if(TERRALIB_MOD_RP_ENABLED)
-  add_subdirectory(terralib_mod_rp)
-endif()
-
-if(TERRALIB_MOD_SA_CORE_ENABLED)
-  add_subdirectory(terralib_mod_sa_core)
-endif()
-
-if(TERRALIB_MOD_SAM_ENABLED)
-  add_subdirectory(terralib_mod_sam)
-endif()
-
-if(TERRALIB_MOD_SRS_ENABLED)
-  add_subdirectory(terralib_mod_srs)
-endif()
-
-if(TERRALIB_MOD_ST_ENABLED)
-  add_subdirectory(terralib_mod_st)
-endif()
-
-if(TERRALIB_MOD_WCS_ENABLED)
-  add_subdirectory(terralib_mod_wcs)
-endif()
-
-if(TERRALIB_MOD_WFS_ENABLED)
-  add_subdirectory(terralib_mod_wfs)
-endif()
-
-if(TERRALIB_MOD_WMS_CORE_ENABLED)
-  add_subdirectory(terralib_mod_wms_core)
-endif()
-
-if(TERRALIB_MOD_WMS_QT_ENABLED)
-  add_subdirectory(terralib_mod_wms_qt)
-endif()
-
-if(TERRALIB_MOD_STATISTICS_CORE_ENABLED)
-  add_subdirectory(terralib_mod_statistics_core)
-endif()
-
-if(TERRALIB_MOD_STMEMORY_ENABLED)
-  add_subdirectory(terralib_mod_stmemory)
-endif()
-
-if(TERRALIB_MOD_STATISTICS_QT_ENABLED)
-  add_subdirectory(terralib_mod_statistics_qt)
-endif()
-
-if(TERRALIB_MOD_SYMBOLOGY_ENABLED)
-  add_subdirectory(terralib_mod_symbology)
-endif()
-
-if(TERRALIB_MOD_VP_CORE_ENABLED)
-  add_subdirectory(terralib_mod_vp_core)
-endif()
-
-if(TERRALIB_MOD_VP_QT_ENABLED)
-  add_subdirectory(terralib_mod_vp_qt)
-endif()
-
-if(TERRALIB_MOD_SA_QT_ENABLED)
-  add_subdirectory(terralib_mod_sa_qt)
-endif()
-
-if(TERRALIB_MOD_XERCES_ENABLED)
-  add_subdirectory(terralib_mod_xerces)
-endif()
-
-if(TERRALIB_MOD_XLINK_ENABLED)
-  add_subdirectory(terralib_mod_xlink)
-endif()
-
-if(TERRALIB_MOD_XML_ENABLED)
-  add_subdirectory(terralib_mod_xml)
-endif()
-
-if(TERRALIB_MOD_XSD_ENABLED)
-  add_subdirectory(terralib_mod_xsd)
-endif()
-
-if(TERRALIB_MOD_EDIT_CORE_ENABLED)
-  add_subdirectory(terralib_mod_edit_core)
-endif()
-
-if(TERRALIB_MOD_EDIT_QT_ENABLED)
-  add_subdirectory(terralib_mod_edit_qt)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_EDIT_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_edit)
-endif()
-
-if(TERRALIB_TERRAVIEW_ENABLED)
-  add_subdirectory(terraview)
-endif()
- 
-if(TERRALIB_MOD_MNT_CORE_ENABLED)
-  add_subdirectory(terralib_mod_mnt_core)
-endif()
-
-if(TERRALIB_MOD_MNT_QT_ENABLED)
-  add_subdirectory(terralib_mod_mnt_qt)
-endif()
-
-if(TERRALIB_MOD_QT_PLUGINS_MNT_ENABLED)
-  add_subdirectory(terralib_mod_qt_plugins_mnt)
-endif()
-
-#
-# build examples
-#
-
-if(TERRALIB_EXAMPLE_ADO_ENABLED)
-  add_subdirectory(terralib_example_ado)
-endif()
-
-if(TERRALIB_EXAMPLE_ATTRIBUTEFILL_ENABLED)
-  add_subdirectory(terralib_example_attributefill)
-endif()
-
-if(TERRALIB_EXAMPLE_BINDING_LUA_ENABLED)
-  add_subdirectory(terralib_example_bind_lua)
-endif()  
-  
-if(TERRALIB_EXAMPLE_COLORBAR_ENABLED)
-  add_subdirectory(terralib_example_colorbar)
-endif()
-
-if(TERRALIB_EXAMPLE_COMMON_ENABLED)
-  add_subdirectory(terralib_example_common)
-endif()
-  
-if(TERRALIB_EXAMPLE_CPPPLUGIN_ENABLED)
-  add_subdirectory(terralib_example_cppplugin)
-endif()
-
-if(TERRALIB_EXAMPLE_DATAACCESS_ENABLED)
-  add_subdirectory(terralib_example_dataaccess)
-endif()
-
-if(TERRALIB_EXAMPLE_FACTORY_ENABLED)
-  add_subdirectory(terralib_example_factory)
-endif()
-
-if(TERRALIB_EXAMPLE_GEOMETRY_ENABLED)
-  add_subdirectory(terralib_example_geometry)
-endif()
-
-if(TERRALIB_EXAMPLE_GRAPH_ENABLED)
-  add_subdirectory(terralib_example_graph)
-endif()
-
-if(TERRALIB_EXAMPLE_HELP_ENABLED)
-  add_subdirectory(terralib_example_help)
-endif()
-
-if(TERRALIB_EXAMPLE_LAYEREXPLORER_ENABLED)
-  add_subdirectory(terralib_example_layerexplorer)
-endif()
-
-if(TERRALIB_EXAMPLE_MAPTOOLS_ENABLED)
-  add_subdirectory(terralib_example_maptools)
-endif()
-
-if(TERRALIB_EXAMPLE_PROGRESS_ENABLED)
-  add_subdirectory(terralib_example_progress)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_CANVAS_ENABLED)
-  add_subdirectory(terralib_example_qt_canvas)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_CHARTS_ENABLED)
-  add_subdirectory(terralib_example_qt_charts)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_DATASOURCE_ENABLED)
-  add_subdirectory(terralib_example_qt_datasource)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_QUERY_ENABLED)
-  add_subdirectory(terralib_example_qt_query)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_RASTER_VISUAL_ENABLED)
-  add_subdirectory(terralib_example_qt_raster_visual)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_RP_ENABLED)
-  add_subdirectory(terralib_example_qt_rp)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_SE_ENABLED)
-  add_subdirectory(terralib_example_qt_se)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_SRS_ENABLED)
-  add_subdirectory(terralib_example_qt_srs)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_TOOLS_ENABLED)
-  add_subdirectory(terralib_example_qt_tools)
-endif()
-
-if(TERRALIB_EXAMPLE_QT_UTILS_ENABLED)
-  add_subdirectory(terralib_example_qt_utils)
-endif()
-
-if(TERRALIB_EXAMPLE_RASTER_ENABLED)
-  add_subdirectory(terralib_example_raster)
-endif()
-
-if(TERRALIB_EXAMPLE_RP_ENABLED)
-  add_subdirectory(terralib_example_rp)
-endif()
-
-if(TERRALIB_EXAMPLE_SAM_ENABLED)
-  add_subdirectory(terralib_example_sam)
-endif()
-
-if(TERRALIB_EXAMPLE_SERIALIZATION_ENABLED)
-  add_subdirectory(terralib_example_serialization)
-endif()
-
-if(TERRALIB_EXAMPLE_SRS_ENABLED)
-  add_subdirectory(terralib_example_srs)
-endif()
-
-if(TERRALIB_EXAMPLE_ST_ENABLED)
-  add_subdirectory(terralib_example_st)
-endif()
-
-if(TERRALIB_EXAMPLE_VP_ENABLED)
-  add_subdirectory(terralib_example_vp)
-endif()
-
-if(TERRALIB_EXAMPLE_XERCES_ENABLED)
-  add_subdirectory(terralib_example_xerces)
-endif()
-
-if(TERRALIB_EXAMPLE_TIN_ENABLED)
-  add_subdirectory(terralib_example_TIN)
-endif()
-
-#
-# build unit test
-#
-
-if(TERRALIB_UNITTEST_COMMON_ENABLED)
-  add_subdirectory(terralib_unittest_common)
-endif()
-
-if(TERRALIB_UNITTEST_DATAACCESS_ENABLED)
-  add_subdirectory(terralib_unittest_dataaccess)
-endif()
-
-if(TERRALIB_UNITTEST_DATATYPE_ENABLED)
-  add_subdirectory(terralib_unittest_datatype)
-endif()
-
-if(TERRALIB_UNITTEST_GEOMETRY_ENABLED)
-  add_subdirectory(terralib_unittest_geometry)
-endif()
-
-if(TERRALIB_UNITTEST_FIXGEOMETRIES_ENABLED)
-  add_subdirectory(terralib_unittest_fixgeometries)
-endif()
-
-if(TERRALIB_UNITTEST_MEMORY_ENABLED)
-  add_subdirectory(terralib_unittest_memory)
-endif()
-
-if(TERRALIB_UNITTEST_RASTER_ENABLED)
-  add_subdirectory(terralib_unittest_raster)
-endif()
-
-if(TERRALIB_UNITTEST_RP_BLENDER_ENABLED)
-  add_subdirectory(terralib_unittest_rp_blender)
-endif()
-
-if(TERRALIB_UNITTEST_RP_CLASSIFIER_ENABLED)
-  add_subdirectory(terralib_unittest_rp_classifier)
-endif()
-
-if(TERRALIB_UNITTEST_RP_ARITHMETIC_OPERATIONS_ENABLED)
-  add_subdirectory(terralib_unittest_rp_arithmetic_operations)
-endif()
-
-if(TERRALIB_UNITTEST_RP_TEXTURE_ENABLED)
-  add_subdirectory(terralib_unittest_rp_texture)
-endif()
-
-if(TERRALIB_UNITTEST_RP_CONTRAST_ENABLED)
-  add_subdirectory(terralib_unittest_rp_contrast)
-endif()
-
-if(TERRALIB_UNITTEST_RP_FILTER_ENABLED)
-  add_subdirectory(terralib_unittest_rp_filter)
-endif()
-
-if(TERRALIB_UNITTEST_RP_FUNCTIONS_ENABLED)
-  add_subdirectory(terralib_unittest_rp_functions)
-endif()
-
-if(TERRALIB_UNITTEST_RP_FUSION_ENABLED)
-  add_subdirectory(terralib_unittest_rp_fusion)
-endif()
-
-if(TERRALIB_UNITTEST_RP_MATRIX_ENABLED)
-  add_subdirectory(terralib_unittest_rp_matrix)
-endif()
-
-if(TERRALIB_UNITTEST_RP_MIXTUREMODEL_ENABLED)
-  add_subdirectory(terralib_unittest_rp_mixturemodel)
-endif()
-
-if(TERRALIB_UNITTEST_RP_MOSAIC_ENABLED)
-  add_subdirectory(terralib_unittest_rp_mosaic)
-endif()
-
-if(TERRALIB_UNITTEST_RP_REGISTER_ENABLED)
-  add_subdirectory(terralib_unittest_rp_register)
-endif()
-
-if(TERRALIB_UNITTEST_RP_SEGMENTER_ENABLED)
-  add_subdirectory(terralib_unittest_rp_segmenter)
-endif()
-
-if(TERRALIB_UNITTEST_RP_SKELETON_ENABLED)
-  add_subdirectory(terralib_unittest_rp_skeleton)
-endif()
-
-if(TERRALIB_UNITTEST_RP_TIEPOINTSLOCATOR_ENABLED)
-  add_subdirectory(terralib_unittest_rp_tiepointslocator)
-endif()
-
-if(TERRALIB_UNITTEST_RP_RADAR_FUNCTIONS_ENABLED)
-  add_subdirectory(terralib_unittest_rp_radar_functions)
-endif()
-
-if(TERRALIB_UNITTEST_SAM_ENABLED)
-  add_subdirectory(terralib_unittest_sam)
-endif()
-
-if(TERRALIB_UNITTEST_SRS_ENABLED)
-  add_subdirectory(terralib_unittest_srs)
-endif()
-
-if(TERRALIB_UNITTEST_VP_ENABLED)
-  add_subdirectory(terralib_unittest_vp)
-endif()
-
 
 #
 # install and targets export
@@ -1286,75 +598,22 @@ endif()
 
 file(GLOB TERRALIB_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/*.h)
 
-install(FILES ${CMAKE_BINARY_DIR}/terralib_buildconfig.h
-              ${CMAKE_BINARY_DIR}/terralib_defines.h
-              ${CMAKE_BINARY_DIR}/terralib_version.h
+install(FILES ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h
+              ${CMAKE_BINARY_DIR}/terralib_layout_version.h
               ${TERRALIB_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib COMPONENT devel)
 
-install(FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib.h
-        DESTINATION ${TERRALIB_DESTINATION_HEADERS} COMPONENT devel)
+install(FILES ${terralib_BINARY_DIR}/pkg/terralib-layout-config.cmake
+              ${terralib_BINARY_DIR}/terralib-layout-config-version.cmake
+        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-layout-${TERRALIB_PKG_VERSION} COMPONENT devel)
 
-if(TERRALIB_BUILD_EXAMPLES_ENABLED)
-  install(FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/examples/Config.h.in
-                ${TERRALIB_ABSOLUTE_ROOT_DIR}/examples/Config.h
-          DESTINATION ${TERRALIB_DESTINATION_EXAMPLES} COMPONENT devel)
-endif()
-
-install(FILES ${terralib_BINARY_DIR}/pkg/terralib-config.cmake
-              ${terralib_BINARY_DIR}/terralib-config-version.cmake
-        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-${TERRALIB_PKG_VERSION} COMPONENT devel)
-
-install(EXPORT terralib-targets
-        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-${TERRALIB_PKG_VERSION}
-        FILE terralib-exports.cmake
-        COMPONENT devel)
+#install(EXPORT terralib-targets
+#        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-layout-${TERRALIB_PKG_VERSION}
+#        FILE terralib-layout-exports.cmake
+#        COMPONENT devel)
 
 install(DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/config
         DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib COMPONENT runtime)
-
-install(DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/icons
-        DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib COMPONENT runtime)
-
-#install(DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/images
-#        DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib COMPONENT runtime)
-
-install ( # -- images folder
-  DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/images
-  DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib 
-  COMPONENT runtime
-  #PATTERN "*icns*" EXCLUDE
-)
-
-if(WIN32)
-  install ( # Application icon on windows system
-    FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/resources/images/ico/terralib-globe.ico
-    DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/images/ico 
-    COMPONENT runtime
-  )
-endif()
-
-install(DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/json
-        DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib COMPONENT runtime)
-
-install(DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/schemas
-        DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib COMPONENT runtime)
-
-#
-# Track dependencies
-#
-if(TERRALIB_TRACK_3RDPARTY_DEPENDENCIES)
-  #set(CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP ON)
-
-  include(InstallRequiredSystemLibraries)
-
-  #install(PROGRAMS ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
-  #        DESTINATION bin
-  #        COMPONENT runtime)
-
-  add_subdirectory(fix_bundle)
-endif()
-
 
 #
 # CPack
@@ -1362,10 +621,10 @@ endif()
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRALIB_ABSOLUTE_ROOT_DIR};/")
 
-configure_file(${terralib_SOURCE_DIR}/terralib-cpack-options.cmake.in
-               ${terralib_BINARY_DIR}/terralibCPackOptions.cmake @ONLY)
+configure_file(${terralib_SOURCE_DIR}/terralib-layout-cpack-options.cmake.in
+               ${terralib_BINARY_DIR}/terralib-layoutCPackOptions.cmake @ONLY)
 
-set(CPACK_PROJECT_CONFIG_FILE ${terralib_BINARY_DIR}/terralibCPackOptions.cmake)
+set(CPACK_PROJECT_CONFIG_FILE ${terralib_BINARY_DIR}/terralib-layout-CPackOptions.cmake)
 
 include(CPack)
 

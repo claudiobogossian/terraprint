@@ -28,7 +28,7 @@
 
 //TerraLib
 #include "AbstractLayoutTool.h"
-#include "../../../../geometry/Point.h"
+#include "terralib/geometry/Point.h"
 
 //STL
 #include <vector>

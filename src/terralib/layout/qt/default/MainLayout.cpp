@@ -26,8 +26,8 @@
 // TerraLib
 #include "MainLayout.h"
 #include "../../../layout/qt/core/Scene.h"
-#include "../../../color/RGBAColor.h"
-#include "../../../geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
+#include "terralib/geometry/Envelope.h"
 #include "OutsideArea.h"
 #include "DisplayDock.h"
 #include "../../../layout/core/pattern/singleton/Context.h"

@@ -31,7 +31,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ENUMS_H
 
 // TerraLib
-#include "../../../common/Singleton.h"
+#include "terralib/common/Singleton.h"
 #include "../Config.h"
 #include "EnumType.h"
 #include "EnumDataType.h"

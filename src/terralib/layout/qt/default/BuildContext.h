@@ -30,7 +30,7 @@
 
 //TerraLib
 #include "../../../layout/qt/core/View.h"
-#include "../../../qt/widgets/canvas/Canvas.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
 
 namespace te
 {

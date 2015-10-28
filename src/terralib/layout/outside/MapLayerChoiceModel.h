@@ -31,7 +31,7 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../core/Config.h"
-#include "../../maptools/AbstractLayer.h"
+#include "terralib/maptools/AbstractLayer.h"
 #include "../core/property/Property.h"
 #include "../core/property/Properties.h"
 

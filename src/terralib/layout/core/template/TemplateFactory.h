@@ -27,7 +27,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TEMPLATE_FACTORY_H
 
 // TerraLib
-#include "../../../common/ParameterizedAbstractFactory.h"
+#include "terralib/common/ParameterizedAbstractFactory.h"
 #include "../../core/Config.h"
 #include "TemplateFactoryParamsCreate.h"
 #include "AbstractTemplate.h"

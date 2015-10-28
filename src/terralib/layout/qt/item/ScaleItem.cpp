@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "ScaleItem.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumScaleType.h"
 #include "../core/ItemUtils.h"
 

@@ -42,12 +42,12 @@
 
 // TerraLib
 #include "../enum/AbstractType.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../Font.h"
 #include "../enum/EnumType.h"
 #include "../Config.h"
 #include "GenericVariant.h"
-#include "../../../geometry/Geometry.h"
+#include "terralib/geometry/Geometry.h"
 
 // STL
 #include <string>

@@ -30,7 +30,7 @@
 
 // TerraLib
 #include "../../core/Config.h"
-#include "../../../geometry/Point.h"
+#include "terralib/geometry/Point.h"
 #include "../../core/property/Properties.h"
 
 // STL

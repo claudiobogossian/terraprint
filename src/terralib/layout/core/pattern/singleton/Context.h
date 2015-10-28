@@ -33,10 +33,10 @@
 // TerraLib
 #include "../../enum/AbstractType.h"
 #include "../../Utils.h"
-#include "../../../../maptools/Canvas.h"
-#include "../../../../geometry/Envelope.h"
+#include "terralib/maptools/Canvas.h"
+#include "terralib/geometry/Envelope.h"
 #include "../../Config.h"
-#include "../../../../common/Singleton.h"
+#include "terralib/common/Singleton.h"
 #include "../../SystematicScaleConfig.h"
 #include "../../PaperConfig.h"
 

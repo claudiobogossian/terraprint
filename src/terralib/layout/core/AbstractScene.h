@@ -29,7 +29,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_SCENE_H
 
 // TerraLib
-#include "../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../core/ContextObject.h"
 #include "Config.h"
 

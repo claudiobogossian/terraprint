@@ -19,7 +19,7 @@
 
 // TerraLib
 #include "ZoomTool.h"
-#include "../../../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "../View.h"
 #include "../Scene.h"
 

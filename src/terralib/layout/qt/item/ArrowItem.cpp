@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "ArrowItem.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumArrowType.h"
 
 // Qt

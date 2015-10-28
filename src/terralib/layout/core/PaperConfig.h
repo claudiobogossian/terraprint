@@ -30,7 +30,7 @@
 
 // TerraLib
 #include "../core/enum/AbstractType.h"
-#include "../../geometry/Envelope.h"
+#include "terralib/geometry/Envelope.h"
 #include "Config.h"
 
 namespace te

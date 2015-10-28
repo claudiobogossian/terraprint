@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "PolygonItem.h"
-#include "../../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 #include "../../item/PolygonModel.h"
 #include "AbstractItem.h"
 

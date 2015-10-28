@@ -32,8 +32,8 @@
 #include "../../core/WorldTransformer.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
-#include "../../../maptools/Utils.h"
-#include "../../../geometry/Utils.h"
+#include "terralib/maptools/Utils.h"
+#include "terralib/geometry/Utils.h"
 
 te::layout::GridGeodesicItem::GridGeodesicItem(AbstractItemController* controller, bool invertedMatrix)
   : GridMapItem(controller, invertedMatrix)

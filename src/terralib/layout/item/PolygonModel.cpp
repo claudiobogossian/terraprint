@@ -31,7 +31,7 @@
 #include "../core/property/Properties.h"
 #include "../core/enum/EnumDataType.h"
 #include "../core/property/Property.h"
-#include "../../color/RGBAColor.h"
+#include "terralib/color/RGBAColor.h"
 
 te::layout::PolygonModel::PolygonModel()
 {

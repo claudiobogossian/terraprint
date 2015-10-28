@@ -27,7 +27,7 @@
 
 // TerraLib
 #include "AbstractEnum.h"
-#include "../../../common/StringUtils.h"
+#include "terralib/common/StringUtils.h"
 
 te::layout::AbstractEnum::AbstractEnum()
 {
