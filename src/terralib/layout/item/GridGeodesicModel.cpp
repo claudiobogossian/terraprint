@@ -30,6 +30,10 @@
 
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/GeodesicGridSettingsConfigProperties.h"
+#include "../core/property/SharedProperties.h"
+#include "../core/property/Properties.h"
+#include "../core/pattern/mvc/AbstractItemView.h"
+#include "../core/pattern/mvc/AbstractItemController.h"
 #include "terralib/common/StringUtils.h"
 #include "terralib/common/UnitOfMeasure.h"
 #include "terralib/srs/SpatialReferenceSystemManager.h"
@@ -59,19 +63,6 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
     property.setName("geographic_box");
     property.setLabel("Geographic Box");
     property.setValue(geographicBox, dataType->getDataTypeEnvelope());
-    m_properties.addProperty(property);
-  }
-  {
-    std::string emptyString;
-
-    Property property(0);
-    property.setName("map_name");
-    property.setLabel("Map Name");
-    property.setValue(emptyString, dataType->getDataTypeStringList());
-
-    Variant v;
-    v.setValue(emptyString, dataType->getDataTypeString());
-    property.addOption(v);
     m_properties.addProperty(property);
   }
   {
@@ -109,16 +100,20 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
     return;
   }
 
+  SharedProperties sharedPropertiesName;
+
   //new properties
   const Property& pNewWidth = subjectModel->getProperty("width");
   const Property& pNewHeight = subjectModel->getProperty("height");
   const Property& pNewWorldBox = subjectModel->getProperty("world_box");
   const Property& pNewSrid = subjectModel->getProperty("srid");
+  const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
 
   //current properties
   const Property& pCurrentWidth = this->getProperty("width");
   const Property& pCurrentHeight = this->getProperty("height");
   const Property& pCurrentGeographicBox = this->getProperty("geographic_box");
+  const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
 
   //new values
   double newWidth = pNewWidth.getValue().toDouble();
@@ -126,11 +121,13 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   int newSrid = pNewSrid.getValue().toInt();
   const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
   te::gm::Envelope newGeographicBox = getWorldBoxInGeographic(newWorldBox, newSrid);
+  const AbstractItemView* newItemObservable = pNewItemObserver.getValue().toGenericVariant().toItem();
 
   //current values
   double currentWidth = pCurrentWidth.getValue().toDouble();
   double currentHeight = pCurrentHeight.getValue().toDouble();
   te::gm::Envelope currentGeographicBox = pCurrentGeographicBox.getValue().toEnvelope();
+  const AbstractItemView* currentItemObservable = pCurrentItemObserver.getValue().toGenericVariant().toItem();
 
   bool doUpdate = false;
   if(newWidth != currentWidth)
@@ -145,7 +142,21 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   {
     doUpdate = true;
   }
-
+  else if (currentItemObservable && newItemObservable)
+  {
+    std::string newName = newItemObservable->getController()->getProperties().getObjectName();
+    std::string currentName = currentItemObservable->getController()->getProperties().getObjectName();
+    if (newName.compare(currentName) != 0)
+    {
+      doUpdate = true;
+    }
+  }
+  else if ((!newItemObservable && currentItemObservable)
+    || (newItemObservable && !currentItemObservable))
+  {
+    doUpdate = true;
+  }
+  
 
   if(doUpdate == true)
   {
@@ -166,6 +177,16 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
     te::gm::Envelope defaultGeographicBox(0, 0, 10000, 10000);
     if(newGeographicBox.equals(defaultGeographicBox) == false)
     {
+      if (!newGeographicBox.isValid())
+      {
+        newGeographicBox = defaultGeographicBox;
+        {
+          Property property(0);
+          property.setName("geographic_box");
+          property.setValue(newGeographicBox, dataType->getDataTypeEnvelope());
+          properties.updateProperty(property);
+        }
+      }
       {
         Property property(0);
         property.setName(settingsConfig.getInitialGridPointX());

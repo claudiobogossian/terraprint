@@ -18,49 +18,51 @@
     */
 
     /*!
-    \file FileEdit.h
+    \file ItemObserverFactory.h
 
     \brief
 
     \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_FILE_EDIT_FACTORY_H 
-#define __TERRALIB_LAYOUT_INTERNAL_FILE_EDIT_FACTORY_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ITEM_OBSERVER_FACTORY_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ITEM_OBSERVER_FACTORY_H
 
+// TerraLib
 #include <QtPropertyBrowser/qtpropertybrowser.h>
-#include "FilePathManager.h"
+#include <QVariant>
+#include "ItemObserverManager.h"
 
 namespace te
 {
   namespace layout
   {
-    class FileEdit;
+    class ItemObserverProperty;
 
-    class FileEditFactory : public QtAbstractEditorFactory<FilePathManager>
+    class ItemObserverFactory : public QtAbstractEditorFactory<ItemObserverManager>
     {
       Q_OBJECT
 
       public:
 
-        FileEditFactory(QObject *parent = 0);
+        ItemObserverFactory(QObject *parent = 0);
 
-        virtual ~FileEditFactory();
+        virtual ~ItemObserverFactory();
 
       protected:
 
-        virtual void connectPropertyManager(FilePathManager *manager);
+        virtual void connectPropertyManager(ItemObserverManager *manager);
 
-        virtual QWidget *createEditor(FilePathManager *manager, QtProperty *property,
+        virtual QWidget *createEditor(ItemObserverManager *manager, QtProperty *property,
           QWidget *parent);
 
-        virtual void disconnectPropertyManager(FilePathManager *manager);
+        virtual void disconnectPropertyManager(ItemObserverManager *manager);
 
       private slots:
 
-        void slotPropertyChanged(QtProperty *property, const QString &value);
+        void slotPropertyChanged(QtProperty *property, const QVariant &value);
 
-        void slotFilterChanged(QtProperty *property, const QString &filter);
+        void slotListNamesChanged(QtProperty *property, const QStringList &names);
 
         void slotSetValue(const QString &value);
 
@@ -68,8 +70,8 @@ namespace te
 
       private:
 
-        QMap<QtProperty *, QList<FileEdit *> >  m_createdEditors;
-        QMap<FileEdit *, QtProperty *>          m_editorToProperty;
+        QMap<QtProperty *, QList<ItemObserverProperty *> >  m_createdEditors;
+        QMap<ItemObserverProperty *, QtProperty *>          m_editorToProperty;
     };
   }
 }

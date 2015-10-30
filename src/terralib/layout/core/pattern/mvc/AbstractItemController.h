@@ -130,6 +130,11 @@ namespace te
         virtual void refresh();
 
         /*!
+          \brief Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+        */
+        virtual void associateChange(const Property& property);
+
+        /*!
           \brief 
         */
         virtual void updateItemPos(const Properties& properties);

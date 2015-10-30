@@ -18,46 +18,46 @@
     */
 
     /*!
-    \file FileEdit.h
+    \file ItemObserverProperty.h
 
     \brief 
 
     \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_FILE_EDIT_H 
-#define __TERRALIB_LAYOUT_INTERNAL_FILE_EDIT_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ITEM_OBSERVER_PROPERTY_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ITEM_OBSERVER_PROPERTY_H
 
 // Qt
 #include <QWidget>
-#include <QLineEdit>
 #include <QString>
+#include <QStringList>
+
+class QComboBox;
 
 namespace te
 {
   namespace layout
   {
-    class FileEdit : public QWidget
+    class ItemObserverProperty : public QWidget
     {
       Q_OBJECT
 
       public:
 
-        FileEdit(QWidget *parent = 0);
+        ItemObserverProperty(QWidget *parent = 0);
 
-        virtual ~FileEdit();
+        virtual ~ItemObserverProperty();
 
-        void setFilePath(const QString &filePath);
+        void setCurrentName(const QString &name);
 
-        QString filePath() const;
+        QString currentName() const;
 
-        void setFilter(const QString &filter);
-
-        QString filter();
-
+        void setNameList(const QStringList & names);
+        
       signals:
 
-        void filePathChanged(const QString &filePath);
+          void currentNameChanged(const QString &name);
 
       protected:
 
@@ -68,15 +68,10 @@ namespace te
         void keyPressEvent(QKeyEvent *e);
 
         void keyReleaseEvent(QKeyEvent *e);
-
-      private slots:
-
-        void buttonClicked();
-
+        
       private:
         
-        QLineEdit* m_lineEdit;
-        QString    m_filter;
+        QComboBox* m_cbNames;
     };
 
   }

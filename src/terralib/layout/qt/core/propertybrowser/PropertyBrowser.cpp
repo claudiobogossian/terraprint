@@ -29,12 +29,11 @@
 #include "PropertyBrowser.h"
 #include "../../../core/property/Properties.h"
 #include "../../../core/enum/Enums.h"
+#include "../../../core/pattern/mvc/AbstractItemView.h"
+#include "../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../core/property/GenericVariant.h"
 #include "VariantPropertiesBrowser.h"
 #include "DialogPropertiesBrowser.h"
-#include "../../../core/pattern/proxy/AbstractProxyProject.h"
-#include "../Scene.h"
-
-// Qt
 #include <QRegExpValidator>
 #include <QRegExp>
 #include <QWidget>
@@ -52,12 +51,15 @@
 
 // STL
 #include <algorithm>    // std::find
+#include "ItemObserverFactory.h"
+#include "ItemObserverManager.h"
 
 te::layout::PropertyBrowser::PropertyBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent) :
   QObject(parent),
   m_propertyEditor(0),
   m_variantPropertiesBrowser(0),
   m_dialogPropertiesBrowser(0),
+  m_scene(scene),
   m_hasWindows(false),
   m_changeQtPropertyVariantValue(false)
 {
@@ -79,7 +81,7 @@ te::layout::PropertyBrowser::~PropertyBrowser()
     delete m_dialogPropertiesBrowser;
     m_dialogPropertiesBrowser = 0;
   }
-
+  
   if(m_propertyEditor)
   {
     delete m_propertyEditor;
@@ -92,18 +94,25 @@ void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProj
   //Qt - The Property Browser
   m_propertyEditor = new QtTreePropertyBrowser;
   
+  // Variant properties
   m_variantPropertiesBrowser = new VariantPropertiesBrowser;
-
   connect(m_variantPropertiesBrowser->getVariantPropertyManager(), SIGNAL(valueChanged(QtProperty*, const QVariant &)),
     this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
 
+  // Dialog properties
   m_dialogPropertiesBrowser = new DialogPropertiesBrowser(scene, proxyProject);
-
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeDlgProperty(Property)));
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(std::vector<Property>)), this, SLOT(onChangeDlgProperty(std::vector<Property>)));
+
+  // Item Observer properties
+  m_itemObserverManager = new ItemObserverManager(scene);
+  connect(m_itemObserverManager, SIGNAL(valueChanged(QtProperty*, const QVariant &)),
+    this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
+  ItemObserverFactory* itemObserverFactory = new ItemObserverFactory;
   
   m_propertyEditor->setFactoryForManager(m_dialogPropertiesBrowser->getStringPropertyManager(), m_dialogPropertiesBrowser->getDlgEditorFactory());
   m_propertyEditor->setFactoryForManager(m_variantPropertiesBrowser->getVariantPropertyManager(), m_variantPropertiesBrowser->getVariantEditorFactory());
+  m_propertyEditor->setFactoryForManager(m_itemObserverManager, itemObserverFactory);
   m_propertyEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_propertyEditor->setResizeMode(QtTreePropertyBrowser::ResizeToContents);
 
@@ -125,6 +134,11 @@ void te::layout::PropertyBrowser::propertyEditorValueChanged( QtProperty *proper
   if(prop.isNull())
   {
     prop = m_dialogPropertiesBrowser->getProperty(property->propertyName().toStdString());
+  }
+
+  if (prop.isNull())
+  {
+    prop = m_itemObserverManager->getProperty(property->propertyName().toStdString());
   }
 
   emit changePropertyValue(prop);
@@ -237,8 +251,9 @@ QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
 
-  if(!dataType)
+  if(!dataType || !objType)
   {
     return 0;
   }
@@ -256,14 +271,32 @@ QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
   else
   {
     QtProperty* pproperty = 0;
-    pproperty = m_dialogPropertiesBrowser->addProperty(property);
-    if(pproperty)
+    GenericVariant gv = property.getValue().toGenericVariant();
+    if (gv.getType() != dataType->getDataTypeItemObserver())
     {
-      addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+      pproperty = m_dialogPropertiesBrowser->addProperty(property);
+      if (pproperty)
+      {
+        addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+      }
+      else
+      {
+        return pproperty;
+      }
     }
     else
     {
-      return pproperty;
+      pproperty = m_itemObserverManager->addProperty(property.getName().c_str());
+      QString val("");
+      if (property.getValue().toGenericVariant().toItem() != 0)
+      {
+        const AbstractItemView* view = property.getValue().toGenericVariant().toItem();
+        const Property& property = view->getController()->getProperty("name");
+        val = property.getValue().toString().c_str();
+      }
+      m_itemObserverManager->setValue(pproperty, val);
+      m_itemObserverManager->setTypeForSearch(pproperty, objType->getMapItem());
+      addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
     }
   }
   m_changeQtPropertyVariantValue = false;
@@ -358,6 +391,11 @@ bool te::layout::PropertyBrowser::updateProperty( Property property )
   
   bool result = m_variantPropertiesBrowser->updateProperty(property);
   
+  if (!result)
+  {
+    bool resultItemObserver = m_itemObserverManager->updateProperty(property);
+  }
+
   m_changeQtPropertyVariantValue = false;
   
   return result;
@@ -400,6 +438,11 @@ te::layout::Properties te::layout::PropertyBrowser::getProperties()
       property = m_dialogPropertiesBrowser->getProperty(prop->propertyName().toStdString());
     }
 
+    if (property.isNull())
+    {
+      property = m_itemObserverManager->getProperty(prop->propertyName().toStdString());
+    }
+
     properties.addProperty(property);
   }
 
@@ -411,10 +454,17 @@ QtProperty* te::layout::PropertyBrowser::findProperty( std::string name )
   QtProperty* prop = 0;
 
   prop = m_variantPropertiesBrowser->findProperty(name);
+  
   if(!prop)
   {
     prop = m_dialogPropertiesBrowser->findProperty(name);
   }
+  
+  if (!prop)
+  {
+    prop = m_itemObserverManager->findProperty(name);
+  }
+
   return prop;
 }
 
