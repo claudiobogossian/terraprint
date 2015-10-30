@@ -433,8 +433,20 @@ void te::layout::OutsideArea::closeMainMenu()
 
 void te::layout::OutsideArea::onSelectionChanged()
 {
+  
   QList<QGraphicsItem*> graphicsItems = m_view->scene()->selectedItems();
   QList<QGraphicsItem*> allItems = m_view->scene()->items();
+
+  Scene* myScene = dynamic_cast<Scene*>(m_view->scene());
+  if (myScene != 0)
+  {
+    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
+    if (subSelectedItem != 0)
+    {
+      graphicsItems.clear();
+      graphicsItems.append(subSelectedItem);
+    }
+  }
 
   //Refresh Property window   
   if(m_dockProperties)
@@ -458,6 +470,14 @@ void te::layout::OutsideArea::onSelectionChanged(QList<QGraphicsItem*> selectedI
   foreach(QGraphicsItem* item, selectedItems) 
   {
     item->setSelected(true);
+    if (item->parentItem() != 0)
+    {
+      AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
+      if (absItem != 0)
+      {
+        absItem->setSubSelection(true);
+      }
+    }
   }
 
   QList<QGraphicsItem*> allItems = m_view->scene()->items();

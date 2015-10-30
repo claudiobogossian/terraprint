@@ -29,6 +29,8 @@
 #include "ItemGroup.h"
 #include "ItemGroupController.h"
 
+#include "../core/Scene.h"
+
 // Qt
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
@@ -36,7 +38,7 @@
 te::layout::ItemGroup::ItemGroup(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItemGroup>(controller, invertedMatrix)
 {
-
+    this->setHandlesChildEvents(true);
 }
 
 te::layout::ItemGroup::~ItemGroup()
@@ -61,6 +63,7 @@ void te::layout::ItemGroup::drawItem( QPainter * painter, const QStyleOptionGrap
 
 QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
 {
+  
   if(change == QGraphicsItem::ItemChildAddedChange)
   {
     ItemGroupController* controller = dynamic_cast<ItemGroupController*>(m_controller);
@@ -72,7 +75,7 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     QGraphicsItem* child = qvariant_cast<QGraphicsItem *>(value);
     if (child != 0)
     {
-      child->setFlag(QGraphicsItem::ItemStacksBehindParent);
+      child->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
     }
   }
   else if (change == QGraphicsItem::ItemChildRemovedChange)
@@ -86,4 +89,3 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
 
   return AbstractItem<QGraphicsItemGroup>::itemChange(change, value);
 }
-

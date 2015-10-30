@@ -71,8 +71,6 @@ namespace te
         */
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-        //virtual void  addToGroup ( QGraphicsItem * item );
-
         /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
          */

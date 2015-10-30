@@ -105,18 +105,23 @@ namespace te
         virtual void setEditionMode(bool editionMode);
 
         bool isEditionMode();
+
+        virtual void setSubSelection(bool selected);
+
+        virtual bool isSubSelected() const;
         
     protected:
 
-        virtual void enterEditionMode();
+      virtual void enterEditionMode() = 0;
 
-        virtual void leaveEditionMode();
+      virtual void leaveEditionMode() = 0;
                 
       protected:
 
         AbstractItemController* m_controller; //!< The controller
         bool                    m_invertedMatrix;
         bool                    m_isEditionMode;
+        bool                    m_subSelected;
     };
   }
 }

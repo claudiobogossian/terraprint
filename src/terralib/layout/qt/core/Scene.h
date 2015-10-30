@@ -155,7 +155,7 @@ namespace te
         */
         virtual bool deleteItem(QGraphicsItem *item);
 
-    /*!
+        /*!
           \brief Method that removes all selected items in the scene and creates a Command to Undo/Redo of type DeleteCommand. The item is removed from the scene, but is not deleted.
         */
         virtual void removeSelectedItems();
@@ -360,6 +360,11 @@ namespace te
         bool isEditionMode();
 
         void setContext(ContextObject context = ContextObject(0,0,0,0));
+
+        /*!
+        \brief Returns the current subselected item. If there is not any subselected item, return 0.
+        */
+        virtual QGraphicsItem* getSubSelectedItem() const;
 
       signals:
 

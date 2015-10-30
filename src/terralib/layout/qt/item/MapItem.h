@@ -135,6 +135,8 @@ namespace te
 
         virtual void doRefresh();
 
+        virtual bool sceneEventFilter(QGraphicsItem * watched, QEvent * event);
+
       protected:
 
         virtual void enterEditionMode();

@@ -609,6 +609,13 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 void te::layout::Scene::redrawSelectionMap()
 {
   QList<QGraphicsItem*> selected = selectedItems();
+
+  QGraphicsItem* subSelectedItem = this->getSubSelectedItem();
+  if (subSelectedItem != 0)
+  {
+    selected.append(subSelectedItem);
+  }
+
   foreach(QGraphicsItem *item, selected) 
   {
     MapItem* mapItem = dynamic_cast<MapItem*>(item);
@@ -622,15 +629,30 @@ void te::layout::Scene::redrawSelectionMap()
 
 void te::layout::Scene::exportItemsToImage(std::string dir)
 {
-  /*
+  const int dpi = 96;
+
   Utils* utils = Context::getInstance().getUtils();
 
   QList<QGraphicsItem*> selected = selectedItems();
   foreach(QGraphicsItem *item, selected) 
   {
-    if(item)
-    {
-      ItemObserver* it = dynamic_cast<ItemObserver*>(item);
+    /*
+    QRectF rectInItemCS = item->boundingRect();
+    QRectF rectInSceneCS = item->mapRectToScene(rectInItemCS); //rect in Millimeters
+
+    QSizeF size = rectInSceneCS.size(); //size in Millimeters
+    double widthInches = size.width() / 25.4;
+    double heightInches = size.height() / 25.4;
+    
+    double widthPixels = widthInches * dpi;
+    double heightPixels = heightInches * dpi;
+
+    
+    QImage image(widthPixels, heightPixels, QImage::Format_ARGB32);
+    */
+
+      
+    /*ItemObserver* it = dynamic_cast<ItemObserver*>(item);
       if(it)
       {
         QImage* img = 0;
@@ -659,10 +681,8 @@ void te::layout::Scene::exportItemsToImage(std::string dir)
 
         if(img)
           delete img;        
-      }
-    }
+      }*/
   }
-  */
 }
 
 void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
@@ -683,7 +703,14 @@ void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
 
 void te::layout::Scene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
 {
+  QGraphicsItem* currentSubSelectedItem = getSubSelectedItem();
   QGraphicsScene::mousePressEvent(mouseEvent);
+  QGraphicsItem* newSubSelectedItem = getSubSelectedItem();
+
+  if (currentSubSelectedItem != newSubSelectedItem)
+  {
+    emit selectionChanged();
+  }
 
   if (m_isEditionMode) // Don't have move event in edition mode
   {
@@ -1158,16 +1185,23 @@ bool te::layout::Scene::isEditionMode()
 
 bool te::layout::Scene::enterEditionMode()
 {
-  if (!mouseGrabberItem())
+  QGraphicsItem* item = mouseGrabberItem();
+
+  QGraphicsItem* subSelectedItem = this->getSubSelectedItem();
+  if (subSelectedItem != 0)
+  {
+    item = subSelectedItem;
+  }
+  if (item == 0)
   {
     return false;
   }
 
-  AbstractItemView* item = dynamic_cast<AbstractItemView*>(mouseGrabberItem());
-  if (!item)
+  AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
+  if (!absItem)
     return false;
 
-  const Property& property = item->getController()->getProperty("editable");
+  const Property& property = absItem->getController()->getProperty("editable");
   if (property.getValue().toBool() == false)
   {
     return false;
@@ -1176,7 +1210,7 @@ bool te::layout::Scene::enterEditionMode()
   if (m_currentItemEdition)
     m_currentItemEdition->setEditionMode(false);
 
-  m_currentItemEdition = item;
+  m_currentItemEdition = absItem;
   m_isEditionMode = true;
   m_currentItemEdition->setEditionMode(true);
   update();
@@ -1208,5 +1242,25 @@ void te::layout::Scene::setContext(ContextObject context)
 
     emit updateAllItemsContext();
   }
+}
+
+QGraphicsItem* te::layout::Scene::getSubSelectedItem() const
+{
+  QList<QGraphicsItem*> allItems = this->items();
+  QList<QGraphicsItem*>::const_iterator it = allItems.begin();
+  while (it != allItems.end())
+  {
+    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+    if (item != 0)
+    {
+      if (item->isSubSelected() == true)
+      {
+        return *it;
+      }
+    }
+    ++it;
+  }
+
+  return 0;
 }
 

@@ -416,15 +416,8 @@ void te::layout::View::createItemGroup()
     if(!layoutGroup)
       return;
 
-    //layoutGroup->redraw();
-
-    /*If "enabled=true", QGraphicsItemGroup will handle all the events. For example, 
-    the event of mouse click on the child item won't be handled by child item.
-    If "enabled=false", QGraphicsItem Group will not block the child item's event 
-    and let child item handle it own event.*/
-    group->setHandlesChildEvents(true);
     group->setSelected(true);
-    reload(); // load item group properties
+    reload(); // load item gro1up properties
   }
 }
 
@@ -677,6 +670,18 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
   }
 
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
+
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  if (myScene != 0)
+  {
+    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
+    if (subSelectedItem != 0)
+    {
+      graphicsItems.clear();
+      graphicsItems.append(subSelectedItem);
+    }
+  }
+  
 
   m_menuBuilder->createMenu(graphicsItems);
   m_menuBuilder->menuExec(event->globalX(), event->globalY());

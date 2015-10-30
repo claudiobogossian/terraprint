@@ -127,6 +127,8 @@ QRectF te::layout::TextItem::boundingRect() const
 
 void te::layout::TextItem::enterEditionMode()
 {
+  AbstractItem<QGraphicsTextItem>::enterEditionMode();
+
   //If enabled is true, this item will accept hover events
   setTextInteractionFlags(Qt::TextEditorInteraction);
   setCursor(Qt::IBeamCursor);
@@ -138,6 +140,8 @@ void te::layout::TextItem::enterEditionMode()
 
 void te::layout::TextItem::leaveEditionMode()
 {
+  AbstractItem<QGraphicsTextItem>::leaveEditionMode();
+
   //Necessary clear the selection and focus of the edit 
   //after being completely closed and like this not cause bad behavior.
   QTextCursor cursor(textCursor());

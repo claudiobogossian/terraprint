@@ -195,6 +195,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
   }
 
   m_treeWidget->sortItems(0, Qt::AscendingOrder);
+  m_treeWidget->expandAll();
 }
 
 void te::layout::ObjectInspectorOutside::onRemoveProperties( std::vector<std::string> names )
@@ -228,7 +229,7 @@ void te::layout::ObjectInspectorOutside::selectItems( QList<QGraphicsItem*> grap
 
     QString qName(name.c_str()); 
 
-    QList<QTreeWidgetItem*> treeItems = m_treeWidget->findItems(qName, Qt::MatchExactly, 0);
+    QList<QTreeWidgetItem*> treeItems = m_treeWidget->findItems(qName, Qt::MatchExactly | Qt::MatchRecursive, 0);
     foreach(QTreeWidgetItem* treeItem, treeItems) 
     {
       treeItem->setSelected(true);

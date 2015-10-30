@@ -291,6 +291,8 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
 
 void te::layout::MapItem::enterEditionMode()
 {
+  AbstractItem<QGraphicsObject>::enterEditionMode();
+
   //we now install the visualization tools in the map display and forward all the mouse and keyboards events to it
   if(m_pan == 0)
   {
@@ -305,11 +307,19 @@ void te::layout::MapItem::enterEditionMode()
   m_mapDisplay->installEventFilter(m_zoomWheel);
 
   this->setCursor(Qt::OpenHandCursor);
+
+
+  if(parentItem() != 0)
+  {
+    parentItem()->setHandlesChildEvents(false);
+  }
 }
 
 void te::layout::MapItem::leaveEditionMode()
 {
-  //we now unistall the visualization tools from the map display and no more events will be forward to it
+  AbstractItem<QGraphicsObject>::leaveEditionMode();
+
+  //we now uninstall the visualization tools from the map display and no more events will be forward to it
   if(m_pan != 0)
   {
     m_mapDisplay->removeEventFilter(m_pan);
@@ -476,4 +486,10 @@ void te::layout::MapItem::drawTilesMap(QPainter* painter)
   }
 
   painter->restore();
+}
+
+bool te::layout::MapItem::sceneEventFilter(QGraphicsItem * watched, QEvent * event)
+{
+  AbstractItem<QGraphicsObject>::sceneEventFilter(watched, event);
+  return true;
 }

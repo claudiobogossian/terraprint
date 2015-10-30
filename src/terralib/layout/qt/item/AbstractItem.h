@@ -129,7 +129,11 @@ namespace te
         /*!
         \brief Reimplemented from QGraphicsItem. World coordinates(mm).
         */
-        virtual bool  contains(const QPointF & point) const;
+        virtual bool contains(const QPointF & point) const;
+
+        virtual void enterEditionMode();
+
+        virtual void leaveEditionMode();
 
       protected:
 
@@ -209,7 +213,7 @@ namespace te
 
         virtual void resized();
 
-      protected:
+     protected:
 
         //resize
         QRectF            m_rect;
@@ -218,6 +222,7 @@ namespace te
         QPointF           m_finalCoord;
         LayoutAlign       m_enumSides;
         Action            m_currentAction;
+
     };
 
     template <class T>
@@ -333,7 +338,7 @@ namespace te
       drawFrame(painter);
 
       //Draws the selection
-      if (option->state & QStyle::State_Selected)
+      if (option->state & QStyle::State_Selected || m_subSelected == true)
       {
         drawSelection(painter);
       }
@@ -344,8 +349,28 @@ namespace te
     template <class T>
     inline bool te::layout::AbstractItem<T>::contains(const QPointF & point) const
     {
-      te::gm::Coord2D coord(point.x(), point.y());
-      return m_controller->contains(coord);
+      //te::gm::Coord2D coord(point.x(), point.y());
+      return T::contains(point);
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::enterEditionMode()
+    {
+      if (T::parentItem() != 0)
+      {
+        T::parentItem()->setHandlesChildEvents(false);
+        this->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
+      }
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::leaveEditionMode()
+    {
+      if (T::parentItem() != 0)
+      {
+        T::parentItem()->setHandlesChildEvents(true);
+        this->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
+      }
     }
 
     template <class T>
@@ -566,6 +591,24 @@ namespace te
           m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
         }
       }
+      else if (change == QGraphicsItem::ItemSelectedHasChanged)
+      {
+        if (T::isSelected() == false)
+        {
+          //we remove the subSelection of the children
+          QList<QGraphicsItem*>	children = T::childItems();
+          QList<QGraphicsItem*>::iterator it = children.begin();
+          while (it != children.end())
+          {
+            AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+            if (item != 0 && item->isSubSelected() == true)
+            {
+              item->setSubSelection(false);
+            }
+            ++it;
+          }
+        }
+      }
       return T::itemChange(change, value);
     }
 
@@ -629,14 +672,54 @@ inline bool te::layout::AbstractItem<T>::checkTouchesCorner( const double& x, co
 
 template <class T>
 inline void te::layout::AbstractItem<T>::mousePressEvent( QGraphicsSceneMouseEvent * event )
-{  
+{
+  bool wasSelected = T::isSelected();
   T::mousePressEvent(event);
+  bool continuedSelected = T::isSelected();
 
-  if(isEditionMode() == true)
+  if (isEditionMode() == true)
   {
     return;
   }
-  
+
+  if (event->button() & Qt::LeftButton)
+  {
+    QList<QGraphicsItem*>	children = T::childItems();
+    QList<QGraphicsItem*>::iterator it = children.begin();
+    while (it != children.end())
+    {
+      AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+      if (item != 0 && item->isSubSelected() == true)
+      {
+        item->setSubSelection(false);
+      }
+
+      ++it;
+    }
+
+    if (wasSelected == true && continuedSelected == true)
+    {
+      //we try to select the children
+      QList<QGraphicsItem*>	children = T::childItems();
+      QList<QGraphicsItem*>::iterator it = children.begin();
+      while (it != children.end())
+      {
+        QPointF childrenPos = (*it)->mapFromParent(event->pos());
+        if ((*it)->contains(childrenPos))
+        {
+          AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+          if (item != 0)
+          {
+            item->setSubSelection(true);
+            break;
+          }
+        }
+        ++it;
+      }
+    }
+  }
+
+    
   //checks if the item is resizable.
   const Property& property = m_controller->getProperty("resizable");
   if (property.getValue().toBool() == true)

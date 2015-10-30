@@ -8,6 +8,7 @@ te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controlle
   : m_controller(controller)
   , m_invertedMatrix(invertedMatrix)
   , m_isEditionMode(false)
+  , m_subSelected(false)
 {
   
 }
@@ -64,14 +65,15 @@ bool te::layout::AbstractItemView::isEditionMode()
   return m_isEditionMode;
 }
 
-void te::layout::AbstractItemView::enterEditionMode()
+void te::layout::AbstractItemView::setSubSelection(bool selected)
 {
-  //do nothing
+  m_subSelected = selected;
+  refresh();
 }
 
-void te::layout::AbstractItemView::leaveEditionMode()
+bool te::layout::AbstractItemView::isSubSelected() const
 {
-  //do nothing
+  return m_subSelected;
 }
 
 
