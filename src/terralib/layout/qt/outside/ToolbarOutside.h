@@ -73,7 +73,7 @@ namespace te
 
     public:
 
-      ToolbarOutside(AbstractOutsideController* controller);
+      ToolbarOutside(AbstractOutsideController* controller, Scene* scene);
 
       virtual ~ToolbarOutside();
       
@@ -470,6 +470,8 @@ namespace te
       QAction* m_actionObjectToImageButton;
       QAction* m_actionExitButton;
       QAction* m_actionExportToPDFButton;
+
+      Scene* m_scene;
     };
   }
 }

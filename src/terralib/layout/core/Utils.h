@@ -34,6 +34,7 @@
 #include "terralib/maptools/WorldDeviceTransformer.h"
 #include "terralib/common/UnitOfMeasure.h"
 #include "terralib/maptools/Enums.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
 #include "Config.h"
 
 // STL
@@ -56,6 +57,7 @@ namespace te
     class PaperConfig;
     class Properties;
     class WorldTransformer;
+    class Scene;
 
     /*!
       \brief Utility class with functions to manipulate the canvas and conversion between projections.
@@ -69,7 +71,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        Utils();
+        Utils(Scene* scene, te::qt::widgets::Canvas* canvas);
 
         /*!
           \brief Destructor
@@ -339,7 +341,9 @@ namespace te
         
       protected:
 
-        bool                    m_applyZoom; //!<
+        bool                      m_applyZoom; //!<
+        Scene*                    m_scene;
+        te::qt::widgets::Canvas*  m_canvas;
     };
   }
 }

@@ -25,15 +25,18 @@
 
 // TerraLib
 #include "OutsideFactoryParamsCreate.h"
+#include "../../../Scene.h"
+#include "../../../../../core/pattern/proxy/AbstractProxyProject.h"
 
 te::layout::OutsideFactoryParamsCreate::OutsideFactoryParamsCreate(const OutsideFactoryParamsCreate& rhs)
 {
   this->operator=(rhs);
 }
 
-te::layout::OutsideFactoryParamsCreate::OutsideFactoryParamsCreate()
+te::layout::OutsideFactoryParamsCreate::OutsideFactoryParamsCreate(te::layout::Scene* scene, AbstractProxyProject* proxyProject)
 {
-
+  m_scene = scene;
+  m_proxyProject = proxyProject;
 }
 
 te::layout::OutsideFactoryParamsCreate::~OutsideFactoryParamsCreate()
@@ -51,5 +54,14 @@ void te::layout::OutsideFactoryParamsCreate::reset() throw(te::common::Exception
   //do nothing
 }
 
+te::layout::Scene* te::layout::OutsideFactoryParamsCreate::getScene()
+{
+  return m_scene;
+}
 
+
+te::layout::AbstractProxyProject* te::layout::OutsideFactoryParamsCreate::getProxyProject()
+{
+  return m_proxyProject;
+}
 

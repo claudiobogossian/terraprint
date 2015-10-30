@@ -37,6 +37,7 @@
 #include "terralib/se/Symbolizer.h"
 #include "terralib/se/PolygonSymbolizer.h"
 #include "terralib/se/Fill.h"
+#include "../core/Scene.h"
 
 // Qt
 #include <QPixmap>
@@ -66,8 +67,8 @@ te::layout::LegendItem::~LegendItem()
 
 void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  te::layout::Utils* utils = Context::getInstance().getUtils(); 
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
+  Utils utils = ((Scene*) this->scene())->getUtils();
+  te::map::Canvas* canvas = ((Scene*) this->scene())->getCanvas();
 
   const Property& pFont = m_controller->getProperty("font");
   const Property& pFontColor = m_controller->getProperty("font_color");
@@ -83,11 +84,11 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
   double displacementBetweenSymbolsAndText(2);
   double symbolsize(5);
 
-  int borderDisplacementInPixels = utils->mm2pixel(borderDisplacement);
-  int dispBetweenSymbolAndTextInPixels = utils->mm2pixel(displacementBetweenSymbolsAndText);
-  int dispBetweenSymbolsInPixels = utils->mm2pixel(displacementBetweenSymbols);
-  int dispBetweenTitleAndSymbolsInPixels = utils->mm2pixel(displacementBetweenTitleAndSymbols);
-  int symbolSizeInPixels = utils->mm2pixel(symbolsize);
+  int borderDisplacementInPixels = utils.mm2pixel(borderDisplacement);
+  int dispBetweenSymbolAndTextInPixels = utils.mm2pixel(displacementBetweenSymbolsAndText);
+  int dispBetweenSymbolsInPixels = utils.mm2pixel(displacementBetweenSymbols);
+  int dispBetweenTitleAndSymbolsInPixels = utils.mm2pixel(displacementBetweenTitleAndSymbols);
+  int symbolSizeInPixels = utils.mm2pixel(symbolsize);
   
   if(layerList.empty() == true)
   {
@@ -117,7 +118,7 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
   double wtxtInPixels = 0.;
   double htxtInPixels = 0.;
 
-  utils->textBoundingBox(wtxtInPixels, htxtInPixels, title);
+  utils.textBoundingBox(wtxtInPixels, htxtInPixels, title);
   
   QRectF rectTitle (x1, y1, wtxtInPixels, htxtInPixels);
 
@@ -167,7 +168,7 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
       painter->setFont(qfont);
       painter->setBrush(qFontColor);
 
-      utils->textBoundingBox(wtxtInPixels, htxtInPixels, label);
+      utils.textBoundingBox(wtxtInPixels, htxtInPixels, label);
 
       QRectF labelRect (labelX1, y1, wtxtInPixels, htxtInPixels);
       QString qLabel (label.c_str());

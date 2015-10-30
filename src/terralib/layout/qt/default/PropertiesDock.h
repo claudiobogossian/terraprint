@@ -41,13 +41,16 @@ namespace te
   namespace layout
   {
     class PropertiesOutside;
+    class Scene;
+    class AbstractProxyProject;
+
     class PropertiesDock : public QDockWidget
     {
       Q_OBJECT //for slots/signals
 
     public:
 
-      PropertiesDock( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+      PropertiesDock(AbstractProxyProject* proxyProject, Scene* scene, QWidget * parent = 0, Qt::WindowFlags flags = 0 );
       virtual ~PropertiesDock();
 
       te::layout::PropertiesOutside* getPropertiesOutside();
@@ -56,7 +59,7 @@ namespace te
 
       virtual void  closeEvent ( QCloseEvent * event );
 
-      virtual void create();
+      virtual void create(AbstractProxyProject* proxyProject, Scene* scene);
 
       te::layout::PropertiesOutside* m_properties;
 

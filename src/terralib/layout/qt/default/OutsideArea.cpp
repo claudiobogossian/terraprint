@@ -36,6 +36,7 @@
 #include "../../../layout/qt/core/BuildGraphicsItem.h"
 #include "../../../layout/qt/core/BuildGraphicsOutside.h"
 #include "terralib/layout/qt/outside/ToolbarController.h"
+#include "../../core/pattern/proxy/AbstractProxyProject.h"
 
 // STL
 #include <string>
@@ -46,7 +47,7 @@
 #include <QAction>
 #include <QStatusBar>
 
-te::layout::OutsideArea::OutsideArea( te::layout::View* view, QStatusBar* status) :
+te::layout::OutsideArea::OutsideArea(AbstractProxyProject* proxyProject, te::layout::View* view, QStatusBar* status) :
   m_dockProperties(0),
   m_dockInspector(0),
   m_dockEditTemplate(0),
@@ -66,7 +67,7 @@ te::layout::OutsideArea::OutsideArea( te::layout::View* view, QStatusBar* status
   m_optionDockToolbar("mnu_dock_toolbar"),
   m_optionDockEditTemplate("mnu_dock_edit_template")
 {
-  init();
+  init(proxyProject);
 }
 
 te::layout::OutsideArea::~OutsideArea()
@@ -108,7 +109,7 @@ te::layout::OutsideArea::~OutsideArea()
     }
 }
 
-void te::layout::OutsideArea::init()
+void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
 {
   if(m_view)
   {
@@ -123,7 +124,7 @@ void te::layout::OutsideArea::init()
     connect(m_view->scene(), SIGNAL(editionInitialized()), this, SLOT(onEditionInitialized()));
   }
   
-  createPropertiesDock();
+  createPropertiesDock(proxyProject);
 
   createInspectorDock();
   
@@ -154,9 +155,9 @@ void te::layout::OutsideArea::init()
   }
 }
 
-void te::layout::OutsideArea::createPropertiesDock()
+void te::layout::OutsideArea::createPropertiesDock(AbstractProxyProject* proxyProject)
 {
-  m_dockProperties = new PropertiesDock;  
+  m_dockProperties = new PropertiesDock(proxyProject, m_view->getScene());  
   m_dockProperties->setFeatures(QDockWidget::DockWidgetMovable |  
     QDockWidget::DockWidgetFloatable);
 }
@@ -179,7 +180,7 @@ void te::layout::OutsideArea::createToolbar()
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getToolbar());
+  QWidget* widget = buildOutside.createOuside(objectType->getToolbar(), m_view->getScene());
   if(!widget)
   {
     return;
@@ -503,7 +504,7 @@ void te::layout::OutsideArea::onCloseView()
   closeAllDocks();
   closeMainMenu();
   m_view->closeOutsideWindows();
-  emit exit();
+  //emit exit();
 }
 
 void te::layout::OutsideArea::onRefreshStatusBar()

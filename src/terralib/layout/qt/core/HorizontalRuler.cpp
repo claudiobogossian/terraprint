@@ -118,12 +118,7 @@ void te::layout::HorizontalRuler::drawRuler( QGraphicsView* view, QPainter* pain
 
 void te::layout::HorizontalRuler::drawMarks( QGraphicsView* view, QPainter* painter, QRectF rect, double zoomFactor )
 {
-  Utils* utils = Context::getInstance().getUtils();
-
-  if(!utils)
-  {
-    return;
-  }
+  Utils utils = ((Scene*) view->scene())->getUtils();
 
   painter->save();
 
@@ -152,7 +147,7 @@ void te::layout::HorizontalRuler::drawMarks( QGraphicsView* view, QPainter* pain
       std::stringstream ss;//create a stringstream
       ss << i;//add number to the stream
 
-      utils->textBoundingBox(wtxt, htxt, ss.str());
+      utils.textBoundingBox(wtxt, htxt, ss.str());
 
       QPointF pTranslate((double)i, y + m_spacingLineText * zoomFactor);
 

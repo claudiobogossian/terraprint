@@ -203,8 +203,8 @@ te::gm::Envelope te::layout::GridGeodesicModel::getWorldBoxInGeographic(const te
   te::gm::Envelope worldBoxGeographic = worldBox;
 
   //About units names (SI): terralib5\resources\json\uom.json 
-  Utils* utils = Context::getInstance().getUtils();
-  te::common::UnitOfMeasurePtr unitPtr = utils->unitMeasure(srid);
+  Utils utils(0, 0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(srid);
 
   if(!unitPtr)
     return worldBoxGeographic;
@@ -214,7 +214,7 @@ te::gm::Envelope te::layout::GridGeodesicModel::getWorldBoxInGeographic(const te
 
   if(unitPtrStr.compare("DEGREE") != 0)
   {
-    std::string proj4 = utils->proj4DescToGeodesic();
+    std::string proj4 = utils.proj4DescToGeodesic();
 
     // Get the id of the projection of destination 
     std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4); 

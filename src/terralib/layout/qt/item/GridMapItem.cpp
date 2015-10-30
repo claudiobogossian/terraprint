@@ -30,6 +30,7 @@
 
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../core/ItemUtils.h"
+#include "../core/Scene.h"
 
 te::layout::GridMapItem::GridMapItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
@@ -482,10 +483,10 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
   int textPointSize = pTextPointSize.getValue().toInt();
   const std::string& fontFamily = pTextFontFamily.getValue().toString();
   
-  ItemUtils* itemUtils = Context::getInstance().getItemUtils();
+  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
  //creates the rect
-  QPainterPath textObject = itemUtils->textToVector(text.c_str(), painter->font(), myScene->getContext().getDpiX(), point, rotate);
+  QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), myScene->getContext().getDpiX(), point, rotate);
 
 //draws the rect
   painter->save();

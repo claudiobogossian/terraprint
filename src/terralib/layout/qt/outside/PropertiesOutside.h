@@ -61,6 +61,8 @@ namespace te
     class MapModel;
     class PropertiesUtils;
     class AbstractOutsideController;
+    class Scene;
+    class AbstractProxyProject;
 
     /*!
     \brief Properties tree for any item, MVC component, using Qt for presentation and editing.
@@ -75,7 +77,7 @@ namespace te
 
       public:
 
-        PropertiesOutside(AbstractOutsideController* controller, PropertyBrowser* propertyBrowser = 0);
+        PropertiesOutside(Scene* scene, AbstractProxyProject* proxyProject, AbstractOutsideController* controller, PropertyBrowser* propertyBrowser = 0);
 
         virtual ~PropertiesOutside();
         
@@ -127,7 +129,8 @@ namespace te
         bool m_updatingValues;
         SharedProperties* m_sharedProps;
         PropertiesUtils*      m_propUtils;
-      };
+        Scene*                m_scene;
+    };
   }
 }
 

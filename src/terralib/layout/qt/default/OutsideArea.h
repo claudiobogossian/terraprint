@@ -52,6 +52,7 @@ namespace te
     class ObjectInspectorDock;
     class EditTemplateDock;
     class EnumType;
+    class AbstractProxyProject;
 
     class OutsideArea : public QObject
     {
@@ -59,7 +60,7 @@ namespace te
 
     public:
 
-      OutsideArea(te::layout::View* view, QStatusBar* status = 0);
+      OutsideArea(AbstractProxyProject* proxyProject, te::layout::View* view, QStatusBar* status = 0);
       virtual ~OutsideArea();
 
       PropertiesDock* getPropertiesDock();
@@ -97,8 +98,8 @@ namespace te
 
     protected:
 
-      virtual void init();
-      virtual void createPropertiesDock();
+      virtual void init(AbstractProxyProject* proxyProject);
+      virtual void createPropertiesDock(AbstractProxyProject* proxyProject);
       virtual void createInspectorDock();
       virtual void createToolbar();
       virtual void createMainMenu();

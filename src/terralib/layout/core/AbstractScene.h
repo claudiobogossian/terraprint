@@ -39,6 +39,8 @@ namespace te
   {
     class AbstractItemView;
     class ItemObserver;
+    class ItemUtils;
+    class Utils;
 
   /*!
       \class AbstractScene
@@ -95,7 +97,11 @@ namespace te
           \return most important common data between te::layout::View and te::layout::Scene
         */
         virtual const ContextObject& getContext() const = 0 ;
-                        
+
+        virtual ItemUtils getItemUtils() = 0;
+
+        virtual Utils getUtils() = 0;
+
       protected:
         
     /*!
@@ -110,7 +116,7 @@ namespace te
       \param hMM height of physical screen in millimeters
         */
         virtual void calculateWindow(double wMM, double hMM) = 0;
-        
+
       protected:
 
         te::gm::Envelope  m_box; //!< scene box.

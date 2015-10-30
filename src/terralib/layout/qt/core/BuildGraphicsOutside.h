@@ -40,6 +40,9 @@ namespace te
 {
   namespace layout
   {
+    class Scene;
+    class AbstractProxyProject;
+
   /*!
   \brief Class responsible for creating or building widgets. All objects are children of Qwidget and OutsideObserver.
     Only place where the model and the controller is instantiated and the MVC outside is created.
@@ -68,7 +71,7 @@ namespace te
       
           \return item value
         */
-        QWidget* createOuside(te::layout::EnumType* type);
+        QWidget* createOuside(te::layout::EnumType* type, Scene* scene = 0, AbstractProxyProject* proxyProject = 0);
     };
   }
 }

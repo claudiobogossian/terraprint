@@ -34,6 +34,7 @@
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "terralib/maptools/Utils.h"
 #include "terralib/geometry/Utils.h"
+#include "../core/Scene.h"
 
 te::layout::GridGeodesicItem::GridGeodesicItem(AbstractItemController* controller, bool invertedMatrix)
   : GridMapItem(controller, invertedMatrix)
@@ -62,8 +63,6 @@ void te::layout::GridGeodesicItem::drawGrid(QPainter* painter)
   {
     currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
   }
-  
-  Utils* utils = Context::getInstance().getUtils();
 
   // Box necessario para desenhar a curvatura
   te::gm::Envelope planarBox = geographicBox;
@@ -116,7 +115,7 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   clear();
 
-  Utils* utils = Context::getInstance().getUtils();
+  Utils utils = ((Scene*) this->scene())->getUtils();
 
   // Box necessario para desenhar a curvatura
   te::gm::Envelope planarBox = geographicBox;
@@ -126,7 +125,7 @@ void te::layout::GridGeodesicItem::calculateGrid()
     return;
   }
 
-  utils->remapToPlanar(&planarBox, zone);
+  utils.remapToPlanar(&planarBox, zone);
 
   calculateVertical(geographicBox, planarBox, newBoxMM);
   calculateHorizontal(geographicBox, planarBox, newBoxMM);
@@ -220,21 +219,12 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   bool bRightRotate = pRightRotate.getValue().toBool();
 
   // Draw a horizontal line and the y coordinate change(vertical)
+  Utils utils = ((Scene*) this->scene())->getUtils();
+  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
-  Utils* utils = Context::getInstance().getUtils();
-  ItemUtils* itemUtils = Context::getInstance().getItemUtils();
+  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
 
-  int dpi = 72.;
-  if (scene() != 0)
-  {
-    AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene());
-    if (myScene != 0)
-    {
-      dpi = myScene->getContext().getDpiX();
-    }
-  }
-
-  WorldTransformer transf = utils->getTransformGeo(planarBox, boxMM);
+  WorldTransformer transf = utils.getTransformGeo(planarBox, boxMM);
   transf.setMirroring(false);
 
   int zone = te::map::CalculatePlanarZone(geoBox);
@@ -256,12 +246,12 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
     te::gm::Envelope env(geoBox.getLowerLeftX() - 3 * horizontalGap, y1, geoBox.getUpperRightX() + 3 * horizontalGap, y1);
 
     te::gm::LinearRing* line = 0;
-    line = utils->addCoordsInX(env, y1, verticalGap);
+    line = utils.addCoordsInX(env, y1, verticalGap);
     
     // Line curvature: of latlong to planar;
     // Draw line: planar to mm
-    utils->remapToPlanar(line, zone);
-    utils->convertToMillimeter(transf, line);
+    utils.remapToPlanar(line, zone);
+    utils.convertToMillimeter(transf, line);
 
     //here we clip the line using the boundaries of the item in MM
     te::gm::Geometry* rectPolygon = te::gm::GetGeomFromEnvelope(&boxMM, line->getSRID());
@@ -295,10 +285,10 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
     m_horizontalLines.push_back(gridLine);
 
-    std::string text = utils->convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText);
+    std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText);
     QString qText = text.c_str();
 
-    QPainterPath textObject = itemUtils->textToVector(qText, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = itemUtils.textToVector(qText, ft, dpi, QPointF(), 0);
 
     QRectF rectF(textObject.boundingRect());
 
@@ -350,20 +340,12 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
 
   // Draw a vertical line and the x coordinate change(horizontal)
 
-  Utils* utils = Context::getInstance().getUtils();
-  ItemUtils* itemUtils = Context::getInstance().getItemUtils();
+  Utils utils = ((Scene*) this->scene())->getUtils();
+  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
-  int dpi = 72.;
-  if (scene() != 0)
-  {
-    AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene());
-    if (myScene != 0)
-    {
-      dpi = myScene->getContext().getDpiX();
-    }
-  }
+  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
   
-  WorldTransformer transf = utils->getTransformGeo(planarBox, boxMM);
+  WorldTransformer transf = utils.getTransformGeo(planarBox, boxMM);
   transf.setMirroring(false);
 
   int zone = te::map::CalculatePlanarZone(geoBox);
@@ -387,12 +369,12 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   {
     te::gm::Envelope env(x1, geoBox.getLowerLeftY() - 3 * verticalGap, x1, geoBox.getUpperRightY() + 3 * verticalGap);
     te::gm::LinearRing* line = 0;
-    line = utils->addCoordsInY(env, x1, horizontalGap);
+    line = utils.addCoordsInY(env, x1, horizontalGap);
 
     // Line curvature: of latlong to planar;
     // Draw line: planar to mm
-    utils->remapToPlanar(line, zone);
-    utils->convertToMillimeter(transf, line);
+    utils.remapToPlanar(line, zone);
+    utils.convertToMillimeter(transf, line);
 
     //here we clip the line using the boundaries of the item in MM
     te::gm::Geometry* rectPolygon = te::gm::GetGeomFromEnvelope(&boxMM, line->getSRID());
@@ -426,10 +408,10 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     
     m_verticalLines.push_back(gridLine);
 
-    std::string text = utils->convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText);
+    std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText);
     QString qText = text.c_str();
 
-    QPainterPath textObject = itemUtils->textToVector(qText, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = itemUtils.textToVector(qText, ft, dpi, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
 
     //as the grid lines an be curved, texts must only de drawn in the cases that the grid line reaches the top or the botton of the item bounding rect

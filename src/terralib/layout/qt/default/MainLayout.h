@@ -29,8 +29,8 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../../layout/qt/core/View.h"
-#include "BuildContext.h"
 #include "BuildEnums.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
 
 // Qt
 #include <QStatusBar>
@@ -96,8 +96,6 @@ namespace te
 
       protected:
 
-
-
 /*        void createDockLayoutDisplay(te::layout::View* view);*/
 
         void createLayoutContext(int width, int height);
@@ -108,10 +106,10 @@ namespace te
 
         te::layout::View*         m_view;
         QStatusBar*               m_statusBar;
-        te::layout::BuildContext* m_buildContext;
         OutsideArea*              m_outsideArea;
         te::layout::BuildEnums*   m_buildEnums;
-        AbstractProxyProject*             m_proxyProject;
+        AbstractProxyProject*     m_proxyProject;
+        te::qt::widgets::Canvas*  m_canvas;
 
       signals:
 

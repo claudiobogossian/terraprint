@@ -31,6 +31,7 @@
 #include "pattern/factory/outside/OutsideFactory.h"
 #include "pattern/factory/outside/OutsideFactoryParamsCreate.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#include "Scene.h"
 
 // Qt
 #include <QWidget>
@@ -49,11 +50,11 @@ te::layout::BuildGraphicsOutside::~BuildGraphicsOutside()
  
 }
 
-QWidget* te::layout::BuildGraphicsOutside::createOuside( te::layout::EnumType* type )
+QWidget* te::layout::BuildGraphicsOutside::createOuside( te::layout::EnumType* type, te::layout::Scene* scene, te::layout::AbstractProxyProject* proxyProject)
 {
   QWidget* widget = 0;
     
-  OutsideFactoryParamsCreate params;
+  OutsideFactoryParamsCreate params(scene, proxyProject);
 
   std::string name = type->getName();
 

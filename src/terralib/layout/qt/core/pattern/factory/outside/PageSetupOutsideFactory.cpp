@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::PageSetupOutsideFactory::build(Outs
   PageSetupModel* model = new PageSetupModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  PageSetupOutside* view = new PageSetupOutside(controller);
+  PageSetupOutside* view = new PageSetupOutside(controller, params.getScene());
   controller->setView(view);
 
   return view;

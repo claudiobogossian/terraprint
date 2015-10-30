@@ -38,6 +38,7 @@
 #include "../../core/Config.h"
 #include "../item/MovingItemGroup.h"
 #include "AlignItems.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
 
 // STL
 #include <string>
@@ -74,6 +75,8 @@ namespace te
     class ItemObserver;
     class AbstractItemController;
     class ContextObject;
+    class ItemUtils;
+    class Utils;
 
   /*!
     \brief Class representing the scene. This scene is child of QGraphicsScene, part of Graphics View Framework. 
@@ -361,6 +364,14 @@ namespace te
 
         void setContext(ContextObject context = ContextObject(0,0,0,0));
 
+        ItemUtils getItemUtils();
+
+        Utils getUtils();
+
+        void setCanvas(te::qt::widgets::Canvas* canvas);
+
+        te::qt::widgets::Canvas* getCanvas();
+
         /*!
         \brief Returns the current subselected item. If there is not any subselected item, return 0.
         */
@@ -473,6 +484,7 @@ namespace te
         AbstractItemView*                  m_currentItemEdition;
         bool                               m_isEditionMode;
         ContextObject                      m_context;
+        te::qt::widgets::Canvas*           m_canvas;
     };
   }
 }

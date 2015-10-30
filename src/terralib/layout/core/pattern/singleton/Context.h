@@ -82,48 +82,6 @@ namespace te
         void setUnitMetric(LayoutUnitsMetrics unit);
 
         /*!
-          \brief Returns abstract scene for QGraphicsScene class, part of Graphics View Framework.
-      
-          \return scene     
-        */
-        AbstractScene* getScene();
-
-        /*!
-          \brief Change scene, QGraphicsScene class, part of Graphics View Framework.
-      
-          \param scene     
-        */
-        void setScene(AbstractScene* scene);
-                                
-        /*!
-          \brief Returns abstraction of a drawing area.
-      
-          \return abstraction of a drawing area       
-        */
-        te::map::Canvas* getCanvas();
-
-        /*!
-          \brief Change abstraction of a drawing area.
-      
-          \param abstraction of a drawing area       
-        */
-        void setCanvas(te::map::Canvas* canvas);
-
-        /*!
-          \brief Returns pointer with functions to manipulate the canvas and conversion between projections.
-      
-          \return A te::layout::Utils pointer      
-        */
-        Utils* getUtils();
-
-        /*!
-          \brief Change pointer with functions to manipulate the canvas and conversion between projections.
-      
-          \param A te::layout::Utils pointer      
-        */
-        void setUtils(Utils* utils);
-
-        /*!
           \brief Template structure version.
       
           \param version      
@@ -134,34 +92,6 @@ namespace te
 
         void setSystematicScaleConfig(SystematicScaleConfig* scale);
 
-        /*!
-          \brief Change the proxy to provide a surrogate or placeholder for te::qt::af::Project to control access to it
-      
-          \param proxy for te::qt::af::Project       
-        */
-        void setProxyProject(AbstractProxyProject* project);
-
-        /*!
-          \brief Returns proxy to provide a surrogate or placeholder for te::qt::af::Project to control access to it
-      
-          \return proxy for te::qt::af::Project       
-        */
-        AbstractProxyProject* getProxyProject();
-        
-        /*!
-          \brief Change pointer for manipulating items in the scene and vectorization of text and legend.
-      
-          \param A te::layout::ItemUtils pointer      
-        */
-        void setItemUtils(ItemUtils* utils);
-
-        /*!
-          \brief Returns pointer for manipulating items in the scene and vectorization of text and legend.
-      
-          \return A te::layout::ItemUtils pointer      
-        */
-        ItemUtils* getItemUtils();
-        
         private:
       
             /*!
@@ -183,13 +113,8 @@ namespace te
       protected:
 
         LayoutUnitsMetrics            m_unitMetric; //!<
-        AbstractScene*                m_scene; //!< abstract scene for QGraphicsScene class, part of Graphics View Framework.
-        te::map::Canvas*              m_canvas; //!< abstraction of a drawing area
-        Utils*                        m_utils; //!< pointer with functions to manipulate the canvas and conversion between projections
         std::string                   m_version; //!< template structure version
         SystematicScaleConfig*        m_systematicConfig; //!<
-        AbstractProxyProject*         m_proxyProject; //!< provide a surrogate or placeholder for te::qt::af::Project to control access to it
-        ItemUtils*                    m_itemUtils; //!< pointer for manipulating items in the scene and vectorization of text and legend
     };
   }
 }

@@ -52,7 +52,7 @@
 #include <QUndoStack>
 #include <QLineEdit>
 
-te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller) :
+te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller, Scene* scene) :
   QToolBar(0),
   AbstractOutsideView(controller),
   m_comboZoom(0),
@@ -146,7 +146,8 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_actionDrawMapToolButton(0),
   m_actionObjectToImageButton(0),
   m_actionExitButton(0),
-  m_actionExportToPDFButton(0)
+  m_actionExportToPDFButton(0),
+  m_scene(scene)
 {
   setVisible(false);
   setWindowTitle("Layout - Toolbar");
@@ -440,9 +441,7 @@ QComboBox* te::layout::ToolbarOutside::createSceneZoomCombobox()
   connect(m_comboZoom, SIGNAL(activated(const QString &)), controller, SLOT(onComboZoomActivated()));
   connect(m_comboZoom->lineEdit(), SIGNAL(returnPressed()), controller, SLOT(onComboZoomActivated()));
 
-  Scene* sc = getScene();
-
-  ContextObject context = sc->getContext();
+  ContextObject context = m_scene->getContext();
 
   int zoom = context.getZoom();
 
@@ -646,14 +645,8 @@ QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
   QToolButton *btn = createToolButton("Undo/Redo", "Undo/Redo", "");
 
   QMenu* menu = new QMenu(btn);
-  
-  Scene* lScene = getScene();
-  if(!lScene)
-  {
-    return btn;
-  }
 
-  QUndoStack* undoStack = lScene->getUndoStack();
+  QUndoStack* undoStack = m_scene->getUndoStack();
 
   if(!undoStack)
     return 0;
@@ -1246,18 +1239,4 @@ std::string te::layout::ToolbarOutside::getActionSVG()
 {
   return m_actionSVG;
 }
-
-te::layout::Scene* te::layout::ToolbarOutside::getScene()
-{
-  Scene* sc = 0;
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if(!abScene)
-  {
-    return sc;
-  }
-
-  sc = dynamic_cast<Scene*>(abScene);
-  return sc;
-}
-
 

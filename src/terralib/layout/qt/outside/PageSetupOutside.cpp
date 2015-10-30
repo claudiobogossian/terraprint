@@ -45,12 +45,13 @@
 #include <QMessageBox>
 #include <QObjectList>
 
-te::layout::PageSetupOutside::PageSetupOutside(AbstractOutsideController* controller) :
+te::layout::PageSetupOutside::PageSetupOutside(AbstractOutsideController* controller, Scene* scene) :
   QDialog(0),
   AbstractOutsideView(controller),
   m_orientation(te::layout::Portrait),
   m_paperType(te::layout::A4),
-  m_ui(new Ui::PageSetup)
+  m_ui(new Ui::PageSetup),
+  m_scene(scene)
 {
   m_ui->setupUi(this);
 
@@ -97,13 +98,7 @@ te::gm::Coord2D te::layout::PageSetupOutside::getPosition()
 
 void te::layout::PageSetupOutside::load()
 {
-  Scene* sc = getScene();
-  if(!sc)
-  {
-    return;
-  }
-
-  PaperConfig* pConfig = sc->getPaperConfig();
+  PaperConfig* pConfig = m_scene->getPaperConfig();
 
   double w = 0;
   double h = 0;
@@ -115,13 +110,7 @@ void te::layout::PageSetupOutside::load()
 
 void te::layout::PageSetupOutside::configureOrientationPage()
 {
-  Scene* sc = getScene();
-  if(!sc)
-  {
-    return;
-  }
-
-  PaperConfig* pConfig = sc->getPaperConfig();
+  PaperConfig* pConfig = m_scene->getPaperConfig();
 
   m_orientation = pConfig->getPaperOrientantion();
 
@@ -137,13 +126,7 @@ void te::layout::PageSetupOutside::configureOrientationPage()
 
 void te::layout::PageSetupOutside::configurePageSize()
 {
-  Scene* sc = getScene();
-  if(!sc)
-  {
-    return;
-  }
-
-  PaperConfig* pConfig = sc->getPaperConfig();
+  PaperConfig* pConfig = m_scene->getPaperConfig();
 
   m_ui->cmbPageSize->clear();
   int index = 0;
@@ -194,13 +177,7 @@ void te::layout::PageSetupOutside::configurePageSize()
 
 void te::layout::PageSetupOutside::switchSize()
 {
-  Scene* sc = getScene();
-  if(!sc)
-  {
-    return;
-  }
-
-  PaperConfig* pConfig = sc->getPaperConfig();
+  PaperConfig* pConfig = m_scene->getPaperConfig();
 
   double w = 0;
   double h = 0;
@@ -233,13 +210,7 @@ void te::layout::PageSetupOutside::on_cmbPageSize_currentIndexChanged( const QSt
 
 void te::layout::PageSetupOutside::on_pbApply_clicked()
 {
-  Scene* sc = getScene();
-  if(!sc)
-  {
-    return;
-  }
-
-  PaperConfig* pConfig = sc->getPaperConfig();
+  PaperConfig* pConfig = m_scene->getPaperConfig();
   
   if(m_orientation != pConfig->getPaperOrientantion() 
     || m_paperType != pConfig->getPaperType())
@@ -265,17 +236,4 @@ void te::layout::PageSetupOutside::on_rdbPortrait_clicked()
     m_orientation = te::layout::Portrait;
   }
 }
-
-te::layout::Scene* te::layout::PageSetupOutside::getScene()
-{
-  Scene* sc = 0;
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if(!abScene)
-  {
-    return sc;
-  }
-  sc = dynamic_cast<Scene*>(abScene);
-  return sc;
-}
-
 

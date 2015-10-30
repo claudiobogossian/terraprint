@@ -68,7 +68,7 @@
 #include <QDesktopWidget>
 
 te::layout::MenuBuilder::MenuBuilder( QObject * parent ) :
-  DialogPropertiesBrowser(0,0,parent),
+  DialogPropertiesBrowser(parent),
   m_menu(0),
   m_propUtils(0)
 {
@@ -217,7 +217,7 @@ void te::layout::MenuBuilder::changePropertyValue( Property property )
   if(property.getType() == dataType->getDataTypeNone())
     return;
 
-  Scene* lScene = dynamic_cast<Scene*>(Context::getInstance().getScene()); 
+  Scene* lScene = (Scene*) m_graphicsItems.first()->scene(); 
 
   std::vector<QGraphicsItem*> commandItems;
   std::vector<Properties> commandOld;

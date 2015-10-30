@@ -30,15 +30,16 @@
 #include "../../../layout/qt/core/BuildGraphicsOutside.h"
 #include "../../../layout/core/enum/Enums.h"
 #include "../../../layout/qt/outside/PropertiesOutside.h"
+#include "../core/Scene.h"
 
-te::layout::PropertiesDock::PropertiesDock( QWidget * parent, Qt::WindowFlags flags ) :
+te::layout::PropertiesDock::PropertiesDock(AbstractProxyProject* proxyProject, Scene* scene, QWidget * parent, Qt::WindowFlags flags ) :
   QDockWidget(parent, flags)
 {
   setVisible(false);
   setWindowTitle("Properties");
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-  create();
+  create(proxyProject, scene);
 
   setWidget(m_properties);
 }
@@ -48,7 +49,7 @@ te::layout::PropertiesDock::~PropertiesDock()
   
 }
 
-void te::layout::PropertiesDock::create()
+void te::layout::PropertiesDock::create(AbstractProxyProject* proxyProject, te::layout::Scene* scene)
 {
   te::layout::BuildGraphicsOutside buildOutside;
 
@@ -58,7 +59,7 @@ void te::layout::PropertiesDock::create()
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getPropertiesWindow());
+  QWidget* widget = buildOutside.createOuside(objectType->getPropertiesWindow(), scene, proxyProject);
   if(!widget)
   {
     return;

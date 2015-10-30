@@ -33,6 +33,7 @@
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/Utils.h"
+#include "../core/Scene.h"
 
 te::layout::GridPlanarItem::GridPlanarItem(AbstractItemController* controller, bool invertedMatrix)
   : GridMapItem(controller, invertedMatrix)
@@ -134,22 +135,14 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   bool bLeftRotate = pLeftRotate.getValue().toBool();
   bool bRightRotate = pRightRotate.getValue().toBool();
 
-  Utils* utils = Context::getInstance().getUtils();
-  ItemUtils* itemUtils = Context::getInstance().getItemUtils();
+  Utils utils = ((Scene*) this->scene())->getUtils();
+  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
-  int dpi = 72.;
-  if (scene() != 0)
-  {
-    AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene());
-    if (myScene != 0)
-    {
-      dpi = myScene->getContext().getDpiX();
-    }
-  }
+  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
   
   // Draw a horizontal line and the y coordinate change(vertical)
 
-  WorldTransformer transf = utils->getTransformGeo(geoBox, boxMM);
+  WorldTransformer transf = utils.getTransformGeo(geoBox, boxMM);
   transf.setMirroring(false);
 
   double y1 = initVerticalLines(geoBox);
@@ -175,7 +168,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     double number = y1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
 
-    QPainterPath textObject = itemUtils->textToVector(convert, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = itemUtils.textToVector(convert, ft, dpi, QPointF(), 0);
 
     QRectF rectF(textObject.boundingRect());
 
@@ -204,27 +197,17 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
   bool bTopRotate = pTopRotate.getValue().toBool();
   bool bBottomRotate = pBottomRotate.getValue().toBool();
 
-  Utils* utils = Context::getInstance().getUtils();
-  ItemUtils* itemUtils = Context::getInstance().getItemUtils();
+  Utils utils = ((Scene*) this->scene())->getUtils();
+  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
-  int dpi = 72.;
-  if (scene() != 0)
-  {
-    AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene());
-    if (myScene != 0)
-    {
-      dpi = myScene->getContext().getDpiX();
-    }
-  }
+  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
 
   // Draw a vertical line and the x coordinate change(horizontal)
 
-  WorldTransformer transf = utils->getTransformGeo(geoBox, boxMM);
+  WorldTransformer transf = utils.getTransformGeo(geoBox, boxMM);
   transf.setMirroring(false);
 
   double x1 = initHorizontalLines(geoBox);
-
-  utils = Context::getInstance().getUtils();
   
   m_boundingBox.Union(boxMM);
   
@@ -256,7 +239,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     double number = x1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
 
-    QPainterPath textObject = itemUtils->textToVector(convert, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = itemUtils.textToVector(convert, ft, dpi, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
     
     calculateTop(line, rectF, convert, bTopRotate, horizontalDisplacement);

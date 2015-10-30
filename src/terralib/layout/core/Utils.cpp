@@ -45,7 +45,7 @@
 #include "PaperConfig.h"
 #include "property/Properties.h"
 #include "property/Property.h"
-
+#include "../qt/core/Scene.h"
 
 // STL
 #include <math.h> 
@@ -53,8 +53,10 @@
 #include <sstream> 
 #include <exception>
 
-te::layout::Utils::Utils() :
-  m_applyZoom(true)
+te::layout::Utils::Utils(te::layout::Scene* scene, te::qt::widgets::Canvas* canvas) :
+  m_applyZoom(true),
+  m_scene(scene),
+  m_canvas(canvas)
 {
 
 }
@@ -66,9 +68,7 @@ te::layout::Utils::~Utils()
 
 void te::layout::Utils::drawRectW( te::gm::Envelope box )
 {
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
-
-  if(!canvas)
+  if(!m_canvas)
   {
     return;
   }
@@ -84,7 +84,7 @@ void te::layout::Utils::drawRectW( te::gm::Envelope box )
 
   rect->setRingN(0, outRingPtr0);
 
-  canvas->draw(rect);
+  m_canvas->draw(rect);
 
   if(rect)
   {
@@ -95,14 +95,12 @@ void te::layout::Utils::drawRectW( te::gm::Envelope box )
 
 void te::layout::Utils::drawLineW( te::gm::LinearRing* line )
 {
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
-
-  if(!canvas)
+  if(!m_canvas)
   {
     return;
   }
     
-  canvas->draw(line);
+  m_canvas->draw(line);
 }
 
 te::gm::LinearRing* te::layout::Utils::createSimpleLine( te::gm::Envelope box )
@@ -121,9 +119,7 @@ te::color::RGBAColor** te::layout::Utils::getImageW( te::gm::Envelope boxmm )
 {
   te::color::RGBAColor** pixmap = 0;
 
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
-
-  if(!canvas)
+  if(!m_canvas)
   {
     return pixmap;
   }
@@ -132,19 +128,18 @@ te::color::RGBAColor** te::layout::Utils::getImageW( te::gm::Envelope boxmm )
 
   if(boxViewport.isValid())
   {
-    pixmap = canvas->getImage(0, 0, boxViewport.getWidth(), boxViewport.getHeight());
+    pixmap = m_canvas->getImage(0, 0, boxViewport.getWidth(), boxViewport.getHeight());
   }
   return pixmap;
 }
 
 int te::layout::Utils::mm2pixel( double mm )
 {
-  AbstractScene* scene = Context::getInstance().getScene();
-  if(!scene)
+  if(!m_scene)
   {
     return -1;
   }
-  const ContextObject& context = scene->getContext();
+  const ContextObject& context = m_scene->getContext();
 
   int devDpi = context.getDpiX();
   int px = (mm * devDpi) / 25.4 ;
@@ -153,12 +148,11 @@ int te::layout::Utils::mm2pixel( double mm )
 
 double te::layout::Utils::pixel2mm( int pixel )
 {
-  AbstractScene* scene = Context::getInstance().getScene();
-  if(!scene)
+  if(!m_scene)
   {
     return -1;
   }
-  const ContextObject& context = scene->getContext();
+  const ContextObject& context = m_scene->getContext();
 
   double devDpi = (double)context.getDpiX();
   double mm = (pixel / devDpi) * 25.4 ;
@@ -174,9 +168,7 @@ void te::layout::Utils::configCanvas( te::gm::Envelope box, bool resize, bool ap
 
 void te::layout::Utils::changeCanvas( te::gm::Envelope viewport, te::gm::Envelope world, bool resize /*= true*/ )
 {
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
-
-  if(!canvas)
+  if(!m_canvas)
   {
     return;
   }
@@ -185,12 +177,12 @@ void te::layout::Utils::changeCanvas( te::gm::Envelope viewport, te::gm::Envelop
   {
     //Transparent
     te::color::RGBAColor color(255,255,255, 0);
-    canvas->setBackgroundColor(color);
+    m_canvas->setBackgroundColor(color);
 
-    canvas->resize(viewport.getWidth(), viewport.getHeight());
+    m_canvas->resize(viewport.getWidth(), viewport.getHeight());
   }
 
-  canvas->setWindow(world.getLowerLeftX(), world.getLowerLeftY(), 
+  m_canvas->setWindow(world.getLowerLeftX(), world.getLowerLeftY(), 
     world.getUpperRightX(), world.getUpperRightY()); 
 }
 
@@ -212,13 +204,12 @@ te::gm::Envelope te::layout::Utils::viewportBoxFromMM( te::gm::Envelope box )
   int zoom = 100;
   if(m_applyZoom)
   {
-    AbstractScene* scene = Context::getInstance().getScene();
-    if(!scene)
+    if(!m_scene)
     {
       te::gm::Envelope env;
       return env;
     }
-    ContextObject context = scene->getContext();
+    ContextObject context = m_scene->getContext();
     zoom = context.getZoom();
   }
 
@@ -308,9 +299,7 @@ te::gm::LinearRing* te::layout::Utils::addCoordsInY( te::gm::Envelope box, doubl
 
 void te::layout::Utils::textBoundingBox( double &w, double &h, std::string txt )
 {
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
-  
-  if(!canvas)
+  if(!m_canvas)
   {
     return;
   }
@@ -318,7 +307,7 @@ void te::layout::Utils::textBoundingBox( double &w, double &h, std::string txt )
   w = 0;
   h = 0;
 
-  te::gm::Polygon* poly = canvas->getTextBoundary(0, 0, txt, 0);
+  te::gm::Polygon* poly = m_canvas->getTextBoundary(0, 0, txt, 0);
   if(poly)
   {
     //Box = mbr: minimum bounding rectangle
@@ -586,21 +575,19 @@ bool te::layout::Utils::getApplyZoom()
 
 void te::layout::Utils::resetCanvas()
 {
-  te::map::Canvas* canvas = Context::getInstance().getCanvas();
-
-  if(!canvas)
+  if(!m_canvas)
   {
     return;
   }
 
   int size = 1;
 
-  canvas->clear();
-  canvas->setLineWidth(size);
-  canvas->setPointWidth(size);
-  canvas->setPolygonContourWidth(size);
-  canvas->setPolygonPatternWidth(size);
-  canvas->setTextContourWidth(size);
+  m_canvas->clear();
+  m_canvas->setLineWidth(size);
+  m_canvas->setPointWidth(size);
+  m_canvas->setPolygonContourWidth(size);
+  m_canvas->setPolygonPatternWidth(size);
+  m_canvas->setTextContourWidth(size);
 }
 
 te::layout::Properties te::layout::Utils::convertToProperties(const te::layout::PaperConfig& paperConfig)

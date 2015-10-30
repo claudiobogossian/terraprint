@@ -82,12 +82,13 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
   int zoom = context.getZoom();
   ((MapController *) m_controller)->setZoom(zoom);
 
-  Utils* utils = Context::getInstance().getUtils();
+  //AbstractScene* scene = ((AbstractItem<QGraphicsItem>*) this)->getScene();
+  Utils utils = ((Scene*) this->scene())->getUtils();
 
   QRectF boxMM = boundingRect();
 
   te::gm::Envelope box(0, 0, boxMM.width(), boxMM.height());
-  box = utils->viewportBox(box);
+  box = utils.viewportBox(box);
 
   m_mapDisplay->setOverrideDPI(context.getDpiX(), context.getDpiY());
 
@@ -143,10 +144,6 @@ void te::layout::MapItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 
   this->setCursor(Qt::ClosedHandCursor);
 
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-    return;
-
   QRectF rect = boundingRect();
   QPointF point = event->pos();
   QPointF remappedPoint = remapPointToViewport(point, rect, m_mapDisplay->rect());
@@ -165,10 +162,6 @@ void  te::layout::MapItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
     AbstractItem<QGraphicsObject>::mouseMoveEvent(event);
     return;
   }
-
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-    return;
 
   QRectF rect = boundingRect();
   QPointF point = event->pos();
@@ -190,10 +183,6 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
   }
 
   this->setCursor(Qt::OpenHandCursor);
-
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-    return;
 
   QRectF rect = boundingRect();
   QPointF point = event->pos();
@@ -273,10 +262,6 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
     AbstractItem<QGraphicsObject>::wheelEvent(event);
     return;
   }
-
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-    return;
 
   QRectF rect = boundingRect();
   QPointF point = event->pos();

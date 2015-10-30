@@ -74,6 +74,7 @@ namespace te
     class EnumType;
     class WaitView;
     class ContextObject;
+    class Scene;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -222,6 +223,8 @@ namespace te
         virtual void createItem(EnumType* itemType);
 
         virtual ContextObject getContext();
+
+        virtual Scene* getScene();
 
       public slots:
     

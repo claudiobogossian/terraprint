@@ -89,8 +89,7 @@ void te::layout::MoveCommand::undo()
     item->setPos(ptOld);
   }
 
-  Scene* sc = dynamic_cast<Scene*>(Context::getInstance().getScene());
-  sc->update();
+  m_moveItems.begin()->first->scene()->update();
   setText(QObject::tr("Move %1").arg(size));
 }
 
@@ -111,11 +110,8 @@ void te::layout::MoveCommand::redo()
   if(moveItensSize != m_itemsPoints.size())
     return;
 
-  Scene* sc = dynamic_cast<Scene*>(Context::getInstance().getScene());
-  if(!sc)
-    return;
-
-  if(!sc->getUndoStack())
+  Scene* sc = (Scene*) m_moveItems.begin()->first->scene();
+  if(! sc->getUndoStack())
     return;
 
   bool resultFound = false;

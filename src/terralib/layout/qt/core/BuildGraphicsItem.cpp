@@ -134,13 +134,9 @@ std::string te::layout::BuildGraphicsItem::nameItem( te::layout::EnumType* type 
     graphicsItems = m_scene->items();
   }  
 
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-  {
-    return name;
-  }
+  ItemUtils iUtils = m_scene->getItemUtils();
 
-  m_id = iUtils->maxTypeId(type);
+  m_id = iUtils.maxTypeId(type);
 
   if(m_id < 0)
     m_id = 0;

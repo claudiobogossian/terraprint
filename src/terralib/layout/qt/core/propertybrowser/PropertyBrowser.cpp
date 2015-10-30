@@ -31,6 +31,8 @@
 #include "../../../core/enum/Enums.h"
 #include "VariantPropertiesBrowser.h"
 #include "DialogPropertiesBrowser.h"
+#include "../../../core/pattern/proxy/AbstractProxyProject.h"
+#include "../Scene.h"
 
 // Qt
 #include <QRegExpValidator>
@@ -51,7 +53,7 @@
 // STL
 #include <algorithm>    // std::find
 
-te::layout::PropertyBrowser::PropertyBrowser(QObject* parent) :
+te::layout::PropertyBrowser::PropertyBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent) :
   QObject(parent),
   m_propertyEditor(0),
   m_variantPropertiesBrowser(0),
@@ -59,7 +61,7 @@ te::layout::PropertyBrowser::PropertyBrowser(QObject* parent) :
   m_hasWindows(false),
   m_changeQtPropertyVariantValue(false)
 {
-  createManager();
+  createManager(scene, proxyProject);
 }
 
 te::layout::PropertyBrowser::~PropertyBrowser()
@@ -85,7 +87,7 @@ te::layout::PropertyBrowser::~PropertyBrowser()
   }
 }
 
-void te::layout::PropertyBrowser::createManager()
+void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProject* proxyProject )
 {
   //Qt - The Property Browser
   m_propertyEditor = new QtTreePropertyBrowser;
@@ -95,7 +97,7 @@ void te::layout::PropertyBrowser::createManager()
   connect(m_variantPropertiesBrowser->getVariantPropertyManager(), SIGNAL(valueChanged(QtProperty*, const QVariant &)),
     this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
 
-  m_dialogPropertiesBrowser = new DialogPropertiesBrowser;
+  m_dialogPropertiesBrowser = new DialogPropertiesBrowser(scene, proxyProject);
 
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeDlgProperty(Property)));
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(std::vector<Property>)), this, SLOT(onChangeDlgProperty(std::vector<Property>)));

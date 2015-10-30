@@ -39,6 +39,9 @@ namespace te
 {
   namespace layout
   {
+    class Scene;
+    class AbstractProxyProject;
+
     /*!
     \brief Parameters to create a new outside object (MVC widget Object).  
     
@@ -62,7 +65,7 @@ namespace te
         \param
         \param
         */
-        OutsideFactoryParamsCreate();
+        OutsideFactoryParamsCreate(Scene* scene, AbstractProxyProject* proxyProject);
 
         /*!
           \brief Destructor
@@ -72,6 +75,15 @@ namespace te
         te::common::AbstractParameters* clone() const;
 
         void reset() throw(te::common::Exception);
+
+        Scene* getScene();
+
+        AbstractProxyProject* getProxyProject();
+
+      private:
+
+        Scene* m_scene;
+        AbstractProxyProject* m_proxyProject;
     };
   }
 }

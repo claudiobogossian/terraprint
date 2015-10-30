@@ -28,13 +28,14 @@
 #include "../../../../../outside/ToolbarModel.h"
 #include "../../../../outside/ToolbarController.h"
 #include "../../../../outside/ToolbarOutside.h"
+#include "../../../Scene.h"
 
 te::layout::AbstractOutsideView* te::layout::ToolbarOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
   ToolbarModel* model = new ToolbarModel();
 
-  ToolbarController* controller = new ToolbarController(model);
-  ToolbarOutside* view = new ToolbarOutside(controller);
+  ToolbarController* controller = new ToolbarController(model, params.getScene());
+  ToolbarOutside* view = new ToolbarOutside(controller, params.getScene());
   controller->setView(view);
   view->createToolbar();
 

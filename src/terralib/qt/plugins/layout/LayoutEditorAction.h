@@ -67,8 +67,7 @@ namespace te
 
             virtual void onExit();
 
-
-
+            virtual void close();
 
           protected:
 

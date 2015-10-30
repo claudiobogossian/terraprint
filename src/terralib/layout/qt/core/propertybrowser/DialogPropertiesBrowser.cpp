@@ -49,6 +49,11 @@
 #include "../../outside/SVGDialogOutside.h"
 #include "../ItemUtils.h"
 #include "../BuildGraphicsOutside.h"
+#include "../../item/GridMapItem.h"
+#include "../../../core/pattern/mvc/AbstractItemView.h"
+#include "../../../core/pattern/mvc/AbstractItemController.h"
+#include "../Scene.h"
+#include "../../../core/pattern/proxy/AbstractProxyProject.h"
 
 // STL
 #include <vector>
@@ -70,22 +75,21 @@
 #include <QtPropertyBrowser/QtStringPropertyManager>
 #include <QtPropertyBrowser/qteditorfactory.h>
 #include <QtPropertyBrowser/QtProperty>
-#include "../../item/GridMapItem.h"
-#include "../../../core/pattern/mvc/AbstractItemView.h"
-#include "../../../core/pattern/mvc/AbstractItemController.h"
 
-te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser(QObject* parent) :
+te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent) :
   AbstractPropertiesBrowser(parent),
   m_strDlgManager(0),
-  m_dlgEditorFactory(0)
+  m_dlgEditorFactory(0),
+  m_scene(scene),
+  m_proxyProject(proxyProject)
 {
   createManager();
 }
 
-te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser( QtDlgEditorFactory* factory, QtStringPropertyManager* manager, QObject *parent /*= 0*/ ):
+te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser(QObject *parent /*= 0*/ ):
   AbstractPropertiesBrowser(parent),
-  m_strDlgManager(manager),
-  m_dlgEditorFactory(factory)
+  m_strDlgManager(0),
+  m_dlgEditorFactory(0)
 {
   if(m_dlgEditorFactory)
   {
@@ -501,18 +505,17 @@ void te::layout::DialogPropertiesBrowser::onShowMapLayerChoiceDlg()
     return;
   }
 
-  AbstractProxyProject* proxy = Context::getInstance().getProxyProject();
-  if (!proxy)
+  if (!m_proxyProject)
   {
     return;
   }
 
-  std::list<te::map::AbstractLayerPtr> listLayers = proxy->getAllLayers();
+  std::list<te::map::AbstractLayerPtr> listLayers = m_proxyProject->getAllLayers();
   model->setLayers(listLayers);
 
-  ItemUtils* utils = Context::getInstance().getItemUtils();
+  ItemUtils utils = m_scene->getItemUtils();
 
-  std::vector<MapItem*> mapList = utils->getMapItemList(true);
+  std::vector<MapItem*> mapList = utils.getMapItemList(true);
 
   std::vector<Properties> props;
 
@@ -593,8 +596,7 @@ void te::layout::DialogPropertiesBrowser::onShowViewDlg()
     return;
   }
 
-  AbstractProxyProject* proxy = Context::getInstance().getProxyProject();
-  if(!proxy)
+  if(!m_proxyProject)
   {
     return;
   }

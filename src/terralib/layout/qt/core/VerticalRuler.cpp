@@ -122,12 +122,7 @@ void te::layout::VerticalRuler::drawRuler( QGraphicsView* view, QPainter* painte
 
 void te::layout::VerticalRuler::drawMarks( QGraphicsView* view, QPainter* painter, QRectF rect, double zoomFactor )
 {
-  Utils* utils = Context::getInstance().getUtils();
-
-  if(!utils)
-  {
-    return;
-  }
+  Utils utils = ((Scene*) view->scene())->getUtils();
 
   painter->save();
 
@@ -154,7 +149,7 @@ void te::layout::VerticalRuler::drawMarks( QGraphicsView* view, QPainter* painte
       std::stringstream ss;//create a stringstream
       ss << i;//add number to the stream
 
-      utils->textBoundingBox(wtxt, htxt, ss.str()); // size in mm
+      utils.textBoundingBox(wtxt, htxt, ss.str()); // size in mm
 
       QPointF pTranslate(x - m_spacingLineText * zoomFactor, i);
 

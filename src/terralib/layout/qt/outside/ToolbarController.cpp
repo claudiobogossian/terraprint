@@ -37,8 +37,9 @@
 #include <QAction>
 #include <QComboBox>
 
-te::layout::ToolbarController::ToolbarController(AbstractOutsideModel* o) :
-  AbstractOutsideController(o)
+te::layout::ToolbarController::ToolbarController(AbstractOutsideModel* o, Scene* scene) :
+  AbstractOutsideController(o),
+  m_scene(scene)
 {
   
 }
@@ -60,7 +61,7 @@ void te::layout::ToolbarController::onMapTriggered(QAction* action)
   
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
 
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
 
   if (action->objectName().compare(toolbar->getActionMapDefault().c_str()) == 0)
   {
@@ -146,7 +147,7 @@ void te::layout::ToolbarController::onGeometryTriggered(QAction* action)
   
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
 
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
 
   if (action->objectName().compare(toolbar->getActionRectangle().c_str()) == 0)
   {
@@ -188,7 +189,7 @@ void te::layout::ToolbarController::onViewAreaTriggered(QAction* action)
 
   ToolbarOutside* toolbar = dynamic_cast<ToolbarOutside*>(m_view);
   
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
 
   if (action->objectName().compare(toolbar->getActionViewPan().c_str()) == 0)
   {
@@ -206,7 +207,7 @@ void te::layout::ToolbarController::onViewAreaTriggered(QAction* action)
 
 void te::layout::ToolbarController::onArrowCursorClicked(bool checked)
 {
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
   viewport->arrowCursor();
 }
 
@@ -220,7 +221,7 @@ void te::layout::ToolbarController::onItemToolsTriggered(QAction* action)
     button->setDefaultAction(action);
   }
 
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
 
   if (action->objectName().compare(toolbar->getActionGroup().c_str()) == 0)
   {    
@@ -280,28 +281,23 @@ void te::layout::ToolbarController::onZoomChanged(int zoom)
 
 void te::layout::ToolbarController::onBringToFrontClicked(bool checked)
 {    
-  getScene()->getAlignItems()->bringToFront();
+  m_scene->getAlignItems()->bringToFront();
 }
 
 void te::layout::ToolbarController::onSendToBackClicked(bool checked)
 {
-  getScene()->getAlignItems()->sendToBack();
+  m_scene->getAlignItems()->sendToBack();
 }
 
 void te::layout::ToolbarController::onRecomposeClicked(bool checked)
 {
-  Scene* sc = getScene();
-  if (!sc)
-  {
-    return;
-  }
-  ContextObject context = sc->getContext();
+  ContextObject context = m_scene->getContext();
 
   int zoom = context.getZoom();
   onZoomChanged(zoom);
   onComboZoomActivated();
 
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
   viewport->recompose();
 }
 
@@ -317,7 +313,7 @@ void te::layout::ToolbarController::onTextToolsTriggered(QAction* action)
   
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
 
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
 
   if (action->objectName().compare(toolbar->getActionTextDefault().c_str()) == 0)
   {
@@ -347,74 +343,59 @@ void te::layout::ToolbarController::onTextToolsTriggered(QAction* action)
 
 void te::layout::ToolbarController::onAlignLeftClicked(bool checked)
 {
-  getScene()->getAlignItems()->alignLeft();
+  m_scene->getAlignItems()->alignLeft();
 }
 
 void te::layout::ToolbarController::onAlignRightClicked(bool checked)
 {
-  getScene()->getAlignItems()->alignRight();
+  m_scene->getAlignItems()->alignRight();
 }
 
 void te::layout::ToolbarController::onAlignTopClicked(bool checked)
 {
-  getScene()->getAlignItems()->alignTop();
+  m_scene->getAlignItems()->alignTop();
 }
 
 void te::layout::ToolbarController::onAlignBottomClicked(bool checked)
 {
-  getScene()->getAlignItems()->alignBottom();
+  m_scene->getAlignItems()->alignBottom();
 }
 
 void te::layout::ToolbarController::onAlignCenterHorizontalClicked(bool checked)
 {  
-  getScene()->getAlignItems()->alignCenterHorizontal();
+  m_scene->getAlignItems()->alignCenterHorizontal();
 }
 
 void te::layout::ToolbarController::onAlignCenterVerticalClicked(bool checked)
 {
-  getScene()->getAlignItems()->alignCenterVertical();
+  m_scene->getAlignItems()->alignCenterVertical();
 }
 
 void te::layout::ToolbarController::onRemoveObjectClicked(bool checked)
 {
-  getScene()->removeSelectedItems();
+  m_scene->removeSelectedItems();
 }
 
 void te::layout::ToolbarController::onDrawMapClicked(bool checked)
 {
-  getScene()->redrawSelectionMap();
+  m_scene->redrawSelectionMap();
 }
 
 void te::layout::ToolbarController::onObjectToImageClicked(bool checked)
 {
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
   viewport->exportItemsToImage();
 }
 
 void te::layout::ToolbarController::onExitClicked(bool checked)
 {
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
   viewport->close();
 }
 
 void te::layout::ToolbarController::onExportToPDFClicked(bool checked)
 {
-  View* viewport = getScene()->getView();
+  View* viewport = m_scene->getView();
   viewport->exportToPDF();
 }
-
-te::layout::Scene* te::layout::ToolbarController::getScene()
-{
-  Scene* sc = 0;
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if (!abScene)
-  {
-    return sc;
-  }
-
-  sc = dynamic_cast<Scene*>(abScene);
-  return sc;
-}
-
-
 

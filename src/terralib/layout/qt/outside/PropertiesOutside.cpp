@@ -43,6 +43,7 @@
 #include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../core/Scene.h"
 #include "../core/propertybrowser/PropertiesUtils.h"
+#include "../../core/pattern/proxy/AbstractProxyProject.h"
 
 // Qt
 #include <QGroupBox>
@@ -56,12 +57,13 @@
 
 #include <QtPropertyBrowser/QtTreePropertyBrowser>
 
-te::layout::PropertiesOutside::PropertiesOutside(AbstractOutsideController* controller, PropertyBrowser* propertyBrowser) :
+te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProject* proxyProject, AbstractOutsideController* controller, PropertyBrowser* propertyBrowser) :
   QWidget(0),
   AbstractOutsideView(controller),
   m_updatingValues(false),
   m_sharedProps(0),
-  m_propUtils(0)
+  m_propUtils(0),
+  m_scene(scene)
 {
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   te::gm::Envelope box = abstractModel->getBox();
@@ -73,7 +75,7 @@ te::layout::PropertiesOutside::PropertiesOutside(AbstractOutsideController* cont
   m_propUtils = new PropertiesUtils;
 
   if(!propertyBrowser)
-    m_layoutPropertyBrowser = new PropertyBrowser;
+    m_layoutPropertyBrowser = new PropertyBrowser(scene, proxyProject);
   else
     m_layoutPropertyBrowser = propertyBrowser;
   
@@ -226,15 +228,13 @@ void te::layout::PropertiesOutside::onChangePropertyValue( Property property )
   if(property.getType() == dataType->getDataTypeNone())
     return;
 
-  Scene* lScene = dynamic_cast<Scene*>(Context::getInstance().getScene()); 
-
   QList<QGraphicsItem*> currentSelectionList = m_graphicsItems;
 
   changeMapVisitable(property);
 
   sendPropertyToItems(property, currentSelectionList);
 
-  lScene->update();
+  m_scene->update();
 }
 
 void te::layout::PropertiesOutside::onChangePropertyValue( std::vector<Property> props )
@@ -290,11 +290,7 @@ bool te::layout::PropertiesOutside::sendPropertyToItems(const Property& property
   {
     QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew, this);
 
-    Scene* lScene = dynamic_cast<Scene*>(Context::getInstance().getScene());
-    if (lScene != 0)
-    {
-      lScene->addUndoStack(command);
-    }    
+   m_scene->addUndoStack(command);
   }
   return result;
 }
@@ -311,9 +307,7 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
     return;
 
 
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if (!iUtils)
-    return;  
+  ItemUtils iUtils = m_scene->getItemUtils();
 
   //we first removed any association, if exists
   foreach(QGraphicsItem* selectedItem, m_graphicsItems)
@@ -335,22 +329,18 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
           continue;
         }
 
-        MapItem* oldMapItem = iUtils->getMapItem(oldMapName);
+        MapItem* oldMapItem = iUtils.getMapItem(oldMapName);
         if (!oldMapItem)
           return;
         
 
         oldMapItem->getController()->detach(selectedAbsView->getController());
 
-        Scene* lScene = dynamic_cast<Scene*>(Context::getInstance().getScene());
-        if (lScene != 0)
+        //checks if the map item is already in a group
+        QGraphicsItemGroup* group = oldMapItem->group();
+        if (group != 0)
         {
-          //checks if the map item is already in a group
-          QGraphicsItemGroup* group = oldMapItem->group();
-          if (group != 0)
-          {
-            lScene->destroyItemGroup(group);
-          }          
+          m_scene->destroyItemGroup(group);
         }
       }
     }
@@ -367,7 +357,7 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
     return;
   }
 
-  MapItem* mapItem = iUtils->getMapItem(name);
+  MapItem* mapItem = iUtils.getMapItem(name);
   if(!mapItem)
     return;
 
@@ -410,13 +400,9 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
       listItemsToConnect.push_front(mapItem);
     }
     
-    Scene* lScene = dynamic_cast<Scene*>(Context::getInstance().getScene()); 
-    if(lScene != 0)
-    {
-      changeZValueOrder(listItemsToConnect); //if need to change the order of the z value 
-      QGraphicsItemGroup* group = lScene->createItemGroup(listItemsToConnect);
-      group->setSelected(true);
-    }
+    changeZValueOrder(listItemsToConnect); //if need to change the order of the z value 
+    group = ((Scene*) m_scene)->createItemGroup(listItemsToConnect);
+    group->setSelected(true);
   }
 }
 
@@ -493,10 +479,6 @@ void te::layout::PropertiesOutside::clearAll()
 bool te::layout::PropertiesOutside::updateTree( QList<QGraphicsItem*> graphicsItems, Properties props )
 {
   bool result = false;
-
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-    return result;
 
   if(m_graphicsItems == graphicsItems)
   {

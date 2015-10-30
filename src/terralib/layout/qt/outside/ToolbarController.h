@@ -50,7 +50,7 @@ namespace te
 
       public:
 
-        ToolbarController(AbstractOutsideModel* o);
+        ToolbarController(AbstractOutsideModel* o, Scene* scene);
 
         virtual ~ToolbarController();
 
@@ -104,7 +104,7 @@ namespace te
 
       protected:
 
-        Scene* getScene();
+        Scene* m_scene;
     };
   }
 }

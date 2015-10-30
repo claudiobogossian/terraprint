@@ -56,6 +56,8 @@ namespace te
     class Properties;
     class EnumDataType;
     class EnumType;
+    class Scene;
+    class AbstractProxyProject;
 
     /*!
     \brief Manage properties dialogs values. 
@@ -68,9 +70,9 @@ namespace te
 
       public:
 
-        DialogPropertiesBrowser(QObject *parent = 0);
+        DialogPropertiesBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject *parent = 0);
 
-        DialogPropertiesBrowser(QtDlgEditorFactory* factory, QtStringPropertyManager* manager, QObject *parent = 0);
+        DialogPropertiesBrowser(QObject *parent = 0);
 
         virtual ~DialogPropertiesBrowser();
 
@@ -159,6 +161,8 @@ namespace te
         std::map<std::string, Property> m_dlgProps;
         Property                        m_currentPropertyClicked;
         QList<QWidget*>                 m_dialogs;
+        Scene*                          m_scene;
+        AbstractProxyProject*           m_proxyProject;
 
     };
   }

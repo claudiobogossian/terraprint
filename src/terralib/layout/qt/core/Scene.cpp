@@ -52,6 +52,8 @@
 #include "View.h"
 #include "../../core/ContextObject.h"
 #include "../../core/WorldTransformer.h"
+#include "ItemUtils.h"
+#include "../../core/Utils.h"
 
 // STL
 #include <algorithm>
@@ -631,7 +633,7 @@ void te::layout::Scene::exportItemsToImage(std::string dir)
 {
   const int dpi = 96;
 
-  Utils* utils = Context::getInstance().getUtils();
+  Utils utils = this->getUtils();
 
   QList<QGraphicsItem*> selected = selectedItems();
   foreach(QGraphicsItem *item, selected) 
@@ -980,12 +982,12 @@ void te::layout::Scene::applyProportionAllItems( QSize oldPaper, QSize newPaper 
 {
   QGraphicsItem* paper = getPaperItem(); 
 
-  Utils* utils = Context::getInstance().getUtils();
+  Utils utils = this->getUtils();
 
   te::gm::Envelope oldPp(0, 0, oldPaper.width(), oldPaper.height());
   te::gm::Envelope newPp(0, 0, newPaper.width(), newPaper.height());
 
-  WorldTransformer transf = utils->getTransformGeo(oldPp, newPp);
+  WorldTransformer transf = utils.getTransformGeo(oldPp, newPp);
   transf.setMirroring(false);
   
   QList<QGraphicsItem*> allItems = items();
@@ -1176,6 +1178,26 @@ void te::layout::Scene::setEditionMode(bool editionMode)
     leaveEditionMode();
     m_isEditionMode = false;
   }
+}
+
+te::layout::ItemUtils te::layout::Scene::getItemUtils()
+{
+  return te::layout::ItemUtils(this);
+}
+
+te::layout::Utils te::layout::Scene::getUtils()
+{
+  return te::layout::Utils(this, m_canvas);
+}
+
+void te::layout::Scene::setCanvas( te::qt::widgets::Canvas* canvas )
+{
+  m_canvas = canvas;
+}
+
+te::qt::widgets::Canvas* te::layout::Scene::getCanvas()
+{
+  return m_canvas;
 }
 
 bool te::layout::Scene::isEditionMode()

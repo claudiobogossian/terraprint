@@ -58,6 +58,8 @@ namespace te
     class VariantPropertiesBrowser;
     class DialogPropertiesBrowser;
     class FilePathManager;
+    class Scene;
+    class AbstractProxyProject;
 
     /*!
     \brief Manage properties variants values. Maps the QProperty properties (Qt) and Property (Layout) and add to a tree (QtTreePropertyBrowser) for presentation to the user, 
@@ -71,7 +73,7 @@ namespace te
 
       public:
 
-        PropertyBrowser(QObject *parent = 0);
+        PropertyBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject *parent = 0);
 
         virtual ~PropertyBrowser();
 
@@ -140,7 +142,7 @@ namespace te
 
         virtual void updateExpandState();
 
-        virtual void createManager();
+        virtual void createManager(Scene* scene, AbstractProxyProject* proxyProject);
 
         virtual void changeVisibility( QList<QtBrowserItem*> items, bool visible );
         

@@ -213,6 +213,8 @@ namespace te
 
         virtual void resized();
 
+        virtual AbstractScene* getScene();
+
      protected:
 
         //resize
@@ -503,20 +505,8 @@ namespace te
     template <class T>
     inline void te::layout::AbstractItem<T>::drawText(const QPointF& point, QPainter* painter, const std::string& text, int rotate)
     {
-      QGraphicsScene* scene = T::scene();
-      if (scene == 0)
-      {
-        return;
-      }
-
-      AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene);
-      if (myScene == 0)
-      {
-        return;
-      }
-
-      ItemUtils* itemUtils = Context::getInstance().getItemUtils();
-      QPainterPath textObject = itemUtils->textToVector(text.c_str(), painter->font(), myScene->getContext().getDpiX(), point, rotate);
+      ItemUtils itemUtils = this->getScene()->getItemUtils();
+      QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), this->getScene()->getContext().getDpiX(), point, rotate);
 
       QPen pen;
       pen.setWidthF(0);
@@ -844,10 +834,10 @@ inline void te::layout::AbstractItem<T>::drawItemResized( QPainter * painter, co
 template <class T>
 inline void te::layout::AbstractItem<T>::setPixmap()
 {
-  Utils* utils = Context::getInstance().getUtils();
+  Utils utils = this->getScene()->getUtils();
   QRectF itemBounding = boundingRect();
   te::gm::Envelope box(0, 0, itemBounding.width(), itemBounding.height());
-  box = utils->viewportBox(box);
+  box = utils.viewportBox(box);
   m_clonePixmap = QPixmap(box.getWidth(), box.getHeight());
   m_clonePixmap.fill(Qt::transparent);
   QPainter p(&m_clonePixmap);
@@ -869,6 +859,23 @@ template <class T>
 inline void te::layout::AbstractItem<T>::resized()
 {
 
+}
+
+template <class T>
+te::layout::AbstractScene* te::layout::AbstractItem<T>::getScene()
+{
+  QGraphicsScene* scene = T::scene();
+  if (scene == 0)
+  {
+    return 0;
+  }
+
+  AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene);
+  if (myScene == 0)
+  {
+    return 0;
+  }
+  return myScene;
 }
 
 #endif //__TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H

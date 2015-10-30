@@ -42,6 +42,7 @@
 #include "pattern/factory/tool/ToolFactoryParamsCreate.h"
 #include "pattern/factory/tool/ToolFactory.h"
 #include "../../core/ContextObject.h"
+#include "Scene.h"
 
 // Qt
 #include <QMouseEvent>
@@ -499,28 +500,24 @@ void te::layout::View::changeMode( EnumType* newMode )
     return;
 
   EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
+  ItemUtils iUtils = sc->getItemUtils();
 
   EnumType* mode = getCurrentMode();
   
   if(mode == enumMode->getModeMapPan())
   {
-    iUtils->setCurrentToolInSelectedMapItems(enumMode->getModeMapPan());
+    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapPan());
   }
   else if(mode == enumMode->getModeMapZoomIn())
   {
-    iUtils->setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomIn());
+    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomIn());
   }
   else if(mode == enumMode->getModeMapZoomOut()) 
   {
-    iUtils->setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomOut());
+    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomOut());
   }
 
-  Scene* sce = dynamic_cast<Scene*>(scene());
-  if(sce)
-  {
-    sce->setContext(getContext());
-  }
+  sc->setContext(getContext());
 
   emit changeContext();
 }
@@ -654,13 +651,9 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
 
   QPointF pt = mapToScene(event->pos());
 
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  if(!iUtils)
-  {
-    return;
-  }
+  ItemUtils iUtils = ((Scene*) scene())->getItemUtils();
 
-  QGraphicsItem* hasItem = iUtils->intersectionSelectionItem(pt.x(), pt.y());
+  QGraphicsItem* hasItem = iUtils.intersectionSelectionItem(pt.x(), pt.y());
   if(!hasItem)
     return;
 
@@ -850,11 +843,11 @@ void te::layout::View::recompose()
 void te::layout::View::arrowCursor()
 {
   EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
+  ItemUtils iUtils = ((Scene*) scene())->getItemUtils();
 
   setCurrentMode(enumMode->getModeNone());
   resetDefaultConfig();
-  std::vector<te::layout::MapItem*> list = iUtils->getMapItemList();
+  std::vector<te::layout::MapItem*> list = iUtils.getMapItemList();
   if (!list.empty())
   {
     /*foreach(MapItem* mit, list)
@@ -1183,5 +1176,10 @@ te::layout::ContextObject te::layout::View::getContext()
 void te::layout::View::onEditionFinalized()
 {
   reload();
+}
+
+te::layout::Scene* te::layout::View::getScene()
+{
+  return dynamic_cast<te::layout::Scene*> (this->scene());
 }
 

@@ -53,7 +53,7 @@ namespace te
     
       public:
         
-        PageSetupOutside(AbstractOutsideController* controller);
+        PageSetupOutside(AbstractOutsideController* controller, Scene* scene);
 
         virtual ~PageSetupOutside();
         
@@ -91,14 +91,13 @@ namespace te
 
         virtual void switchSize();
 
-        Scene* getScene();
-
         te::layout::LayoutOrientationType m_orientation;
         te::layout::LayoutAbstractPaperType m_paperType;
                         
       private:
 
         std::auto_ptr<Ui::PageSetup> m_ui;
+        Scene*                       m_scene;
     };
   }
 }

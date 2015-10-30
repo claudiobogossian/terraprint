@@ -217,8 +217,8 @@ void te::layout::PropertiesUtils::mapNameDynamicProperty( Property& property, co
     currentName = property.getOptionByCurrentChoice().toString();
   }
 
-  ItemUtils* iUtils = Context::getInstance().getItemUtils();
-  std::vector<std::string> strList = iUtils->mapNameList();
+  ItemUtils iUtils = ((Scene*) graphicsItems.first()->scene())->getItemUtils();
+  std::vector<std::string> strList = iUtils.mapNameList();
 
 
   addDynamicOptions(property, strList);

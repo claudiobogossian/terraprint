@@ -36,13 +36,8 @@
 #include "../proxy/AbstractProxyProject.h"
 
 te::layout::Context::Context() :
-  m_scene(0),
-  m_canvas(0),
-  m_utils(0),
   m_version("MAPLayoutQt5_1.0.0"),
-  m_systematicConfig(0),
-  m_proxyProject(0),
-  m_itemUtils(0)
+  m_systematicConfig(0)
 {
   
 }
@@ -50,36 +45,6 @@ te::layout::Context::Context() :
 te::layout::Context::~Context()
 {
 
-}
-
-te::layout::AbstractScene* te::layout::Context::getScene()
-{
-  return m_scene;
-}
-
-void te::layout::Context::setScene( AbstractScene* scene )
-{
-  m_scene = scene;
-}
-
-te::map::Canvas* te::layout::Context::getCanvas()
-{
-  return m_canvas;
-}
-
-void te::layout::Context::setCanvas( te::map::Canvas* canvas )
-{
-  m_canvas = canvas;
-}
-
-te::layout::Utils* te::layout::Context::getUtils()
-{
-  return m_utils;
-}
-
-void te::layout::Context::setUtils( Utils* utils )
-{
-  m_utils = utils;
 }
 
 te::layout::LayoutUnitsMetrics te::layout::Context::getUnitMetric()
@@ -106,25 +71,4 @@ void te::layout::Context::setSystematicScaleConfig( SystematicScaleConfig* scale
 {
   m_systematicConfig = scale;
 }
-
-void te::layout::Context::setProxyProject( AbstractProxyProject* project )
-{
-  m_proxyProject = project;
-}
-
-te::layout::AbstractProxyProject* te::layout::Context::getProxyProject()
-{
-  return m_proxyProject;
-}
-
-void te::layout::Context::setItemUtils( ItemUtils* utils )
-{
-  m_itemUtils = utils;
-}
-
-te::layout::ItemUtils* te::layout::Context::getItemUtils()
-{
-  return m_itemUtils;
-}
-
 

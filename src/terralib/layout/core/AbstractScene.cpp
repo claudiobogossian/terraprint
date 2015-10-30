@@ -37,3 +37,4 @@ te::gm::Envelope te::layout::AbstractScene::getSceneBox()
 {
   return m_box;
 }
+

@@ -31,6 +31,8 @@
 #include "OutsideArea.h"
 #include "DisplayDock.h"
 #include "../../../layout/core/pattern/singleton/Context.h"
+#include "../../../qt/plugins/layout/ProxyProject.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
 
 // Qt
 #include <QGraphicsScene>
@@ -40,25 +42,18 @@
 #include <QString>
 #include <QVBoxLayout>
 
-#include "../../../qt/plugins/layout/ProxyProject.h"
-
 te::layout::MainLayout::MainLayout(AbstractProxyProject* proxyProject) :
   m_view(0),
   m_statusBar(0),
-  m_buildContext(0),
   m_outsideArea(0),
   m_buildEnums(0),
   m_proxyProject(proxyProject)
 {
-  m_buildContext = new te::layout::BuildContext;
   m_buildEnums = new te::layout::BuildEnums;
 }
 
 te::layout::MainLayout::~MainLayout()
 {
-
-  onExit();
-
   if(m_outsideArea)
   {
     delete m_outsideArea;
@@ -77,12 +72,6 @@ te::layout::MainLayout::~MainLayout()
     m_statusBar = 0;
   }
 
-  if(m_buildContext)
-  {
-    delete m_buildContext;
-    m_buildContext = 0;
-  }
-
   if(m_buildEnums)
   {
     delete m_buildEnums;
@@ -94,11 +83,16 @@ te::layout::MainLayout::~MainLayout()
     delete m_proxyProject;
     m_proxyProject = 0;
   }
+
+  if(m_canvas)
+  {
+    delete m_canvas;
+    m_canvas = 0;
+  }
 }
 
 void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
 {
-
   bool create = false;
 
   if(!m_view)
@@ -130,7 +124,7 @@ void te::layout::MainLayout::postInit()
 {
   if(!m_outsideArea)
    {
-     m_outsideArea = new OutsideArea(m_view, m_statusBar);
+     m_outsideArea = new OutsideArea(m_proxyProject, m_view, m_statusBar);
  /* TODO: DONE Evento de exit sendo tratado do lado de fora para matar o dock quando mainlayout morrer*/
      m_outsideArea->connect(m_outsideArea, SIGNAL(exit()), this, SLOT(onExit()));
    }
@@ -141,14 +135,18 @@ void te::layout::MainLayout::postInit()
 
 void te::layout::MainLayout::createLayoutContext(int width, int height)
 {
-  if(!m_buildContext)
-    return;
+  Scene* lScene = dynamic_cast<Scene*>(m_view->scene());
 
-  m_buildContext->createLayoutContext(width, height, m_view);
-  //m_proxyProject = proxyProject;
-  if(!te::layout::Context::getInstance().getProxyProject())
+  if(lScene)
   {
-    te::layout::Context::getInstance().setProxyProject(m_proxyProject);
+    te::gm::Envelope worldbox = lScene->getSceneBox();
+
+    //Create Canvas
+    m_canvas = new te::qt::widgets::Canvas(width, height);
+    m_canvas->setWindow(worldbox.getLowerLeftX(), worldbox.getLowerLeftY(), 
+      worldbox.getUpperRightX(), worldbox.getUpperRightY());
+    m_canvas->clear();
+    lScene->setCanvas(m_canvas);
   }
 }
 

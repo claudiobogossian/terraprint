@@ -229,13 +229,12 @@ bool te::layout::ItemUtils::isCurrentMapTools()
 {
   bool result = false;
 
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if(!abScene)
+  if(!m_scene)
   {
     return result;
   }
 
-  Scene* sc = dynamic_cast<Scene*>(abScene);
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
   if(!sc)
   {
     return result;
@@ -485,20 +484,12 @@ QGraphicsItem* te::layout::ItemUtils::intersectionSelectionItem( int x, int y )
 {
   QGraphicsItem* intersectionItem = 0;
 
-  AbstractScene* abstScene = Context::getInstance().getScene();
-
-  if(!abstScene)
+  if(!m_scene)
   {
     return intersectionItem;
   }
 
-  Scene* sc = dynamic_cast<Scene*>(abstScene);
-  if(!sc)
-  {
-    return intersectionItem;
-  }
-
-  QList<QGraphicsItem*> items = sc->selectedItems();
+  QList<QGraphicsItem*> items = m_scene->selectedItems();
 
   QPointF pt(x, y);
 
@@ -519,25 +510,14 @@ QGraphicsItem* te::layout::ItemUtils::intersectionSelectionItem( int x, int y )
 
 QRectF te::layout::ItemUtils::getTextBoundary( const std::string& fontName, int fontSize, const std::string& text ) const
 {
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if(abScene == 0)
+  if(m_scene == 0)
   {
     return QRectF();
   }
 
-  Scene* scene = dynamic_cast<Scene*>(abScene);
-  if(scene == 0)
-  {
-    return QRectF();
-  }
+  Utils utils = ((Scene*) m_scene)->getUtils();
 
-  Utils* utils = Context::getInstance().getUtils();
-  if(utils == 0)
-  {
-    return QRectF();
-  }
-
-  const ContextObject& context = scene->getContext();
+  const ContextObject& context = ((Scene *) m_scene)->getContext();
 
   double correctionFactorY = context.getDpiY() / 72.;
 
@@ -550,9 +530,9 @@ QRectF te::layout::ItemUtils::getTextBoundary( const std::string& fontName, int 
   int height = rect.height();
   int descend = fontMetrics.descent();
 
-  double widthMM = utils->pixel2mm(width);
-  double heightMM = utils->pixel2mm(height);
-  double descendMM = utils->pixel2mm(descend);
+  double widthMM = utils.pixel2mm(width);
+  double heightMM = utils.pixel2mm(height);
+  double descendMM = utils.pixel2mm(descend);
 
    QRectF textBoundingRect(0, -descendMM, widthMM, heightMM);
    return textBoundingRect;
@@ -560,25 +540,14 @@ QRectF te::layout::ItemUtils::getTextBoundary( const std::string& fontName, int 
 
 QRectF te::layout::ItemUtils::getMinimumTextBoundary(const std::string& fontName, int fontSize, const std::string& text) const
 {
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if (abScene == 0)
+  if (m_scene == 0)
   {
     return QRectF();
   }
 
-  Scene* scene = dynamic_cast<Scene*>(abScene);
-  if (scene == 0)
-  {
-    return QRectF();
-  }
+  Utils utils = ((Scene*) m_scene)->getUtils();
 
-  Utils* utils = Context::getInstance().getUtils();
-  if (utils == 0)
-  {
-    return QRectF();
-  }
-
-  const ContextObject& context = scene->getContext();
+  const ContextObject& context = ((Scene*) m_scene)->getContext();
 
   double correctionFactorY = context.getDpiY() / 72.;
 
@@ -591,9 +560,9 @@ QRectF te::layout::ItemUtils::getMinimumTextBoundary(const std::string& fontName
   int height = rect.height();
   int descend = fontMetrics.descent();
 
-  double widthMM = utils->pixel2mm(width);
-  double heightMM = utils->pixel2mm(height);
-  double descendMM = utils->pixel2mm(descend);
+  double widthMM = utils.pixel2mm(width);
+  double heightMM = utils.pixel2mm(height);
+  double descendMM = utils.pixel2mm(descend);
 
   QRectF textBoundingRect(0, -descendMM, widthMM, heightMM);
   return textBoundingRect;
@@ -661,20 +630,12 @@ QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFon
 
 void te::layout::ItemUtils::changeViewMode( EnumType* mode )
 {
-  AbstractScene* abScene = Context::getInstance().getScene();
-
-  if(!abScene)
+  if(!m_scene)
   {
     return;
   }
 
-  Scene* scene = dynamic_cast<Scene*>(abScene);
-  if(!scene)
-  {
-    return;
-  }
-
-  View* view = scene->getView();
+  View* view = ((Scene *) m_scene)->getView();
   if(!view)
   {
     return;
@@ -687,19 +648,12 @@ te::layout::AbstractItemView* te::layout::ItemUtils::getSelectedItem()
 {
   AbstractItemView* abstractItem = 0;
 
-  AbstractScene* abScene = Context::getInstance().getScene();
-  if (abScene == 0)
+  if (m_scene == 0)
   {
     return abstractItem;
   }
 
-  Scene* myScene = dynamic_cast<Scene*>(abScene);
-  if (myScene == 0)
-  {
-    return abstractItem;
-  }
-
-  QList<QGraphicsItem*> items = myScene->items();
+  QList<QGraphicsItem*> items = m_scene->items();
   QGraphicsItem* item = items.first();
 
   if (!item)
