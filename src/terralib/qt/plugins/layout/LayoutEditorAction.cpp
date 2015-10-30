@@ -25,16 +25,16 @@
 
 // Terralib
 #include "LayoutEditorAction.h"
-#include "../../af/ApplicationController.h"
+#include "terralib/qt/af/ApplicationController.h"
 #include "../../../layout/qt/default/MainLayout.h"
-#include "../../../common/TerraLib.h"
+#include "terralib/common/TerraLib.h"
 #include "../../../layout/core/Config.h"
 #include "../../../layout/qt/default/DisplayDock.h"
 #include "../../../layout/qt/default/PropertiesDock.h"
 #include "../../../layout/qt/default/EditTemplateDock.h"
 #include "../../../layout/qt/default/ObjectInspectorDock.h"
 #include "../../../layout/qt/outside/ToolbarOutside.h"
-#include "../../../common/progress/ProgressManager.h"
+#include "terralib/common/progress/ProgressManager.h"
 
 #include "ProxyProject.h"
 

@@ -25,13 +25,13 @@
 
 // TerraLib
 #include "../../../BuildConfig.h"
-#include "../../../common/Config.h"
-#include "../../../common/Translator.h"
-#include "../../../common/Logger.h"
-#include "../../af/ApplicationController.h"
-#include "../../af/events/ApplicationEvents.h"
+#include "terralib/common/Config.h"
+#include "terralib/common/Translator.h"
+#include "terralib/common/Logger.h"
+#include "terralib/qt/af/ApplicationController.h"
+#include "terralib/qt/af/events/ApplicationEvents.h"
 #include "Plugin.h"
-#include "../../af/Utils.h"
+#include "terralib/qt/af/Utils.h"
 
 #if defined(TERRALIB_APACHE_LOG4CXX_ENABLED) && defined(TERRALIB_LOGGER_ENABLED)
 //Log4cxx

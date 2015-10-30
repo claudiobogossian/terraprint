@@ -27,8 +27,8 @@
 
 // TerraLib
 #include "ProxyProject.h"
-#include "../../af/ApplicationController.h"
-#include "../../af/events/LayerEvents.h"
+#include "terralib/qt/af/ApplicationController.h"
+#include "terralib/qt/af/events/LayerEvents.h"
 
 
 te::qt::plugins::layout::ProxyProject::ProxyProject()
