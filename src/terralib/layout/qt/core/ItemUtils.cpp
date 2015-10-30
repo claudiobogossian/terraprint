@@ -491,13 +491,14 @@ QGraphicsItem* te::layout::ItemUtils::intersectionSelectionItem( int x, int y )
 
   QList<QGraphicsItem*> items = m_scene->selectedItems();
 
-  QPointF pt(x, y);
+  QPointF ptScene(x, y);
 
   foreach (QGraphicsItem *item, items) 
   {
     if(item)
     {
-      if(item->contains(pt))
+      QPointF ptLocal = item->mapFromScene(ptScene);
+      if (item->contains(ptLocal) == true)
       {
         intersectionItem = item;
         break;
