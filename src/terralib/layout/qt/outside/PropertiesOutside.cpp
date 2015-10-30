@@ -301,14 +301,14 @@ void te::layout::PropertiesOutside::closeEvent( QCloseEvent * event )
   m_layoutPropertyBrowser->closeAllWindows();
 }
 
-void te::layout::PropertiesOutside::changeMapVisitable( Property property )
+void te::layout::PropertiesOutside::changeMapVisitable(Property property)
 {
+  if (!m_scene)
+    return;
+
   // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
   if (property.getName().compare(m_sharedProps->getItemObserver()) != 0)
     return;
-
-
-  ItemUtils iUtils = m_scene->getItemUtils();
 
   //we first removed any association, if exists
   foreach(QGraphicsItem* selectedItem, m_graphicsItems)
@@ -334,20 +334,13 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
         MapItem* oldMapItem = dynamic_cast<MapItem*>(oldMapItemView);
         if (!oldMapItem)
           return;
-        
 
-        oldMapItem->getController()->detach(selectedAbsView->getController());
-
-        
-        if (m_scene != 0)
-        {
           //checks if the map item is already in a group
           QGraphicsItemGroup* group = oldMapItem->group();
           if (group != 0)
           {
             m_scene->destroyItemGroup(group);
           }
-        }
       }
     }
   }
@@ -357,27 +350,25 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
   {
     return;
   }
-  
+
   MapItem* mapItem = dynamic_cast<MapItem*>(mapItemView);
-  if(!mapItem)
+  if (!mapItem)
     return;
 
   QList<QGraphicsItem*> listItemsToConnect;
   bool connectItem = false;
 
   //the selected item will now be the observer and the mapItem will be the subject
-  foreach( QGraphicsItem* selectedItem, m_graphicsItems) 
+  foreach(QGraphicsItem* selectedItem, m_graphicsItems)
   {
-    if(selectedItem)
+    if (selectedItem)
     {
       AbstractItemView* selectedAbsView = dynamic_cast<AbstractItemView*>(selectedItem);
-      if(selectedAbsView != 0)
+      if (selectedAbsView != 0)
       {
-        mapItem->getController()->attach(selectedAbsView->getController());
-
         const Property& pConnectItemPos = selectedAbsView->getController()->getProperty("connect_item_position");
         connectItem = pConnectItemPos.getValue().toBool();
-        if(connectItem == true)
+        if (connectItem == true)
         {
           //We must move the selected item to the position of the map in scene coordinate system
 
@@ -388,11 +379,11 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
     }
   }
 
-  if(listItemsToConnect.empty() == false)
+  if (listItemsToConnect.empty() == false)
   {
     //checks if the map item is already in a group
     QGraphicsItemGroup* group = mapItem->group();
-    if(group != 0)
+    if (group != 0)
     {
       listItemsToConnect.push_front(group);
     }
@@ -400,10 +391,10 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
     {
       listItemsToConnect.push_front(mapItem);
     }
-    
+
     changeZValueOrder(listItemsToConnect); //if need to change the order of the z value 
-    group = ((Scene*) m_scene)->createItemGroup(listItemsToConnect);
-    group->setSelected(true);
+    QGraphicsItemGroup* newGroup = m_scene->createItemGroup(listItemsToConnect);
+    newGroup->setSelected(true);
   }
 }
 
