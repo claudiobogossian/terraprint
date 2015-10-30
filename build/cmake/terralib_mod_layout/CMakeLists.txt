@@ -344,3 +344,14 @@ install(FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/outside COMPONENT devel)
 
 export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib-exports.cmake)
+
+if(MSVC)
+	add_custom_command(
+      TARGET terralib_mod_layout
+      POST_BUILD
+	  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/Debug/terralib_mod_layout.dll" "${terralib_DIR}/debug"
+      
+      COMMENT "Copying plugin files..."
+      VERBATIM
+    )
+endif()
