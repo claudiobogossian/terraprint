@@ -99,9 +99,14 @@ void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
   {
     create = true;
     m_view = new te::layout::View;
-    m_view->setScene(new te::layout::Scene(m_view));
+
+    te::layout::Scene* myScene = new te::layout::Scene(m_view);
+    m_view->setScene(myScene);
+
+    te::layout::MenuBuilder* menuBuilder = new te::layout::MenuBuilder(myScene, m_proxyProject, m_view);
+    m_view->setMenuBuilder(menuBuilder);
   }
-      
+
   //Resize the dialog and put it in the screen center  
   m_view->move( screen.center() - m_view->rect().center() );
 

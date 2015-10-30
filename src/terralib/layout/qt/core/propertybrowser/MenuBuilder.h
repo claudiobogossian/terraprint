@@ -61,7 +61,7 @@ namespace te
 
     public:
 
-      MenuBuilder( QObject * parent = 0 );
+      MenuBuilder(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent = 0);
 
       virtual ~MenuBuilder();
          

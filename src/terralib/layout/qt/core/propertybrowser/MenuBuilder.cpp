@@ -67,8 +67,8 @@
 #include <QRect>
 #include <QDesktopWidget>
 
-te::layout::MenuBuilder::MenuBuilder( QObject * parent ) :
-  DialogPropertiesBrowser(parent),
+te::layout::MenuBuilder::MenuBuilder(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent) :
+  DialogPropertiesBrowser(scene, proxyProject, parent),
   m_menu(0),
   m_propUtils(0)
 {

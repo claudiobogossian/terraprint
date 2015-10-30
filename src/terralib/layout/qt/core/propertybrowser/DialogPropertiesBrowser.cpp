@@ -83,18 +83,12 @@ te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser(Scene* scene, Abstr
   m_scene(scene),
   m_proxyProject(proxyProject)
 {
-  createManager();
-}
-
-te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser(QObject *parent /*= 0*/ ):
-  AbstractPropertiesBrowser(parent),
-  m_strDlgManager(0),
-  m_dlgEditorFactory(0)
-{
-  if(m_dlgEditorFactory)
+  if (m_dlgEditorFactory)
   {
     connect(m_dlgEditorFactory, SIGNAL(internalDlg(QWidget *, QtProperty *)), this, SLOT(onSetDlg(QWidget *, QtProperty *)));
   }
+
+  createManager();
 }
 
 te::layout::DialogPropertiesBrowser::~DialogPropertiesBrowser()

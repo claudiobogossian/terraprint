@@ -81,18 +81,6 @@ te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
     m_dockLayoutDisplay = 0;
   }
   m_menu->clear();
-
-  if (m_verticalLayout)
-  {
-    delete m_verticalLayout;
-    m_verticalLayout;
-  }
-
-  if (m_groupBox)
-  {
-    delete m_groupBox;
-    m_groupBox;
-  }
 }
 
 void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked)

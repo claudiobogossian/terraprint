@@ -72,8 +72,6 @@ namespace te
 
         DialogPropertiesBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject *parent = 0);
 
-        DialogPropertiesBrowser(QObject *parent = 0);
-
         virtual ~DialogPropertiesBrowser();
 
         QtStringPropertyManager* getStringPropertyManager();

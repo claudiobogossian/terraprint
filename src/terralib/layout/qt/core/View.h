@@ -226,6 +226,8 @@ namespace te
 
         virtual Scene* getScene();
 
+        virtual void setMenuBuilder(MenuBuilder* menuBuilder);
+
       public slots:
     
     /*!

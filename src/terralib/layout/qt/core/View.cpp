@@ -659,7 +659,7 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
 
   if(!m_menuBuilder)
   {
-    m_menuBuilder = new MenuBuilder(this);
+    m_menuBuilder = new MenuBuilder((Scene*)scene(), 0, this);
   }
 
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
@@ -1181,5 +1181,10 @@ void te::layout::View::onEditionFinalized()
 te::layout::Scene* te::layout::View::getScene()
 {
   return dynamic_cast<te::layout::Scene*> (this->scene());
+}
+
+void te::layout::View::setMenuBuilder(te::layout::MenuBuilder* menuBuilder)
+{
+  m_menuBuilder = menuBuilder;
 }
 

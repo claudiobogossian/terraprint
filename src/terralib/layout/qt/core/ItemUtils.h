@@ -159,8 +159,8 @@ namespace te
         /*!
           \brief Checks whether the coordinated intersects an item and returns.
 
-          \param x axis x coordinate
-          \param y axis y coordinate
+          \param x axis x coordinate, in scene CS
+          \param y axis y coordinate, in scene CS
 
           \return 
         */
