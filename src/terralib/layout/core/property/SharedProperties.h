@@ -59,6 +59,7 @@ namespace te
         std::string getAngle();
         std::string getWidth();
         std::string getHeight();
+        std::string getItemObserver();
 
       protected:
 
@@ -76,6 +77,7 @@ namespace te
         std::string m_angle;
         std::string m_width;
         std::string m_height;
+        std::string m_itemObserver;
     };
   }
 }

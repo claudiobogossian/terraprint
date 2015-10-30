@@ -50,7 +50,8 @@ te::layout::EnumDataType::EnumDataType() :
   m_dataTypeLayerList(0),
   m_dataTypeStringVector(0),
   m_dataTypeSVGView(0),
-  m_dataTypeGeometry(0)
+  m_dataTypeGeometry(0),
+  m_dataTypeItemObserver(0)
 {
   init();
 }
@@ -162,6 +163,11 @@ te::layout::EnumDataType::~EnumDataType()
     delete m_dataTypeGeometry;
     m_dataTypeGeometry = 0;
   }
+  if (m_dataTypeItemObserver)
+  {
+    delete m_dataTypeItemObserver;
+    m_dataTypeItemObserver = 0;
+  }
 }
 
 void te::layout::EnumDataType::init()
@@ -209,6 +215,8 @@ void te::layout::EnumDataType::init()
   m_dataTypeSVGView = createEnum("SVGView", this, "SVG View");
 
   m_dataTypeGeometry = createEnum("Geometry", this, "Geometry");
+
+  m_dataTypeItemObserver = createEnum("ItemObserver", this, "Item Observer");
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNone() const
@@ -319,5 +327,10 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypeSVGView() const
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeGeometry() const
 {
   return m_dataTypeGeometry;
+}
+
+te::layout::EnumType* te::layout::EnumDataType::getDataTypeItemObserver() const
+{
+  return m_dataTypeItemObserver;
 }
 

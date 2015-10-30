@@ -24,6 +24,8 @@
 #include "AbstractItemView.h"
 #include "../factory/ItemParamsCreate.h"
 #include "../factory/AbstractItemFactory.h"
+#include "../../property/SharedProperties.h"
+#include "../../property/GenericVariant.h"
 
 te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model)
   : Observer()
@@ -61,6 +63,17 @@ void te::layout::AbstractItemController::setProperty(const te::layout::Property&
   props.addProperty(property);
 
   updateItemPos(props);
+
+  SharedProperties sharedPropertiesName;
+  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+  if (property.getName().compare(sharedPropertiesName.getItemObserver()) == 0)
+  {
+    if (!property.isNull())
+    {
+      associateChange(property);
+    }
+  }
+
   m_model->setProperty(property);
 }
 
@@ -72,6 +85,15 @@ const te::layout::Properties& te::layout::AbstractItemController::getProperties(
 void te::layout::AbstractItemController::setProperties(const te::layout::Properties& properties)
 {
   updateItemPos(properties);
+
+  SharedProperties sharedPropertiesName;
+  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+  Property propItemObserver = properties.getProperty(sharedPropertiesName.getItemObserver());
+  if (!propItemObserver.isNull())
+  {
+    associateChange(propItemObserver);
+  }
+
   m_model->setProperties(properties);
 }
 
@@ -203,5 +225,32 @@ void te::layout::AbstractItemController::updateItemPos(const Properties& propert
   double y = prop_y.getValue().toDouble();
 
   m_view->setItemPosition(x, y);
+}
+
+void te::layout::AbstractItemController::associateChange(const Property& property)
+{
+  if (property.isNull())
+    return;
+
+  SharedProperties sharedPropertiesName;
+
+  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+
+  Property existPropItemObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
+  if (!existPropItemObserver.isNull())
+  {
+    const AbstractItemView* existItem = existPropItemObserver.getValue().toGenericVariant().toItem();
+    if (existItem)
+    {
+      existItem->getController()->detach(this);
+    }
+  }
+
+  const AbstractItemView* item = property.getValue().toGenericVariant().toItem();
+  if (item)
+  {
+    item->getController()->attach(this);
+  }
+  
 }
 

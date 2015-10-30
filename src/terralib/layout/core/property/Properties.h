@@ -114,7 +114,7 @@ namespace te
 
           \return object name that owns these properties
         */
-        virtual std::string getObjectName();
+        virtual const std::string getObjectName() const;
 
         /*!
           \brief Sets object name that owns these properties.
@@ -278,7 +278,7 @@ namespace te
       return m_properties.empty();
     }
 
-    inline std::string Properties::getObjectName()
+    inline const std::string Properties::getObjectName() const
     {
       return m_objName;
     }

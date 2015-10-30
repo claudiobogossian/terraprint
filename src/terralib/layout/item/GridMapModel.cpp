@@ -72,6 +72,8 @@ te::layout::GridMapModel::GridMapModel()
 
   double crossOffSet = 2.;
 
+  AbstractItemView* item = 0;
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   GridSettingsConfigProperties settingsConfig;
@@ -317,7 +319,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setValue(topRotateText, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
-    {
+  {
     Property property(0);
     property.setName(settingsConfig.getCrossOffset());
     property.setComposeWidget(true);
@@ -325,12 +327,23 @@ te::layout::GridMapModel::GridMapModel()
     m_properties.addProperty(property);
   }
 
-//updating properties
-  {
+  //updating properties
+    {
     Property property(0);
     property.setName("connect_item_position");
     property.setValue(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
+  }
+
+  // Observer pattern relationship. Associate: != 0 / Dissociate : == 0.
+  {
+    GenericVariant gv;
+    gv.setItem(item, dataType->getDataTypeItemObserver());
+    Property property(0);
+    property.setName(sharedProps.getItemObserver());
+    property.setComposeWidget(true);
+    property.setValue(gv, dataType->getDataTypeGenericVariant());
+    m_properties.addProperty(property);
   }
 }
 

@@ -32,12 +32,13 @@
 
 // STL
 #include <vector>
+#include <cstddef>
 
 te::layout::AbstractTemplate::AbstractTemplate(std::string path) :
   m_path(path),
   m_type(0)
 {
-  unsigned found = path.find_last_of("/\\");
+  std::size_t found = path.find_last_of("/\\");
   m_fileName = path.substr(found + 1);
 
   m_type = Enums::getInstance().getEnumTemplateType()->getNoneType();

@@ -43,7 +43,8 @@ te::layout::SharedProperties::SharedProperties() :
   m_frameColor("bordercolor"),
   m_angle("angle"),
   m_width("width"),
-  m_height("height")
+  m_height("height"),
+  m_itemObserver("itemObserver")
 {
 
 }
@@ -122,3 +123,9 @@ std::string te::layout::SharedProperties::getHeight()
 {
   return m_height;
 }
+
+std::string te::layout::SharedProperties::getItemObserver()
+{
+  return m_itemObserver;
+}
+

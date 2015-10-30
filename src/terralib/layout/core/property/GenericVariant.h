@@ -50,6 +50,7 @@ namespace te
 {
   namespace layout
   {
+    class AbstractItemView;
     /*!
     
       \ingroup layout
@@ -85,6 +86,8 @@ namespace te
         */
         template<typename T>
         bool setList(std::list<T> value, EnumType* type);
+
+        bool setItem(AbstractItemView* value, EnumType* type);
                 
         /*!
           \brief Returns the value of string vector type. (The setValue method received a string vector)
@@ -99,6 +102,13 @@ namespace te
           \return value of string type
         */
         const std::list<te::map::AbstractLayerPtr>& toLayerList() const;
+
+        /*!
+        \brief Returns the value of AbstractItemView pointer. (The setValue method received a list layer)
+
+        \return value of string type
+        */
+        const AbstractItemView* toItem() const;
         
         /*!
           \brief Converts the value to a string.
@@ -124,6 +134,8 @@ namespace te
         */ 
         virtual void fromPtree(boost::property_tree::ptree tree);
 
+        EnumType* getType();
+
     protected:
       
       /*!
@@ -146,6 +158,7 @@ namespace te
 
       std::vector<std::string>                m_vString; //!< value of string vector type
       std::list<te::map::AbstractLayerPtr>    m_listLayer; //!< value of te::map::AbstractLayerPtr list type
+      AbstractItemView*                       m_item; //!< value of a item 
     };
 
     template<typename T>

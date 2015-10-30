@@ -30,6 +30,10 @@
 
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/GridSettingsConfigProperties.h"
+#include "../core/property/SharedProperties.h"
+#include "../core/property/Properties.h"
+#include "../core/pattern/mvc/AbstractItemView.h"
+#include "../core/pattern/mvc/AbstractItemController.h"
 #include "../core/property/PlanarGridSettingsConfigProperties.h"
 #include "terralib/common/StringUtils.h"
 #include "terralib/common/UnitOfMeasure.h"
@@ -69,19 +73,6 @@ te::layout::GridPlanarModel::GridPlanarModel()
     property.setValue(planarBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
   }
-  {
-    std::string emptyString;
-
-    Property property(0);
-    property.setName("map_name");
-    property.setLabel("Map Name");
-    property.setValue(emptyString, dataType->getDataTypeStringList());
-
-    Variant v;
-    v.setValue(emptyString, dataType->getDataTypeString());
-    property.addOption(v);
-    m_properties.addProperty(property);
-  }
 }
 
 te::layout::GridPlanarModel::~GridPlanarModel()
@@ -96,17 +87,21 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     return;
   }
 
+  SharedProperties sharedPropertiesName;
+
   //new properties
   const Property& pNewWidth = subjectModel->getProperty("width");
   const Property& pNewHeight = subjectModel->getProperty("height");
   const Property& pNewWorldBox = subjectModel->getProperty("world_box");
   const Property& pNewSrid = subjectModel->getProperty("srid");
   const Property& pNewScale = subjectModel->getProperty("scale");
+  const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
 
   //current properties
   const Property& pCurrentWidth = this->getProperty("width");
   const Property& pCurrentHeight = this->getProperty("height");
   const Property& pCurrentPlanarBox = this->getProperty("planar_box");
+  const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
 
   //new values
   double newWidth = pNewWidth.getValue().toDouble();
@@ -115,6 +110,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
   const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
   te::gm::Envelope newPlanarBox = te::map::GetWorldBoxInPlanar(newWorldBox, newSrid);
   double newScale = pNewScale.getValue().toDouble();
+  const AbstractItemView* newItemObservable = pNewItemObserver.getValue().toGenericVariant().toItem();
 
   if(newScale == 0)
   {
@@ -125,6 +121,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
   double currentWidth = pCurrentWidth.getValue().toDouble();
   double currentHeight = pCurrentHeight.getValue().toDouble();
   te::gm::Envelope currentPlanarBox = pCurrentPlanarBox.getValue().toEnvelope();
+  const AbstractItemView* currentItemObservable = pCurrentItemObserver.getValue().toGenericVariant().toItem();
 
   bool doUpdate = false;
   if(newWidth != currentWidth)
@@ -136,6 +133,20 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     doUpdate = true;
   }
   else if(newPlanarBox.equals(currentPlanarBox) == false)
+  {
+    doUpdate = true;
+  }
+  else if (currentItemObservable && newItemObservable)
+  {
+    std::string newName = newItemObservable->getController()->getProperties().getObjectName();
+    std::string currentName = currentItemObservable->getController()->getProperties().getObjectName();
+    if (newName.compare(currentName) != 0)
+    {
+      doUpdate = true;
+    }
+  }
+  else if ((!newItemObservable && currentItemObservable)
+    || (newItemObservable && !currentItemObservable))
   {
     doUpdate = true;
   }
@@ -165,6 +176,19 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     if(newPlanarBox.equals(defaultPlanarBox) == false)
     {
       double gapX = 0;
+      double gapY = 0;
+
+      if (!newPlanarBox.isValid())
+      {
+        newPlanarBox = defaultPlanarBox;
+        {
+          Property property(0);
+          property.setName("planar_box");
+          property.setValue(newPlanarBox, dataType->getDataTypeEnvelope());
+          properties.updateProperty(property);
+        }
+      }
+
       double distance = newPlanarBox.getWidth();
       double initialX = getInitialCoord(newPlanarBox.getLowerLeftX(), distance, gapX);
       {
@@ -173,7 +197,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
         property.setValue(initialX, dataType->getDataTypeDouble());
         properties.addProperty(property);
       }
-      double gapY = 0;
+
       distance = newPlanarBox.getHeight();
       double initialY = getInitialCoord(newPlanarBox.getLowerLeftY(), distance, gapY);
       {

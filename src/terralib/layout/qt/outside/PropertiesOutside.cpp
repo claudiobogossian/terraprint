@@ -303,7 +303,8 @@ void te::layout::PropertiesOutside::closeEvent( QCloseEvent * event )
 
 void te::layout::PropertiesOutside::changeMapVisitable( Property property )
 {
-  if(property.getName().compare(m_sharedProps->getMapName()) != 0)
+  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+  if (property.getName().compare(m_sharedProps->getItemObserver()) != 0)
     return;
 
 
@@ -317,47 +318,47 @@ void te::layout::PropertiesOutside::changeMapVisitable( Property property )
       AbstractItemView* selectedAbsView = dynamic_cast<AbstractItemView*>(selectedItem);
       if (selectedAbsView != 0)
       {
-        const Property& pOldMapName = selectedAbsView->getController()->getProperty(m_sharedProps->getMapName());
-        if (pOldMapName.isNull() == true)
+        const Property& pOldMapItem = selectedAbsView->getController()->getProperty(m_sharedProps->getItemObserver());
+        if (pOldMapItem.isNull() == true)
         {
           continue;
         }
 
-        const std::string oldMapName = pOldMapName.getOptionByCurrentChoice().toString();
-        if (oldMapName.empty() == true)
+        AbstractItemView* oldMapItemView = const_cast<AbstractItemView*>(pOldMapItem.getValue().toGenericVariant().toItem());
+        if (!oldMapItemView)
         {
           continue;
         }
 
-        MapItem* oldMapItem = iUtils.getMapItem(oldMapName);
+        const Property& oldMapName = oldMapItemView->getController()->getProperty("name");
+        MapItem* oldMapItem = dynamic_cast<MapItem*>(oldMapItemView);
         if (!oldMapItem)
           return;
         
 
         oldMapItem->getController()->detach(selectedAbsView->getController());
 
-        //checks if the map item is already in a group
-        QGraphicsItemGroup* group = oldMapItem->group();
-        if (group != 0)
+        
+        if (m_scene != 0)
         {
-          m_scene->destroyItemGroup(group);
+          //checks if the map item is already in a group
+          QGraphicsItemGroup* group = oldMapItem->group();
+          if (group != 0)
+          {
+            m_scene->destroyItemGroup(group);
+          }
         }
       }
     }
   }
 
-  std::string name = property.getValue().toString();
-  if (name.compare("") == 0)
-  {
-    name = property.getOptionByCurrentChoice().toString();
-  }
-
-  if (name.compare("") == 0)
+  AbstractItemView* mapItemView = const_cast<AbstractItemView*>(property.getValue().toGenericVariant().toItem());
+  if (!mapItemView)
   {
     return;
   }
-
-  MapItem* mapItem = iUtils.getMapItem(name);
+  
+  MapItem* mapItem = dynamic_cast<MapItem*>(mapItemView);
   if(!mapItem)
     return;
 

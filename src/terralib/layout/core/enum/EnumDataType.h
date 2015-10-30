@@ -213,6 +213,13 @@ namespace te
         */
         virtual EnumType* getDataTypeGeometry() const;
 
+        /*!
+        \brief Returns shared pointer of the type te::gm::Geometry belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getDataTypeItemObserver() const;
+
       protected:
 
         /*!
@@ -244,6 +251,7 @@ namespace te
         EnumType* m_dataTypeStringVector; //!< value that represents type string vector (std::vector<std::string>) belonging to enumeration
         EnumType* m_dataTypeSVGView; //!< value that represents type SVGView (string) belonging to enumeration
         EnumType* m_dataTypeGeometry; //!< shared pointer to te::gm::Geometry belonging to enumeration
+        EnumType* m_dataTypeItemObserver; //!< value that represents type item observer to te::gm::Geometry belonging to enumeration
     };
   }
 }

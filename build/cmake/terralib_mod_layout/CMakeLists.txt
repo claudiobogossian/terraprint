@@ -230,10 +230,17 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ItemObserverFactory.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ItemObserverProperty.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ItemObserverManager.h
+                                 #Base Layout
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MainLayout.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/OutsideArea.h
+                                 
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PDFSettingsOutside.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/FileEditFactory.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/FileEdit.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/FilePathManager.h
                                  #Base Layout
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MainLayout.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/OutsideArea.h
