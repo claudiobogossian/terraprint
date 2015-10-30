@@ -84,6 +84,12 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     if (child != 0)
     {
       child->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
+
+      AbstractItemView* absItem = dynamic_cast < AbstractItemView*>(child);
+      if (absItem != 0)
+      {
+        absItem->setSubSelection(false);
+      }
     }
   }
 
