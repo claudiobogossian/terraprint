@@ -105,7 +105,7 @@ void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProj
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(std::vector<Property>)), this, SLOT(onChangeDlgProperty(std::vector<Property>)));
 
   // Item Observer properties
-  m_itemObserverManager = new ItemObserverManager(m_scene);
+  m_itemObserverManager = new ItemObserverManager(scene);
   connect(m_itemObserverManager, SIGNAL(valueChanged(QtProperty*, const QVariant &)),
     this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
   ItemObserverFactory* itemObserverFactory = new ItemObserverFactory;
