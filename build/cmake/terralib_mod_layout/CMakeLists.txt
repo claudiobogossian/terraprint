@@ -274,8 +274,8 @@ target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            ${QTPROPERTYBROWSER_LIBRARY})
 
 set_target_properties(terralib_mod_layout
-                      PROPERTIES VERSION ${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}
-                                 SOVERSION ${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}
+                      PROPERTIES VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
+                                 SOVERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
                                  INSTALL_NAME_DIR "@executable_path/../lib")
 
 install(TARGETS terralib_mod_layout
