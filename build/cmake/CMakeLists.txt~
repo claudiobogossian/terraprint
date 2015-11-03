@@ -1311,10 +1311,10 @@ endif()
 
 install(FILES ${terralib_BINARY_DIR}/pkg/terralib-config.cmake
               ${terralib_BINARY_DIR}/terralib-config-version.cmake
-        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-${TERRALIB_PKG_VERSION} COMPONENT devel)
+        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-${TERRALIB_LAYOUT_PKG_VERSION} COMPONENT devel)
 
 install(EXPORT terralib-targets
-        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-${TERRALIB_PKG_VERSION}
+        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-${TERRALIB_LAYOUT_PKG_VERSION}
         FILE terralib-exports.cmake
         COMPONENT devel)
 

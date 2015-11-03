@@ -340,17 +340,14 @@ install(FILES ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h
               ${TERRALIB_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib COMPONENT devel)
 
-install(FILES ${terralib_BINARY_DIR}/pkg/terralib-layout-config.cmake
-              ${terralib_BINARY_DIR}/terralib-layout-config-version.cmake
+install(FILES ${CMAKE_BINARY_DIR}/pkg/terralib-layout-config.cmake
+              ${CMAKE_BINARY_DIR}/terralib-layout-config-version.cmake
         DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-layout-${TERRALIB_LAYOUT_PKG_VERSION} COMPONENT devel)
 
 #install(EXPORT terralib-targets
 #        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-layout-${TERRALIB_LAYOUT_PKG_VERSION}
 #        FILE terralib-layout-exports.cmake
 #        COMPONENT devel)
-
-install(DIRECTORY ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/config
-        DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib COMPONENT runtime)
 
 #
 # CPack
