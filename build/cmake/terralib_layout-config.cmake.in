@@ -25,6 +25,6 @@
 #          Frederico Augusto T. Bede <frederico.bede@funcate.org.br>
 #
 
-include("@terralib_BINARY_DIR@/terralib-exports.cmake")
+include("@terralib_BINARY_DIR@/terralib_layout-exports.cmake")
 
-set(terralib_INCLUDE_DIRS "@TERRALIB_ABSOLUTE_ROOT_DIR@/src")
+set(terralib_layout_INCLUDE_DIRS "@TERRALIB_ABSOLUTE_ROOT_DIR@/src")
