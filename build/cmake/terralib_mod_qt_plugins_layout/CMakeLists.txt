@@ -102,7 +102,9 @@ install(FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/plugins/te.qt.layout.
         DESTINATION ${TERRALIB_DESTINATION_PLUGINS} COMPONENT runtime)
         
 if(UNIX)
-	install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_qt_plugins_layout.so
+  install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_qt_plugins_layout.so.${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
+    	    DESTINATION ${terralib_DIR}/../../)
+  install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_qt_plugins_layout.so
     	    DESTINATION ${terralib_DIR}/../../)
 endif()	  
 
