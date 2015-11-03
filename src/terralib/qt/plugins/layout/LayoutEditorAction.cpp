@@ -92,16 +92,13 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   QSize size = mw->centralWidget()->size();
   QRect screen = mw->centralWidget()->geometry();
 
-  if(!m_mainLayout)
+  if(m_mainLayout)
   {
-    m_mainLayout = new te::layout::MainLayout(proxyProject);
+    delete m_mainLayout;
   }
+  m_mainLayout = new te::layout::MainLayout(proxyProject);
   m_mainLayout->init(size, screen);
 
-  if (m_dockLayoutDisplay)
-  {
-    delete m_dockLayoutDisplay;
-  }
   m_dockLayoutDisplay = new te::layout::DisplayDock;
 
   m_statusBar = m_mainLayout->getStatusBar();
@@ -126,8 +123,6 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   mw->connect(m_mainLayout, SIGNAL(exit()), this, SLOT(onExit()));
 
   createMenu();
-  //QAction* actionExit = m_mainLayout->getToolbar()->getActionExitButton();
-  //connect(actionExit, SIGNAL(activated()), this, SLOT(close()));
   m_mainLayout->getToolbar()->getActionExitButton()->setVisible(false);
 
   if(m_mainLayout->getProperties())
@@ -211,27 +206,4 @@ void te::qt::plugins::layout::LayoutEditorAction::createMenu()
   actionExit->setIcon(QIcon::fromTheme("layout-close"));
   actionExit->setToolTip("");
   layoutMenu->addAction(actionExit);
-  connect(actionExit, SIGNAL(activated()), this, SLOT(close()));
 }
-
-void te::qt::plugins::layout::LayoutEditorAction::close()
-{
-  if (m_mainLayout)
-  {
-    delete m_mainLayout;
-    m_mainLayout = 0;
-  }
-
-  if (m_verticalLayout)
-  {
-    delete m_verticalLayout;
-    m_verticalLayout = 0;
-  }
-
-  if (m_groupBox)
-  {
-    delete m_groupBox;
-    m_groupBox = 0;
-  }
-}
-

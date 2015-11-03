@@ -60,18 +60,6 @@ te::layout::MainLayout::~MainLayout()
     m_outsideArea = 0;
   }
 
-  if(m_view)
-  {
-    delete m_view;
-    m_view = 0;
-  }
-  
-  if(m_statusBar)
-  {
-    delete m_statusBar;
-    m_statusBar = 0;
-  }
-
   if(m_buildEnums)
   {
     delete m_buildEnums;
