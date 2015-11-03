@@ -67,8 +67,6 @@ namespace te
 
             virtual void onExit();
 
-            virtual void close();
-
           protected:
 
           te::layout::DisplayDock*              m_dockLayoutDisplay;

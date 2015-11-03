@@ -38,11 +38,11 @@ te::layout::DisplayDock::DisplayDock( QWidget * parent, Qt::WindowFlags flags ) 
 {  
   setVisible(false);
   setWindowTitle("Layout Display");
+  setAttribute(Qt::WA_DeleteOnClose);
 }
 
 te::layout::DisplayDock::~DisplayDock()
 {
-
 }
 
 void te::layout::DisplayDock::closeEvent( QCloseEvent * event )
