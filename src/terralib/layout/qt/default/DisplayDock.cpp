@@ -55,6 +55,7 @@ void te::layout::DisplayDock::closeEvent( QCloseEvent * event )
   }
 
   removeDock();
+  emit exit();
 }
 
 void te::layout::DisplayDock::setPreviousCentralWidget( QWidget* previous )

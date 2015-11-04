@@ -56,6 +56,10 @@ namespace te
 
       virtual void onExit();
 
+    signals:
+
+      void exit();
+
     protected:
 
       virtual void  closeEvent ( QCloseEvent * event );
