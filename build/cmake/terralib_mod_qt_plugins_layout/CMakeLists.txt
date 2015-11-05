@@ -108,7 +108,7 @@ if(UNIX)
     	    DESTINATION ${terralib_DIR}/../../)
 endif()	  
 
-export(TARGETS terralib_mod_qt_plugins_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib-exports.cmake)
+export(TARGETS terralib_mod_qt_plugins_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
 
 if(MSVC)
 	add_custom_command(

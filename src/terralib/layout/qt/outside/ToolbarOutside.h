@@ -177,6 +177,8 @@ namespace te
 
       virtual QAction* getActionComboBoxZoom();
 
+      virtual QAction* getActionExportToPDFButton();
+
       /* Actions names */
 
       /* Map Menu */
