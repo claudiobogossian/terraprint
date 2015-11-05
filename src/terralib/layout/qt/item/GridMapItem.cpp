@@ -49,9 +49,13 @@ te::layout::GridMapItem::~GridMapItem()
 
 void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pVisible = m_controller->getProperty(settingsConfig.getVisible());
+  const Property& pVisible = pGridSettings.containsSubProperty(settingsConfig.getVisible());
   bool visible = pVisible.getValue().toBool();
 
   if(visible)
@@ -67,11 +71,15 @@ void te::layout::GridMapItem::drawGrid( QPainter* painter )
 
 void te::layout::GridMapItem::configPainter( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pLineStyle = m_controller->getProperty(settingsConfig.getLineStyle());
-  const Property& pLineColor = m_controller->getProperty(settingsConfig.getLineColor());
-  const Property& pLineWidth = m_controller->getProperty(settingsConfig.getLineWidth());
+  const Property& pLineStyle = pGridSettings.containsSubProperty(settingsConfig.getLineStyle());
+  const Property& pLineColor = pGridSettings.containsSubProperty(settingsConfig.getLineColor());
+  const Property& pLineWidth = pGridSettings.containsSubProperty(settingsConfig.getLineWidth());
 
   const std::string& lineStyleName = pLineStyle.getOptionByCurrentChoice().toString();
   const te::color::RGBAColor& lineColor = pLineColor.getValue().toColor();
@@ -117,11 +125,15 @@ void te::layout::GridMapItem::configPainter( QPainter* painter )
 
 void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextPointSize = m_controller->getProperty(settingsConfig.getPointTextSize());
-  const Property& pTextFontFamily = m_controller->getProperty(settingsConfig.getFontText());
-  const Property& pTextColor = m_controller->getProperty(settingsConfig.getTextColor());
+  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextColor = pGridSettings.containsSubProperty(settingsConfig.getTextColor());
 
   int textPointSize = pTextPointSize.getValue().toInt();
   const std::string& fontFamily = pTextFontFamily.getValue().toString();
@@ -193,13 +205,17 @@ void te::layout::GridMapItem::drawHorizontalLines( QPainter* painter )
 
 void te::layout::GridMapItem::drawTexts( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pVisibleAllTexts = m_controller->getProperty(settingsConfig.getVisibleAllTexts());
-  const Property& pLeftText = m_controller->getProperty(settingsConfig.getLeftText());
-  const Property& pRightText = m_controller->getProperty(settingsConfig.getRightText());
-  const Property& pTopText = m_controller->getProperty(settingsConfig.getTopText());
-  const Property& pBottomText = m_controller->getProperty(settingsConfig.getBottomText());
+  const Property& pVisibleAllTexts = pGridSettings.containsSubProperty(settingsConfig.getVisibleAllTexts());
+  const Property& pLeftText = pGridSettings.containsSubProperty(settingsConfig.getLeftText());
+  const Property& pRightText = pGridSettings.containsSubProperty(settingsConfig.getRightText());
+  const Property& pTopText = pGridSettings.containsSubProperty(settingsConfig.getTopText());
+  const Property& pBottomText = pGridSettings.containsSubProperty(settingsConfig.getBottomText());
 
   bool visibleAllTexts = pVisibleAllTexts.getValue().toBool();
   bool leftText = pLeftText.getValue().toBool();
@@ -241,8 +257,12 @@ void te::layout::GridMapItem::drawTexts( QPainter* painter )
 
 void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
-  const Property& pTopRotateText = m_controller->getProperty(settingsConfig.getTopRotateText());
+  const Property& pTopRotateText = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   bool bRotate = pTopRotateText.getValue().toBool();
   int iRotate = 0;
   if (bRotate)
@@ -265,8 +285,12 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
 void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
-  const Property& pBottomRotateText = m_controller->getProperty(settingsConfig.getBottomRotateText());
+  const Property& pBottomRotateText = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
   bool bRotate = pBottomRotateText.getValue().toBool();
   int iRotate = 0;
   if (bRotate)
@@ -289,8 +313,12 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
 void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
-  const Property& pLeftRotateText = m_controller->getProperty(settingsConfig.getLeftRotateText());
+  const Property& pLeftRotateText = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   bool bRotate = pLeftRotateText.getValue().toBool();
   int iRotate = 0;
   if (bRotate)
@@ -317,8 +345,12 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 
 void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
-  const Property& pRightRotateText = m_controller->getProperty(settingsConfig.getRightRotateText());
+  const Property& pRightRotateText = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
   bool bRotate = pRightRotateText.getValue().toBool();
   int iRotate = 0;
   if (bRotate)
@@ -355,13 +387,17 @@ QRectF te::layout::GridMapItem::boundingRect() const
 
 void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   painter->save();
 
   configPainter(painter);
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pCrossOffset = m_controller->getProperty(settingsConfig.getCrossOffset());
+  const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
   double crossOffSet = pCrossOffset.getValue().toDouble();
 
   QList<QLineF>::iterator itv = m_verticalLines.begin();
@@ -402,17 +438,21 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
 
 bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hrz, QPainter* painter )
 {
+  bool result = false;
+
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return result;
+
   GridSettingsConfigProperties settingsConfig;
 
   const Property& pWidth = m_controller->getProperty("width");
   const Property& pHeight = m_controller->getProperty("height");
-  const Property& pCrossOffset = m_controller->getProperty(settingsConfig.getCrossOffset());
+  const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
 
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
   double crossOffSet = pCrossOffset.getValue().toDouble();
-
-  bool result = false;
 
   //if the cross intersects the border of the reference rect, a line must be drawn instead of the cross
   te::gm::Envelope boxMM(0, 0, width, height);
@@ -475,10 +515,14 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
     return;
   }
 
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextPointSize = m_controller->getProperty(settingsConfig.getPointTextSize());
-  const Property& pTextFontFamily = m_controller->getProperty(settingsConfig.getFontText());
+  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
 
   int textPointSize = pTextPointSize.getValue().toInt();
   const std::string& fontFamily = pTextFontFamily.getValue().toString();

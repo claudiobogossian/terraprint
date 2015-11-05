@@ -34,6 +34,9 @@
 #include "../enum/EnumType.h"
 #include "../Config.h"
 
+// boost
+#include <boost/shared_ptr.hpp>
+
 namespace te
 {
   namespace layout
@@ -47,6 +50,8 @@ namespace te
     class TELAYOUTEXPORT Property
     {
       public:
+
+        typedef boost::shared_ptr<Property> Ptr;
         
         /*!
           \brief Constructor
@@ -79,7 +84,7 @@ namespace te
         */
         EnumType* getType() const;
 
-        std::vector<te::layout::Property> getSubProperty();
+        std::vector<te::layout::Property> getSubProperty() const;
         
         /*
           To use this method, you need to declare a variable with 
@@ -140,8 +145,14 @@ namespace te
         //Ex.: For font information
         void addSubProperty( Property property );
 
+        bool addSubProperty(const Property& parent, const Property& subProperty);
+
         void removeSubProperty( Property property );
 
+        bool removeSubProperty(const std::string& name);
+
+        bool updateSubProperty(Property property);
+        
         /*!
           \brief Returns true if no value has been set, false otherwise.
 
@@ -168,9 +179,9 @@ namespace te
         */
         virtual std::string getLabel();
 
-        virtual bool containsSubProperty(Property subProperty);
+        virtual bool containsSubProperty(Property subProperty) const;
 
-        virtual Property containsSubProperty(std::string name);
+        virtual const te::layout::Property& containsSubProperty(std::string name) const;
         
         /*!
           \brief Sets true if property will be used in a menu, false otherwise.
@@ -277,21 +288,22 @@ namespace te
 
     protected:
 
-      int m_parentItemHashCode; //!< hashcode of the object that owns this property
-      std::string m_name; //!< name of this property
-      EnumType* m_type; //!< data type of this property
-      Variant m_value; //!<
-      Variant m_currentChoice; //!<
-      bool m_editable; //!<
-      std::vector<Variant> m_options; //!<
-      std::vector<te::layout::Property> m_subProperty; //!<
-      std::string m_label; //!<
-      bool m_menu; //!< the property will be used in a menu. 
-      std::string m_icon; //!<
-      bool m_visible; //!< visibility
-      bool m_required; //!< required
-      bool m_composeWidget; //!< compose widget
-      bool m_public; //!< public property, used by another component
+      int                                 m_parentItemHashCode; //!< hashcode of the object that owns this property
+      std::string                         m_name; //!< name of this property
+      EnumType*                           m_type; //!< data type of this property
+      Variant                             m_value; //!<
+      Variant                             m_currentChoice; //!<
+      bool                                m_editable; //!<
+      std::vector<Variant>                m_options; //!<
+      std::vector<te::layout::Property>   m_subProperty; //!<
+      std::string                         m_label; //!<
+      bool                                m_menu; //!< the property will be used in a menu. 
+      std::string                         m_icon; //!<
+      bool                                m_visible; //!< visibility
+      bool                                m_required; //!< required
+      bool                                m_composeWidget; //!< compose widget
+      bool                                m_public; //!< public property, used by another component
+      mutable Property::Ptr               m_nullProperty; //!< Represents a null property
     };
 
     template <typename ValueType>

@@ -48,6 +48,7 @@
 #include <QtPropertyBrowser/QtVariantPropertyManager>
 #include <QtPropertyBrowser/QtTreePropertyBrowser>
 #include <QtPropertyBrowser/qteditorfactory.h>
+#include <QtPropertyBrowser/QtGroupPropertyManager>
 
 // STL
 #include <algorithm>    // std::find
@@ -243,11 +244,11 @@ QtTreePropertyBrowser* te::layout::PropertyBrowser::getPropertyEditor()
 
 QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
 {
-  QtVariantProperty* vproperty = 0;
+  QtProperty* pproperty = 0;
 
   if(!property.isVisible())
   {
-    return vproperty;
+    return pproperty;
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -260,47 +261,35 @@ QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
 
   m_changeQtPropertyVariantValue = true;
   
-  QtProperty* qProperty = m_variantPropertiesBrowser->addProperty(property);
-  vproperty = dynamic_cast<QtVariantProperty*>(qProperty);
-  if(vproperty) 
+  pproperty = addVariantProperty(property); // add variant property 
+  if (!pproperty)
   {
-    bool is_readOnly = !property.isEditable();
-    vproperty->setAttribute(QLatin1String("readOnly"), is_readOnly);
-    addPropertyItem(vproperty, QLatin1String(property.getName().c_str()));
-  }
-  else
-  {
-    QtProperty* pproperty = 0;
     GenericVariant gv = property.getValue().toGenericVariant();
-    if (gv.getType() != dataType->getDataTypeItemObserver())
+    if (gv.getType() != dataType->getDataTypeItemObserver()
+      && property.getType() != dataType->getDataTypeGroupProperties())
     {
-      pproperty = m_dialogPropertiesBrowser->addProperty(property);
-      if (pproperty)
-      {
-        addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
-      }
-      else
-      {
-        return pproperty;
-      }
+      pproperty = addDialogProperty(property); // add dialog property
+    }
+    else if (gv.getType() == dataType->getDataTypeItemObserver())
+    {
+      pproperty = addItemProperty(property); // add item observer property
+    }
+  }
+
+  if (pproperty)
+  {
+    if (property.getType() != dataType->getDataTypeGroupProperties())
+    {
+      gatherProperties(pproperty, property); // gather properties (has a root property with a value and subproperties)
     }
     else
     {
-      pproperty = m_itemObserverManager->addProperty(property.getName().c_str());
-      QString val("");
-      if (property.getValue().toGenericVariant().toItem() != 0)
-      {
-        const AbstractItemView* view = property.getValue().toGenericVariant().toItem();
-        const Property& property = view->getController()->getProperty("name");
-        val = property.getValue().toString().c_str();
-      }
-      m_itemObserverManager->setValue(pproperty, val);
-      m_itemObserverManager->setTypeForSearch(pproperty, objType->getMapItem());
-      addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+      createGroup(pproperty, property); // group subproperties (has a root property without a value (has subproperties). For group of types, styles, etc.)
     }
   }
+
   m_changeQtPropertyVariantValue = false;
-  return vproperty;
+  return pproperty;
 }
 
 QMap<QString, QtProperty*> te::layout::PropertyBrowser::addProperties(const Properties& properties)
@@ -320,6 +309,71 @@ QMap<QString, QtProperty*> te::layout::PropertyBrowser::addProperties(const Prop
   m_dialogPropertiesBrowser->setAllProperties(props);
 
   return m_idToProperty;
+}
+
+QtProperty* te::layout::PropertyBrowser::addVariantProperty(const Property& property)
+{
+  QtVariantProperty* vproperty = 0;
+
+  QtProperty* pproperty = m_variantPropertiesBrowser->addProperty(property);
+  if (!pproperty)
+    return vproperty;
+
+  vproperty = dynamic_cast<QtVariantProperty*>(pproperty);
+  if (vproperty)
+  {
+    bool is_readOnly = !property.isEditable();
+    vproperty->setAttribute(QLatin1String("readOnly"), is_readOnly);
+    addPropertyItem(vproperty, QLatin1String(property.getName().c_str()));
+  }
+  return vproperty;
+}
+
+QtProperty* te::layout::PropertyBrowser::addDialogProperty(const Property& property)
+{
+  QtProperty* pproperty = 0;
+
+  pproperty = m_dialogPropertiesBrowser->addProperty(property);
+  if (pproperty)
+  {
+    addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+  }
+
+  return pproperty;
+}
+
+QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& property)
+{
+  QtProperty* pproperty = 0;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
+
+  if (!dataType || !objType)
+  {
+    return pproperty;
+  }
+
+  GenericVariant gv = property.getValue().toGenericVariant();
+  if (gv.getType() != dataType->getDataTypeItemObserver())
+    return pproperty;
+  
+  pproperty = m_itemObserverManager->addProperty(property.getName().c_str());
+  if (!pproperty)
+    return pproperty;
+
+  QString val("");
+  if (property.getValue().toGenericVariant().toItem() != 0)
+  {
+    const AbstractItemView* view = property.getValue().toGenericVariant().toItem();
+    const Property& property = view->getController()->getProperty("name");
+    val = property.getValue().toString().c_str();
+  }
+  m_itemObserverManager->setValue(pproperty, val);
+  m_itemObserverManager->setTypeForSearch(pproperty, objType->getMapItem());
+  addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+
+  return pproperty;
 }
 
 bool te::layout::PropertyBrowser::removeProperty( Property property )
@@ -352,6 +406,44 @@ bool te::layout::PropertyBrowser::removeProperty( Property property )
   }
 
   return true;
+}
+
+void te::layout::PropertyBrowser::gatherProperties(QtProperty* qproperty, Property property)
+{
+  if (property.getSubProperty().empty())
+    return;
+    
+  std::vector<Property> vecProperties = property.getSubProperty();
+  foreach(Property prop, vecProperties)
+  {
+    if (!prop.isVisible())
+      continue;
+
+    QtProperty* subProperty = addProperty(prop); // create and add property
+    addSubProperty(qproperty, subProperty); // change property to sub property
+  }
+}
+
+void te::layout::PropertyBrowser::createGroup(QtProperty* qproperty, Property property)
+{
+  QtGroupPropertyManager*  groupManager = new QtGroupPropertyManager;
+  QtProperty* groupProperty = groupManager->addProperty(property.getName().c_str());
+
+  if (!property.getSubProperty().empty())
+  {
+    std::vector<Property> vecProperties = property.getSubProperty();
+    foreach(Property prop, vecProperties)
+    {
+      if (!prop.isVisible())
+        continue;
+
+      QtProperty* subProperty = addProperty(prop); // create and add property
+      groupProperty->addSubProperty(subProperty); // change property to group
+    }
+  }
+  
+  //add group property to the property browser tree
+  addPropertyItem(groupProperty, QLatin1String(property.getName().c_str()));
 }
 
 void te::layout::PropertyBrowser::setHasWindows( bool hasWindows )

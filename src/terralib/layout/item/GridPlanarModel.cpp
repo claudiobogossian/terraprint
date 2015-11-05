@@ -56,13 +56,15 @@ te::layout::GridPlanarModel::GridPlanarModel()
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
+  Property prop_gridsettings = m_properties.getProperty("GridSettings");
+
   //adding properties
   {
     Property property(0);
     property.setName(settingsConfig.getUnit());
     property.setLabel("Unit");
     property.setValue((int)unit, dataType->getDataTypeInt());
-    m_properties.addProperty(property);
+    m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
 
   // Reference Settings

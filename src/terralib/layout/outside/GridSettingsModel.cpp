@@ -62,21 +62,13 @@ te::layout::Property te::layout::GridSettingsModel::containsProperty( std::strin
 
 bool te::layout::GridSettingsModel::updateProperty( Property prop, EnumType* enumType )
 {
+  bool result = false;
   if (!containsGrid(enumType))
-  {
-    return false;
-  }
-  
-  bool result = m_properties.contains(prop);
-  if(!result)
   {
     return result;
   }
-
-  if(m_properties.removeProperty(prop.getName()))
-  {
-    m_properties.addProperty(prop);
-  }
+  
+  result = m_properties.updateProperty(prop);
   return result;
 }
 

@@ -44,14 +44,15 @@ te::layout::Property::Property( int parentItemHashCode ) :
   m_visible(true),
   m_required(false),
   m_composeWidget(false),
-  m_public(false)
+  m_public(false),
+  m_nullProperty(0)
 {
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
 }
 
 te::layout::Property::~Property()
 {
-
+  
 }
 
 const std::string& te::layout::Property::getName() const
@@ -126,6 +127,30 @@ void te::layout::Property::addSubProperty( Property property )
   m_subProperty.push_back(property);
 }
 
+bool te::layout::Property::addSubProperty(const Property& parent, const Property& subProperty)
+{
+  std::vector<te::layout::Property> subProperties = parent.getSubProperty();
+  std::size_t total = subProperties.size();
+  std::size_t totalResult = 0;
+
+  if (std::find(m_subProperty.begin(), m_subProperty.end(), parent) != m_subProperty.end())
+  {
+    std::vector<Property>::iterator it = std::find(m_subProperty.begin(), m_subProperty.end(), parent);
+    it->addSubProperty(subProperty);
+    totalResult = it->getSubProperty().size();
+  }
+  else
+  {
+    for (std::vector<te::layout::Property>::iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
+    {
+      itSub->addSubProperty(parent, subProperty);
+    }
+  }
+
+  if (totalResult > total)
+    return true;
+  return false;
+}
 void te::layout::Property::removeSubProperty( Property property )
 {
   for(std::vector<Property>::iterator it = m_subProperty.begin(); it != m_subProperty.end(); it++)
@@ -135,12 +160,70 @@ void te::layout::Property::removeSubProperty( Property property )
       m_subProperty.erase(it);
       break;
     }
+    else
+    {
+      it->removeSubProperty(property);
+    }
   }
 }
 
-std::vector<te::layout::Property> te::layout::Property::getSubProperty()
+bool te::layout::Property::removeSubProperty(const std::string& name)
+{
+  bool is_removeProp = false;
+
+  Property property;
+  property.setName(name);
+
+  if (m_subProperty.empty())
+    return is_removeProp;
+
+  if (std::find(m_subProperty.begin(), m_subProperty.end(), property) != m_subProperty.end())
+  {
+    std::vector<Property>::iterator it = std::find(m_subProperty.begin(), m_subProperty.end(), property);
+    property = (*it);
+    is_removeProp = true;
+  }
+  else
+  {
+    for (std::vector<Property>::iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
+    {
+      is_removeProp = itSub->removeSubProperty(name);
+      if (is_removeProp)
+      {
+        break;
+      }
+    }
+  }
+  return is_removeProp;
+}
+
+std::vector<te::layout::Property> te::layout::Property::getSubProperty() const
 {
   return m_subProperty;
+}
+
+bool te::layout::Property::updateSubProperty(Property property)
+{
+  bool result = false;
+
+  if (m_subProperty.empty())
+    return result;
+
+  for (std::vector<te::layout::Property>::iterator it = m_subProperty.begin(); it != m_subProperty.end(); ++it)
+  {
+    if ((*it) == property)
+    {
+      it->setValue(property.getValue());
+      it->setOptionChoice(property.getOptionByCurrentChoice());
+      result = true;
+    }
+    else
+    {
+      it->updateSubProperty(property);
+    }
+  }
+
+  return result;
 }
 
 bool te::layout::Property::isNull() const
@@ -162,33 +245,67 @@ bool te::layout::Property::isNull() const
   return result;
 }
 
-bool te::layout::Property::containsSubProperty( Property subProperty )
+bool te::layout::Property::containsSubProperty( Property subProperty ) const
 {
   bool is_present = false;
 
-  if(std::find(m_subProperty.begin(), m_subProperty.end(), subProperty) != m_subProperty.end())
+  if (m_subProperty.empty())
+    return is_present;
+
+  if (std::find(m_subProperty.begin(), m_subProperty.end(), subProperty) != m_subProperty.end())
   {
     is_present = true;
+  }
+  else
+  {
+    for (std::vector<Property>::const_iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
+    {
+      is_present = itSub->containsSubProperty(subProperty);
+      if (is_present)
+      {
+        break;
+      }
+    }
   }
 
   return is_present;
 }
 
-te::layout::Property te::layout::Property::containsSubProperty( std::string name )
+const te::layout::Property& te::layout::Property::containsSubProperty(std::string name) const
 {
   Property property;
   property.setName(name);
+  
+  if (!m_nullProperty)
+  {
+    m_nullProperty = Property::Ptr(new Property);
+  }
+
+  if (m_subProperty.empty())
+  {
+    Property* p = m_nullProperty.get();
+    return *p;
+  }
 
   if(std::find(m_subProperty.begin(), m_subProperty.end(), property) != m_subProperty.end())
   {
-    std::vector<Property>::iterator it = std::find(m_subProperty.begin(), m_subProperty.end(), property);
-
-    property = (*it);
+    std::vector<Property>::const_iterator it = std::find(m_subProperty.begin(), m_subProperty.end(), property);
+    return (*it);
   }
   else
-    property.setName("");
-
-  return property;
+  {
+    for (std::vector<Property>::const_iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
+    {
+      const Property& prop = itSub->containsSubProperty(name);
+      if (!prop.isNull())
+      {
+        return prop;
+      }
+    }
+  }
+  
+  Property* p = m_nullProperty.get();
+  return *p;
 }
 
 void te::layout::Property::clear()

@@ -149,6 +149,16 @@ namespace te
         virtual void changeVisibility( QList<QtBrowserItem*> items, bool visible );
         
         virtual void blockOpenWindows(bool block);
+
+        virtual void createGroup(QtProperty* qproperty, Property property);
+
+        virtual void gatherProperties(QtProperty* qproperty, Property property);
+
+        virtual QtProperty* addVariantProperty(const Property& property);
+
+        virtual QtProperty* addDialogProperty(const Property& property);
+
+        virtual QtProperty* addItemProperty(const Property& property);
               
       protected:
 
