@@ -44,8 +44,7 @@ te::layout::Property::Property( int parentItemHashCode ) :
   m_visible(true),
   m_required(false),
   m_composeWidget(false),
-  m_public(false),
-  m_nullProperty(0)
+  m_public(false)
 {
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
 }
