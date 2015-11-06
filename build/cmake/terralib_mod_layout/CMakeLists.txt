@@ -349,8 +349,15 @@ install(FILES ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES}
 
 install(FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/outside COMPONENT devel)
+        
+if(UNIX)
+  install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_layout.so.${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
+    	    DESTINATION ${terralib_DIR}/../../)
+  install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_layout.so
+    	    DESTINATION ${terralib_DIR}/../../)
+endif()	        
 
-export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib-exports.cmake)
+export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
 
 if(MSVC)
 	add_custom_command(

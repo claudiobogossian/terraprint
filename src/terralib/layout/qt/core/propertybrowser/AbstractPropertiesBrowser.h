@@ -76,31 +76,36 @@ namespace te
 
         virtual void clearAll();
         
-        virtual Property getProperty(const std::string& name) = 0;
+        virtual Property getProperty(const std::string& label) = 0;
 
         virtual EnumType* getLayoutType(QVariant::Type type, const std::string& name = "") = 0;
 
         virtual int getVariantType(EnumType* dataType) = 0;
         
-        virtual QVariant findPropertyValue(const std::string& name);
+        virtual QVariant findPropertyValue(const std::string& label);
 
-        virtual QtProperty* findProperty(const std::string& name);
+        virtual QtProperty* findProperty(const std::string& label);
 
         virtual bool removeProperty(QtProperty* prop);
 
         virtual void setAllProperties(Properties properties);
+
+        QString nameProperty(const std::string& label);
+
+        QString labelProperty(const std::string& name);
                           
       protected:
 
         virtual void createManager() = 0;
 
-        virtual void addPropertyItem(QtProperty *property, const QString &id);
+        virtual void addPropertyItem(QtProperty *property, const QString &id, const QString &label);
 
         virtual QVariant checkComplexType(QtVariantProperty* property);
 
         bool                        m_changeProperty;
         QMap<QtProperty*, QString>  m_propertyToId;
         QMap<QString, QtProperty*>  m_idToProperty;
+        QMap<QString, QString>      m_nameToLabel;
         Properties                  m_allProperties;
     };
   }

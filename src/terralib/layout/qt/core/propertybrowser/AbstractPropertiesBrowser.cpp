@@ -56,10 +56,18 @@ te::layout::AbstractPropertiesBrowser::~AbstractPropertiesBrowser()
  
 }
 
-void te::layout::AbstractPropertiesBrowser::addPropertyItem( QtProperty *property, const QString &id )
+void te::layout::AbstractPropertiesBrowser::addPropertyItem(QtProperty *property, const QString &id, const QString &label)
 {
   m_propertyToId[property] = id;
   m_idToProperty[id] = property;
+
+  // If there is no label, then the name will be the label
+  QString labelString = label;
+  if (labelString.compare("") == 0)
+  {
+    labelString = id;
+  }
+  m_nameToLabel[id] = labelString;
 }
 
 void te::layout::AbstractPropertiesBrowser::clearAll()
@@ -69,17 +77,50 @@ void te::layout::AbstractPropertiesBrowser::clearAll()
   m_allProperties.clear();
 }
 
-QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue( const std::string& name )
+QString te::layout::AbstractPropertiesBrowser::nameProperty(const std::string& label)
+{
+  QList<QString> labelList = m_nameToLabel.values();
+
+  if (!labelList.contains(label.c_str()))
+  {
+    return QString();
+  }
+
+  int index = labelList.indexOf(label.c_str());
+  QString value = labelList.value(index);
+  QString name = m_nameToLabel.key(value);
+
+  return name;
+}
+
+QString te::layout::AbstractPropertiesBrowser::labelProperty(const std::string& name)
+{
+  if (!m_nameToLabel.contains(name.c_str()))
+  {
+    return QString();
+  }
+
+  QString foundLabel = m_nameToLabel[name.c_str()];
+  return foundLabel;
+}
+
+QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue(const std::string& label)
 {
   QVariant variant;
 
-  if(!m_idToProperty.contains(name.c_str()))
+  QString name = nameProperty(label);
+  if (name.compare("") == 0)
+  {
+    return variant;
+  }
+
+  if (!m_idToProperty.contains(name))
   {
     return variant;
   }
 
   QtVariantProperty* vproperty = 0;
-  QtProperty* prop = m_idToProperty[name.c_str()];
+  QtProperty* prop = m_idToProperty[name];
 
   if(prop)
   {
@@ -97,16 +138,22 @@ QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue( const std::st
   return variant;
 }
 
-QtProperty* te::layout::AbstractPropertiesBrowser::findProperty( const std::string& name )
+QtProperty* te::layout::AbstractPropertiesBrowser::findProperty(const std::string& label)
 {
   QtProperty* prop = 0;
 
-  if(!m_idToProperty.contains(name.c_str()))
+  QString name = nameProperty(label);
+  if (name.compare("") == 0)
+  {
+    return prop;
+  }
+
+  if (!m_idToProperty.contains(name))
   {
     return prop;  
   }
 
-  prop = m_idToProperty[name.c_str()];
+  prop = m_idToProperty[name];
   return prop;
 }
 
@@ -136,13 +183,19 @@ bool te::layout::AbstractPropertiesBrowser::removeProperty( QtProperty* prop )
     return false;
   }
 
-  if(!m_idToProperty.contains(prop->propertyName()))
+  QString name = nameProperty(prop->propertyName().toStdString());
+  if (name.compare("") == 0)
+  {
+    return prop;
+  }
+
+  if (!m_idToProperty.contains(name))
   {
     return false;  
   }
 
   m_propertyToId.remove(prop);
-  m_idToProperty.remove(prop->propertyName());
+  m_idToProperty.remove(name);
 
   return true;
 }

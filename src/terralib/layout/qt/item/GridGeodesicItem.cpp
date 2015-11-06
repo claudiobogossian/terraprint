@@ -49,10 +49,14 @@ te::layout::GridGeodesicItem::~GridGeodesicItem()
 
 void te::layout::GridGeodesicItem::drawGrid(QPainter* painter)
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GeodesicGridSettingsConfigProperties settingsConfig;
 
   const Property& pGeographicBox = m_controller->getProperty("geographic_box");
-  const Property& pStyle = m_controller->getProperty(settingsConfig.getStyle());
+  const Property& pStyle = pGridSettings.containsSubProperty(settingsConfig.getStyle());
 
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
 
@@ -91,12 +95,16 @@ void te::layout::GridGeodesicItem::drawGrid(QPainter* painter)
 
 void te::layout::GridGeodesicItem::calculateGrid()
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GeodesicGridSettingsConfigProperties settingsConfig;
 
   const Property& pGeographicBox = m_controller->getProperty("geographic_box");
   const Property& pWidth = m_controller->getProperty("width");
   const Property& pHeight = m_controller->getProperty("height");
-  const Property& pStyle = m_controller->getProperty(settingsConfig.getStyle());
+  const Property& pStyle = pGridSettings.containsSubProperty(settingsConfig.getStyle());
   const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
 
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
@@ -137,10 +145,14 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
 double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& geoBox )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return 0;
+
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pInitialGridPointY = m_controller->getProperty(settingsConfig.getInitialGridPointY());
-  const Property& pVerticalGap = m_controller->getProperty(settingsConfig.getLneVrtGap());
+  const Property& pInitialGridPointY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
+  const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
 
   double initialGridPointY = pInitialGridPointY.getValue().toDouble();
   double verticalGap = pVerticalGap.getValue().toDouble();
@@ -164,10 +176,14 @@ double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& 
 
 double te::layout::GridGeodesicItem::initHorizontalLines( const te::gm::Envelope& geoBox )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return 0;
+
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pInitialGridPointX = m_controller->getProperty(settingsConfig.getInitialGridPointX());
-  const Property& pHorizontalGap = m_controller->getProperty(settingsConfig.getLneHrzGap());
+  const Property& pInitialGridPointX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
+  const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
 
   double initialGridPointX = pInitialGridPointX.getValue().toDouble();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
@@ -192,19 +208,23 @@ double te::layout::GridGeodesicItem::initHorizontalLines( const te::gm::Envelope
 
 void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pFontFamily = m_controller->getProperty(settingsConfig.getFontText());
-  const Property& pTextPointSize = m_controller->getProperty(settingsConfig.getPointTextSize());
-  const Property& pVerticalGap = m_controller->getProperty(settingsConfig.getLneVrtGap());
-  const Property& pHorizontalGap = m_controller->getProperty(settingsConfig.getLneHrzGap());
-  const Property& pShowDegreesText = m_controller->getProperty(settingsConfig.getDegreesText());
-  const Property& pShowMinutesText = m_controller->getProperty(settingsConfig.getMinutesText());
-  const Property& pShowSecondsText = m_controller->getProperty(settingsConfig.getSecondsText());
-  const Property& pHorizontalDisplacement = m_controller->getProperty(settingsConfig.getLneHrzDisplacement());
-  const Property& pVerticalDisplacement = m_controller->getProperty(settingsConfig.getLneVrtDisplacement());
-  const Property& pLeftRotate = m_controller->getProperty(settingsConfig.getLeftRotateText());
-  const Property& pRightRotate = m_controller->getProperty(settingsConfig.getRightRotateText());
+  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
+  const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+  const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+  const Property& pShowDegreesText = pGridSettings.containsSubProperty(settingsConfig.getDegreesText());
+  const Property& pShowMinutesText = pGridSettings.containsSubProperty(settingsConfig.getMinutesText());
+  const Property& pShowSecondsText = pGridSettings.containsSubProperty(settingsConfig.getSecondsText());
+  const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
+  const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
+  const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
+  const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
 
   std::string fontFamily = pFontFamily.getValue().toString();
   int textPointSize = pTextPointSize.getValue().toInt();
@@ -312,19 +332,23 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
 void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM )
 {
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pFontFamily = m_controller->getProperty(settingsConfig.getFontText());
-  const Property& pTextPointSize = m_controller->getProperty(settingsConfig.getPointTextSize());
-  const Property& pHorizontalGap = m_controller->getProperty(settingsConfig.getLneHrzGap());
-  const Property& pVerticalGap = m_controller->getProperty(settingsConfig.getLneVrtGap());
-  const Property& pShowDegreesText = m_controller->getProperty(settingsConfig.getDegreesText());
-  const Property& pShowMinutesText = m_controller->getProperty(settingsConfig.getMinutesText());
-  const Property& pShowSecondsText = m_controller->getProperty(settingsConfig.getSecondsText());
-  const Property& pVerticalDisplacement = m_controller->getProperty(settingsConfig.getLneVrtDisplacement());
-  const Property& pHorizontalDisplacement = m_controller->getProperty(settingsConfig.getLneHrzDisplacement());
-  const Property& pTopRotate = m_controller->getProperty(settingsConfig.getTopRotateText());
-  const Property& pBottomRotate = m_controller->getProperty(settingsConfig.getBottomRotateText());
+  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
+  const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+  const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+  const Property& pShowDegreesText = pGridSettings.containsSubProperty(settingsConfig.getDegreesText());
+  const Property& pShowMinutesText = pGridSettings.containsSubProperty(settingsConfig.getMinutesText());
+  const Property& pShowSecondsText = pGridSettings.containsSubProperty(settingsConfig.getSecondsText());
+  const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
+  const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
+  const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
+  const Property& pBottomRotate = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
   
   std::string fontFamily = pFontFamily.getValue().toString();
   int textPointSize = pTextPointSize.getValue().toInt();

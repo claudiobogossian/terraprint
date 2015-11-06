@@ -80,6 +80,15 @@ namespace te
         virtual bool addProperty(const Property& property);
 
         /*!
+        \brief Adds the specified sub property to the set of properties for the parent property of this object.
+
+        \param property specified parent property
+        \param subProperty specified subproperty
+        \return true if add, false otherwise
+        */
+        virtual bool addSubProperty(const Property& parent, const Property& subProperty);
+
+        /*!
           \brief Removes a property from the set of properties of this object.
 
           \param property specified property
@@ -197,7 +206,6 @@ namespace te
         bool m_hasWindows; //!<
         int  m_hashcode;
         Property m_nullProperty; //!< Represents a null property
-
     };
 
     inline Properties::Properties() :
@@ -233,6 +241,33 @@ namespace te
       return false;
     }
 
+    inline bool Properties::addSubProperty(const Property& parent, const Property& subProperty)
+    {
+      std::vector<te::layout::Property> subProperties = parent.getSubProperty();      
+      std::size_t total = subProperties.size();
+      std::size_t totalResult = 0;
+
+      if (std::find(m_properties.begin(), m_properties.end(), parent) != m_properties.end())
+      {
+        std::vector<Property>::iterator it = std::find(m_properties.begin(), m_properties.end(), parent);
+        it->addSubProperty(subProperty);
+        totalResult = it->getSubProperty().size();
+      }
+      else
+      {
+        for (std::vector<te::layout::Property>::iterator itSub = m_properties.begin(); itSub != m_properties.end(); ++itSub)
+        {
+          if (itSub->addSubProperty(parent, subProperty))
+          {
+            totalResult += total;
+          }          
+        }
+      }
+
+      if (totalResult > total)
+        return true;
+      return false;
+    }
 
     inline bool Properties::removeProperty(const std::string& name)
     {
@@ -245,6 +280,10 @@ namespace te
           m_properties.erase(it);
           result = true;
           break;
+        }
+        else
+        {
+          it->removeSubProperty(name);
         }
       }
       return result;
@@ -259,9 +298,12 @@ namespace te
         if(it->getName().compare(property.getName()) == 0)
         {
           it->setValue(property.getValue());
-          it->setOptionChoice(property.getOptionByCurrentChoice());
+          it->setOptionChoice(property.getOptionByCurrentChoice());          
           result = true;
-          break;
+        }
+        else
+        {
+          it->updateSubProperty(property);
         }
       }
       return result;
@@ -306,6 +348,17 @@ namespace te
       {
         is_present = true;
       }
+      else
+      {
+        for (std::vector<te::layout::Property>::const_iterator itSub = m_properties.begin(); itSub != m_properties.end(); ++itSub)
+        {
+          is_present = itSub->containsSubProperty(property);
+          if (is_present)
+          {
+            break;
+          }
+        }
+      }
 
       return is_present;
     }
@@ -321,13 +374,26 @@ namespace te
     {
       Property property(0);
       property.setName(name);
-
-      std::vector<Property>::const_iterator it = std::find(m_properties.begin(), m_properties.end(), property);
-      if(it != m_properties.end())
+      
+      if (std::find(m_properties.begin(), m_properties.end(), property) != m_properties.end())
       {
-        return *it;
+        std::vector<Property>::const_iterator it = std::find(m_properties.begin(), m_properties.end(), property);
+        if (it != m_properties.end())
+        {
+          return (*it);
+        }
       }
-
+      else
+      {
+        for (std::vector<te::layout::Property>::const_iterator itSub = m_properties.begin(); itSub != m_properties.end(); ++itSub)
+        {
+          const Property& prop = itSub->containsSubProperty(name);
+          if (!prop.isNull())
+          {
+            return prop;
+          }
+        }
+      }
       return m_nullProperty;
     }
 

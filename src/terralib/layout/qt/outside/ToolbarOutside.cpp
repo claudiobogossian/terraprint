@@ -1235,6 +1235,11 @@ QAction* te::layout::ToolbarOutside::getActionComboBoxZoom()
   return m_actionComboZoom;
 }
 
+QAction* te::layout::ToolbarOutside::getActionExportToPDFButton()
+{
+  return m_actionExportToPDFButton;
+}
+
 std::string te::layout::ToolbarOutside::getActionSVG()
 {
   return m_actionSVG;

@@ -37,9 +37,9 @@ project(terralib_layout)
 set(TERRALIB_LAYOUT_VERSION_MAJOR 0)
 set(TERRALIB_LAYOUT_VERSION_MINOR 0)
 set(TERRALIB_LAYOUT_VERSION_PATCH 4)
-set(TERRALIB_LAYOUT_VERSION_STRING "${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}.${TERRALIB_VERSION_PATCH}")
+set(TERRALIB_LAYOUT_VERSION_STRING "${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}.${TERRALIB_LAYOUT_VERSION_PATCH}")
 set(TERRALIB_LAYOUT_VERSION "0x000004")
-set(TERRALIB_LAYOUT_PKG_VERSION ${TERRALIB_VERSION_MAJOR}.${TERRALIB_VERSION_MINOR}.${TERRALIB_VERSION_PATCH})
+set(TERRALIB_LAYOUT_PKG_VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}.${TERRALIB_LAYOUT_VERSION_PATCH})
 
 # variable indicating that it will search for 3rd-party libraries and install them
 if(NOT DEFINED TERRALIB_TRACK_3RDPARTY_DEPENDENCIES)
@@ -151,7 +151,7 @@ include(CMakeDependentOption)
 # including TerraLib auxiliary macros and functions
 #
 
-include(terralib-layout_macros.cmake)
+include(terralib_layout_macros.cmake)
 
 #
 # first check of libraries
@@ -295,14 +295,14 @@ CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plug
 # process TERRALIB configuration files
 #
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-config-pkg.cmake.in
-               ${CMAKE_BINARY_DIR}/pkg/terralib-layout-config.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib_layout-config-pkg.cmake.in
+               ${CMAKE_BINARY_DIR}/pkg/terralib_layout-config.cmake @ONLY)
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-config-version.cmake.in
-               ${CMAKE_BINARY_DIR}/terralib-layout-config-version.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib_layout-config-version.cmake.in
+               ${CMAKE_BINARY_DIR}/terralib_layout-config-version.cmake @ONLY)
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-config.cmake.in
-               ${CMAKE_BINARY_DIR}/terralib-layout-config.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib_layout-config.cmake.in
+               ${CMAKE_BINARY_DIR}/terralib_layout-config.cmake @ONLY)
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/BuildConfig.h.in
                ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h @ONLY)
@@ -340,14 +340,14 @@ install(FILES ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h
               ${TERRALIB_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib COMPONENT devel)
 
-install(FILES ${CMAKE_BINARY_DIR}/pkg/terralib-layout-config.cmake
-              ${CMAKE_BINARY_DIR}/terralib-layout-config-version.cmake
-        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-layout-${TERRALIB_LAYOUT_PKG_VERSION} COMPONENT devel)
+install(FILES ${CMAKE_BINARY_DIR}/pkg/terralib_layout-config.cmake
+              ${CMAKE_BINARY_DIR}/terralib_layout-config-version.cmake
+        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib_layout-${TERRALIB_LAYOUT_PKG_VERSION} COMPONENT devel)
 
-#install(EXPORT terralib-targets
-#        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib-layout-${TERRALIB_LAYOUT_PKG_VERSION}
-#        FILE terralib-layout-exports.cmake
-#        COMPONENT devel)
+install(EXPORT terralib-targets
+        DESTINATION ${TERRALIB_DESTINATION_LIBRARY}/cmake/terralib_layout-${TERRALIB_LAYOUT_PKG_VERSION}
+        FILE terralib_layout-exports.cmake
+        COMPONENT devel)
 
 #
 # CPack
@@ -355,10 +355,10 @@ install(FILES ${CMAKE_BINARY_DIR}/pkg/terralib-layout-config.cmake
 
 set(CPACK_SOURCE_INSTALLED_DIRECTORIES "${TERRALIB_ABSOLUTE_ROOT_DIR};/")
 
-configure_file(${CMAKE_SOURCE_DIR}/terralib-layout-cpack-options.cmake.in
-               ${CMAKE_BINARY_DIR}/terralib-layoutCPackOptions.cmake @ONLY)
+configure_file(${CMAKE_SOURCE_DIR}/terralib_layout-cpack-options.cmake.in
+               ${CMAKE_BINARY_DIR}/terralib_layoutCPackOptions.cmake @ONLY)
 
-set(CPACK_PROJECT_CONFIG_FILE ${terralib_BINARY_DIR}/terralib-layout-CPackOptions.cmake)
+set(CPACK_PROJECT_CONFIG_FILE ${terralib_BINARY_DIR}/terralib_layout-CPackOptions.cmake)
 
 include(CPack)
 

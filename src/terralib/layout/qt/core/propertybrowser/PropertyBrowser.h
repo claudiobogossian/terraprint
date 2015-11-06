@@ -101,9 +101,9 @@ namespace te
       
         virtual void setHasWindows(bool hasWindows = false);
 
-        virtual void selectProperty(std::string name);
+        virtual void selectProperty(std::string label);
 
-        virtual QtProperty* findProperty(std::string name);
+        virtual QtProperty* findProperty(std::string label);
 
         virtual bool addSubProperty(QtProperty* prop, QtProperty* subProp);
 
@@ -113,6 +113,10 @@ namespace te
           \brief Verify if have some different property between te::layout::Properties and QtTreePropertyBrowser.
         */
         virtual bool equalsProperties(Properties props);
+
+        QString nameProperty(const std::string& label);
+
+        QString labelProperty(const std::string& name);
                     
       protected slots:
 
@@ -140,7 +144,7 @@ namespace te
 
         virtual QtProperty* addProperty(const Property& property);
       
-        virtual void addPropertyItem(QtProperty *property, const QString &id);
+        virtual void addPropertyItem(QtProperty *property, const QString &id, const QString &label);
 
         virtual void updateExpandState();
 
@@ -149,6 +153,16 @@ namespace te
         virtual void changeVisibility( QList<QtBrowserItem*> items, bool visible );
         
         virtual void blockOpenWindows(bool block);
+
+        virtual void createGroup(QtProperty* qproperty, Property property);
+
+        virtual void gatherProperties(QtProperty* qproperty, Property property);
+
+        virtual QtProperty* addVariantProperty(const Property& property);
+
+        virtual QtProperty* addDialogProperty(const Property& property);
+
+        virtual QtProperty* addItemProperty(const Property& property);
               
       protected:
 
@@ -158,6 +172,7 @@ namespace te
         ItemObserverManager*        m_itemObserverManager;
         QMap<QtProperty*, QString>  m_propertyToId;
         QMap<QString, QtProperty*>  m_idToProperty;
+        QMap<QString, QString>      m_nameToLabel;
         QMap<QString, bool>         m_idToExpanded;
         Scene*                      m_scene;
 

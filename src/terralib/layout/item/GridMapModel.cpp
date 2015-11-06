@@ -82,51 +82,47 @@ te::layout::GridMapModel::GridMapModel()
   m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getGridMapItem());
 
   // Grid settings
-  {
-    std::string name;
-    Property property(0);
-    property.setName("GridSettings");
-    property.setMenu(true);
-    property.setPublic(true);
-    property.setValue(name, dataType->getDataTypeGridSettings());  
-    m_properties.addProperty(property);
-  }
+  Property prop_gridsettings(0);
+  prop_gridsettings.setName("GridSettings");
+  prop_gridsettings.setMenu(true);
+  prop_gridsettings.setPublic(true);
+  prop_gridsettings.setValue(name, dataType->getDataTypeGridSettings());
   
-  // Grid 
+  // Grid: sub properties
   {
     Property property(0);
     property.setName(settingsConfig.getVisible());
     property.setComposeWidget(true);
     property.setValue(visible, dataType->getDataTypeBool());  
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getLneHrzGap());
     property.setComposeWidget(true);
     property.setValue(lneHrzGap, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getLneVrtGap());
     property.setComposeWidget(true);
     property.setValue(lneVrtGap, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getInitialGridPointX());
     property.setComposeWidget(true);
     property.setValue(m_initialGridPointX, dataType->getDataTypeDouble());  
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getInitialGridPointY());
     property.setComposeWidget(true);
     property.setValue(m_initialGridPointY, dataType->getDataTypeDouble());  
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   //Just one is visible
@@ -156,7 +152,7 @@ te::layout::GridMapModel::GridMapModel()
       property.addOption(v);
     }
 
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   // Line
@@ -186,7 +182,7 @@ te::layout::GridMapModel::GridMapModel()
       property.addOption(v);
     }
 
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   {
@@ -194,7 +190,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getLineColor());
     property.setComposeWidget(true);
     property.setValue(lineColor, dataType->getDataTypeColor());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   {
@@ -202,7 +198,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getLineWidth());
     property.setComposeWidget(true);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   // Text: Basic Configuration
@@ -211,7 +207,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getPointTextSize());
     property.setComposeWidget(true);
     property.setValue(pointTextSize, dataType->getDataTypeInt());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   
   {
@@ -219,14 +215,14 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getFontText());
     property.setComposeWidget(true);
     property.setValue(fontFamily, dataType->getDataTypeString());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getTextColor());
     property.setComposeWidget(true);
     property.setValue(textColor, dataType->getDataTypeColor());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   // Text: Advanced configuration
@@ -235,7 +231,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getVisibleAllTexts());
     property.setComposeWidget(true);
     property.setValue(visibleAllTexts, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   {
@@ -244,7 +240,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setComposeWidget(true);
     property.setVisible(false); //need review
     property.setValue(superscriptText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   {
@@ -252,7 +248,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getLneVrtDisplacement());
     property.setComposeWidget(true);
     property.setValue(lneVrtDisplacement, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   {
@@ -260,7 +256,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getLneHrzDisplacement());
     property.setComposeWidget(true);
     property.setValue(lneHrzDisplacement, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
   {
@@ -268,67 +264,69 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getBottomText());
     property.setComposeWidget(true);
     property.setValue(bottomText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getLeftText());
     property.setComposeWidget(true);
     property.setValue(leftText, dataType->getDataTypeBool());  
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getRightText());
     property.setComposeWidget(true);
     property.setValue(rightText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getTopText());
     property.setComposeWidget(true);
     property.setValue(topText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getBottomRotateText());
     property.setComposeWidget(true);
     property.setValue(bottomRotateText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getLeftRotateText());
     property.setComposeWidget(true);
     property.setValue(leftRotateText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getRightRotateText());
     property.setComposeWidget(true);
     property.setValue(rightRotateText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getTopRotateText());
     property.setComposeWidget(true);
     property.setValue(topRotateText, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName(settingsConfig.getCrossOffset());
     property.setComposeWidget(true);
     property.setValue(crossOffSet, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_gridsettings.addSubProperty(property);
   }
 
+  m_properties.addProperty(prop_gridsettings); // add gridsettings property
+
   //updating properties
-    {
+  {
     Property property(0);
     property.setName("connect_item_position");
     property.setValue(true, dataType->getDataTypeBool());

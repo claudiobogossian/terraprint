@@ -90,13 +90,13 @@ namespace te
 
         virtual bool checkDlgType(const Property& prop);
 
-        virtual Property findDlgProperty(const std::string& name);
+        virtual Property findDlgProperty(const std::string& label);
 
         virtual Property findDlgProperty(EnumType* dataType);
         
-        virtual Property getProperty(const std::string& name);
+        virtual Property getProperty(const std::string& label);
 
-        virtual EnumType* getLayoutType(QVariant::Type type, const std::string& name = "");
+        virtual EnumType* getLayoutType(QVariant::Type type, const std::string& label = "");
 
         virtual int getVariantType(EnumType* dataType);
 
@@ -146,7 +146,7 @@ namespace te
 
         virtual void createManager();
 
-        virtual void changeValueQtPropertyDlg(const std::string& name, const QVariant& variant);
+        virtual void changeValueQtPropertyDlg(const std::string& label, const QVariant& variant);
 
         virtual QWidget* createOutside(EnumType* enumType);
 
