@@ -76,6 +76,7 @@ te::layout::TitleModel::TitleModel()
   {
     Property propertyGridSettings(0);  
     propertyGridSettings.setName(propertyNames.getName());
+    propertyGridSettings.setLabel(TR_LAYOUT("Settings"));
     std::string sValuePlanar = "Settings";
     propertyGridSettings.setMenu(true);
     propertyGridSettings.setValue(sValuePlanar, dataType->getDataTypeTextGridSettings());
@@ -84,78 +85,91 @@ te::layout::TitleModel::TitleModel()
     {
       Property property(0);
       property.setName(propertyNames.getSpacing());
+      property.setLabel(TR_LAYOUT("Spacing"));
       property.setValue(spacing, dataType->getDataTypeDouble());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getPadding());
+      property.setLabel(TR_LAYOUT("Padding"));
       property.setValue(padding, dataType->getDataTypeDouble());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getTableColor());
+      property.setLabel(TR_LAYOUT("Color"));
       property.setValue(tableColor, dataType->getDataTypeColor());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getWidth());
+      property.setLabel(TR_LAYOUT("Width"));
       property.setValue(width, dataType->getDataTypeDouble());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getRowNumber());
+      property.setLabel(TR_LAYOUT("Number of rows"));
       property.setValue(rowNumber, dataType->getDataTypeInt());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getEvenRow());
+      property.setLabel(TR_LAYOUT("Even Row Color"));
       property.setValue(evenRow, dataType->getDataTypeColor());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getOddRow());
+      property.setLabel(TR_LAYOUT("Odd Row Color"));
       property.setValue(oddRow, dataType->getDataTypeColor());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getColumnNumber());
+      property.setLabel(TR_LAYOUT("Number of columns"));
       property.setValue(columnNumber, dataType->getDataTypeInt());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getColumnWidth());
+      property.setLabel(TR_LAYOUT("Column Width"));
       property.setValue(columnWidth, dataType->getDataTypeDouble());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getBorderWidth());
+      property.setLabel(TR_LAYOUT("Border Width"));
       property.setValue(borderWidth, dataType->getDataTypeDouble());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getBorderGridColor());
+      property.setLabel(TR_LAYOUT("Border Grid Color"));
       property.setValue(borderGridColor, dataType->getDataTypeColor());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getHeaderHorizontalColor());
+      property.setLabel(TR_LAYOUT("Horizontal Header Color"));
       property.setValue(headerHorizontalColor, dataType->getDataTypeColor());
       propertyGridSettings.addSubProperty(property);
     }
     {
       Property property(0);
       property.setName(propertyNames.getHeaderVerticalColor());
+      property.setLabel(TR_LAYOUT("Vertical Header Color"));
       property.setValue(headerVerticalColor, dataType->getDataTypeColor());
       propertyGridSettings.addSubProperty(property);
     }

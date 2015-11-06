@@ -50,7 +50,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale");
-    property.setLabel("Scale");
+    property.setLabel(TR_LAYOUT("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -58,7 +58,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale_width_rect_gap");
-    property.setLabel("Scale Gap X");
+    property.setLabel(TR_LAYOUT("Scale Gap X"));
     property.setValue(scaleGapX, dataType->getDataTypeDouble());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -67,7 +67,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale_height_rect_gap");
-    property.setLabel("Scale Gap Y");
+    property.setLabel(TR_LAYOUT("Scale Gap Y"));
     property.setValue(scaleGapY, dataType->getDataTypeDouble());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -93,7 +93,7 @@ te::layout::ScaleModel::ScaleModel()
 
     Property property(0);
     property.setName("scale_type");
-    property.setLabel("graphic type");
+    property.setLabel(TR_LAYOUT("Graphic type"));
     property.setValue(currentScaleType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;

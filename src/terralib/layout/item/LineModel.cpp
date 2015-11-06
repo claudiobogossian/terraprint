@@ -51,7 +51,7 @@ te::layout::LineModel::LineModel()
 
     Property property(0);
     property.setName("line_style_type");
-    property.setLabel("line style type");
+    property.setLabel(TR_LAYOUT("Line Style"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -75,7 +75,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel("color");
+    property.setLabel(TR_LAYOUT("Color"));
     property.setValue(color, dataType->getDataTypeColor());
     this->m_properties.addProperty(property);
   }
@@ -83,7 +83,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("geometry");
-    property.setLabel("geometry");
+    property.setLabel(TR_LAYOUT("Geometry"));
     property.setVisible(false);
     property.setValue(line, dataType->getDataTypeGeometry());
     this->m_properties.addProperty(property);
@@ -92,6 +92,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("resizable");
+    property.setLabel(TR_LAYOUT("Resizable"));
     property.setValue(false, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }

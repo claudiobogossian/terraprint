@@ -62,7 +62,7 @@ te::layout::GridPlanarModel::GridPlanarModel()
   {
     Property property(0);
     property.setName(settingsConfig.getUnit());
-    property.setLabel("Unit");
+    property.setLabel(TR_LAYOUT("Unit"));
     property.setValue((int)unit, dataType->getDataTypeInt());
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
@@ -71,7 +71,7 @@ te::layout::GridPlanarModel::GridPlanarModel()
   {
     Property property(0);
     property.setName("planar_box");
-    property.setLabel("Planar Box");
+    property.setLabel(TR_LAYOUT("Planar Box"));
     property.setValue(planarBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
   }

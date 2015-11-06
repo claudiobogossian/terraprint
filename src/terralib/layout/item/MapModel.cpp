@@ -54,6 +54,7 @@ te::layout::MapModel::MapModel()
     std::string value = "Choice";
     Property property(0);
     property.setName("mapChoice");
+    property.setLabel(TR_LAYOUT("Select the layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -65,6 +66,7 @@ te::layout::MapModel::MapModel()
 
     Property property;
     property.setName("layers");
+    property.setLabel(TR_LAYOUT("Layers"));
     property.setValue(gv, dataType->getDataTypeGenericVariant());
     property.setEditable(false);
     property.setVisible(false);
@@ -74,6 +76,7 @@ te::layout::MapModel::MapModel()
   {
     Property property(0);
     property.setName("world_box");
+    property.setLabel(TR_LAYOUT("World Box"));
     property.setValue(worldBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
   }
@@ -81,6 +84,7 @@ te::layout::MapModel::MapModel()
   {
     Property property(0);
     property.setName("srid");
+    property.setLabel(TR_LAYOUT("SRID"));
     property.setValue(srid, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
@@ -88,6 +92,7 @@ te::layout::MapModel::MapModel()
   {
     Property property(0);
     property.setName("scale");
+    property.setLabel(TR_LAYOUT("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }

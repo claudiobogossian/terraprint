@@ -49,7 +49,7 @@ te::layout::RectangleModel::RectangleModel()
 
     Property property(0);
     property.setName("rectangle_type");
-    property.setLabel("graphic type");
+    property.setLabel(TR_LAYOUT("Graphic type"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -76,7 +76,7 @@ te::layout::RectangleModel::RectangleModel()
   {
     Property property(0);
     property.setName("fill_color");
-    property.setLabel("Fill Color");
+    property.setLabel(TR_LAYOUT("Fill Color"));
     property.setValue(fillColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -85,7 +85,7 @@ te::layout::RectangleModel::RectangleModel()
   {
     Property property(0);
     property.setName("contour_color");
-    property.setLabel("Contour Color");
+    property.setLabel(TR_LAYOUT("Contour Color"));
     property.setValue(contourColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);

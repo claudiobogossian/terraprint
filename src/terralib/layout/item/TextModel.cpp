@@ -49,7 +49,7 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("font");
-    property.setLabel("Font");
+    property.setLabel(TR_LAYOUT("Font"));
     property.setValue(font, dataType->getDataTypeFont());
     m_properties.addProperty(property);
   }
@@ -57,7 +57,7 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("text");
-    property.setLabel("Text");
+    property.setLabel(TR_LAYOUT("Text"));
     property.setValue(text, dataType->getDataTypeString());
     m_properties.addProperty(property);
   }
@@ -65,7 +65,7 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel("Color");
+    property.setLabel(TR_LAYOUT("Color"));
     property.setValue(color, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
@@ -76,7 +76,7 @@ te::layout::TextModel::TextModel()
 
     Property property(0);
     property.setName("alignment");
-    property.setLabel("graphic type");
+    property.setLabel(TR_LAYOUT("Alignment"));
     property.setValue(currentAlignmentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;

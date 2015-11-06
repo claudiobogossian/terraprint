@@ -26,6 +26,8 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_CONFIG_H
 #define __TERRALIB_LAYOUT_INTERNAL_CONFIG_H
 
+#include "terralib/common/Translator.h"
+
 #define TE_LAYOUT_MODULE_NAME "te.layout"
 
 /** @name Internationalization Defines
@@ -52,14 +54,14 @@
 
   \brief It marks a string in order to get translated. This is a special mark used in the Terrralib Layout module. 
  */
-#define TR_LAYOUT(message) TR(message, TE_LAYOUT_TEXT_DOMAIN)
+#define TR_LAYOUT(message) TE_GENERAL_TR(message, TE_LAYOUT_TEXT_DOMAIN)
 
 /*!
   \def TR_PLURAL_LAYOUT
 
   \brief This mark can be used when you have a plural phrase to be translated. This is a special mark used in the Layout module of Terrralib. 
  */
-#define TR_PLURAL_LAYOUT(message1, message2, n) TR_PLURAL(TE_LAYOUT_TEXT_DOMAIN, message1, message2, n)
+#define TR_PLURAL_LAYOUT(message1, message2, n) TE_GENERAL_TR_PLURAL(TE_LAYOUT_TEXT_DOMAIN, message1, message2, n)
 
 //@}
 
