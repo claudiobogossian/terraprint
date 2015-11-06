@@ -30,6 +30,7 @@
 
 #include "../core/property/GridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
+#include "../core/pattern/mvc/AbstractItemView.h"
 
 te::layout::GridMapModel::GridMapModel() 
   : AbstractItemModel()

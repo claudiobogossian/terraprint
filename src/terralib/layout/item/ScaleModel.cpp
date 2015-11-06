@@ -31,6 +31,8 @@
 #include "../core/enum/EnumScaleType.h"
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
+#include "../core/property/SharedProperties.h"
+#include "../core/pattern/mvc/AbstractItemView.h"
 
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
@@ -43,8 +45,11 @@ te::layout::ScaleModel::ScaleModel()
   double scale = 250000.;
   double scaleGapX = 20.;
   double scaleGapY = 5.;
+  AbstractItemView* item = 0;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  SharedProperties sharedProps;
 
 //adding properties
   {
@@ -73,17 +78,15 @@ te::layout::ScaleModel::ScaleModel()
     m_properties.addProperty(property);
   }
 
+  // Observer pattern relationship. Associate: != 0 / Dissociate : == 0.
   {
-    std::string emptyString;
-
+    GenericVariant gv;
+    gv.setItem(item, dataType->getDataTypeItemObserver());
     Property property(0);
-    property.setName("map_name");
-    property.setLabel("Map Name");
-    property.setValue(emptyString, dataType->getDataTypeStringList());
-
-    Variant v;
-    v.setValue(emptyString, dataType->getDataTypeString());
-    property.addOption(v);
+    property.setName(sharedProps.getItemObserver());
+    property.setLabel(TR_LAYOUT("Connection with"));
+    property.setComposeWidget(true);
+    property.setValue(gv, dataType->getDataTypeGenericVariant());
     m_properties.addProperty(property);
   }
 
