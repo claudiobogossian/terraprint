@@ -19,7 +19,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("id");
-    property.setLabel("Id");
+    property.setLabel(TR_LAYOUT("Id"));
     property.setValue(0, dataType->getDataTypeInt());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -29,7 +29,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     std::string name = "";
     Property property(0);
     property.setName("name");
-    property.setLabel("Name");
+    property.setLabel(TR_LAYOUT("Name"));
     property.setValue(name, dataType->getDataTypeString());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -38,7 +38,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("x");
-    property.setLabel("X");
+    property.setLabel(TR_LAYOUT("X"));
     property.setValue(boundingBox.getLowerLeftX(), dataType->getDataTypeDouble());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -47,7 +47,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("y");
-    property.setLabel("Y");
+    property.setLabel(TR_LAYOUT("Y"));
     property.setValue(boundingBox.getLowerLeftY(), dataType->getDataTypeDouble());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -56,7 +56,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("width");
-    property.setLabel("Width");
+    property.setLabel(TR_LAYOUT("Width"));
     property.setValue(boundingBox.getWidth(), dataType->getDataTypeDouble());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -65,7 +65,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("height");
-    property.setLabel("Height");
+    property.setLabel(TR_LAYOUT("Height"));
     property.setValue(boundingBox.getHeight(), dataType->getDataTypeDouble());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -74,7 +74,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("background_color");
-    property.setLabel("Background Color");
+    property.setLabel(TR_LAYOUT("Background Color"));
     property.setValue(backgroundColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -83,7 +83,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("frame_color");
-    property.setLabel("Frame Color");
+    property.setLabel(TR_LAYOUT("Frame Color"));
     property.setValue(frameColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -92,7 +92,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("frame_thickness");
-    property.setLabel("Frame Thickness");
+    property.setLabel(TR_LAYOUT("Frame Thickness"));
     property.setValue(frameThickness, dataType->getDataTypeDouble());
     property.setVisible(false);
     property.setEditable(false);
@@ -102,7 +102,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("show_frame");
-    property.setLabel("show_frame");
+    property.setLabel(TR_LAYOUT("Show Frame"));
     property.setValue(false, dataType->getDataTypeBool());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -111,7 +111,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setLabel("Resizable");
+    property.setLabel(TR_LAYOUT("Resizable"));
     property.setVisible(false);
     property.setValue(true, dataType->getDataTypeBool());
     m_properties.addProperty(property);
@@ -120,7 +120,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("rotation");
-    property.setLabel("Rotation");
+    property.setLabel(TR_LAYOUT("Rotation"));
     property.setValue(rotation, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
@@ -128,7 +128,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("printable");
-    property.setLabel("printable");
+    property.setLabel(TR_LAYOUT("Printable"));
     property.setVisible(false);
     property.setValue(true, dataType->getDataTypeBool());
     m_properties.addProperty(property);
@@ -137,7 +137,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("zValue");
-    property.setLabel("zValue");
+    property.setLabel(TR_LAYOUT("Order in which appears"));
     property.setValue(zValue, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
@@ -153,6 +153,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
   {
     Property property(0);
     property.setName("editable");
+    property.setLabel(TR_LAYOUT("Editable"));
     property.setVisible(false);
     property.setValue(false, dataType->getDataTypeBool());
     m_properties.addProperty(property);

@@ -61,7 +61,7 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
   {
     Property property(0);
     property.setName("geographic_box");
-    property.setLabel("Geographic Box");
+    property.setLabel(TR_LAYOUT("Geographic Box"));
     property.setValue(geographicBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
   }
@@ -71,21 +71,21 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
   {
     Property property(0);
     property.setName(settingsConfig.getDegreesText());
-    property.setLabel("Show Degrees Text");
+    property.setLabel(TR_LAYOUT("Show Degrees Text"));
     property.setValue(showDegreesText, dataType->getDataTypeBool());
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
   {
     Property property(0);
     property.setName(settingsConfig.getMinutesText());
-    property.setLabel("Show Minutes Text");
+    property.setLabel(TR_LAYOUT("Show Minutes Text"));
     property.setValue(showMinutesText, dataType->getDataTypeBool());
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
   {
     Property property(0);
     property.setName(settingsConfig.getSecondsText());
-    property.setLabel("Show Seconds Text");
+    property.setLabel(TR_LAYOUT("Show Seconds Text"));
     property.setValue(showSecondsText, dataType->getDataTypeBool());
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }

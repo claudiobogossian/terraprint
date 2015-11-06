@@ -48,7 +48,7 @@ te::layout::NorthModel::NorthModel()
 
     Property property(0);
     property.setName("northArrow_type");
-    property.setLabel("graphic type");
+    property.setLabel(TR_LAYOUT("Graphic Type"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -73,7 +73,7 @@ te::layout::NorthModel::NorthModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel("color");
+    property.setLabel(TR_LAYOUT("color"));
     property.setValue(color, dataType->getDataTypeColor());
     this->m_properties.addProperty(property);
   }

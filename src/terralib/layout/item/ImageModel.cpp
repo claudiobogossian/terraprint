@@ -48,7 +48,7 @@ te::layout::ImageModel::ImageModel()
   {
     Property property(0);
     property.setName("file_name");
-    property.setLabel("File Name");
+    property.setLabel(TR_LAYOUT("File Name"));
     property.setValue(fileName, dataType->getDataTypeImage());
     property.setMenu(true);
     m_properties.addProperty(property);

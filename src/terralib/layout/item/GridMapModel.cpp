@@ -30,6 +30,7 @@
 
 #include "../core/property/GridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
+#include "../core/pattern/mvc/AbstractItemView.h"
 
 te::layout::GridMapModel::GridMapModel() 
   : AbstractItemModel()
@@ -84,6 +85,7 @@ te::layout::GridMapModel::GridMapModel()
   // Grid settings
   Property prop_gridsettings(0);
   prop_gridsettings.setName("GridSettings");
+  prop_gridsettings.setLabel(TR_LAYOUT("Grid Settings"));
   prop_gridsettings.setMenu(true);
   prop_gridsettings.setPublic(true);
   prop_gridsettings.setValue(name, dataType->getDataTypeGridSettings());
@@ -92,6 +94,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getVisible());
+    property.setLabel(TR_LAYOUT("Visible"));
     property.setComposeWidget(true);
     property.setValue(visible, dataType->getDataTypeBool());  
     prop_gridsettings.addSubProperty(property);
@@ -99,6 +102,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLneHrzGap());
+    property.setLabel(TR_LAYOUT("Horizontal Gap"));
     property.setComposeWidget(true);
     property.setValue(lneHrzGap, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -106,6 +110,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLneVrtGap());
+    property.setLabel(TR_LAYOUT("Vertical Gap"));
     property.setComposeWidget(true);
     property.setValue(lneVrtGap, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -113,6 +118,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getInitialGridPointX());
+    property.setLabel(TR_LAYOUT("Initial Point X"));
     property.setComposeWidget(true);
     property.setValue(m_initialGridPointX, dataType->getDataTypeDouble());  
     prop_gridsettings.addSubProperty(property);
@@ -120,6 +126,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getInitialGridPointY());
+    property.setLabel(TR_LAYOUT("Initial Point Y"));
     property.setComposeWidget(true);
     property.setValue(m_initialGridPointY, dataType->getDataTypeDouble());  
     prop_gridsettings.addSubProperty(property);
@@ -132,6 +139,7 @@ te::layout::GridMapModel::GridMapModel()
 
     Property property(0);
     property.setName(settingsConfig.getStyle());
+    property.setLabel(TR_LAYOUT("Style"));
     property.setComposeWidget(true);
     property.setValue(currentGridStyle->getLabel(), dataType->getDataTypeStringList());
 
@@ -162,6 +170,7 @@ te::layout::GridMapModel::GridMapModel()
 
     Property property(0);
     property.setName(settingsConfig.getLineStyle());
+    property.setLabel(TR_LAYOUT("Line Style"));
     property.setComposeWidget(true);
     property.setValue(currentLineStyle->getLabel(), dataType->getDataTypeStringList());
 
@@ -188,6 +197,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLineColor());
+    property.setLabel(TR_LAYOUT("Line Color"));
     property.setComposeWidget(true);
     property.setValue(lineColor, dataType->getDataTypeColor());
     prop_gridsettings.addSubProperty(property);
@@ -196,6 +206,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLineWidth());
+    property.setLabel(TR_LAYOUT("Line Width"));
     property.setComposeWidget(true);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -205,6 +216,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getPointTextSize());
+    property.setLabel(TR_LAYOUT("Point Size"));
     property.setComposeWidget(true);
     property.setValue(pointTextSize, dataType->getDataTypeInt());
     prop_gridsettings.addSubProperty(property);
@@ -213,6 +225,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getFontText());
+    property.setLabel(TR_LAYOUT("Font Family"));
     property.setComposeWidget(true);
     property.setValue(fontFamily, dataType->getDataTypeString());
     prop_gridsettings.addSubProperty(property);
@@ -220,6 +233,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getTextColor());
+    property.setLabel(TR_LAYOUT("Text Color"));
     property.setComposeWidget(true);
     property.setValue(textColor, dataType->getDataTypeColor());
     prop_gridsettings.addSubProperty(property);
@@ -229,6 +243,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getVisibleAllTexts());
+    property.setLabel(TR_LAYOUT("All Texts Visible"));
     property.setComposeWidget(true);
     property.setValue(visibleAllTexts, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -237,6 +252,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getSuperscriptText());
+    property.setLabel(TR_LAYOUT("Superscript"));
     property.setComposeWidget(true);
     property.setVisible(false); //need review
     property.setValue(superscriptText, dataType->getDataTypeBool());
@@ -246,6 +262,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLneVrtDisplacement());
+    property.setLabel(TR_LAYOUT("Vertical Displacement"));
     property.setComposeWidget(true);
     property.setValue(lneVrtDisplacement, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -254,6 +271,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLneHrzDisplacement());
+    property.setLabel(TR_LAYOUT("Horizontal Displacement"));
     property.setComposeWidget(true);
     property.setValue(lneHrzDisplacement, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -262,6 +280,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getBottomText());
+    property.setLabel(TR_LAYOUT("Bottom Text Visible"));
     property.setComposeWidget(true);
     property.setValue(bottomText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -269,6 +288,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLeftText());
+    property.setLabel(TR_LAYOUT("Left Text Visible"));
     property.setComposeWidget(true);
     property.setValue(leftText, dataType->getDataTypeBool());  
     prop_gridsettings.addSubProperty(property);
@@ -276,6 +296,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getRightText());
+    property.setLabel(TR_LAYOUT("Right Text Visible"));
     property.setComposeWidget(true);
     property.setValue(rightText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -283,6 +304,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getTopText());
+    property.setLabel(TR_LAYOUT("Top Text Visible"));
     property.setComposeWidget(true);
     property.setValue(topText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -290,6 +312,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getBottomRotateText());
+    property.setLabel(TR_LAYOUT("Bottom Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(bottomRotateText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -297,6 +320,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getLeftRotateText());
+    property.setLabel(TR_LAYOUT("Left Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(leftRotateText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -304,6 +328,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getRightRotateText());
+    property.setLabel(TR_LAYOUT("Right Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(rightRotateText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -311,6 +336,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getTopRotateText());
+    property.setLabel(TR_LAYOUT("Top Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(topRotateText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -318,6 +344,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName(settingsConfig.getCrossOffset());
+    property.setLabel(TR_LAYOUT("Cross Offset"));
     property.setComposeWidget(true);
     property.setValue(crossOffSet, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -339,6 +366,7 @@ te::layout::GridMapModel::GridMapModel()
     gv.setItem(item, dataType->getDataTypeItemObserver());
     Property property(0);
     property.setName(sharedProps.getItemObserver());
+    property.setLabel(TR_LAYOUT("Connection with"));
     property.setComposeWidget(true);
     property.setValue(gv, dataType->getDataTypeGenericVariant());
     m_properties.addProperty(property);

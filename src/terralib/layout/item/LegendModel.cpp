@@ -91,6 +91,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("legendChoice");
+    property.setLabel(TR_LAYOUT("Select the legend"));
     property.setValue(name, dataType->getDataTypeLegendChoice());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -101,6 +102,7 @@ te::layout::LegendModel::LegendModel()
 
     Property property;
     property.setName("layers");
+    property.setLabel(TR_LAYOUT("Layer"));
     property.setValue(gv, dataType->getDataTypeGenericVariant());
     property.setEditable(false);
     property.setVisible(false);
@@ -120,6 +122,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("font");
+    property.setLabel(TR_LAYOUT("Font"));
     property.setValue(font, dataType->getDataTypeFont());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -127,6 +130,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("font_color");
+    property.setLabel(TR_LAYOUT("Font Color"));
     property.setValue(fontColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);

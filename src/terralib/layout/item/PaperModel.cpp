@@ -53,42 +53,49 @@ te::layout::PaperModel::PaperModel()
   {
     Property property(0);
     property.setName("paper_color");
+    property.setLabel(TR_LAYOUT("Paper Color"));
     property.setValue(paperColor, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("shadow_color");
+    property.setLabel(TR_LAYOUT("Shadow Color"));
     property.setValue(shadowColor, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("shadow_padding");
+    property.setLabel(TR_LAYOUT("Shadow padding"));
     property.setValue(shadowPadding, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_width");
+    property.setLabel(TR_LAYOUT("Paper width"));
     property.setValue(paperWidth, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_height");
+    property.setLabel(TR_LAYOUT("Paper height"));
     property.setValue(paperHeight, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_type");
+    property.setLabel(TR_LAYOUT("Paper type"));
     property.setValue((int)paperType, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_orientation");
+    property.setLabel(TR_LAYOUT("Orientation"));
     property.setValue((int)paperOrientation, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
