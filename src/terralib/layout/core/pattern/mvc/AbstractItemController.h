@@ -120,6 +120,8 @@ namespace te
 
         virtual void itemPositionChanged(double x, double y);
 
+        virtual void itemZValueChanged(int index);
+
       protected:
 
         /*!

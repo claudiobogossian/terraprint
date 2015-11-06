@@ -186,6 +186,17 @@ void te::layout::AbstractItemController::itemPositionChanged(double x, double y)
   m_model->setProperties(properties);
 }
 
+void te::layout::AbstractItemController::itemZValueChanged(int index)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property property(0);
+    property.setName("zValue");
+    property.setValue(index, dataType->getDataTypeInt());
+    m_model->setProperty(property);
+  }
+}
+
 te::layout::AbstractItemModel* te::layout::AbstractItemController::getModel() const
 {
   return m_model;

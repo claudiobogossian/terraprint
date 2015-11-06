@@ -138,7 +138,7 @@ void te::layout::Property::removeSubProperty( Property property )
   }
 }
 
-std::vector<te::layout::Property> te::layout::Property::getSubProperty()
+const std::vector<te::layout::Property>& te::layout::Property::getSubProperty() const
 {
   return m_subProperty;
 }

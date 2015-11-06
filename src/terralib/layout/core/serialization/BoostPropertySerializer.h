@@ -25,8 +25,8 @@
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_JSON_H 
-#define __TERRALIB_LAYOUT_INTERNAL_JSON_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_BOOSTPROPERTYSERIALIZER_H 
+#define __TERRALIB_LAYOUT_INTERNAL_BOOSTPROPERTYSERIALIZER_H 
 
 //TerraLib
 #include "Serialization.h"
@@ -43,6 +43,11 @@ namespace te
 {
   namespace layout
   {
+
+    class Properties;
+    class Property;
+    class PaperConfig;
+
     /*!
       \brief Implementation of .json for Serialization. It is a JSON file. Save or change a file .json and serializes the properties of the objects, MVC component.
     
@@ -50,16 +55,14 @@ namespace te
 
       \sa te::layout::Serialization
     */
-    class TELAYOUTEXPORT JSON : public Serialization
+    class TELAYOUTEXPORT BoostPropertySerializer : public Serialization
     {
       public:
 
-        JSON();
+        BoostPropertySerializer();
         
-        virtual ~JSON();
+        virtual ~BoostPropertySerializer();
         
-        virtual bool serialize();
-
         virtual boost::property_tree::ptree retrievePTree();
 
         virtual std::vector<te::layout::Properties> retrieve();
@@ -68,7 +71,15 @@ namespace te
 
         virtual void loadFromPath( std::string loadPath );
 
-        virtual void loadFromProperties( std::vector<te::layout::Properties> properties );
+        /*!
+        \brief Encodes the given vector of Properties into a Boost Property Tree container
+        */
+        virtual boost::property_tree::ptree encode(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties);
+
+        /*!
+        \brief Decodes the given Boost Property Tree container into a vector of Properties
+        */
+        virtual bool decode(const boost::property_tree::ptree& tree, PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties);
 
       protected:
 
@@ -76,12 +87,31 @@ namespace te
 
         virtual void retrieveSubPTree(boost::property_tree::ptree subTree, Property& prop);
 
+        /*!
+        \brief Encodes the given vector of Property to a Boost Property Tree container
+        */
+        virtual  boost::property_tree::ptree encode(const std::vector<te::layout::Property>& vecProperty) const;
+
+        /*!
+        \brief Decodes the given Boost Property Tree that container into a vector of Properties. The given node must represent an Item Node
+        */
+        virtual te::layout::Properties decodeItem(const boost::property_tree::ptree& itemNode);
+
+        /*!
+        \brief Decodes the given Boost Property Tree that container into a vector of Properties. The given node must represent the list of all Property of an item
+        */
+        virtual std::vector<te::layout::Property> decodeProperties(const boost::property_tree::ptree& propertiesNode);
+
+        /*
+        \brief Decodes the given Boost Property Tree that container into a vector of Property.The given node must represent a Property
+        */
+        virtual te::layout::Property decodeProperty(const boost::property_tree::ptree& propertyNode);
+
+    protected:
+
         boost::property_tree::ptree m_array;
     };
   }
 }
 
-#endif
-
-
-
+#endif //__TERRALIB_LAYOUT_INTERNAL_BOOSTPROPERTYSERIALIZER_H

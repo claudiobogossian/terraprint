@@ -30,7 +30,6 @@
 
 te::layout::Serialization::Serialization() :
   m_loadPath(""),
-  m_serializationPath(""),
   m_rootKey("Unknown")
 {
 
@@ -39,16 +38,6 @@ te::layout::Serialization::Serialization() :
 te::layout::Serialization::~Serialization()
 {
 
-}
-
-void te::layout::Serialization::setSerializationPath( std::string path )
-{
-  m_serializationPath = path;
-}
-
-std::string te::layout::Serialization::getSerializationPath()
-{
-  return m_serializationPath;
 }
 
 std::string te::layout::Serialization::getLoadPath()

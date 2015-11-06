@@ -18,13 +18,13 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/ZoomAreaToolFactory.h
+  \file terralib/layout/qt/core/pattern/factory/XmlTemplateFactory.h
 
   \brief This is the concrete factory for zoom area tools.
  */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_JSON_TEMPLATE_FACTORY_H
-#define __TERRALIB_LAYOUT_INTERNAL_JSON_TEMPLATE_FACTORY_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_XML_TEMPLATE_FACTORY_H
+#define __TERRALIB_LAYOUT_INTERNAL_XML_TEMPLATE_FACTORY_H
 
 // TerraLib
 #include "../../core/Config.h"
@@ -37,28 +37,28 @@ namespace te
   {
     class AbstractTemplate;
     /*!
-      \class ZoomAreaToolFactory
+      \class XmlTemplateFactory
 
-      \brief This is the concrete factory for json template.
+      \brief This is the concrete factory for xml template.
 
       \sa TemplateFactory, ParameterizedAbstractFactory, AbstractTemplate
     */
-    class TELAYOUTEXPORT JSONTemplateFactory : public TemplateFactory
+    class TELAYOUTEXPORT XmlTemplateFactory : public TemplateFactory
     {
       public:
 
         /*! It register the factory in the abstract dictionary. */
-        JSONTemplateFactory();
+        XmlTemplateFactory();
 
         /*! \brief Destructor. */
-        ~JSONTemplateFactory();
+        virtual ~XmlTemplateFactory();
 
       protected:
 
         /*!
-          \brief It creates a new json template.
+          \brief It creates a new xml template.
 
-          \return It returns json template.
+          \return It returns xml template.
         */
         AbstractTemplate* build(TemplateFactoryParamsCreate params);
     };
@@ -67,5 +67,4 @@ namespace te
 }   // end namespace te
 
 
-#endif  // __TERRALIB_LAYOUT_INTERNAL_JSON_TEMPLATE_FACTORY_H
-
+#endif  // __TERRALIB_LAYOUT_INTERNAL_XML_TEMPLATE_FACTORY_H

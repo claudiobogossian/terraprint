@@ -30,7 +30,7 @@
 
 te::layout::EnumTemplateType::EnumTemplateType() :
   m_noneType(0),
-  m_jsonType(0)
+  m_xmlType(0)
 {
   init();
 }
@@ -42,10 +42,10 @@ te::layout::EnumTemplateType::~EnumTemplateType()
     delete m_noneType;
     m_noneType = 0;
   }
-  if(m_jsonType)
+  if (m_xmlType)
   {
-    delete m_jsonType;
-    m_jsonType = 0;
+    delete m_xmlType;
+    m_xmlType = 0;
   }
 }
 
@@ -53,7 +53,7 @@ void te::layout::EnumTemplateType::init()
 {
   m_noneType = createEnum("NoneTemplate", this);
 
-  m_jsonType = createEnum("JsonTemplate", this);
+  m_xmlType = createEnum("XmlTemplate", this);
 }
 
 te::layout::EnumType* te::layout::EnumTemplateType::getNoneType() const
@@ -61,7 +61,7 @@ te::layout::EnumType* te::layout::EnumTemplateType::getNoneType() const
   return m_noneType;
 }
 
-te::layout::EnumType* te::layout::EnumTemplateType::getJsonType() const
+te::layout::EnumType* te::layout::EnumTemplateType::getXmlType() const
 {
-  return m_jsonType;
+  return m_xmlType;
 }

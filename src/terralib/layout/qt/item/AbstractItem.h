@@ -599,6 +599,10 @@ namespace te
           }
         }
       }
+      else if (change == QGraphicsItem::ItemZValueHasChanged)
+      {
+        m_controller->itemZValueChanged(T::zValue());
+      }
       return T::itemChange(change, value);
     }
 

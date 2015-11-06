@@ -57,8 +57,8 @@ te::layout::OutsideArea::OutsideArea(AbstractProxyProject* proxyProject, te::lay
   m_layoutMenu(0),
   m_optionNew("mnu_main_new"),
   m_optionUpdate("mnu_main_update"),
-  m_optionImportJSON("mnu_main_import_json"),
-  m_optionExportJSON("mnu_main_export_json"),
+  m_optionImportXml("mnu_main_import_xml"),
+  m_optionExportXml("mnu_main_export_xml"),
   m_optionPageConfig("mnu_main_page_config"),
   m_optionPrint("mnu_main_print"),
   m_optionExit("mnu_main_exit"),
@@ -221,10 +221,10 @@ void te::layout::OutsideArea::createMainMenu()
    QMenu* mnuImport = m_layoutMenu->addMenu("Import Template");
    QMenu* mnuExport = m_layoutMenu->addMenu("Export Template");
 
-   QAction* actionImportJSON = createAction("Import JSON Template", m_optionImportJSON, "layout-import");
+   QAction* actionImportJSON = createAction("Import Xml Template", m_optionImportXml, "layout-import");
    mnuImport->addAction(actionImportJSON);
 
-   QAction* actionExportJSON = createAction("Export JSON Template", m_optionExportJSON, "layout-export");
+   QAction* actionExportJSON = createAction("Export XML Template", m_optionExportXml, "layout-export");
    mnuExport->addAction(actionExportJSON);
 
    m_layoutMenu->addSeparator();
@@ -261,15 +261,15 @@ void te::layout::OutsideArea::onMainMenuTriggered( QAction* action )
   {
     //changeAction wiil be TypeSaveCurrentTemplate
   }
-  else if(action->objectName().compare(m_optionImportJSON.c_str()) == 0)
+  else if(action->objectName().compare(m_optionImportXml.c_str()) == 0)
   {
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->importTemplate(enumTemplate->getJsonType());
+    m_view->importTemplate(enumTemplate->getXmlType());
   }
-  else if(action->objectName().compare(m_optionExportJSON.c_str()) == 0)
+  else if(action->objectName().compare(m_optionExportXml.c_str()) == 0)
   {
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->exportProperties(enumTemplate->getJsonType());
+    m_view->exportProperties(enumTemplate->getXmlType());
   }
   else if(action->objectName().compare(m_optionPageConfig.c_str()) == 0)
   {    

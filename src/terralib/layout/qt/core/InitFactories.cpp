@@ -68,11 +68,14 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/outside/ToolbarOutsideFactory.h"
 #include "pattern/factory/outside/PDFSettingsOutsideFactory.h"
 
+//templates
+#include "../../core/template/XmlTemplateFactory.h"
+
 namespace te
 {
   namespace layout
   {
-    void TELAYOUTEXPORT initToolFactories()
+    void initToolFactories()
     {
       static bool ToolFactoryInitalized = false;
 
@@ -107,7 +110,7 @@ namespace te
       }
     }
 
-    void TELAYOUTEXPORT initItemFactories()
+    void initItemFactories()
     {
       static bool ItemFactoryInitalized = false;
 
@@ -140,7 +143,15 @@ namespace te
         static PaperItemFactory PaperItemFactory_instance;
       }
     }
+
+    void initTemplateFactories()
+    {
+      static bool TemplateFactoryInitalized = false;
+
+      if (!TemplateFactoryInitalized)
+      {
+        static XmlTemplateFactory XmlTemplateFactory_instance;
+      }
+    }
   }
 }
-
-

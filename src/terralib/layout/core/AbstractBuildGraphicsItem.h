@@ -101,6 +101,25 @@ namespace te
         virtual std::string findName(te::layout::Properties props);
 
         /*!
+        \brief Search for property of a graphic object that represent width value.
+
+        \param props properties
+
+        \return width value
+        */
+        virtual double findWidth(const te::layout::Properties& props);
+
+        /*!
+        \brief Search for property of a graphic object that represent height value.
+
+        \param props properties
+
+        \return height value
+        */
+        virtual double findHeight(const te::layout::Properties& props);
+
+
+        /*!
           \brief Creates the name of the new graphic object. Adds the number that corresponds to how many objects of this type have already been created.
 
           \param name name of the class type of the graphic object

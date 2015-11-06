@@ -92,7 +92,7 @@
           </sizepolicy>
          </property>
          <property name="text">
-          <string>JSON</string>
+          <string>XML</string>
          </property>
         </widget>
        </item>

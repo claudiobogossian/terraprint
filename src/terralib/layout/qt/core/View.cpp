@@ -1040,7 +1040,7 @@ bool te::layout::View::exportProperties( EnumType* type )
   bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
-    QDir::currentPath(), tr("JSON Files (*.json)"));
+    QDir::currentPath(), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {
@@ -1076,7 +1076,7 @@ bool te::layout::View::exportProperties( EnumType* type )
 bool te::layout::View::importTemplate( EnumType* type )
 {  
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
-    QDir::currentPath(), tr("JSON Files (*.json)"));
+    QDir::currentPath(), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {

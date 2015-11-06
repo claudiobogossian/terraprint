@@ -79,7 +79,7 @@ namespace te
         */
         EnumType* getType() const;
 
-        std::vector<te::layout::Property> getSubProperty();
+        const std::vector<te::layout::Property>& getSubProperty() const;
         
         /*
           To use this method, you need to declare a variable with 

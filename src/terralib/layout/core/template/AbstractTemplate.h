@@ -41,6 +41,7 @@ namespace te
   {
     class Properties;
     class EnumType;
+    class PaperConfig;
 
     /*!
       \brief Abstract class that represents a Template.
@@ -55,9 +56,9 @@ namespace te
 
         virtual ~AbstractTemplate();
 
-        virtual bool exportTemplate(std::vector<te::layout::Properties> properties) = 0;
+        virtual bool exportTemplate(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& properties) = 0;
 
-        virtual std::vector<te::layout::Properties> importTemplate() = 0;
+        virtual bool importTemplate(PaperConfig& paperConfig, std::vector<te::layout::Properties>& properties) = 0;
 
         virtual bool deleteTemplate() = 0;
 

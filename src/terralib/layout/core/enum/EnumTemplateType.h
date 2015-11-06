@@ -64,7 +64,7 @@ namespace te
       
           \return enum value      
         */
-        virtual EnumType* getJsonType() const;
+        virtual EnumType* getXmlType() const;
 
         /*!
           \brief Returns value that represents none type belonging to enumeration.
@@ -83,7 +83,7 @@ namespace te
       protected:
 
         EnumType* m_noneType; //!< value that represents none type belonging to enumeration
-        EnumType* m_jsonType; //!< value that represents json type belonging to enumeration
+        EnumType* m_xmlType; //!< value that represents json type belonging to enumeration
     };
   }
 }

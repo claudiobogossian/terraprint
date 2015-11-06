@@ -18,28 +18,28 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/template/ZoomAreaToolFactory.cpp
+  \file terralib/layout/qt/core/template/XmlTemplateFactory.cpp
 
   \brief This is the concrete factory for zoom area tools.
 */
 
 // TerraLib
-#include "JSONTemplateFactory.h"
+#include "XmlTemplateFactory.h"
 #include "../../core/enum/Enums.h"
-#include "JSONTemplate.h"
+#include "XmlTemplate.h"
 
-te::layout::AbstractTemplate* te::layout::JSONTemplateFactory::build(TemplateFactoryParamsCreate params)
+te::layout::AbstractTemplate* te::layout::XmlTemplateFactory::build(TemplateFactoryParamsCreate params)
 {
-  return new JSONTemplate(params.getFilePath());
+  return new XmlTemplate(params.getFilePath());
 }
 
-te::layout::JSONTemplateFactory::JSONTemplateFactory() :
-  TemplateFactory(Enums::getInstance().getEnumTemplateType()->getJsonType()->getName())
+te::layout::XmlTemplateFactory::XmlTemplateFactory() :
+TemplateFactory(Enums::getInstance().getEnumTemplateType()->getXmlType()->getName())
 {
 
 }
 
-te::layout::JSONTemplateFactory::~JSONTemplateFactory()
+te::layout::XmlTemplateFactory::~XmlTemplateFactory()
 {
 
 }

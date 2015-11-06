@@ -101,6 +101,13 @@ te::layout::PaperModel::PaperModel()
     property.setValue(frameColor, dataType->getDataTypeColor());
     m_properties.updateProperty(property);
   }
+
+  {
+    Property property(0);
+    property.setName("printable");
+    property.setValue(false, dataType->getDataTypeBool());
+    m_properties.updateProperty(property);
+  }
 }
 
 te::layout::PaperModel::~PaperModel()

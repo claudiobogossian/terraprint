@@ -518,7 +518,7 @@ bool te::layout::Scene::exportPropertiesToTemplate( EnumType* type, std::string 
   if(!jtemplate)
     return is_export;
 
-  is_export = jtemplate->exportTemplate(props);
+  is_export = jtemplate->exportTemplate(*m_paperConfig, props);
 
   return is_export;
 }
@@ -539,7 +539,8 @@ std::vector<te::layout::Properties> te::layout::Scene::importTemplateToPropertie
   if(!jtemplate)
     return props;
 
-  props = jtemplate->importTemplate();
+  te::layout::PaperConfig paperConfig;
+  jtemplate->importTemplate(paperConfig, props);
 
   return props;
 }

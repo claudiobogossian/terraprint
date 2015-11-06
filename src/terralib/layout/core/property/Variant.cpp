@@ -28,6 +28,8 @@
 // TerraLib
 #include "Variant.h"
 #include "../enum/Enums.h"
+#include "terralib/geometry/WKTReader.h"
+#include "terralib/geometry/WKTWriter.h"
 
 // STL
 #include <sstream>
@@ -262,11 +264,13 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
     return;
   }
 
+  m_type = type;
+
   /* the ptree boost returns data with string type */
 
   try
   {
-    if(type == dataType->getDataTypeString())
+    if (type == dataType->getDataTypeString() || type == dataType->getDataTypeStringList())
     {
       m_sValue = tree.data();
       null = false;
@@ -357,6 +361,14 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
     {
       m_generic.fromPtree(tree);
     }
+    else if (type == dataType->getDataTypeGeometry())
+    {
+      te::gm::Geometry* geometry = te::gm::WKTReader::read(tree.data().c_str());
+      m_geometryPtr.reset(geometry);
+
+      m_complex = true;
+      null = false;
+    }
     else // Any remaining data will be by default "std::string"  
     {
       m_sValue = tree.data();
@@ -433,6 +445,7 @@ void te::layout::Variant::clear()
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
   m_null = true;
   m_generic.clear();
+  m_geometryPtr.reset();
 }
 
 std::string te::layout::Variant::convertToString() const
@@ -448,7 +461,7 @@ std::string te::layout::Variant::convertToString() const
   if(m_type == dataType->getDataTypeNone())
     return s_convert;
 
-  if(m_type == dataType->getDataTypeString())
+  if (m_type == dataType->getDataTypeString() || m_type == dataType->getDataTypeStringList())
   {
     s_convert = m_sValue;
   }
@@ -493,6 +506,10 @@ std::string te::layout::Variant::convertToString() const
   else if(m_type == dataType->getDataTypeBool()) 
   {
     s_convert = m_bValue ? "true" : "false"; 
+  }
+  else if (m_type == dataType->getDataTypeGeometry())
+  {
+    s_convert = m_geometryPtr->asText();
   }
   
   return s_convert;

@@ -20,18 +20,17 @@
 /*!
   \file JSONTemplate.h
    
-  \brief Implementation of AbstractTemplate. Template that creates, saves, or change a .json file.
+  \brief Implementation of AbstractTemplate. Template that creates, saves, or change a .xml file.
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_JSON_TEMPLATE_H 
-#define __TERRALIB_LAYOUT_INTERNAL_JSON_TEMPLATE_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_XML_TEMPLATE_H 
+#define __TERRALIB_LAYOUT_INTERNAL_XML_TEMPLATE_H
 
 // TerraLib
 #include "AbstractTemplate.h"
 #include "../Config.h"
-#include "../property/Properties.h"
 
 // STL
 #include <vector>
@@ -40,24 +39,26 @@ namespace te
 {
   namespace layout
   {
+    class Properties;
+
     /*!
-      \brief Implementation of AbstractTemplate. Template that creates, saves, or change a .json file.
+      \brief Implementation of AbstractTemplate. Template that creates, saves, or change a .xml file.
     
       \ingroup layout
 
       \sa te::layout::AbstractTemplate
     */
-    class TELAYOUTEXPORT JSONTemplate : public AbstractTemplate
+    class TELAYOUTEXPORT XmlTemplate : public AbstractTemplate
     {
       public:
 
-        JSONTemplate(std::string path);
+        XmlTemplate(std::string path);
 
-        virtual ~JSONTemplate();
+        virtual ~XmlTemplate();
 
-        virtual bool exportTemplate(std::vector<te::layout::Properties> properties);
+        virtual bool exportTemplate(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& properties);
 
-        virtual std::vector<te::layout::Properties> importTemplate();
+        virtual bool importTemplate(PaperConfig& paperConfig, std::vector<te::layout::Properties>& properties);
 
         virtual bool deleteTemplate();
     };

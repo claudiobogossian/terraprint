@@ -36,6 +36,8 @@ namespace te
     void TELAYOUTEXPORT initToolFactories();
 
     void TELAYOUTEXPORT initItemFactories();
+
+    void TELAYOUTEXPORT initTemplateFactories();
   }
 }
 #endif

@@ -36,6 +36,9 @@ namespace te
 {
   namespace layout
   {
+
+    class PaperConfig;
+
     /*!
       \brief Abstract class for serialization properties in any file extension.
     
@@ -51,15 +54,17 @@ namespace te
 
         virtual void loadFromPath(std::string loadPath) = 0;
 
-        virtual void loadFromProperties(std::vector<te::layout::Properties> properties) = 0;
+        /*!
+        \brief Encodes the given vector of Properties into a Boost Property Tree container
+        */
+        virtual boost::property_tree::ptree encode(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties) = 0;
 
-        virtual void setSerializationPath(std::string path);
-
-        virtual std::string getSerializationPath();
+        /*!
+        \brief Decodes the given Boost Property Tree container into a vector of Properties
+        */
+        virtual bool decode(const boost::property_tree::ptree& tree, PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties) = 0;
 
         virtual std::string getLoadPath();
-
-        virtual bool serialize() = 0;
 
         virtual std::vector<te::layout::Properties> retrieve() = 0;
 
@@ -68,17 +73,13 @@ namespace te
         virtual void setRootKey(std::string rootKey);
 
         virtual std::string getRootKey();
-        
+       
        protected:
 
          std::string m_loadPath;
-         std::string m_serializationPath;
-         std::vector<te::layout::Properties> m_properties;
          std::string m_rootKey;
     };
   }
 }
 
 #endif
-
-

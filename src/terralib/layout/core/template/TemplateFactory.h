@@ -46,12 +46,12 @@ namespace te
 
       If you want a new tool you can use a command like:
       <code>
-        te::layout::AbstractTemplate* pEngine = te::layout::TemplateFactory::make("JSON");
+        te::layout::AbstractTemplate* pEngine = te::layout::TemplateFactory::make("XML");
       </code>
       Or
       <code>
         te::layout::EnumTemplateType* tool = Enums::getInstance().getEnumTemplateType();
-        te::layout::EnumType* template = tool->getToolTypeJSON();
+        te::layout::EnumType* template = tool->getToolTypeXml();
         te::layout::AbstractTemplate* pEngine = te::layout::TemplateFactory::make(template->getName());
       </code>
 

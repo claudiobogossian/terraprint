@@ -63,6 +63,8 @@ QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties p
 
   m_props = props;
   m_coord = findCoordinate(props);
+  m_width = findWidth(props);
+  m_height = findHeight(props);
   
   EnumType* type = props.getTypeObj();
 

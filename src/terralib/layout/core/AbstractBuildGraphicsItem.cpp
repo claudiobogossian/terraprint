@@ -95,6 +95,32 @@ std::string te::layout::AbstractBuildGraphicsItem::findName(te::layout::Properti
   return name;
 }
 
+double te::layout::AbstractBuildGraphicsItem::findWidth(const te::layout::Properties& props)
+{
+  double width = 0.;
+
+  Property property = props.getProperty("width");
+  if (!property.isNull())
+  {
+    width = property.getValue().toDouble();
+  }
+
+  return width;
+}
+
+double te::layout::AbstractBuildGraphicsItem::findHeight(const te::layout::Properties& props)
+{
+  double height = 0.;
+
+  Property property = props.getProperty("height");
+  if (!property.isNull())
+  {
+    height = property.getValue().toDouble();
+  }
+
+  return height;
+}
+
 void te::layout::AbstractBuildGraphicsItem::clear()
 {
   m_id = 0;
