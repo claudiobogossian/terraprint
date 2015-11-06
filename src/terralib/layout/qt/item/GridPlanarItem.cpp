@@ -135,6 +135,11 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   bool bLeftRotate = pLeftRotate.getValue().toBool();
   bool bRightRotate = pRightRotate.getValue().toBool();
 
+  if (this->scene() == 0)
+  {
+    return;
+  }
+
   Utils utils = ((Scene*) this->scene())->getUtils();
   ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
@@ -196,6 +201,11 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
   LayoutUnit unit = (LayoutUnit)pUnit.getValue().toInt();
   bool bTopRotate = pTopRotate.getValue().toBool();
   bool bBottomRotate = pBottomRotate.getValue().toBool();
+
+  if (this->scene() == 0)
+  {
+    return;
+  }
 
   Utils utils = ((Scene*) this->scene())->getUtils();
   ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
