@@ -63,13 +63,21 @@ namespace te
 
         AbstractItemView* item(const QtProperty *property) const;
 
-        virtual Property getProperty(const std::string& name);
+        virtual Property getProperty(const std::string& label);
 
         virtual bool updateProperty(const Property& property);
 
-        virtual QtProperty* findProperty(const std::string& name);
+        virtual QtProperty* findProperty(const std::string& label);
 
         void setTypeForSearch(QtProperty *property, const EnumType* type);
+
+        QString propertyLabel(const QtProperty *property) const;
+
+        void setPropertyLabel(QtProperty *property, const QString &name, const QString &label);
+
+        QString nameProperty(const std::string& label);
+
+        QString labelProperty(const std::string& name);
 
       public slots:
 
@@ -105,8 +113,9 @@ namespace te
           EnumType*         typeSearchNames;
         };
 
-        QMap<const QtProperty *, Data> m_values;
-        Scene*                         m_scene;
+        QMap<const QtProperty *, Data>  m_values;
+        Scene*                          m_scene;
+        QMap<QString, QString>          m_nameToLabel;
     };
 
   }

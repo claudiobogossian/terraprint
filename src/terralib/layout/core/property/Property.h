@@ -177,7 +177,7 @@ namespace te
 
           \return label of this property
         */
-        virtual std::string getLabel();
+        virtual const std::string& getLabel() const;
 
         virtual bool containsSubProperty(Property subProperty) const;
 

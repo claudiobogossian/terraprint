@@ -196,10 +196,19 @@ void te::layout::PropertyBrowser::clearAll()
   m_dialogPropertiesBrowser->clearAll();
 }
 
-void te::layout::PropertyBrowser::addPropertyItem(QtProperty *property, const QString &id)
+void te::layout::PropertyBrowser::addPropertyItem(QtProperty *property, const QString &id, const QString &label)
 {
   m_propertyToId[property] = id;
   m_idToProperty[id] = property; 
+
+  // If there is no label, then the name will be the label
+  QString labelString = label;
+  if (labelString.compare("") == 0)
+  {
+    labelString = id;
+  }
+  m_nameToLabel[id] = labelString;
+
   QtBrowserItem *item = m_propertyEditor->addProperty(property);
   if (m_idToExpanded.contains(id))
     m_propertyEditor->setExpanded(item, m_idToExpanded[id]);
@@ -324,7 +333,7 @@ QtProperty* te::layout::PropertyBrowser::addVariantProperty(const Property& prop
   {
     bool is_readOnly = !property.isEditable();
     vproperty->setAttribute(QLatin1String("readOnly"), is_readOnly);
-    addPropertyItem(vproperty, QLatin1String(property.getName().c_str()));
+    addPropertyItem(vproperty, QLatin1String(property.getName().c_str()), QLatin1String(property.getLabel().c_str()));
   }
   return vproperty;
 }
@@ -336,7 +345,7 @@ QtProperty* te::layout::PropertyBrowser::addDialogProperty(const Property& prope
   pproperty = m_dialogPropertiesBrowser->addProperty(property);
   if (pproperty)
   {
-    addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+    addPropertyItem(pproperty, QLatin1String(property.getName().c_str()), QLatin1String(property.getLabel().c_str()));
   }
 
   return pproperty;
@@ -357,8 +366,12 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
   GenericVariant gv = property.getValue().toGenericVariant();
   if (gv.getType() != dataType->getDataTypeItemObserver())
     return pproperty;
+
+  std::string label = property.getLabel();
+  if (label.compare("") == 0)
+    label = property.getName();
   
-  pproperty = m_itemObserverManager->addProperty(property.getName().c_str());
+  pproperty = m_itemObserverManager->addProperty(label.c_str());
   if (!pproperty)
     return pproperty;
 
@@ -371,18 +384,29 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
   }
   m_itemObserverManager->setValue(pproperty, val);
   m_itemObserverManager->setTypeForSearch(pproperty, objType->getMapItem());
-  addPropertyItem(pproperty, QLatin1String(property.getName().c_str()));
+  m_itemObserverManager->setPropertyLabel(pproperty, QLatin1String(property.getName().c_str()), QLatin1String(property.getLabel().c_str())); // add label
+  addPropertyItem(pproperty, QLatin1String(property.getName().c_str()), QLatin1String(property.getLabel().c_str()));
 
   return pproperty;
 }
 
 bool te::layout::PropertyBrowser::removeProperty( Property property )
 {
+  std::string label = property.getLabel();
+  if (label.compare("") == 0)
+    label = property.getName();
+
+  QString name = nameProperty(label);
+  if (name.compare("") == 0)
+  {
+    return false;
+  }
+
   QtProperty* removeProp = 0;
   QList<QtProperty*> list = m_propertyEditor->properties();
   foreach( QtProperty* prop, list) 
   {
-    if(property.getName().compare(prop->propertyName().toStdString()) == 0)
+    if (property.getName().compare(name.toStdString()) == 0)
     {
       removeProp = prop;
     }
@@ -426,8 +450,12 @@ void te::layout::PropertyBrowser::gatherProperties(QtProperty* qproperty, Proper
 
 void te::layout::PropertyBrowser::createGroup(QtProperty* qproperty, Property property)
 {
+  std::string label = property.getLabel();
+  if (label.compare("") == 0)
+    label = property.getName();
+
   QtGroupPropertyManager*  groupManager = new QtGroupPropertyManager;
-  QtProperty* groupProperty = groupManager->addProperty(property.getName().c_str());
+  QtProperty* groupProperty = groupManager->addProperty(label.c_str());
 
   if (!property.getSubProperty().empty())
   {
@@ -443,7 +471,7 @@ void te::layout::PropertyBrowser::createGroup(QtProperty* qproperty, Property pr
   }
   
   //add group property to the property browser tree
-  addPropertyItem(groupProperty, QLatin1String(property.getName().c_str()));
+  addPropertyItem(groupProperty, QLatin1String(property.getName().c_str()), QLatin1String(property.getLabel().c_str()));
 }
 
 void te::layout::PropertyBrowser::setHasWindows( bool hasWindows )
@@ -457,14 +485,14 @@ void te::layout::PropertyBrowser::blockOpenWindows( bool block )
 
 }
 
-void te::layout::PropertyBrowser::selectProperty( std::string name )
+void te::layout::PropertyBrowser::selectProperty(std::string label)
 {
   QList<QtProperty*> props = m_propertyEditor->properties();
   foreach( QtProperty* prop, props) 
   {
     if(prop)
     {
-      if(name.compare(prop->propertyName().toStdString()) == 0)
+      if (label.compare(prop->propertyName().toStdString()) == 0)
       {
         QList<QtBrowserItem *> list = m_propertyEditor->items(prop);
         QtBrowserItem* item = list.first();
@@ -541,20 +569,20 @@ te::layout::Properties te::layout::PropertyBrowser::getProperties()
   return properties;
 }
 
-QtProperty* te::layout::PropertyBrowser::findProperty( std::string name )
+QtProperty* te::layout::PropertyBrowser::findProperty(std::string label)
 {
   QtProperty* prop = 0;
 
-  prop = m_variantPropertiesBrowser->findProperty(name);
+  prop = m_variantPropertiesBrowser->findProperty(label);
   
   if(!prop)
   {
-    prop = m_dialogPropertiesBrowser->findProperty(name);
+    prop = m_dialogPropertiesBrowser->findProperty(label);
   }
   
   if (!prop)
   {
-    prop = m_itemObserverManager->findProperty(name);
+    prop = m_itemObserverManager->findProperty(label);
   }
 
   return prop;
@@ -588,12 +616,16 @@ bool te::layout::PropertyBrowser::addSubProperty( Property prop, Property subPro
 bool te::layout::PropertyBrowser::equalsProperties( Properties props )
 {
   bool result = true;
-
+  
   foreach( Property prop, props.getProperties()) 
   {
     if(prop.isVisible())
     {
-      QtProperty* qtprop = findProperty(prop.getName());
+      std::string label = prop.getLabel();
+      if (label.compare("") == 0)
+        label = prop.getName();
+
+      QtProperty* qtprop = findProperty(label);
       if(!qtprop)
       {
         result = false;
@@ -604,11 +636,30 @@ bool te::layout::PropertyBrowser::equalsProperties( Properties props )
   return result;
 }
 
+QString te::layout::PropertyBrowser::nameProperty(const std::string& label)
+{
+  QList<QString> labelList = m_nameToLabel.values();
 
+  if (!labelList.contains(label.c_str()))
+  {
+    return QString();
+  }
 
+  int index = labelList.indexOf(label.c_str());
+  QString value = labelList.value(index);
+  QString name = m_nameToLabel.key(value);
 
+  return name;
+}
 
+QString te::layout::PropertyBrowser::labelProperty(const std::string& name)
+{
+  if (!m_nameToLabel.contains(name.c_str()))
+  {
+    return QString();
+  }
 
-
-
+  QString foundLabel = m_nameToLabel[name.c_str()];
+  return foundLabel;
+}
 

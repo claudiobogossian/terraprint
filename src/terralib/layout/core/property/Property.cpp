@@ -336,7 +336,7 @@ void te::layout::Property::setLabel( std::string label )
   m_label = label;
 }
 
-std::string te::layout::Property::getLabel()
+const std::string& te::layout::Property::getLabel() const
 {
   return m_label;
 }
