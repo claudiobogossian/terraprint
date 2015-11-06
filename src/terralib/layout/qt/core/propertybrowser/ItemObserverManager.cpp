@@ -172,10 +172,17 @@ QStringList te::layout::ItemObserverManager::getItemNames(const EnumType* type)
   return names;
 }
 
-te::layout::Property te::layout::ItemObserverManager::getProperty(const std::string& name)
+te::layout::Property te::layout::ItemObserverManager::getProperty(const std::string& label)
 {
   Property prop;
-  prop.setName(name);
+
+  QString name = nameProperty(label);
+  if (name.compare("") == 0)
+  {
+    return prop;
+  }
+
+  prop.setName(name.toStdString());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -187,7 +194,7 @@ te::layout::Property te::layout::ItemObserverManager::getProperty(const std::str
   QSet<QtProperty*> props = properties();
   foreach(QtProperty* p, props)
   {
-    if (p->propertyName() == name.c_str())
+    if (p->propertyName() == label.c_str())
     {
       Data data = m_values[p];
       GenericVariant gv;
@@ -207,10 +214,14 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
   QtProperty* qprop = 0;
   Data data;
 
+  std::string label = property.getLabel();
+  if (label.compare("") == 0)
+    label = property.getName();
+
   QSet<QtProperty*> props = properties();
   foreach(QtProperty* p, props)
-  {
-    if (p->propertyName() == property.getName().c_str())
+  {    
+    if (p->propertyName() == label.c_str())
     {
       qprop = p;
 
@@ -245,14 +256,20 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
   return bupdate_property;
 }
 
-QtProperty* te::layout::ItemObserverManager::findProperty(const std::string& name)
+QtProperty* te::layout::ItemObserverManager::findProperty(const std::string& label)
 {
   QtProperty* prop = 0;
+
+  QString name = nameProperty(label);
+  if (name.compare("") == 0)
+  {
+    return prop;
+  }
 
   QSet<QtProperty*> props = properties();
   foreach(QtProperty* p, props)
   {
-    if (p->propertyName() == name.c_str())
+    if (p->propertyName() == name)
     {
       prop = p;
       break;
@@ -277,5 +294,51 @@ void te::layout::ItemObserverManager::setTypeForSearch(QtProperty *property, con
   m_values[property] = data;
 
   emit listNamesChanged(property, data.names);
+}
+
+QString te::layout::ItemObserverManager::propertyLabel(const QtProperty *property) const
+{
+  if (!m_nameToLabel.contains(property->propertyName()))
+    return QString();
+  return m_nameToLabel[property->propertyName()];
+}
+
+void te::layout::ItemObserverManager::setPropertyLabel(QtProperty *property, const QString &name, const QString &label)
+{
+  if (!m_values.contains(property))
+    return;
+
+  QString labelString = label;
+  if (labelString.compare("") == 0)
+    labelString = name;
+
+  m_nameToLabel[name] = labelString;
+}
+
+QString te::layout::ItemObserverManager::nameProperty(const std::string& label)
+{
+  QList<QString> labelList = m_nameToLabel.values();
+
+  if (!labelList.contains(label.c_str()))
+  {
+    return QString();
+  }
+
+  int index = labelList.indexOf(label.c_str());
+  QString value = labelList.value(index);
+  QString name = m_nameToLabel.key(value);
+
+  return name;
+}
+
+QString te::layout::ItemObserverManager::labelProperty(const std::string& name)
+{
+  if (!m_nameToLabel.contains(name.c_str()))
+  {
+    return QString();
+  }
+
+  QString foundLabel = m_nameToLabel[name.c_str()];
+  return foundLabel;
 }
 
