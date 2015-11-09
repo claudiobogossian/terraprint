@@ -31,8 +31,7 @@
 #include "../pattern/mvc/AbstractItemView.h"
 
 te::layout::GenericVariant::GenericVariant():
-  m_type(0),
-  m_item(0)
+  m_type(0)
 {
 
 }
@@ -50,31 +49,6 @@ std::vector<std::string> te::layout::GenericVariant::toStringVector()
 const std::list<te::map::AbstractLayerPtr>& te::layout::GenericVariant::toLayerList() const
 {
   return m_listLayer;
-}
-
-const te::layout::AbstractItemView* te::layout::GenericVariant::toItem() const
-{
-  return m_item;
-}
-
-bool te::layout::GenericVariant::setItem(AbstractItemView* value, EnumType* type)
-{
-  bool result = false;
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  if (!dataType)
-  {
-    return result;
-  }
- 
-  if (type == dataType->getDataTypeItemObserver())
-  {
-    m_type = type;
-    m_item = value;
-    result = true;
-  }
-
-  return result;
 }
 
 te::layout::EnumType* te::layout::GenericVariant::getType()

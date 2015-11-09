@@ -115,6 +115,14 @@ te::layout::PaperModel::PaperModel()
     property.setValue(false, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
+
+  {
+    std::string name = "Paper";
+    Property property(0);
+    property.setName("name");
+    property.setValue(name, dataType->getDataTypeString());
+    m_properties.updateProperty(property);
+  }
 }
 
 te::layout::PaperModel::~PaperModel()

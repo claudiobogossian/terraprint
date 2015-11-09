@@ -112,7 +112,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
   const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
   te::gm::Envelope newPlanarBox = te::map::GetWorldBoxInPlanar(newWorldBox, newSrid);
   double newScale = pNewScale.getValue().toDouble();
-  const AbstractItemView* newItemObservable = pNewItemObserver.getValue().toGenericVariant().toItem();
+  std::string newItemObservable = pNewItemObserver.getValue().toString();
 
   if(newScale == 0)
   {
@@ -123,7 +123,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
   double currentWidth = pCurrentWidth.getValue().toDouble();
   double currentHeight = pCurrentHeight.getValue().toDouble();
   te::gm::Envelope currentPlanarBox = pCurrentPlanarBox.getValue().toEnvelope();
-  const AbstractItemView* currentItemObservable = pCurrentItemObserver.getValue().toGenericVariant().toItem();
+  const std::string currentItemObservable = pCurrentItemObserver.getValue().toString();
 
   bool doUpdate = false;
   if(newWidth != currentWidth)
@@ -138,17 +138,15 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
   {
     doUpdate = true;
   }
-  else if (currentItemObservable && newItemObservable)
+  else if (!currentItemObservable.empty() && !newItemObservable.empty())
   {
-    std::string newName = newItemObservable->getController()->getProperties().getObjectName();
-    std::string currentName = currentItemObservable->getController()->getProperties().getObjectName();
-    if (newName.compare(currentName) != 0)
+    if (newItemObservable.compare(currentItemObservable) != 0)
     {
       doUpdate = true;
     }
   }
-  else if ((!newItemObservable && currentItemObservable)
-    || (newItemObservable && !currentItemObservable))
+  else if ((newItemObservable.empty() && !currentItemObservable.empty())
+    || (!newItemObservable.empty() && currentItemObservable.empty()))
   {
     doUpdate = true;
   }

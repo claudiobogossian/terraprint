@@ -26,6 +26,7 @@
 #include "../factory/AbstractItemFactory.h"
 #include "../../property/SharedProperties.h"
 #include "../../property/GenericVariant.h"
+#include "../../AbstractScene.h"
 
 te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model)
   : Observer()
@@ -243,25 +244,30 @@ void te::layout::AbstractItemController::associateChange(const Property& propert
   if (property.isNull())
     return;
 
+  AbstractScene* scene = m_view->getScene();
+  if (!scene)
+    return;
+
   SharedProperties sharedPropertiesName;
 
   // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-
   Property existPropItemObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
   if (!existPropItemObserver.isNull())
   {
-    const AbstractItemView* existItem = existPropItemObserver.getValue().toGenericVariant().toItem();
+    AbstractItemView* existItem = scene->getItem(existPropItemObserver.getValue().toString());
     if (existItem)
     {
       existItem->getController()->detach(this);
     }
   }
 
-  const AbstractItemView* item = property.getValue().toGenericVariant().toItem();
-  if (item)
+  if (!property.isNull())
   {
-    item->getController()->attach(this);
-  }
-  
+    AbstractItemView* item = scene->getItem(property.getValue().toString());
+    if (item)
+    {
+      item->getController()->attach(this);
+    }
+  }  
 }
 

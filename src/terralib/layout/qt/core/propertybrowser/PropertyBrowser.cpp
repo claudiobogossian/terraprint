@@ -34,12 +34,7 @@
 #include "../../../core/property/GenericVariant.h"
 #include "VariantPropertiesBrowser.h"
 #include "DialogPropertiesBrowser.h"
-#include <QRegExpValidator>
-#include <QRegExp>
-#include <QWidget>
-#include <QVariant>
-#include <QFont>
-#include <QColor>
+#include "../../../qt/core/Scene.h"
 
 // QtPropertyBrowser
 #include <QtPropertyBrowser/QtStringPropertyManager>
@@ -49,6 +44,12 @@
 #include <QtPropertyBrowser/QtTreePropertyBrowser>
 #include <QtPropertyBrowser/qteditorfactory.h>
 #include <QtPropertyBrowser/QtGroupPropertyManager>
+#include <QRegExpValidator>
+#include <QRegExp>
+#include <QWidget>
+#include <QVariant>
+#include <QFont>
+#include <QColor>
 
 // STL
 #include <algorithm>    // std::find
@@ -273,13 +274,12 @@ QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
   pproperty = addVariantProperty(property); // add variant property 
   if (!pproperty)
   {
-    GenericVariant gv = property.getValue().toGenericVariant();
-    if (gv.getType() != dataType->getDataTypeItemObserver()
+    if (property.getType() != dataType->getDataTypeItemObserver()
       && property.getType() != dataType->getDataTypeGroupProperties())
     {
       pproperty = addDialogProperty(property); // add dialog property
     }
-    else if (gv.getType() == dataType->getDataTypeItemObserver())
+    else if (property.getType() == dataType->getDataTypeItemObserver())
     {
       pproperty = addItemProperty(property); // add item observer property
     }
@@ -363,8 +363,7 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
     return pproperty;
   }
 
-  GenericVariant gv = property.getValue().toGenericVariant();
-  if (gv.getType() != dataType->getDataTypeItemObserver())
+  if (property.getType() != dataType->getDataTypeItemObserver())
     return pproperty;
 
   std::string label = property.getLabel();
@@ -376,11 +375,14 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
     return pproperty;
 
   QString val("");
-  if (property.getValue().toGenericVariant().toItem() != 0)
+  if (!property.isNull())
   {
-    const AbstractItemView* view = property.getValue().toGenericVariant().toItem();
-    const Property& property = view->getController()->getProperty("name");
-    val = property.getValue().toString().c_str();
+    const AbstractItemView* view = m_scene->getItem(property.getValue().toString());
+    if (view)
+    {
+      const Property& property = view->getController()->getProperty("name");
+      val = property.getValue().toString().c_str();
+    }
   }
   m_itemObserverManager->setValue(pproperty, val);
   m_itemObserverManager->setTypeForSearch(pproperty, objType->getMapItem());

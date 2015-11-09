@@ -33,6 +33,9 @@
 #include "../core/ContextObject.h"
 #include "Config.h"
 
+// STL
+#include <string>
+
 namespace te
 {
   namespace layout
@@ -101,6 +104,8 @@ namespace te
         virtual ItemUtils getItemUtils() = 0;
 
         virtual Utils getUtils() = 0;
+
+        virtual AbstractItemView* getItem(std::string name) = 0;
 
       protected:
         

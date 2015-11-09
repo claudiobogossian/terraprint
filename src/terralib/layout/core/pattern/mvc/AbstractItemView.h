@@ -40,6 +40,7 @@ namespace te
     class AbstractItemController;
     class AbstractItemModel;
     class ContextObject;
+    class AbstractScene;
 
     /*!
       \brief Abstract class to represent an observable. "Model" part of MVC component. 
@@ -109,6 +110,8 @@ namespace te
         virtual void setSubSelection(bool selected);
 
         virtual bool isSubSelected() const;
+
+        virtual AbstractScene* getScene() = 0;
         
     protected:
 

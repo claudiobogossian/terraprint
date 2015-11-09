@@ -324,13 +324,12 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
           continue;
         }
 
-        AbstractItemView* oldMapItemView = const_cast<AbstractItemView*>(pOldMapItem.getValue().toGenericVariant().toItem());
+        AbstractItemView* oldMapItemView = m_scene->getItem(pOldMapItem.getValue().toString());
         if (!oldMapItemView)
         {
           continue;
         }
 
-        const Property& oldMapName = oldMapItemView->getController()->getProperty("name");
         MapItem* oldMapItem = dynamic_cast<MapItem*>(oldMapItemView);
         if (!oldMapItem)
           return;
@@ -345,7 +344,7 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
     }
   }
 
-  AbstractItemView* mapItemView = const_cast<AbstractItemView*>(property.getValue().toGenericVariant().toItem());
+  AbstractItemView* mapItemView = m_scene->getItem(property.getValue().toString());
   if (!mapItemView)
   {
     return;

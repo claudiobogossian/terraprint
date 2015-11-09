@@ -124,13 +124,13 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   int newSrid = pNewSrid.getValue().toInt();
   const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
   te::gm::Envelope newGeographicBox = getWorldBoxInGeographic(newWorldBox, newSrid);
-  const AbstractItemView* newItemObservable = pNewItemObserver.getValue().toGenericVariant().toItem();
+  std::string newItemObservable = pNewItemObserver.getValue().toString();
 
   //current values
   double currentWidth = pCurrentWidth.getValue().toDouble();
   double currentHeight = pCurrentHeight.getValue().toDouble();
   te::gm::Envelope currentGeographicBox = pCurrentGeographicBox.getValue().toEnvelope();
-  const AbstractItemView* currentItemObservable = pCurrentItemObserver.getValue().toGenericVariant().toItem();
+  std::string currentItemObservable = pCurrentItemObserver.getValue().toString();
 
   bool doUpdate = false;
   if(newWidth != currentWidth)
@@ -145,17 +145,15 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   {
     doUpdate = true;
   }
-  else if (currentItemObservable && newItemObservable)
+  else if (!currentItemObservable.empty() && !newItemObservable.empty())
   {
-    std::string newName = newItemObservable->getController()->getProperties().getObjectName();
-    std::string currentName = currentItemObservable->getController()->getProperties().getObjectName();
-    if (newName.compare(currentName) != 0)
+    if (newItemObservable.compare(currentItemObservable) != 0)
     {
       doUpdate = true;
     }
   }
-  else if ((!newItemObservable && currentItemObservable)
-    || (newItemObservable && !currentItemObservable))
+  else if ((newItemObservable.empty() && !currentItemObservable.empty())
+    || (!newItemObservable.empty() && currentItemObservable.empty()))
   {
     doUpdate = true;
   }

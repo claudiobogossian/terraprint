@@ -45,7 +45,7 @@ te::layout::ScaleModel::ScaleModel()
   double scale = 250000.;
   double scaleGapX = 20.;
   double scaleGapY = 5.;
-  AbstractItemView* item = 0;
+  std::string itemName = "";
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -80,13 +80,11 @@ te::layout::ScaleModel::ScaleModel()
 
   // Observer pattern relationship. Associate: != 0 / Dissociate : == 0.
   {
-    GenericVariant gv;
-    gv.setItem(item, dataType->getDataTypeItemObserver());
     Property property(0);
     property.setName(sharedProps.getItemObserver());
     property.setLabel(TR_LAYOUT("Connection with"));
     property.setComposeWidget(true);
-    property.setValue(gv, dataType->getDataTypeGenericVariant());
+    property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
   }
 

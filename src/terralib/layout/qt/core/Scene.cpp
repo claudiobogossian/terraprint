@@ -1287,3 +1287,27 @@ QGraphicsItem* te::layout::Scene::getSubSelectedItem() const
   return 0;
 }
 
+te::layout::AbstractItemView* te::layout::Scene::getItem(std::string name)
+{
+  AbstractItemView* abstractItem = 0;
+
+  QList<QGraphicsItem*> allItems = items();
+  foreach(QGraphicsItem *item, allItems)
+  {
+    if (item)
+    {
+      AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
+      if (it)
+      {
+        const Property& property = it->getController()->getProperty("name");
+        if (name.compare(property.getValue().toString()) == 0)
+        {
+          abstractItem = it;
+          break;
+        }
+      }
+    }
+  }
+
+  return abstractItem;
+}

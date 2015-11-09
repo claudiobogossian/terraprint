@@ -197,9 +197,8 @@ te::layout::Property te::layout::ItemObserverManager::getProperty(const std::str
     if (p->propertyName() == label.c_str())
     {
       Data data = m_values[p];
-      GenericVariant gv;
-      gv.setItem(data.item, dataType->getDataTypeItemObserver());
-      prop.setValue(gv, dataType->getDataTypeGenericVariant());
+      std::string currentName = data.currentName.toStdString();
+      prop.setValue(currentName, dataType->getDataTypeItemObserver());
       break;
     }
   }
@@ -226,8 +225,8 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
       qprop = p;
 
       data = m_values[p];
-      const AbstractItemView* item = property.getValue().toGenericVariant().toItem();
-      if (item)
+      const std::string itemName = property.getValue().toString();
+      if (!itemName.empty())
       {
         const Property& property = data.item->getController()->getProperty("name");
         if (property.getValue().toString().c_str() == data.currentName)
@@ -237,9 +236,13 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
         }
         else
         {
-          data.item = const_cast<AbstractItemView*>(item);
-          data.currentName = property.getValue().toString().c_str();
-          setValue(qprop, data.currentName); //change qproperty
+          AbstractItemView* item = findItem(itemName.c_str());
+          if (item)
+          {
+            data.item = const_cast<AbstractItemView*>(item);
+            data.currentName = property.getValue().toString().c_str();
+            setValue(qprop, data.currentName); //change qproperty
+          }
           break;
         }
       }

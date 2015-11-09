@@ -377,6 +377,8 @@ namespace te
         */
         virtual QGraphicsItem* getSubSelectedItem() const;
 
+        virtual AbstractItemView* getItem(std::string name);
+
       signals:
 
      /*!

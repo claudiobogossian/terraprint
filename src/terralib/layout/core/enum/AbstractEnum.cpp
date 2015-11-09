@@ -129,7 +129,7 @@ int te::layout::AbstractEnum::minId()
 
 int te::layout::AbstractEnum::size()
 {
-  return m_enums.size();
+  return (int)m_enums.size();
 }
 
 te::layout::EnumType* te::layout::AbstractEnum::createEnum(std::string name, AbstractEnum* type, std::string label)

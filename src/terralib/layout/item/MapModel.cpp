@@ -54,7 +54,7 @@ te::layout::MapModel::MapModel()
     std::string value = "Choice";
     Property property(0);
     property.setName("mapChoice");
-    property.setLabel(TR_LAYOUT("Select the layers"));
+    property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setMenu(true);
     m_properties.addProperty(property);
