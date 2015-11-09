@@ -123,6 +123,11 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   clear();
 
+  if (this->scene() == 0)
+  {
+    return;
+  }
+
   Utils utils = ((Scene*) this->scene())->getUtils();
 
   // Box necessario para desenhar a curvatura
