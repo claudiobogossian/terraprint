@@ -75,11 +75,11 @@ namespace te
 
     template<class T> const T te::layout::ValueBase::get() const
     {
-      return dynamic_cast<const Value<T>>(*this).get();
+      return dynamic_cast<const Value<T> >(*this).get();
     }
     template<class T, class U> void te::layout::ValueBase::setValue(const U rhs)
     {
-      return dynamic_cast<Value<T>>(*this).setValue(rhs);
+      return dynamic_cast<Value<T> >(*this).setValue(rhs);
     }
   }
 }
