@@ -39,6 +39,7 @@
 #include "../item/MovingItemGroup.h"
 #include "AlignItems.h"
 #include "terralib/qt/widgets/canvas/Canvas.h"
+#include "Value.h"
 
 // STL
 #include <string>
@@ -77,6 +78,7 @@ namespace te
     class ContextObject;
     class ItemUtils;
     class Utils;
+    class AbstractProxyProject;
 
   /*!
     \brief Class representing the scene. This scene is child of QGraphicsScene, part of Graphics View Framework. 
@@ -379,14 +381,19 @@ namespace te
 
         virtual AbstractItemView* getItem(std::string name);
 
+        void setProxyProject(AbstractProxyProject* proxyProject);
+
+        template <typename T>
+        Value<T>* getContextValues(std::string name);
+
       signals:
 
-     /*!
+      /*!
           \brief Issued after insertion of an item in the scene.
         */
          void addItemFinalized(QGraphicsItem* item);
     
-    /*!
+      /*!
           \brief Issued after deleting an item in the scene.
       
       \param names names of items removed
@@ -487,7 +494,24 @@ namespace te
         bool                               m_isEditionMode;
         ContextObject                      m_context;
         te::qt::widgets::Canvas*           m_canvas;
+        std::map<std::string, ValueBase*>  m_contextValues;
     };
+
+    template <typename T>
+    inline te::layout::Value<T>* te::layout::Scene::getContextValues(std::string name)
+    {
+      Value<T>* value = 0;
+      for (std::map<std::string, ValueBase*>::iterator it = m_contextValues.begin(); it != m_contextValues.end(); ++it)
+      {
+        std::string key = it->first;
+        if (key.compare(name) == 0)
+        {
+          value = dynamic_cast<Value<T>*>(it->second);
+          break;
+        }
+      }
+      return value;
+    }
   }
 }
 

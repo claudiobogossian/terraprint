@@ -132,6 +132,15 @@ te::layout::Scene::~Scene()
     delete m_paperConfig;
     m_paperConfig = 0;
   }
+
+  for (std::map<std::string, ValueBase*>::iterator it = m_contextValues.begin(); it != m_contextValues.end(); ++it)
+  {
+    if (it->second != 0)
+    {
+      delete it->second;
+      it->second = 0;
+    }
+  }
 }
 
 void te::layout::Scene::insertItem(ItemObserver* item)
@@ -1311,3 +1320,13 @@ te::layout::AbstractItemView* te::layout::Scene::getItem(std::string name)
 
   return abstractItem;
 }
+
+void te::layout::Scene::setProxyProject(AbstractProxyProject* proxyProject)
+{
+  if (!proxyProject)
+    return;
+
+  ValueBase* value = new Value<AbstractProxyProject*>(proxyProject);
+  m_contextValues["proxy_project"] = value;
+}
+

@@ -89,6 +89,7 @@ void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
     m_view = new te::layout::View;
 
     te::layout::Scene* myScene = new te::layout::Scene(m_view);
+    myScene->setProxyProject(m_proxyProject);
     m_view->setScene(myScene);
 
     te::layout::MenuBuilder* menuBuilder = new te::layout::MenuBuilder(myScene, m_proxyProject, m_view);
