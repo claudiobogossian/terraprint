@@ -69,7 +69,11 @@ bool te::layout::XmlTemplate::exportTemplate(const PaperConfig& paperConfig, con
     //boost::property_tree::json_parser::
     //boost::property_tree::write_json(m_path, pTree);
 
-    boost::property_tree::xml_writer_settings<boost::property_tree::ptree::key_type> settings('\t', 1);
+#if BOOST_VERSION > 105600
+        boost::property_tree::xml_writer_settings<std::string> settings('\t', 1);
+#else
+        boost::property_tree::xml_writer_settings<char> settings('\t', 1);
+#endif
     boost::property_tree::write_xml(m_path, pTree, std::locale(), settings);
   }
   catch (const boost::property_tree::xml_parser_error& pe)
