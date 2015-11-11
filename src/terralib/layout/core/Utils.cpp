@@ -46,6 +46,7 @@
 #include "property/Properties.h"
 #include "property/Property.h"
 #include "../qt/core/Scene.h"
+#include "terralib/common/StringUtils.h"
 
 // STL
 #include <math.h> 
@@ -648,4 +649,33 @@ te::layout::PaperConfig te::layout::Utils::convertToPaperConfig(const te::layout
   paperConfig.setPaperOrientation(paperOrientation);
 
   return paperConfig;
+}
+
+te::gm::Envelope te::layout::Utils::getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid)
+{
+	te::gm::Envelope worldBoxGeographic = worldBox;
+
+	//About units names (SI): terralib5\resources\json\uom.json 
+
+
+	te::common::UnitOfMeasurePtr unitPtr = unitMeasure(srid);
+
+	if (!unitPtr)
+		return worldBoxGeographic;
+
+	std::string unitPtrStr = unitPtr->getName();
+	unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+	if (unitPtrStr.compare("DEGREE") != 0)
+	{
+		std::string proj4 = proj4DescToGeodesic();
+
+		// Get the id of the projection of destination 
+		std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
+
+		// Remapping 
+		worldBoxGeographic.transform(srid, projGeographic.second);
+	}
+
+	return worldBoxGeographic;
 }

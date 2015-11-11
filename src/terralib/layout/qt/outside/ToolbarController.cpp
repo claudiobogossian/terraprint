@@ -50,7 +50,7 @@ te::layout::ToolbarController::~ToolbarController()
 }
 
 void te::layout::ToolbarController::onMapTriggered(QAction* action)
-{
+{ 
   QToolButton* button = dynamic_cast<QToolButton*>(sender());
   if (button)
   {
@@ -90,6 +90,10 @@ void te::layout::ToolbarController::onMapTriggered(QAction* action)
   else if (action->objectName().compare(toolbar->getActionMapLocation().c_str()) == 0)
   {
     viewport->createItem(itemType->getMapLocationItem());
+  }
+  else if (action->objectName().compare(toolbar->getActionThreeNorth().c_str()) == 0)
+  {
+    viewport->createItem(itemType->getThreeNorthItem());
   }
 }
 

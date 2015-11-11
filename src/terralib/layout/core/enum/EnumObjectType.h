@@ -359,6 +359,14 @@ namespace te
         virtual EnumType* getPDFSettingsDialog() const;
 
 
+        /*!
+          \brief Returns value that represents Three North Item (MVC Component) type belonging to enumeration.
+      
+          \return enum value      
+        */
+        virtual EnumType* getThreeNorthItem() const;
+
+
       protected:
 
         /*!
@@ -410,6 +418,7 @@ namespace te
         EnumType* m_starItem; //!< value that represents star type belonging to enumeration
         EnumType* m_svgItem; //!< value that represents SVG type belonging to enumeration
         EnumType* m_pdfSettingsDialog; //!< value that represents SVG type belonging to enumeration
+        EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
     };
   }
 }
