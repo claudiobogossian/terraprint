@@ -53,6 +53,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/item/PolygonItemFactory.h"
 #include "pattern/factory/item/LineItemFactory.h"
 #include "pattern/factory/item/PaperItemFactory.h"
+#include "pattern/factory/item/ThreeNorthItemFactory.h"
 #include "pattern/factory/outside/ColorDialogOutsideFactory.h"
 #include "pattern/factory/outside/EditTemplateOutsideFactory.h"
 #include "pattern/factory/outside/FontDialogOutsideFactory.h"
@@ -86,6 +87,7 @@ namespace te
         static CreateLineItemToolFactory CreateLineItemToolFactory_instance;
         static CreatePolygonItemToolFactory CreatePolygonItemToolFactory_instance;
         static CreateItemToolFactory CreateItemToolFactory_instance;
+		static ThreeNorthItemFactory ThreeNorthItemFactory_instance;
       }
 
       // Temporary

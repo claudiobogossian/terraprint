@@ -211,6 +211,8 @@ namespace te
 
       std::string getActionNorth();
 
+      std::string getActionThreeNorth();
+
       std::string getActionMapLocation();
 
       /* Geometry Menu */
@@ -372,6 +374,7 @@ namespace te
       std::string m_actionGridPlanar;
       std::string m_actionGridGeodesic;
       std::string m_actionNorth;
+      std::string m_actionThreeNorth;
       std::string m_actionMapLocation;
       
       /* Geometry Menu */

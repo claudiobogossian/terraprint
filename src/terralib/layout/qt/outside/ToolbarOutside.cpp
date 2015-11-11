@@ -69,6 +69,7 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_actionGridPlanar("map_grid_planar"),
   m_actionGridGeodesic("map_grid_geodesic"),
   m_actionNorth("map_north"),
+  m_actionThreeNorth("map_three_north"),
   m_actionMapLocation("map_location"),
   m_actionRectangle("geometry_rectangle"),
   m_actionPoint("geometry_point"),
@@ -257,6 +258,9 @@ QToolButton* te::layout::ToolbarOutside::createMapToolButton()
 
   QAction* actionNorth = createAction("North Object", m_actionNorth, "layout-north", "", menu);
   menu->addAction(actionNorth);
+
+  QAction* actionThreeNorth = createAction("Three North Object", m_actionThreeNorth, "layout-three-north", "", menu);
+  menu->addAction(actionThreeNorth);
 
   QAction* actionMapLocation = createAction("Map Location Object", m_actionMapLocation, "layout-map-location", "", menu);
   menu->addAction(actionMapLocation);
@@ -963,6 +967,11 @@ std::string te::layout::ToolbarOutside::getActionGridGeodesic()
 std::string te::layout::ToolbarOutside::getActionNorth()
 {
   return m_actionNorth;
+}
+
+std::string te::layout::ToolbarOutside::getActionThreeNorth()
+{
+  return m_actionThreeNorth;
 }
 
 std::string te::layout::ToolbarOutside::getActionMapLocation()
