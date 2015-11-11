@@ -46,7 +46,7 @@ te::layout::AbstractItemView* te::layout::LineItemFactory::build(ItemFactoryPara
 
   if (!props.getProperties().empty())
   {
-    model->setProperties(props);
+    controller->setProperties(props);
   }
   return view;
 }

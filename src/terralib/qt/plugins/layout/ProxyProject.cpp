@@ -29,7 +29,7 @@
 #include "ProxyProject.h"
 #include "terralib/qt/af/ApplicationController.h"
 #include "terralib/qt/af/events/LayerEvents.h"
-
+#include "terralib/dataaccess/datasource/DataSourceInfoManager.h"
 
 te::qt::plugins::layout::ProxyProject::ProxyProject()
 {
@@ -84,3 +84,37 @@ te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::contains( std::
   }
   return layer;
 }
+
+te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::getLayerFromURI(std::string uri)
+{
+  te::map::AbstractLayerPtr layer;
+  std::string uriInfo = "URI";
+
+  std::list<te::map::AbstractLayerPtr> layers = getAllLayers();
+
+  std::list<te::map::AbstractLayerPtr>::iterator it;
+
+  for (it = layers.begin(); it != layers.end(); ++it)
+  {
+    te::map::AbstractLayerPtr layerPtr = (*it);
+    if (!layerPtr)
+      continue;
+    const std::string& id = it->get()->getDataSourceId();
+
+    te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
+    const std::map<std::string, std::string>& connInfo = info->getConnInfo();
+
+    std::string uriFromLayer = "";
+    for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
+    {
+      uriFromLayer = it->second;
+      if (uriFromLayer.compare(uri) == 0)
+      {
+        layer = layerPtr;
+        break;
+      }
+    }
+  }
+  return layer;
+}
+

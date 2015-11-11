@@ -32,6 +32,9 @@
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
 
+// STL
+#include <vector>
+
 te::layout::MapModel::MapModel()
   : AbstractItemModel()
 {
@@ -46,6 +49,7 @@ te::layout::MapModel::MapModel()
   std::list<te::map::AbstractLayerPtr> layerList;
   double width = 120.;
   double height = 120.;
+  std::vector<std::string>  vString;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -56,18 +60,27 @@ te::layout::MapModel::MapModel()
     property.setName("mapChoice");
     property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
+    property.setSerializable(false);
     property.setMenu(true);
     m_properties.addProperty(property);
   }
 
   {
-    GenericVariant gv;
-    gv.setList(layerList, dataType->getDataTypeLayerList());
-
     Property property;
     property.setName("layers");
     property.setLabel(TR_LAYOUT("Layers"));
-    property.setValue(gv, dataType->getDataTypeGenericVariant());
+    property.setValue(layerList, dataType->getDataTypeLayerList());
+    property.setEditable(false);
+    property.setVisible(false);
+    property.setSerializable(false);
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("layers_uri");
+    property.setLabel(TR_LAYOUT("URI"));
+    property.setValue(vString, dataType->getDataTypeStringVector());
     property.setEditable(false);
     property.setVisible(false);
     m_properties.addProperty(property);

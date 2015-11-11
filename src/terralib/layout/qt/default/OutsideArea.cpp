@@ -213,18 +213,18 @@ void te::layout::OutsideArea::createMainMenu()
    QAction* actionNew = createAction("New", m_optionNew, "layout-new");
    m_layoutMenu->addAction(actionNew);
 
-   QAction* actionSave = createAction("Update Template", m_optionUpdate, "layout-save");
+   QAction* actionSave = createAction("Update Map", m_optionUpdate, "layout-save");
    m_layoutMenu->addAction(actionSave);
 
    m_layoutMenu->addSeparator();
 
-   QMenu* mnuImport = m_layoutMenu->addMenu("Import Template");
-   QMenu* mnuExport = m_layoutMenu->addMenu("Export Template");
+   QMenu* mnuImport = m_layoutMenu->addMenu("Import Map");
+   QMenu* mnuExport = m_layoutMenu->addMenu("Export Map");
 
-   QAction* actionImportJSON = createAction("Import Xml Template", m_optionImportXml, "layout-import");
+   QAction* actionImportJSON = createAction("Import Xml Map", m_optionImportXml, "layout-import");
    mnuImport->addAction(actionImportJSON);
 
-   QAction* actionExportJSON = createAction("Export XML Template", m_optionExportXml, "layout-export");
+   QAction* actionExportJSON = createAction("Export XML Map", m_optionExportXml, "layout-export");
    mnuExport->addAction(actionExportJSON);
 
    m_layoutMenu->addSeparator();

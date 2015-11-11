@@ -603,6 +603,11 @@ namespace te
       {
         m_controller->itemZValueChanged(T::zValue());
       }
+      else if (change == QGraphicsItem::ItemSceneHasChanged)
+      {
+        Properties properties = m_controller->getProperties();
+        m_controller->setProperties(properties);
+      }
       return T::itemChange(change, value);
     }
 

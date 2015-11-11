@@ -417,8 +417,7 @@ void te::layout::MapItem::drawTilesMap(QPainter* painter)
     
   //we read the current layer list from the model because mapDisplay does not have the getLayers function
   const Property& property = m_controller->getProperty("layers");
-  const GenericVariant& gv = property.getValue().toGenericVariant();
-  const std::list<te::map::AbstractLayerPtr>& currentLayerList = gv.toLayerList();
+  const std::list<te::map::AbstractLayerPtr>& currentLayerList = property.getValue().toLayerList();
 
   painter->save();
 

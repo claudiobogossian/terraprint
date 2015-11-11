@@ -413,6 +413,9 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const st
   {
     const Property& property = vecProperty[i];
 
+    if (!property.isSerializable())
+      continue;
+
     const std::string& name = property.getName();
     const std::string& type = property.getType()->getName();
     const std::string& value = property.getValue().convertToString();

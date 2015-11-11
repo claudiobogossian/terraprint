@@ -107,10 +107,8 @@ std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceModel::searchLaye
     }
 
     m_layerProperties.push_back(pp);
-
-    GenericVariant v = pp.getValue().toGenericVariant();
-
-    std::list<te::map::AbstractLayerPtr> currentLayers = v.toLayerList();
+    
+    std::list<te::map::AbstractLayerPtr> currentLayers = pp.getValue().toLayerList();
     std::list<te::map::AbstractLayerPtr>::iterator itLayers = currentLayers.begin();
     while(itLayers != currentLayers.end())
     {

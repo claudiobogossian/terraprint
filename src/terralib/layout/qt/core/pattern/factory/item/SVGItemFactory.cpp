@@ -46,7 +46,7 @@ te::layout::AbstractItemView* te::layout::SVGItemFactory::build(ItemFactoryParam
 
   if (!props.getProperties().empty())
   {
-    model->setProperties(props);
+    controller->setProperties(props);
   }
   return view;
 }

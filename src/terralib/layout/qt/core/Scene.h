@@ -501,6 +501,10 @@ namespace te
     inline te::layout::Value<T>* te::layout::Scene::getContextValues(std::string name)
     {
       Value<T>* value = 0;
+
+      if (m_contextValues.empty())
+        return value;
+
       for (std::map<std::string, ValueBase*>::iterator it = m_contextValues.begin(); it != m_contextValues.end(); ++it)
       {
         std::string key = it->first;

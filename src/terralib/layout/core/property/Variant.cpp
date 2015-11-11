@@ -97,7 +97,6 @@ void te::layout::Variant::convertValue( const void* valueCopy )
   Font* fontValue = 0;
   te::gm::Envelope* envelopeValue = 0;
   GenericVariant* generic = 0;
-  te::gm::GeometryShrPtr geometryPtr;
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   if(!m_type || !dataType)
@@ -225,6 +224,28 @@ void te::layout::Variant::convertValue( const void* valueCopy )
      {
        null = false;
        m_geometryPtr = *geoPtrRef;
+       m_complex = true;
+     }
+   }
+   else if (m_type == dataType->getDataTypeStringVector())
+   {
+     // Cast it back to a vector of string..
+     std::vector<std::string>*  vstringValue = static_cast<std::vector<std::string>* >(value); //Attempting to convert *void to vector
+     if (vstringValue)
+     {
+       null = false;
+       m_vString = *vstringValue;
+       m_complex = true;
+     }
+   }
+   else if (m_type == dataType->getDataTypeLayerList())
+   {
+     // Cast it back to a list of te::map::AbstractLayerPtr.
+     std::list<te::map::AbstractLayerPtr>* listLayer = static_cast<std::list<te::map::AbstractLayerPtr>* >(value); //Attempting to convert *void to list
+     if (listLayer)
+     {
+       null = false;
+       m_listLayer = *listLayer;
        m_complex = true;
      }
    }
@@ -369,6 +390,20 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
       m_complex = true;
       null = false;
     }
+    else if (type == dataType->getDataTypeStringVector())
+    {
+      std::string vString = tree.data();
+      std::istringstream f(vString);
+      std::string s;
+      while (std::getline(f, s, ','))
+      {
+        m_vString.push_back(s);
+      }
+    }
+    else if (type == dataType->getDataTypeLayerList())
+    {
+      // do nothing
+    }
     else // Any remaining data will be by default "std::string"  
     {
       m_sValue = tree.data();
@@ -429,6 +464,16 @@ const te::gm::Envelope& te::layout::Variant::toEnvelope() const
   return m_envelopeValue;
 }
 
+const std::list<te::map::AbstractLayerPtr> te::layout::Variant::toLayerList() const
+{
+  return m_listLayer;
+}
+
+const std::vector<std::string> te::layout::Variant::toStringVector() const
+{
+  return m_vString;
+}
+
 bool te::layout::Variant::isNull() const
 {
   return m_null;
@@ -450,6 +495,9 @@ void te::layout::Variant::clear()
 
 std::string te::layout::Variant::convertToString() const
 {
+  std::ostringstream convert;
+  convert.precision(15);
+
   std::stringstream ss;//create a stringstream
   std::string s_convert;
   
@@ -467,8 +515,8 @@ std::string te::layout::Variant::convertToString() const
   }
   else if(m_type == dataType->getDataTypeDouble())
   {
-    ss << m_dValue;//add number to the stream
-    s_convert = ss.str();
+    convert << m_dValue; //add number to the stream
+    s_convert = convert.str();
   }
   else if(m_type == dataType->getDataTypeInt())
   {
@@ -482,8 +530,8 @@ std::string te::layout::Variant::convertToString() const
   }
   else if(m_type == dataType->getDataTypeFloat())
   {
-    ss << m_fValue;//add number to the stream
-    s_convert = ss.str();
+    convert << m_fValue; //add number to the stream
+    s_convert = convert.str();
   }
   else if(m_type == dataType->getDataTypeColor())
   {
@@ -510,6 +558,22 @@ std::string te::layout::Variant::convertToString() const
   else if (m_type == dataType->getDataTypeGeometry())
   {
     s_convert = m_geometryPtr->asText();
+  }
+  else if (m_type == dataType->getDataTypeStringVector())
+  {
+    if (!m_vString.empty())
+    {
+      for (std::vector<std::string>::const_iterator it = m_vString.begin(); it != m_vString.end(); ++it)
+      {
+        if (!s_convert.empty())
+          s_convert += ",";
+        s_convert += (*it);
+      }
+    }
+  }
+  else if (m_type == dataType->getDataTypeLayerList())
+  {
+    // do nothing
   }
   
   return s_convert;
