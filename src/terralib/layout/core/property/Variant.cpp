@@ -575,6 +575,10 @@ std::string te::layout::Variant::convertToString() const
   {
     // do nothing
   }
+  else
+  {
+    s_convert = m_sValue;
+  }
   
   return s_convert;
 }

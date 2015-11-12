@@ -293,85 +293,6 @@ bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptr
   }
 
   return true;
-
-  /*
-  //v.first //is the name of the child.
-  //v.second //is the child tree.
-
-  boost::property_tree::ptree::assoc_iterator it1 = m_array.find("template");
-  boost::property_tree::ptree::assoc_iterator it_nofound = m_array.not_found();
-
-  if (it1 == it_nofound)
-    return propsRetrieve;
-
-  boost::property_tree::ptree subtree = (*it1).second;
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  int count = 0;
-  while (true)
-  {
-    std::stringstream ss;//create a stringstream
-    ss << count;//add number to the stream
-
-    std::string s_prop = "properties_" + ss.str();
-
-    boost::property_tree::ptree::assoc_iterator it2 = subtree.find(s_prop);
-    boost::property_tree::ptree::assoc_iterator it_nofound2 = subtree.not_found();
-
-    if (it2 == it_nofound2)
-      return propsRetrieve;
-
-    boost::property_tree::ptree subtree1 = (*it2).second;
-
-    boost::property_tree::ptree::assoc_iterator itName = subtree1.find("name");
-    boost::property_tree::ptree::assoc_iterator it_nofoundName = subtree1.not_found();
-
-    if (itName == it_nofoundName)
-      return propsRetrieve;
-
-    te::layout::Properties props = (*itName).second.data();
-
-    EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
-
-    std::string valName;
-    boost::property_tree::ptree tree;
-    Property prop;
-    BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, subtree.get_child(s_prop))
-    {
-      if (v.first.compare("object_type") == 0)
-      {
-        EnumType* type = enumObj->getEnum(v.second.data());
-        props.setTypeObj(type);
-        continue;
-      }
-
-      if (v.first.compare("type") == 0)
-      {
-        prop.setName(valName);
-        EnumType* tp = dataType->getEnum(v.second.data());
-        Variant vt;
-        vt.fromPtree(tree, tp);
-        prop.setValue(vt);
-        props.addProperty(prop);
-        prop.clear();
-      }
-      else
-      {
-        std::string val = v.first;
-        valName = val;
-        tree = v.second;
-
-        retrieveSubPTree(tree, prop);
-      }
-    }
-
-    propsRetrieve.push_back(props);
-    count += 1;
-  }
-
-  return propsRetrieve;
-  */
 }
 
 void te::layout::BoostPropertySerializer::searchProperty( Property& property, boost::property_tree::ptree& array, boost::property_tree::ptree& child )
@@ -486,20 +407,16 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   std::string currentChoice = propertyNode.get<std::string>("currentChoice");
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  EnumType* valueType = dataType->getEnum(type);
 
   Property property;
   property.setName(name);
 
-  if(value.empty() == false)
-  {
-    const boost::property_tree::ptree& valueNode = propertyNode.get_child("value");
+  const boost::property_tree::ptree& valueNode = propertyNode.get_child("value");
+  Variant variantValue;
+  variantValue.fromPtree(valueNode, valueType);
 
-    EnumType* valueType = dataType->getEnum(type);
-    Variant variantValue;
-    variantValue.fromPtree(valueNode, valueType);
-
-    property.setValue(variantValue);
-  }
+  property.setValue(variantValue);
 
   if (currentChoice.empty() == false)
   {
