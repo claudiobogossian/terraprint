@@ -686,10 +686,12 @@ std::string te::layout::Variant::toString( int value ) const
 
 std::string te::layout::Variant::toString(double value) const
 {
-  std::stringstream ss;//create a stringstream
-  ss << value;//add number to the stream
+  std::ostringstream convert;
+  convert.precision(15);
 
-  return ss.str();
+  convert << value;//add number to the stream
+
+  return convert.str();
 }
 
 bool te::layout::Variant::toBool( std::string str )
