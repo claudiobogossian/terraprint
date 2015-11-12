@@ -30,15 +30,15 @@
 #include "../../../layout/qt/outside/ObjectInspectorOutside.h"
 #include "../../../layout/qt/core/BuildGraphicsOutside.h"
 #include "../../../layout/core/enum/Enums.h"
+#include "../core/Scene.h"
 
-
-te::layout::ObjectInspectorDock::ObjectInspectorDock( QWidget * parent /*= 0*/, Qt::WindowFlags flags /*= 0*/ ) :
+te::layout::ObjectInspectorDock::ObjectInspectorDock(te::layout::Scene* scene, QWidget * parent /*= 0*/, Qt::WindowFlags flags /*= 0*/) :
   QDockWidget(parent, flags)
 {
   setWindowTitle("Object Inspector");
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-  create();
+  create(scene);
 
   setWidget(m_inspector);
 }
@@ -48,7 +48,7 @@ te::layout::ObjectInspectorDock::~ObjectInspectorDock()
 
 }
 
-void te::layout::ObjectInspectorDock::create()
+void te::layout::ObjectInspectorDock::create(te::layout::Scene* scene)
 {
   te::layout::BuildGraphicsOutside buildOutside;
   
@@ -58,7 +58,7 @@ void te::layout::ObjectInspectorDock::create()
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getObjectInspectorWindow());
+  QWidget* widget = buildOutside.createOuside(objectType->getObjectInspectorWindow(), scene);
   if(!widget)
   {
     return;

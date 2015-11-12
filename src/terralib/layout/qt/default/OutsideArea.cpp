@@ -164,7 +164,7 @@ void te::layout::OutsideArea::createPropertiesDock(AbstractProxyProject* proxyPr
 
 void te::layout::OutsideArea::createInspectorDock()
 {
-  m_dockInspector = new ObjectInspectorDock;
+  m_dockInspector = new ObjectInspectorDock(m_view->getScene());
   m_dockInspector->setFeatures(QDockWidget::DockWidgetMovable |  
     QDockWidget::DockWidgetFloatable);
 }

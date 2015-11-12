@@ -32,22 +32,24 @@
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 
-
 // STL
 #include <string>
 
 // Qt
 #include <QWidget>
 
-class QtProperty;
 class QGraphicsItem;
 class QTreeWidget;
+class QContextMenuEvent;
+class QAction;
+class QMenu;
 
 namespace te
 {
   namespace layout
   {
     class AbstractOutsideController;
+    class Scene;
 
     /*!
     \brief Tree of names of all the items entered on the scene, MVC components, using Qt to present the name of each item and its class. Object Inspector.
@@ -62,7 +64,7 @@ namespace te
 
     public:
 
-      ObjectInspectorOutside(AbstractOutsideController* controller);
+      ObjectInspectorOutside(Scene* scene, AbstractOutsideController* controller);
       
       virtual ~ObjectInspectorOutside();
             
@@ -80,18 +82,27 @@ namespace te
 
       virtual void itemSelectionChanged();
 
+      virtual void onMenuTriggered(QAction*);
+
     signals:
 
       void currentItemChanged(QGraphicsItem* item);
 
       void selectionChanged(QList<QGraphicsItem*> graphicsItems);
-
-
+      
     protected:
 
+      virtual void contextMenuEvent(QContextMenuEvent * event);
+
+      virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "");
+
+      virtual void createMenu(std::string itemName);
+      
       QTreeWidget*            m_treeWidget;
       bool                    m_isChangingSelection;
       QList<QGraphicsItem*>   m_graphicsItems;
+      Scene*                  m_scene;
+      QMenu*                  m_menu;
     };
   }
 }

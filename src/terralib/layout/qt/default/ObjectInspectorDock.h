@@ -36,13 +36,15 @@ namespace te
 {
   namespace layout
   {
+    class Scene;
+
     class ObjectInspectorDock : public QDockWidget
     {
       Q_OBJECT //for slots/signals
 
     public:
 
-      ObjectInspectorDock(QWidget * parent = 0, Qt::WindowFlags flags = 0);
+      ObjectInspectorDock(te::layout::Scene* scene, QWidget * parent = 0, Qt::WindowFlags flags = 0);
 
       virtual ~ObjectInspectorDock();
 
@@ -50,7 +52,7 @@ namespace te
 
     protected:
 
-      virtual void create();
+      virtual void create(te::layout::Scene* scene);
 
       te::layout::ObjectInspectorOutside* m_inspector;
     };

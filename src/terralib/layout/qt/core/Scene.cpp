@@ -333,6 +333,37 @@ void te::layout::Scene::removeSelectedItems()
     emit deleteFinalized(names);
 }
 
+void te::layout::Scene::removeItemByName(std::string name)
+{
+  std::vector<std::string> names;
+
+  AbstractItemView* abstractItem = getItem(name);
+  if (!abstractItem)
+    return;
+
+  QList<QGraphicsItem*> graphicsItems;
+  if (abstractItem)
+  {
+    if (abstractItem->getController())
+    {
+      const Property& pName = abstractItem->getController()->getProperty("name");
+      names.push_back(pName.getValue().toString());
+    }
+  }
+
+  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+  if (!item)
+    return;
+
+  graphicsItems.push_back(item);
+
+  QUndoCommand* command = new DeleteCommand(this, graphicsItems);
+  addUndoStack(command);
+
+  if (!names.empty())
+    emit deleteFinalized(names);
+}
+
 void te::layout::Scene::addUndoStack( QUndoCommand* command )
 {
   m_undoStack->push(command);

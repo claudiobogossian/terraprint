@@ -164,6 +164,11 @@ namespace te
           \brief Method that removes all selected items in the scene and creates a Command to Undo/Redo of type DeleteCommand. The item is removed from the scene, but is not deleted.
         */
         virtual void removeSelectedItems();
+
+        /*!
+        \brief Method that removes a item in the scene and creates a Command to Undo/Redo of type DeleteCommand. The item is removed from the scene, but is not deleted.
+        */
+        virtual void removeItemByName(std::string name);
     
     /*!
           \brief Groups objects and creates a QGraphicsItemGroup object. A command Undo/Redo of type AddCommand is created.
