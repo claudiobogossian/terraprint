@@ -105,7 +105,7 @@ namespace te
 
         virtual Utils getUtils() = 0;
 
-        virtual AbstractItemView* getItem(std::string name) = 0;
+        virtual AbstractItemView* getItem(const std::string& name) = 0;
 
       protected:
         

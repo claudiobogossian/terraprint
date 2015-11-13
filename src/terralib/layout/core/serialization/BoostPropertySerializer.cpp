@@ -214,7 +214,7 @@ void te::layout::BoostPropertySerializer::loadFromPath( std::string loadPath )
   }
 }
 
-boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te::layout::PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties)
+boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te::layout::PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties, const std::map< std::string, std::vector<std::string> >& mapGroups)
 {
   double paperWidth = 0.;
   double paperHeight = 0.;
@@ -235,6 +235,7 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te
   
   rootNode.push_back(std::make_pair("paper", paperNode));
 
+  //for all the items
   boost::property_tree::ptree itemsNode;
   for (size_t i = 0; i < vecProperties.size(); ++i)
   {    
@@ -254,16 +255,43 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te
 
     itemsNode.push_back(std::make_pair("item", propertiesNode));
   }
-
   rootNode.push_back(std::make_pair("items", itemsNode));
-  
+
+  //for all the groups
+  boost::property_tree::ptree groupsNode;
+  std::map< std::string, std::vector<std::string> >::const_iterator itGroups = mapGroups.begin();
+  while (itGroups != mapGroups.end())
+  {
+    const std::string& groupName = itGroups->first;
+    const std::vector<std::string>& vecItems = itGroups->second;
+
+    
+    boost::property_tree::ptree itemsListNode;
+    for (size_t i = 0; i < vecItems.size(); ++i)
+    {
+      boost::property_tree::ptree itemNode;
+      itemNode.add("name", vecItems[i]);
+
+      itemsListNode.push_back(std::make_pair("item", itemNode));
+    }
+
+    boost::property_tree::ptree groupNode;
+    groupNode.add("name", groupName);
+    groupNode.push_back(std::make_pair("items", itemsListNode));
+
+    groupsNode.push_back(std::make_pair("group", groupNode));
+    ++itGroups;
+  }
+
+  rootNode.push_back(std::make_pair("groups", groupsNode));
+
   boost::property_tree::ptree templateNode;
   templateNode.push_back(std::make_pair("template", rootNode));
 
   return templateNode;
 }
 
-bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptree& tree, te::layout::PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties)
+bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptree& tree, te::layout::PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties, std::map< std::string, std::vector<std::string> >& oMapGroups)
 {
   std::vector<te::layout::Properties> vecProperties;
 
@@ -290,6 +318,28 @@ bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptr
     oProperties.push_back(properties);
 
     ++itItems;
+  }
+
+  const boost::property_tree::ptree& groupsNode = tree.get_child("template.groups");
+  boost::property_tree::ptree::const_iterator itGroups = groupsNode.begin();
+  while (itGroups != groupsNode.end())
+  {
+    const boost::property_tree::ptree& groupNode = itGroups->second;
+
+    std::string groupName = groupNode.get<std::string>("name");
+    const boost::property_tree::ptree& itemsListNode = groupNode.get_child("items");
+
+    boost::property_tree::ptree::const_iterator itItems = itemsListNode.begin();
+    while (itItems != itemsListNode.end())
+    {
+      std::string itemName = itItems->second.get<std::string>("name");
+
+      oMapGroups[groupName].push_back(itemName);
+
+      ++itItems;
+    }
+
+    ++itGroups;
   }
 
   return true;

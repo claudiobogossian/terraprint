@@ -546,9 +546,11 @@ bool te::layout::Scene::exportPropertiesToTemplate( EnumType* type, std::string 
     return is_export;
   }
   
-  std::vector<te::layout::Properties> props = getItemsProperties();
+  std::vector<te::layout::Properties> properties;
+  std::map< std::string, std::vector<std::string> > mapGroups;
+  getItemsProperties(properties, mapGroups);
 
-  if(props.empty())
+  if (properties.empty())
     return is_export;
   
   TemplateEditor editor(type, fileName);
@@ -558,18 +560,16 @@ bool te::layout::Scene::exportPropertiesToTemplate( EnumType* type, std::string 
   if(!jtemplate)
     return is_export;
 
-  is_export = jtemplate->exportTemplate(*m_paperConfig, props);
+  is_export = jtemplate->exportTemplate(*m_paperConfig, properties, mapGroups);
 
   return is_export;
 }
 
-std::vector<te::layout::Properties> te::layout::Scene::importTemplateToProperties( EnumType* type, std::string fileName )
+bool te::layout::Scene::importTemplateToProperties(EnumType* type, std::string fileName, std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups)
 {
-  std::vector<te::layout::Properties> props;
-
   if(fileName.compare("") == 0)
   {
-    return props;
+    return false;
   }
   
   TemplateEditor editor(type, fileName);
@@ -577,37 +577,128 @@ std::vector<te::layout::Properties> te::layout::Scene::importTemplateToPropertie
   AbstractTemplate* jtemplate = editor.getTemplate();
 
   if(!jtemplate)
-    return props;
+    return false;
 
   te::layout::PaperConfig paperConfig;
-  jtemplate->importTemplate(paperConfig, props);
+  jtemplate->importTemplate(paperConfig, properties, mapGroups);
 
-  return props;
+  return true;
 }
 
-std::vector<te::layout::Properties> te::layout::Scene::getItemsProperties()
+bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups)
 {
-  std::vector<te::layout::Properties> props;
-
   QList<QGraphicsItem*> graphicsItems = items();
-  foreach( QGraphicsItem *item, graphicsItems) 
+  graphicsItems = sortItemsByDependency(graphicsItems);
+
+  foreach(QGraphicsItem *qItem, graphicsItems)
   {
-    if (item)
-    {    
-      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+    AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(qItem);
+    if (absItem == 0)
+    {
+      continue;
+    }
+
+    //I am inside a group
+    if (qItem->parentItem() != 0)
+    {
+      const std::string& absItemName = absItem->getController()->getProperty("name").getValue().toString();
+
+      AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(qItem->parentItem());
+      if (absParentItem == 0)
+      {
+        continue;
+      }
+
+      const std::string& absParentName = absParentItem->getController()->getProperty("name").getValue().toString();
+      mapGroups[absParentName].push_back(absItemName);
+    }
+
+    //I am not a group
+    //if (qItem->childItems().empty() == true)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(qItem);
       if(lItem)
       {
         const Property& pIsPrintable = lItem->getController()->getProperty("printable");
         if(pIsPrintable.getValue().toBool() == false)
           continue;
         
-        props.push_back(lItem->getController()->getProperties());
+        properties.push_back(lItem->getController()->getProperties());
       }
     }
   }
 
-  return props;
+  return true;
 }
+
+QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGraphicsItem*>& listItems)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  std::map< std::string, std::string > mapDependency;
+  std::map< std::string, QGraphicsItem* > mapItems;
+
+  //we first analyse all the item to detect which item depends on which 
+  foreach(QGraphicsItem *qItem, listItems)
+  {
+    AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(qItem);
+    if (absItem == 0)
+    {
+      continue;
+    }
+
+    const std::string& absItemName = absItem->getController()->getProperty("name").getValue().toString();
+
+    mapItems[absItemName] = qItem;
+
+    
+    const Properties& properties = absItem->getController()->getProperties();
+    const std::vector<Property>& vecProperty = properties.getProperties();
+    for (size_t i = 0; i < vecProperty.size(); ++i)
+    {
+      const Property& property = vecProperty[i];
+      if (property.getType() == dataType->getDataTypeItemObserver())
+      {
+        const std::string& parentItemName = property.getValue().toString();
+        mapDependency[absItemName] = parentItemName;
+      }
+    }
+  }
+
+  QList<QGraphicsItem*> sortedList = listItems;
+
+  //and now we sort the list to ensure that the items that have dependency are listed after the ones that they depend on
+  std::map< std::string, std::string >::const_iterator it = mapDependency.begin();
+  while (it != mapDependency.end())
+  {
+    const std::string& itemName = it->first;
+    const std::string& parentName = it->second;
+
+    //QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(getItem(itemName));
+    //QGraphicsItem* parent = dynamic_cast<QGraphicsItem*>(getItem(parentName));
+    
+    QGraphicsItem* item = mapItems[itemName];
+    QGraphicsItem* parent = mapItems[parentName];
+
+    int itemIndex = sortedList.indexOf(item);
+    int parentIndex = sortedList.indexOf(parent);
+
+    if (parentIndex > itemIndex)
+    {
+      sortedList.move(itemIndex, parentIndex);
+
+      //as we can have several levels in the dependency tree, we must restart the analysis to ensure that the sort is correct
+      it = mapDependency.begin();
+      continue;
+    }
+
+    ++it;
+  }
+
+  return sortedList;
+
+}
+
 
 void te::layout::Scene::reset()
 {
@@ -624,9 +715,14 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 {
   BuildGraphicsItem build(this);
   
-  std::vector<te::layout::Properties> props = importTemplateToProperties(type, fileName);
+  std::vector<te::layout::Properties> properties;
+  std::map< std::string, std::vector<std::string> > mapGroups;
+  if (importTemplateToProperties(type, fileName, properties, mapGroups) == false)
+  {
+    return false;
+  }
 
-  if(props.empty())
+  if (properties.empty())
     return false;
 
   reset();
@@ -636,14 +732,49 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
   te::gm::Envelope boxW = getSceneBox();
   vzArea->changeBoxArea(boxW);
 
-  for(it = props.begin() ; it != props.end() ; ++it)
+  //we create the items
+  std::map<std::string, te::layout::Properties> mapProperties;
+  for (it = properties.begin(); it != properties.end(); ++it)
   {
-    te::layout::Properties proper = (*it);
+    const te::layout::Properties& proper = (*it);
 
     if(proper.getProperties().empty())
       continue;
 
+    if (proper.getTypeObj() == Enums::getInstance().getEnumObjectType()->getItemGroup())
+    {
+      mapProperties[proper.getProperty("name").getValue().toString()] = proper;
+      continue;
+    }
+    
+
     build.buildItem(proper);
+  }
+
+  //then we create the groups
+  std::map< std::string, std::vector<std::string> >::const_iterator itGroups = mapGroups.begin();
+  while (itGroups != mapGroups.end())
+  {
+    const std::string& groupName = itGroups->first;
+    const std::vector<std::string>& vecItemNames = itGroups->second;
+
+    QList<QGraphicsItem*> listItems;
+    for (size_t i = 0; i < vecItemNames.size(); ++i)
+    {
+      const std::string& itemName = vecItemNames[i];
+      QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->getItem(itemName));
+
+      listItems.append(qItem);
+    }
+
+    QGraphicsItemGroup* qItemGroup = createItemGroup(listItems);
+    AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(qItemGroup);
+    if (itemView != 0)
+    {
+      itemView->getController()->setProperties(mapProperties[groupName]);
+    }
+
+    ++itGroups;
   }
 
   return true;
@@ -1327,7 +1458,7 @@ QGraphicsItem* te::layout::Scene::getSubSelectedItem() const
   return 0;
 }
 
-te::layout::AbstractItemView* te::layout::Scene::getItem(std::string name)
+te::layout::AbstractItemView* te::layout::Scene::getItem(const std::string& name)
 {
   AbstractItemView* abstractItem = 0;
 

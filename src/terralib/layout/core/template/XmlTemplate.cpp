@@ -55,13 +55,13 @@ te::layout::XmlTemplate::~XmlTemplate()
 
 }
 
-bool te::layout::XmlTemplate::exportTemplate(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& properties)
+bool te::layout::XmlTemplate::exportTemplate(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& properties, const std::map< std::string, std::vector<std::string> >& mapGroups)
 {
   //We initialize the encoder object
   BoostPropertySerializer serializer;
 
   //we get the tree to be serialized
-  const boost::property_tree::ptree& pTree = serializer.encode(paperConfig, properties);
+  const boost::property_tree::ptree& pTree = serializer.encode(paperConfig, properties, mapGroups);
 
   try
   {
@@ -87,7 +87,7 @@ bool te::layout::XmlTemplate::exportTemplate(const PaperConfig& paperConfig, con
   return true;
 }
 
-bool te::layout::XmlTemplate::importTemplate(PaperConfig& paperConfig, std::vector<te::layout::Properties>& properties)
+bool te::layout::XmlTemplate::importTemplate(PaperConfig& paperConfig, std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups)
 {
   boost::property_tree::ptree pTree;
   try
@@ -102,7 +102,7 @@ bool te::layout::XmlTemplate::importTemplate(PaperConfig& paperConfig, std::vect
   }
 
   BoostPropertySerializer serializer;
-  bool result = serializer.decode(pTree, paperConfig, properties);
+  bool result = serializer.decode(pTree, paperConfig, properties, mapGroups);
 
   return result;
 }
