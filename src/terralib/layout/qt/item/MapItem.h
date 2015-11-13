@@ -157,6 +157,8 @@ namespace te
 
         virtual void drawTilesMap(QPainter* painter);
 
+        virtual void recompose();
+        
     protected slots:
 
         void extentChanged();

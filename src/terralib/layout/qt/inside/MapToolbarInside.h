@@ -74,6 +74,8 @@ namespace te
 
       virtual QToolButton* createZoomOutButton();
 
+      virtual QToolButton* createRecomposeButton();
+
       virtual QToolButton* createSystematicScaleButton();
 
       virtual QToolButton* createTextGridAsObjectButton();

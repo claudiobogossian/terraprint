@@ -59,6 +59,9 @@ void te::layout::MapToolbarInside::createToolbar()
 {
   m_toolbar = new QToolBar("Map Component ToolBar");
 
+  createRecomposeButton();
+  m_toolbar->addSeparator();
+
   createPanButton();
   m_toolbar->addSeparator();
 
@@ -66,6 +69,7 @@ void te::layout::MapToolbarInside::createToolbar()
   m_toolbar->addSeparator();
 
   createZoomOutButton();
+  m_toolbar->addSeparator();
 }
 
 void te::layout::MapToolbarInside::clear()
@@ -125,6 +129,23 @@ QToolButton* te::layout::MapToolbarInside::createZoomOutButton()
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onZoomOutClicked(bool)));
+
+  m_toolbar->addWidget(btn);
+
+  return btn;
+}
+
+QToolButton* te::layout::MapToolbarInside::createRecomposeButton()
+{
+  QToolButton *btn = 0;
+
+  if (!m_toolbar)
+    return btn;
+
+  btn = createToolButton("Recompose", "Recompose", "layout-recompose");
+  btn->setCheckable(false);
+
+  connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onRecomposeClicked(bool)));
 
   m_toolbar->addWidget(btn);
 

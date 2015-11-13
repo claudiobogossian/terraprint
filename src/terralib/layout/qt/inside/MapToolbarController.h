@@ -63,6 +63,8 @@ namespace te
 
         virtual void onZoomOutClicked(bool checked);
 
+        virtual void onRecomposeClicked(bool checked);
+
         virtual void onSystematicScaleClicked(bool checked);
 
         virtual void onTextGridAsObjectClicked(bool checked);

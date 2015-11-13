@@ -40,6 +40,7 @@
 #include "terralib/qt/widgets/tools/Zoom.h"
 #include "terralib/qt/widgets/tools/ZoomArea.h"
 #include "terralib/qt/widgets/tools/ZoomClick.h"
+#include "terralib/maptools/Utils.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneDragDropEvent>
@@ -467,6 +468,8 @@ bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
 {
   EnumModeType* mode = Enums::getInstance().getEnumModeType();
 
+  bool result = false;
+
   if (m_currentTool)
   {
     removeCurrentTool();
@@ -493,22 +496,30 @@ bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
     m_currentTool = new te::qt::widgets::ZoomClick(m_mapDisplay, toolCursor, 2.0, te::qt::widgets::Zoom::Out);
   }
 
+  if (tool == mode->getModeMapRecompose())
+  {
+    recompose();
+    result = true;
+  }
+
   if (m_currentTool)
   {
     m_currentTool->setCursor(toolCursor);
     m_mapDisplay->installEventFilter(m_currentTool);
     this->setCursor(toolCursor);
+    result = true;
   }
 
   if (parentItem() != 0)
   {
     parentItem()->setHandlesChildEvents(false);
   }
-  return false;
+  return true;
 }
 
 bool te::layout::MapItem::removeCurrentTool()
 {
+  bool result = false;
   if (m_currentTool)
   {
     m_mapDisplay->removeEventFilter(m_currentTool);
@@ -518,9 +529,9 @@ bool te::layout::MapItem::removeCurrentTool()
 
     this->setCursor(Qt::ArrowCursor);
     
-    return true;
+    result = true;
   }
-  return false;
+  return result;
 }
 
 QCursor te::layout::MapItem::createCursor(std::string pathIcon)
@@ -543,4 +554,15 @@ QCursor te::layout::MapItem::createCursor(std::string pathIcon)
   return cur;
 }
 
+void te::layout::MapItem::recompose()
+{
+  const Property& property = m_controller->getProperty("layers");
+  std::list<te::map::AbstractLayerPtr> currentLayerList = property.getValue().toLayerList();
+
+  if (currentLayerList.empty())
+    return;
+
+  te::gm::Envelope finalEnv = te::map::GetSelectedExtent(currentLayerList, m_mapDisplay->getSRID(), false);
+  m_mapDisplay->setExtent(finalEnv, true);
+}
 

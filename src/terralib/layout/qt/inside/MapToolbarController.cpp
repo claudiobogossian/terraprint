@@ -74,6 +74,12 @@ void te::layout::MapToolbarController::onZoomOutClicked(bool checked)
   changeMapTool(type->getModeMapZoomOut());
 }
 
+void te::layout::MapToolbarController::onRecomposeClicked(bool checked)
+{
+  EnumModeType* type = Enums::getInstance().getEnumModeType();
+  changeMapTool(type->getModeMapRecompose());
+}
+
 void te::layout::MapToolbarController::onSystematicScaleClicked(bool checked)
 {
   // do nothing
