@@ -214,7 +214,7 @@ void te::layout::BoostPropertySerializer::loadFromPath( std::string loadPath )
   }
 }
 
-boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te::layout::PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties)
+boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te::layout::PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties, const std::map< std::string, std::vector<std::string> >& mapGroups)
 {
   double paperWidth = 0.;
   double paperHeight = 0.;
@@ -235,6 +235,7 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te
   
   rootNode.push_back(std::make_pair("paper", paperNode));
 
+  //for all the items
   boost::property_tree::ptree itemsNode;
   for (size_t i = 0; i < vecProperties.size(); ++i)
   {    
@@ -254,16 +255,43 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te
 
     itemsNode.push_back(std::make_pair("item", propertiesNode));
   }
-
   rootNode.push_back(std::make_pair("items", itemsNode));
-  
+
+  //for all the groups
+  boost::property_tree::ptree groupsNode;
+  std::map< std::string, std::vector<std::string> >::const_iterator itGroups = mapGroups.begin();
+  while (itGroups != mapGroups.end())
+  {
+    const std::string& groupName = itGroups->first;
+    const std::vector<std::string>& vecItems = itGroups->second;
+
+    
+    boost::property_tree::ptree itemsListNode;
+    for (size_t i = 0; i < vecItems.size(); ++i)
+    {
+      boost::property_tree::ptree itemNode;
+      itemNode.add("name", vecItems[i]);
+
+      itemsListNode.push_back(std::make_pair("item", itemNode));
+    }
+
+    boost::property_tree::ptree groupNode;
+    groupNode.add("name", groupName);
+    groupNode.push_back(std::make_pair("items", itemsListNode));
+
+    groupsNode.push_back(std::make_pair("group", groupNode));
+    ++itGroups;
+  }
+
+  rootNode.push_back(std::make_pair("groups", groupsNode));
+
   boost::property_tree::ptree templateNode;
   templateNode.push_back(std::make_pair("template", rootNode));
 
   return templateNode;
 }
 
-bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptree& tree, te::layout::PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties)
+bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptree& tree, te::layout::PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties, std::map< std::string, std::vector<std::string> >& oMapGroups)
 {
   std::vector<te::layout::Properties> vecProperties;
 
@@ -292,86 +320,29 @@ bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptr
     ++itItems;
   }
 
-  return true;
-
-  /*
-  //v.first //is the name of the child.
-  //v.second //is the child tree.
-
-  boost::property_tree::ptree::assoc_iterator it1 = m_array.find("template");
-  boost::property_tree::ptree::assoc_iterator it_nofound = m_array.not_found();
-
-  if (it1 == it_nofound)
-    return propsRetrieve;
-
-  boost::property_tree::ptree subtree = (*it1).second;
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  int count = 0;
-  while (true)
+  const boost::property_tree::ptree& groupsNode = tree.get_child("template.groups");
+  boost::property_tree::ptree::const_iterator itGroups = groupsNode.begin();
+  while (itGroups != groupsNode.end())
   {
-    std::stringstream ss;//create a stringstream
-    ss << count;//add number to the stream
+    const boost::property_tree::ptree& groupNode = itGroups->second;
 
-    std::string s_prop = "properties_" + ss.str();
+    std::string groupName = groupNode.get<std::string>("name");
+    const boost::property_tree::ptree& itemsListNode = groupNode.get_child("items");
 
-    boost::property_tree::ptree::assoc_iterator it2 = subtree.find(s_prop);
-    boost::property_tree::ptree::assoc_iterator it_nofound2 = subtree.not_found();
-
-    if (it2 == it_nofound2)
-      return propsRetrieve;
-
-    boost::property_tree::ptree subtree1 = (*it2).second;
-
-    boost::property_tree::ptree::assoc_iterator itName = subtree1.find("name");
-    boost::property_tree::ptree::assoc_iterator it_nofoundName = subtree1.not_found();
-
-    if (itName == it_nofoundName)
-      return propsRetrieve;
-
-    te::layout::Properties props = (*itName).second.data();
-
-    EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
-
-    std::string valName;
-    boost::property_tree::ptree tree;
-    Property prop;
-    BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, subtree.get_child(s_prop))
+    boost::property_tree::ptree::const_iterator itItems = itemsListNode.begin();
+    while (itItems != itemsListNode.end())
     {
-      if (v.first.compare("object_type") == 0)
-      {
-        EnumType* type = enumObj->getEnum(v.second.data());
-        props.setTypeObj(type);
-        continue;
-      }
+      std::string itemName = itItems->second.get<std::string>("name");
 
-      if (v.first.compare("type") == 0)
-      {
-        prop.setName(valName);
-        EnumType* tp = dataType->getEnum(v.second.data());
-        Variant vt;
-        vt.fromPtree(tree, tp);
-        prop.setValue(vt);
-        props.addProperty(prop);
-        prop.clear();
-      }
-      else
-      {
-        std::string val = v.first;
-        valName = val;
-        tree = v.second;
+      oMapGroups[groupName].push_back(itemName);
 
-        retrieveSubPTree(tree, prop);
-      }
+      ++itItems;
     }
 
-    propsRetrieve.push_back(props);
-    count += 1;
+    ++itGroups;
   }
 
-  return propsRetrieve;
-  */
+  return true;
 }
 
 void te::layout::BoostPropertySerializer::searchProperty( Property& property, boost::property_tree::ptree& array, boost::property_tree::ptree& child )
@@ -412,6 +383,9 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const st
   for (size_t i = 0; i < vecProperty.size(); ++i)
   {
     const Property& property = vecProperty[i];
+
+    if (!property.isSerializable())
+      continue;
 
     const std::string& name = property.getName();
     const std::string& type = property.getType()->getName();
@@ -483,20 +457,16 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   std::string currentChoice = propertyNode.get<std::string>("currentChoice");
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  EnumType* valueType = dataType->getEnum(type);
 
   Property property;
   property.setName(name);
 
-  if(value.empty() == false)
-  {
-    const boost::property_tree::ptree& valueNode = propertyNode.get_child("value");
+  const boost::property_tree::ptree& valueNode = propertyNode.get_child("value");
+  Variant variantValue;
+  variantValue.fromPtree(valueNode, valueType);
 
-    EnumType* valueType = dataType->getEnum(type);
-    Variant variantValue;
-    variantValue.fromPtree(valueNode, valueType);
-
-    property.setValue(variantValue);
-  }
+  property.setValue(variantValue);
 
   if (currentChoice.empty() == false)
   {

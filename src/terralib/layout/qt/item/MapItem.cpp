@@ -37,6 +37,10 @@
 #include "terralib/qt/widgets/layer/explorer/LayerItem.h"
 #include "terralib/qt/widgets/tools/Pan.h"
 #include "terralib/qt/widgets/tools/ZoomWheel.h"
+#include "terralib/qt/widgets/tools/Zoom.h"
+#include "terralib/qt/widgets/tools/ZoomArea.h"
+#include "terralib/qt/widgets/tools/ZoomClick.h"
+#include "terralib/maptools/Utils.h"
 
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneDragDropEvent>
@@ -49,7 +53,7 @@
 te::layout::MapItem::MapItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsObject>(controller, invertedMatrix)
   , m_mapDisplay(0)
-  , m_pan(0)
+  , m_currentTool(0)
   , m_zoomWheel(0)
   , m_tileSize(2048)
 {
@@ -141,9 +145,7 @@ void te::layout::MapItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
     AbstractItem<QGraphicsObject>::mousePressEvent(event);
     return;
   }
-
-  this->setCursor(Qt::ClosedHandCursor);
-
+  
   QRectF rect = boundingRect();
   QPointF point = event->pos();
   QPointF remappedPoint = remapPointToViewport(point, rect, m_mapDisplay->rect());
@@ -181,8 +183,6 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
     AbstractItem<QGraphicsObject>::mouseReleaseEvent(event);
     return;
   }
-
-  this->setCursor(Qt::OpenHandCursor);
 
   QRectF rect = boundingRect();
   QPointF point = event->pos();
@@ -279,21 +279,14 @@ void te::layout::MapItem::enterEditionMode()
   AbstractItem<QGraphicsObject>::enterEditionMode();
 
   //we now install the visualization tools in the map display and forward all the mouse and keyboards events to it
-  if(m_pan == 0)
-  {
-    m_pan = new te::qt::widgets::Pan(m_mapDisplay, Qt::OpenHandCursor, Qt::ClosedHandCursor);
-  }
   if(m_zoomWheel == 0)
   {
     m_zoomWheel = new te::qt::widgets::ZoomWheel(m_mapDisplay, 1.25, false);
+    this->setCursor(Qt::OpenHandCursor);
   }
 
-  m_mapDisplay->installEventFilter(m_pan);
   m_mapDisplay->installEventFilter(m_zoomWheel);
-
-  this->setCursor(Qt::OpenHandCursor);
-
-
+  
   if(parentItem() != 0)
   {
     parentItem()->setHandlesChildEvents(false);
@@ -305,13 +298,6 @@ void te::layout::MapItem::leaveEditionMode()
   AbstractItem<QGraphicsObject>::leaveEditionMode();
 
   //we now uninstall the visualization tools from the map display and no more events will be forward to it
-  if(m_pan != 0)
-  {
-    m_mapDisplay->removeEventFilter(m_pan);
-    delete m_pan;
-    m_pan = 0;
-  }
-
   if(m_zoomWheel != 0)
   {
     m_mapDisplay->removeEventFilter(m_zoomWheel);
@@ -417,8 +403,7 @@ void te::layout::MapItem::drawTilesMap(QPainter* painter)
     
   //we read the current layer list from the model because mapDisplay does not have the getLayers function
   const Property& property = m_controller->getProperty("layers");
-  const GenericVariant& gv = property.getValue().toGenericVariant();
-  const std::list<te::map::AbstractLayerPtr>& currentLayerList = gv.toLayerList();
+  const std::list<te::map::AbstractLayerPtr>& currentLayerList = property.getValue().toLayerList();
 
   painter->save();
 
@@ -478,3 +463,106 @@ bool te::layout::MapItem::sceneEventFilter(QGraphicsItem * watched, QEvent * eve
   AbstractItem<QGraphicsObject>::sceneEventFilter(watched, event);
   return true;
 }
+
+bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
+{
+  EnumModeType* mode = Enums::getInstance().getEnumModeType();
+
+  bool result = false;
+
+  if (m_currentTool)
+  {
+    removeCurrentTool();
+  }
+
+  QCursor toolCursor;
+
+  //we now install the visualization tools in the map display and forward all the mouse and keyboards events to it
+  if (tool == mode->getModeMapPan())
+  {
+    toolCursor = createCursor("layout-map-pan");
+    m_currentTool = new te::qt::widgets::Pan(m_mapDisplay, toolCursor, toolCursor);
+  }
+
+  if (tool == mode->getModeMapZoomIn())
+  {
+    toolCursor = createCursor("layout-map-zoom-in");
+    m_currentTool = new te::qt::widgets::ZoomArea(m_mapDisplay, toolCursor);
+  }
+
+  if (tool == mode->getModeMapZoomOut())
+  {
+    toolCursor = createCursor("layout-map-zoom-out");
+    m_currentTool = new te::qt::widgets::ZoomClick(m_mapDisplay, toolCursor, 2.0, te::qt::widgets::Zoom::Out);
+  }
+
+  if (tool == mode->getModeMapRecompose())
+  {
+    recompose();
+    result = true;
+  }
+
+  if (m_currentTool)
+  {
+    m_currentTool->setCursor(toolCursor);
+    m_mapDisplay->installEventFilter(m_currentTool);
+    this->setCursor(toolCursor);
+    result = true;
+  }
+
+  if (parentItem() != 0)
+  {
+    parentItem()->setHandlesChildEvents(false);
+  }
+  return true;
+}
+
+bool te::layout::MapItem::removeCurrentTool()
+{
+  bool result = false;
+  if (m_currentTool)
+  {
+    m_mapDisplay->removeEventFilter(m_currentTool);
+
+    delete m_currentTool;
+    m_currentTool = 0;
+
+    this->setCursor(Qt::ArrowCursor);
+    
+    result = true;
+  }
+  return result;
+}
+
+QCursor te::layout::MapItem::createCursor(std::string pathIcon)
+{
+  QIcon ico(QIcon::fromTheme(pathIcon.c_str()));
+
+  //search icon size
+  QList<QSize> sizes = ico.availableSizes();
+  int maximum = sizes[0].width();
+  for (int i = 1; i < sizes.size(); ++i)
+  {
+    maximum = qMax(maximum, sizes[i].width());
+  }
+
+  QSize sz(maximum, maximum);
+  QPixmap pixmap = ico.pixmap(sz);
+
+  QCursor cur(pixmap);
+
+  return cur;
+}
+
+void te::layout::MapItem::recompose()
+{
+  const Property& property = m_controller->getProperty("layers");
+  std::list<te::map::AbstractLayerPtr> currentLayerList = property.getValue().toLayerList();
+
+  if (currentLayerList.empty())
+    return;
+
+  te::gm::Envelope finalEnv = te::map::GetSelectedExtent(currentLayerList, m_mapDisplay->getSRID(), false);
+  m_mapDisplay->setExtent(finalEnv, true);
+}
+

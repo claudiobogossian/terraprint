@@ -46,7 +46,7 @@ te::layout::AbstractItemView* te::layout::BarCodeItemFactory::build(ItemFactoryP
 
   if (!props.getProperties().empty())
   {
-    model->setProperties(props);
+    controller->setProperties(props);
   }
   return dynamic_cast<AbstractItemView*>(view);
 }

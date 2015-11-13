@@ -148,12 +148,9 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  GenericVariant v;
-  v.setList(m_layersSelected, dataType->getDataTypeLayerList());
-
   Property prop;
   prop.setName("layers");
-  prop.setValue(v, dataType->getDataTypeGenericVariant());
+  prop.setValue(m_layersSelected, dataType->getDataTypeLayerList());
 
   m_layersSelected.clear();
 

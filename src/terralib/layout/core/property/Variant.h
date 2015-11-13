@@ -48,6 +48,7 @@
 #include "../Config.h"
 #include "GenericVariant.h"
 #include "terralib/geometry/Geometry.h"
+#include "terralib/maptools/AbstractLayer.h"
 
 // STL
 #include <string>
@@ -207,6 +208,20 @@ namespace te
         const te::gm::GeometryShrPtr toGeometry() const;
 
         /*!
+        \brief Returns the list of shared pointer of te::map::AbstractLayerPtr type. (The setValue method received a list of shared pointer of te::map::AbstractLayer).
+
+        \return list of shared pointer of te::map::AbstractLayerPtr type
+        */
+        const std::list<te::map::AbstractLayerPtr> toLayerList() const;
+
+        /*!
+        \brief Returns the vector of string. (The setValue method received a vector of string).
+
+        \return vector of string
+        */
+        const std::vector<std::string> toStringVector() const;
+
+        /*!
           \brief Converts the value to a string.
 
           \return Value as a string
@@ -304,20 +319,22 @@ namespace te
        */
       virtual bool toBool(std::string str);
 
-      std::string m_sValue; //!< value of string type
-      double m_dValue; //!< value of double type
-      int m_iValue; //!< value of int type
-      long m_lValue; //!< value of long type
-      float m_fValue; //!< value of float type
-      bool m_bValue; //!< value of boolean type 
-      te::color::RGBAColor m_colorValue; //!< value of te::color::RGBAColor type
-      Font m_fontValue; //!< value of te::layout::Font type
-      te::gm::Envelope m_envelopeValue; //!< value of the envelope type
-      EnumType* m_type; //!< data type of this object
-      bool m_null; //!< true if no value has been set, false otherwise
-      bool m_complex; //!< true if value is not of common C++ data type, false otherwise
-      GenericVariant m_generic; //!< value of te::layout::GenericVariant type
-      te::gm::GeometryShrPtr m_geometryPtr; //!< shared pointer of te::gm::Geometry type
+      std::string                           m_sValue; //!< value of string type
+      double                                m_dValue; //!< value of double type
+      int                                   m_iValue; //!< value of int type
+      long                                  m_lValue; //!< value of long type
+      float                                 m_fValue; //!< value of float type
+      bool                                  m_bValue; //!< value of boolean type 
+      te::color::RGBAColor                  m_colorValue; //!< value of te::color::RGBAColor type
+      Font                                  m_fontValue; //!< value of te::layout::Font type
+      te::gm::Envelope                      m_envelopeValue; //!< value of the envelope type
+      EnumType*                             m_type; //!< data type of this object
+      bool                                  m_null; //!< true if no value has been set, false otherwise
+      bool                                  m_complex; //!< true if value is not of common C++ data type, false otherwise
+      GenericVariant                        m_generic; //!< value of te::layout::GenericVariant type
+      te::gm::GeometryShrPtr                m_geometryPtr; //!< shared pointer of te::gm::Geometry type
+      std::vector<std::string>              m_vString; //!< value of string vector type
+      std::list<te::map::AbstractLayerPtr>  m_listLayer; //!< value of te::map::AbstractLayerPtr list type
     };
 
     template<typename ValueType>

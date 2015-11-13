@@ -46,7 +46,7 @@ te::layout::AbstractItemView* te::layout::GridPlanarItemFactory::build(ItemFacto
 
   if (!props.getProperties().empty())
   {
-    model->setProperties(props);
+    controller->setProperties(props);
   }
   return dynamic_cast<AbstractItemView*>(view);
 }

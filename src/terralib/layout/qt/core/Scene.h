@@ -164,6 +164,11 @@ namespace te
           \brief Method that removes all selected items in the scene and creates a Command to Undo/Redo of type DeleteCommand. The item is removed from the scene, but is not deleted.
         */
         virtual void removeSelectedItems();
+
+        /*!
+        \brief Method that removes a item in the scene and creates a Command to Undo/Redo of type DeleteCommand. The item is removed from the scene, but is not deleted.
+        */
+        virtual void removeItemByName(std::string name);
     
     /*!
           \brief Groups objects and creates a QGraphicsItemGroup object. A command Undo/Redo of type AddCommand is created.
@@ -238,7 +243,7 @@ namespace te
       
       \return true list of properties, false list of empty properties
         */
-        virtual std::vector<te::layout::Properties> importTemplateToProperties(EnumType* type, std::string fileName);
+        virtual bool importTemplateToProperties(EnumType* type, std::string fileName, std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
         
     /*!
           \brief Method that clears the scene and the stack of Undo/Redo.
@@ -379,7 +384,7 @@ namespace te
         */
         virtual QGraphicsItem* getSubSelectedItem() const;
 
-        virtual AbstractItemView* getItem(std::string name);
+        virtual AbstractItemView* getItem(const std::string& name);
 
         void setProxyProject(AbstractProxyProject* proxyProject);
 
@@ -465,7 +470,9 @@ namespace te
       
       \return list of properties
         */
-        virtual std::vector<te::layout::Properties> getItemsProperties();
+        virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
+
+        virtual QList<QGraphicsItem*> sortItemsByDependency(const QList<QGraphicsItem*>& listItems);
 
         virtual void applyProportionAllItems(QSize oldPaper, QSize newPaper);
 
@@ -478,6 +485,20 @@ namespace te
         virtual void leaveEditionMode();
 
         virtual te::gm::Envelope calculateProportion(te::gm::Envelope box, QSize oldPaper, QSize newPaper);
+
+        /*!
+        \brief Method that show a dock with a toolbar when editing an item. The View is the owner of the dock and ToolBar.
+
+        \param itemType type of the item
+        */
+        virtual void showDock();
+
+        /*!
+        \brief Method that close a dock with a toolbar when exit a editing item. The View is the owner of the dock. Change to NULL the owner of the ToolBar.
+
+        \param itemType type of the item
+        */
+        virtual void closeDock();
         
     protected:
 
@@ -501,6 +522,10 @@ namespace te
     inline te::layout::Value<T>* te::layout::Scene::getContextValues(std::string name)
     {
       Value<T>* value = 0;
+
+      if (m_contextValues.empty())
+        return value;
+
       for (std::map<std::string, ValueBase*>::iterator it = m_contextValues.begin(); it != m_contextValues.end(); ++it)
       {
         std::string key = it->first;

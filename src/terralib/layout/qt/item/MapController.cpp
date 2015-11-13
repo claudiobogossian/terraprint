@@ -19,14 +19,19 @@
 
 // TerraLib
 #include "MapController.h"
-
-#include <set>
-
 #include "MapItem.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/maptools/MapDisplay.h"
+#include "terralib/dataaccess/datasource/DataSourceInfoManager.h"
+#include "../core/Value.h"
+#include "../core/Scene.h"
+#include "../../core/pattern/proxy/AbstractProxyProject.h"
 
+// STL
+#include <set>
+#include <vector>
+#include <map>
 
 te::layout::MapController::MapController(AbstractItemModel* model)
   : AbstractItemController(model)
@@ -44,13 +49,10 @@ te::layout::MapController::~MapController()
 void te::layout::MapController::addLayers(const std::list<te::map::AbstractLayerPtr>& layerList)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  GenericVariant gv;
-  gv.setList(layerList, dataType->getDataTypeLayerList());
-
+  
   Property property;
   property.setName("layers");
-  property.setValue(gv, dataType->getDataTypeGenericVariant());
+  property.setValue(layerList, dataType->getDataTypeLayerList());
 
   setProperty(property);
 }
@@ -94,6 +96,14 @@ void te::layout::MapController::setProperty(const te::layout::Property& property
     }
   }
 
+  Property prop;
+  // Sync Layers and URIs
+  if (property.getName().compare("layers_uri") == 0 || property.getName().compare("layers") == 0)
+  {
+    prop = syncLayersAndURIs(property);
+    syncMapDisplayProperty(prop);
+  }
+
   if(wasSync == true)
   {
     Properties extentChangedProperties = getExtentChangedProperties(mapDisplay->getExtent(), mapDisplay->getScale(), mapDisplay->getSRID());
@@ -102,13 +112,28 @@ void te::layout::MapController::setProperty(const te::layout::Property& property
       extentChangedProperties.addProperty(property);
     }
 
+    if (!prop.isNull())
+    {
+      extentChangedProperties.addProperty(prop);
+    }
+
     AbstractItemController::setProperties(extentChangedProperties);
 
     view->doRefresh();
   }
   else
   {
-    AbstractItemController::setProperty(property);
+    if (prop.isNull())
+    {
+      AbstractItemController::setProperty(property);
+    }
+    else
+    {
+      Properties changedProperties;
+      changedProperties.addProperty(property);
+      changedProperties.addProperty(prop);
+      AbstractItemController::setProperties(changedProperties);
+    }
   }
 }
 
@@ -139,11 +164,25 @@ void te::layout::MapController::setProperties(const te::layout::Properties& prop
         {
           propertiesCopy.addProperty(property);
         }
-
+      }
+      else
+      {
+        propertiesCopy.addProperty(property);
       }
     }
     else
     {
+      // Sync Layers and URIs
+      if (property.getName().compare("layers_uri") == 0
+        || property.getName().compare("layers") == 0)
+      {
+        Property prop = syncLayersAndURIs(property);
+        if (!prop.isNull())
+        {
+          propertiesCopy.addProperty(prop);
+          syncMapDisplayProperty(prop);
+        }
+      }
       propertiesCopy.addProperty(property);
     }
   }
@@ -183,7 +222,19 @@ bool te::layout::MapController::isMapDisplayProperty(const te::layout::Property&
 
 bool te::layout::MapController::syncMapDisplayProperty(const te::layout::Property& property)
 {
-  if(property.getName() == "scale")
+  const Property& prop_layers = this->getProperty("layers");
+  const std::list<te::map::AbstractLayerPtr>& currentLayerList = prop_layers.getValue().toLayerList();
+  
+  if (property.getName() == "layers")
+  {
+    const std::list<te::map::AbstractLayerPtr>& newLayerList = property.getValue().toLayerList();
+
+    if (syncLayersToItem(newLayerList) == true)
+    {
+      return true;
+    }
+  }
+  else if (property.getName() == "scale" && !currentLayerList.empty())
   {
     double newScale = property.getValue().toDouble();
     if(syncScaleToItem(newScale) == true)
@@ -191,7 +242,7 @@ bool te::layout::MapController::syncMapDisplayProperty(const te::layout::Propert
       return true;
     }
   }
-  else if(property.getName() == "world_box")
+  else if (property.getName() == "world_box" && !currentLayerList.empty())
   {
     te::gm::Envelope newExtent = property.getValue().toEnvelope();
     if(syncExtentToItem(newExtent) == true)
@@ -199,20 +250,10 @@ bool te::layout::MapController::syncMapDisplayProperty(const te::layout::Propert
       return true;
     }
   }
-  else if(property.getName() == "srid")
+  else if (property.getName() == "srid" && !currentLayerList.empty())
   {
     int newSRID = property.getValue().toInt();
     if(syncSridToItem(newSRID) == true)
-    {
-      return true;
-    }
-  }
-  else if(property.getName() == "layers")
-  {
-    const GenericVariant& gv = property.getValue().toGenericVariant();
-    const std::list<te::map::AbstractLayerPtr>& newLayerList = gv.toLayerList();
-
-    if(syncLayersToItem(newLayerList) == true)
     {
       return true;
     }
@@ -346,8 +387,7 @@ bool te::layout::MapController::syncLayersToItem(const std::list<te::map::Abstra
 
   //we read the current layer list from the model because mapDisplay does not have the getLayers function
   const Property& property = this->getProperty("layers");
-  const GenericVariant& gv = property.getValue().toGenericVariant();
-  const std::list<te::map::AbstractLayerPtr>& currentLayerList = gv.toLayerList();
+  const std::list<te::map::AbstractLayerPtr>& currentLayerList = property.getValue().toLayerList();
 
   if(currentLayerList != layerList)
   {
@@ -418,4 +458,108 @@ bool te::layout::MapController::syncLayersToItem(const std::list<te::map::Abstra
   return false;
 }
 
+te::layout::Property te::layout::MapController::syncLayersAndURIs(const Property& property)
+{
+  Property prop;
+  prop = syncURIsFromLayers(property);
+  if (prop.isNull())
+  {
+    prop = syncLayersFromURIs(property);
+  }
+  return prop;
+}
+
+te::layout::Property te::layout::MapController::syncLayersFromURIs(const Property& property)
+{
+  Property prop;
+  MapItem* view = dynamic_cast<MapItem*>(m_view);
+  if (view == 0)
+  {
+    return prop;
+  }
+
+  Scene* scene = dynamic_cast<Scene*>(view->scene());
+  if (!scene)
+  {
+    return prop;
+  }
+
+  std::list<te::map::AbstractLayerPtr> layerList;
+  std::vector<std::string>  vString;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  if (property.getName().compare("layers_uri") == 0)
+  {
+    vString = property.getValue().toStringVector();
+
+    AbstractProxyProject* project;
+    std::list<te::map::AbstractLayerPtr> allLayerList;
+    Value<AbstractProxyProject* >* value = scene->getContextValues<AbstractProxyProject *>("proxy_project");
+    if (value)
+    {
+      project = value->get();
+    }
+
+    // search layers 
+    for (std::vector<std::string>::iterator it = vString.begin(); it != vString.end(); ++it)
+    {
+      std::string uri = (*it);
+      te::map::AbstractLayerPtr layer = project->getLayerFromURI(uri);
+      if (layer)
+      {
+        layerList.push_back(layer);
+      }
+    }
+    prop = m_model->getProperty("layers");
+    prop.setValue(layerList, dataType->getDataTypeLayerList());
+  }
+  return prop;
+}
+
+te::layout::Property te::layout::MapController::syncURIsFromLayers(const Property& property)
+{
+  Property prop;
+
+  MapItem* view = dynamic_cast<MapItem*>(m_view);
+  if (view == 0)
+  {
+    return prop;
+  }
+
+  std::list<te::map::AbstractLayerPtr> layerList;
+  std::vector<std::string>  vString;
+  std::string uriInfo = "URI";
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  if (property.getName().compare("layers") == 0)
+  {
+    layerList = property.getValue().toLayerList();
+
+    // search layer info (uri)
+    for (std::list<te::map::AbstractLayerPtr>::iterator it = layerList.begin(); it != layerList.end(); ++it)
+    {
+      const std::string& id = it->get()->getDataSourceId();
+
+      te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
+      const std::map<std::string, std::string>& connInfo = info->getConnInfo();
+
+      std::string uri = "";
+
+      for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
+      {
+        std::string nameURI = it->first;
+        if (nameURI.compare(uriInfo) == 0)
+        {
+          uri = it->second;
+        }
+        vString.push_back(uri);
+      }
+    }
+    prop = m_model->getProperty("layers_uri");
+    prop.setValue(vString, dataType->getDataTypeStringVector());
+  }
+  return prop;
+}
 

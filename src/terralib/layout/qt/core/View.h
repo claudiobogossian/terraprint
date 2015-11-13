@@ -51,6 +51,7 @@
 #include <QMenu>
 #include <QImage>
 #include <QCursor>
+#include <QMap>
 
 class QMouseEvent;
 class QWheelEvent;
@@ -62,6 +63,7 @@ class QGraphicsItemGroup;
 class QLineF;
 class QContextMenuEvent;
 class QEvent;
+class QDockWidget;
 
 namespace te
 {
@@ -75,6 +77,8 @@ namespace te
     class WaitView;
     class ContextObject;
     class Scene;
+    class EnumType;
+    class ToolbarItemInside;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -227,6 +231,38 @@ namespace te
         virtual Scene* getScene();
 
         virtual void setMenuBuilder(MenuBuilder* menuBuilder);
+
+        /*!
+        \brief Method that adds ToolbarItemInside with a toolbar to be displayed when editing an item, which is identified by name.
+        By adding the toolbar, the owner becomes the View.
+
+        \param itemType type of the item
+        \param toolbarInside ToolbarItemInside with a toolbar that will be displayed when editing the item
+        \return true if added, false otherwise
+        */
+        bool addToolbarItemInside(EnumType* itemType, ToolbarItemInside* toolbarInside);
+
+        /*!
+        \brief Method that return a toolbar to be displayed when editing an item, which is identified by name. The View is the owner.
+
+        \param itemType type of the item
+        \return ToolbarItemInside with toolbar that will be displayed when editing the item
+        */
+        ToolbarItemInside* getToolbarInside(EnumType* itemType);
+
+        /*!
+        \brief Method that show a dock with a toolbar when editing an item. The View is the owner of the dock and ToolBar.
+
+        \param itemType type of the item
+        */
+        virtual void showDockToolbar(EnumType* itemType, AbstractItemView* item);
+
+        /*!
+        \brief Method that close a dock with a toolbar when exit a editing item. The View is the owner of the dock. Change to NULL the owner of the ToolBar.
+
+        \param itemType type of the item
+        */
+        virtual void closeDockToolbar();
 
       public slots:
     
@@ -384,34 +420,35 @@ namespace te
         */
         virtual void reload();
 
-      protected:
-
         /*!
-          \brief Apply the zoom in the QGraphicsView to the given value
-          */
+        \brief Apply the zoom in the QGraphicsView to the given value
+        */
         virtual void applyScale(double horizontalScale, double verticalScale);
-
+        
       protected:
 
-        VisualizationArea*                m_visualizationArea;
-        AbstractLayoutTool*               m_currentTool;
-        PageSetupOutside*                 m_pageSetupOutside;
-        SystematicScaleOutside*           m_systematicOutside;
-        te::gm::Coord2D                   m_coordSystematic;
-        bool                              m_selectionChange;
-        MenuBuilder*                      m_menuBuilder;
-        HorizontalRuler*                  m_horizontalRuler;
-        VerticalRuler*                    m_verticalRuler;
-        double                            m_width;
-        double                            m_height;
-        bool                              m_isMoving;
-        te::layout::MovingItemGroup*      m_movingItemGroup;
-        bool                              m_updateItemPos;
-        WaitView*                         m_wait;
-        bool                              m_flag;
-        QPixmap                           m_foreground; //!< This pixmap represents the foreground drawings and is used for double buffering
-        std::vector<AbstractLayoutTool*>  m_lateRemovalVec;
-        bool                              m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True
+        VisualizationArea*                   m_visualizationArea;
+        AbstractLayoutTool*                  m_currentTool;
+        PageSetupOutside*                    m_pageSetupOutside;
+        SystematicScaleOutside*              m_systematicOutside;
+        te::gm::Coord2D                      m_coordSystematic;
+        bool                                 m_selectionChange;
+        MenuBuilder*                         m_menuBuilder;
+        HorizontalRuler*                     m_horizontalRuler;
+        VerticalRuler*                       m_verticalRuler;
+        double                               m_width;
+        double                               m_height;
+        bool                                 m_isMoving;
+        te::layout::MovingItemGroup*         m_movingItemGroup;
+        bool                                 m_updateItemPos;
+        WaitView*                            m_wait;
+        bool                                 m_flag;
+        QPixmap                              m_foreground; //!< This pixmap represents the foreground drawings and is used for double buffering
+        std::vector<AbstractLayoutTool*>     m_lateRemovalVec;
+        bool                                 m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True
+        QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item
+        QDockWidget*                         m_dockItemToolbar;
+        EnumType*                            m_currentToolbarInsideType;
     };
   }
 }

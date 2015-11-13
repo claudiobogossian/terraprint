@@ -33,20 +33,26 @@
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../item/MovingItemGroup.h"
+#include "../core/Scene.h"
 
 //Qt
 #include <QGraphicsWidget>
 #include <QVBoxLayout>
 #include <QGroupBox>
-#include <QtPropertyBrowser/QtProperty>
-#include <QtPropertyBrowser/QtTreePropertyBrowser>
 #include <QTreeWidget>
+#include <QGraphicsItem>
+#include <QContextMenuEvent>
+#include <QAction>
+#include <QMenu>
+#include <QPoint>
 
-te::layout::ObjectInspectorOutside::ObjectInspectorOutside(AbstractOutsideController* controller)
+te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, AbstractOutsideController* controller)
   : QWidget(0)
   , AbstractOutsideView(controller)
   , m_treeWidget(0)
   , m_isChangingSelection(false)
+  , m_scene(scene)
+  , m_menu(0)
 {
   m_treeWidget = new QTreeWidget(this);
 
@@ -276,3 +282,80 @@ void te::layout::ObjectInspectorOutside::itemSelectionChanged()
 
   emit selectionChanged(selectedGraphicsItem);
 }
+
+void te::layout::ObjectInspectorOutside::contextMenuEvent(QContextMenuEvent * event)
+{
+  if (event->reason() != QContextMenuEvent::Mouse)
+  {
+    QWidget::contextMenuEvent(event);
+    return;
+  }  
+  
+  QList<QTreeWidgetItem*> selectedTreeItems = m_treeWidget->selectedItems();
+  if (selectedTreeItems.empty())
+    return;
+
+  QTreeWidgetItem* treeItem = selectedTreeItems.first();
+
+  QString qTreeItemName = treeItem->text(0);
+  std::string treeItemName = qTreeItemName.toStdString();
+
+  createMenu(treeItemName);
+
+  if (!m_menu)
+    return;
+
+  QPoint posMenu = pos();
+
+  QPoint pt = mapToGlobal(posMenu);
+
+  //QPoint pt = event->pos();
+  m_menu->exec(pt);
+}
+
+void te::layout::ObjectInspectorOutside::onMenuTriggered(QAction*)
+{
+  if (!m_scene)
+    return;
+
+  QList<QTreeWidgetItem*> selectedTreeItems = m_treeWidget->selectedItems();
+  if (selectedTreeItems.empty())
+    return;
+
+  QTreeWidgetItem* treeItem = selectedTreeItems.first();
+
+  QString qTreeItemName = treeItem->text(0);
+  std::string treeItemName = qTreeItemName.toStdString();
+  
+  m_scene->removeItemByName(treeItemName);
+}
+
+QAction* te::layout::ObjectInspectorOutside::createAction(std::string text, std::string objName, std::string icon, std::string tooltip)
+{
+  QAction *actionMenu = new QAction(text.c_str(), this);
+  actionMenu->setObjectName(objName.c_str());
+
+  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
+  actionMenu->setToolTip(tooltip.c_str());
+
+  return actionMenu;
+}
+
+void te::layout::ObjectInspectorOutside::createMenu(std::string itemName)
+{
+  if (!m_menu)
+  {
+    m_menu = new QMenu(this);
+    connect(m_menu, SIGNAL(triggered(QAction*)), this, SLOT(onMenuTriggered(QAction*)));
+  }
+  else
+  {
+    m_menu->clear();
+  }
+
+  std::string text = TR_LAYOUT("Delete " + itemName + " item");
+  
+  QAction* action = createAction(text, itemName, "");
+  m_menu->addAction(action);
+}
+

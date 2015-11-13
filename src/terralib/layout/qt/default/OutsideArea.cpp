@@ -37,6 +37,9 @@
 #include "../../../layout/qt/core/BuildGraphicsOutside.h"
 #include "terralib/layout/qt/outside/ToolbarController.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
+#include "../inside/MapToolbarInside.h"
+#include "../inside/MapToolbarController.h"
+#include "../inside/ToolbarItemInside.h"
 
 // STL
 #include <string>
@@ -122,6 +125,8 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
     connect(m_view, SIGNAL(changeContext()), this, SLOT(onRefreshStatusBar()));
     connect(m_view->scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
     connect(m_view->scene(), SIGNAL(editionInitialized()), this, SLOT(onEditionInitialized()));
+
+    addAllItemToolbars();
   }
   
   createPropertiesDock(proxyProject);
@@ -164,7 +169,7 @@ void te::layout::OutsideArea::createPropertiesDock(AbstractProxyProject* proxyPr
 
 void te::layout::OutsideArea::createInspectorDock()
 {
-  m_dockInspector = new ObjectInspectorDock;
+  m_dockInspector = new ObjectInspectorDock(m_view->getScene());
   m_dockInspector->setFeatures(QDockWidget::DockWidgetMovable |  
     QDockWidget::DockWidgetFloatable);
 }
@@ -213,18 +218,18 @@ void te::layout::OutsideArea::createMainMenu()
    QAction* actionNew = createAction("New", m_optionNew, "layout-new");
    m_layoutMenu->addAction(actionNew);
 
-   QAction* actionSave = createAction("Update Template", m_optionUpdate, "layout-save");
+   QAction* actionSave = createAction("Update Map", m_optionUpdate, "layout-save");
    m_layoutMenu->addAction(actionSave);
 
    m_layoutMenu->addSeparator();
 
-   QMenu* mnuImport = m_layoutMenu->addMenu("Import Template");
-   QMenu* mnuExport = m_layoutMenu->addMenu("Export Template");
+   QMenu* mnuImport = m_layoutMenu->addMenu("Import Map");
+   QMenu* mnuExport = m_layoutMenu->addMenu("Export Map");
 
-   QAction* actionImportJSON = createAction("Import Xml Template", m_optionImportXml, "layout-import");
+   QAction* actionImportJSON = createAction("Import Xml Map", m_optionImportXml, "layout-import");
    mnuImport->addAction(actionImportJSON);
 
-   QAction* actionExportJSON = createAction("Export XML Template", m_optionExportXml, "layout-export");
+   QAction* actionExportJSON = createAction("Export XML Map", m_optionExportXml, "layout-export");
    mnuExport->addAction(actionExportJSON);
 
    m_layoutMenu->addSeparator();
@@ -588,5 +593,15 @@ void te::layout::OutsideArea::onEditionInitialized()
   {
     m_dockInspector->getObjectInspectorOutside()->setDisabled(true);
   }
+}
+
+void te::layout::OutsideArea::addAllItemToolbars()
+{
+  //EnumObjectType* object = Enums::getInstance().getEnumObjectType();
+
+  //MapToolbarController* controller = new MapToolbarController;
+  //MapToolbarInside* inside = new MapToolbarInside(controller);
+
+  //m_view->addToolbarItemInside(object->getMapItem(), inside);
 }
 

@@ -44,7 +44,8 @@ te::layout::Property::Property( int parentItemHashCode ) :
   m_visible(true),
   m_required(false),
   m_composeWidget(false),
-  m_public(false)
+  m_public(false),
+  m_serializable(true)
 {
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
 }
@@ -424,8 +425,13 @@ void te::layout::Property::setPublic( bool publicProperty )
   }
 }
 
+bool te::layout::Property::isSerializable() const
+{
+  return m_serializable;
+}
 
-
-
-
+void te::layout::Property::setSerializable(bool serializable)
+{
+  m_serializable = serializable;
+}
 

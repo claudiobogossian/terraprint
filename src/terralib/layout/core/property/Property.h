@@ -283,6 +283,20 @@ namespace te
           \param true if property compose a widget, false otherwise 
         */
         void setPublic(bool publicProperty);
+
+        /*!
+        \brief Returns true if property is serializable, false otherwise.
+
+        \return true if the property can be serialized in file or database
+        */
+        bool isSerializable() const;
+
+        /*!
+        \brief Sets true if property is serializable, false otherwise.
+        
+        \param true if the property can be serialized in file or database
+        */
+        void setSerializable(bool serializable);
       
         bool operator ==(const Property& other) const;
 
@@ -304,6 +318,7 @@ namespace te
       bool                                m_composeWidget; //!< compose widget
       bool                                m_public; //!< public property, used by another component
       mutable Property::Ptr               m_nullProperty; //!< Represents a null property
+      bool                                m_serializable; //!< if true the property can be serialized in file or database
     };
 
     template <typename ValueType>

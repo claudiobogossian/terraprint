@@ -57,12 +57,12 @@ namespace te
         /*!
         \brief Encodes the given vector of Properties into a Boost Property Tree container
         */
-        virtual boost::property_tree::ptree encode(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties) = 0;
+        virtual boost::property_tree::ptree encode(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& vecProperties, const std::map< std::string, std::vector<std::string> >& mapGroups) = 0;
 
         /*!
         \brief Decodes the given Boost Property Tree container into a vector of Properties
         */
-        virtual bool decode(const boost::property_tree::ptree& tree, PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties) = 0;
+        virtual bool decode(const boost::property_tree::ptree& tree, PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties, std::map< std::string, std::vector<std::string> >& oMapGroups) = 0;
 
         virtual std::string getLoadPath();
 

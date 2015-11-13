@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::ObjectInspectorOutsideFactory::buil
   ObjectInspectorModel* model = new ObjectInspectorModel();
 
   ObjectInspectorController* controller = new ObjectInspectorController(model);
-  ObjectInspectorOutside* view = new ObjectInspectorOutside(controller);
+  ObjectInspectorOutside* view = new ObjectInspectorOutside(params.getScene(), controller);
   controller->setView(view);
 
   return view;

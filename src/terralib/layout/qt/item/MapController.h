@@ -30,6 +30,7 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../core/property/Property.h"
 
 #include "terralib/maptools/AbstractLayer.h"
 
@@ -109,6 +110,12 @@ namespace te
         */
         virtual bool syncLayersToItem(const std::list<te::map::AbstractLayerPtr>& layerList);
 
+        virtual Property syncLayersAndURIs(const Property& property);
+
+        virtual Property syncLayersFromURIs(const Property& property);
+
+        virtual Property syncURIsFromLayers(const Property& property);
+
     protected:
 
         int m_zoom;
@@ -116,4 +123,4 @@ namespace te
     };
   }
 }
-#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_CONTROLLER_H
+#endif 

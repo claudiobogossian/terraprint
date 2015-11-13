@@ -87,6 +87,15 @@ namespace te
             \return pointer to the layer found or null
          */
         virtual te::map::AbstractLayerPtr contains(std::string name) = 0;
+
+        /*!
+        \brief Checks whether the layer is in the project.
+
+        \param uri uri to check
+
+        \return pointer to the layer found or null
+        */
+        virtual te::map::AbstractLayerPtr getLayerFromURI(std::string uri) = 0;
     };
   }
 }

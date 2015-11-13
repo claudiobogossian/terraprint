@@ -56,9 +56,9 @@ namespace te
 
         virtual ~AbstractTemplate();
 
-        virtual bool exportTemplate(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& properties) = 0;
+        virtual bool exportTemplate(const PaperConfig& paperConfig, const std::vector<te::layout::Properties>& properties, const std::map< std::string, std::vector<std::string> >& mapGroups) = 0;
 
-        virtual bool importTemplate(PaperConfig& paperConfig, std::vector<te::layout::Properties>& properties) = 0;
+        virtual bool importTemplate(PaperConfig& paperConfig, std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups) = 0;
 
         virtual bool deleteTemplate() = 0;
 

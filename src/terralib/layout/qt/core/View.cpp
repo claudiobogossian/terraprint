@@ -43,6 +43,8 @@
 #include "pattern/factory/tool/ToolFactory.h"
 #include "../../core/ContextObject.h"
 #include "Scene.h"
+#include "BuildGraphicsOutside.h"
+#include "../inside/ToolbarItemInside.h"
 
 // Qt
 #include <QMouseEvent>
@@ -55,7 +57,8 @@
 #include <QFileDialog>
 #include <QPainterPath>
 #include <QEvent>
-#include "BuildGraphicsOutside.h"
+#include <QToolBar>
+#include <QDockWidget>
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -70,16 +73,35 @@ te::layout::View::View( QWidget* widget) :
   m_isMoving(false),
   m_movingItemGroup(0),
   m_updateItemPos(false),
-  m_mouseEvent(false)
+  m_mouseEvent(false),
+  m_dockItemToolbar(0),
+  m_currentToolbarInsideType(0)
 {
   setDragMode(RubberBandDrag);
 
   m_horizontalRuler = new HorizontalRuler;
   m_verticalRuler = new VerticalRuler;
+
+  m_dockItemToolbar = new QDockWidget(this->viewport());
+  m_dockItemToolbar->setVisible(false);
+  m_dockItemToolbar->setFloating(true);
+  m_dockItemToolbar->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable);
 }
 
 te::layout::View::~View()
 {
+  QList<ToolbarItemInside*> toolbars = m_itemToolbars.values();
+  foreach(ToolbarItemInside *inside, toolbars)
+  {
+    if (inside)
+    {
+      delete inside;
+      inside = 0;
+    }
+  }
+
+  m_itemToolbars.clear();
+
   if (m_currentTool)
   {
     viewport()->removeEventFilter(m_currentTool);
@@ -539,6 +561,8 @@ void te::layout::View::closeEvent( QCloseEvent * event )
   {
     m_menuBuilder->closeAllWindows();
   }
+
+  closeDockToolbar();
 
   QGraphicsView::closeEvent(event);
   emit closeView();
@@ -1186,5 +1210,90 @@ te::layout::Scene* te::layout::View::getScene()
 void te::layout::View::setMenuBuilder(te::layout::MenuBuilder* menuBuilder)
 {
   m_menuBuilder = menuBuilder;
+}
+
+bool te::layout::View::addToolbarItemInside(EnumType* itemType, ToolbarItemInside* toolbarInside)
+{
+  if (!itemType)
+    return false;
+
+  if (!toolbarInside)
+    return false;
+
+  m_itemToolbars[itemType] = toolbarInside;
+  return true;
+}
+
+te::layout::ToolbarItemInside* te::layout::View::getToolbarInside(EnumType* itemType)
+{
+  ToolbarItemInside* toolbarInside = 0;
+  if (!itemType)
+    return toolbarInside;
+
+  if (m_itemToolbars.find(itemType) != m_itemToolbars.end())
+  {
+    QMap<EnumType*, ToolbarItemInside*>::iterator it = m_itemToolbars.find(itemType);
+    toolbarInside = it.value();
+  }
+  return toolbarInside;
+}
+
+void te::layout::View::showDockToolbar(EnumType* itemType, AbstractItemView* item)
+{
+  if (!m_dockItemToolbar)
+    return;
+
+  if (m_dockItemToolbar->widget())
+  {
+    closeDockToolbar();
+  }
+
+  if (itemType)
+  {
+    ToolbarItemInside* toolbarInside = getToolbarInside(itemType);
+    if (toolbarInside)
+    {
+      QMap<EnumType*, ToolbarItemInside*>::iterator it = m_itemToolbars.find(itemType);
+      toolbarInside = it.value();
+      if (toolbarInside)
+      {
+        toolbarInside->setItem(item);
+        QToolBar* toolbar = toolbarInside->getToolbar();
+        toolbar->setParent(this->viewport());
+        m_dockItemToolbar->setWidget(toolbar);
+        m_dockItemToolbar->setVisible(true);
+        QString title = toolbar->windowTitle();
+        m_dockItemToolbar->setWindowTitle(title);
+        m_currentToolbarInsideType = itemType;
+      }
+    }
+  }
+}
+
+void te::layout::View::closeDockToolbar()
+{
+  if (!m_dockItemToolbar)
+    return;
+
+  if (!m_dockItemToolbar->widget())
+    return;
+
+  if (m_currentToolbarInsideType)
+  {
+    ToolbarItemInside* toolbarInside = getToolbarInside(m_currentToolbarInsideType);
+    if (toolbarInside)
+    {
+      toolbarInside->clear();
+      toolbarInside->setItem(0);
+      m_dockItemToolbar->setVisible(false);
+      m_dockItemToolbar->setWidget(0);
+      QToolBar* toolbar = dynamic_cast<QToolBar*>(m_dockItemToolbar->widget());
+      if (toolbar)
+      {
+        toolbar->setParent(0);
+      }
+      m_currentToolbarInsideType = 0;
+    }
+  }
 }
 
