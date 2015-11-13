@@ -107,6 +107,8 @@ namespace te
 
       virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "");
 
+      virtual void addAllItemToolbars();
+
     protected:
 
       PropertiesDock* m_dockProperties;

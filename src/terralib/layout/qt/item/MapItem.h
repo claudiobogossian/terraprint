@@ -38,9 +38,8 @@
 
 // Qt
 #include <QGraphicsObject>
+#include <QCursor>
 
-//class QGraphicsSceneMouseEvent;
-//class QMimeData;
 class QVariant;
 
 namespace te
@@ -52,12 +51,15 @@ namespace te
       class MapDisplay;
       class Pan;
       class ZoomWheel;
+      class AbstractTool;
     }
   }
 
   namespace layout
   {
     class AbstractItemController;
+    class EnumType;
+
     /*!
     \brief This class is a proxy MapDisplay. This makes it possible to add a MapDisplay as item of a scene. 
     This object is of type QGraphicsProxyWidget. He have a directly interaction by user. 
@@ -92,6 +94,14 @@ namespace te
         virtual te::qt::widgets::MapDisplay* getMapDisplay();
 
         virtual void contextUpdated(const ContextObject& context);
+
+        virtual bool changeCurrentTool(EnumType* tool);
+
+        virtual bool removeCurrentTool();
+
+        virtual void doRefresh();
+
+      protected:
 
         /*!
           \brief For any specific drawing, the item must reimplement this function
@@ -133,17 +143,19 @@ namespace te
         */
         virtual void  wheelEvent ( QGraphicsSceneWheelEvent * event );
 
-        virtual void doRefresh();
-
         virtual bool sceneEventFilter(QGraphicsItem * watched, QEvent * event);
-
-      protected:
-
+        
         virtual void enterEditionMode();
 
         virtual void leaveEditionMode();
 
         virtual QPointF remapPointToViewport(const QPointF& point, const QRectF& item, const QRectF& widget) const;
+
+        virtual QCursor createCursor(std::string pathIcon);
+
+        virtual void resized();
+
+        virtual void drawTilesMap(QPainter* painter);
 
     protected slots:
 
@@ -154,15 +166,11 @@ namespace te
         virtual void  dragMoveEvent ( QGraphicsSceneDragDropEvent * event );
 
       protected:
-
-        virtual void resized();
-
-        virtual void drawTilesMap(QPainter* painter);
-
-        te::qt::widgets::MapDisplay*  m_mapDisplay;
-        te::qt::widgets::Pan*         m_pan;
-        te::qt::widgets::ZoomWheel*   m_zoomWheel;
-        int                           m_tileSize;
+        
+        te::qt::widgets::MapDisplay*    m_mapDisplay;
+        te::qt::widgets::AbstractTool*  m_currentTool;
+        te::qt::widgets::ZoomWheel*     m_zoomWheel;
+        int                             m_tileSize;
     };
   }
 }

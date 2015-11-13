@@ -72,6 +72,7 @@
 #include <QColor>
 #include <QPen>
 #include <QKeyEvent>
+#include <QToolBar>
 
 te::layout::Scene::Scene( QObject* object): 
   QGraphicsScene(object),
@@ -795,18 +796,48 @@ void te::layout::Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEv
 {
   QGraphicsScene::mouseDoubleClickEvent(mouseEvent);
 
+  if (m_currentItemEdition && m_isEditionMode)
+  {
+    QPointF pt = mouseEvent->scenePos();
+    te::gm::Coord2D coord(pt.x(), pt.y());
+    if (m_currentItemEdition->getController()->contains(coord))
+    {
+      return; // the same item continues edition
+    }
+  }
+
   if (m_isEditionMode == true)
   {
+    closeDock();
+    setEditionMode(true); 
+    if (!m_isEditionMode)
+    {
+      setEditionMode(false); //Edition off
+    }
+    else
+    {
+      showDock();
+    }
     return;
   }
 
   setEditionMode(true);
+  if (m_isEditionMode)
+  {
+    showDock();
+  }
+  else
+  {
+    closeDock();
+    setEditionMode(false); //Edition off
+  }
 }
 
 void te::layout::Scene::keyPressEvent(QKeyEvent * keyEvent)
 {
   if (keyEvent->key() == Qt::Key_Escape)
   {
+    closeDock();
     setEditionMode(false); //Edition off
   }
   QGraphicsScene::keyPressEvent(keyEvent);
@@ -1359,5 +1390,36 @@ void te::layout::Scene::setProxyProject(AbstractProxyProject* proxyProject)
 
   ValueBase* value = new Value<AbstractProxyProject*>(proxyProject);
   m_contextValues["proxy_project"] = value;
+}
+
+void te::layout::Scene::showDock()
+{
+  if (m_currentItemEdition)
+  {
+    View* view = getView();
+    if (view)
+    {
+      EnumType* itemType = m_currentItemEdition->getController()->getProperties().getTypeObj();
+      if (itemType)
+      {
+        view->showDockToolbar(itemType, m_currentItemEdition);
+      }
+    }
+  }
+}
+
+void te::layout::Scene::closeDock()
+{
+  if (m_currentItemEdition)
+  {
+    View* view = getView();
+    if (view)
+    {
+      if (m_currentItemEdition)
+      {
+        view->closeDockToolbar();
+      }
+    }
+  }
 }
 

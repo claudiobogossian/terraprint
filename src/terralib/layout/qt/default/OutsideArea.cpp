@@ -37,6 +37,9 @@
 #include "../../../layout/qt/core/BuildGraphicsOutside.h"
 #include "terralib/layout/qt/outside/ToolbarController.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
+#include "../inside/MapToolbarInside.h"
+#include "../inside/MapToolbarController.h"
+#include "../inside/ToolbarItemInside.h"
 
 // STL
 #include <string>
@@ -122,6 +125,8 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
     connect(m_view, SIGNAL(changeContext()), this, SLOT(onRefreshStatusBar()));
     connect(m_view->scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
     connect(m_view->scene(), SIGNAL(editionInitialized()), this, SLOT(onEditionInitialized()));
+
+    addAllItemToolbars();
   }
   
   createPropertiesDock(proxyProject);
@@ -588,5 +593,15 @@ void te::layout::OutsideArea::onEditionInitialized()
   {
     m_dockInspector->getObjectInspectorOutside()->setDisabled(true);
   }
+}
+
+void te::layout::OutsideArea::addAllItemToolbars()
+{
+  EnumObjectType* object = Enums::getInstance().getEnumObjectType();
+
+  MapToolbarController* controller = new MapToolbarController;
+  MapToolbarInside* inside = new MapToolbarInside(controller);
+
+  m_view->addToolbarItemInside(object->getMapItem(), inside);
 }
 

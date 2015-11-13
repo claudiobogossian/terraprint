@@ -91,6 +91,8 @@ file(GLOB TERRALIB_LAYOUT_QT_ITEM_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/te
 file(GLOB TERRALIB_LAYOUT_QT_ITEM_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/*.cpp)
 file(GLOB TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/*.h)
+file(GLOB TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/*.cpp)
+file(GLOB TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/*.h)
 file(GLOB TERRALIB_LAYOUT_UI_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/ui/*.ui)
 
 # datasource
@@ -138,6 +140,8 @@ source_group("Source Files\\qt\\item"  FILES ${TERRALIB_LAYOUT_QT_ITEM_SRC_FILES
 source_group("Header Files\\qt\\item"  FILES ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES})
 source_group("Source Files\\qt\\outside"  FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES})
 source_group("Header Files\\qt\\outside"  FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES})
+source_group("Source Files\\qt\\inside"  FILES ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES})
+source_group("Header Files\\qt\\inside"  FILES ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
 source_group("UI Files\\"  FILES ${TERRALIB_LAYOUT_UI_HDR_FILES})
 
 set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES} 
@@ -185,7 +189,9 @@ set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_SRC_FILES} 
            ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_HDR_FILES} 
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES})
+           ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
+		   ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES} 
+           ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
            
 if(Qt5_FOUND)
 
@@ -248,6 +254,8 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/ObjectInspectorDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/PropertiesDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/EditTemplateDock.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarInside.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h
                                  )
 
   QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
@@ -325,6 +333,9 @@ install(FILES ${TERRALIB_LAYOUT_QT_CORE_HDR_FILES}
         
 install(FILES ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/default COMPONENT devel)
+		
+install(FILES ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
+        DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/inside COMPONENT devel)
 
 install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/factory/item COMPONENT devel)

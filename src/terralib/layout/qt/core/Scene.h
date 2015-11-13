@@ -483,6 +483,20 @@ namespace te
         virtual void leaveEditionMode();
 
         virtual te::gm::Envelope calculateProportion(te::gm::Envelope box, QSize oldPaper, QSize newPaper);
+
+        /*!
+        \brief Method that show a dock with a toolbar when editing an item. The View is the owner of the dock and ToolBar.
+
+        \param itemType type of the item
+        */
+        virtual void showDock();
+
+        /*!
+        \brief Method that close a dock with a toolbar when exit a editing item. The View is the owner of the dock. Change to NULL the owner of the ToolBar.
+
+        \param itemType type of the item
+        */
+        virtual void closeDock();
         
     protected:
 
