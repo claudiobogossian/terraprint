@@ -243,7 +243,7 @@ namespace te
       
       \return true list of properties, false list of empty properties
         */
-        virtual std::vector<te::layout::Properties> importTemplateToProperties(EnumType* type, std::string fileName);
+        virtual bool importTemplateToProperties(EnumType* type, std::string fileName, std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
         
     /*!
           \brief Method that clears the scene and the stack of Undo/Redo.
@@ -384,7 +384,7 @@ namespace te
         */
         virtual QGraphicsItem* getSubSelectedItem() const;
 
-        virtual AbstractItemView* getItem(std::string name);
+        virtual AbstractItemView* getItem(const std::string& name);
 
         void setProxyProject(AbstractProxyProject* proxyProject);
 
@@ -470,7 +470,9 @@ namespace te
       
       \return list of properties
         */
-        virtual std::vector<te::layout::Properties> getItemsProperties();
+        virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
+
+        virtual QList<QGraphicsItem*> sortItemsByDependency(const QList<QGraphicsItem*>& listItems);
 
         virtual void applyProportionAllItems(QSize oldPaper, QSize newPaper);
 
