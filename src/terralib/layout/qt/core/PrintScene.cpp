@@ -261,9 +261,13 @@ void te::layout::PrintScene::print()
 
 bool te::layout::PrintScene::exportToPDF()
 { 
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return false;
+
   BuildGraphicsOutside build;
   EnumObjectType* type = Enums::getInstance().getEnumObjectType();
-  QWidget* outside = build.createOuside(type->getPDFSettingsDialog());
+  QWidget* outside = build.createOuside(type->getPDFSettingsDialog(), sc);
   PDFSettingsOutside* pdfSettings = dynamic_cast<PDFSettingsOutside*>(outside);
   pdfSettings->setCurrentDPI(m_currentPdfDpi);
     
@@ -326,11 +330,7 @@ bool te::layout::PrintScene::exportToPDF()
   }
   msgBox.exec();
 
-  Scene* sc = dynamic_cast<Scene*>(m_scene);
-  if(sc)
-  {
-    sc->redrawItems();
-  }
+  sc->redrawItems();  
 
   m_printState = NoPrinter;
 

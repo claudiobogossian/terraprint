@@ -576,11 +576,15 @@ void te::layout::View::showEvent( QShowEvent * event )
 
 void te::layout::View::showPageSetup()
 {
+  Scene* sc = dynamic_cast<Scene*>(scene());
+  if (!sc)
+    return;
+
   if(!m_pageSetupOutside)
   {
     BuildGraphicsOutside build;
     EnumObjectType* type = Enums::getInstance().getEnumObjectType();
-    QWidget* outside = build.createOuside(type->getPageSetup());
+    QWidget* outside = build.createOuside(type->getPageSetup(), sc);
     m_pageSetupOutside = dynamic_cast<PageSetupOutside*>(outside);
     connect(m_pageSetupOutside, SIGNAL(changeConfig()), this, SLOT(onChangeConfig()));
   }
@@ -621,11 +625,15 @@ void te::layout::View::onChangeConfig()
 
 void te::layout::View::showSystematicScale()
 {
+  Scene* sc = dynamic_cast<Scene*>(scene());
+  if (!sc)
+    return;
+
   if(!m_systematicOutside)
   {
     BuildGraphicsOutside build;
     EnumObjectType* type = Enums::getInstance().getEnumObjectType();
-    QWidget* outside = build.createOuside(type->getSystematicScale());
+    QWidget* outside = build.createOuside(type->getSystematicScale(), sc);
     m_systematicOutside = dynamic_cast<SystematicScaleOutside*>(outside);
     connect(m_systematicOutside, SIGNAL(systematicApply(double,SystematicScaleType)), this, SLOT(onSystematicApply(double,SystematicScaleType)));
   }

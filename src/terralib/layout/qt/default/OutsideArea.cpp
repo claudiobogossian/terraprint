@@ -176,7 +176,6 @@ void te::layout::OutsideArea::createInspectorDock()
 
 void te::layout::OutsideArea::createToolbar()
 {
-
   te::layout::BuildGraphicsOutside buildOutside;
 
   te::layout::EnumObjectType* objectType = te::layout::Enums::getInstance().getEnumObjectType();
@@ -201,7 +200,7 @@ void te::layout::OutsideArea::createToolbar()
 
 void te::layout::OutsideArea::createEditTemplateDock()
 {
-  m_dockEditTemplate = new EditTemplateDock;
+  m_dockEditTemplate = new EditTemplateDock(m_view->getScene());
   m_dockEditTemplate->setFeatures(QDockWidget::NoDockWidgetFeatures);
   m_dockEditTemplate->setVisible(false);
 }
