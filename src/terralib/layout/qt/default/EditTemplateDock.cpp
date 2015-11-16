@@ -37,12 +37,13 @@
 #include <QSizePolicy>
 #include <QString>
 
-te::layout::EditTemplateDock::EditTemplateDock( QWidget * parent, Qt::WindowFlags flags ) :
+te::layout::EditTemplateDock::EditTemplateDock(Scene* scene, QWidget * parent, Qt::WindowFlags flags) :
   QDockWidget(parent, flags),
   m_editTemplate(0),
   m_tab(0),
   m_currentTab(-1),
-  m_tabHeight(0)
+  m_tabHeight(0),
+  m_scene(scene)
 {
   setVisible(false);
   setAllowedAreas(Qt::RightDockWidgetArea);
@@ -84,7 +85,7 @@ void te::layout::EditTemplateDock::create()
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getEditTemplate());
+  QWidget* widget = buildOutside.createOuside(objectType->getEditTemplate(), m_scene);
   if(!widget)
   {
     return;

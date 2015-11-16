@@ -37,20 +37,19 @@
 
 
 namespace te
-{
+{   
   namespace layout
   {
     class EditTemplateOutside;
-  }    
-  namespace layout
-  {
+    class Scene;
+
     class EditTemplateDock : public QDockWidget
     {
       Q_OBJECT //for slots/signals
 
     public:
 
-      EditTemplateDock( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+      EditTemplateDock( Scene* scene, QWidget * parent = 0, Qt::WindowFlags flags = 0 );
       virtual ~EditTemplateDock();
 
       te::layout::EditTemplateOutside* getEditTemplateOutside();
@@ -76,6 +75,7 @@ namespace te
       int                              m_currentTab;
       double                           m_tabHeight;
       QRectF                           m_editTemplateSize;
+      Scene*                           m_scene;
     };
   }
 }

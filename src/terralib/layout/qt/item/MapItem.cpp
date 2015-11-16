@@ -562,7 +562,7 @@ void te::layout::MapItem::recompose()
   if (currentLayerList.empty())
     return;
 
-  te::gm::Envelope finalEnv = te::map::GetSelectedExtent(currentLayerList, m_mapDisplay->getSRID(), false);
+  te::gm::Envelope finalEnv = te::map::GetExtent(currentLayerList, m_mapDisplay->getSRID(), false);
   m_mapDisplay->setExtent(finalEnv, true);
 }
 

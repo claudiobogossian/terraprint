@@ -53,6 +53,15 @@ te::layout::MapToolbarInside::~MapToolbarInside()
     delete m_controller;
     m_controller = 0;
   }
+  
+  if (m_toolbar)
+  {
+    if (!m_toolbar->parent())
+    {
+      delete m_toolbar;
+      m_toolbar = 0;
+    }
+  }
 }
 
 void te::layout::MapToolbarInside::createToolbar()
