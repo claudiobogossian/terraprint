@@ -149,8 +149,25 @@ te::layout::View::~View()
 void te::layout::View::mousePressEvent( QMouseEvent * event )
 {
   m_mouseEvent = true;
+  
+  // Pan will be just with MidButton
+  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
+  {
+    return;
+  }
 
-  QGraphicsView::mousePressEvent(event);
+  if (event->button() == Qt::MidButton)
+  {
+    pan();
+    /* The pan is made by default with the left mouse button (QGraphicsView), 
+    so we need to resubmit the event, as if this button had been clicked */
+    QMouseEvent resubmit(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+    QGraphicsView::mousePressEvent(&resubmit);
+  }
+  else
+  {
+    QGraphicsView::mousePressEvent(event);
+  }
 
   QPointF scenePos = mapToScene(event->pos());
   te::gm::Coord2D coord(scenePos.x(), scenePos.y());
@@ -191,13 +208,24 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
 {
   m_mouseEvent = true;
 
-  if (event->modifiers() & Qt::ControlModifier)
+  // Pan will be just with MidButton
+  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
   {
     return;
   }
 
-  QGraphicsView::mouseMoveEvent(event);
-
+  if (event->button() == Qt::MidButton) // Pan
+  {
+    /* The pan is made by default with the left mouse button (QGraphicsView),
+    so we need to resubmit the event, as if this button had been clicked */
+    QMouseEvent resubmit(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+    QGraphicsView::mouseMoveEvent(&resubmit);
+  }
+  else
+  {
+    QGraphicsView::mouseMoveEvent(event);
+  }
+  
   Scene* sc = dynamic_cast<Scene*>(scene());
 
   if(!sc)
@@ -220,8 +248,24 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
 void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
 {
   m_mouseEvent = false;
+  
+  // Pan will be just with MidButton
+  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
+  {
+    return;
+  }
 
-  QGraphicsView::mouseReleaseEvent(event);
+  if (event->button() == Qt::MidButton) // Pan
+  {
+    /* The pan is made by default with the left mouse button (QGraphicsView),
+    so we need to resubmit the event, as if this button had been clicked */
+    QMouseEvent resubmit(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+    QGraphicsView::mouseReleaseEvent(&resubmit);
+  }
+  else
+  {
+    QGraphicsView::mouseReleaseEvent(event);
+  }
 
   Scene* sc = dynamic_cast<Scene*>(scene());
 
@@ -282,26 +326,22 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
   ViewportUpdateMode mode = viewportUpdateMode();
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   
-  if(event->modifiers() & Qt::AltModifier)
+  int zoom = 0; 
+
+  // Zoom in / Zoom Out with mouse scroll
+  if (event->delta() > 0)
   {
-    int zoom = 0;
-
-    // Zoom in / Zoom Out
-    if(event->delta() > 0) 
-    {
-      //Zooming In
-      zoom = nextZoom();
-    }
-    else
-    {
-      zoom = previousZoom();
-    }
-
-    setZoom(zoom);
+    //Zooming In
+    zoom = nextZoom();
   }
+  else
+  {
+    zoom = previousZoom();
+  }
+
+  setZoom(zoom);
   
   QGraphicsView::wheelEvent(event);
-
   setViewportUpdateMode(mode);
 }
 
@@ -781,6 +821,8 @@ void te::layout::View::pan()
 {
   //Use ScrollHand Drag Mode to enable Panning
   resetDefaultConfig();
+
+  m_foreground = QPixmap();
 
   //The entire viewport is redrawn to avoid traces
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
