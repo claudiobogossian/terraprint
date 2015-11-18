@@ -23,7 +23,6 @@
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/maptools/MapDisplay.h"
-#include "terralib/dataaccess/datasource/DataSourceInfoManager.h"
 #include "../core/Value.h"
 #include "../core/Scene.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
@@ -472,17 +471,6 @@ te::layout::Property te::layout::MapController::syncLayersAndURIs(const Property
 te::layout::Property te::layout::MapController::syncLayersFromURIs(const Property& property)
 {
   Property prop;
-  MapItem* view = dynamic_cast<MapItem*>(m_view);
-  if (view == 0)
-  {
-    return prop;
-  }
-
-  Scene* scene = dynamic_cast<Scene*>(view->scene());
-  if (!scene)
-  {
-    return prop;
-  }
 
   std::list<te::map::AbstractLayerPtr> layerList;
   std::vector<std::string>  vString;
@@ -493,12 +481,10 @@ te::layout::Property te::layout::MapController::syncLayersFromURIs(const Propert
   {
     vString = property.getValue().toStringVector();
 
-    AbstractProxyProject* project;
-    std::list<te::map::AbstractLayerPtr> allLayerList;
-    Value<AbstractProxyProject* >* value = scene->getContextValues<AbstractProxyProject *>("proxy_project");
-    if (value)
+    AbstractProxyProject* project = getAbstractProxyProject();
+    if (!project)
     {
-      project = value->get();
+      return prop;
     }
 
     // search layers 
@@ -520,46 +506,55 @@ te::layout::Property te::layout::MapController::syncLayersFromURIs(const Propert
 te::layout::Property te::layout::MapController::syncURIsFromLayers(const Property& property)
 {
   Property prop;
-
-  MapItem* view = dynamic_cast<MapItem*>(m_view);
-  if (view == 0)
-  {
-    return prop;
-  }
-
   std::list<te::map::AbstractLayerPtr> layerList;
   std::vector<std::string>  vString;
-  std::string uriInfo = "URI";
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   if (property.getName().compare("layers") == 0)
   {
     layerList = property.getValue().toLayerList();
+    
+    AbstractProxyProject* project = getAbstractProxyProject();
+    if (!project)
+    {
+      return prop;
+    }
 
     // search layer info (uri)
     for (std::list<te::map::AbstractLayerPtr>::iterator it = layerList.begin(); it != layerList.end(); ++it)
     {
-      const std::string& id = it->get()->getDataSourceId();
-
-      te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
-      const std::map<std::string, std::string>& connInfo = info->getConnInfo();
-
-      std::string uri = "";
-
-      for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
-      {
-        std::string nameURI = it->first;
-        if (nameURI.compare(uriInfo) == 0)
-        {
-          uri = it->second;
-        }
-        vString.push_back(uri);
-      }
+      te::map::AbstractLayerPtr layer = (*it);
+      std::string uri = project->getURIFromLayer(layer);
+      vString.push_back(uri);
     }
     prop = m_model->getProperty("layers_uri");
     prop.setValue(vString, dataType->getDataTypeStringVector());
   }
   return prop;
+}
+
+te::layout::AbstractProxyProject* te::layout::MapController::getAbstractProxyProject()
+{
+  AbstractProxyProject* project = 0;
+  MapItem* view = dynamic_cast<MapItem*>(m_view);
+  if (!view)
+  {
+    return project;
+  }
+
+  Scene* scene = dynamic_cast<Scene*>(view->scene());
+  if (!scene)
+  {
+    return project;
+  }
+
+  std::list<te::map::AbstractLayerPtr> allLayerList;
+  Value<AbstractProxyProject* >* value = scene->getContextValues<AbstractProxyProject *>("proxy_project");
+  if (value)
+  {
+    project = value->get();
+  }
+  return project;
 }
 

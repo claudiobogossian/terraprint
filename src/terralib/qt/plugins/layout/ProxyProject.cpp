@@ -118,3 +118,27 @@ te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::getLayerFromURI
   return layer;
 }
 
+std::string te::qt::plugins::layout::ProxyProject::getURIFromLayer(te::map::AbstractLayerPtr layer)
+{
+  std::string uri;
+  std::string uriInfo = "URI";
+
+  const std::string& id = layer->getDataSourceId();
+
+  te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
+  if (info)
+  {
+    const std::map<std::string, std::string>& connInfo = info->getConnInfo();
+    for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
+    {
+      std::string nameURI = it->first;
+      if (nameURI.compare(uriInfo) == 0)
+      {
+        uri = it->second;
+        break;
+      }
+    }
+  }
+  return uri;
+}
+

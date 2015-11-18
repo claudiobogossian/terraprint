@@ -39,6 +39,7 @@ namespace te
   namespace layout
   {
     class AbstractItemModel;
+    class AbstractProxyProject;
     /*!
     \brief Class that represents text controller.
     
@@ -116,7 +117,9 @@ namespace te
 
         virtual Property syncURIsFromLayers(const Property& property);
 
-    protected:
+      protected:
+
+        virtual AbstractProxyProject* getAbstractProxyProject();
 
         int m_zoom;
         bool m_ignoreExtentChangedEvent;
