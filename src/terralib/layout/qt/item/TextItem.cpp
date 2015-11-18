@@ -116,6 +116,18 @@ void te::layout::TextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * even
 void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
 {
   QGraphicsTextItem::keyPressEvent(event);
+
+  /* Required to remove formatting texts coming from outside the application. 
+     This item will only accept "plain text", no "rich texts".*/
+  if (event->matches(QKeySequence::Paste))
+  {
+    QTextCursor cursor(textCursor());
+    std::string plainText = toPlainText().toStdString();
+    cursor.select(QTextCursor::Document);
+    cursor.deleteChar();
+    setTextCursor(cursor);
+    setPlainText(plainText.c_str());
+  }
 }
 
 QRectF te::layout::TextItem::boundingRect() const
