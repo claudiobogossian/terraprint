@@ -39,6 +39,7 @@ te::layout::LineModel::LineModel()
   te::color::RGBAColor color(0, 0, 0, 255);
   te::gm::LineString* lineString = new te::gm::LineString(0, te::gm::LineStringType);
   te::gm::GeometryShrPtr line(lineString);
+  double lineWidth = 0;
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getLineItem());
 
@@ -72,6 +73,15 @@ te::layout::LineModel::LineModel()
     }
     this->m_properties.addProperty(property);
   }
+
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
+  
   {
     Property property(0);
     property.setName("color");

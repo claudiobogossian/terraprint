@@ -60,9 +60,12 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
   const te::color::RGBAColor& color = pColor.getValue().toColor();
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
+  const Property& width = m_controller->getProperty("line_width");
+  double w = width.getValue().toDouble();
+
   painter->save();
   QPen penStyle = searchStyle();
-  QPen pn(qColor, 0, penStyle.style());
+  QPen pn(qColor, w, penStyle.style());
   painter->setPen(pn);
 
   QPainterPath path;
