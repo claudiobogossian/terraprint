@@ -425,6 +425,11 @@ namespace te
         */
         virtual void applyScale(double horizontalScale, double verticalScale);
         
+        /*!
+        \brief positioning the dock (toolbar) on top of the item 
+        */
+        virtual void positioningDockOnTheScreen(AbstractItemView* item);
+
       protected:
 
         VisualizationArea*                   m_visualizationArea;

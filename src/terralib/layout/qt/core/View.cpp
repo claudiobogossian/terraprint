@@ -59,6 +59,9 @@
 #include <QEvent>
 #include <QToolBar>
 #include <QDockWidget>
+#include <QPoint>
+#include <QRect>
+#include <QSize>
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -1311,9 +1314,13 @@ void te::layout::View::showDockToolbar(EnumType* itemType, AbstractItemView* ite
         QToolBar* toolbar = toolbarInside->getToolbar();
         toolbar->setParent(this->viewport());
         m_dockItemToolbar->setWidget(toolbar);
-        m_dockItemToolbar->setVisible(true);
+
         QString title = toolbar->windowTitle();
         m_dockItemToolbar->setWindowTitle(title);
+
+        positioningDockOnTheScreen(item);
+
+        m_dockItemToolbar->setVisible(true);
         m_currentToolbarInsideType = itemType;
       }
     }
@@ -1344,6 +1351,39 @@ void te::layout::View::closeDockToolbar()
       }
       m_currentToolbarInsideType = 0;
     }
+  }
+}
+
+void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
+{
+  if (!item)
+  {
+    return;
+  }
+
+  /* Positioning the dock (toolbar) on top of the item  */
+
+  // space between the item and dock (toolbar)
+  double space = 20;
+
+  QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
+  if (qitem)
+  {
+    // Required if the item has the inverted matrix
+    QRectF boundRect = qitem->boundingRect();
+    boundRect = qitem->mapRectToScene(boundRect);
+
+    // Mapping to screen coordinates
+    QPointF pos(qitem->scenePos().x(), qitem->scenePos().y() + boundRect.height());
+    QPoint itemPos = mapFromScene(pos);
+    QPoint ptGlobal = viewport()->mapToGlobal(itemPos);
+
+    // total size with margins and borders
+    QSize dockSize = m_dockItemToolbar->sizeHint();
+
+    // Place the dock on top of the item
+    QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dockItemToolbar->height() + space), dockSize.width(), dockSize.height());
+    m_dockItemToolbar->setGeometry(rect);
   }
 }
 
