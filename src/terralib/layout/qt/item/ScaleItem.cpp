@@ -289,31 +289,31 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   painter->save();
 
-  double      unit=1000.0;
-  std::string strUnit="(Km)";
+  double unit = 1000.0;
+  std::string strUnit = "(Km)";
 
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
-  
+
   double scale = pScale.getValue().toDouble();
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if(scale < 1000)
+  if (scale < 1000)
   {
     unit = 1.0;
-    strUnit="(m)";
+    strUnit = "(m)";
   }
-  else 
+  else
   {
     unit = 1000.0;
   }
 
   //convert millimeters to centimeters
-  double mmToCm = gapX/10;
+  double mmToCm = gapX / 10.;
 
-  double spacing = scale/100;
+  double spacing = scale / 100.;
 
   double value = 0.;
   double width = 0.;
@@ -321,53 +321,58 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   QColor black(0, 0, 0, 255);
   QColor white(255, 255, 255, 255);
+  QColor verticalLineColor = black;
   QColor firstRect = black;
   QColor secondRect = white;
   QColor changeColor;
   QColor textColor(0, 0, 0, 255);
 
-  QRectF newBoxFirst;
-  QRectF newBoxSecond;
+  QLineF lineHrz;
+  QLineF lineVrt;
 
   std::string fontFamily("Arial");
   int fontSize = 10;
   ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
 
-  //Rect around scale
-  QPen pn(black, 0, Qt::SolidLine);
-
-  for( ; x1 < boundRect.topRight().x(); x1 += width)
+  QPen penScale(black, 0, Qt::SolidLine);
+  painter->setPen(penScale);
+  painter->setBrush(Qt::NoBrush);
+  
+  for (; x1 < boundRect.topRight().x(); x1 += width)
   {
-    if(x1+gapX >= boundRect.topRight().x())
+    if (x1 + gapX >= boundRect.topRight().x())
     {
       //No draw the remaining rects, near the end
       break;
     }
+    
+    penScale.setColor(firstRect);
+    painter->setPen(penScale);
+    painter->setBrush(Qt::NoBrush);
 
-    painter->setPen(Qt::NoPen);
+    //horizontal line
+    lineHrz = QLineF(x1, boundRect.center().y(), x1 + gapX, boundRect.center().y());
+    painter->drawLine(lineHrz);
 
-    painter->setBrush(QBrush(white));
-    newBoxSecond = QRectF(x1, boundRect.center().y() - gapY/2, gapX, gapY);
-    painter->drawRect(newBoxSecond);
+    penScale.setColor(verticalLineColor);
+    painter->setPen(penScale);
 
-    painter->setPen(pn);
+    //vertical line
+    lineVrt = QLineF(x1, boundRect.center().y() - gapY, x1, boundRect.center().y() + gapY);
+    painter->drawLine(lineVrt);
 
-    QLineF lne(x1, boundRect.center().y(), gapX, boundRect.center().y());
-    painter->drawLine(lne);
-
-    if(width == 0)
+    if (width == 0)
       width = gapX;
     else
-      value += (spacing * mmToCm)/unit;
+      value += (spacing * mmToCm) / unit;
 
     std::stringstream ss_value;
     ss_value << value;
 
     std::string s_value = ss_value.str();
 
-    painter->setPen(QPen(textColor));
-    QPointF coordText(x1, newBoxSecond.topLeft().y() - 5);
-
+    painter->setPen(penScale);
+    QPointF coordText(x1, lineVrt.y1() - 5);
     painter->setBrush(QBrush(textColor));
     drawText(coordText, painter, ss_value.str());
 
@@ -376,20 +381,21 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     secondRect = changeColor;
   }
 
-  QRectF rectScale = QRectF(boundRect.x(), boundRect.center().y() - gapY/2, boundRect.x() + newBoxSecond.right(), gapY);
+  QRectF rectScale = QRectF(boundRect.x(), boundRect.center().y() - gapY, boundRect.x() + lineHrz.x2(), gapY * 2);
 
+  //Rect around scale
   QPen penBackground(black, 0, Qt::SolidLine);
   painter->setBrush(Qt::NoBrush);
   painter->setPen(penBackground);
   painter->drawRect(rectScale);
 
   //middle-bottom text
-  double centerX = rectScale.center().x();  
+  double centerX = rectScale.center().x();
   painter->setPen(QPen(textColor));
 
   QPointF coordText(centerX, boundRect.topLeft().y() + 1);
-  painter->setBrush(QBrush(textColor));
   drawText(coordText, painter, strUnit);
 
   painter->restore();
 }
+

@@ -35,6 +35,7 @@
 #include "terralib/maptools/AbstractLayer.h"
 
 #include <list>
+#include <string>
 
 namespace te
 {
@@ -96,6 +97,15 @@ namespace te
         \return pointer to the layer found or null
         */
         virtual te::map::AbstractLayerPtr getLayerFromURI(std::string uri) = 0;
+
+        /*!
+        \brief Find the uri of a layer
+
+        \param layer layer to check
+
+        \return the uri of a layer
+        */
+        virtual std::string getURIFromLayer(te::map::AbstractLayerPtr layer) = 0;
     };
   }
 }

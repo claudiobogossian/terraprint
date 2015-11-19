@@ -58,7 +58,6 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("width");
     property.setLabel(TR_LAYOUT("Width"));
     property.setValue(boundingBox.getWidth(), dataType->getDataTypeDouble());
-    property.setEditable(false);
     m_properties.addProperty(property);
   }
 
@@ -67,7 +66,6 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("height");
     property.setLabel(TR_LAYOUT("Height"));
     property.setValue(boundingBox.getHeight(), dataType->getDataTypeDouble());
-    property.setEditable(false);
     m_properties.addProperty(property);
   }
 

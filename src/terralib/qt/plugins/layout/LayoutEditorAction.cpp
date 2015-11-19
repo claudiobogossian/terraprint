@@ -69,17 +69,10 @@ te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
 
   if(m_mainLayout)
   {
-    m_verticalLayout->removeWidget(m_mainLayout->getView());
     delete m_mainLayout;
     m_mainLayout=0;
   }
 
-  //MainLayout finish
-  if(m_dockLayoutDisplay)
-  {
-    delete m_dockLayoutDisplay;
-    m_dockLayoutDisplay = 0;
-  }
   m_menu->clear();
 }
 
@@ -122,6 +115,7 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   m_mainLayout->postInit();
   mw->connect(m_mainLayout, SIGNAL(exit()), this, SLOT(onExit()));
 
+  m_menu->clear();
   createMenu();
   m_mainLayout->getToolbar()->getActionExitButton()->setVisible(false);
 
@@ -159,6 +153,9 @@ void te::qt::plugins::layout::LayoutEditorAction::onExit()
 {
   QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
 
+  m_menu->clear();
+  createAction(tr("Layout Editor...").toStdString());
+
   if(m_mainLayout)
   {
     if(m_mainLayout->getProperties())
@@ -190,6 +187,8 @@ void te::qt::plugins::layout::LayoutEditorAction::onExit()
     {
       mw->removeDockWidget(m_dockLayoutDisplay);
       m_dockLayoutDisplay->close();
+      delete m_dockLayoutDisplay;
+      m_dockLayoutDisplay = 0;
     }
   }
 

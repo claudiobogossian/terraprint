@@ -59,6 +59,9 @@
 #include <QEvent>
 #include <QToolBar>
 #include <QDockWidget>
+#include <QPoint>
+#include <QRect>
+#include <QSize>
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -149,8 +152,25 @@ te::layout::View::~View()
 void te::layout::View::mousePressEvent( QMouseEvent * event )
 {
   m_mouseEvent = true;
+  
+  // Pan will be just with MidButton
+  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
+  {
+    return;
+  }
 
-  QGraphicsView::mousePressEvent(event);
+  if (event->button() == Qt::MidButton)
+  {
+    pan();
+    /* The pan is made by default with the left mouse button (QGraphicsView), 
+    so we need to resubmit the event, as if this button had been clicked */
+    QMouseEvent resubmit(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+    QGraphicsView::mousePressEvent(&resubmit);
+  }
+  else
+  {
+    QGraphicsView::mousePressEvent(event);
+  }
 
   QPointF scenePos = mapToScene(event->pos());
   te::gm::Coord2D coord(scenePos.x(), scenePos.y());
@@ -191,13 +211,24 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
 {
   m_mouseEvent = true;
 
-  if (event->modifiers() & Qt::ControlModifier)
+  // Pan will be just with MidButton
+  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
   {
     return;
   }
 
-  QGraphicsView::mouseMoveEvent(event);
-
+  if (event->button() == Qt::MidButton) // Pan
+  {
+    /* The pan is made by default with the left mouse button (QGraphicsView),
+    so we need to resubmit the event, as if this button had been clicked */
+    QMouseEvent resubmit(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+    QGraphicsView::mouseMoveEvent(&resubmit);
+  }
+  else
+  {
+    QGraphicsView::mouseMoveEvent(event);
+  }
+  
   Scene* sc = dynamic_cast<Scene*>(scene());
 
   if(!sc)
@@ -220,8 +251,24 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
 void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
 {
   m_mouseEvent = false;
+  
+  // Pan will be just with MidButton
+  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
+  {
+    return;
+  }
 
-  QGraphicsView::mouseReleaseEvent(event);
+  if (event->button() == Qt::MidButton) // Pan
+  {
+    /* The pan is made by default with the left mouse button (QGraphicsView),
+    so we need to resubmit the event, as if this button had been clicked */
+    QMouseEvent resubmit(event->type(), event->pos(), Qt::LeftButton, Qt::LeftButton, event->modifiers());
+    QGraphicsView::mouseReleaseEvent(&resubmit);
+  }
+  else
+  {
+    QGraphicsView::mouseReleaseEvent(event);
+  }
 
   Scene* sc = dynamic_cast<Scene*>(scene());
 
@@ -282,26 +329,22 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
   ViewportUpdateMode mode = viewportUpdateMode();
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
   
-  if(event->modifiers() & Qt::AltModifier)
+  int zoom = 0; 
+
+  // Zoom in / Zoom Out with mouse scroll
+  if (event->delta() > 0)
   {
-    int zoom = 0;
-
-    // Zoom in / Zoom Out
-    if(event->delta() > 0) 
-    {
-      //Zooming In
-      zoom = nextZoom();
-    }
-    else
-    {
-      zoom = previousZoom();
-    }
-
-    setZoom(zoom);
+    //Zooming In
+    zoom = nextZoom();
   }
+  else
+  {
+    zoom = previousZoom();
+  }
+
+  setZoom(zoom);
   
   QGraphicsView::wheelEvent(event);
-
   setViewportUpdateMode(mode);
 }
 
@@ -781,6 +824,8 @@ void te::layout::View::pan()
 {
   //Use ScrollHand Drag Mode to enable Panning
   resetDefaultConfig();
+
+  m_foreground = QPixmap();
 
   //The entire viewport is redrawn to avoid traces
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
@@ -1269,9 +1314,13 @@ void te::layout::View::showDockToolbar(EnumType* itemType, AbstractItemView* ite
         QToolBar* toolbar = toolbarInside->getToolbar();
         toolbar->setParent(this->viewport());
         m_dockItemToolbar->setWidget(toolbar);
-        m_dockItemToolbar->setVisible(true);
+
         QString title = toolbar->windowTitle();
         m_dockItemToolbar->setWindowTitle(title);
+
+        positioningDockOnTheScreen(item);
+
+        m_dockItemToolbar->setVisible(true);
         m_currentToolbarInsideType = itemType;
       }
     }
@@ -1302,6 +1351,39 @@ void te::layout::View::closeDockToolbar()
       }
       m_currentToolbarInsideType = 0;
     }
+  }
+}
+
+void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
+{
+  if (!item)
+  {
+    return;
+  }
+
+  /* Positioning the dock (toolbar) on top of the item  */
+
+  // space between the item and dock (toolbar)
+  double space = 20;
+
+  QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
+  if (qitem)
+  {
+    // Required if the item has the inverted matrix
+    QRectF boundRect = qitem->boundingRect();
+    boundRect = qitem->mapRectToScene(boundRect);
+
+    // Mapping to screen coordinates
+    QPointF pos(qitem->scenePos().x(), qitem->scenePos().y() + boundRect.height());
+    QPoint itemPos = mapFromScene(pos);
+    QPoint ptGlobal = viewport()->mapToGlobal(itemPos);
+
+    // total size with margins and borders
+    QSize dockSize = m_dockItemToolbar->sizeHint();
+
+    // Place the dock on top of the item
+    QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dockItemToolbar->height() + space), dockSize.width(), dockSize.height());
+    m_dockItemToolbar->setGeometry(rect);
   }
 }
 

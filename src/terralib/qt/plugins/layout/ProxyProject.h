@@ -99,6 +99,11 @@ namespace te
             */
             virtual te::map::AbstractLayerPtr getLayerFromURI(std::string uri);
 
+            /*!
+            \brief Reimplemented from AbstractProxyProject
+            */
+            virtual std::string getURIFromLayer(te::map::AbstractLayerPtr layer);
+
           Q_SIGNALS:
 
             void triggered(te::qt::af::evt::Event* e);
