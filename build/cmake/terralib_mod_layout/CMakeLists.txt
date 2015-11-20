@@ -371,11 +371,11 @@ endif()
 export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
 
 if(MSVC)
-  if (EXISTS "${CMAKE_BINARY_DIR}/Debug/terralib_mod_layout.dll")
+  if (EXISTS "${CMAKE_BINARY_DIR}/Debug/terralib_mod_layoutd.dll")
   	add_custom_command(
         TARGET terralib_mod_layout
         POST_BUILD
-  	  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/Debug/terralib_mod_layout.dll" "${terralib_DIR}/debug"
+  	  COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_BINARY_DIR}/Debug/terralib_mod_layoutd.dll" "${terralib_DIR}/debug"
         
         COMMENT "Copying plugin files..."
         VERBATIM

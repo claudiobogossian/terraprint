@@ -88,6 +88,9 @@ endif()
 #
 # global definitions and includes
 #
+if(MSVC)
+  set(CMAKE_DEBUG_POSTFIX "d")
+endif()
 
 add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_VERSION=3 -DBOOST_UBLAS_TYPE_CHECK=0)
 
