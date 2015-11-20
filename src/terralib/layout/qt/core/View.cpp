@@ -1170,6 +1170,7 @@ bool te::layout::View::importTemplate( EnumType* type )
   if(result)
   {
     m_visualizationArea->build();
+    onChangeConfig();
   }
 
   return result;
