@@ -368,10 +368,10 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
       if(strings.empty() || strings.size() > 4)
         return;
 
-      int x1 = std::atoi(strings[0].c_str());
-      int y1 = std::atoi(strings[1].c_str());
-      int x2 = std::atoi(strings[2].c_str());
-      int y2 = std::atoi(strings[3].c_str());
+      double x1 = std::atof(strings[0].c_str());
+      double y1 = std::atof(strings[1].c_str());
+      double x2 = std::atof(strings[2].c_str());
+      double y2 = std::atof(strings[3].c_str());
 
       m_envelopeValue.init(x1, y1, x2, y2);
 
@@ -398,6 +398,7 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
       while (std::getline(f, s, ','))
       {
         m_vString.push_back(s);
+        null = false;
       }
     }
     else if (type == dataType->getDataTypeLayerList())

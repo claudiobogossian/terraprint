@@ -84,7 +84,14 @@ namespace te
         /*!
           \brief Checks if the given property is a property to be sync with the map display
         */
-        virtual bool isMapDisplayProperty(const Property& property);
+        virtual bool isMapDisplayProperty(const Property& property) const;
+
+        virtual std::list<te::map::AbstractLayerPtr> getIntersection(const std::list<te::map::AbstractLayerPtr>& listA, const std::list<te::map::AbstractLayerPtr>& listB) const;
+
+        /*!
+        \brief Syncs the given Map Display properties. If the values are the same, returns FALSE. If the values had to be sync, return TRUE.
+        */
+        virtual bool syncMapDisplayProperties(const std::vector<Property>& vecProperties);
 
         /*!
           \brief Syncs the given property. If the values are the same, returns FALSE. If the values had to be sync, return TRUE.

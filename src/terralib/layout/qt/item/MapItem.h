@@ -173,6 +173,7 @@ namespace te
         te::qt::widgets::AbstractTool*  m_currentTool;
         te::qt::widgets::ZoomWheel*     m_zoomWheel;
         int                             m_tileSize;
+        bool                            m_refreshEnabled;
     };
   }
 }
