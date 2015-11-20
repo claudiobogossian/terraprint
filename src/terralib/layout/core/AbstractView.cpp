@@ -39,6 +39,9 @@ te::layout::AbstractView::AbstractView():
   m_currentMode(0),
   m_oldMode(0)
 {
+  m_zooms[10] = "10%";
+  m_zooms[25] = "25%";
+  m_zooms[33] = "33%";
   m_zooms[42] = "42%";
   m_zooms[50] = "50%";
   m_zooms[70] = "70%";
@@ -104,6 +107,10 @@ int te::layout::AbstractView::nextZoom()
       }
     }
   }
+  else
+  {
+    zoom = findGreaterZoomThanCurrent();
+  }
   return zoom;
 }
 
@@ -124,6 +131,10 @@ int te::layout::AbstractView::previousZoom()
         zoom = it->first;
       }
     }
+  }
+  else
+  {
+    zoom = findLessZoomThanCurrent();
   }
   return zoom;
 }
@@ -205,9 +216,33 @@ void te::layout::AbstractView::setCurrentMode( EnumType* mode )
   m_currentMode = mode;
 }
 
+int te::layout::AbstractView::findGreaterZoomThanCurrent()
+{
+  int zoom = 0;
+  
+  for (std::map<int, std::string>::iterator it = m_zooms.begin(); it != m_zooms.end(); ++it)
+  {
+    if (it->first > m_currentZoom)
+    {
+      zoom = it->first;
+      break;
+    }
+  }
+  return zoom;
+}
 
+int te::layout::AbstractView::findLessZoomThanCurrent()
+{
+  int zoom = 0;
 
-
-
-
+  for (std::map<int, std::string>::reverse_iterator it = m_zooms.rbegin(); it != m_zooms.rend(); ++it)
+  {
+    if (it->first < m_currentZoom)
+    {
+      zoom = it->first;
+      break;
+    }
+  }
+  return zoom;
+}
 
