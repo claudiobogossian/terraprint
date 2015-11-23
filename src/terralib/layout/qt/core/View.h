@@ -461,6 +461,7 @@ namespace te
         QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item
         QDockWidget*                         m_dockItemToolbar;
         EnumType*                            m_currentToolbarInsideType;
+        bool                                 m_midButtonClicked;
     };
   }
 }

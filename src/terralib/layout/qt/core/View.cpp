@@ -79,7 +79,8 @@ te::layout::View::View( QWidget* widget) :
   m_updateItemPos(false),
   m_mouseEvent(false),
   m_dockItemToolbar(0),
-  m_currentToolbarInsideType(0)
+  m_currentToolbarInsideType(0),
+  m_midButtonClicked(false)
 {
   setDragMode(RubberBandDrag);
 
@@ -157,15 +158,10 @@ void te::layout::View::mousePressEvent( QMouseEvent * event )
   Scene* sc = dynamic_cast<Scene*>(scene());
   if (!sc)
     return;
-  
-  // Pan will be just with MidButton
-  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
-  {
-    return;
-  }
 
   if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
+    m_midButtonClicked = true;
     pan();
     /* The pan is made by default with the left mouse button (QGraphicsView), 
     so we need to resubmit the event, as if this button had been clicked */
@@ -217,12 +213,6 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
   if (!sc)
     return;
 
-  // Pan will be just with MidButton
-  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
-  {
-    return;
-  }
-
   if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     /* The pan is made by default with the left mouse button (QGraphicsView),
@@ -258,12 +248,6 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
   if (!sc)
     return;
   
-  // Pan will be just with MidButton
-  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
-  {
-    return;
-  }
-
   if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     /* The pan is made by default with the left mouse button (QGraphicsView),
@@ -297,13 +281,15 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
     sc->selectItems(selectedItems);
   }
   
+  if (m_midButtonClicked)
+  {
+    m_midButtonClicked = false;
+    resetDefaultConfig();
+  }
+
   /* The Properties only load when selection change and mouse release */
   if(!m_selectionChange && !m_updateItemPos)
     return;
-
-  if(m_updateItemPos)
-  {
-  }
 
   if (!sc->isEditionMode()) // If scene in edition mode the reload will happen in double click event
   {
