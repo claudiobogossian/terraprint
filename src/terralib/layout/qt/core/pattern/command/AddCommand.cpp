@@ -63,7 +63,18 @@ void te::layout::AddCommand::undo()
   if(m_item->scene() != scene)
     return;
 
-  m_scene->removeItem(m_item);
+  AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(m_item);
+  if (!abstractItem)
+    return;
+
+  const Property& pName = abstractItem->getController()->getProperty("name");
+  std::string nameItem = pName.getValue().toString();
+
+  bool result = scene->removeItemByName(nameItem);
+  
+  if (!result)
+    return;
+
   scene->addItemStackWithoutScene(m_item);
   m_scene->update();
 }

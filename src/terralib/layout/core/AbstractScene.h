@@ -41,7 +41,6 @@ namespace te
   namespace layout
   {
     class AbstractItemView;
-    class ItemObserver;
     class ItemUtils;
     class Utils;
 
@@ -65,14 +64,7 @@ namespace te
           \brief Destructor
         */ 
         virtual ~AbstractScene(void) {};
-
-        /*!
-        \brief Method that inserts a graphic object in the scene. Inverts the matrix of the object if necessary, ex.: TextItem.
-
-        \param item graphic object
-        */
-        virtual void insertItem(ItemObserver* item) = 0;
-    
+            
     /*!
           \brief Method that inserts a graphic object in the scene. Inverts the matrix of the object if necessary, ex.: TextItem.
       

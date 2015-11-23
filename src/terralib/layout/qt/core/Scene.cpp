@@ -144,18 +144,6 @@ te::layout::Scene::~Scene()
   }
 }
 
-void te::layout::Scene::insertItem(ItemObserver* item)
-{
-  if (!item)
-  {
-    return;
-  }
-
-  QGraphicsItem* qitem = ((QGraphicsItem*)item);
-
-  insertItem(qitem);
-}
-
 void te::layout::Scene::insertItem(AbstractItemView* item)
 {
   if (!item)
@@ -334,13 +322,15 @@ void te::layout::Scene::removeSelectedItems()
     emit deleteFinalized(names);
 }
 
-void te::layout::Scene::removeItemByName(std::string name)
+bool te::layout::Scene::removeItemByName(std::string name)
 {
+  bool result = false;
+
   std::vector<std::string> names;
 
   AbstractItemView* abstractItem = getItem(name);
   if (!abstractItem)
-    return;
+    return result;
 
   QList<QGraphicsItem*> graphicsItems;
   if (abstractItem)
@@ -349,20 +339,22 @@ void te::layout::Scene::removeItemByName(std::string name)
     {
       const Property& pName = abstractItem->getController()->getProperty("name");
       names.push_back(pName.getValue().toString());
+      result = true;
     }
   }
 
   QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-  if (!item)
-    return;
+  if (!item || names.empty())
+    return result;
 
   graphicsItems.push_back(item);
 
   QUndoCommand* command = new DeleteCommand(this, graphicsItems);
   addUndoStack(command);
 
-  if (!names.empty())
-    emit deleteFinalized(names);
+  emit deleteFinalized(names);
+
+  return result;
 }
 
 void te::layout::Scene::addUndoStack( QUndoCommand* command )

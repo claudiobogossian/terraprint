@@ -73,7 +73,7 @@ namespace te
       
       \return z value
         */
-        QGraphicsItem* buildItem(te::layout::Properties props);
+        QGraphicsItem* buildItem(te::layout::Properties props, bool addUndo = true);
     
        /*!
          \brief Method to create a graphic object from the properties.
@@ -84,7 +84,8 @@ namespace te
       
          \return z value
         */
-        QGraphicsItem* createItem(te::layout::EnumType* itemType, const te::gm::Coord2D& coordinate, double width = 0, double height = 0);
+        QGraphicsItem* createItem(te::layout::EnumType* itemType, const te::gm::Coord2D& coordinate, 
+          double width = 0, double height = 0, bool addUndo = true);
 
         /*!
           \brief Method to create a graphic object from the type.
@@ -93,7 +94,7 @@ namespace te
       
           \return item value
         */
-        QGraphicsItem* createItem(te::layout::EnumType* itemType);
+        QGraphicsItem* createItem(te::layout::EnumType* itemType, bool addUndo = true);
                 
       protected:
     
@@ -113,7 +114,7 @@ namespace te
           \param item built item
           \param draw if true the component will be redraw, false otherwise
         */
-        virtual void afterBuild(QGraphicsItem* item);
+        virtual void afterBuild(QGraphicsItem* item, bool addUndo = true);
 
       protected:
 
