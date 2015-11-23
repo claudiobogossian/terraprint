@@ -80,6 +80,10 @@ namespace te
 
         void onCancelPushButtonClicked();
 
+      protected:
+
+        std::vector<std::string> intersectionLayersTitle(std::vector<std::string> output);
+
       private:
 
         std::auto_ptr<Ui::MapLayerChoice> m_ui;

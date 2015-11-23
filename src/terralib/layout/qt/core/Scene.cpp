@@ -583,6 +583,14 @@ bool te::layout::Scene::importTemplateToProperties(EnumType* type, std::string f
   te::layout::PaperConfig paperConfig;
   jtemplate->importTemplate(paperConfig, properties, mapGroups);
 
+  double w = 0;
+  double h = 0;
+
+  m_paperConfig->setPaperOrientation(paperConfig.getPaperOrientantion());
+  paperConfig.getPaperSize(w, h);
+  m_paperConfig->setPaperSizeCustom(w, h);
+  m_paperConfig->setPaperType(paperConfig.getPaperType());
+
   return true;
 }
 
@@ -732,6 +740,9 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
   te::gm::Envelope boxW = getSceneBox();
   vzArea->changeBoxArea(boxW);
+  vzArea->build();
+
+  getView()->onChangeConfig();
 
   //we create the items
   std::map<std::string, te::layout::Properties> mapProperties;

@@ -150,6 +150,10 @@ namespace te
 
         virtual void setCurrentMode(EnumType* mode);
 
+        virtual int findGreaterZoomThanCurrent();
+        
+        virtual int findLessZoomThanCurrent();
+
       protected:
 
         bool                          m_visibleRulers; //!< rulers visibility state

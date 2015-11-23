@@ -152,6 +152,10 @@ te::layout::View::~View()
 void te::layout::View::mousePressEvent( QMouseEvent * event )
 {
   m_mouseEvent = true;
+
+  Scene* sc = dynamic_cast<Scene*>(scene());
+  if (!sc)
+    return;
   
   // Pan will be just with MidButton
   if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
@@ -159,7 +163,7 @@ void te::layout::View::mousePressEvent( QMouseEvent * event )
     return;
   }
 
-  if (event->button() == Qt::MidButton)
+  if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     pan();
     /* The pan is made by default with the left mouse button (QGraphicsView), 
@@ -174,10 +178,6 @@ void te::layout::View::mousePressEvent( QMouseEvent * event )
 
   QPointF scenePos = mapToScene(event->pos());
   te::gm::Coord2D coord(scenePos.x(), scenePos.y());
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  if(!sc)
-    return;
 
   if (m_isMoving == false)
   {
@@ -211,13 +211,18 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
 {
   m_mouseEvent = true;
 
+  Scene* sc = dynamic_cast<Scene*>(scene());
+
+  if (!sc)
+    return;
+
   // Pan will be just with MidButton
   if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
   {
     return;
   }
 
-  if (event->button() == Qt::MidButton) // Pan
+  if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     /* The pan is made by default with the left mouse button (QGraphicsView),
     so we need to resubmit the event, as if this button had been clicked */
@@ -228,11 +233,6 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
   {
     QGraphicsView::mouseMoveEvent(event);
   }
-  
-  Scene* sc = dynamic_cast<Scene*>(scene());
-
-  if(!sc)
-    return;
 
   if(!scene()->selectedItems().empty())
   {
@@ -251,6 +251,11 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
 void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
 {
   m_mouseEvent = false;
+
+  Scene* sc = dynamic_cast<Scene*>(scene());
+
+  if (!sc)
+    return;
   
   // Pan will be just with MidButton
   if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
@@ -258,7 +263,7 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
     return;
   }
 
-  if (event->button() == Qt::MidButton) // Pan
+  if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     /* The pan is made by default with the left mouse button (QGraphicsView),
     so we need to resubmit the event, as if this button had been clicked */
@@ -269,11 +274,6 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
   {
     QGraphicsView::mouseReleaseEvent(event);
   }
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-
-  if(!sc)
-    return;
 
   if (m_isMoving == true)
   {
@@ -735,6 +735,7 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
   if(!m_menuBuilder)
   {
     m_menuBuilder = new MenuBuilder((Scene*)scene(), 0, this);
+    connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
   }
 
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
@@ -1167,11 +1168,6 @@ bool te::layout::View::importTemplate( EnumType* type )
     return false;
 
   bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
-  if(result)
-  {
-    m_visualizationArea->build();
-  }
-
   return result;
 }
 
@@ -1263,6 +1259,16 @@ te::layout::Scene* te::layout::View::getScene()
 void te::layout::View::setMenuBuilder(te::layout::MenuBuilder* menuBuilder)
 {
   m_menuBuilder = menuBuilder;
+  if (!m_menuBuilder)
+  {
+    return;
+  }
+  
+  connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
+  if (m_menuBuilder->parent() != this)
+  {
+    m_menuBuilder->setParent(this);
+  }
 }
 
 bool te::layout::View::addToolbarItemInside(EnumType* itemType, ToolbarItemInside* toolbarInside)
@@ -1385,5 +1391,10 @@ void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
     QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dockItemToolbar->height() + space), dockSize.width(), dockSize.height());
     m_dockItemToolbar->setGeometry(rect);
   }
+}
+
+void te::layout::View::onChangeMenuProperty(Property property)
+{
+  reload(); // reload the principal property browser
 }
 

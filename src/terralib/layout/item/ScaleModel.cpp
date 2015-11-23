@@ -102,17 +102,34 @@ te::layout::ScaleModel::ScaleModel()
     property.addOption(v);
     property.setOptionChoice(v);
 
-    for(int i = 0 ; i < enumScaleType.size(); ++i)
+    for (int i = 0; i < enumScaleType.size(); ++i)
     {
       EnumType* enumType = enumScaleType.getEnum(i);
 
-      if(enumType == enumScaleType.getNoneType() || enumType == currentScaleType)
+      if (enumType == enumScaleType.getNoneType() || enumType == currentScaleType)
         continue;
 
       Variant v;
       v.setValue(enumType->getLabel(), dataType->getDataTypeString());
       property.addOption(v);
     }
+
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("Unit");
+    property.setLabel(TR_LAYOUT("Unit"));
+    property.setValue(std::string("km"), dataType->getDataTypeStringList());
+
+    Variant v;
+    v.setValue(std::string("km"), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    v.setValue(std::string("m"), dataType->getDataTypeString());
+    property.addOption(v);
 
     m_properties.addProperty(property);
   }

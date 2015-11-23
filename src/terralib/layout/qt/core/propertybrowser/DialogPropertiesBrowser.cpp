@@ -517,24 +517,12 @@ void te::layout::DialogPropertiesBrowser::onShowMapLayerChoiceDlg()
   std::list<te::map::AbstractLayerPtr> listLayers = m_proxyProject->getAllLayers();
   model->setLayers(listLayers);
 
-  ItemUtils utils = m_scene->getItemUtils();
-
-  std::vector<MapItem*> mapList = utils.getMapItemList(true);
-
-  std::vector<Properties> props;
-
-  std::vector<MapItem*>::const_iterator it = mapList.begin();
-  for (; it != mapList.end(); ++it)
-  {
-    MapItem* mIt = (*it);
-    props.push_back(mIt->getController()->getProperties());
-  }
-
-  model->setPropertiesMaps(props);
+  std::vector<te::layout::Properties> properties;
+  properties.push_back(m_allProperties);
+  model->setPropertiesMaps(properties);
 
   layerChoice->init();
   layerChoice->show();
-
 }
 
 void te::layout::DialogPropertiesBrowser::onShowLegendChoiceDlg()

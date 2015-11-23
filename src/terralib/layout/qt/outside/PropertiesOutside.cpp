@@ -208,10 +208,7 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
   newProperties.clear();
 
   foreach(Property prop, vecProperties)
-  {
-    if(!prop.isVisible())
-      continue;
-    
+  {    
     m_propUtils->checkDynamicProperty(prop, allItems);
     newProperties.addProperty(prop);
   }

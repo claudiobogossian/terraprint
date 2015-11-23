@@ -66,14 +66,23 @@ void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGrap
   }
 }
 
+double te::layout::ScaleItem::getUnit(std::string& strUnit)
+{
+  double unit = 1000.0;
+  strUnit = "(" + m_controller->getProperty("Unit").getOptionByCurrentChoice().toString() + ")";
+
+  if (strUnit == "(m)")
+  {
+    unit = 1.0;
+  }
+  return unit;
+}
+
 void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 {
   QRectF boundRect = boundingRect();
   
   painter->save();
-
-  double unit=1000.0;
-  std::string strUnit="(Km)";
 
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
@@ -83,15 +92,8 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if(scale < 1000)
-  {
-    unit = 1.0;
-    strUnit="(m)";
-  }
-  else 
-  {
-    unit = 1000.0;
-  }
+  std::string strUnit;
+  double unit = getUnit(strUnit);
 
   //convert millimeters to centimeters
   double mmToCm = gapX/10.;
@@ -116,25 +118,22 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   int fontSize = 10;
   ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
 
-  for( ; x1 < boundRect.topRight().x(); x1 += width)
+  for( ; x1 <= boundRect.topRight().x(); x1 += width)
   {
-    if(x1+gapX >= boundRect.topRight().x())
+    if(x1+gapX < boundRect.topRight().x())
     {
-      //No draw the remaining rects, near the end
-      break;
+      painter->setPen(Qt::NoPen);
+
+      //Down rect
+      painter->setBrush(QBrush(secondRect));
+      newBoxSecond = QRectF(x1, boundRect.center().y() - gapY, gapX, gapY);
+      painter->drawRect(newBoxSecond);
+
+      //Up rect
+      painter->setBrush(QBrush(firstRect));
+      newBoxFirst = QRectF(x1, boundRect.center().y(), gapX, gapY);
+      painter->drawRect(newBoxFirst);
     }
-
-    painter->setPen(Qt::NoPen);
-
-    //Down rect
-    painter->setBrush(QBrush(secondRect));
-    newBoxSecond = QRectF(x1, boundRect.center().y() - gapY, gapX, gapY);
-    painter->drawRect(newBoxSecond);
-
-    //Up rect
-    painter->setBrush(QBrush(firstRect));
-    newBoxFirst = QRectF(x1, boundRect.center().y(), gapX, gapY);
-    painter->drawRect(newBoxFirst);
 
     if(width == 0)
       width = gapX;
@@ -182,9 +181,6 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
   painter->save();
 
-  double      unit=1000.0;
-  std::string strUnit="(Km)";
-
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
@@ -193,15 +189,8 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if(scale < 1000)
-  {
-    unit = 1.0;
-    strUnit="(m)";
-  }
-  else 
-  {
-    unit = 1000.0;
-  }
+  std::string strUnit;
+  double unit = getUnit(strUnit);
 
   //convert millimeters to centimeters
   double mmToCm = gapX/10;
@@ -226,20 +215,16 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   int fontSize = 10;
   ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
 
-  for( ; x1 < boundRect.topRight().x(); x1 += width)
+  for( ; x1 <= boundRect.topRight().x(); x1 += width)
   {
-    if(x1+gapX >= boundRect.topRight().x())
+    if(x1+gapX < boundRect.topRight().x())
     {
-      //No draw the remaining rects, near the end
-      break;
+      painter->setPen(Qt::NoPen);
+
+      painter->setBrush(QBrush(secondRect));
+      newBoxSecond = QRectF(x1, boundRect.center().y() - gapY/2, gapX, gapY);
+      painter->drawRect(newBoxSecond);
     }
-
-    painter->setPen(Qt::NoPen);
-
-    painter->setBrush(QBrush(secondRect));
-    newBoxSecond = QRectF(x1, boundRect.center().y() - gapY/2, gapX, gapY);
-    painter->drawRect(newBoxSecond);
-
 
     if(width == 0)
       width = gapX;
@@ -289,9 +274,6 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   painter->save();
 
-  double unit = 1000.0;
-  std::string strUnit = "(Km)";
-
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
@@ -300,15 +282,8 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if (scale < 1000)
-  {
-    unit = 1.0;
-    strUnit = "(m)";
-  }
-  else
-  {
-    unit = 1000.0;
-  }
+  std::string strUnit;
+  double unit = getUnit(strUnit);
 
   //convert millimeters to centimeters
   double mmToCm = gapX / 10.;
@@ -338,28 +313,25 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   painter->setPen(penScale);
   painter->setBrush(Qt::NoBrush);
   
-  for (; x1 < boundRect.topRight().x(); x1 += width)
+  for (; x1 <= boundRect.topRight().x(); x1 += width)
   {
-    if (x1 + gapX >= boundRect.topRight().x())
+    if (x1 + gapX < boundRect.topRight().x())
     {
-      //No draw the remaining rects, near the end
-      break;
+      penScale.setColor(firstRect);
+      painter->setPen(penScale);
+      painter->setBrush(Qt::NoBrush);
+
+      //horizontal line
+      lineHrz = QLineF(x1, boundRect.center().y(), x1 + gapX, boundRect.center().y());
+      painter->drawLine(lineHrz);
+
+      penScale.setColor(verticalLineColor);
+      painter->setPen(penScale);
+
+      //vertical line
+      lineVrt = QLineF(x1, boundRect.center().y() - gapY, x1, boundRect.center().y() + gapY);
+      painter->drawLine(lineVrt);
     }
-    
-    penScale.setColor(firstRect);
-    painter->setPen(penScale);
-    painter->setBrush(Qt::NoBrush);
-
-    //horizontal line
-    lineHrz = QLineF(x1, boundRect.center().y(), x1 + gapX, boundRect.center().y());
-    painter->drawLine(lineHrz);
-
-    penScale.setColor(verticalLineColor);
-    painter->setPen(penScale);
-
-    //vertical line
-    lineVrt = QLineF(x1, boundRect.center().y() - gapY, x1, boundRect.center().y() + gapY);
-    painter->drawLine(lineVrt);
 
     if (width == 0)
       width = gapX;
@@ -398,4 +370,5 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   painter->restore();
 }
+
 

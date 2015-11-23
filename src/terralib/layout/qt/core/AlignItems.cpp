@@ -30,15 +30,17 @@
 #include "../../core/pattern/mvc/AbstractItemView.h"
 #include "terralib/geometry/Envelope.h"
 #include "terralib/geometry/Coord2D.h"
+#include "../core/pattern/command/MoveCommand.h"
+#include "../core/Scene.h"
 
 // STL
 #include <sstream>
 
 // Qt
-#include <QGraphicsScene>
 #include <QGraphicsItem>
+#include <QUndoCommand>
 
-te::layout::AlignItems::AlignItems( QGraphicsScene* scene, PaperConfig* config ):
+te::layout::AlignItems::AlignItems( Scene* scene, PaperConfig* config ):
   m_scene(scene),
   m_config(config),
   m_minimunZValue(0)
@@ -130,6 +132,9 @@ void te::layout::AlignItems::alignLeft()
     return;
   
   QList<QGraphicsItem *> items = m_scene->selectedItems(); 
+  if (items.empty())
+    return;
+
   double dbLeft = 0;
 
   double ww = 0;
@@ -137,12 +142,18 @@ void te::layout::AlignItems::alignLeft()
   
   m_config->getPaperSize(ww, hh);
 
+  std::map<QGraphicsItem*, QPointF> itemsWithPoints;
+
   if(items.count() == 1)
   {
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbLeft = ppbx.getLowerLeftX();
-    QPointF pot(dbLeft, items.first()->sceneBoundingRect().y());   
+    QPointF pot(dbLeft, items.first()->sceneBoundingRect().y());
+
+    itemsWithPoints[items.first()] = items.first()->scenePos();//it will be added to the undo/redo stack
+
     items.first()->setPos(pot);
+    addToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -153,9 +164,12 @@ void te::layout::AlignItems::alignLeft()
     if(item)
     {
       QPointF pt(dbLeft, item->scenePos().y());
+      itemsWithPoints[item] = item->scenePos();//it will be added to the undo/redo stack
       item->setPos(pt);
     }
   }
+
+  addToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignRight()
@@ -166,12 +180,16 @@ void te::layout::AlignItems::alignRight()
     return;
 
   QList<QGraphicsItem *> items = m_scene->selectedItems(); 
+  if (items.empty())
+    return;
 
   double dbRight = 0;
   double w = 0;
 
   double ww = 0;
   double hh = 0;
+
+  std::map<QGraphicsItem*, QPointF> itemsWithPoints;
 
   m_config->getPaperSize(ww, hh);
 
@@ -181,7 +199,11 @@ void te::layout::AlignItems::alignRight()
     dbRight = ppbx.getUpperRightX();
     w = dbRight - items.first()->sceneBoundingRect().width();
     QPointF pot(w, items.first()->sceneBoundingRect().y());
+
+    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+
     items.first()->setPos(pot);
+    addToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -193,9 +215,12 @@ void te::layout::AlignItems::alignRight()
     {
       w = dbRight - item->sceneBoundingRect().width();
       QPointF pt(w, item->scenePos().y());
+      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
   }
+
+  addToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignTop()
@@ -206,11 +231,16 @@ void te::layout::AlignItems::alignTop()
     return;
 
   QList<QGraphicsItem *> items = m_scene->selectedItems(); 
+  if (items.empty())
+    return;
+
   double dbBottom = 0;
   double h = 0;
 
   double ww = 0;
   double hh = 0;
+
+  std::map<QGraphicsItem*, QPointF> itemsWithPoints;
 
   m_config->getPaperSize(ww, hh);
 
@@ -220,7 +250,11 @@ void te::layout::AlignItems::alignTop()
     dbBottom = ppbx.getUpperRightY();
     h = dbBottom - items.first()->sceneBoundingRect().height();
     QPointF pot(items.first()->sceneBoundingRect().x(), h);
+
+    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+
     items.first()->setPos(pot);
+    addToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -232,9 +266,12 @@ void te::layout::AlignItems::alignTop()
     {
       h = dbBottom - item->sceneBoundingRect().height();
       QPointF pt(item->scenePos().x(), h);
+      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
   }
+
+  addToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignBottom()
@@ -245,10 +282,15 @@ void te::layout::AlignItems::alignBottom()
     return;
 
   QList<QGraphicsItem *> items = m_scene->selectedItems(); 
+  if (items.empty())
+    return;
+
   double dbTop = 0;
 
   double ww = 0;
   double hh = 0;
+
+  std::map<QGraphicsItem*, QPointF> itemsWithPoints;
 
   m_config->getPaperSize(ww, hh);
 
@@ -257,7 +299,11 @@ void te::layout::AlignItems::alignBottom()
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbTop = ppbx.getLowerLeftY();
     QPointF pot(items.first()->sceneBoundingRect().x(), dbTop);
+
+    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+
     items.first()->setPos(pot);
+    addToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -268,9 +314,12 @@ void te::layout::AlignItems::alignBottom()
     if(item)
     {
       QPointF pt(item->scenePos().x(), dbTop);
+      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
   }
+
+  addToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignCenterHorizontal()
@@ -281,11 +330,16 @@ void te::layout::AlignItems::alignCenterHorizontal()
     return;
 
   QList<QGraphicsItem *> items = m_scene->selectedItems(); 
+  if (items.empty())
+    return;
+
   double dbCenterHrz = 0;
   double w = 0;
 
   double ww = 0;
   double hh = 0;
+
+  std::map<QGraphicsItem*, QPointF> itemsWithPoints;
 
   m_config->getPaperSize(ww, hh);
 
@@ -295,7 +349,11 @@ void te::layout::AlignItems::alignCenterHorizontal()
     dbCenterHrz = ppbx.getCenter().x;
     w = items.first()->sceneBoundingRect().width() / 2.;
     QPointF pot(dbCenterHrz - w, items.first()->sceneBoundingRect().y());
+
+    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+
     items.first()->setPos(pot);
+    addToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -308,9 +366,12 @@ void te::layout::AlignItems::alignCenterHorizontal()
       w = item->sceneBoundingRect().width() / 2.;
 
       QPointF pt(dbCenterHrz - w, item->scenePos().y());
+      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
   }
+
+  addToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignCenterVertical()
@@ -321,11 +382,16 @@ void te::layout::AlignItems::alignCenterVertical()
     return;
 
   QList<QGraphicsItem *> items = m_scene->selectedItems(); 
+  if (items.empty())
+    return;
+
   double dbCenterVrt = 0;
   double h = 0;
 
   double ww = 0;
   double hh = 0;
+
+  std::map<QGraphicsItem*, QPointF> itemsWithPoints;
 
   m_config->getPaperSize(ww, hh);
 
@@ -335,7 +401,11 @@ void te::layout::AlignItems::alignCenterVertical()
     dbCenterVrt = ppbx.getCenter().y;
     h = items.first()->sceneBoundingRect().height() / 2.;
     QPointF pot(items.first()->sceneBoundingRect().x(), dbCenterVrt - h);
+
+    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+
     items.first()->setPos(pot);
+    addToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -348,9 +418,12 @@ void te::layout::AlignItems::alignCenterVertical()
       h = item->sceneBoundingRect().height() / 2.;
 
       QPointF pt(item->scenePos().x(), dbCenterVrt - h);
+      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
   }
+
+  addToUndoRedoStack(itemsWithPoints);
 }
 
 QRectF te::layout::AlignItems::getSelectionItemsBoundingBox()
@@ -374,5 +447,15 @@ int te::layout::AlignItems::getMinimumZValue()
 void te::layout::AlignItems::setMinimumZValue(int minimum)
 {
   m_minimunZValue = minimum;
+}
+
+bool te::layout::AlignItems::addToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items)
+{
+  bool result = true;
+
+  QUndoCommand* command = new MoveCommand(items);
+  m_scene->addUndoStack(command);
+
+  return result;
 }
 

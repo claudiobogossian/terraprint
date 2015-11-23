@@ -42,6 +42,7 @@
 #include "../outside/SystematicScaleOutside.h"
 #include "../item/MovingItemGroup.h"
 #include "propertybrowser/MenuBuilder.h"
+#include "../../core/property/Property.h"
 
 // STL
 #include <string>
@@ -304,6 +305,10 @@ namespace te
           \brief Update properties when the scene leaves the edition mode
         */
         virtual void onEditionFinalized();
+
+      protected slots:
+
+        virtual void onChangeMenuProperty(Property property);
 
       signals:
 

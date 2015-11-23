@@ -56,6 +56,7 @@ te::layout::MapItem::MapItem(AbstractItemController* controller, bool invertedMa
   , m_currentTool(0)
   , m_zoomWheel(0)
   , m_tileSize(2048)
+  , m_refreshEnabled(true)
 {
   this->setAcceptDrops(true);
 
@@ -87,6 +88,7 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
   ((MapController *) m_controller)->setZoom(zoom);
 
   //AbstractScene* scene = ((AbstractItem<QGraphicsItem>*) this)->getScene();
+
   Utils utils = ((Scene*) this->scene())->getUtils();
 
   QRectF boxMM = boundingRect();
@@ -94,14 +96,33 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
   te::gm::Envelope box(0, 0, boxMM.width(), boxMM.height());
   box = utils.viewportBox(box);
 
-  m_mapDisplay->setOverrideDPI(context.getDpiX(), context.getDpiY());
-
   QSize currentSize = m_mapDisplay->size();
   QSize newSize(qRound(box.getWidth()), qRound(box.getHeight()));
   if(currentSize != newSize)
   {
+    const Properties& properties = m_controller->getProperties();
+
+    delete m_mapDisplay;
+
+    m_mapDisplay = new te::qt::widgets::MapDisplay();
+    m_mapDisplay->setAcceptDrops(true);
+    m_mapDisplay->setBackgroundColor(Qt::transparent);
+    m_mapDisplay->setResizeInterval(0);
+    m_mapDisplay->setMouseTracking(true);
+    m_mapDisplay->setOverrideDPI(context.getDpiX(), context.getDpiY());
+
     this->prepareGeometryChange();
     m_mapDisplay->resize(newSize);
+
+    connect(m_mapDisplay, SIGNAL(extentChanged()), this, SLOT(extentChanged()));
+    
+    m_refreshEnabled = false;
+    m_controller->setProperties(properties);
+    //bool wasSync = ((MapController *)m_controller)->syncMapDisplayProperties(properties.getProperties());
+
+    m_refreshEnabled = true;
+
+    update();
   }
 }
 
@@ -133,6 +154,9 @@ QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange cha
     if(myScene != 0)
     {
       contextUpdated(myScene->getContext());
+
+      //we dont want AbstractItem to handle this event, so we 'jump' to its father
+      return QGraphicsObject::itemChange(change, value);
     }
   }
   return AbstractItem<QGraphicsObject>::itemChange(change, value);
@@ -341,7 +365,10 @@ void te::layout::MapItem::resized()
 
 void te::layout::MapItem::doRefresh()
 {
-  m_mapDisplay->refresh();
+  if (m_refreshEnabled == true)
+  {
+    m_mapDisplay->refresh();
+  }
 }
 
 void te::layout::MapItem::drawTilesMap(QPainter* painter)

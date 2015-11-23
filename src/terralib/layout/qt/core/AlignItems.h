@@ -32,15 +32,20 @@
 #include "../../core/Config.h"
 #include "../../core/PaperConfig.h"
 
+// STL
+#include <map>
+
 // Qt
 #include <QRectF>
+#include <QPointF>
 
-class QGraphicsScene;
+class QGraphicsItem;
 
 namespace te
 {
   namespace layout
   {
+    class Scene;
     /*!
     \brief Class applying the alignment in one or more components. Ex .: send to back, bring to front, align right, align bottom.
     
@@ -53,7 +58,7 @@ namespace te
         /*!
           \brief Constructor
         */
-        AlignItems( QGraphicsScene* scene, PaperConfig* config );
+        AlignItems(Scene* scene, PaperConfig* config);
 
         /*!
           \brief Destructor
@@ -123,7 +128,9 @@ namespace te
 
       protected:
 
-        QGraphicsScene* m_scene;
+        virtual bool addToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items);
+
+        Scene*          m_scene;
         PaperConfig*    m_config;
         int             m_minimunZValue;
     };

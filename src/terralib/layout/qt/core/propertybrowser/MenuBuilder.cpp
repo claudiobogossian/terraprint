@@ -115,6 +115,8 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
+  setAllProperties(m_properties);
+
   foreach(Property prop, m_properties.getProperties()) 
   {
     if(!prop.isMenu() || !prop.isVisible())
