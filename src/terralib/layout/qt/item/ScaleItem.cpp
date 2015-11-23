@@ -66,14 +66,23 @@ void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGrap
   }
 }
 
+double te::layout::ScaleItem::getUnit(std::string& strUnit)
+{
+  double unit = 1000.0;
+  strUnit = "(" + m_controller->getProperty("Unit").getOptionByCurrentChoice().toString() + ")";
+
+  if (strUnit == "(m)")
+  {
+    unit = 1.0;
+  }
+  return unit;
+}
+
 void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 {
   QRectF boundRect = boundingRect();
   
   painter->save();
-
-  double unit=1000.0;
-  std::string strUnit="(Km)";
 
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
@@ -83,15 +92,8 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if(scale < 1000)
-  {
-    unit = 1.0;
-    strUnit="(m)";
-  }
-  else 
-  {
-    unit = 1000.0;
-  }
+  std::string strUnit;
+  double unit = getUnit(strUnit);
 
   //convert millimeters to centimeters
   double mmToCm = gapX/10.;
@@ -182,9 +184,6 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
   painter->save();
 
-  double      unit=1000.0;
-  std::string strUnit="(Km)";
-
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
@@ -193,15 +192,8 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if(scale < 1000)
-  {
-    unit = 1.0;
-    strUnit="(m)";
-  }
-  else 
-  {
-    unit = 1000.0;
-  }
+  std::string strUnit;
+  double unit = getUnit(strUnit);
 
   //convert millimeters to centimeters
   double mmToCm = gapX/10;
@@ -289,9 +281,6 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   painter->save();
 
-  double unit = 1000.0;
-  std::string strUnit = "(Km)";
-
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
@@ -300,15 +289,8 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   double gapX = pScaleGapX.getValue().toDouble();
   double gapY = pScaleGapY.getValue().toDouble();
 
-  if (scale < 1000)
-  {
-    unit = 1.0;
-    strUnit = "(m)";
-  }
-  else
-  {
-    unit = 1000.0;
-  }
+  std::string strUnit;
+  double unit = getUnit(strUnit);
 
   //convert millimeters to centimeters
   double mmToCm = gapX / 10.;
@@ -398,4 +380,5 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   painter->restore();
 }
+
 
