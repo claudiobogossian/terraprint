@@ -740,6 +740,9 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
   te::gm::Envelope boxW = getSceneBox();
   vzArea->changeBoxArea(boxW);
+  vzArea->build();
+
+  getView()->onChangeConfig();
 
   //we create the items
   std::map<std::string, te::layout::Properties> mapProperties;

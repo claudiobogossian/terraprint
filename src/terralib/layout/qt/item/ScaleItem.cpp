@@ -118,25 +118,22 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   int fontSize = 10;
   ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
 
-  for( ; x1 < boundRect.topRight().x(); x1 += width)
+  for( ; x1 <= boundRect.topRight().x(); x1 += width)
   {
-    if(x1+gapX >= boundRect.topRight().x())
+    if(x1+gapX < boundRect.topRight().x())
     {
-      //No draw the remaining rects, near the end
-      break;
+      painter->setPen(Qt::NoPen);
+
+      //Down rect
+      painter->setBrush(QBrush(secondRect));
+      newBoxSecond = QRectF(x1, boundRect.center().y() - gapY, gapX, gapY);
+      painter->drawRect(newBoxSecond);
+
+      //Up rect
+      painter->setBrush(QBrush(firstRect));
+      newBoxFirst = QRectF(x1, boundRect.center().y(), gapX, gapY);
+      painter->drawRect(newBoxFirst);
     }
-
-    painter->setPen(Qt::NoPen);
-
-    //Down rect
-    painter->setBrush(QBrush(secondRect));
-    newBoxSecond = QRectF(x1, boundRect.center().y() - gapY, gapX, gapY);
-    painter->drawRect(newBoxSecond);
-
-    //Up rect
-    painter->setBrush(QBrush(firstRect));
-    newBoxFirst = QRectF(x1, boundRect.center().y(), gapX, gapY);
-    painter->drawRect(newBoxFirst);
 
     if(width == 0)
       width = gapX;
@@ -218,20 +215,16 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   int fontSize = 10;
   ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
 
-  for( ; x1 < boundRect.topRight().x(); x1 += width)
+  for( ; x1 <= boundRect.topRight().x(); x1 += width)
   {
-    if(x1+gapX >= boundRect.topRight().x())
+    if(x1+gapX < boundRect.topRight().x())
     {
-      //No draw the remaining rects, near the end
-      break;
+      painter->setPen(Qt::NoPen);
+
+      painter->setBrush(QBrush(secondRect));
+      newBoxSecond = QRectF(x1, boundRect.center().y() - gapY/2, gapX, gapY);
+      painter->drawRect(newBoxSecond);
     }
-
-    painter->setPen(Qt::NoPen);
-
-    painter->setBrush(QBrush(secondRect));
-    newBoxSecond = QRectF(x1, boundRect.center().y() - gapY/2, gapX, gapY);
-    painter->drawRect(newBoxSecond);
-
 
     if(width == 0)
       width = gapX;
@@ -320,28 +313,25 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   painter->setPen(penScale);
   painter->setBrush(Qt::NoBrush);
   
-  for (; x1 < boundRect.topRight().x(); x1 += width)
+  for (; x1 <= boundRect.topRight().x(); x1 += width)
   {
-    if (x1 + gapX >= boundRect.topRight().x())
+    if (x1 + gapX < boundRect.topRight().x())
     {
-      //No draw the remaining rects, near the end
-      break;
+      penScale.setColor(firstRect);
+      painter->setPen(penScale);
+      painter->setBrush(Qt::NoBrush);
+
+      //horizontal line
+      lineHrz = QLineF(x1, boundRect.center().y(), x1 + gapX, boundRect.center().y());
+      painter->drawLine(lineHrz);
+
+      penScale.setColor(verticalLineColor);
+      painter->setPen(penScale);
+
+      //vertical line
+      lineVrt = QLineF(x1, boundRect.center().y() - gapY, x1, boundRect.center().y() + gapY);
+      painter->drawLine(lineVrt);
     }
-    
-    penScale.setColor(firstRect);
-    painter->setPen(penScale);
-    painter->setBrush(Qt::NoBrush);
-
-    //horizontal line
-    lineHrz = QLineF(x1, boundRect.center().y(), x1 + gapX, boundRect.center().y());
-    painter->drawLine(lineHrz);
-
-    penScale.setColor(verticalLineColor);
-    painter->setPen(penScale);
-
-    //vertical line
-    lineVrt = QLineF(x1, boundRect.center().y() - gapY, x1, boundRect.center().y() + gapY);
-    painter->drawLine(lineVrt);
 
     if (width == 0)
       width = gapX;
