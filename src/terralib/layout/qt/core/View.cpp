@@ -1168,12 +1168,6 @@ bool te::layout::View::importTemplate( EnumType* type )
     return false;
 
   bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
-  if(result)
-  {
-    m_visualizationArea->build();
-    onChangeConfig();
-  }
-
   return result;
 }
 
