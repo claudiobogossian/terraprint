@@ -310,6 +310,8 @@ namespace te
 
         virtual void onChangeMenuProperty(Property property);
 
+        virtual void onScrollBarValueChanged(int value);
+
       signals:
 
     /*!
@@ -459,6 +461,7 @@ namespace te
         QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item
         QDockWidget*                         m_dockItemToolbar;
         EnumType*                            m_currentToolbarInsideType;
+        bool                                 m_midButtonClicked;
     };
   }
 }

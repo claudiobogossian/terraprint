@@ -62,6 +62,7 @@
 #include <QPoint>
 #include <QRect>
 #include <QSize>
+#include <QScrollBar>
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -78,7 +79,8 @@ te::layout::View::View( QWidget* widget) :
   m_updateItemPos(false),
   m_mouseEvent(false),
   m_dockItemToolbar(0),
-  m_currentToolbarInsideType(0)
+  m_currentToolbarInsideType(0),
+  m_midButtonClicked(false)
 {
   setDragMode(RubberBandDrag);
 
@@ -156,15 +158,10 @@ void te::layout::View::mousePressEvent( QMouseEvent * event )
   Scene* sc = dynamic_cast<Scene*>(scene());
   if (!sc)
     return;
-  
-  // Pan will be just with MidButton
-  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
-  {
-    return;
-  }
 
   if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
+    m_midButtonClicked = true;
     pan();
     /* The pan is made by default with the left mouse button (QGraphicsView), 
     so we need to resubmit the event, as if this button had been clicked */
@@ -216,12 +213,6 @@ void te::layout::View::mouseMoveEvent( QMouseEvent * event )
   if (!sc)
     return;
 
-  // Pan will be just with MidButton
-  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
-  {
-    return;
-  }
-
   if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     /* The pan is made by default with the left mouse button (QGraphicsView),
@@ -257,12 +248,6 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
   if (!sc)
     return;
   
-  // Pan will be just with MidButton
-  if ((event->button() == Qt::LeftButton) && (dragMode() == QGraphicsView::ScrollHandDrag))
-  {
-    return;
-  }
-
   if (event->button() == Qt::MidButton && !sc->isEditionMode()) // Pan
   {
     /* The pan is made by default with the left mouse button (QGraphicsView),
@@ -296,13 +281,15 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
     sc->selectItems(selectedItems);
   }
   
+  if (m_midButtonClicked)
+  {
+    m_midButtonClicked = false;
+    resetDefaultConfig();
+  }
+
   /* The Properties only load when selection change and mouse release */
   if(!m_selectionChange && !m_updateItemPos)
     return;
-
-  if(m_updateItemPos)
-  {
-  }
 
   if (!sc->isEditionMode()) // If scene in edition mode the reload will happen in double click event
   {
@@ -343,8 +330,12 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
   }
 
   setZoom(zoom);
+
+  if (isLimitExceeded(zoom) == false)
+  {
+    QGraphicsView::wheelEvent(event);
+  }
   
-  QGraphicsView::wheelEvent(event);
   setViewportUpdateMode(mode);
 }
 
@@ -446,12 +437,13 @@ void te::layout::View::config()
       setCurrentMode(Enums::getInstance().getEnumModeType()->getModeNone());
     }
   }
-
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
+    
   connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
+
+  //scrollbars
+  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
+  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -925,14 +917,6 @@ void te::layout::View::arrowCursor()
 
   setCurrentMode(enumMode->getModeNone());
   resetDefaultConfig();
-  std::vector<te::layout::MapItem*> list = iUtils.getMapItemList();
-  if (!list.empty())
-  {
-    /*foreach(MapItem* mit, list)
-    {
-      mit->changeCurrentTool(mode);
-    }*/
-  }
 }
 
 void te::layout::View::newTemplate()
@@ -1396,5 +1380,12 @@ void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
 void te::layout::View::onChangeMenuProperty(Property property)
 {
   reload(); // reload the principal property browser
+}
+
+void te::layout::View::onScrollBarValueChanged(int value)
+{
+  // moved scrollbar so update foreground
+  m_foreground = QPixmap();
+  viewport()->update();
 }
 
