@@ -71,6 +71,7 @@ namespace te
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
+        virtual double getUnit(std::string& strUnit);
         virtual void drawDoubleAlternatingScaleBar(QPainter * painter);
         virtual void drawAlternatingScaleBar(QPainter * painter);
         virtual void drawHollowScaleBar(QPainter * painter);
