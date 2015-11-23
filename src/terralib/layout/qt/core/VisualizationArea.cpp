@@ -70,7 +70,7 @@ void te::layout::VisualizationArea::createPaper()
   
   // Create paper item
   BuildGraphicsItem build(m_scene);
-  QGraphicsItem* item = build.buildItem(properties);
+  QGraphicsItem* item = build.buildItem(properties, false);
   if (item)
   {
     item->setPos(0, 0);

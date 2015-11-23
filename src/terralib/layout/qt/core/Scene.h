@@ -113,14 +113,7 @@ namespace te
           \brief Destructor
         */ 
         virtual ~Scene();
-
-        /*!
-        \brief Method that inserts a graphic object in the scene. Inverts the matrix of the object if necessary, ex.: TextItem.
-
-        \param item graphic object
-        */
-        virtual void insertItem(ItemObserver* item);
-
+        
         /*!
           \brief Method that inserts a graphic object in the scene. Inverts the matrix of the object if necessary, ex.: TextItem.
       
@@ -168,7 +161,7 @@ namespace te
         /*!
         \brief Method that removes a item in the scene and creates a Command to Undo/Redo of type DeleteCommand. The item is removed from the scene, but is not deleted.
         */
-        virtual void removeItemByName(std::string name);
+        virtual bool removeItemByName(std::string name);
     
     /*!
           \brief Groups objects and creates a QGraphicsItemGroup object. A command Undo/Redo of type AddCommand is created.

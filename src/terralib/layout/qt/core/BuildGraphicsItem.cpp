@@ -52,7 +52,7 @@ te::layout::BuildGraphicsItem::~BuildGraphicsItem()
  
 }
 
-QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties props)
+QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties props, bool addUndo)
 {
   QGraphicsItem* item = 0;
 
@@ -68,7 +68,7 @@ QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties p
   
   EnumType* type = props.getTypeObj();
 
-  item = createItem(type);
+  item = createItem(type, addUndo);
 
   clear();
   
@@ -76,7 +76,7 @@ QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties p
 }
 
 QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* itemType, const te::gm::Coord2D& coordinate, 
-    double width, double height)
+  double width, double height, bool addUndo)
 {
   QGraphicsItem* item = 0;
 
@@ -86,14 +86,14 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
   m_width = width;
   m_height = height;
 
-  item = createItem(itemType);
+  item = createItem(itemType, addUndo);
 
   clear();
 
   return item;
 }
 
-QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* itemType)
+QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* itemType, bool addUndo)
 {
   QGraphicsItem* item = 0;
 
@@ -119,7 +119,7 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
     m_scene->insertItem(item);
   }
 
-  afterBuild(item);
+  afterBuild(item, addUndo);
 
   return item;
 }
@@ -154,7 +154,7 @@ std::string te::layout::BuildGraphicsItem::nameItem( te::layout::EnumType* type 
   return name;
 }
 
-void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item)
+void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo)
 {
   if (!item)
   {
@@ -190,8 +190,11 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item)
   {
     if (m_scene)
     {
-      QUndoCommand* command = new AddCommand(item);
-      m_scene->addUndoStack(command);
+      if (addUndo)
+      {
+        QUndoCommand* command = new AddCommand(item);
+        m_scene->addUndoStack(command);
+      }
     }
   }
 }
