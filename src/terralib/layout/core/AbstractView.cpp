@@ -49,6 +49,11 @@ te::layout::AbstractView::AbstractView():
   m_zooms[150] = "150%";
   m_zooms[200] = "200%";
   m_zooms[300] = "300%";
+  m_zooms[400] = "400%";
+  m_zooms[600] = "600%";
+  m_zooms[700] = "700%";
+  m_zooms[800] = "800%";
+  m_zooms[900] = "900%";
 
   if(Enums::getInstance().getEnumModeType())
   {

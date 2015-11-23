@@ -330,8 +330,12 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
   }
 
   setZoom(zoom);
+
+  if (isLimitExceeded(zoom) == false)
+  {
+    QGraphicsView::wheelEvent(event);
+  }
   
-  QGraphicsView::wheelEvent(event);
   setViewportUpdateMode(mode);
 }
 
