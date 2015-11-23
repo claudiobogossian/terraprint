@@ -62,6 +62,7 @@
 #include <QPoint>
 #include <QRect>
 #include <QSize>
+#include <QScrollBar>
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -446,12 +447,13 @@ void te::layout::View::config()
       setCurrentMode(Enums::getInstance().getEnumModeType()->getModeNone());
     }
   }
-
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
+    
   connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
+
+  //scrollbars
+  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
+  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -925,14 +927,6 @@ void te::layout::View::arrowCursor()
 
   setCurrentMode(enumMode->getModeNone());
   resetDefaultConfig();
-  std::vector<te::layout::MapItem*> list = iUtils.getMapItemList();
-  if (!list.empty())
-  {
-    /*foreach(MapItem* mit, list)
-    {
-      mit->changeCurrentTool(mode);
-    }*/
-  }
 }
 
 void te::layout::View::newTemplate()
@@ -1402,5 +1396,12 @@ void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
 void te::layout::View::onChangeMenuProperty(Property property)
 {
   reload(); // reload the principal property browser
+}
+
+void te::layout::View::onScrollBarValueChanged(int value)
+{
+  // moved scrollbar so update foreground
+  m_foreground = QPixmap();
+  viewport()->update();
 }
 

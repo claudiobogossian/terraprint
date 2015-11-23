@@ -310,6 +310,8 @@ namespace te
 
         virtual void onChangeMenuProperty(Property property);
 
+        virtual void onScrollBarValueChanged(int value);
+
       signals:
 
     /*!
