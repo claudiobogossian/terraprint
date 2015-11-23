@@ -43,6 +43,7 @@ class QTreeWidget;
 class QContextMenuEvent;
 class QAction;
 class QMenu;
+class QKeyEvent;
 
 namespace te
 {
@@ -94,9 +95,17 @@ namespace te
 
       virtual void contextMenuEvent(QContextMenuEvent * event);
 
+      virtual void keyPressEvent(QKeyEvent * event);
+
       virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "");
 
       virtual void createMenu(std::string itemName);
+
+      virtual bool removeSelectedItem();
+
+      virtual std::string selectItemName();
+
+      virtual bool isValidItem(QGraphicsItem* item);
       
       QTreeWidget*            m_treeWidget;
       bool                    m_isChangingSelection;

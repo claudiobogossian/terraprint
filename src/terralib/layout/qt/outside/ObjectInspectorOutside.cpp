@@ -122,8 +122,6 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
   if(m_graphicsItems.empty())
     return;
-
-  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
   
   foreach(QGraphicsItem* parentItem, graphicsItems) 
   {
@@ -132,26 +130,12 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
       continue;
     }
 
-    MovingItemGroup* moving = dynamic_cast<MovingItemGroup*>(parentItem);
-    if (moving)
+    if (!isValidItem(parentItem))
     {
       continue;
     }
 
     AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(parentItem);
-    if(absParentItem == 0)
-    {
-      continue;
-    }
-    if(absParentItem->getController() == 0)
-    {
-      continue;
-    }
-
-    if(absParentItem->getController()->getProperties().getTypeObj() == enumObj->getPaperItem())
-    {
-      continue;
-    }
 
     const Property& pParentName = absParentItem->getController()->getProperty("name");
     const std::string& parentName = pParentName.getValue().toString();
@@ -165,26 +149,12 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
     foreach(QGraphicsItem *childItem, parentItem->childItems()) 
     {
-      MovingItemGroup* moving = dynamic_cast<MovingItemGroup*>(childItem);
-      if (moving)
+      if (!isValidItem(childItem))
       {
         continue;
       }
 
       AbstractItemView* absChildItem = dynamic_cast<AbstractItemView*>(childItem);
-      if(absChildItem == 0)
-      {
-        continue;
-      }
-      if(absChildItem->getController() == 0)
-      {
-        continue;
-      }
-
-      if(absChildItem->getController()->getProperties().getTypeObj() == enumObj->getPaperItem())
-      {
-        continue;
-      }
 
       const Property& pChildName = absChildItem->getController()->getProperty("name");
       const std::string& childName = pChildName.getValue().toString();
@@ -291,25 +261,18 @@ void te::layout::ObjectInspectorOutside::contextMenuEvent(QContextMenuEvent * ev
     return;
   }  
   
-  QList<QTreeWidgetItem*> selectedTreeItems = m_treeWidget->selectedItems();
-  if (selectedTreeItems.empty())
+  std::string treeItemName = selectItemName();
+  if (treeItemName.compare("") == 0)
     return;
-
-  QTreeWidgetItem* treeItem = selectedTreeItems.first();
-
-  QString qTreeItemName = treeItem->text(0);
-  std::string treeItemName = qTreeItemName.toStdString();
 
   createMenu(treeItemName);
 
   if (!m_menu)
     return;
 
-  QPoint posMenu = pos();
-
+  QPoint posMenu = event->pos();
   QPoint pt = mapToGlobal(posMenu);
 
-  //QPoint pt = event->pos();
   m_menu->exec(pt);
 }
 
@@ -318,16 +281,7 @@ void te::layout::ObjectInspectorOutside::onMenuTriggered(QAction*)
   if (!m_scene)
     return;
 
-  QList<QTreeWidgetItem*> selectedTreeItems = m_treeWidget->selectedItems();
-  if (selectedTreeItems.empty())
-    return;
-
-  QTreeWidgetItem* treeItem = selectedTreeItems.first();
-
-  QString qTreeItemName = treeItem->text(0);
-  std::string treeItemName = qTreeItemName.toStdString();
-  
-  m_scene->removeItemByName(treeItemName);
+  removeSelectedItem();
 }
 
 QAction* te::layout::ObjectInspectorOutside::createAction(std::string text, std::string objName, std::string icon, std::string tooltip)
@@ -357,5 +311,77 @@ void te::layout::ObjectInspectorOutside::createMenu(std::string itemName)
   
   QAction* action = createAction(text, itemName, "");
   m_menu->addAction(action);
+}
+
+void te::layout::ObjectInspectorOutside::keyPressEvent(QKeyEvent * event)
+{
+  if (event->key() != Qt::Key_Delete)
+  {
+    QWidget::keyPressEvent(event);
+    return;
+  }
+
+  removeSelectedItem();
+}
+
+bool te::layout::ObjectInspectorOutside::removeSelectedItem()
+{
+  bool result = false;
+
+  std::string treeItemName = selectItemName();
+
+  if (treeItemName.compare("") != 0)
+  {
+    m_scene->removeItemByName(treeItemName);
+    result = true;
+  }
+
+  return result;
+}
+
+std::string te::layout::ObjectInspectorOutside::selectItemName()
+{
+  std::string treeItemName = "";
+
+  QList<QTreeWidgetItem*> selectedTreeItems = m_treeWidget->selectedItems();
+  if (selectedTreeItems.empty())
+    return treeItemName;
+
+  QTreeWidgetItem* treeItem = selectedTreeItems.first();
+
+  QString qTreeItemName = treeItem->text(0);
+  treeItemName = qTreeItemName.toStdString();
+
+  return treeItemName;
+}
+
+bool te::layout::ObjectInspectorOutside::isValidItem(QGraphicsItem* item)
+{
+  bool result = false;
+
+  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
+
+  MovingItemGroup* moving = dynamic_cast<MovingItemGroup*>(item);
+  if (moving)
+  {
+    return result;
+  }
+
+  AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(item);
+  if (absParentItem == 0)
+  {
+    return result;
+  }
+  if (absParentItem->getController() == 0)
+  {
+    return result;
+  }
+
+  if (absParentItem->getController()->getProperties().getTypeObj() == enumObj->getPaperItem())
+  {
+    return result;
+  }
+
+  return true;
 }
 
