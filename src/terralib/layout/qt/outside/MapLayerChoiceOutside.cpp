@@ -40,6 +40,7 @@
 // Qt
 #include <QGridLayout>
 #include <QMessageBox>
+#include <QString>
 
 te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller)
   : QDialog(0),
@@ -74,43 +75,27 @@ void te::layout::MapLayerChoiceOutside::init()
     return;
   }
 
-  // Layers From Map Items
-  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
-  std::list<te::map::AbstractLayerPtr>::iterator itSelected = selectedLayers.begin();
-  
-  // All Layers from Project
-
-  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
-  std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin();
-
   std::vector <std::string> namesToInput;
   std::vector <std::string> namesToOutput;
-  bool hasTheSameId = false;
-  while(it != layers.end())
+
+  // Layers From Map Items
+  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+  
+  // All Layers from Project
+  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = selectedLayers.begin(); it != selectedLayers.end(); ++it)
   {
-    te::map::AbstractLayerPtr layer = it->get();
-    while(itSelected != selectedLayers.end())
+    te::map::AbstractLayerPtr layer = (*it);
+    if (std::find(layers.begin(), layers.end(), layer) != layers.end())
     {
-      te::map::AbstractLayerPtr layerSelected = itSelected->get();
-      if (layerSelected->getId() == layer->getId())
-      {
-        namesToOutput.push_back(layerSelected->getTitle());
-        hasTheSameId = true;
-        break;
-      }
-      ++itSelected;
+      std::list<te::map::AbstractLayerPtr>::iterator findIt = std::find(layers.begin(), layers.end(), layer);
+      namesToOutput.push_back(layer->getTitle());
     }
-    if  (hasTheSameId)
-    {
-      ++it;
-      hasTheSameId = false;
-      continue;
-    }
-    namesToInput.push_back(layer->getTitle());
-    itSelected = selectedLayers.begin();
-    ++it;
   }
 
+  namesToInput = intersectionLayersTitle(namesToOutput);
+  
   m_widget->setInputValues(namesToInput);
   m_widget->setOutputValues(namesToOutput);
 }
@@ -138,6 +123,9 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
       te::map::AbstractLayerPtr layer = it->get();
       std::string nameLayer = layer->getTitle();
 
+      QString qNameLayer(nameLayer.c_str());
+      nameLayer = qNameLayer.toLatin1().data();
+
       std::string name = (*itString);
       if(nameLayer.compare(name) == 0)
       {
@@ -147,6 +135,16 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
   }    
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  // Layers From Map Items
+  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+
+  if (selectedLayers == m_layersSelected)
+  {
+    m_layersSelected.clear();
+    accept();
+    return;
+  }
 
   Property prop;
   prop.setName("layers");
@@ -181,5 +179,33 @@ te::gm::Coord2D te::layout::MapLayerChoiceOutside::getPosition()
   coordinate.y = valuey;
 
   return coordinate;
+}
+
+std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTitle(std::vector<std::string> output)
+{
+  std::vector <std::string> namesToInput;
+
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
+  MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
+  if (!model)
+  {
+    return namesToInput;
+  }
+
+  // All Layers from Project
+
+  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin(); it != layers.end(); ++it)
+  {
+    te::map::AbstractLayerPtr layer = (*it);
+    std::string nameLayer = layer->getTitle();
+    if (std::find(output.begin(), output.end(), nameLayer) == output.end())
+    {
+      namesToInput.push_back(layer->getTitle());
+    }
+  }
+
+  return namesToInput;
 }
 

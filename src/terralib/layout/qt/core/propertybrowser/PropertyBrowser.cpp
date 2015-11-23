@@ -529,6 +529,9 @@ void te::layout::PropertyBrowser::updateProperties( Properties props )
   {
     updateProperty(prop);
   }
+
+  m_variantPropertiesBrowser->setAllProperties(props);
+  m_dialogPropertiesBrowser->setAllProperties(props);
 }
 
 te::layout::VariantPropertiesBrowser* te::layout::PropertyBrowser::getVariantPropertiesBrowser()

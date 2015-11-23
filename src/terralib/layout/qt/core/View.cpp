@@ -735,6 +735,7 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
   if(!m_menuBuilder)
   {
     m_menuBuilder = new MenuBuilder((Scene*)scene(), 0, this);
+    connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
   }
 
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
@@ -1264,6 +1265,16 @@ te::layout::Scene* te::layout::View::getScene()
 void te::layout::View::setMenuBuilder(te::layout::MenuBuilder* menuBuilder)
 {
   m_menuBuilder = menuBuilder;
+  if (!m_menuBuilder)
+  {
+    return;
+  }
+  
+  connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
+  if (m_menuBuilder->parent() != this)
+  {
+    m_menuBuilder->setParent(this);
+  }
 }
 
 bool te::layout::View::addToolbarItemInside(EnumType* itemType, ToolbarItemInside* toolbarInside)
@@ -1386,5 +1397,10 @@ void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
     QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dockItemToolbar->height() + space), dockSize.width(), dockSize.height());
     m_dockItemToolbar->setGeometry(rect);
   }
+}
+
+void te::layout::View::onChangeMenuProperty(Property property)
+{
+  reload(); // reload the principal property browser
 }
 
