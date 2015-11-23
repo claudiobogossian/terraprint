@@ -80,27 +80,22 @@ void te::layout::MapLayerChoiceOutside::init()
 
   // Layers From Map Items
   std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
-  std::list<te::map::AbstractLayerPtr>::iterator itSelected = selectedLayers.begin();
   
   // All Layers from Project
-
   std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
-  std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin();
 
-  for (std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin(); it != layers.end(); ++it)
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = selectedLayers.begin(); it != selectedLayers.end(); ++it)
   {
     te::map::AbstractLayerPtr layer = (*it);
-    if (std::find(selectedLayers.begin(), selectedLayers.end(), layer) != selectedLayers.end())
+    if (std::find(layers.begin(), layers.end(), layer) != layers.end())
     {
-      std::list<te::map::AbstractLayerPtr>::iterator findIt = std::find(selectedLayers.begin(), selectedLayers.end(), layer);
+      std::list<te::map::AbstractLayerPtr>::iterator findIt = std::find(layers.begin(), layers.end(), layer);
       namesToOutput.push_back(layer->getTitle());
-    }
-    else
-    {
-      namesToInput.push_back(layer->getTitle());
     }
   }
 
+  namesToInput = intersectionLayersTitle(namesToOutput);
+  
   m_widget->setInputValues(namesToInput);
   m_widget->setOutputValues(namesToOutput);
 }
@@ -141,6 +136,16 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
+  // Layers From Map Items
+  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+
+  if (selectedLayers == m_layersSelected)
+  {
+    m_layersSelected.clear();
+    accept();
+    return;
+  }
+
   Property prop;
   prop.setName("layers");
   prop.setValue(m_layersSelected, dataType->getDataTypeLayerList());
@@ -174,5 +179,33 @@ te::gm::Coord2D te::layout::MapLayerChoiceOutside::getPosition()
   coordinate.y = valuey;
 
   return coordinate;
+}
+
+std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTitle(std::vector<std::string> output)
+{
+  std::vector <std::string> namesToInput;
+
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
+  MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
+  if (!model)
+  {
+    return namesToInput;
+  }
+
+  // All Layers from Project
+
+  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin(); it != layers.end(); ++it)
+  {
+    te::map::AbstractLayerPtr layer = (*it);
+    std::string nameLayer = layer->getTitle();
+    if (std::find(output.begin(), output.end(), nameLayer) == output.end())
+    {
+      namesToInput.push_back(layer->getTitle());
+    }
+  }
+
+  return namesToInput;
 }
 
