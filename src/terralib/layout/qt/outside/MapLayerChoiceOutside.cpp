@@ -40,6 +40,7 @@
 // Qt
 #include <QGridLayout>
 #include <QMessageBox>
+#include <QString>
 
 te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller)
   : QDialog(0),
@@ -74,6 +75,9 @@ void te::layout::MapLayerChoiceOutside::init()
     return;
   }
 
+  std::vector <std::string> namesToInput;
+  std::vector <std::string> namesToOutput;
+
   // Layers From Map Items
   std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
   std::list<te::map::AbstractLayerPtr>::iterator itSelected = selectedLayers.begin();
@@ -83,32 +87,18 @@ void te::layout::MapLayerChoiceOutside::init()
   std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
   std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin();
 
-  std::vector <std::string> namesToInput;
-  std::vector <std::string> namesToOutput;
-  bool hasTheSameId = false;
-  while(it != layers.end())
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin(); it != layers.end(); ++it)
   {
-    te::map::AbstractLayerPtr layer = it->get();
-    while(itSelected != selectedLayers.end())
+    te::map::AbstractLayerPtr layer = (*it);
+    if (std::find(selectedLayers.begin(), selectedLayers.end(), layer) != selectedLayers.end())
     {
-      te::map::AbstractLayerPtr layerSelected = itSelected->get();
-      if (layerSelected->getId() == layer->getId())
-      {
-        namesToOutput.push_back(layerSelected->getTitle());
-        hasTheSameId = true;
-        break;
-      }
-      ++itSelected;
+      std::list<te::map::AbstractLayerPtr>::iterator findIt = std::find(selectedLayers.begin(), selectedLayers.end(), layer);
+      namesToOutput.push_back(layer->getTitle());
     }
-    if  (hasTheSameId)
+    else
     {
-      ++it;
-      hasTheSameId = false;
-      continue;
+      namesToInput.push_back(layer->getTitle());
     }
-    namesToInput.push_back(layer->getTitle());
-    itSelected = selectedLayers.begin();
-    ++it;
   }
 
   m_widget->setInputValues(namesToInput);
@@ -137,6 +127,9 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
     {
       te::map::AbstractLayerPtr layer = it->get();
       std::string nameLayer = layer->getTitle();
+
+      QString qNameLayer(nameLayer.c_str());
+      nameLayer = qNameLayer.toLatin1().data();
 
       std::string name = (*itString);
       if(nameLayer.compare(name) == 0)
