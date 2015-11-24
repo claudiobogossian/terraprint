@@ -27,7 +27,7 @@
 #include "PolygonItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/PolygonModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../../item/LineController.h"
 #include "../../../../item/PolygonItem.h"
 
 te::layout::AbstractItemView* te::layout::PolygonItemFactory::build(ItemFactoryParamsCreate params)
@@ -40,7 +40,7 @@ te::layout::AbstractItemView* te::layout::PolygonItemFactory::build(ItemFactoryP
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  LineController* controller = new LineController(model);
   PolygonItem* view = new PolygonItem(controller);
   controller->setView(view);
 

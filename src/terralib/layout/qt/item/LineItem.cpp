@@ -28,6 +28,7 @@
 // TerraLib
 #include "LineItem.h"
 #include "../../core/property/Property.h"
+#include "LineController.h"
 // STL
 #include <vector>
 
@@ -50,7 +51,13 @@ te::layout::LineItem::~LineItem()
 
 void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  QPolygonF poly = getQPolygon();
+  LineController* controller = dynamic_cast<LineController*>(m_controller);
+  if (!controller)
+  {
+    return;
+  }
+
+  QPolygonF poly = controller->getQPolygon();
   if (poly.empty())
   {
     return;
@@ -114,23 +121,5 @@ QPen te::layout::LineItem::searchStyle()
     }
   }
   return penStyle;
-}
-
-QPolygonF te::layout::LineItem::getQPolygon()
-{
-  const Property& pLine = m_controller->getProperty("geometry");
-
-  const te::gm::GeometryShrPtr geometryPtr = pLine.getValue().toGeometry();
-
-  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr.get());
-  std::size_t nPoints = lineString->size();
-  te::gm::Coord2D const* coordsPtr = lineString->getCoordinates();
-  QPolygonF poly;
-  for( std::size_t pIdx = 0 ; pIdx < nPoints ; ++pIdx )
-  {
-    QPointF pt(coordsPtr[pIdx].getX(), coordsPtr[pIdx].getY());
-    poly.push_back(pt);
-  }
-  return poly;
 }
 

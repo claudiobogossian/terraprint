@@ -30,6 +30,7 @@
 #include "terralib/color/RGBAColor.h"
 #include "../../item/PolygonModel.h"
 #include "AbstractItem.h"
+#include "LineController.h"
 
 // Qt
 #include <QPointF>
@@ -50,7 +51,13 @@ te::layout::PolygonItem::~PolygonItem()
 
 void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  QPolygonF poly = getQPolygon();
+  LineController* controller = dynamic_cast<LineController*>(m_controller);
+  if (!controller)
+  {
+    return;
+  }
+
+  QPolygonF poly = controller->getQPolygon();
 
   if (poly.empty())
   {
