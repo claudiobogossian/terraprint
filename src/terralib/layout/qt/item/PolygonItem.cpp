@@ -73,8 +73,11 @@ void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGr
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
+  const Property& width = m_controller->getProperty("line_width");
+  double w = width.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qColor, 0, Qt::SolidLine);
+  QPen pen(qColor, w, Qt::SolidLine);
 
   painter->save();
 
