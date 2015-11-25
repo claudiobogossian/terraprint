@@ -423,6 +423,7 @@ void te::layout::View::config()
   int zoom = getDefaultZoom();
   double newScale = zoom / 100.;
   scale(newScale, newScale); //Initial zoom out
+  setZoom(zoom);
 
   //----------------------------------------------------------------------------------------------
   if(!m_visualizationArea)
