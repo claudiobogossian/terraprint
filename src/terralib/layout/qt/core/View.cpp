@@ -438,12 +438,11 @@ void te::layout::View::config()
     }
   }
     
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
   connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
-
-  //scrollbars
-  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
-  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
