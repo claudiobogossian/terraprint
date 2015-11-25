@@ -730,19 +730,7 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
     connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
   }
 
-  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
-
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  if (myScene != 0)
-  {
-    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
-    if (subSelectedItem != 0)
-    {
-      graphicsItems.clear();
-      graphicsItems.append(subSelectedItem);
-    }
-  }
-  
+  QList<QGraphicsItem*> graphicsItems = getSelectedGraphicsItems();
 
   m_menuBuilder->createMenu(graphicsItems);
   m_menuBuilder->menuExec(event->globalX(), event->globalY());
@@ -1389,3 +1377,24 @@ void te::layout::View::onScrollBarValueChanged(int value)
   viewport()->update();
 }
 
+te::layout::MenuBuilder* te::layout::View::getMenuBuilder()
+{
+  return m_menuBuilder;
+}
+
+QList<QGraphicsItem*> te::layout::View::getSelectedGraphicsItems()
+{
+  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
+
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  if (myScene != 0)
+  {
+    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
+    if (subSelectedItem != 0)
+    {
+      graphicsItems.clear();
+      graphicsItems.append(subSelectedItem);
+    }
+  }
+  return graphicsItems;
+}

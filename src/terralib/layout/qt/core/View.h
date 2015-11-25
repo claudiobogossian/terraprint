@@ -233,6 +233,8 @@ namespace te
 
         virtual void setMenuBuilder(MenuBuilder* menuBuilder);
 
+        virtual MenuBuilder* getMenuBuilder();
+
         /*!
         \brief Method that adds ToolbarItemInside with a toolbar to be displayed when editing an item, which is identified by name.
         By adding the toolbar, the owner becomes the View.
@@ -264,6 +266,8 @@ namespace te
         \param itemType type of the item
         */
         virtual void closeDockToolbar();
+
+        virtual QList<QGraphicsItem*> getSelectedGraphicsItems();
 
       public slots:
     

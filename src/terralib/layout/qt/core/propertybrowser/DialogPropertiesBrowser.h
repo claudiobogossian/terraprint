@@ -122,8 +122,6 @@ namespace te
 
         virtual void onShowGridSettingsDlg();
 
-        virtual void onShowImageDlg();
-
         virtual void onShowTextGridSettingsDlg();
 
         virtual void onShowFontDlg();
@@ -135,6 +133,10 @@ namespace te
         virtual void onShowLegendChoiceDlg();
 
         virtual void onShowViewDlg();
+
+      public slots:
+
+      virtual void onShowImageDlg();
 
       signals:
 
