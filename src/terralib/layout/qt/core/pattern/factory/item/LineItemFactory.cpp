@@ -27,7 +27,7 @@
 #include "LineItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/LineModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../../item/LineController.h"
 #include "../../../../item/LineItem.h"
 
 te::layout::AbstractItemView* te::layout::LineItemFactory::build(ItemFactoryParamsCreate params)
@@ -40,7 +40,7 @@ te::layout::AbstractItemView* te::layout::LineItemFactory::build(ItemFactoryPara
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  LineController* controller = new LineController(model);
   LineItem* view = new LineItem(controller);
   controller->setView(view);
 

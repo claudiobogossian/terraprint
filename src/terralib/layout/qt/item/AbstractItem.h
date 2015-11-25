@@ -215,6 +215,8 @@ namespace te
 
         virtual AbstractScene* getScene();
 
+        bool isLimitExceeded(QRectF resizeRect);
+
      protected:
 
         //resize
@@ -224,6 +226,7 @@ namespace te
         QPointF           m_finalCoord;
         LayoutAlign       m_enumSides;
         Action            m_currentAction;
+        double            m_marginResizePrecision; //precision
 
     };
 
@@ -233,6 +236,7 @@ namespace te
       , AbstractItemView(controller, invertedMatrix)
       , m_enumSides(TPNoneSide)
       , m_currentAction(NO_ACTION)
+      , m_marginResizePrecision(2.)
     {
       T::setFlags(QGraphicsItem::ItemIsMovable
         | QGraphicsItem::ItemIsSelectable
@@ -628,33 +632,32 @@ inline bool te::layout::AbstractItem<T>::checkTouchesCorner( const double& x, co
 {
   bool result = true;
   QRectF bRect = boundingRect();
-  double margin = 2.; //precision
 
   QPointF ll = bRect.bottomLeft();
   QPointF lr = bRect.bottomRight();
   QPointF tl = bRect.topLeft();
   QPointF tr = bRect.topRight();
 
-  if ((x >= (ll.x() - margin) && x <= (ll.x() + margin))
-    && (y >= (ll.y() - margin) && y <= (ll.y() + margin)))
+  if ((x >= (ll.x() - m_marginResizePrecision) && x <= (ll.x() + m_marginResizePrecision))
+    && (y >= (ll.y() - m_marginResizePrecision) && y <= (ll.y() + m_marginResizePrecision)))
   {
     T::setCursor(Qt::SizeFDiagCursor);
     m_enumSides = TPTopLeft;
   }
-  else if ((x >= (lr.x() - margin) && x <= (lr.x() + margin))
-    && (y >= (lr.y() - margin) && y <= (lr.y() + margin)))
+  else if ((x >= (lr.x() - m_marginResizePrecision) && x <= (lr.x() + m_marginResizePrecision))
+    && (y >= (lr.y() - m_marginResizePrecision) && y <= (lr.y() + m_marginResizePrecision)))
   {
     T::setCursor(Qt::SizeBDiagCursor);
     m_enumSides = TPTopRight;
   }
-  else if ((x >= (tl.x() - margin) && x <= (tl.x() + margin))
-    && (y >= (tl.y() - margin) && y <= (tl.y() + margin)))
+  else if ((x >= (tl.x() - m_marginResizePrecision) && x <= (tl.x() + m_marginResizePrecision))
+    && (y >= (tl.y() - m_marginResizePrecision) && y <= (tl.y() + m_marginResizePrecision)))
   {
     T::setCursor(Qt::SizeBDiagCursor);
     m_enumSides = TPLowerLeft;
   }
-  else if ((x >= (tr.x() - margin) && x <= (tr.x() + margin))
-    && (y >= (tr.y() - margin) && y <= (tr.y() + margin)))
+  else if ((x >= (tr.x() - m_marginResizePrecision) && x <= (tr.x() + m_marginResizePrecision))
+    && (y >= (tr.y() - m_marginResizePrecision) && y <= (tr.y() + m_marginResizePrecision)))
   {
     T::setCursor(Qt::SizeFDiagCursor);
     m_enumSides = TPLowerRight;
@@ -791,6 +794,8 @@ inline void te::layout::AbstractItem<T>::calculateResize()
   double dx = 0;
   double dy = 0;
 
+  QRectF resizeRect = m_rect;
+
   if(m_currentAction == RESIZE_ACTION)
   {
     dx = m_finalCoord.x() - m_initialCoord.x();
@@ -800,26 +805,26 @@ inline void te::layout::AbstractItem<T>::calculateResize()
     {
     case TPTopRight:
       {
-        m_rect.setWidth(m_rect.width() + dx);
-        m_rect.setHeight(m_rect.height() + dy);
+        resizeRect.setWidth(resizeRect.width() + dx);
+        resizeRect.setHeight(resizeRect.height() + dy);
         break;
       }
     case TPTopLeft:
       {
-        m_rect.setX(m_rect.x() + dx);
-        m_rect.setHeight(m_rect.height() + dy);
+        resizeRect.setX(resizeRect.x() + dx);
+        resizeRect.setHeight(resizeRect.height() + dy);
         break;
       }
     case TPLowerRight:
       {
-        m_rect.setY(m_rect.y() + dy);
-        m_rect.setWidth(m_rect.width() + dx);
+        resizeRect.setY(resizeRect.y() + dy);
+        resizeRect.setWidth(resizeRect.width() + dx);
         break;
       }
     case TPLowerLeft:
       {
-        m_rect.setX(m_rect.x() + dx);
-        m_rect.setY(m_rect.y() + dy);
+        resizeRect.setX(resizeRect.x() + dx);
+        resizeRect.setY(resizeRect.y() + dy);
         break;
       }
     default :
@@ -827,8 +832,29 @@ inline void te::layout::AbstractItem<T>::calculateResize()
         break;
       }
     }
+    if (!isLimitExceeded(resizeRect))
+    {
+      m_rect = resizeRect;
+    }
     m_initialCoord = m_finalCoord;
   }
+}
+
+template <class T>
+inline bool te::layout::AbstractItem<T>::isLimitExceeded(QRectF resizeRect)
+{
+  bool result = false;
+  
+  double x = resizeRect.topLeft().x();
+  double y = resizeRect.topLeft().y();
+
+  if ((resizeRect.width() - m_marginResizePrecision) <= 0 
+    || (resizeRect.height() - m_marginResizePrecision) <= 0)
+  {
+    result = true;
+  }
+
+  return result;
 }
 
 template <class T>
