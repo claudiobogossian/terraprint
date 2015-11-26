@@ -95,6 +95,31 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
     associateChange(propItemObserver);
   }
 
+  bool hasGeometryChanged = false;
+  bool hasWidth = !properties.getProperty("width").isNull();
+  if (hasWidth)
+  {
+    double newWidth = properties.getProperty("width").getValue().toDouble();
+    double currentWidth = m_model->getProperty("width").getValue().toDouble();
+    if (newWidth != currentWidth)
+    {
+      hasGeometryChanged = true;
+    }
+  }
+  bool hasHeight = !properties.getProperty("height").isNull();
+  if (hasHeight)
+  {
+    double newHeight = properties.getProperty("height").getValue().toDouble();
+    double currentHeight = m_model->getProperty("height").getValue().toDouble();
+    if (newHeight != currentHeight)
+    {
+      hasGeometryChanged = true;
+    }
+  }
+  if (hasGeometryChanged)
+  {
+    m_view->prepareGeometryChange();
+  }
   m_model->setProperties(properties);
 }
 
