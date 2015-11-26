@@ -103,7 +103,7 @@ te::layout::LineModel::LineModel()
     Property property(0);
     property.setName("resizable");
     property.setLabel(TR_LAYOUT("Resizable"));
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
 }
