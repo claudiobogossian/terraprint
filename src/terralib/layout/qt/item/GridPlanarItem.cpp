@@ -63,13 +63,13 @@ void te::layout::GridPlanarItem::drawGrid(QPainter* painter)
     currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
   }
 
-  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  const Property& pFontSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
 
-  std::string fontFamily = pFontFamily.getValue().toString();
-  int fontSize = pFontSize.getValue().toInt();
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  Font txtFont = pTextFontFamily.getValue().toFont();
 
-  ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
+  
+
+  ItemUtils::ConfigurePainterForTexts(painter, txtFont);
   
   EnumGridStyleType* gridStyle = Enums::getInstance().getEnumGridStyleType();
   if(!gridStyle)
@@ -108,12 +108,6 @@ void te::layout::GridPlanarItem::calculateGrid()
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
-
-  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  const Property& pFontSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
-
-  std::string fontFamily = pFontFamily.getValue().toString();
-  int fontSize = pFontSize.getValue().toInt();
   
   calculateVertical(planarBox, referenceBoxMM);
   calculateHorizontal(planarBox, referenceBoxMM);
@@ -131,16 +125,15 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
-  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
   const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
   const Property& pUnit = pGridSettings.containsSubProperty(settingsConfig.getUnit());
   const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
 
-  std::string fontFamily = pFontFamily.getValue().toString();
-  int textPointSize = pTextPointSize.getValue().toInt();
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  Font txtFont = pTextFontFamily.getValue().toFont();
+  
   double verticalGap = pVerticalGap.getValue().toDouble();
   double verticalDisplacement = pVerticalDisplacement.getValue().toDouble();
   LayoutUnit unit = (LayoutUnit)pUnit.getValue().toInt();
@@ -166,7 +159,9 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   
   m_boundingBox.Union(boxMM);
   
-  QFont ft(fontFamily.c_str(), textPointSize);
+
+
+  QFont ft =  itemUtils.convertToQfont(txtFont);
   
   for( ; y1 <= geoBox.getUpperRightY() ; y1 += verticalGap)
   {
@@ -202,16 +197,16 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
-  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
   const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
   const Property& pUnit = pGridSettings.containsSubProperty(settingsConfig.getUnit());
   const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   const Property& pBottomRotate = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
 
-  std::string fontFamily = pFontFamily.getValue().toString();
-  int textPointSize = pTextPointSize.getValue().toInt();
+  Font txtFont = pTextFontFamily.getValue().toFont();
+ 
+
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
   LayoutUnit unit = (LayoutUnit)pUnit.getValue().toInt();
@@ -237,7 +232,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
   
   m_boundingBox.Union(boxMM);
   
-  QFont ft(fontFamily.c_str(), textPointSize);
+  QFont ft = itemUtils.convertToQfont(txtFont);
 
   for( ; x1 <= geoBox.getUpperRightX() ; x1 += horizontalGap)
   {

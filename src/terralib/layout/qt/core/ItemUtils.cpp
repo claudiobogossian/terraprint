@@ -666,11 +666,27 @@ te::layout::AbstractItemView* te::layout::ItemUtils::getSelectedItem()
   return abstractItem;
 }
 
-void te::layout::ItemUtils::ConfigurePainterForTexts(QPainter* painter, const std::string& fontFamily, int fontSize)
+void te::layout::ItemUtils::ConfigurePainterForTexts(QPainter* painter, Font txtFont)
 {
-  QFont fontCopy = painter->font();
-  fontCopy.setFamily(fontFamily.c_str());
-  fontCopy.setPointSize(fontSize);
-
+  QFont fontCopy = convertToQfont(txtFont);
   painter->setFont(fontCopy);
+}
+
+QFont  te::layout::ItemUtils::convertToQfont(Font txtFont){
+
+  //converts information about the font
+  QFont qft;
+  qft.setFamily(txtFont.getFamily().c_str());
+  qft.setBold(txtFont.isBold());
+  qft.setItalic(txtFont.isItalic());
+  qft.setKerning(txtFont.isKerning());
+  qft.setStrikeOut(txtFont.isStrikeout());
+  qft.setUnderline(txtFont.isUnderline());
+
+  //we need to set the font size from PT to MM
+
+  qft.setPointSizeF(txtFont.getPointSize());
+
+  return qft;
+
 }

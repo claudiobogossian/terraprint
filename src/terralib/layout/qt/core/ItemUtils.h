@@ -203,7 +203,14 @@ namespace te
           \param fontFamily The font to be used
           \param fontSize The font size of the text
         */
-        static void ConfigurePainterForTexts(QPainter* painter, const std::string& fontFamily, int fontSize);
+        static void ConfigurePainterForTexts(QPainter* painter, Font txtFont);
+
+        /*!
+          \brief This function converts a object Font to QFont
+          \param txtFont object Font
+          \
+        */
+        static QFont convertToQfont(Font txtFont);
 
       protected:
 

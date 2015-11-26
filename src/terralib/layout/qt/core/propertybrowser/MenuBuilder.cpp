@@ -219,8 +219,6 @@ void te::layout::MenuBuilder::changePropertyValue( Property property )
   if(property.getType() == dataType->getDataTypeNone())
     return;
 
-  Scene* lScene = (Scene*) m_graphicsItems.first()->scene(); 
-
   std::vector<QGraphicsItem*> commandItems;
   std::vector<Properties> commandOld;
   std::vector<Properties> commandNew;
@@ -259,9 +257,9 @@ void te::layout::MenuBuilder::changePropertyValue( Property property )
   if(!m_graphicsItems.isEmpty())
   {
     QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew);
-    lScene->addUndoStack(command);
+    m_scene->addUndoStack(command);
   }
-  lScene->update();
+  m_scene->update();
 }
 
 te::layout::Property te::layout::MenuBuilder::findMnuProperty( te::layout::EnumType* dataType )
@@ -309,7 +307,17 @@ void te::layout::MenuBuilder::menuExec( int x /*= 0*/, int y /*= 0*/ )
   m_menu->exec(pt);
 }
 
+void te::layout::MenuBuilder::setSelectedGraphicsItems(QList<QGraphicsItem*>& items)
+{
+  m_graphicsItems = items;
+}
 
+void te::layout::MenuBuilder::setCurrentProperty(std::string name)
+{
+  bool window = false;
+  m_properties = m_propUtils->intersection(m_graphicsItems, window);
+  m_currentPropertyClicked = findMnuProperty(name);
+}
 
 
 

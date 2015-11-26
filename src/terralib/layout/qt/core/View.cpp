@@ -423,6 +423,7 @@ void te::layout::View::config()
   int zoom = getDefaultZoom();
   double newScale = zoom / 100.;
   scale(newScale, newScale); //Initial zoom out
+  setZoom(zoom);
 
   //----------------------------------------------------------------------------------------------
   if(!m_visualizationArea)
@@ -438,12 +439,11 @@ void te::layout::View::config()
     }
   }
     
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
   connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
-
-  //scrollbars
-  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
-  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -730,19 +730,7 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
     connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
   }
 
-  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
-
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  if (myScene != 0)
-  {
-    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
-    if (subSelectedItem != 0)
-    {
-      graphicsItems.clear();
-      graphicsItems.append(subSelectedItem);
-    }
-  }
-  
+  QList<QGraphicsItem*> graphicsItems = getSelectedGraphicsItems();
 
   m_menuBuilder->createMenu(graphicsItems);
   m_menuBuilder->menuExec(event->globalX(), event->globalY());
@@ -1389,3 +1377,24 @@ void te::layout::View::onScrollBarValueChanged(int value)
   viewport()->update();
 }
 
+te::layout::MenuBuilder* te::layout::View::getMenuBuilder()
+{
+  return m_menuBuilder;
+}
+
+QList<QGraphicsItem*> te::layout::View::getSelectedGraphicsItems()
+{
+  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
+
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  if (myScene != 0)
+  {
+    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
+    if (subSelectedItem != 0)
+    {
+      graphicsItems.clear();
+      graphicsItems.append(subSelectedItem);
+    }
+  }
+  return graphicsItems;
+}

@@ -116,7 +116,12 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
   std::string fontFamily("Arial");
   int fontSize = 10;
-  ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
+
+  Font txtFont = Font();
+  txtFont.setFamily(fontFamily);
+  txtFont.setPointSize(fontSize);
+
+  ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
   QPointF unitCoord(0, 0);
 
@@ -226,8 +231,15 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QRectF newBoxSecond;
 
   std::string fontFamily("Arial");
+
   int fontSize = 10;
-  ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
+  Font txtFont = Font();
+
+  txtFont.setFamily(fontFamily);
+  txtFont.setPointSize(fontSize);
+
+
+  ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
   QPointF unitCoord(0, 0);
 
@@ -333,7 +345,13 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   std::string fontFamily("Arial");
   int fontSize = 10;
-  ItemUtils::ConfigurePainterForTexts(painter, fontFamily, fontSize);
+
+  Font txtFont = Font();
+  
+  txtFont.setFamily(fontFamily);
+  txtFont.setPointSize(fontSize);
+
+  ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
   QPen penScale(black, 0, Qt::SolidLine);
   painter->setPen(penScale);

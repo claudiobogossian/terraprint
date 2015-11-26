@@ -69,6 +69,10 @@ namespace te
 
       virtual void menuExec(int x = 0, int y = 0);
 
+      virtual void setSelectedGraphicsItems(QList<QGraphicsItem*>& items);
+
+      virtual void setCurrentProperty(std::string name);
+
       protected slots:
 
         virtual void onMenuTriggered(QAction* action);
