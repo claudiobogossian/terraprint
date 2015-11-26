@@ -117,6 +117,14 @@ te::layout::AbstractItemModel::AbstractItemModel()
 
   {
     Property property(0);
+    property.setName("keep_aspect");
+    property.setLabel(TR_LAYOUT("Keep Aspect on Resize"));
+    property.setValue(true, dataType->getDataTypeBool());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
     property.setName("rotation");
     property.setLabel(TR_LAYOUT("Rotation"));
     property.setValue(rotation, dataType->getDataTypeDouble());
