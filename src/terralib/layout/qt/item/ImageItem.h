@@ -80,6 +80,8 @@ namespace te
 
         virtual void drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0);
 
+        virtual void defineSize();
+
       protected:
 
         QImage      m_image; //!< Represents the loaded image

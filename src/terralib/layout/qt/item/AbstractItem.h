@@ -135,6 +135,8 @@ namespace te
 
         virtual void leaveEditionMode();
 
+        virtual void prepareGeometryChange();
+
       protected:
 
         /*!
@@ -609,8 +611,11 @@ namespace te
       }
       else if (change == QGraphicsItem::ItemSceneHasChanged)
       {
-        Properties properties = m_controller->getProperties();
-        m_controller->setProperties(properties);
+        if (this->getScene() != 0)
+        {
+          Properties properties = m_controller->getProperties();
+          m_controller->setProperties(properties);
+        }
       }
       return T::itemChange(change, value);
     }
@@ -911,6 +916,12 @@ te::layout::AbstractScene* te::layout::AbstractItem<T>::getScene()
     return 0;
   }
   return myScene;
+}
+
+template <class T>
+void te::layout::AbstractItem<T>::prepareGeometryChange()
+{
+  T::prepareGeometryChange();
 }
 
 #endif //__TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H

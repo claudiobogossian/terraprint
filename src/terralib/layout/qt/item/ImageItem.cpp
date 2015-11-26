@@ -56,6 +56,7 @@ void te::layout::ImageItem::setFileName(const std::string& fileName)
   {
     if (m_image.load(m_fileName.c_str()) == true)
     {
+      defineSize();
       m_image = m_image.mirrored();
     }
   }
@@ -95,6 +96,40 @@ void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraph
   painter->drawImage(boundRect, m_image, sourceRect);
 
   painter->restore();
+}
+
+void te::layout::ImageItem::defineSize()
+{
+  double width = m_image.width();
+  double height = m_image.height();
+  double factor = width / height;
+  if (factor < 1)
+  {
+    height = m_controller->getProperty("height").getValue().toDouble();
+    width = height * factor;
+  }
+  else
+  {
+    width = m_controller->getProperty("width").getValue().toDouble();
+    height = width / factor;
+  }
+
+  Properties properties;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property property(0);
+    property.setName("width");
+    property.setValue((double) width, dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("height");
+    property.setValue((double) height, dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+  m_controller->setProperties(properties);
 }
 
 
