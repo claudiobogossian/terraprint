@@ -57,6 +57,7 @@ te::layout::ScaleModel::ScaleModel()
     property.setName("scale");
     property.setLabel(TR_LAYOUT("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
+    property.setEditable(false);
     property.setMenu(true);
     m_properties.addProperty(property);
   }

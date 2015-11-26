@@ -777,6 +777,9 @@ inline void te::layout::AbstractItem<T>::mouseReleaseEvent( QGraphicsSceneMouseE
     calculateResize();
     QPointF newPos(m_rect.x(), m_rect.y());
     newPos = T::mapToScene(newPos);
+
+    m_currentAction = NO_ACTION;
+
     T::setPos(newPos);
     m_rect.moveTo(0, 0);
     T::setOpacity(1.);
@@ -796,52 +799,59 @@ inline void te::layout::AbstractItem<T>::mouseReleaseEvent( QGraphicsSceneMouseE
 template <class T>
 inline void te::layout::AbstractItem<T>::calculateResize()
 {
-  double dx = 0;
-  double dy = 0;
+  if (m_currentAction != RESIZE_ACTION)
+  {
+    return;
+  }
 
   QRectF resizeRect = m_rect;
 
-  if(m_currentAction == RESIZE_ACTION)
-  {
-    dx = m_finalCoord.x() - m_initialCoord.x();
-    dy = m_finalCoord.y() - m_initialCoord.y();
+  double width = m_controller->getProperty("width").getValue().toDouble();
+  double height = m_controller->getProperty("height").getValue().toDouble();
+  bool keepAspect = m_controller->getProperty("keep_aspect").getValue().toBool();
+  double factor = width / height;
 
-    switch(m_enumSides)
-    {
+  QPointF finalCoord = m_finalCoord;
+
+  double dx = m_finalCoord.x() - m_initialCoord.x();
+  double dy = m_finalCoord.y() - m_initialCoord.y();
+
+  double correctionX = dx;
+
+  if (keepAspect == true)
+  {
+    correctionX = (dy * factor);
+  }
+
+  switch (m_enumSides)
+  {
     case TPTopRight:
-      {
-        resizeRect.setWidth(resizeRect.width() + dx);
-        resizeRect.setHeight(resizeRect.height() + dy);
-        break;
-      }
+      finalCoord.setX(m_initialCoord.x() + correctionX);
+      resizeRect.setBottomRight(finalCoord);
+      break;
+
     case TPTopLeft:
-      {
-        resizeRect.setX(resizeRect.x() + dx);
-        resizeRect.setHeight(resizeRect.height() + dy);
-        break;
-      }
+      finalCoord.setX(m_initialCoord.x() - correctionX);
+      resizeRect.setBottomLeft(finalCoord);
+      break;
+
     case TPLowerRight:
-      {
-        resizeRect.setY(resizeRect.y() + dy);
-        resizeRect.setWidth(resizeRect.width() + dx);
-        break;
-      }
+      finalCoord.setX(m_initialCoord.x() - correctionX);
+      resizeRect.setTopRight(finalCoord);
+      break;
+
     case TPLowerLeft:
-      {
-        resizeRect.setX(resizeRect.x() + dx);
-        resizeRect.setY(resizeRect.y() + dy);
-        break;
-      }
-    default :
-      {
-        break;
-      }
-    }
-    if (!isLimitExceeded(resizeRect))
-    {
-      m_rect = resizeRect;
-    }
-    m_initialCoord = m_finalCoord;
+      finalCoord.setX(m_initialCoord.x() + correctionX);
+      resizeRect.setTopLeft(finalCoord);
+      break;
+
+    default:
+      break;
+  }
+
+  if(isLimitExceeded(resizeRect) == false)
+  {
+    m_rect = resizeRect;
   }
 }
 

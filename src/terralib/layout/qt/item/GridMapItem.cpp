@@ -131,17 +131,16 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
   const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
   const Property& pTextColor = pGridSettings.containsSubProperty(settingsConfig.getTextColor());
 
-  int textPointSize = pTextPointSize.getValue().toInt();
-  const std::string& fontFamily = pTextFontFamily.getValue().toString();
+
+  Font txtFont =  pTextFontFamily.getValue().toFont();
   const te::color::RGBAColor& textColor = pTextColor.getValue().toColor();
 
   QColor clrText(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), textColor.getAlpha());
 
-  ItemUtils::ConfigurePainterForTexts(painter, fontFamily, textPointSize);
+  ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
   QPen pen (clrText);
   painter->setPen(pen);
@@ -521,11 +520,6 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-
-  int textPointSize = pTextPointSize.getValue().toInt();
-  const std::string& fontFamily = pTextFontFamily.getValue().toString();
   
   ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 

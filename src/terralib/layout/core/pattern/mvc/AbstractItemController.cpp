@@ -260,8 +260,16 @@ void te::layout::AbstractItemController::updateItemPos(const Properties& propert
 
   double x = prop_x.getValue().toDouble();
   double y = prop_y.getValue().toDouble();
+  QPointF newPos(x, y);
 
-  m_view->setItemPosition(x, y);
+  QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_view);
+  if (gItem != 0)
+  {
+    if (gItem->pos() != newPos)
+    {
+      m_view->setItemPosition(x, y);
+    }
+  }
 }
 
 void te::layout::AbstractItemController::associateChange(const Property& property)
