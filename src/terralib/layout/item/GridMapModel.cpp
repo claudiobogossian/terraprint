@@ -58,6 +58,7 @@ te::layout::GridMapModel::GridMapModel()
   te::color::RGBAColor textColor(0, 0, 0, 255);
 
   // Text: Advanced configuration
+  Font font;
   bool visibleAllTexts = true;
   bool superscriptText = false;
   double lneVrtDisplacement = 1.;
@@ -212,24 +213,16 @@ te::layout::GridMapModel::GridMapModel()
     prop_gridsettings.addSubProperty(property);
   }
 
-  // Text: Basic Configuration
-  {
-    Property property(0);
-    property.setName(settingsConfig.getPointTextSize());
-    property.setLabel(TR_LAYOUT("Point Size"));
-    property.setComposeWidget(true);
-    property.setValue(pointTextSize, dataType->getDataTypeInt());
-    prop_gridsettings.addSubProperty(property);
-  }
-  
+
   {
     Property property(0);
     property.setName(settingsConfig.getFontText());
-    property.setLabel(TR_LAYOUT("Font Family"));
-    property.setComposeWidget(true);
-    property.setValue(fontFamily, dataType->getDataTypeString());
+    property.setLabel(TR_LAYOUT("Font"));
+    property.setValue(font, dataType->getDataTypeFont());
     prop_gridsettings.addSubProperty(property);
   }
+
+
   {
     Property property(0);
     property.setName(settingsConfig.getTextColor());
@@ -349,6 +342,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setValue(crossOffSet, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
   }
+
 
   m_properties.addProperty(prop_gridsettings); // add gridsettings property
 

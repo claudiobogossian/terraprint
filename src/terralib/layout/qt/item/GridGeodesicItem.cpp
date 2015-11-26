@@ -219,8 +219,9 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+
+
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
   const Property& pShowDegreesText = pGridSettings.containsSubProperty(settingsConfig.getDegreesText());
@@ -231,8 +232,10 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
 
-  std::string fontFamily = pFontFamily.getValue().toString();
-  int textPointSize = pTextPointSize.getValue().toInt();
+
+
+//  std::string fontFamily = pFontFamily.getValue().toString();
+//  int textPointSize = pTextPointSize.getValue().toInt();
   double verticalGap = pVerticalGap.getValue().toDouble();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();
@@ -242,7 +245,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   double verticalDisplacement = pVerticalDisplacement.getValue().toDouble();
   bool bLeftRotate = pLeftRotate.getValue().toBool();
   bool bRightRotate = pRightRotate.getValue().toBool();
-
+  Font txtFont = pTextFontFamily.getValue().toFont();
   // Draw a horizontal line and the y coordinate change(vertical)
   Utils utils = ((Scene*) this->scene())->getUtils();
   ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
@@ -258,7 +261,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
     return;
   }
 
-  QFont ft(fontFamily.c_str(), textPointSize);
+  QFont ft(txtFont.getFamily().c_str(), txtFont.getPointSize());
 
   double y1 = initVerticalLines(geoBox);
   double y2 = geoBox.getUpperRightY();
@@ -343,8 +346,6 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  const Property& pTextPointSize = pGridSettings.containsSubProperty(settingsConfig.getPointTextSize());
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
   const Property& pShowDegreesText = pGridSettings.containsSubProperty(settingsConfig.getDegreesText());
@@ -354,9 +355,12 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
   const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   const Property& pBottomRotate = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
   
-  std::string fontFamily = pFontFamily.getValue().toString();
-  int textPointSize = pTextPointSize.getValue().toInt();
+  
+  Font txtFont = pTextFontFamily.getValue().toFont();
+//  std::string fontFamily = pFontFamily.getValue().toString();
+//  int textPointSize = pTextPointSize.getValue().toInt();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double verticalGap = pVerticalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();
@@ -383,7 +387,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     return;
   }
 
-  QFont ft(fontFamily.c_str(), textPointSize);
+  QFont ft(txtFont.getFamily().c_str(), txtFont.getPointSize());
 
   //as the geographic grid comes from the result of a reprojection, the geographic box sometimes can be smaller than the planar box, maninly when the distance from equator gets higher.
   //when this happens, these calculated lines do not reach the boundaries of the item, and consequently the texts are not drawn in the correct position
