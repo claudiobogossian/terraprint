@@ -312,10 +312,25 @@ void te::layout::View::mouseDoubleClickEvent(QMouseEvent * event)
 }
 
 void te::layout::View::wheelEvent(QWheelEvent *event)
-{
+{  
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+  {
+    return;
+  }
+
+  /*In edit mode not apply the zoom, 
+    but part of the current item characteristics for this event.
+    Example: Zoom on the map.*/
+  if (scne->isEditionMode())
+  {
+    QGraphicsView::wheelEvent(event);
+    return;
+  }
+
   ViewportUpdateMode mode = viewportUpdateMode();
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-  
+
   int zoom = 0; 
 
   // Zoom in / Zoom Out with mouse scroll
