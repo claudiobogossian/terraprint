@@ -439,11 +439,12 @@ void te::layout::View::config()
     }
   }
     
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
   connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
+
+  //scrollbars
+  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
+  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -1079,7 +1080,7 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
     m_foreground = QPixmap::fromImage(m_foreground.toImage().mirrored());
   }
 
-  QRect rectView(0, 0, this->width(), this->height());
+  QRect rectView(0, 0, this->viewport()->width(), this->viewport()->height());
   QPolygonF polygonScene = this->mapToScene(rectView);
 
   painter->drawPixmap(polygonScene.boundingRect(), m_foreground, m_foreground.rect());
