@@ -222,7 +222,7 @@ te::color::RGBAColor te::layout::GridSettingsOutside::configColor( QWidget* widg
   QColor bColor = brush.color();
   rgbaColor.setColor(bColor.red(), bColor.green(), bColor.blue());
 
-  QColor color = QColorDialog::getColor(brush.color(),this, "Color" );
+  QColor color = QColorDialog::getColor(brush.color(),this, tr("Color") );
 
   if(!color.isValid())  
     return rgbaColor;

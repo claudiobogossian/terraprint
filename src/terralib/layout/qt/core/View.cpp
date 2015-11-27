@@ -1111,12 +1111,12 @@ bool te::layout::View::exportProperties( EnumType* type )
   if(is_export)
   {
     msgBox.setIcon(QMessageBox::Information);
-    msgBox.setText("Template exported successfully!");    
+    msgBox.setText(tr("Template exported successfully!"));    
   }
   else
   {
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Error exporting template!");
+    msgBox.setText(tr("Error exporting template!"));
   }
 
   msgBox.exec();
@@ -1155,7 +1155,7 @@ void te::layout::View::exportItemsToImage()
   if(scne->selectedItems().empty())
   {
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Select at least one component!"); 
+    msgBox.setText(tr("Select at least one component!")); 
     msgBox.exec();
     return;
   }
@@ -1173,7 +1173,7 @@ void te::layout::View::exportItemsToImage()
   scne->exportItemsToImage(dirName);
 
   msgBox.setIcon(QMessageBox::Information);
-  msgBox.setText("Successfully exported images!"); 
+  msgBox.setText(tr("Successfully exported images!")); 
   msgBox.exec();
 }
 

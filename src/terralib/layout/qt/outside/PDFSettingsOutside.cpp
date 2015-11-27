@@ -115,11 +115,11 @@ void te::layout::PDFSettingsOutside::onCurrentIndexChanged(const QString & text)
     m_ui->lblDPIInformation->clear();
     if (dpi < 900)
     {
-      m_ui->lblDPIInformation->setText("The DPI chosen is high. Can cause very large files.");
+      m_ui->lblDPIInformation->setText(tr("The DPI chosen is high. Can cause very large files."));
     }
     else
     {
-      m_ui->lblDPIInformation->setText("The DPI chosen is too high. Can cause very large files.");
+      m_ui->lblDPIInformation->setText(tr("The DPI chosen is too high. Can cause very large files."));
     }
   }
   else

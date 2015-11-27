@@ -41,6 +41,9 @@
 // STL
 #include <string>
 
+// Qt
+#include <QString>
+
 class QGraphicsItem;
 class QWidget;
 class QGroupBox;
@@ -183,114 +186,114 @@ namespace te
 
       /* Map Menu */
 
-      std::string getActionMapDefault();
+      QString getActionMapDefault();
 
-      std::string getActionLegendDefault();
+      QString getActionLegendDefault();
 
-      std::string getActionScale();
+      QString getActionScale();
 
       /* Map Tools */
 
-      std::string getActionMapZoomIn();
+      QString getActionMapZoomIn();
 
-      std::string getActionMapZoomOut();
+      QString getActionMapZoomOut();
 
-      std::string getActionMapPan();
+      QString getActionMapPan();
 
-      std::string getActionMapSystematicScale();
+      QString getActionMapSystematicScale();
 
-      std::string getActionMapCreateTextGrid();
+      QString getActionMapCreateTextGrid();
 
-      std::string getActionMapCreateMapText();
+      QString getActionMapCreateMapText();
 
-      std::string getActionMapCreateLegendChildAsObject();
+      QString getActionMapCreateLegendChildAsObject();
       
-      std::string getActionGridPlanar();
+      QString getActionGridPlanar();
 
-      std::string getActionGridGeodesic();
+      QString getActionGridGeodesic();
 
-      std::string getActionNorth();
+      QString getActionNorth();
 
-      std::string getActionThreeNorth();
+      QString getActionThreeNorth();
 
-      std::string getActionMapLocation();
+      QString getActionMapLocation();
 
       /* Geometry Menu */
 
-      std::string getActionRectangle();
+      QString getActionRectangle();
 
-      std::string getActionPoint();
+      QString getActionPoint();
 
-      std::string getActionEllipse();
+      QString getActionEllipse();
 
-      std::string getActionArrow();
+      QString getActionArrow();
 
-      std::string getActionLine(); 
+      QString getActionLine();
 
-      std::string getActionPolygon();
+      QString getActionPolygon();
 
-      std::string getActionSVG();
+      QString getActionSVG();
 
       /* View Area */
 
-      std::string getActionViewPan();
+      QString getActionViewPan();
 
-      std::string getActionViewZoomIn();
+      QString getActionViewZoomIn();
 
-      std::string getActionViewZoomOut();
+      QString getActionViewZoomOut();
 
       /* Items Tools */
 
-      std::string getActionGroup();
+      QString getActionGroup();
 
-      std::string getActionUngroup();
+      QString getActionUngroup();
       
-      std::string getActionSceneZoom();
+      QString getActionSceneZoom();
 
-      std::string getActionRemoveObject();
+      QString getActionRemoveObject();
 
       /* Text Tools */
 
-      std::string getActionTextDefault();
+      QString getActionTextDefault();
 
-      std::string getActionImage();
+      QString getActionImage();
 
-      std::string getActionStringGrid();
+      QString getActionStringGrid();
 
-      std::string getActionTitle();
+      QString getActionTitle();
 
-      std::string getActionBalloon();
+      QString getActionBalloon();
 
-      std::string getActionBarCode();
+      QString getActionBarCode();
 
 
       /* Align */
 
-      std::string getActionAlignLeft();
+      QString getActionAlignLeft();
 
-      std::string getActionAlignRight();
+      QString getActionAlignRight();
 
-      std::string getActionAlignTop();
+      QString getActionAlignTop();
 
-      std::string getActionAlignBottom();
+      QString getActionAlignBottom();
 
-      std::string getActionAlignCenterHorizontal();
+      QString getActionAlignCenterHorizontal();
 
-      std::string getActionAlignCenterVertical();
+      QString getActionAlignCenterVertical();
 
       /* Undo/Redo */
 
-      std::string getActionUndo();
+      QString getActionUndo();
 
-      std::string getActionRedo();
+      QString getActionRedo();
 
-      std::string getActionDrawMap();
+      QString getActionDrawMap();
 
-      std::string getActionObjectToImage();
+      QString getActionObjectToImage();
 
-      std::string getActionExit();
+      QString getActionExit();
 
-      std::string getActionExportToPDF();
+      QString getActionExportToPDF();
                   
     signals:
       
@@ -346,11 +349,11 @@ namespace te
 
       virtual QToolButton* createExportToPDFButton();
       
-      virtual QToolButton* createToolButton(std::string text, std::string tooltip, std::string icon);
+      virtual QToolButton* createToolButton(QString text, QString tooltip, QString icon);
 
-      virtual QPushButton* createPushButton(std::string text, std::string tooltip, std::string icon);
+      virtual QPushButton* createPushButton(QString text, QString tooltip, QString icon);
       
-      virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "", QWidget* parent = 0);
+      virtual QAction* createAction(QString text, QString objName, QString icon, QString tooltip = "", QWidget* parent = 0);
 
       Scene* getScene();
 
@@ -359,72 +362,72 @@ namespace te
       QComboBox* m_comboZoom;
 
       /* Map Menu */
-      std::string m_actionMapDefault;
-      std::string m_actionLegendDefault;
-      std::string m_actionScale;
+      QString m_actionMapDefault;
+      QString m_actionLegendDefault;
+      QString m_actionScale;
 
       /* Map Tools */
-      std::string m_actionMapZoomIn;
-      std::string m_actionMapZoomOut;
-      std::string m_actionMapPan;
-      std::string m_actionMapSystematicScale;
-      std::string m_actionMapCreateTextGrid;
-      std::string m_actionMapCreateMapText;
-      std::string m_actionMapCreateLegendChildAsObject;
-      std::string m_actionGridPlanar;
-      std::string m_actionGridGeodesic;
-      std::string m_actionNorth;
-      std::string m_actionThreeNorth;
-      std::string m_actionMapLocation;
+      QString m_actionMapZoomIn;
+      QString m_actionMapZoomOut;
+      QString m_actionMapPan;
+      QString m_actionMapSystematicScale;
+      QString m_actionMapCreateTextGrid;
+      QString m_actionMapCreateMapText;
+      QString m_actionMapCreateLegendChildAsObject;
+      QString m_actionGridPlanar;
+      QString m_actionGridGeodesic;
+      QString m_actionNorth;
+      QString m_actionThreeNorth;
+      QString m_actionMapLocation;
       
       /* Geometry Menu */
-      std::string m_actionRectangle;
-      std::string m_actionPoint;
-      std::string m_actionEllipse;
-      std::string m_actionArrow;
-      std::string m_actionLine; 
-      std::string m_actionPolygon;
-      std::string m_actionSVG;
+      QString m_actionRectangle;
+      QString m_actionPoint;
+      QString m_actionEllipse;
+      QString m_actionArrow;
+      QString m_actionLine;
+      QString m_actionPolygon;
+      QString m_actionSVG;
 
       /* View Area */
-      std::string m_actionViewPan;
-      std::string m_actionViewZoomIn;
-      std::string m_actionViewZoomOut;
+      QString m_actionViewPan;
+      QString m_actionViewZoomIn;
+      QString m_actionViewZoomOut;
       
       /* Items Tools */
 
-      std::string m_actionGroup;
-      std::string m_actionUngroup;
+      QString m_actionGroup;
+      QString m_actionUngroup;
       
-      std::string m_actionSceneZoom;
+      QString m_actionSceneZoom;
 
-      std::string m_actionRemoveObject;
+      QString m_actionRemoveObject;
 
       /* Text Tools */
-      std::string m_actionTextDefault;
-      std::string m_actionImage;
-      std::string m_actionStringGrid;
-      std::string m_actionTitle;
-      std::string m_actionBalloon;
-      std::string m_actionBarCode;
+      QString m_actionTextDefault;
+      QString m_actionImage;
+      QString m_actionStringGrid;
+      QString m_actionTitle;
+      QString m_actionBalloon;
+      QString m_actionBarCode;
 
       /* Align */
-      std::string m_actionAlignLeft;
-      std::string m_actionAlignRight;
-      std::string m_actionAlignTop;
-      std::string m_actionAlignBottom;
-      std::string m_actionAlignCenterHorizontal;
-      std::string m_actionAlignCenterVertical;
+      QString m_actionAlignLeft;
+      QString m_actionAlignRight;
+      QString m_actionAlignTop;
+      QString m_actionAlignBottom;
+      QString m_actionAlignCenterHorizontal;
+      QString m_actionAlignCenterVertical;
 
       /* Undo/Redo */
-      std::string m_actionUndo;
-      std::string m_actionRedo;
+      QString m_actionUndo;
+      QString m_actionRedo;
 
-      std::string m_actionDrawMap;
+      QString m_actionDrawMap;
 
-      std::string m_actionObjectToImage;
-      std::string m_actionExit;
-      std::string m_actionExportToPDF;
+      QString m_actionObjectToImage;
+      QString m_actionExit;
+      QString m_actionExportToPDF;
 
       /* ToolButton */
       QToolButton* m_mapToolButton;

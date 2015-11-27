@@ -200,7 +200,7 @@ void te::qt::plugins::layout::LayoutEditorAction::createMenu()
 {
   QMenu* layoutMenu = m_mainLayout->getMenu(m_menu);
 
-  QAction* actionExit = new QAction("Exit", layoutMenu);
+  QAction* actionExit = new QAction(tr("Exit"), layoutMenu);
   actionExit->setObjectName("mnu_main_exit");
   actionExit->setIcon(QIcon::fromTheme("layout-close"));
   actionExit->setToolTip("");

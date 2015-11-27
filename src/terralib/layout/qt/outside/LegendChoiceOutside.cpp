@@ -46,8 +46,8 @@ te::layout::LegendChoiceOutside::LegendChoiceOutside(AbstractOutsideController* 
   QGridLayout* displayLayout = new QGridLayout(m_ui->m_widget);
   displayLayout->addWidget(m_widget.get());
 
-  m_widget->setLeftLabel("Available Attributes");
-  m_widget->setRightLabel("Selected Attributes");
+  m_widget->setLeftLabel(tr("Available Attributes").toStdString());
+  m_widget->setRightLabel(tr("Selected Attributes").toStdString());
 
   connect(m_ui->m_okPushButton, SIGNAL(clicked()), this, SLOT(onOkPushButtonClicked()));
   connect(m_ui->m_cancelPushButton, SIGNAL(clicked()), this, SLOT(onCancelPushButtonClicked()));
