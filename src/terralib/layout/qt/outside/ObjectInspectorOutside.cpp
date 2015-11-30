@@ -60,7 +60,7 @@ te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, Abstrac
   te::gm::Envelope box = abstractModel->getBox();
   setBaseSize(box.getWidth(), box.getHeight());
   setVisible(false);
-  setWindowTitle("Object Inspector");
+  setWindowTitle(tr("Object Inspector"));
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   
   
@@ -307,7 +307,7 @@ void te::layout::ObjectInspectorOutside::createMenu(std::string itemName)
     m_menu->clear();
   }
 
-  std::string text = TR_LAYOUT("Delete " + itemName + " item");
+  std::string text = TR_LAYOUT("Delete ") + itemName;
   
   QAction* action = createAction(text, itemName, "");
   m_menu->addAction(action);

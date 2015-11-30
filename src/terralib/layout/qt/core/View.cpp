@@ -312,10 +312,25 @@ void te::layout::View::mouseDoubleClickEvent(QMouseEvent * event)
 }
 
 void te::layout::View::wheelEvent(QWheelEvent *event)
-{
+{  
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+  {
+    return;
+  }
+
+  /*In edit mode not apply the zoom, 
+    but part of the current item characteristics for this event.
+    Example: Zoom on the map.*/
+  if (scne->isEditionMode())
+  {
+    QGraphicsView::wheelEvent(event);
+    return;
+  }
+
   ViewportUpdateMode mode = viewportUpdateMode();
   setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-  
+
   int zoom = 0; 
 
   // Zoom in / Zoom Out with mouse scroll
@@ -439,11 +454,12 @@ void te::layout::View::config()
     }
   }
     
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
   connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
+
+  //scrollbars
+  connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
+  connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -1079,7 +1095,7 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
     m_foreground = QPixmap::fromImage(m_foreground.toImage().mirrored());
   }
 
-  QRect rectView(0, 0, this->width(), this->height());
+  QRect rectView(0, 0, this->viewport()->width(), this->viewport()->height());
   QPolygonF polygonScene = this->mapToScene(rectView);
 
   painter->drawPixmap(polygonScene.boundingRect(), m_foreground, m_foreground.rect());
@@ -1110,12 +1126,12 @@ bool te::layout::View::exportProperties( EnumType* type )
   if(is_export)
   {
     msgBox.setIcon(QMessageBox::Information);
-    msgBox.setText("Template exported successfully!");    
+    msgBox.setText(tr("Template exported successfully!"));    
   }
   else
   {
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Error exporting template!");
+    msgBox.setText(tr("Error exporting template!"));
   }
 
   msgBox.exec();
@@ -1154,7 +1170,7 @@ void te::layout::View::exportItemsToImage()
   if(scne->selectedItems().empty())
   {
     msgBox.setIcon(QMessageBox::Warning);
-    msgBox.setText("Select at least one component!"); 
+    msgBox.setText(tr("Select at least one component!")); 
     msgBox.exec();
     return;
   }
@@ -1172,7 +1188,7 @@ void te::layout::View::exportItemsToImage()
   scne->exportItemsToImage(dirName);
 
   msgBox.setIcon(QMessageBox::Information);
-  msgBox.setText("Successfully exported images!"); 
+  msgBox.setText(tr("Successfully exported images!")); 
   msgBox.exec();
 }
 

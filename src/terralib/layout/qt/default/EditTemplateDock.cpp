@@ -55,7 +55,7 @@ te::layout::EditTemplateDock::EditTemplateDock(Scene* scene, QWidget * parent, Q
   m_editTemplateSize.setHeight(m_editTemplate->geometry().height());
 
   m_tab = new QTabWidget(this);
-  m_tab->addTab(m_editTemplate, "Edit Template");
+  m_tab->addTab(m_editTemplate, tr("Edit Template"));
   m_tab->setTabPosition(QTabWidget::East);
   
   connect(m_tab, SIGNAL(currentChanged(int)), this, SLOT(onCurrentChanged(int)));

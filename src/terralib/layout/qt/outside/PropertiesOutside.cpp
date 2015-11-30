@@ -69,7 +69,7 @@ te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProj
   te::gm::Envelope box = abstractModel->getBox();
   setBaseSize(box.getWidth(), box.getHeight());
   setVisible(false);
-  setWindowTitle("Properties");
+  setWindowTitle(tr("Properties"));
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   
   m_propUtils = new PropertiesUtils;

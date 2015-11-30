@@ -151,7 +151,7 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_scene(scene)
 {
   setVisible(false);
-  setWindowTitle("Layout - Toolbar");
+  setWindowTitle(tr("Layout - Toolbar"));
   setMinimumSize(200, 10);
 }
 
@@ -237,32 +237,32 @@ void te::layout::ToolbarOutside::createToolbar()
 
 QToolButton* te::layout::ToolbarOutside::createMapToolButton()
 {
-  QToolButton *btnMap = createToolButton("Map", "Map Objects", "");
+  QToolButton *btnMap = createToolButton(tr("Map"), tr("Map Objects"), "");
 
   QMenu* menu = new QMenu(btnMap);
 
-  QAction* actionDefaultMenu = createAction("Default Map Object", m_actionMapDefault, "layout-default-map", "", menu);
+  QAction* actionDefaultMenu = createAction(tr("Default Map Object"), m_actionMapDefault, "layout-default-map", "", menu);
   menu->addAction(actionDefaultMenu);
   
-  QAction* actionGridPlanar = createAction("Grid Planar", m_actionGridPlanar, "layout-grid", "", menu);
+  QAction* actionGridPlanar = createAction(tr("Grid Planar"), m_actionGridPlanar, "layout-grid", "", menu);
   menu->addAction(actionGridPlanar);
 
-  QAction* actionGridGeodesic = createAction("Grid Geodesic", m_actionGridGeodesic, "layout-grid", "", menu);
+  QAction* actionGridGeodesic = createAction(tr("Grid Geodesic"), m_actionGridGeodesic, "layout-grid", "", menu);
   menu->addAction(actionGridGeodesic);
 
-  QAction* actionLegend = createAction("Default Legend", m_actionLegendDefault, "layout-default-legend", "", menu);
+  QAction* actionLegend = createAction(tr("Default Legend"), m_actionLegendDefault, "layout-default-legend", "", menu);
   menu->addAction(actionLegend);
 
-  QAction* actionScale = createAction("Scale Object", m_actionScale, "layout-scale", "", menu);
+  QAction* actionScale = createAction(tr("Scale Object"), m_actionScale, "layout-scale", "", menu);
   menu->addAction(actionScale);
 
-  QAction* actionNorth = createAction("North Object", m_actionNorth, "layout-north", "", menu);
+  QAction* actionNorth = createAction(tr("North Object"), m_actionNorth, "layout-north", "", menu);
   menu->addAction(actionNorth);
 
-  QAction* actionThreeNorth = createAction("Three North Object", m_actionThreeNorth, "layout-three-north", "", menu);
+  QAction* actionThreeNorth = createAction(tr("Three North Object"), m_actionThreeNorth, "layout-three-north", "", menu);
   menu->addAction(actionThreeNorth);
 
-  QAction* actionMapLocation = createAction("Map Location Object", m_actionMapLocation, "layout-map-location", "", menu);
+  QAction* actionMapLocation = createAction(tr("Map Location Object"), m_actionMapLocation, "layout-map-location", "", menu);
   menu->addAction(actionMapLocation);
   
   btnMap->setMenu(menu);
@@ -280,29 +280,29 @@ QToolButton* te::layout::ToolbarOutside::createMapToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createMapToolsToolButton()
 {
-  QToolButton *btnMapTools = createToolButton("Map Tools", "Map Tools", "");
+  QToolButton *btnMapTools = createToolButton(tr("Map Tools"), tr("Map Tools"), "");
 
   QMenu* menu = new QMenu(btnMapTools);
 
-  QAction* actionPan = createAction("Pan Tool", m_actionMapPan, "layout-map-pan", "", menu);
+  QAction* actionPan = createAction(tr("Pan Tool"), m_actionMapPan, "layout-map-pan", "", menu);
   menu->addAction(actionPan);
 
-  QAction* actionZoomIn = createAction("Zoom In", m_actionMapZoomIn, "layout-map-zoom-in", "", menu);
+  QAction* actionZoomIn = createAction(tr("Zoom In"), m_actionMapZoomIn, "layout-map-zoom-in", "", menu);
   menu->addAction(actionZoomIn);
 
-  QAction* actionZoomOut = createAction("Zoom Out", m_actionMapZoomOut, "layout-map-zoom-out", "", menu);
+  QAction* actionZoomOut = createAction(tr("Zoom Out"), m_actionMapZoomOut, "layout-map-zoom-out", "", menu);
   menu->addAction(actionZoomOut);
 
-  QAction* actionSystematic = createAction("Systematic Scale", m_actionMapSystematicScale, "layout-systematic-map", "", menu);
+  QAction* actionSystematic = createAction(tr("Systematic Scale"), m_actionMapSystematicScale, "layout-systematic-map", "", menu);
   menu->addAction(actionSystematic);
 
-  QAction* actionTextGrid = createAction("Text Grid as Object", m_actionMapCreateTextGrid, "layout-createtext-as-obj", "", menu);
+  QAction* actionTextGrid = createAction(tr("Text Grid as Object"), m_actionMapCreateTextGrid, "layout-createtext-as-obj", "", menu);
   menu->addAction(actionTextGrid);
 
-  QAction* actionTextMap = createAction("Text Map as Object", m_actionMapCreateMapText, "layout-createmap-text-as-objs", "", menu);
+  QAction* actionTextMap = createAction(tr("Text Map as Object"), m_actionMapCreateMapText, "layout-createmap-text-as-objs", "", menu);
   menu->addAction(actionTextMap);
 
-  QAction* actionLegend = createAction("Legend as Object", m_actionMapCreateLegendChildAsObject, "layout-legend-child", "", menu);
+  QAction* actionLegend = createAction(tr("Legend as Object"), m_actionMapCreateLegendChildAsObject, "layout-legend-child", "", menu);
   menu->addAction(actionLegend);
 
   btnMapTools->setMenu(menu);
@@ -320,29 +320,29 @@ QToolButton* te::layout::ToolbarOutside::createMapToolsToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createGeometryToolButton()
 {
-  QToolButton *btnGeometry = createToolButton("Geometry Tools", "Geometries Objects", "");
+  QToolButton *btnGeometry = createToolButton(tr("Geometry Tools"), tr("Geometries Objects"), "");
 
   QMenu* menu = new QMenu(btnGeometry);
 
-  QAction* actionRectagle = createAction("Rectangle Object", m_actionRectangle, "layout-square", "", menu);
+  QAction* actionRectagle = createAction(tr("Rectangle Object"), m_actionRectangle, "layout-square", "", menu);
   menu->addAction(actionRectagle);
 
-  QAction* actionArrow = createAction("Arrow Object", m_actionArrow, "layout-arrow", "", menu);
+  QAction* actionArrow = createAction(tr("Arrow Object"), m_actionArrow, "layout-arrow", "", menu);
   menu->addAction(actionArrow);
 
-  QAction* actionEllipse = createAction("Ellipse Object", m_actionEllipse, "layout-ellipse", "", menu);
+  QAction* actionEllipse = createAction(tr("Ellipse Object"), m_actionEllipse, "layout-ellipse", "", menu);
   menu->addAction(actionEllipse);
 
-  QAction* actionPoint = createAction("Point Object", m_actionPoint, "layout-point", "", menu);
+  QAction* actionPoint = createAction(tr("Point Object"), m_actionPoint, "layout-point", "", menu);
   menu->addAction(actionPoint);
 
-  QAction* actionLine = createAction("Line Object", m_actionLine, "layout-drawline", "", menu); 
+  QAction* actionLine = createAction(tr("Line Object"), m_actionLine, "layout-drawline", "", menu);
   menu->addAction(actionLine);
 
-  QAction* actionPolygon = createAction("Polygon Object", m_actionPolygon, "layout-polygon", "", menu); 
+  QAction* actionPolygon = createAction(tr("Polygon Object"), m_actionPolygon, "layout-polygon", "", menu);
   menu->addAction(actionPolygon);
 
-  QAction* actionSVG = createAction("SVG Object", m_actionSVG, "layout-svg", "", menu); 
+  QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, "layout-svg", "", menu);
   menu->addAction(actionSVG);
 
   btnGeometry->setMenu(menu);
@@ -360,17 +360,17 @@ QToolButton* te::layout::ToolbarOutside::createGeometryToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createViewAreaToolButton()
 {
-  QToolButton *btnViewArea = createToolButton("Paper Tools", "Paper Tools", "");
+  QToolButton *btnViewArea = createToolButton(tr("Paper Tools"), tr("Paper Tools"), "");
 
   QMenu* menu = new QMenu(btnViewArea);
 
-  QAction* actionPan = createAction("Pan Tool", m_actionViewPan, "layout-paper-pan", "", menu);
+  QAction* actionPan = createAction(tr("Pan Tool"), m_actionViewPan, "layout-paper-pan", "", menu);
   menu->addAction(actionPan);
   
-  QAction* actionZoomIn = createAction("Zoom In", m_actionViewZoomIn, "layout-paper-zoom-in", "", menu);
+  QAction* actionZoomIn = createAction(tr("Zoom In"), m_actionViewZoomIn, "layout-paper-zoom-in", "", menu);
   menu->addAction(actionZoomIn);
   
-  QAction* actionZoomOut = createAction("Zoom Out", m_actionViewZoomOut, "layout-paper-zoom-out", "", menu);
+  QAction* actionZoomOut = createAction(tr("Zoom Out"), m_actionViewZoomOut, "layout-paper-zoom-out", "", menu);
   menu->addAction(actionZoomOut);
 
   btnViewArea->setMenu(menu);
@@ -388,7 +388,7 @@ QToolButton* te::layout::ToolbarOutside::createViewAreaToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createArrowCursorButton()
 {
-  QToolButton *btnArrowCursor = createToolButton("Arrow Cursor", "Arrow Cursor", "layout-default-cursor");
+  QToolButton *btnArrowCursor = createToolButton(tr("Arrow Cursor"), tr("Arrow Cursor"), "layout-default-cursor");
   btnArrowCursor->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -403,14 +403,14 @@ QToolButton* te::layout::ToolbarOutside::createArrowCursorButton()
 
 QToolButton* te::layout::ToolbarOutside::createItemTools()
 {
-  QToolButton *btnTools = createToolButton("Item Tools", "Item Tools", "");
+  QToolButton *btnTools = createToolButton(tr("Item Tools"), tr("Item Tools"), "");
 
   QMenu* menu = new QMenu(btnTools);
 
-  QAction* actionGroup = createAction("Group", m_actionGroup, "layout-group", "", menu);
+  QAction* actionGroup = createAction(tr("Group"), m_actionGroup, "layout-group", "", menu);
   menu->addAction(actionGroup);
 
-  QAction* actionUngroup = createAction("Ungroup", m_actionUngroup, "layout-ungroup", "", menu);
+  QAction* actionUngroup = createAction(tr("Ungroup"), m_actionUngroup, "layout-ungroup", "", menu);
   menu->addAction(actionUngroup);
 
   btnTools->setMenu(menu);
@@ -429,7 +429,7 @@ QToolButton* te::layout::ToolbarOutside::createItemTools()
 QComboBox* te::layout::ToolbarOutside::createSceneZoomCombobox()
 {
   m_comboZoom = new QComboBox(this);
-  m_comboZoom->setObjectName(m_actionSceneZoom.c_str());
+  m_comboZoom->setObjectName(m_actionSceneZoom);
 
   m_comboZoom->setEditable(true);
   m_comboZoom->setInsertPolicy(QComboBox::NoInsert);
@@ -458,7 +458,7 @@ QComboBox* te::layout::ToolbarOutside::createSceneZoomCombobox()
 
 QToolButton* te::layout::ToolbarOutside::createBringToFrontToolButton()
 {
-  QToolButton *btn = createToolButton("Bring to front", "Bring to front", "layout-in-front");
+  QToolButton *btn = createToolButton(tr("Bring to front"), tr("Bring to front"), "layout-in-front");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -473,7 +473,7 @@ QToolButton* te::layout::ToolbarOutside::createBringToFrontToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createSendToBackToolButton()
 {
-  QToolButton *btn = createToolButton("Send to back", "Send to back", "layout-to-back");
+  QToolButton *btn = createToolButton(tr("Send to back"), tr("Send to back"), "layout-to-back");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -489,7 +489,7 @@ QToolButton* te::layout::ToolbarOutside::createSendToBackToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createRecomposeToolButton()
 {
-  QToolButton *btn = createToolButton("Recompose", "Recompose", "layout-recompose");
+  QToolButton *btn = createToolButton(tr("Recompose"), tr("Recompose"), "layout-recompose");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -504,26 +504,26 @@ QToolButton* te::layout::ToolbarOutside::createRecomposeToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createTextToolButton()
 {
-  QToolButton *btn = createToolButton("Text Tools", "Text Tools", "");
+  QToolButton *btn = createToolButton(tr("Text Tools"), tr("Text Tools"), "");
 
   QMenu* menu = new QMenu(btn);
 
-  QAction* actionTxtDefault = createAction("Default Text Object", m_actionTextDefault, "layout-default-text", "", menu);
+  QAction* actionTxtDefault = createAction(tr("Default Text Object"), m_actionTextDefault, "layout-default-text", "", menu);
   menu->addAction(actionTxtDefault);
   
-  QAction* actionTitle = createAction("Title Object", m_actionTitle, "layout-title", "", menu);
+  QAction* actionTitle = createAction(tr("Title Object"), m_actionTitle, "layout-title", "", menu);
   menu->addAction(actionTitle);
 
-  QAction* actionStringGrid = createAction("Text Grid Object", m_actionStringGrid, "layout-grid", "", menu);
+  QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
   menu->addAction(actionStringGrid);
 
-  QAction* actionImage = createAction("Image Object", m_actionImage, "layout-image", "", menu);
+  QAction* actionImage = createAction(tr("Image Object"), m_actionImage, "layout-image", "", menu);
   menu->addAction(actionImage);
 
-  QAction* actionBalloon = createAction("Balloon Object", m_actionBalloon, "layout-ballon", "", menu); 
+  QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);
   menu->addAction(actionBalloon);
 
-  QAction* actionBarCode = createAction("BarCode Object", m_actionBarCode, "layout-barcode", "", menu);
+  QAction* actionBarCode = createAction(tr("BarCode Object"), m_actionBarCode, "layout-barcode", "", menu);
   menu->addAction(actionBarCode);
 
   btn->setMenu(menu);
@@ -541,7 +541,7 @@ QToolButton* te::layout::ToolbarOutside::createTextToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createAlignLeftToolButton()
 {
-  QToolButton *btn = createToolButton("Align Left", "Align Left", "layout-alignleft");
+  QToolButton *btn = createToolButton(tr("Align Left"), tr("Align Left"), "layout-alignleft");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -556,7 +556,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignLeftToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createAlignRightToolButton()
 {
-  QToolButton *btn = createToolButton("Align Right", "Align Right", "layout-alignright");
+  QToolButton *btn = createToolButton(tr("Align Right"), tr("Align Right"), "layout-alignright");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -571,7 +571,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignRightToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createAlignTopToolButton()
 {
-  QToolButton *btn = createToolButton("Align Top", "Align Top", "layout-aligntop");
+  QToolButton *btn = createToolButton(tr("Align Top"), tr("Align Top"), "layout-aligntop");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -586,7 +586,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignTopToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createAlignBottomToolButton()
 {
-  QToolButton *btn = createToolButton("Align Bottom", "Align Bottom", "layout-alignbottom");
+  QToolButton *btn = createToolButton(tr("Align Bottom"), tr("Align Bottom"), "layout-alignbottom");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -601,7 +601,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignBottomToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createAlignCenterHorizontalToolButton()
 {
-  QToolButton *btn = createToolButton("Align Center Horizontal", "Align Center Horizontal", "layout-alignhrzcenter");
+  QToolButton *btn = createToolButton(tr("Align Center Horizontal"), tr("Align Center Horizontal"), "layout-alignhrzcenter");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -616,7 +616,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignCenterHorizontalToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createAlignCenterVerticalToolButton()
 {
-  QToolButton *btn = createToolButton("Align Center Vertical", "Align Center Vertical", "layout-alignvrtcenter");
+  QToolButton *btn = createToolButton(tr("Align Center Vertical"), tr("Align Center Vertical"), "layout-alignvrtcenter");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -631,7 +631,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignCenterVerticalToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createRemoveObjectToolButton()
 {
-  QToolButton *btn = createToolButton("Remove Object", "Remove Object", "layout-empty-trash");
+  QToolButton *btn = createToolButton(tr("Remove Object"), tr("Remove Object"), "layout-empty-trash");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -646,7 +646,7 @@ QToolButton* te::layout::ToolbarOutside::createRemoveObjectToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
 {
-  QToolButton *btn = createToolButton("Undo/Redo", "Undo/Redo", "");
+  QToolButton *btn = createToolButton(tr("Undo/Redo"), tr("Undo/Redo"), "");
 
   QMenu* menu = new QMenu(btn);
 
@@ -657,16 +657,16 @@ QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
 
   QAction* actionUndo = undoStack->createUndoAction(menu, tr("&Undo"));
   actionUndo->setShortcuts(QKeySequence::Undo);
-  actionUndo->setObjectName(m_actionUndo.c_str());
+  actionUndo->setObjectName(m_actionUndo);
   actionUndo->setIcon(QIcon::fromTheme("layout-undo"));
-  actionUndo->setToolTip("Undo Action");
+  actionUndo->setToolTip(tr("Undo Action"));
   menu->addAction(actionUndo);
 
   QAction* actionRedo  = undoStack->createRedoAction(menu, tr("&Redo"));
   actionRedo->setShortcuts(QKeySequence::Redo);
-  actionRedo->setObjectName(m_actionRedo.c_str());
+  actionRedo->setObjectName(m_actionRedo);
   actionRedo->setIcon(QIcon::fromTheme("layout-redo"));
-  actionRedo->setToolTip("Redo Action");
+  actionRedo->setToolTip(tr("Redo Action"));
   menu->addAction(actionRedo);
     
   btn->setMenu(menu);
@@ -682,7 +682,7 @@ QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createDrawMapToolButton()
 {
-  QToolButton *btn = createToolButton("Redraw Selection Map", "Redraw Selection Map", "layout-draw-map");
+  QToolButton *btn = createToolButton(tr("Redraw Selection Map"), tr("Redraw Selection Map"), "layout-draw-map");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -697,7 +697,7 @@ QToolButton* te::layout::ToolbarOutside::createDrawMapToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createObjectToImageButton()
 {
-  QToolButton *btn = createToolButton("Object To Image", "Export all selected objects to image", "layout-object-to-image");
+  QToolButton *btn = createToolButton(tr("Object To Image"), tr("Export all selected objects to image"), "layout-object-to-image");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -712,7 +712,7 @@ QToolButton* te::layout::ToolbarOutside::createObjectToImageButton()
 
 QToolButton* te::layout::ToolbarOutside::createExitButton()
 {
-  QToolButton *btn = createToolButton("Exit", "Exit", "layout-close");
+  QToolButton *btn = createToolButton(tr("Exit"), tr("Exit"), "layout-close");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -727,7 +727,7 @@ QToolButton* te::layout::ToolbarOutside::createExitButton()
 
 QToolButton* te::layout::ToolbarOutside::createExportToPDFButton()
 {
-  QToolButton *btn = createToolButton("Export To PDF", "Export to PDF", "layout-pdf");
+  QToolButton *btn = createToolButton(tr("Export To PDF"), tr("Export to PDF"), "layout-pdf");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -745,34 +745,34 @@ void te::layout::ToolbarOutside::notifyChangedZoom(int newZoom)
   emit zoomChangedInComboBox(newZoom);
 }
 
-QToolButton* te::layout::ToolbarOutside::createToolButton( std::string text, std::string tooltip, std::string icon )
+QToolButton* te::layout::ToolbarOutside::createToolButton(QString text, QString tooltip, QString icon)
 {
   QToolButton *btn = new QToolButton(this);
-  btn->setText(text.c_str());
+  btn->setText(text);
   btn->setGeometry(0,0,10,10);
   btn->setCheckable(true);
-  btn->setToolTip(tooltip.c_str());
+  btn->setToolTip(tooltip);
   
-  if(!icon.empty())
-  btn->setIcon(QIcon::fromTheme(icon.c_str()));
+  if(!icon.isEmpty())
+  btn->setIcon(QIcon::fromTheme(icon));
 
   return btn;
 }
 
-QPushButton* te::layout::ToolbarOutside::createPushButton( std::string text, std::string tooltip, std::string icon )
+QPushButton* te::layout::ToolbarOutside::createPushButton(QString text, QString tooltip, QString icon)
 {
   QPushButton *btn = new QPushButton(this);
-  btn->setText(text.c_str());
+  btn->setText(text);
   btn->setGeometry(0,0,10,10);
   btn->setCheckable(true);
-  btn->setToolTip(tooltip.c_str());
+  btn->setToolTip(tooltip);
 
-  btn->setIcon(QIcon::fromTheme(icon.c_str()));
+  btn->setIcon(QIcon::fromTheme(icon));
 
   return btn;
 }
 
-QAction* te::layout::ToolbarOutside::createAction( std::string text, std::string objName, std::string icon, std::string tooltip, QWidget* parent )
+QAction* te::layout::ToolbarOutside::createAction(QString text, QString objName, QString icon, QString tooltip, QWidget* parent)
 {
   QWidget* parentToUse = parent;
   if(parentToUse == 0)
@@ -780,11 +780,11 @@ QAction* te::layout::ToolbarOutside::createAction( std::string text, std::string
   parentToUse = this;
   }
 
-  QAction *actionMenu = new QAction(text.c_str(), parentToUse);
-  actionMenu->setObjectName(objName.c_str());
+  QAction *actionMenu = new QAction(text, parentToUse);
+  actionMenu->setObjectName(objName);
 
-  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
-  actionMenu->setToolTip(tooltip.c_str());
+  actionMenu->setIcon(QIcon::fromTheme(icon));
+  actionMenu->setToolTip(tooltip);
 
   return actionMenu;
 }
@@ -904,232 +904,232 @@ QToolButton* te::layout::ToolbarOutside::getExitButton()
   return m_exitButton;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapDefault()
+QString te::layout::ToolbarOutside::getActionMapDefault()
 {
   return m_actionMapDefault;
 }
 
-std::string te::layout::ToolbarOutside::getActionLegendDefault()
+QString te::layout::ToolbarOutside::getActionLegendDefault()
 {
   return m_actionLegendDefault;
 }
 
-std::string te::layout::ToolbarOutside::getActionScale()
+QString te::layout::ToolbarOutside::getActionScale()
 {
   return m_actionScale;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapZoomIn()
+QString te::layout::ToolbarOutside::getActionMapZoomIn()
 {
   return m_actionMapZoomIn;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapZoomOut()
+QString te::layout::ToolbarOutside::getActionMapZoomOut()
 {
   return m_actionMapZoomOut;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapPan()
+QString te::layout::ToolbarOutside::getActionMapPan()
 {
   return m_actionMapPan;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapSystematicScale()
+QString te::layout::ToolbarOutside::getActionMapSystematicScale()
 {
   return m_actionMapSystematicScale;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapCreateTextGrid()
+QString te::layout::ToolbarOutside::getActionMapCreateTextGrid()
 {
   return m_actionMapCreateTextGrid;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapCreateMapText()
+QString te::layout::ToolbarOutside::getActionMapCreateMapText()
 {
   return m_actionMapCreateMapText;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapCreateLegendChildAsObject()
+QString te::layout::ToolbarOutside::getActionMapCreateLegendChildAsObject()
 {
   return m_actionMapCreateLegendChildAsObject;
 }
 
-std::string te::layout::ToolbarOutside::getActionGridPlanar()
+QString te::layout::ToolbarOutside::getActionGridPlanar()
 {
   return m_actionGridPlanar;
 }
 
-std::string te::layout::ToolbarOutside::getActionGridGeodesic()
+QString te::layout::ToolbarOutside::getActionGridGeodesic()
 {
   return m_actionGridGeodesic;
 }
 
-std::string te::layout::ToolbarOutside::getActionNorth()
+QString te::layout::ToolbarOutside::getActionNorth()
 {
   return m_actionNorth;
 }
 
-std::string te::layout::ToolbarOutside::getActionThreeNorth()
+QString te::layout::ToolbarOutside::getActionThreeNorth()
 {
   return m_actionThreeNorth;
 }
 
-std::string te::layout::ToolbarOutside::getActionMapLocation()
+QString te::layout::ToolbarOutside::getActionMapLocation()
 {
   return m_actionMapLocation;
 }
 
-std::string te::layout::ToolbarOutside::getActionRectangle()
+QString te::layout::ToolbarOutside::getActionRectangle()
 {
   return m_actionRectangle;
 }
 
-std::string te::layout::ToolbarOutside::getActionPoint()
+QString te::layout::ToolbarOutside::getActionPoint()
 {
   return m_actionPoint;
 }
 
-std::string te::layout::ToolbarOutside::getActionEllipse()
+QString te::layout::ToolbarOutside::getActionEllipse()
 {
   return m_actionEllipse;
 }
 
-std::string te::layout::ToolbarOutside::getActionArrow()
+QString te::layout::ToolbarOutside::getActionArrow()
 {
   return m_actionArrow;
 }
 
-std::string te::layout::ToolbarOutside::getActionLine()
+QString te::layout::ToolbarOutside::getActionLine()
 {
   return m_actionLine;
 }
 
-std::string te::layout::ToolbarOutside::getActionPolygon()
+QString te::layout::ToolbarOutside::getActionPolygon()
 {
   return m_actionPolygon;
 }
 
-std::string te::layout::ToolbarOutside::getActionViewPan()
+QString te::layout::ToolbarOutside::getActionViewPan()
 {
   return m_actionViewPan;
 }
 
-std::string te::layout::ToolbarOutside::getActionViewZoomIn()
+QString te::layout::ToolbarOutside::getActionViewZoomIn()
 {
   return m_actionViewZoomIn;
 }
 
-std::string te::layout::ToolbarOutside::getActionViewZoomOut()
+QString te::layout::ToolbarOutside::getActionViewZoomOut()
 {
   return m_actionViewZoomOut;
 }
 
-std::string te::layout::ToolbarOutside::getActionGroup()
+QString te::layout::ToolbarOutside::getActionGroup()
 {
   return m_actionGroup;
 }
 
-std::string te::layout::ToolbarOutside::getActionUngroup()
+QString te::layout::ToolbarOutside::getActionUngroup()
 {
   return m_actionUngroup;
 }
 
-std::string te::layout::ToolbarOutside::getActionSceneZoom()
+QString te::layout::ToolbarOutside::getActionSceneZoom()
 {
   return m_actionSceneZoom;
 }
 
-std::string te::layout::ToolbarOutside::getActionRemoveObject()
+QString te::layout::ToolbarOutside::getActionRemoveObject()
 {
   return m_actionRemoveObject;
 }
 
-std::string te::layout::ToolbarOutside::getActionTextDefault()
+QString te::layout::ToolbarOutside::getActionTextDefault()
 {
   return m_actionTextDefault;
 }
 
-std::string te::layout::ToolbarOutside::getActionImage()
+QString te::layout::ToolbarOutside::getActionImage()
 {
   return m_actionImage;
 }
 
-std::string te::layout::ToolbarOutside::getActionStringGrid()
+QString te::layout::ToolbarOutside::getActionStringGrid()
 {
   return m_actionStringGrid;
 }
 
-std::string te::layout::ToolbarOutside::getActionTitle()
+QString te::layout::ToolbarOutside::getActionTitle()
 {
   return m_actionTitle;
 }
 
-std::string te::layout::ToolbarOutside::getActionBalloon()
+QString te::layout::ToolbarOutside::getActionBalloon()
 {
   return m_actionBalloon;
 }
 
-std::string te::layout::ToolbarOutside::getActionBarCode()
+QString te::layout::ToolbarOutside::getActionBarCode()
 {
   return m_actionBarCode;
 }
 
-std::string te::layout::ToolbarOutside::getActionAlignLeft()
+QString te::layout::ToolbarOutside::getActionAlignLeft()
 {
   return m_actionAlignLeft;
 }
 
-std::string te::layout::ToolbarOutside::getActionAlignRight()
+QString te::layout::ToolbarOutside::getActionAlignRight()
 {
   return m_actionAlignRight;
 }
 
-std::string te::layout::ToolbarOutside::getActionAlignTop()
+QString te::layout::ToolbarOutside::getActionAlignTop()
 {
   return m_actionAlignTop;
 }
 
-std::string te::layout::ToolbarOutside::getActionAlignBottom()
+QString te::layout::ToolbarOutside::getActionAlignBottom()
 {
   return m_actionAlignBottom;
 }
 
-std::string te::layout::ToolbarOutside::getActionAlignCenterHorizontal()
+QString te::layout::ToolbarOutside::getActionAlignCenterHorizontal()
 {
   return m_actionAlignCenterHorizontal;
 }
 
-std::string te::layout::ToolbarOutside::getActionAlignCenterVertical()
+QString te::layout::ToolbarOutside::getActionAlignCenterVertical()
 {
   return m_actionAlignCenterVertical;
 }
 
-std::string te::layout::ToolbarOutside::getActionUndo()
+QString te::layout::ToolbarOutside::getActionUndo()
 {
   return m_actionUndo;
 }
 
-std::string te::layout::ToolbarOutside::getActionRedo()
+QString te::layout::ToolbarOutside::getActionRedo()
 {
   return m_actionRedo;
 }
 
-std::string te::layout::ToolbarOutside::getActionDrawMap()
+QString te::layout::ToolbarOutside::getActionDrawMap()
 {
   return m_actionDrawMap;
 }
 
-std::string te::layout::ToolbarOutside::getActionObjectToImage()
+QString te::layout::ToolbarOutside::getActionObjectToImage()
 {
   return m_actionObjectToImage;
 }
 
-std::string te::layout::ToolbarOutside::getActionExit()
+QString te::layout::ToolbarOutside::getActionExit()
 {
   return m_actionExit;
 }
 
-std::string te::layout::ToolbarOutside::getActionExportToPDF()
+QString te::layout::ToolbarOutside::getActionExportToPDF()
 {
   return m_actionExportToPDF;
 }
@@ -1137,6 +1137,11 @@ std::string te::layout::ToolbarOutside::getActionExportToPDF()
 QAction* te::layout::ToolbarOutside::getActionMapToolButton()
 {
   return m_actionMapToolButton;
+}
+
+QString te::layout::ToolbarOutside::getActionSVG()
+{
+  return m_actionSVG;
 }
 
 QAction* te::layout::ToolbarOutside::getActionMapToolsToolButton()
@@ -1247,10 +1252,5 @@ QAction* te::layout::ToolbarOutside::getActionComboBoxZoom()
 QAction* te::layout::ToolbarOutside::getActionExportToPDFButton()
 {
   return m_actionExportToPDFButton;
-}
-
-std::string te::layout::ToolbarOutside::getActionSVG()
-{
-  return m_actionSVG;
 }
 

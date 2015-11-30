@@ -36,7 +36,7 @@ te::layout::PropertiesDock::PropertiesDock(AbstractProxyProject* proxyProject, S
   QDockWidget(parent, flags)
 {
   setVisible(false);
-  setWindowTitle("Properties");
+  setWindowTitle(tr("Properties"));
   setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
   create(proxyProject, scene);

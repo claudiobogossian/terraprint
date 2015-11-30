@@ -209,46 +209,46 @@ void te::layout::OutsideArea::createMainMenu()
 {
   if(!m_layoutMenu)
   {
-    m_layoutMenu= new QMenu("Print Model");
+    m_layoutMenu= new QMenu(tr("Print Model"));
   }
 
    connect(m_layoutMenu, SIGNAL(triggered(QAction*)), this, SLOT(onMainMenuTriggered(QAction*)));
 
-   QAction* actionNew = createAction("New", m_optionNew, "layout-new");
+   QAction* actionNew = createAction(tr("New").toStdString(), m_optionNew, "layout-new");
    m_layoutMenu->addAction(actionNew);
 
-   QAction* actionSave = createAction("Update Map", m_optionUpdate, "layout-save");
+   QAction* actionSave = createAction(tr("Update Map").toStdString(), m_optionUpdate, "layout-save");
    m_layoutMenu->addAction(actionSave);
 
    m_layoutMenu->addSeparator();
 
-   QMenu* mnuImport = m_layoutMenu->addMenu("Import Map");
-   QMenu* mnuExport = m_layoutMenu->addMenu("Export Map");
+   QMenu* mnuImport = m_layoutMenu->addMenu(tr("Import Map"));
+   QMenu* mnuExport = m_layoutMenu->addMenu(tr("Export Map"));
 
-   QAction* actionImportJSON = createAction("Import Xml Map", m_optionImportXml, "layout-import");
+   QAction* actionImportJSON = createAction(tr("Import Xml Map").toStdString(), m_optionImportXml, "layout-import");
    mnuImport->addAction(actionImportJSON);
 
-   QAction* actionExportJSON = createAction("Export XML Map", m_optionExportXml, "layout-export");
+   QAction* actionExportJSON = createAction(tr("Export XML Map").toStdString(), m_optionExportXml, "layout-export");
    mnuExport->addAction(actionExportJSON);
 
    m_layoutMenu->addSeparator();
 
-   QAction* actionDockInspector = createAction("Dock Inspector", m_optionDockInspector, "");
+   QAction* actionDockInspector = createAction(tr("Dock Inspector").toStdString(), m_optionDockInspector, "");
    actionDockInspector->setCheckable(true);
    actionDockInspector->setChecked(true);
    m_layoutMenu->addAction(actionDockInspector);
 
-   QAction* actionDockProperties = createAction("Dock Properties", m_optionDockProperties, "");
+   QAction* actionDockProperties = createAction(tr("Dock Properties").toStdString(), m_optionDockProperties, "");
    actionDockProperties->setCheckable(true);
    actionDockProperties->setChecked(true);
    m_layoutMenu->addAction(actionDockProperties);
 
    m_layoutMenu->addSeparator();
 
-   QAction* actionPageConfig = createAction("Page Config...", m_optionPageConfig, "layout-page-setup");
+   QAction* actionPageConfig = createAction(tr("Page Config...").toStdString(), m_optionPageConfig, "layout-page-setup");
    m_layoutMenu->addAction(actionPageConfig);
 
-   QAction* actionPrint = createAction("Print...", m_optionPrint, "layout-printer");
+   QAction* actionPrint = createAction(tr("Print...").toStdString(), m_optionPrint, "layout-printer");
    m_layoutMenu->addAction(actionPrint);
 
    m_layoutMenu->addSeparator();
@@ -540,12 +540,12 @@ void te::layout::OutsideArea::onRefreshStatusBar()
 
   if(mode == te::layout::Enums::getInstance().getEnumModeType()->getModeNone())
   {
-    msg = "Map Layout - TerraLib 5";
+    msg = tr("Map Layout - TerraLib 5").toStdString();
     m_statusBar->showMessage(msg.c_str());
     return;
   }
   
-  msg = "Map Layout - TerraLib 5 | Context: ";
+  msg = tr("Map Layout - TerraLib 5 | Context: ").toStdString();
   
   std::string s_mode = mode->getLabel();
   if(s_mode.compare("") == 0)

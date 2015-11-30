@@ -63,35 +63,35 @@ void te::layout::ToolbarController::onMapTriggered(QAction* action)
 
   View* viewport = m_scene->getView();
 
-  if (action->objectName().compare(toolbar->getActionMapDefault().c_str()) == 0)
+  if (action->objectName().compare(toolbar->getActionMapDefault()) == 0)
   {
     viewport->createItem(itemType->getMapItem());
   }
-  else if (action->objectName().compare(toolbar->getActionGridPlanar().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionGridPlanar()) == 0)
   {
     viewport->createItem(itemType->getGridPlanarItem());
   }
-  else if (action->objectName().compare(toolbar->getActionGridGeodesic().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionGridGeodesic()) == 0)
   {
     viewport->createItem(itemType->getGridGeodesicItem());
   }
-  else if (action->objectName().compare(toolbar->getActionLegendDefault().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionLegendDefault()) == 0)
   {
     viewport->createItem(itemType->getLegendItem());
   }
-  else if (action->objectName().compare(toolbar->getActionScale().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionScale()) == 0)
   {
     viewport->createItem(itemType->getScaleItem());
   }
-  else if (action->objectName().compare(toolbar->getActionNorth().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionNorth()) == 0)
   {
     viewport->createItem(itemType->getNorthItem());
   }
-  else if (action->objectName().compare(toolbar->getActionMapLocation().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapLocation()) == 0)
   {
     viewport->createItem(itemType->getMapLocationItem());
   }
-  else if (action->objectName().compare(toolbar->getActionThreeNorth().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionThreeNorth()) == 0)
   {
     viewport->createItem(itemType->getThreeNorthItem());
   }
@@ -109,31 +109,31 @@ void te::layout::ToolbarController::onMapToolsTriggered(QAction* action)
 
   EnumModeType* type = Enums::getInstance().getEnumModeType();
 
-  if (action->objectName().compare(toolbar->getActionMapPan().c_str()) == 0)
+  if (action->objectName().compare(toolbar->getActionMapPan()) == 0)
   {
     toolbar->changeAction(type->getModeMapPan());
   }
-  else if (action->objectName().compare(toolbar->getActionMapZoomIn().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapZoomIn()) == 0)
   {
     toolbar->changeAction(type->getModeMapZoomIn());
   }
-  else if (action->objectName().compare(toolbar->getActionMapZoomOut().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapZoomOut()) == 0)
   {
     toolbar->changeAction(type->getModeMapZoomOut());
   }
-  else if (action->objectName().compare(toolbar->getActionMapSystematicScale().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapSystematicScale()) == 0)
   {
     toolbar->changeAction(type->getModeSystematicScale());
   }
-  else if (action->objectName().compare(toolbar->getActionMapCreateTextGrid().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapCreateTextGrid()) == 0)
   {
     //do nothing
   }
-  else if (action->objectName().compare(toolbar->getActionMapCreateMapText().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapCreateMapText()) == 0)
   {
     //do nothing
   }
-  else if (action->objectName().compare(toolbar->getActionMapCreateLegendChildAsObject().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionMapCreateLegendChildAsObject()) == 0)
   {
     //do nothing
   }
@@ -153,31 +153,31 @@ void te::layout::ToolbarController::onGeometryTriggered(QAction* action)
 
   View* viewport = m_scene->getView();
 
-  if (action->objectName().compare(toolbar->getActionRectangle().c_str()) == 0)
+  if (action->objectName().compare(toolbar->getActionRectangle()) == 0)
   {
     viewport->createItem(itemType->getRectangleItem());
   }
-  else if (action->objectName().compare(toolbar->getActionArrow().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionArrow()) == 0)
   {
     viewport->createItem(itemType->getArrowItem());
   }
-  else if (action->objectName().compare(toolbar->getActionEllipse().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionEllipse()) == 0)
   {
     viewport->createItem(itemType->getEllipseItem());
   }
-  else if (action->objectName().compare(toolbar->getActionPoint().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionPoint()) == 0)
   {
     viewport->createItem(itemType->getPointItem());
   }
-  else if (action->objectName().compare(toolbar->getActionLine().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionLine()) == 0)
   {
     viewport->createLineItem();
   }
-  else if (action->objectName().compare(toolbar->getActionPolygon().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionPolygon()) == 0)
   {
     viewport->createPolygonItem();
   }
-  else if (action->objectName().compare(toolbar->getActionSVG().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionSVG()) == 0)
   {
     viewport->createItem(itemType->getSVGItem());
   }
@@ -195,15 +195,15 @@ void te::layout::ToolbarController::onViewAreaTriggered(QAction* action)
   
   View* viewport = m_scene->getView();
 
-  if (action->objectName().compare(toolbar->getActionViewPan().c_str()) == 0)
+  if (action->objectName().compare(toolbar->getActionViewPan()) == 0)
   {
     viewport->pan();
   }
-  else if (action->objectName().compare(toolbar->getActionViewZoomIn().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionViewZoomIn()) == 0)
   {
     viewport->zoomArea();
   }
-  else if (action->objectName().compare(toolbar->getActionViewZoomOut().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionViewZoomOut()) == 0)
   {
     viewport->zoomOut();
   }
@@ -227,11 +227,11 @@ void te::layout::ToolbarController::onItemToolsTriggered(QAction* action)
 
   View* viewport = m_scene->getView();
 
-  if (action->objectName().compare(toolbar->getActionGroup().c_str()) == 0)
+  if (action->objectName().compare(toolbar->getActionGroup()) == 0)
   {    
     viewport->createItemGroup();
   }
-  else if (action->objectName().compare(toolbar->getActionUngroup().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionUngroup()) == 0)
   {
     viewport->destroyItemGroup();
   }
@@ -319,27 +319,27 @@ void te::layout::ToolbarController::onTextToolsTriggered(QAction* action)
 
   View* viewport = m_scene->getView();
 
-  if (action->objectName().compare(toolbar->getActionTextDefault().c_str()) == 0)
+  if (action->objectName().compare(toolbar->getActionTextDefault()) == 0)
   {
     viewport->createItem(itemType->getTextItem());
   }
-  else if (action->objectName().compare(toolbar->getActionStringGrid().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionStringGrid()) == 0)
   {
     viewport->createItem(itemType->getTextGridItem());
   }
-  else if (action->objectName().compare(toolbar->getActionTitle().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionTitle()) == 0)
   {
     viewport->createItem(itemType->getTitleItem());
   }
-  else if (action->objectName().compare(toolbar->getActionImage().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionImage()) == 0)
   {
     viewport->createItem(itemType->getImageItem());
   }
-  else if (action->objectName().compare(toolbar->getActionBalloon().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionBalloon()) == 0)
   {
     viewport->createItem(itemType->getBalloonItem());
   }
-  else if (action->objectName().compare(toolbar->getActionBarCode().c_str()) == 0)
+  else if (action->objectName().compare(toolbar->getActionBarCode()) == 0)
   {
     viewport->createItem(itemType->getBarCodeItem());
   }

@@ -53,7 +53,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
 
 	  Property property(0);
 	  property.setName("map_name");
-	  property.setLabel("Map Name");
+    property.setLabel(TR_LAYOUT("Map Name"));
 	  property.setValue(emptyString, dataType->getDataTypeStringList());
 
 	  Variant v;
@@ -65,14 +65,14 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel("color");
+    property.setLabel(TR_LAYOUT("color"));
     property.setValue(color, dataType->getDataTypeColor());
     this->m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("magnetic_convergence");
-    property.setLabel("magnetic_convergence");
+    property.setLabel(TR_LAYOUT("magnetic_convergence"));
     property.setValue(false, dataType->getDataTypeBool());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -80,7 +80,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   {
     Property property(0);
     property.setName("magnetic_north");
-    property.setLabel("magnetic_north");
+    property.setLabel(TR_LAYOUT("magnetic_north"));
     property.setValue(false, dataType->getDataTypeBool());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -89,7 +89,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   {
 	  Property property(0);
 	  property.setName("angle_magnetic_convergence");
-	  property.setLabel("angle_magnetic_convergence");
+    property.setLabel(TR_LAYOUT("angle_magnetic_convergence"));
 	  property.setValue(magnetic_convergence_angle, dataType->getDataTypeDouble());
 	  property.setMenu(true);
 	  this->m_properties.addProperty(property);
@@ -98,7 +98,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   {
 	  Property property(0);
 	  property.setName("angle_magnetic_north");
-	  property.setLabel("angle_magnetic_north");
+    property.setLabel(TR_LAYOUT("angle_magnetic_north"));
 	  property.setValue(magnetic_angle, dataType->getDataTypeDouble());
 	  property.setMenu(true);
 	  this->m_properties.addProperty(property);

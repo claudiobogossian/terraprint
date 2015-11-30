@@ -37,8 +37,7 @@ te::layout::DisplayDock::DisplayDock( QWidget * parent, Qt::WindowFlags flags ) 
   m_previousCentralWidgetVisibilite(true)
 {  
   setVisible(false);
-  setWindowTitle("Layout Display");
-  //setAttribute(Qt::WA_DeleteOnClose);
+  setWindowTitle(tr("Layout Display"));
 }
 
 te::layout::DisplayDock::~DisplayDock()
