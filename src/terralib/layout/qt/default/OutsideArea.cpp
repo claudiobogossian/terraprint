@@ -40,6 +40,7 @@
 #include "../inside/MapToolbarInside.h"
 #include "../inside/MapToolbarController.h"
 #include "../inside/ToolbarItemInside.h"
+#include "../item/ImageItem.h"
 
 // STL
 #include <string>
@@ -477,6 +478,9 @@ void te::layout::OutsideArea::onAddItemFinalized(QGraphicsItem* item)
   te::layout::EnumType* enumType = abstractItem->getController()->getProperties().getTypeObj();
   if (enumType == enumObj->getImageItem())
   {
+    ImageItem* imageItem = dynamic_cast<ImageItem*> (item);
+    if (imageItem->getFileName() != "")
+      return;
     QList<QGraphicsItem*> imageItemList;
     imageItemList.append(item);
     m_view->getMenuBuilder()->setSelectedGraphicsItems(imageItemList);
