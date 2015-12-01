@@ -37,39 +37,6 @@ te::layout::TitleItem::~TitleItem()
 {
 }
 
-/*
-void te::layout::TitleItem::refreshDocument()
-{
-  if(!m_model)
-    return;
-
-  TitleModel* model = dynamic_cast<TitleModel*>(m_model);
-
-  if(!model)
-    return;
-
-  QImage img = createImage();
-  QPointF pp = scenePos();
-  te::gm::Envelope box(pp.x(), pp.y(), pp.x() + img.widthMM(), pp.y() + img.heightMM());
-
-  model->setBox(box);
-  
-  // Update Model
-
-  // Header
-  QTextTableCell cellOne = m_table->cellAt(0, 0);
-  QTextCursor cellCursorOne = cellOne.firstCursorPosition();
-  std::string txtOne = cellCursorOne.block().text().toStdString();
-  model->setTitle(txtOne);
-
-  // Table
-  QTextTableCell cellTwo = m_table->cellAt(1, 0);
-  QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
-  std::string txtTwo = cellCursorTwo.block().text().toStdString();
-  model->setText(txtTwo);
-}
-*/
-
 void te::layout::TitleItem::updateGeometry( int position, int charsRemoved, int charsAdded )
 {
   //we override this function just to avoid the view to call textChanged function from the controller
