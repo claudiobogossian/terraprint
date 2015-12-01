@@ -262,7 +262,13 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pTopRotateText = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+
   bool bRotate = pTopRotateText.getValue().toBool();
+  const Font& font = pFont.getValue().toFont();
+
+  QFont qFont = ItemUtils::convertToQfont(font);
+
   int iRotate = 0;
   if (bRotate)
   {
@@ -274,7 +280,7 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
   {
     std::string txt = it->first;
     QPointF pt = it->second;
-    drawText(pt, painter, txt, iRotate);
+    drawText(pt, painter, qFont, txt, iRotate);
 
 #ifdef _DEBUG
     debugDrawTextRect(painter, pt, txt, iRotate);
@@ -290,7 +296,13 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pBottomRotateText = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+
   bool bRotate = pBottomRotateText.getValue().toBool();
+  const Font& font = pFont.getValue().toFont();
+
+  QFont qFont = ItemUtils::convertToQfont(font);
+
   int iRotate = 0;
   if (bRotate)
   {
@@ -302,7 +314,7 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
   {
     std::string txt = it->first;
     QPointF pt = it->second;
-    drawText(pt, painter, txt, iRotate);
+    drawText(pt, painter, qFont, txt, iRotate);
 
 #ifdef _DEBUG
     debugDrawTextRect(painter, pt, txt, iRotate);
@@ -318,7 +330,13 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pLeftRotateText = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+
   bool bRotate = pLeftRotateText.getValue().toBool();
+  const Font& font = pFont.getValue().toFont();
+
+  QFont qFont = ItemUtils::convertToQfont(font);
+
   int iRotate = 0;
   if (bRotate)
   {
@@ -333,7 +351,7 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
   {
     std::string txt = it->first;
     QPointF pt = it->second;
-    drawText(pt, painter, txt, iRotate);
+    drawText(pt, painter, qFont, txt, iRotate);
 
 #ifdef _DEBUG
     debugDrawTextRect(painter, pt, txt, iRotate);
@@ -350,7 +368,13 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pRightRotateText = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+
   bool bRotate = pRightRotateText.getValue().toBool();
+  const Font& font = pFont.getValue().toFont();
+
+  QFont qFont = ItemUtils::convertToQfont(font);
+
   int iRotate = 0;
   if (bRotate)
   {
@@ -362,7 +386,7 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
   {
     std::string txt = it->first;
     QPointF pt = it->second;  
-    drawText(pt, painter, txt, iRotate);
+    drawText(pt, painter, qFont, txt, iRotate);
 
 #ifdef _DEBUG
     debugDrawTextRect(painter, pt, txt, iRotate);
@@ -518,13 +542,8 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
 
-  GridSettingsConfigProperties settingsConfig;
-
-  
-  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
-
  //creates the rect
-  QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), myScene->getContext().getDpiX(), point, rotate);
+  QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), point, rotate);
 
 //draws the rect
   painter->save();

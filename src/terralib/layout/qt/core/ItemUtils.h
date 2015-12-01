@@ -191,7 +191,7 @@ namespace te
         \param rotationAngle The [optional] rotation angle
         
         */
-        virtual QPainterPath textToVector(const QString& text, const QFont& font, double dpi = 72., const QPointF& referencePoint = QPointF(), double rotationAngle = 0.);
+        static QPainterPath textToVector(const QString& text, const QFont& font, const QPointF& referencePoint = QPointF(), double rotationAngle = 0.);
 
         void changeViewMode(EnumType* mode);
 
@@ -211,6 +211,10 @@ namespace te
           \
         */
         static QFont convertToQfont(Font txtFont);
+
+        static double getTextDPI();
+
+        static void setTextDPI(double textDpi);
 
       protected:
 
@@ -241,6 +245,8 @@ namespace te
       protected:
 
         QGraphicsScene* m_scene; //!< A pointer to scene
+
+        static double m_textDPI;
     };
   }
 }
