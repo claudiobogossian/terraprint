@@ -146,22 +146,16 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   }
 
   Utils utils = ((Scene*) this->scene())->getUtils();
-  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
-
-  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
   
   // Draw a horizontal line and the y coordinate change(vertical)
-
   WorldTransformer transf = utils.getTransformGeo(geoBox, boxMM);
   transf.setMirroring(false);
 
   double y1 = initVerticalLines(geoBox);
   
   m_boundingBox.Union(boxMM);
-  
 
-
-  QFont ft =  itemUtils.convertToQfont(txtFont);
+  QFont ft = ItemUtils::convertToQfont(txtFont);
   
   for( ; y1 <= geoBox.getUpperRightY() ; y1 += verticalGap)
   {
@@ -180,7 +174,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     double number = y1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
 
-    QPainterPath textObject = itemUtils.textToVector(convert, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
 
     QRectF rectF(textObject.boundingRect());
 
@@ -219,12 +213,8 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
   }
 
   Utils utils = ((Scene*) this->scene())->getUtils();
-  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
-
-  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
 
   // Draw a vertical line and the x coordinate change(horizontal)
-
   WorldTransformer transf = utils.getTransformGeo(geoBox, boxMM);
   transf.setMirroring(false);
 
@@ -232,7 +222,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
   
   m_boundingBox.Union(boxMM);
   
-  QFont ft = itemUtils.convertToQfont(txtFont);
+  QFont ft = ItemUtils::convertToQfont(txtFont);
 
   for( ; x1 <= geoBox.getUpperRightX() ; x1 += horizontalGap)
   {
@@ -260,7 +250,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     double number = x1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
 
-    QPainterPath textObject = itemUtils.textToVector(convert, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
     
     calculateTop(line, rectF, convert, bTopRotate, horizontalDisplacement);

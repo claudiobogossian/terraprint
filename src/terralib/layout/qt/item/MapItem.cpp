@@ -135,15 +135,14 @@ void te::layout::MapItem::drawItem( QPainter * painter, const QStyleOptionGraphi
     return;
   }*/
 
+  QPixmap pixmap(m_mapDisplay->width(), m_mapDisplay->height());
+  pixmap.fill(Qt::transparent);
 
-  QImage image(m_mapDisplay->width(), m_mapDisplay->height(), QImage::Format_ARGB32);
-  image.fill(Qt::transparent);
-
-  QPainter localPainter(&image);
+  QPainter localPainter(&pixmap);
   m_mapDisplay->render(&localPainter, QPoint(), QRegion(), QWidget::DrawChildren);
   localPainter.end();
 
-  drawImage(this->getAdjustedBoundingRect(painter), painter, image);
+  drawPixmap(this->getAdjustedBoundingRect(painter), painter, pixmap);
 }
 
 QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )

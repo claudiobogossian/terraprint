@@ -168,7 +168,7 @@ namespace te
         /*!
         \brief Draws the given text in the given location with rotation
         */
-        virtual void drawText(const QPointF& point, QPainter* painter, const std::string& text, int rotate = 0);
+        virtual void drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate = 0);
 
         /*!
         \brief Draws the given image in the given location
@@ -509,10 +509,12 @@ namespace te
     }
     
     template <class T>
-    inline void te::layout::AbstractItem<T>::drawText(const QPointF& point, QPainter* painter, const std::string& text, int rotate)
+    inline void te::layout::AbstractItem<T>::drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate)
     {
       ItemUtils itemUtils = this->getScene()->getItemUtils();
-      QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), this->getScene()->getContext().getDpiX(), point, rotate);
+      QPainterPath textObject = itemUtils.textToVector(text.c_str(), font, point, rotate);
+
+      int fontSize = painter->font().pointSize();
 
       QPen pen;
       pen.setWidthF(0);

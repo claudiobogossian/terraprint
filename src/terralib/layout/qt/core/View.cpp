@@ -1229,6 +1229,12 @@ te::layout::ContextObject te::layout::View::getContext()
 {
   double dpiX = logicalDpiX();
   double dpiY = logicalDpiY();
+
+  dpiX = 144;
+  dpiY = 144;
+
+  ItemUtils::setTextDPI(dpiY);
+
   int zoom = getCurrentZoom();
   EnumType* mode = getCurrentMode();
   return ContextObject(zoom, dpiX, dpiY, mode);
