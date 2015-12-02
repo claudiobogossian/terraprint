@@ -151,7 +151,9 @@ namespace te
 
         bool removeSubProperty(const std::string& name);
 
-        bool updateSubProperty(Property property);
+        virtual bool updateSubProperty(Property property);
+
+        virtual bool completelyUpdateSubProperty(const Property& property);
         
         /*!
           \brief Returns true if no value has been set, false otherwise.
@@ -195,18 +197,18 @@ namespace te
 
           \return true if property will be used in a menu, false otherwise  
         */
-        virtual bool isMenu();
+        virtual bool isMenu() const;
 
         virtual void setIcon(std::string icon);
 
-        virtual std::string getIcon();
+        virtual std::string getIcon() const;
 
         /*!
           \brief Return true if value is not of common C++ data type, false otherwise.
 
           \return true if value is not of common C++ data type, false otherwise  
         */
-        virtual bool isComplex();
+        virtual bool isComplex() const;
 
         /*!
           \brief Sets the visibility of this property.
@@ -227,7 +229,7 @@ namespace te
 
           \return true if property is required, false otherwise 
         */
-        bool isRequired();
+        bool isRequired() const;
 
         /*!
           \brief Sets true if property is required, false otherwise 
@@ -248,7 +250,7 @@ namespace te
 
           \return hashcode
         */
-        int getParentItemHashCode();
+        int getParentItemHashCode() const;
 
         /*!
           \brief Returns true if property compose a widget, false otherwise.
@@ -256,7 +258,7 @@ namespace te
 
           \return true if property compose a widget, false otherwise 
         */
-        bool isComposeWidget();
+        bool isComposeWidget() const;
 
         /*!
           \brief Sets true if property compose a widget, false otherwise

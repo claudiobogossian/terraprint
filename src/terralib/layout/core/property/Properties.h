@@ -104,6 +104,8 @@ namespace te
         */
         virtual bool updateProperty(const Property& property);
 
+        virtual bool completelyUpdateProperty(const Property& property);
+
         /*!
           \brief Clear set of properties of this object.
 
@@ -299,6 +301,36 @@ namespace te
         {
           it->setValue(property.getValue());
           it->setOptionChoice(property.getOptionByCurrentChoice());          
+          result = true;
+        }
+        else
+        {
+          it->updateSubProperty(property);
+        }
+      }
+      return result;
+    }
+
+    inline bool Properties::completelyUpdateProperty(const Property& property)
+    {
+      bool result = false;
+
+      for (std::vector<Property>::iterator it = m_properties.begin(); it != m_properties.end(); ++it)
+      {
+        if (it->getName().compare(property.getName()) == 0)
+        {
+          it->setValue(property.getValue());
+          it->setOptionChoice(property.getOptionByCurrentChoice());
+          it->setEditable(property.isEditable());
+          it->setLabel(property.getLabel());
+          it->setMenu(property.isMenu());
+          it->setIcon(property.getIcon());
+          it->setVisible(property.isVisible());
+          it->setRequired(property.isRequired());
+          it->setParentItemHashCode(property.getParentItemHashCode());
+          it->setComposeWidget(property.isComposeWidget());
+          it->setPublic(property.isPublic());
+          it->setSerializable(property.isSerializable());
           result = true;
         }
         else

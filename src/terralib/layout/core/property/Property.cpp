@@ -226,6 +226,36 @@ bool te::layout::Property::updateSubProperty(Property property)
   return result;
 }
 
+bool te::layout::Property::completelyUpdateSubProperty(const Property& property)
+{
+  bool result = false;
+
+  for (std::vector<te::layout::Property>::iterator it = m_subProperty.begin(); it != m_subProperty.end(); ++it)
+  {
+    if ((*it) == property)
+    {
+      it->setValue(property.getValue());
+      it->setOptionChoice(property.getOptionByCurrentChoice());
+      it->setEditable(property.isEditable());
+      it->setLabel(property.getLabel());
+      it->setMenu(property.isMenu());
+      it->setIcon(property.getIcon());
+      it->setVisible(property.isVisible());
+      it->setRequired(property.isRequired());
+      it->setParentItemHashCode(property.getParentItemHashCode());
+      it->setComposeWidget(property.isComposeWidget());
+      it->setPublic(property.isPublic());
+      it->setSerializable(property.isSerializable());
+      result = true;
+    }
+    else
+    {
+      it->updateSubProperty(property);
+    }
+  }
+  return result;
+}
+
 bool te::layout::Property::isNull() const
 {
   bool result = true;
@@ -347,7 +377,7 @@ void te::layout::Property::setMenu( bool menu )
   m_menu = menu;
 }
 
-bool te::layout::Property::isMenu()
+bool te::layout::Property::isMenu() const
 {
   return m_menu;
 }
@@ -357,12 +387,12 @@ void te::layout::Property::setIcon( std::string icon )
   m_icon = icon;
 }
 
-std::string te::layout::Property::getIcon()
+std::string te::layout::Property::getIcon() const
 {
   return m_icon;
 }
 
-bool te::layout::Property::isComplex()
+bool te::layout::Property::isComplex() const
 {
   return m_value.isComplex();
 }
@@ -377,7 +407,7 @@ bool te::layout::Property::isVisible() const
   return m_visible;
 }
 
-bool te::layout::Property::isRequired()
+bool te::layout::Property::isRequired() const
 {
   return m_required;
 }
@@ -392,12 +422,12 @@ void te::layout::Property::setParentItemHashCode( int hashCode )
   m_parentItemHashCode = hashCode;
 }
 
-int te::layout::Property::getParentItemHashCode()
+int te::layout::Property::getParentItemHashCode() const
 {
   return m_parentItemHashCode;
 }
 
-bool te::layout::Property::isComposeWidget()
+bool te::layout::Property::isComposeWidget() const
 {
   return m_composeWidget;
 }
