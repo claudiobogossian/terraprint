@@ -477,6 +477,18 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
 
     property.setOptionChoice(variantCurrentChoice);
   }
+
+  boost::optional<const boost::property_tree::ptree&> child = propertyNode.get_child_optional("sub_property");
+  if (child != 0)
+  {
+    const boost::property_tree::ptree& vecSubPropertyNode = propertyNode.get_child("sub_property");
+
+    std::vector<Property> vecSubProperty = decodeProperties(vecSubPropertyNode);
+    for (size_t i = 0; i < vecSubProperty.size(); ++i)
+    {
+      property.addSubProperty(vecSubProperty[i]);
+    }
+  }
   
   return property;
 }
