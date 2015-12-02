@@ -50,6 +50,7 @@ te::layout::PolygonModel::PolygonModel()
     property.setName("fill_color");
     property.setLabel(TR_LAYOUT("Fill Color"));
     property.setValue(fillColor, dataType->getDataTypeColor());
+    property.setMenu(true);
     this->m_properties.addProperty(property);
   }
 
@@ -58,6 +59,7 @@ te::layout::PolygonModel::PolygonModel()
     property.setName("contour_color");
     property.setLabel(TR_LAYOUT("Contour Color"));
     property.setValue(contourColor, dataType->getDataTypeColor());
+    property.setMenu(true);
     this->m_properties.addProperty(property);
   }
 

@@ -301,6 +301,14 @@ namespace te
         {
           it->setValue(property.getValue());
           it->setOptionChoice(property.getOptionByCurrentChoice());          
+
+          //if this property has subproperties, we must update them too
+          std::vector<Property> vecSubProperties = property.getSubProperty();
+          for (size_t j = 0; j < vecSubProperties.size(); ++j)
+          {
+            it->updateSubProperty(vecSubProperties[j]);
+          }
+
           result = true;
         }
         else

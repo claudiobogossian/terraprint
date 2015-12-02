@@ -35,14 +35,33 @@
 
 te::layout::BarCodeModel::BarCodeModel() 
 {
-  /*
+  
   m_type = Enums::getInstance().getEnumObjectType()->getBarCodeItem();
 
   m_box = te::gm::Envelope(0., 0., 20., 20.);
   m_border = false;
-  m_font.setPointSize(12);
+  int size = 50;
+  m_font.setPointSize(size);
   m_font.setFamily("Free 3 of 9 Extended");
-  */
+
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  {
+    Property property = m_properties.getProperty("font");
+    property.setVisible(false);
+    property.setValue(m_font, dataType->getDataTypeFont());
+    m_properties.completelyUpdateProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("barcodesize");
+    property.setLabel(TR_LAYOUT("Barcode Size"));
+    property.setValue(size, dataType->getDataTypeInt());
+    m_properties.addProperty(property);
+  }
+
+
 }
 
 te::layout::BarCodeModel::~BarCodeModel()

@@ -31,6 +31,7 @@
 // TerraLib
 #include "../core/ContextItem.h"
 #include "TextModel.h"
+#include "terralib/geometry/Envelope.h"
 
 namespace te
 {
@@ -43,6 +44,11 @@ namespace te
         BarCodeModel();
 
         virtual ~BarCodeModel();
+    protected:
+      EnumType* m_type;
+      te::gm::Envelope m_box;
+      bool m_border;
+      Font m_font;
     };
   }
 }

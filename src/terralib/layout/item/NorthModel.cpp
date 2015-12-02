@@ -73,8 +73,9 @@ te::layout::NorthModel::NorthModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel(TR_LAYOUT("color"));
+    property.setLabel(TR_LAYOUT("Color"));
     property.setValue(color, dataType->getDataTypeColor());
+    property.setMenu(true);
     this->m_properties.addProperty(property);
   }
 }

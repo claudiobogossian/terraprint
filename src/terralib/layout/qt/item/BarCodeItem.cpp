@@ -27,6 +27,7 @@
 
 // TerraLib
 #include "BarCodeItem.h"
+#include "TextController.h"
 
 // Qt
 #include <QStyleOptionGraphicsItem>
@@ -44,5 +45,13 @@ te::layout::BarCodeItem::~BarCodeItem()
 
 void te::layout::BarCodeItem::paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /* = 0 */ )
 {
+  //const Property& pFontBarcode = m_controller->getProperty("fontbarcode");
+  //if (pFontBarcode.isNull() || pFontBarcode.getSubProperty().empty())
+  //  return;
+
+  TextController* controller = dynamic_cast<TextController*>(m_controller);
+
+
   QGraphicsTextItem::paint(painter, option, widget);
+
 }
