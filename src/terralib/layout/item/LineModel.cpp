@@ -87,6 +87,7 @@ te::layout::LineModel::LineModel()
     property.setName("color");
     property.setLabel(TR_LAYOUT("Color"));
     property.setValue(color, dataType->getDataTypeColor());
+    property.setMenu(true);
     this->m_properties.addProperty(property);
   }
 

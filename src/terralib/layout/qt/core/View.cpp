@@ -58,11 +58,12 @@
 #include <QPainterPath>
 #include <QEvent>
 #include <QToolBar>
-#include <QDockWidget>
+#include <QDialog>
 #include <QPoint>
 #include <QRect>
 #include <QSize>
 #include <QScrollBar>
+#include <QLayout>
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -78,7 +79,7 @@ te::layout::View::View( QWidget* widget) :
   m_movingItemGroup(0),
   m_updateItemPos(false),
   m_mouseEvent(false),
-  m_dockItemToolbar(0),
+  m_dialogItemToolbar(0),
   m_currentToolbarInsideType(0),
   m_midButtonClicked(false)
 {
@@ -87,10 +88,9 @@ te::layout::View::View( QWidget* widget) :
   m_horizontalRuler = new HorizontalRuler;
   m_verticalRuler = new VerticalRuler;
 
-  m_dockItemToolbar = new QDockWidget(this->viewport());
-  m_dockItemToolbar->setVisible(false);
-  m_dockItemToolbar->setFloating(true);
-  m_dockItemToolbar->setFeatures(QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable);
+  m_dialogItemToolbar = new QDialog(this->viewport());
+  m_dialogItemToolbar->setVisible(false);
+  m_dialogItemToolbar->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
 }
 
 te::layout::View::~View()
@@ -613,7 +613,7 @@ void te::layout::View::closeEvent( QCloseEvent * event )
     m_menuBuilder->closeAllWindows();
   }
 
-  closeDockToolbar();
+  closeToolbar();
 
   QGraphicsView::closeEvent(event);
   emit closeView();
@@ -1288,15 +1288,12 @@ te::layout::ToolbarItemInside* te::layout::View::getToolbarInside(EnumType* item
   return toolbarInside;
 }
 
-void te::layout::View::showDockToolbar(EnumType* itemType, AbstractItemView* item)
+void te::layout::View::showToolbar(EnumType* itemType, AbstractItemView* item)
 {
-  if (!m_dockItemToolbar)
+  if (!m_dialogItemToolbar)
     return;
 
-  if (m_dockItemToolbar->widget())
-  {
-    closeDockToolbar();
-  }
+  closeToolbar();
 
   if (itemType)
   {
@@ -1309,27 +1306,30 @@ void te::layout::View::showDockToolbar(EnumType* itemType, AbstractItemView* ite
       {
         toolbarInside->setItem(item);
         QToolBar* toolbar = toolbarInside->getToolbar();
-        toolbar->setParent(this->viewport());
-        m_dockItemToolbar->setWidget(toolbar);
+        toolbar->setParent(m_dialogItemToolbar);
+        toolbar->setVisible(true);
+
+        QSize size = toolbar->size();
+        setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX); // disable fixed size 
+        m_dialogItemToolbar->resize(size);
 
         QString title = toolbar->windowTitle();
-        m_dockItemToolbar->setWindowTitle(title);
+        m_dialogItemToolbar->setWindowTitle(title);
 
-        positioningDockOnTheScreen(item);
+        positioningToolbarOnTheScreen(item);
 
-        m_dockItemToolbar->setVisible(true);
+        m_dialogItemToolbar->setFixedSize(m_dialogItemToolbar->size());
+
+        m_dialogItemToolbar->setVisible(true);
         m_currentToolbarInsideType = itemType;
       }
     }
   }
 }
 
-void te::layout::View::closeDockToolbar()
+void te::layout::View::closeToolbar()
 {
-  if (!m_dockItemToolbar)
-    return;
-
-  if (!m_dockItemToolbar->widget())
+  if (!m_dialogItemToolbar)
     return;
 
   if (m_currentToolbarInsideType)
@@ -1339,19 +1339,23 @@ void te::layout::View::closeDockToolbar()
     {
       toolbarInside->clear();
       toolbarInside->setItem(0);
-      m_dockItemToolbar->setVisible(false);
-      m_dockItemToolbar->setWidget(0);
-      QToolBar* toolbar = dynamic_cast<QToolBar*>(m_dockItemToolbar->widget());
-      if (toolbar)
+      m_dialogItemToolbar->setVisible(false);
+      QList<QToolBar *> allPButtons = m_dialogItemToolbar->findChildren<QToolBar *>();
+      QToolBar* toolbar = 0;
+      if (!allPButtons.isEmpty())
       {
-        toolbar->setParent(0);
+        toolbar = allPButtons.first();
+        if (toolbar)
+        {
+          toolbar->setParent(0);
+        }
       }
       m_currentToolbarInsideType = 0;
     }
   }
 }
 
-void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
+void te::layout::View::positioningToolbarOnTheScreen(AbstractItemView* item)
 {
   if (!item)
   {
@@ -1376,11 +1380,11 @@ void te::layout::View::positioningDockOnTheScreen(AbstractItemView* item)
     QPoint ptGlobal = viewport()->mapToGlobal(itemPos);
 
     // total size with margins and borders
-    QSize dockSize = m_dockItemToolbar->sizeHint();
+    QSize dockSize = m_dialogItemToolbar->size();
 
     // Place the dock on top of the item
-    QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dockItemToolbar->height() + space), dockSize.width(), dockSize.height());
-    m_dockItemToolbar->setGeometry(rect);
+    QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dialogItemToolbar->height() + space), dockSize.width(), dockSize.height());
+    m_dialogItemToolbar->setGeometry(rect);
   }
 }
 

@@ -25,6 +25,7 @@
 
 // TerraLib
 #include "BarCodeItemFactory.h"
+#include "../../../../item/BarCodeController.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/BarCodeModel.h"
 #include "../../../../../core/pattern/mvc/AbstractItemController.h"
@@ -40,7 +41,7 @@ te::layout::AbstractItemView* te::layout::BarCodeItemFactory::build(ItemFactoryP
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  BarCodeController* controller = new BarCodeController(model);
   BarCodeItem* view = new BarCodeItem(controller);
   controller->setView(view);
 

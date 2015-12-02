@@ -1536,7 +1536,7 @@ void te::layout::Scene::showDock()
       EnumType* itemType = m_currentItemEdition->getController()->getProperties().getTypeObj();
       if (itemType)
       {
-        view->showDockToolbar(itemType, m_currentItemEdition);
+        view->showToolbar(itemType, m_currentItemEdition);
       }
     }
   }
@@ -1551,7 +1551,7 @@ void te::layout::Scene::closeDock()
     {
       if (m_currentItemEdition)
       {
-        view->closeDockToolbar();
+        view->closeToolbar();
       }
     }
   }
