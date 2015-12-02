@@ -121,6 +121,8 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   txtFont.setFamily(fontFamily);
   txtFont.setPointSize(fontSize);
 
+  QFont qFont = ItemUtils::convertToQfont(txtFont);
+
   ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
   QPointF unitCoord(0, 0);
@@ -158,11 +160,11 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     painter->setBrush(QBrush(textColor));
 
     const std::string& text = ss_value.str();
-    ItemUtils itemUtils = this->getScene()->getItemUtils();
-    QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), this->getScene()->getContext().getDpiX(), coordText, 0);
+
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
     
-    drawText(coordText, painter, ss_value.str());
+    drawText(coordText, painter, qFont, ss_value.str());
 
 
     unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
@@ -189,7 +191,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
 
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, strUnit);
+  drawText(unitCoord, painter, qFont, strUnit);
 
   painter->restore();
 }
@@ -238,6 +240,8 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   txtFont.setFamily(fontFamily);
   txtFont.setPointSize(fontSize);
 
+  QFont qFont = ItemUtils::convertToQfont(txtFont);
+
 
   ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
@@ -270,12 +274,12 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
     QPointF coordText(x1, newBoxSecond.topLeft().y() - 5);
     
     const std::string& text = ss_value.str();
-    ItemUtils itemUtils = this->getScene()->getItemUtils();
-    QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), this->getScene()->getContext().getDpiX(), coordText, 0);
+
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
     painter->setBrush(QBrush(textColor));
-    drawText(coordText, painter, ss_value.str());
+    drawText(coordText, painter, qFont, ss_value.str());
 
     unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
     unitCoord.setY(coordText.ry() - 0.5);
@@ -301,7 +305,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   
   QPointF coordText(centerX, boundRect.topLeft().y() + 1);
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, strUnit);
+  drawText(unitCoord, painter, qFont, strUnit);
 
   painter->restore();
 }
@@ -351,6 +355,8 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   txtFont.setFamily(fontFamily);
   txtFont.setPointSize(fontSize);
 
+  QFont qFont = ItemUtils::convertToQfont(txtFont);
+
   ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
   QPen penScale(black, 0, Qt::SolidLine);
@@ -393,16 +399,14 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     QPointF coordText(x1, lineVrt.y1() - 5);
 
     const std::string& text = ss_value.str();
-    ItemUtils itemUtils = this->getScene()->getItemUtils();
-    QPainterPath textObject = itemUtils.textToVector(text.c_str(), painter->font(), this->getScene()->getContext().getDpiX(), coordText, 0);
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
     painter->setBrush(QBrush(textColor));
-    drawText(coordText, painter, ss_value.str());
+    drawText(coordText, painter, qFont, ss_value.str());
 
     unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
     unitCoord.setY(coordText.ry() - 0.5);
-
 
     changeColor = firstRect;
     firstRect = secondRect;
@@ -422,7 +426,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   painter->setPen(QPen(textColor));
 
   QPointF coordText(centerX, boundRect.topLeft().y() + 1);
-  drawText(unitCoord, painter, strUnit);
+  drawText(unitCoord, painter, qFont, strUnit);
 
   painter->restore();
 }

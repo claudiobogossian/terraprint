@@ -138,17 +138,9 @@ void te::layout::ThreeNorthItem::drawTrueNorthStar(QPainter * painter)
   QColor cpen(0,0,0);
   QPen pn(cpen, 0, Qt::SolidLine);
   painter->setPen(pn);
- 
-  double dpi = 96.;
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  if (myScene != 0)
-  {
-	  dpi = myScene->getContext().getDpiY();
-  }
 
   QString qStrUnit("NQ");
-  ItemUtils utils(scene());
-  QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", 17), dpi, QPointF(-2.1, boundingRect().center().y() + boundingRect().height() / 2.2), 0);
+  QPainterPath textPath = ItemUtils::textToVector(qStrUnit, QFont("Arial", 17), QPointF(-2.1, boundingRect().center().y() + boundingRect().height() / 2.2), 0);
 
   QPainterPath rect_path;
 
@@ -202,16 +194,8 @@ void te::layout::ThreeNorthItem::drawMagneticNorthArrow(QPainter * painter, doub
 	QPolygonF north;
 	north << p5 << p6;
 
-	double dpi = 96.;
-	Scene* myScene = dynamic_cast<Scene*>(this->scene());
-	if (myScene != 0)
-	{
-		dpi = myScene->getContext().getDpiY();
-	}
-
 	QString qStrUnit("NM");
-	ItemUtils utils(scene());
-	QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", 17), dpi, QPointF(-2.1, boundingRect().center().y() + boundingRect().height() / 2.2), 0);
+  QPainterPath textPath = ItemUtils::textToVector(qStrUnit, QFont("Arial", 17), QPointF(-2.1, boundingRect().center().y() + boundingRect().height() / 2.2), 0);
 
 	QPainterPath rect_path;
 	rect_path.addPolygon(north);
@@ -255,21 +239,13 @@ void te::layout::ThreeNorthItem::drawGridNorthSquare(QPainter * painter, double 
 
 	star << pUnion;
 
-	double dpi = 96.;
-	Scene* myScene = dynamic_cast<Scene*>(this->scene());
-	if (myScene != 0)
-	{
-		dpi = myScene->getContext().getDpiY();
-	}
-
 	QMatrix matrix;
 	matrix.rotate(46.5);
 	star = matrix.map(star);
 	star.translate(QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.4));
 
 	QString qStrUnit("NG");
-	ItemUtils utils(scene());
-	QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", 17), dpi, QPointF(-1.8, boundingRect().center().y() + boundingRect().height() / 2.), 0);
+  QPainterPath textPath = ItemUtils::textToVector(qStrUnit, QFont("Arial", 17), QPointF(-1.8, boundingRect().center().y() + boundingRect().height() / 2.), 0);
 
 	QPainterPath rect_path;
 

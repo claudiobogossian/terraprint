@@ -248,9 +248,6 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   Font txtFont = pTextFontFamily.getValue().toFont();
   // Draw a horizontal line and the y coordinate change(vertical)
   Utils utils = ((Scene*) this->scene())->getUtils();
-  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
-
-  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
 
   WorldTransformer transf = utils.getTransformGeo(planarBox, boxMM);
   transf.setMirroring(false);
@@ -316,7 +313,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
     std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText);
     QString qText = text.c_str();
 
-    QPainterPath textObject = itemUtils.textToVector(qText, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
 
     QRectF rectF(textObject.boundingRect());
 
@@ -374,10 +371,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   // Draw a vertical line and the x coordinate change(horizontal)
 
   Utils utils = ((Scene*) this->scene())->getUtils();
-  ItemUtils itemUtils = ((Scene*) this->scene())->getItemUtils();
 
-  int dpi = ((Scene*) this->scene())->getContext().getDpiX();
-  
   WorldTransformer transf = utils.getTransformGeo(planarBox, boxMM);
   transf.setMirroring(false);
 
@@ -444,7 +438,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText);
     QString qText = text.c_str();
 
-    QPainterPath textObject = itemUtils.textToVector(qText, ft, dpi, QPointF(), 0);
+    QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
 
     //as the grid lines an be curved, texts must only de drawn in the cases that the grid line reaches the top or the botton of the item bounding rect

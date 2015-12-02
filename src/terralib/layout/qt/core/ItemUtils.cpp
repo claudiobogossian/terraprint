@@ -56,6 +56,8 @@
 #include <QTextDocument>
 #include <QFont>
 
+double te::layout::ItemUtils::m_textDPI = 72.;
+
 te::layout::ItemUtils::ItemUtils( QGraphicsScene* scene ) :
   m_scene(scene)
 {
@@ -569,17 +571,17 @@ QRectF te::layout::ItemUtils::getMinimumTextBoundary(const std::string& fontName
   return textBoundingRect;
 }
 
-QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFont& font, double dpi, const QPointF& referencePoint, double rotationAngle)
+QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFont& font, const QPointF& referencePoint, double rotationAngle)
 {
+  double textDPI = ItemUtils::getTextDPI();
+
   //we first calculate the correction factor to be use in the case that the given DPI is not 72.
-  double correctionFactor = dpi / 72.;
+  double correctionFactor = textDPI / 72.;
   
   //as we are in a CS based in millimeters, we calculate the relation between the millimeters CS and the device CS
   double ptSizeInches = 1. / 72.; //The size of 1 point, in inches
   double ptSizeMM = ptSizeInches * 25.4; //The size of 1 point, in millimeters
   double scale = ptSizeMM * (1. / correctionFactor); //for the calculation of the scale, we consider the pixel size in millimeters and the inverse of the correction factor
-
-  //Now we vectorize the text by addind it to a painter path
 
   QFont fontCopy(font);
   if (font.pixelSize() > 0)
@@ -595,8 +597,9 @@ QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFon
     fontCopy.setPointSizeF(font.pointSizeF());
   }
 
+  //Now we vectorize the text by addind it to a painter path
   QPainterPath painterPath;
-  painterPath.addText(0, 0, font, text);
+  painterPath.addText(0, 0, fontCopy, text);
 
   //Then we apply the [optional] rotation
   if(rotationAngle != 0)
@@ -608,11 +611,8 @@ QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFon
     transform.rotate(-rotationAngle);
 
     painterPath = transform.map(painterPath);
-    //painterPath.moveTo(0., 0.);
     painterPath.translate(-painterPath.boundingRect().x(), -painterPath.boundingRect().y());
   }
-
-  
 
   //and scale, so the vectorized text size can be compatible to the device
   QTransform transform;
@@ -621,6 +621,8 @@ QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFon
   //after the transformation is set, we apply it to the painter path
   painterPath = transform.map(painterPath);
   painterPath.translate(-painterPath.boundingRect().x(), -painterPath.boundingRect().y());
+
+  QRectF currentRect = painterPath.boundingRect();
  
   //we [optionally] translate the painter path to the given reference coordinate
   painterPath.translate(referencePoint);
@@ -688,5 +690,14 @@ QFont  te::layout::ItemUtils::convertToQfont(Font txtFont){
   qft.setPointSizeF(txtFont.getPointSize());
 
   return qft;
+}
 
+double te::layout::ItemUtils::getTextDPI()
+{
+  return m_textDPI;
+}
+
+void te::layout::ItemUtils::setTextDPI(double textDpi)
+{
+  m_textDPI = textDpi;
 }

@@ -69,7 +69,6 @@ te::layout::TitleModel::TitleModel()
     Property property(0);
     property.setName(propertyNames.getTitle());
     property.setValue(title, dataType->getDataTypeString());
-    property.addSubProperty(property);
     m_properties.addProperty(property);
   }
 
