@@ -766,26 +766,9 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
     for (size_t i = 0; i < vecItemNames.size(); ++i)
     {
       const std::string& itemName = vecItemNames[i];
-      AbstractItemView* selectedAbsView = getItem(itemName);
-      if (selectedAbsView != 0)
-      {
-        QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(selectedAbsView);
-        const Property& pConnectItemPos = selectedAbsView->getController()->getProperty("connect_item_position");
-        bool connectItem = pConnectItemPos.getValue().toBool();
-        if (connectItem == true)
-        {
-          const Property& pItemObserver = selectedAbsView->getController()->getProperty("itemObserver");
-          std::string itemObserverName = pItemObserver.getValue().toString();
-          AbstractItemView* mapView = getItem(itemObserverName);
-          if (mapView)
-          {
-            QGraphicsItem* mapItem = dynamic_cast<QGraphicsItem*>(mapView);
-            //We must move the selected item to the position of the map in scene coordinate system
-            qItem->setPos(mapItem->scenePos());
-          }
-        }
-        listItems.append(qItem);
-      }
+      QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->getItem(itemName));
+
+      listItems.append(qItem);
     }
 
     QGraphicsItemGroup* qItemGroup = createItemGroup(listItems);
@@ -1222,9 +1205,15 @@ void te::layout::Scene::applyProportionAllItems( QSize oldPaper, QSize newPaper 
       {
         AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
         if(it)
-        {                    
+        {           
           double x = item->scenePos().x();
           double y = item->scenePos().y();
+          if (item->parentItem())
+          {
+            x = item->pos().x();
+            y = item->pos().y();
+          }
+
           double width = item->boundingRect().width();
           double height = item->boundingRect().height();
 
