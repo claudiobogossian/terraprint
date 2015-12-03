@@ -1205,9 +1205,15 @@ void te::layout::Scene::applyProportionAllItems( QSize oldPaper, QSize newPaper 
       {
         AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
         if(it)
-        {                    
+        {           
           double x = item->scenePos().x();
           double y = item->scenePos().y();
+          if (item->parentItem())
+          {
+            x = item->pos().x();
+            y = item->pos().y();
+          }
+
           double width = item->boundingRect().width();
           double height = item->boundingRect().height();
 
