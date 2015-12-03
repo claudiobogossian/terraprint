@@ -161,7 +161,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
     const std::string& text = ss_value.str();
 
-    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), coordText, 0);
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
     
     drawText(coordText, painter, qFont, ss_value.str());
@@ -275,7 +275,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
     
     const std::string& text = ss_value.str();
 
-    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), coordText, 0);
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
     painter->setBrush(QBrush(textColor));
@@ -399,7 +399,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     QPointF coordText(x1, lineVrt.y1() - 5);
 
     const std::string& text = ss_value.str();
-    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), coordText, 0);
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
     painter->setBrush(QBrush(textColor));
