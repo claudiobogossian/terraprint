@@ -766,9 +766,26 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
     for (size_t i = 0; i < vecItemNames.size(); ++i)
     {
       const std::string& itemName = vecItemNames[i];
-      QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->getItem(itemName));
-
-      listItems.append(qItem);
+      AbstractItemView* selectedAbsView = getItem(itemName);
+      if (selectedAbsView != 0)
+      {
+        QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(selectedAbsView);
+        const Property& pConnectItemPos = selectedAbsView->getController()->getProperty("connect_item_position");
+        bool connectItem = pConnectItemPos.getValue().toBool();
+        if (connectItem == true)
+        {
+          const Property& pItemObserver = selectedAbsView->getController()->getProperty("itemObserver");
+          std::string itemObserverName = pItemObserver.getValue().toString();
+          AbstractItemView* mapView = getItem(itemObserverName);
+          if (mapView)
+          {
+            QGraphicsItem* mapItem = dynamic_cast<QGraphicsItem*>(mapView);
+            //We must move the selected item to the position of the map in scene coordinate system
+            qItem->setPos(mapItem->scenePos());
+          }
+        }
+        listItems.append(qItem);
+      }
     }
 
     QGraphicsItemGroup* qItemGroup = createItemGroup(listItems);
