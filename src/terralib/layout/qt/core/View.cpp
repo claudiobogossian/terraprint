@@ -1112,6 +1112,10 @@ bool te::layout::View::exportProperties( EnumType* type )
   {
     return is_export;
   }
+  if (fileName.endsWith(".xml") == false)
+  {
+    fileName.append(".xml");
+  }
 
   std::string j_name = fileName.toStdString();
 
