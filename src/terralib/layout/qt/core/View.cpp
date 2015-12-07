@@ -90,7 +90,14 @@ te::layout::View::View( QWidget* widget) :
 
   m_dialogItemToolbar = new QDialog(this->viewport());
   m_dialogItemToolbar->setVisible(false);
-  m_dialogItemToolbar->setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
+  m_dialogItemToolbar->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
+  Qt::WindowFlags flags = m_dialogItemToolbar->windowFlags();
+
+  // Linux: for remove buttons in title bar
+  flags &= ~Qt::WindowContextHelpButtonHint;
+  flags &= ~Qt::WindowMinMaxButtonsHint;
+  flags &= ~Qt::WindowCloseButtonHint;
+  m_dialogItemToolbar->setWindowFlags(flags);
 }
 
 te::layout::View::~View()
@@ -1314,7 +1321,6 @@ void te::layout::View::showToolbar(EnumType* itemType, AbstractItemView* item)
         toolbar->setVisible(true);
 
         QSize size = toolbar->size();
-        setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX); // disable fixed size 
         m_dialogItemToolbar->resize(size);
 
         QString title = toolbar->windowTitle();

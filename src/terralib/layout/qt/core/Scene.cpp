@@ -1446,6 +1446,10 @@ bool te::layout::Scene::enterEditionMode()
 
   m_currentItemEdition = absItem;
   m_isEditionMode = true;
+  if (getView())
+  {
+    getView()->setDragMode(QGraphicsView::NoDrag);
+  }
   m_currentItemEdition->setEditionMode(true);
   update();
 
@@ -1461,6 +1465,10 @@ void te::layout::Scene::leaveEditionMode()
     return;
   }
   m_isEditionMode = false;
+  if (getView())
+  {
+    getView()->setDragMode(QGraphicsView::RubberBandDrag);
+  }
   m_currentItemEdition->setEditionMode(false);
   update();
   emit editionFinalized();
