@@ -32,6 +32,7 @@
 #include "../core/ItemUtils.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../qt/core/Scene.h"
+#include "../core/tools/PanMapTool.h"
 #include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/qt/widgets/layer/explorer/TreeItem.h"
 #include "terralib/qt/widgets/layer/explorer/LayerItem.h"
@@ -301,14 +302,23 @@ void te::layout::MapItem::enterEditionMode()
 {
   AbstractItem<QGraphicsObject>::enterEditionMode();
 
+  QCursor toolCursor = createCursor("layout-map-pan");
+
   //we now install the visualization tools in the map display and forward all the mouse and keyboards events to it
-  if(m_zoomWheel == 0)
+  if(!m_zoomWheel)
   {
     m_zoomWheel = new te::qt::widgets::ZoomWheel(m_mapDisplay, 1.25, false);
-    this->setCursor(Qt::OpenHandCursor);
+    this->setCursor(toolCursor);
+  }
+  m_mapDisplay->installEventFilter(m_zoomWheel);
+
+  if (m_currentTool)
+  {
+    removeCurrentTool();
   }
 
-  m_mapDisplay->installEventFilter(m_zoomWheel);
+  m_currentTool = new PanMapTool(m_mapDisplay, toolCursor, toolCursor);
+  m_mapDisplay->installEventFilter(m_currentTool);
   
   if(parentItem() != 0)
   {
@@ -326,6 +336,11 @@ void te::layout::MapItem::leaveEditionMode()
     m_mapDisplay->removeEventFilter(m_zoomWheel);
     delete m_zoomWheel;
     m_zoomWheel = 0;
+  }
+
+  if (m_currentTool)
+  {
+    removeCurrentTool();
   }
 
   this->setCursor(Qt::ArrowCursor);
@@ -507,7 +522,7 @@ bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
   if (tool == mode->getModeMapPan())
   {
     toolCursor = createCursor("layout-map-pan");
-    m_currentTool = new te::qt::widgets::Pan(m_mapDisplay, toolCursor, toolCursor);
+    m_currentTool = new PanMapTool(m_mapDisplay, toolCursor, toolCursor);
   }
 
   if (tool == mode->getModeMapZoomIn())
