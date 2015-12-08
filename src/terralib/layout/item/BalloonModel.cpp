@@ -37,10 +37,33 @@
 te::layout::BalloonModel::BalloonModel()
   : AbstractItemModel()
 {
-  /*m_type = Enums::getInstance().getEnumObjectType()->getBalloonItem();
+  m_type = Enums::getInstance().getEnumObjectType()->getBalloonItem();
 
   m_box = te::gm::Envelope(0., 0., 20., 20.);
-  m_border = true;*/
+  m_border = true;
+
+  te::color::RGBAColor color(0, 0, 0, 255);
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  {
+  Property property(0);
+  property.setName("border");
+  property.setLabel(TR_LAYOUT("Border"));
+  property.setValue(m_border, dataType->getDataTypeBool());
+  property.setMenu(true);
+  this->m_properties.addProperty(property);
+ }
+
+  {
+    Property property(0);
+    property.setName("color");
+    property.setLabel(TR_LAYOUT("Color"));
+    property.setValue(color, dataType->getDataTypeColor());
+    property.setMenu(true);
+    this->m_properties.addProperty(property);
+  }
+
 }
 
 te::layout::BalloonModel::~BalloonModel()
