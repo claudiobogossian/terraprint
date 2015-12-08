@@ -49,7 +49,7 @@
 #include <QMatrix>
 
 te::layout::LegendItem::LegendItem(AbstractItemController* controller)
-  : AbstractItem<QGraphicsItem>(controller, true)
+  : AbstractItem<QGraphicsItem>(controller)
 {
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
@@ -71,10 +71,8 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
   const Property& pLayers = m_controller->getProperty("layers");  
   const std::list<te::map::AbstractLayerPtr>& layerList = pLayers.getValue().toLayerList();
 
-  double borderDisplacement = 1;
-  double displacementBetweenTitleAndSymbols = 7;
-  int borderDisplacementInPixels = utils.mm2pixel(borderDisplacement);
-  int dispBetweenTitleAndSymbolsInPixels = utils.mm2pixel(displacementBetweenTitleAndSymbols);
+  int borderDisplacement = 3.;
+  int dispBetweenTitleAndSymbols = 4;
   
   if(layerList.empty() == true)
   {
@@ -83,8 +81,8 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
 
   QRectF boundRect = this->boundingRect();
 
-  double x1 = boundRect.x() + borderDisplacementInPixels;
-  double y1 = boundRect.y() - borderDisplacementInPixels;
+  double x1 = boundRect.x() + borderDisplacement;
+  double y1 = boundRect.bottomLeft().y() - borderDisplacement;
 
   double wtxtInPixels = 0.;
   double htxtInPixels = 0.;
@@ -94,37 +92,23 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
     const te::map::AbstractLayerPtr layer = (*it);
 
     std::string title = layer->getTitle();
+        
+    QPoint ptTitle(x1, y1);
+    QFont font("Arial", 12);
+    drawText(ptTitle, painter, font, title);
 
-    QString qTitle(title.c_str());
-
-    utils.textBoundingBox(wtxtInPixels, htxtInPixels, title);
-
-    QRectF rectTitle(x1, y1, wtxtInPixels, htxtInPixels);
-
-    painter->drawText(rectTitle, qTitle);
-
-    y1 += dispBetweenTitleAndSymbolsInPixels;
+    y1 -= dispBetweenTitleAndSymbols;
 
     drawLegend(painter, layer, x1, y1);
   }
 }
 
-void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double y1)
+void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double& y1)
 {
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  Utils utils = sc->getUtils();
-
-  double displacementBetweenSymbols = 7;
-  double displacementBetweenSymbolsAndText = 2;
-  double symbolsize = 5;
-
-  int dispBetweenSymbolAndTextInPixels = utils.mm2pixel(displacementBetweenSymbolsAndText);
-  int dispBetweenSymbolsInPixels = utils.mm2pixel(displacementBetweenSymbols);
-  int symbolSizeInPixels = utils.mm2pixel(symbolsize);
-
+  double displacementBetweenSymbols = 5;
+  double displacementBetweenSymbolsAndText = 1.;
+  double symbolsize = 7;
+  
   te::map::Grouping* grouping = layer->getGrouping();
 
   if (grouping != 0 && grouping->isVisible() == true)
@@ -133,7 +117,7 @@ void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLaye
     const std::vector<te::map::GroupingItem*>& items = grouping->getGroupingItems();
     te::map::GroupingType type = grouping->getType();
 
-    double labelX1 = x1 + symbolSizeInPixels + dispBetweenSymbolAndTextInPixels;
+    double labelX1 = x1 + symbolsize + displacementBetweenSymbolsAndText;
 
     for (unsigned int i = 0; i < items.size(); ++i)
     {
@@ -146,16 +130,19 @@ void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLaye
       foreach(te::se::Symbolizer* symbol, symbolizers)
       {
         double offset = 2.0;
-        QRectF geomRect(x1, y1, symbolSizeInPixels, symbolSizeInPixels);
+        QRectF geomRect(x1, y1, symbolsize, symbolsize);
 
         te::gm::Geometry* geom = createGeometry(geomRect, symbol);
         if (!geom)
           continue;
 
         drawGeometry(painter, geomRect, symbol, geom);
+
+        delete geom;
+        geom = 0;
       }
 
-      y1 += dispBetweenSymbolsInPixels;
+      y1 -= displacementBetweenSymbols;
     }
   }
 }
@@ -227,8 +214,17 @@ te::gm::Geometry* te::layout::LegendItem::createPointSymbolizer(QRectF geomRect)
 
 void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te::se::Symbolizer*symbol, te::gm::Geometry* geom)
 {
-  int pixmapWidth = geom->getMBR()->getWidth();
-  int pixmapHeight = geom->getMBR()->getHeight();
+  if (!scene())
+    return;
+
+  Scene* sc = dynamic_cast<Scene*>(scene());
+  Utils utils = sc->getUtils();
+
+  int pixmapWidthMM = geom->getMBR()->getWidth();
+  int pixmapHeightMM = geom->getMBR()->getHeight();
+
+  int pixmapWidth = utils.mm2pixel(pixmapWidthMM);
+  int pixmapHeight = utils.mm2pixel(pixmapHeightMM);
 
   double x1 = geomRect.x();
   double y1 = geomRect.y();
@@ -248,9 +244,11 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
   geomCanvas.draw(geom);
   
   QPointF ptGeom(x1, y1);
+  
+  QRectF rect(x1, y1, pixmapWidthMM, pixmapHeightMM);
 
   painter->save();
-  painter->drawPixmap(ptGeom, *pixmap);
+  drawPixmap(rect, painter, *pixmap);
   painter->restore();
 }
 
@@ -267,15 +265,9 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, double x1, double y1, 
 
   QFont qFont(QString(font.getFamily().c_str()), font.getPointSize());
   QColor qFontColor(fontColor.getRed(), fontColor.getGreen(), fontColor.getBlue(), fontColor.getAlpha());
-
-  double wtxt = 0;
-  double htxt = 0;
-
+  
   painter->save();
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  Utils utils = sc->getUtils();
-
+  
   std::string label = propertyName;
   label += ": ";
 
@@ -292,15 +284,15 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, double x1, double y1, 
     label += " ~ ";
     label += upperLimit;
   }
+    
+  QPen pen(qFontColor);
+  painter->setPen(pen);
 
   painter->setFont(qFont);
   painter->setBrush(qFontColor);
-
-  utils.textBoundingBox(wtxt, htxt, label);
-
-  QRectF newLabelRect(x1, y1, wtxt, htxt);
-  QString qLabel(label.c_str());
-  painter->drawText(newLabelRect, qLabel);
+  
+  QPointF pt(x1, y1); // 3 is the size of the simbolyze
+  drawText(pt, painter, qFont, label);
 
   painter->restore();
 }

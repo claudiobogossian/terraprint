@@ -80,11 +80,11 @@ namespace te
          */
         virtual ~LegendItem();
 
-    protected:
-
+      protected:
+        
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-        virtual void drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double y1);
+        virtual void drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double& y1);
 
         virtual te::gm::Geometry* createGeometry(QRectF geomRect, te::se::Symbolizer* symbol);
 
