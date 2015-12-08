@@ -48,7 +48,7 @@ namespace te
           
       \ingroup layout
 
-      \sa te::layout::AbstractItemModel, NewObserver
+      \sa te::layout::AbstractItemModel, Observer
     */
     class TELAYOUTEXPORT ScaleModel : public AbstractItemModel, public Observer
     {
@@ -64,6 +64,9 @@ namespace te
         */
         virtual ~ScaleModel();
 
+        /*!
+        \brief This function is called by the subject every time its model is changed
+        */
         virtual void update(const Subject* subject);
     };
   }

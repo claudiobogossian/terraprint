@@ -51,7 +51,7 @@ namespace te
     
     \ingroup layout
 
-    \sa te::layout::ItemObserver
+    \sa te::layout::MapItem
   */
     class TELAYOUTEXPORT MapLocationItem : public MapItem
     {
@@ -65,12 +65,21 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        MapLocationItem(AbstractItemController* controller, bool invertedMatrix = false);
+        MapLocationItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor
         */ 
         virtual ~MapLocationItem();
+
+    protected:
+
+        virtual void createMapDisplay();
+
+      protected slots:
+
+        void onDisplayPaintEvent(QPainter*);
+
     };
   }
 }
