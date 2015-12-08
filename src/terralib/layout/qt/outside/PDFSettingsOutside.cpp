@@ -98,6 +98,10 @@ void te::layout::PDFSettingsOutside::onSaveAsClicked()
   {
     m_ui->txtEdtFile->setText(fileName);
   }
+  if (fileName.endsWith(".pdf") == false)
+  {
+    fileName.append(".pdf");
+  }
 }
 
 void te::layout::PDFSettingsOutside::onCurrentIndexChanged(const QString & text)

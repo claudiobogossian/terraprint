@@ -1205,9 +1205,15 @@ void te::layout::Scene::applyProportionAllItems( QSize oldPaper, QSize newPaper 
       {
         AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
         if(it)
-        {                    
+        {           
           double x = item->scenePos().x();
           double y = item->scenePos().y();
+          if (item->parentItem())
+          {
+            x = item->pos().x();
+            y = item->pos().y();
+          }
+
           double width = item->boundingRect().width();
           double height = item->boundingRect().height();
 
@@ -1440,6 +1446,10 @@ bool te::layout::Scene::enterEditionMode()
 
   m_currentItemEdition = absItem;
   m_isEditionMode = true;
+  if (getView())
+  {
+    getView()->setDragMode(QGraphicsView::NoDrag);
+  }
   m_currentItemEdition->setEditionMode(true);
   update();
 
@@ -1455,6 +1465,10 @@ void te::layout::Scene::leaveEditionMode()
     return;
   }
   m_isEditionMode = false;
+  if (getView())
+  {
+    getView()->setDragMode(QGraphicsView::RubberBandDrag);
+  }
   m_currentItemEdition->setEditionMode(false);
   update();
   emit editionFinalized();
@@ -1536,7 +1550,7 @@ void te::layout::Scene::showDock()
       EnumType* itemType = m_currentItemEdition->getController()->getProperties().getTypeObj();
       if (itemType)
       {
-        view->showDockToolbar(itemType, m_currentItemEdition);
+        view->showToolbar(itemType, m_currentItemEdition);
       }
     }
   }
@@ -1551,7 +1565,7 @@ void te::layout::Scene::closeDock()
     {
       if (m_currentItemEdition)
       {
-        view->closeDockToolbar();
+        view->closeToolbar();
       }
     }
   }

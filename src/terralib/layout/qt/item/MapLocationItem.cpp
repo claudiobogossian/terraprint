@@ -28,9 +28,13 @@
 // TerraLib
 #include "MapLocationItem.h"
 
-te::layout::MapLocationItem::MapLocationItem(AbstractItemController* controller, bool invertedMatrix) :
-  MapItem(controller, invertedMatrix)
-{    
+#include "terralib/qt/widgets/canvas/MapDisplay.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
+#include "terralib/geometry/Utils.h"
+
+te::layout::MapLocationItem::MapLocationItem(AbstractItemController* controller) 
+  : MapItem(controller)
+{
 
 }
 
@@ -39,5 +43,51 @@ te::layout::MapLocationItem::~MapLocationItem()
 
 }
 
+void te::layout::MapLocationItem::createMapDisplay()
+{
+  te::layout::MapItem::createMapDisplay();
 
+  connect(m_mapDisplay, SIGNAL(displayPaintEvent(QPainter*)), this, SLOT(onDisplayPaintEvent(QPainter*)));
 
+}
+
+void te::layout::MapLocationItem::onDisplayPaintEvent(QPainter*)
+{
+  const Property& pSrid = m_controller->getProperty("reference_srid");
+  const Property& pBox = m_controller->getProperty("reference_box");
+  const Property& pFillColor = m_controller->getProperty("reference_box_fill_color");
+  const Property& pContourColor = m_controller->getProperty("reference_box_contour_color");
+
+  int referenceSrid = pSrid.getValue().toInt();
+  te::gm::Envelope referenceBox = pBox.getValue().toEnvelope();
+  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
+  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
+
+  if (referenceSrid == -1 || referenceBox.isValid() == false)
+  {
+    return;
+  }
+  
+  te::gm::Envelope envelope = m_mapDisplay->getExtent();
+  int srid = m_mapDisplay->getSRID();
+
+  te::qt::widgets::Canvas canvas(m_mapDisplay->getDraftPixmap());
+  canvas.calcAspectRatio(&envelope);
+  canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
+  canvas.clear();
+
+  if (srid != referenceSrid)
+  {
+    referenceBox.transform(referenceSrid, srid);
+  }
+
+  te::gm::Geometry* referenceGeometry = te::gm::GetGeomFromEnvelope(&referenceBox, srid);
+
+  canvas.setPolygonFillColor(fillColor);
+  canvas.setPolygonContourColor(contourColor);
+  canvas.setPolygonContourDashStyle(te::map::DashLine);
+  canvas.setPolygonContourWidth(2);
+  canvas.draw(referenceGeometry);
+
+  delete referenceGeometry;
+}

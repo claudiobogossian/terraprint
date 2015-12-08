@@ -64,7 +64,7 @@ class QGraphicsItemGroup;
 class QLineF;
 class QContextMenuEvent;
 class QEvent;
-class QDockWidget;
+class QDialog;
 
 namespace te
 {
@@ -258,14 +258,14 @@ namespace te
 
         \param itemType type of the item
         */
-        virtual void showDockToolbar(EnumType* itemType, AbstractItemView* item);
+        virtual void showToolbar(EnumType* itemType, AbstractItemView* item);
 
         /*!
         \brief Method that close a dock with a toolbar when exit a editing item. The View is the owner of the dock. Change to NULL the owner of the ToolBar.
 
         \param itemType type of the item
         */
-        virtual void closeDockToolbar();
+        virtual void closeToolbar();
 
         virtual QList<QGraphicsItem*> getSelectedGraphicsItems();
 
@@ -439,7 +439,7 @@ namespace te
         /*!
         \brief positioning the dock (toolbar) on top of the item 
         */
-        virtual void positioningDockOnTheScreen(AbstractItemView* item);
+        virtual void positioningToolbarOnTheScreen(AbstractItemView* item);
 
       protected:
 
@@ -463,7 +463,7 @@ namespace te
         std::vector<AbstractLayoutTool*>     m_lateRemovalVec;
         bool                                 m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True
         QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item
-        QDockWidget*                         m_dockItemToolbar;
+        QDialog*                             m_dialogItemToolbar;
         EnumType*                            m_currentToolbarInsideType;
         bool                                 m_midButtonClicked;
     };
