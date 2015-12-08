@@ -45,7 +45,55 @@ te::layout::BalloonItem::~BalloonItem()
 
 void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
+  const Property& property = m_controller->getProperty("border");
+
+  if (property.isNull() == false){
+    drawBalloon1(painter);
+  }
+
 
 }
 
+void te::layout::BalloonItem::drawBalloon1(QPainter * painter){
+
+  painter->save();
+  QColor cpen = setBrush(painter);
+  QPen pn(cpen, 0, Qt::SolidLine);
+  painter->setPen(pn);
+
+  QPen pen(cpen, 0, Qt::SolidLine);
+  pen.setWidth(1);
+
+  QPointF p1 = QPointF(boundingRect().width() / 4., boundingRect().height() - (boundingRect().height() / 4.));
+  QPointF p2 = QPointF((boundingRect().width() / 2.) + (boundingRect().width() / 4.), boundingRect().height() - (boundingRect().height() / 4.));
+
+  QPointF p3 = QPointF(boundingRect().width() / 4., boundingRect().height() - (boundingRect().height() / 2.));
+  QPointF p4 = QPointF((p2.rx() - (p2.rx()*0.2)), p3.ry());
+  QPointF p5 = QPointF((p2.rx() - (p2.rx()*0.2)), p3.ry() - (p3.ry()*0.3));
+  QPointF p6 = QPointF((p2.rx() - (p2.rx()*0.1)), p3.ry());
+  QPointF p7 = QPointF(p2.rx(), p3.ry());
+
+
+  painter->setPen(pen);
+
+  painter->drawLine(p1, p2);
+  painter->drawLine(p1, p3);
+  painter->drawLine(p3, p4);
+  painter->drawLine(p4, p5);
+  painter->drawLine(p5, p6);
+  painter->drawLine(p6, p7);
+  painter->drawLine(p7, p2);
+
+  painter->restore();
+
+}
+
+QColor te::layout::BalloonItem::setBrush(QPainter* painter)
+{
+  const Property& colorProperty = m_controller->getProperty("color");
+  const te::color::RGBAColor& color = colorProperty.getValue().toColor();
+  QColor brushColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+  painter->setBrush(QBrush(brushColor));
+  return brushColor;
+}
 
