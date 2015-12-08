@@ -33,11 +33,24 @@
 // TerraLib
 #include "AbstractItem.h"
 #include "../../core/Config.h"
+#include "terralib/maptools/GroupingItem.h"
+#include "terralib/maptools/AbstractLayer.h"
+
+// STL
+#include <string>
 
 #include <QGraphicsItem>
 
 namespace te
 {
+  namespace gm
+  {
+    class Geometry;
+  }
+  namespace se
+  {
+    class Symbolizer;
+  }
   namespace layout
   {
     class AbstractItemController;
@@ -70,6 +83,20 @@ namespace te
     protected:
 
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+
+        virtual void drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double y1);
+
+        virtual te::gm::Geometry* createGeometry(QRectF geomRect, te::se::Symbolizer* symbol);
+
+        virtual te::gm::Geometry* createPolygonSymbolizer(QRectF geomRect, double offset = 2.0);
+
+        virtual te::gm::Geometry* createLineSymbolizer(QRectF geomRect, double offset = 2.0);
+
+        virtual te::gm::Geometry* createPointSymbolizer(QRectF geomRect);
+
+        virtual void drawGeometry(QPainter* painter, QRectF geomRect, te::se::Symbolizer*symbol, te::gm::Geometry* geom);
+
+        virtual void drawLabel(QPainter* painter, double x1, double y1, std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 
     private:
 
