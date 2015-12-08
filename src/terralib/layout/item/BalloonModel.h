@@ -32,6 +32,7 @@
 #include "../core/pattern/mvc/AbstractItemModel.h"
 #include "../core/Config.h"
 
+
 namespace te
 {
   namespace layout
@@ -49,6 +50,10 @@ namespace te
     class TELAYOUTEXPORT BalloonModel : public AbstractItemModel
     {
       public:
+
+        bool m_type;
+        te::gm::Envelope m_box;
+        bool m_border;
 
         /*!
           \brief Constructor

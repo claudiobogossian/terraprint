@@ -68,6 +68,8 @@ namespace te
       protected:
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+        virtual void drawBalloon1(QPainter * painter);
+        QColor setBrush(QPainter* painter);
     };
   }
 }

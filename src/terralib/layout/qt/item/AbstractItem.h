@@ -833,17 +833,26 @@ inline void te::layout::AbstractItem<T>::calculateResize()
       break;
 
     case TPTopLeft:
-      finalCoord.setX(m_initialCoord.x() - correctionX);
+      if (keepAspect == true)
+        finalCoord.setX(m_initialCoord.x() - correctionX);
+      else
+        finalCoord.setX(m_initialCoord.x() + correctionX);
+
       resizeRect.setBottomLeft(finalCoord);
       break;
 
     case TPLowerRight:
-      finalCoord.setX(m_initialCoord.x() - correctionX);
+      if (keepAspect == true)
+        finalCoord.setX(m_initialCoord.x() - correctionX);
+      else
+        finalCoord.setX(m_initialCoord.x() + correctionX);
+
       resizeRect.setTopRight(finalCoord);
       break;
 
     case TPLowerLeft:
       finalCoord.setX(m_initialCoord.x() + correctionX);
+      
       resizeRect.setTopLeft(finalCoord);
       break;
 

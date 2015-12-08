@@ -27,7 +27,7 @@
 #include "MapLocationItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/MapLocationModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../../item/MapController.h"
 #include "../../../../item/MapLocationItem.h"
 
 te::layout::AbstractItemView* te::layout::MapLocationItemFactory::build(ItemFactoryParamsCreate params)
@@ -40,7 +40,7 @@ te::layout::AbstractItemView* te::layout::MapLocationItemFactory::build(ItemFact
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  AbstractItemController* controller = new MapController(model);
   MapLocationItem* view = new MapLocationItem(controller);
   controller->setView(view);
 
