@@ -63,9 +63,13 @@ te::layout::LegendModel::LegendModel()
 
   std::string name = "";
   std::string mapName = "";
-  Font font;
-  font.setPointSize(8);
-  te::color::RGBAColor fontColor(0, 0, 0, 255);
+  std::string legendBody = "";
+  Font fontLegend;
+  fontLegend.setPointSize(8);
+  Font fontTitle;
+  fontTitle.setPointSize(12);
+  te::color::RGBAColor fontLegendColor(0, 0, 0, 255);
+  te::color::RGBAColor fontTitleColor(0, 0, 0, 255);
   std::list<te::map::AbstractLayerPtr> layerList;
   double borderDisplacement = 3.;
   double displacementBetweenSymbols = 5.;
@@ -111,57 +115,80 @@ te::layout::LegendModel::LegendModel()
   }
   {
     Property property(0);
-    property.setName("font");
-    property.setLabel(TR_LAYOUT("Font"));
-    property.setValue(font, dataType->getDataTypeFont());
+    property.setName("font_title");
+    property.setLabel(TR_LAYOUT("Font Title"));
+    property.setValue(fontTitle, dataType->getDataTypeFont());
     property.setMenu(true);
     m_properties.addProperty(property);
   }
   {
     Property property(0);
-    property.setName("font_color");
-    property.setLabel(TR_LAYOUT("Font Color"));
-    property.setValue(fontColor, dataType->getDataTypeColor());
+    property.setName("font_title_color");
+    property.setLabel(TR_LAYOUT("Font Title Color"));
+    property.setValue(fontTitleColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
   }
 
   // Legend Configuration
+
+  Property prop_legend_body(0);
+  prop_legend_body.setName("legend_body");
+  prop_legend_body.setLabel(TR_LAYOUT("Legend Body"));
+  prop_legend_body.setValue(legendBody, dataType->getDataTypeGroup());
+  {
+    Property property(0);
+    property.setName("font_legend");
+    property.setLabel(TR_LAYOUT("Font Legend"));
+    property.setValue(fontLegend, dataType->getDataTypeFont());
+    property.setMenu(true);
+    prop_legend_body.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("font_legend_color");
+    property.setLabel(TR_LAYOUT("Font Legend Color"));
+    property.setValue(fontLegendColor, dataType->getDataTypeColor());
+    property.setMenu(true);
+    prop_legend_body.addSubProperty(property);
+  }
   {
     Property property(0);
     property.setName("border_displacement");
     property.setLabel(TR_LAYOUT("Border Displacement"));
     property.setValue(borderDisplacement, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_symbols");
     property.setLabel(TR_LAYOUT("Displacement Between Symbols"));
     property.setValue(displacementBetweenSymbols, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_title_and_symbols");
     property.setLabel(TR_LAYOUT("Displacement Between Title And Symbols"));
     property.setValue(displacementBetweenTitleAndSymbols, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_symbols_and_texts");
     property.setLabel(TR_LAYOUT("Displacement Between Symbols And Texts"));
     property.setValue(displacementBetweenSymbolsAndText, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("symbol_size");
     property.setLabel(TR_LAYOUT("Symbol Size"));
     property.setValue(symbolSize, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    prop_legend_body.addSubProperty(property);
   }
+  m_properties.addProperty(prop_legend_body);
+
   //updating properties
   {
     Property property(0);
@@ -181,7 +208,6 @@ te::layout::LegendModel::LegendModel()
     property.setValue(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
-
 }
 
 te::layout::LegendModel::~LegendModel()

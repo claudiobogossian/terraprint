@@ -72,15 +72,22 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
   const Property& pLayers = m_controller->getProperty("layers");  
   const Property& pBorderDisplacement = m_controller->getProperty("border_displacement");
   const Property& pDispBetweenTitleAndSymbols = m_controller->getProperty("displacement_between_title_and_symbols");
+  const Property& pFontColor = m_controller->getProperty("font_title_color");
+  const Property& pFont = m_controller->getProperty("font_title");
 
   const std::list<te::map::AbstractLayerPtr>& layerList = pLayers.getValue().toLayerList();
   int borderDisplacement = pBorderDisplacement.getValue().toDouble();
   int dispBetweenTitleAndSymbols = pDispBetweenTitleAndSymbols.getValue().toDouble();
+  const te::color::RGBAColor& fontColor = pFontColor.getValue().toColor();
+  const Font& font = pFont.getValue().toFont();
   
   if(layerList.empty() == true)
   {
     return;
   }
+
+  QColor qFontColor(fontColor.getRed(), fontColor.getGreen(), fontColor.getBlue(), fontColor.getAlpha());
+  QFont qFont = utils.convertToQfont(font);
 
   QRectF boundRect = this->boundingRect();
 
@@ -101,10 +108,20 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
     y1 -= textBoundary.height();
 
     QPoint ptTitle(x1, y1);
-    QFont font("Arial", 12);
-    drawText(ptTitle, painter, font, title);
+    
+    painter->save();
 
-    y1 -= textBoundary.height() - dispBetweenTitleAndSymbols;
+    QPen pen(qFontColor);
+    painter->setPen(pen);
+
+    painter->setFont(qFont);
+    painter->setBrush(qFontColor);
+
+    drawText(ptTitle, painter, qFont, title);
+
+    painter->restore();
+
+    y1 -= (textBoundary.height() + dispBetweenTitleAndSymbols);
 
     drawLegend(painter, layer, x1, y1);
   }
@@ -121,14 +138,14 @@ void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLaye
   const Property& pDisplacementBetweenSymbols = m_controller->getProperty("displacement_between_symbols");
   const Property& pDisplacementBetweenSymbolsAndText = m_controller->getProperty("displacement_between_symbols_and_texts");
   const Property& pSymbolSize = m_controller->getProperty("symbol_size");
-  const Property& pFont = m_controller->getProperty("font");
+  const Property& pFont = m_controller->getProperty("font_legend");
 
   double displacementBetweenSymbols = pDisplacementBetweenSymbols.getValue().toDouble();
   double displacementBetweenSymbolsAndText = pDisplacementBetweenSymbolsAndText.getValue().toDouble();
   double symbolSize = pSymbolSize.getValue().toDouble();
   const Font& font = pFont.getValue().toFont();
 
-  QFont qFont(QString(font.getFamily().c_str()), font.getPointSize());
+  QFont qFont = utils.convertToQfont(font);
   
   te::map::Grouping* grouping = layer->getGrouping();
 
@@ -335,7 +352,7 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, double x1, double& y1,
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  const Property& pFontColor = m_controller->getProperty("font_color");
+  const Property& pFontColor = m_controller->getProperty("font_legend_color");
   const te::color::RGBAColor& fontColor = pFontColor.getValue().toColor();
 
   QColor qFontColor(fontColor.getRed(), fontColor.getGreen(), fontColor.getBlue(), fontColor.getAlpha());
