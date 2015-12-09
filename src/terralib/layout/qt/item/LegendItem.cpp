@@ -35,8 +35,7 @@
 #include "terralib/maptools/CanvasConfigurer.h"
 #include "terralib/qt/widgets/canvas/Canvas.h"
 #include "terralib/se/Symbolizer.h"
-#include "terralib/se/PolygonSymbolizer.h"
-#include "terralib/se/Fill.h"
+#include "terralib/se/PointSymbolizer.h"
 #include "../core/Scene.h"
 #include "../core/ItemUtils.h"
 
@@ -258,6 +257,7 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
 
   Scene* sc = dynamic_cast<Scene*>(scene());
   Utils utils = sc->getUtils();
+  ItemUtils itemUtils = sc->getItemUtils();
 
   if (!symbol || !geom)
     return;
@@ -281,7 +281,7 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
 
   te::gm::Envelope box(0, 0, pixmapWidthMM, pixmapHeightMM);
   box = utils.viewportBox(box);
-    
+      
   int pixmapWidth = box.getWidth();
   int pixmapHeight = box.getHeight();
 
@@ -291,7 +291,7 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
   double ury = y1 + pixmapHeightMM;
 
   QPixmap* pixmap = new QPixmap(pixmapWidth, pixmapHeight);
-  //pixmap->fill(Qt::transparent);
+  pixmap->fill(Qt::transparent);
 
   te::qt::widgets::Canvas geomCanvas(pixmap);
   geomCanvas.setWindow(llx, lly, urx, ury);
@@ -299,10 +299,28 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
   // Configuring...
   te::map::CanvasConfigurer cc(&geomCanvas);
   cc.config(symbol);
+
+  // Resize mark (image) depending on the zoom 
+  te::se::PointSymbolizer* pointSymbol = dynamic_cast<te::se::PointSymbolizer*>(symbol);
+  if (pointSymbol)
+  {
+    // Gets the new graphic size 
+    std::size_t width = static_cast<std::size_t>(pixmapWidth);
+    std::size_t height = static_cast<std::size_t>(pixmapHeight);
+    te::color::RGBAColor** rgba = itemUtils.changePointMarkSize(pointSymbol, width, height);
+    if (rgba)
+    {
+      geomCanvas.setPointPattern(rgba, pixmapWidth, pixmapHeight);
+    }
+  }
+
+  geomCanvas.setPointWidth(pixmapWidth);
+  geomCanvas.setLineWidth(pixmapWidth);
+  geomCanvas.setPolygonPatternWidth(pixmapWidth);
   
   // Let's draw!
   geomCanvas.draw(geom);
-
+  
   painter->save();
   drawPixmap(rect, painter, *pixmap);
   painter->restore();
