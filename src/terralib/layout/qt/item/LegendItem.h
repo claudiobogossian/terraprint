@@ -96,11 +96,11 @@ namespace te
 
         virtual void drawGeometry(QPainter* painter, QRectF geomRect, te::se::Symbolizer*symbol, te::gm::Geometry* geom);
 
-        virtual void drawLabel(QPainter* painter, double x1, double y1, std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
+        virtual void drawLabel(QPainter* painter, double x1, double& y1, std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item, QFont font);
 
-    private:
+        virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 
-        bool m_move;
+        double m_vtrCenter; //!< vertical center between text and symbol
     };
   }
 }

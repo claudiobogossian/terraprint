@@ -67,11 +67,11 @@ te::layout::LegendModel::LegendModel()
   font.setPointSize(8);
   te::color::RGBAColor fontColor(0, 0, 0, 255);
   std::list<te::map::AbstractLayerPtr> layerList;
-  double borderDisplacement = 1;
-  double displacementBetweenSymbols = 7;
-  double displacementBetweenTitleAndSymbols = 7;
-  double displacementBetweenSymbolsAndText = 2;
-  double symbolsize = 5;
+  double borderDisplacement = 3.;
+  double displacementBetweenSymbols = 5.;
+  double displacementBetweenTitleAndSymbols = 4.;
+  double displacementBetweenSymbolsAndText = 1.;
+  double symbolSize = 7.;
   std::string itemName = "";
 
   double width = 70.;
@@ -126,6 +126,42 @@ te::layout::LegendModel::LegendModel()
     m_properties.addProperty(property);
   }
 
+  // Legend Configuration
+  {
+    Property property(0);
+    property.setName("border_displacement");
+    property.setLabel(TR_LAYOUT("Border Displacement"));
+    property.setValue(borderDisplacement, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("displacement_between_symbols");
+    property.setLabel(TR_LAYOUT("Displacement Between Symbols"));
+    property.setValue(displacementBetweenSymbols, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("displacement_between_title_and_symbols");
+    property.setLabel(TR_LAYOUT("Displacement Between Title And Symbols"));
+    property.setValue(displacementBetweenTitleAndSymbols, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("displacement_between_symbols_and_texts");
+    property.setLabel(TR_LAYOUT("Displacement Between Symbols And Texts"));
+    property.setValue(displacementBetweenSymbolsAndText, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("symbol_size");
+    property.setLabel(TR_LAYOUT("Symbol Size"));
+    property.setValue(symbolSize, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
   //updating properties
   {
     Property property(0);
