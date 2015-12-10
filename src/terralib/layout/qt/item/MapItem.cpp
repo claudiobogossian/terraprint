@@ -51,8 +51,8 @@
 #include <QWheelEvent>
 #include <QMouseEvent>
 
-te::layout::MapItem::MapItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsObject>(controller, invertedMatrix)
+te::layout::MapItem::MapItem(AbstractItemController* controller)
+  : AbstractItem<QGraphicsObject>(controller, false)
   , m_mapDisplay(0)
   , m_currentTool(0)
   , m_zoomWheel(0)
@@ -61,16 +61,7 @@ te::layout::MapItem::MapItem(AbstractItemController* controller, bool invertedMa
 {
   this->setAcceptDrops(true);
 
-  m_mapDisplay = new te::qt::widgets::MapDisplay();
-  m_mapDisplay->setAcceptDrops(true);
-  m_mapDisplay->setBackgroundColor(Qt::transparent);
-  m_mapDisplay->setResizeInterval(0);
-  m_mapDisplay->setMouseTracking(true);
-
-  this->prepareGeometryChange();
-  m_mapDisplay->resize(10, 10);
-
-  connect(m_mapDisplay, SIGNAL(extentChanged()), this, SLOT(extentChanged()));
+  createMapDisplay();
 }
 
 te::layout::MapItem::~MapItem()
@@ -103,24 +94,13 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
   {
     const Properties& properties = m_controller->getProperties();
 
-    delete m_mapDisplay;
+    createMapDisplay();
 
-    m_mapDisplay = new te::qt::widgets::MapDisplay();
-    m_mapDisplay->setAcceptDrops(true);
-    m_mapDisplay->setBackgroundColor(Qt::transparent);
-    m_mapDisplay->setResizeInterval(0);
-    m_mapDisplay->setMouseTracking(true);
     m_mapDisplay->setOverrideDPI(context.getDpiX(), context.getDpiY());
-
-    this->prepareGeometryChange();
     m_mapDisplay->resize(newSize);
-
-    connect(m_mapDisplay, SIGNAL(extentChanged()), this, SLOT(extentChanged()));
-    
+   
     m_refreshEnabled = false;
     m_controller->setProperties(properties);
-    //bool wasSync = ((MapController *)m_controller)->syncMapDisplayProperties(properties.getProperties());
-
     m_refreshEnabled = true;
 
     update();
@@ -605,5 +585,24 @@ void te::layout::MapItem::recompose()
 
   te::gm::Envelope finalEnv = te::map::GetExtent(currentLayerList, m_mapDisplay->getSRID(), false);
   m_mapDisplay->setExtent(finalEnv, true);
+}
+
+void te::layout::MapItem::createMapDisplay()
+{
+  if (m_mapDisplay != 0)
+  {
+    delete m_mapDisplay;
+  }
+
+  m_mapDisplay = new te::qt::widgets::MapDisplay();
+  m_mapDisplay->setAcceptDrops(true);
+  m_mapDisplay->setBackgroundColor(Qt::transparent);
+  m_mapDisplay->setResizeInterval(0);
+  m_mapDisplay->setMouseTracking(true);
+
+  this->prepareGeometryChange();
+  m_mapDisplay->resize(10, 10);
+
+  connect(m_mapDisplay, SIGNAL(extentChanged()), this, SLOT(extentChanged()));
 }
 

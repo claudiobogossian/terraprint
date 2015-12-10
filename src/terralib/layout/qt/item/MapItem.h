@@ -84,7 +84,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        MapItem(AbstractItemController* controller, bool invertedMatrix = false);
+        MapItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor
@@ -158,6 +158,8 @@ namespace te
         virtual void drawTilesMap(QPainter* painter);
 
         virtual void recompose();
+
+        virtual void createMapDisplay();
         
     protected slots:
 
