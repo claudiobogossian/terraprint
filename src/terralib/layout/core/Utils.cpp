@@ -368,27 +368,17 @@ std::string te::layout::Utils::convertDecimalToDegree( const double& value, bool
 
   char n = (char)-80;
 
-  if(bDegrees)
-    degreeValue = convertNumberToString(std::floor(degree), 0);
+  if (bDegrees)
+    degreeValue = te::common::Convert2String(std::floor(degree), 0);
   if(bMinutes)
-    degreeValue += n + convertNumberToString(std::floor(min), 0);
+    degreeValue += n + te::common::Convert2String(std::floor(min), 0);
   if(bSeconds)
-    degreeValue += "' " + convertNumberToString(std::fabs(sec),0) + "''";
+    degreeValue += "' " + te::common::Convert2String(std::fabs(sec), 0) + "''";
 
   if(bDegrees == false && bMinutes == false && bSeconds == false)
-    degreeValue = convertNumberToString(std::floor(dbValue),0) + n + convertNumberToString(std::fabs(min),0) + "' " + convertNumberToString(std::fabs(sec),0) + "''";
+    degreeValue = te::common::Convert2String(std::floor(dbValue), 0) + n + te::common::Convert2String(std::fabs(min), 0) + "' " + te::common::Convert2String(std::fabs(sec), 0) + "''";
 
   return degreeValue;
-}
-
-std::string te::layout::Utils::convertNumberToString( const double& value, int precision )
-{
-  std::ostringstream convert;
-  convert.precision(precision);
-
-  double number = value;  
-  convert << number;
-  return convert.str();
 }
 
 int te::layout::Utils::roundNumber( const double& value )

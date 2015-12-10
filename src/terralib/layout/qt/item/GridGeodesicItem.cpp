@@ -311,7 +311,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
     m_horizontalLines.push_back(gridLine);
 
     std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText);
-    QString qText = text.c_str();
+    QString qText = QString::fromLatin1(text.c_str());
 
     QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
 
@@ -435,8 +435,9 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     
     m_verticalLines.push_back(gridLine);
 
+
     std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText);
-    QString qText = text.c_str();
+    QString qText = QString::fromLatin1(text.c_str());
 
     QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
