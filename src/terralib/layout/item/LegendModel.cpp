@@ -83,6 +83,7 @@ te::layout::LegendModel::LegendModel()
     property.setLabel(TR_LAYOUT("Select the legend"));
     property.setValue(name, dataType->getDataTypeLegendChoice());
     property.setMenu(true);
+    property.setVisible(false);
     m_properties.addProperty(property);
   }
   {
