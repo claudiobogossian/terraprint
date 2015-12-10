@@ -197,15 +197,6 @@ namespace te
         virtual double convertDegreeToDecimal();
 
         /*!
-          \brief Number to string.
-      
-          \param value 
-          \param precision decimal places
-          \return number as string
-        */ 
-        virtual std::string convertNumberToString(const double& value, int precision);
-
-        /*!
           \brief Rounds double to int.
       
           \param value   
