@@ -190,27 +190,28 @@ te::gm::Geometry* te::layout::LegendItem::createGeometry(QRectF geomRect, te::se
   return geom;
 }
 
-te::gm::Geometry* te::layout::LegendItem::createPolygonSymbolizer(QRectF geomRect, double offset)
+te::gm::Geometry* te::layout::LegendItem::createPolygonSymbolizer(QRectF geomRect)
 {
   te::gm::Geometry* geom = 0;
-  
+  double penWidth = 1.;
+    
   double x1 = geomRect.x();
   double y1 = geomRect.y();
 
   te::gm::Polygon* polygon = new te::gm::Polygon(1, te::gm::PolygonType);
   te::gm::LinearRing* ring = new te::gm::LinearRing(5, te::gm::LineStringType);
-  ring->setPoint(0, x1 + offset, y1 + offset);
-  ring->setPoint(1, x1 + geomRect.width() - offset, y1 + offset);
-  ring->setPoint(2, x1 + geomRect.width() - offset, y1 + geomRect.height() - offset);
-  ring->setPoint(3, x1 + offset, y1 + geomRect.height() - offset);
-  ring->setPoint(4, x1 + offset, y1 + offset);
+  ring->setPoint(0, x1 + penWidth, y1 + penWidth);
+  ring->setPoint(1, x1 + geomRect.width() - penWidth, y1 + penWidth);
+  ring->setPoint(2, x1 + geomRect.width() - penWidth, y1 + geomRect.height() - penWidth);
+  ring->setPoint(3, x1 + penWidth, y1 + geomRect.height() - penWidth);
+  ring->setPoint(4, x1 + penWidth, y1 + penWidth);
   polygon->setRingN(0, ring);
   geom = polygon;
 
   return geom;
 }
 
-te::gm::Geometry* te::layout::LegendItem::createLineSymbolizer(QRectF geomRect, double offset)
+te::gm::Geometry* te::layout::LegendItem::createLineSymbolizer(QRectF geomRect)
 {
   te::gm::Geometry* geom = 0;
 
@@ -218,8 +219,8 @@ te::gm::Geometry* te::layout::LegendItem::createLineSymbolizer(QRectF geomRect, 
   double y1 = geomRect.y();
 
   te::gm::LineString* line = new te::gm::LineString(2, te::gm::LineStringType);
-  line->setPoint(0, x1 + offset, y1 + geomRect.height() * 0.5);
-  line->setPoint(1, x1 + geomRect.width() - offset, y1 + geomRect.height() * 0.5);
+  line->setPoint(0, x1, y1 + geomRect.height() * 0.5);
+  line->setPoint(1, x1 + geomRect.width(), y1 + geomRect.height() * 0.5);
   geom = line;
 
   return geom;

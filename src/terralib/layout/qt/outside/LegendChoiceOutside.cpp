@@ -26,6 +26,9 @@
 // TerraLib
 #include "LegendChoiceOutside.h"
 #include "ui_LegendChoice.h"
+#include "../../outside/LegendChoiceModel.h"
+#include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/pattern/mvc/AbstractOutsideController.h"
 
 // STL
 #include <string>
@@ -35,32 +38,117 @@
 
 te::layout::LegendChoiceOutside::LegendChoiceOutside(AbstractOutsideController* controller)
   : QDialog(0),
-    AbstractOutsideView(controller),
-    m_ui(new Ui::LegendChoice)
+  AbstractOutsideView(controller),
+  m_ui(new Ui::LegendChoice)
 {
   // add controls
   m_ui->setupUi(this);
-  
-  m_widget.reset(new te::qt::widgets::DoubleListWidget(m_ui->m_widget));
-  
+
+  m_widget.reset(new DoubleTreeWidgetOutside(m_ui->m_widget));
+
   QGridLayout* displayLayout = new QGridLayout(m_ui->m_widget);
   displayLayout->addWidget(m_widget.get());
 
-  m_widget->setLeftLabel(tr("Available Attributes").toStdString());
-  m_widget->setRightLabel(tr("Selected Attributes").toStdString());
+  m_widget->setLeftLabel(tr("Available Layer Legends").toStdString());
+  m_widget->setRightLabel(tr("Selected Layer Legends").toStdString());
 
   connect(m_ui->m_okPushButton, SIGNAL(clicked()), this, SLOT(onOkPushButtonClicked()));
   connect(m_ui->m_cancelPushButton, SIGNAL(clicked()), this, SLOT(onCancelPushButtonClicked()));
-
 }
 
 te::layout::LegendChoiceOutside::~LegendChoiceOutside()
 {
+
+}
+
+void te::layout::LegendChoiceOutside::init()
+{
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
+  LegendChoiceModel* model = dynamic_cast<LegendChoiceModel*>(abstractModel);
+  if (!model)
+  {
+    return;
+  }
+
+  std::vector <std::string> namesToInput;
+  std::vector <std::string> namesToOutput;
+
+  // Layers From Map Items
+  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+
+  // All Layers from Project
+  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = selectedLayers.begin(); it != selectedLayers.end(); ++it)
+  {
+    te::map::AbstractLayerPtr layer = (*it);
+    if (std::find(layers.begin(), layers.end(), layer) != layers.end())
+    {
+      std::list<te::map::AbstractLayerPtr>::iterator findIt = std::find(layers.begin(), layers.end(), layer);
+      namesToOutput.push_back(layer->getTitle());
+    }
+  }
+
+  namesToInput = intersectionLayersTitle(namesToOutput);
+
+  m_widget->setInputValues(namesToInput);
+  m_widget->setOutputValues(namesToOutput);
 }
 
 void te::layout::LegendChoiceOutside::onOkPushButtonClicked()
 {
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
+  LegendChoiceModel* model = dynamic_cast<LegendChoiceModel*>(abstractModel);
+  if (!model)
+  {
+    return;
+  }
 
+  m_layersOnTheRight = m_widget->getOutputValues();
+
+  std::list<te::map::AbstractLayerPtr> layerListMap = model->getLayers();
+
+  std::vector<std::string>::iterator itString = m_layersOnTheRight.begin();
+  for (; itString != m_layersOnTheRight.end(); ++itString)
+  {
+    std::list<te::map::AbstractLayerPtr>::iterator it = layerListMap.begin();
+    for (; it != layerListMap.end(); ++it)
+    {
+      te::map::AbstractLayerPtr layer = it->get();
+      std::string nameLayer = layer->getTitle();
+
+      QString qNameLayer(nameLayer.c_str());
+      nameLayer = qNameLayer.toLatin1().data();
+
+      std::string name = (*itString);
+      if (nameLayer.compare(name) == 0)
+      {
+        m_layersSelected.push_back(layer);
+      }
+    }
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  // Layers From Map Items
+  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+
+  if (selectedLayers == m_layersSelected)
+  {
+    m_layersSelected.clear();
+    accept();
+    return;
+  }
+
+  Property prop;
+  prop.setName("layers");
+  prop.setValue(m_layersSelected, dataType->getDataTypeLayerList());
+
+  m_layersSelected.clear();
+
+  emit updateProperty(prop);
+
+  accept();
 }
 
 void te::layout::LegendChoiceOutside::onCancelPushButtonClicked()
@@ -68,9 +156,9 @@ void te::layout::LegendChoiceOutside::onCancelPushButtonClicked()
   reject();
 }
 
-void te::layout::LegendChoiceOutside::setPosition( const double& x, const double& y )
+void te::layout::LegendChoiceOutside::setPosition(const double& x, const double& y)
 {
-  move(x,y);
+  move(x, y);
   refresh();
 }
 
@@ -85,5 +173,33 @@ te::gm::Coord2D te::layout::LegendChoiceOutside::getPosition()
   coordinate.y = valuey;
 
   return coordinate;
+}
+
+std::vector<std::string> te::layout::LegendChoiceOutside::intersectionLayersTitle(std::vector<std::string> output)
+{
+  std::vector <std::string> namesToInput;
+
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
+  LegendChoiceModel* model = dynamic_cast<LegendChoiceModel*>(abstractModel);
+  if (!model)
+  {
+    return namesToInput;
+  }
+
+  // All Layers from Project
+
+  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin(); it != layers.end(); ++it)
+  {
+    te::map::AbstractLayerPtr layer = (*it);
+    std::string nameLayer = layer->getTitle();
+    if (std::find(output.begin(), output.end(), nameLayer) == output.end())
+    {
+      namesToInput.push_back(layer->getTitle());
+    }
+  }
+
+  return namesToInput;
 }
 

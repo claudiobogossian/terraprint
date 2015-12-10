@@ -533,7 +533,7 @@ void te::layout::DialogPropertiesBrowser::onShowLegendChoiceDlg()
     return;
   }
 
-  QWidget* widget = createOutside(enumObj->getGridSettings());
+  QWidget* widget = createOutside(enumObj->getLegendChoice());
   if(!widget)
   {
     return;
@@ -555,6 +555,19 @@ void te::layout::DialogPropertiesBrowser::onShowLegendChoiceDlg()
     return;
   }
   
+  if (!m_proxyProject)
+  {
+    return;
+  }
+
+  std::list<te::map::AbstractLayerPtr> listLayers = m_proxyProject->getAllLayers();
+  model->setLayers(listLayers);
+
+  std::vector<te::layout::Properties> properties;
+  properties.push_back(m_allProperties);
+  model->setPropertiesLegends(properties);
+
+  legendChoice->init();
   legendChoice->show();
 }
 
@@ -752,7 +765,7 @@ QWidget* te::layout::DialogPropertiesBrowser::createOutside( EnumType* enumType 
   }
   
   BuildGraphicsOutside build;
-  widget = build.createOuside(enumType, m_scene);
+  widget = build.createOuside(enumType, m_scene, m_proxyProject);
   return widget;
 }
 

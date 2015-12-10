@@ -99,9 +99,9 @@ namespace te
 
         virtual te::gm::Geometry* createGeometry(QRectF geomRect, te::se::Symbolizer* symbol);
 
-        virtual te::gm::Geometry* createPolygonSymbolizer(QRectF geomRect, double offset = 2.0);
+        virtual te::gm::Geometry* createPolygonSymbolizer(QRectF geomRect);
 
-        virtual te::gm::Geometry* createLineSymbolizer(QRectF geomRect, double offset = 2.0);
+        virtual te::gm::Geometry* createLineSymbolizer(QRectF geomRect);
 
         virtual te::gm::Geometry* createPointSymbolizer(QRectF geomRect);
 
