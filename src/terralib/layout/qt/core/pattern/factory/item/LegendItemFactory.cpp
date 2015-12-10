@@ -26,8 +26,8 @@
 // TerraLib
 #include "LegendItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../../item/LegendModel.h"
+#include "../../../../item/LegendController.h"
 #include "../../../../item/LegendItem.h"
 
 te::layout::AbstractItemView* te::layout::LegendItemFactory::build(ItemFactoryParamsCreate params)
@@ -40,7 +40,7 @@ te::layout::AbstractItemView* te::layout::LegendItemFactory::build(ItemFactoryPa
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  LegendController* controller = new LegendController(model);
   LegendItem* view = new LegendItem(controller);
   controller->setView(view);
 

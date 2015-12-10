@@ -40,12 +40,21 @@
 #include <string>
 
 #include <QGraphicsItem>
+#include <QColor>
+#include <QFont>
 
 namespace te
 {
   namespace gm
   {
     class Geometry;
+  }
+  namespace qt
+  {
+    namespace widgets
+    {
+      class Canvas;
+    }
   }
   namespace se
   {
@@ -80,6 +89,8 @@ namespace te
          */
         virtual ~LegendItem();
 
+        virtual void refreshLegendProperties();
+
       protected:
         
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
@@ -96,11 +107,36 @@ namespace te
 
         virtual void drawGeometry(QPainter* painter, QRectF geomRect, te::se::Symbolizer*symbol, te::gm::Geometry* geom);
 
-        virtual void drawLabel(QPainter* painter, double x1, double& y1, std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item, QFont font);
+        virtual te::qt::widgets::Canvas* createCanvas(QRectF rectMM, te::se::Symbolizer*symbol);
+        
+        virtual void drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text);
+
+        virtual void drawTitle(QPainter* painter, double x1, double& y1, std::string title);
 
         virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 
-        double m_vtrCenter; //!< vertical center between text and symbol
+        virtual void resizeMark(te::qt::widgets::Canvas* geomCanvas, te::se::Symbolizer*symbol, int pxWidth, int pxHeight);
+
+        virtual void verticalAdjustmentBetweenPairs(double& y1, std::string label, double symbolSize);
+
+        virtual QPointF verticalLegendTextAdjustment(double x1, double y1, std::string text);
+
+        virtual QRectF verticalLegendGeomAdjustment(QRectF geom);
+      
+      protected:
+
+        double                                m_maxHeight; //!< vertical center between text and symbol
+        double                                m_displacementBetweenSymbols;
+        double                                m_displacementBetweenSymbolsAndText;
+        double                                m_symbolSize;
+        std::list<te::map::AbstractLayerPtr>  m_layerList;
+        int                                   m_borderDisplacement;
+        int                                   m_dispBetweenTitleAndSymbols;
+
+        QColor                                m_qFontLegendColor;
+        QFont                                 m_qFontLegend;
+        QColor                                m_qFontTitleColor;
+        QFont                                 m_qFontTitle;
     };
   }
 }

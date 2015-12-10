@@ -31,13 +31,6 @@
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
 #include "../core/property/SharedProperties.h"
-
-
-//#include "LegendModel.h"
-//#include "MapModel.h"
-//#include "../core/property/Property.h"
-//#include "../core/property/Properties.h"
-//#include "../core/property/SharedProperties.h"
 #include "terralib/maptools/CanvasConfigurer.h"
 #include "terralib/se/Symbolizer.h"
 #include "terralib/se/Style.h"
@@ -45,15 +38,12 @@
 #include "terralib/geometry/Polygon.h"
 #include "terralib/geometry/Geometry.h"
 #include "terralib/geometry/Envelope.h"
-//#include "../core/enum/Enums.h"
 #include "terralib/maptools/GroupingItem.h"
 #include "terralib/maptools/Enums.h"
 
 // STL
 #include <string>
 #include <sstream> 
-
-
 
 te::layout::LegendModel::LegendModel()
   : AbstractItemModel()
@@ -77,6 +67,7 @@ te::layout::LegendModel::LegendModel()
   double displacementBetweenSymbolsAndText = 1.;
   double symbolSize = 7.;
   std::string itemName = "";
+  std::vector<std::string>  vString;
 
   double width = 70.;
   double height = 50.;
@@ -96,9 +87,9 @@ te::layout::LegendModel::LegendModel()
   }
   {
     Property property;
-    property.setName("layers");
-    property.setLabel(TR_LAYOUT("Layers"));
-    property.setValue(layerList, dataType->getDataTypeLayerList());
+    property.setName("layers_uri");
+    property.setLabel(TR_LAYOUT("URI"));
+    property.setValue(vString, dataType->getDataTypeStringVector());
     property.setEditable(false);
     property.setVisible(false);
     property.setSerializable(false);
@@ -223,15 +214,15 @@ void te::layout::LegendModel::update(const Subject* subject)
     return;
   }
 
-  const Property& pLayersNew = subjectModel->getProperty("layers");
-  const Property& pLayersCurrent = this->getProperty("layers");
+  const Property& pLayersNewUri = subjectModel->getProperty("layers_uri");
+  const Property& pLayersCurrentUri = this->getProperty("layers_uri");
 
-  const std::list<te::map::AbstractLayerPtr>& layersNew = pLayersNew.getValue().toLayerList();
-  const std::list<te::map::AbstractLayerPtr>& layersCurrent = pLayersCurrent.getValue().toLayerList();
+  const std::vector<std::string>& layersNewUri = pLayersNewUri.getValue().toStringVector();
+  const std::vector<std::string>& layersCurrentUri = pLayersCurrentUri.getValue().toStringVector();
 
-  if(layersNew != layersCurrent)
+  if (layersNewUri != layersCurrentUri)
   {
-    setProperty(pLayersNew);
+    setProperty(pLayersNewUri);
   }
 }
 
