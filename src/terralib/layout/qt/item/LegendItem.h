@@ -49,6 +49,10 @@ namespace te
   {
     class Geometry;
   }
+  namespace map
+  {
+    class Grouping;
+  }
   namespace qt
   {
     namespace widgets
@@ -95,7 +99,7 @@ namespace te
         
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-        virtual void drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double& y1);
+        virtual void drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1);
 
         virtual te::gm::Geometry* createGeometry(QRectF geomRect, te::se::Symbolizer* symbol);
 
@@ -111,7 +115,7 @@ namespace te
         
         virtual void drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text);
 
-        virtual void drawTitle(QPainter* painter, double x1, double& y1, std::string title);
+        virtual void drawTitle(QPainter* painter, double& x1, double& y1, std::string title);
 
         virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 
@@ -122,16 +126,25 @@ namespace te
         virtual QPointF verticalLegendTextAdjustment(double x1, double y1, std::string text);
 
         virtual QRectF verticalLegendGeomAdjustment(QRectF geom);
+
+        virtual void initXY(double& x1, double& y1);
+
+        virtual void verifyLimitRows(double& x1, double& y1);
       
       protected:
 
-        double                                m_maxHeight; //!< vertical center between text and symbol
+        double                                m_currentMaxHeight; //!< max vertical size between text and symbol
+        double                                m_maxWidth; //!< max horizontal size between text and symbol
         double                                m_displacementBetweenSymbols;
         double                                m_displacementBetweenSymbolsAndText;
         double                                m_symbolSize;
         std::list<te::map::AbstractLayerPtr>  m_layerList;
         int                                   m_borderDisplacement;
         int                                   m_dispBetweenTitleAndSymbols;
+        int                                   m_rows;
+        int                                   m_countColumns;
+        int                                   m_countRows;
+        double                                m_offsetBetweenColumns;
 
         QColor                                m_qFontLegendColor;
         QFont                                 m_qFontLegend;

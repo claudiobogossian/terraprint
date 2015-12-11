@@ -45,12 +45,17 @@
 
 te::layout::LegendItem::LegendItem(AbstractItemController* controller)
   : AbstractItem<QGraphicsItem>(controller)
-  , m_maxHeight(0)
+  , m_currentMaxHeight(0)
+  , m_maxWidth(0)
   , m_displacementBetweenSymbols(0)
   , m_displacementBetweenSymbolsAndText(0)
   , m_symbolSize(0)
   , m_borderDisplacement(0)
   , m_dispBetweenTitleAndSymbols(0)
+  , m_rows(0)
+  , m_countColumns(0)
+  , m_countRows(0)
+  , m_offsetBetweenColumns(0)
 {
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
@@ -74,13 +79,16 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
     return;
   }
 
-  QRectF boundRect = this->boundingRect();
+  double x1 = 0;
+  double y1 = 0;
 
-  double x1 = boundRect.x() + m_borderDisplacement;
-  double y1 = boundRect.bottomLeft().y() - m_borderDisplacement;
+  initXY(x1, y1);
 
   double wtxtInPixels = 0.;
   double htxtInPixels = 0.;
+
+  m_countRows = 0;
+  m_countColumns = 0;
 
   for (std::list<te::map::AbstractLayerPtr>::const_iterator it = m_layerList.begin(); it != m_layerList.end(); ++it)
   {
@@ -88,13 +96,13 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
 
     std::string title = layer->getTitle();
 
+    verifyLimitRows(x1, y1);
     drawTitle(painter, x1, y1, title);
-
     drawLegend(painter, layer, x1, y1);
   }
 }
 
-void te::layout::LegendItem::drawTitle(QPainter* painter, double x1, double& y1, std::string title)
+void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1, std::string title)
 {
   if (!scene())
     return;
@@ -116,6 +124,8 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double x1, double& y1,
   painter->setFont(m_qFontTitle);
   painter->setBrush(m_qFontTitleColor);
 
+  m_maxWidth = qMax(textBoundary.width(), m_maxWidth);
+
   drawText(ptTitle, painter, m_qFontTitle, title);
 
   painter->restore();
@@ -123,7 +133,7 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double x1, double& y1,
   y1 -= (textBoundary.height() + m_dispBetweenTitleAndSymbols);
 }
 
-void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double x1, double& y1)
+void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1)
 {
   if (!scene())
     return;
@@ -142,7 +152,8 @@ void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLaye
     for (unsigned int i = 0; i < items.size(); ++i)
     {
       te::map::GroupingItem* item = items[i];
-
+      verifyLimitRows(x1, y1);
+      
       std::string label = getLabel(propertyName, type, item);
       verticalAdjustmentBetweenPairs(y1, label, m_symbolSize);
 
@@ -169,7 +180,7 @@ void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLaye
 
       y1 -= m_displacementBetweenSymbols;
     }
-  }
+  }  
 }
 
 te::gm::Geometry* te::layout::LegendItem::createGeometry(QRectF geomRect, te::se::Symbolizer* symbol)
@@ -389,6 +400,8 @@ void te::layout::LegendItem::refreshLegendProperties()
   const Property& pDispBetweenTitleAndSymbols = m_controller->getProperty("displacement_between_title_and_symbols");
   const Property& pFontTitleColor = m_controller->getProperty("font_title_color");
   const Property& pTitleFont = m_controller->getProperty("font_title");
+  const Property& pRows = m_controller->getProperty("rows");
+  const Property& pOffsetBetweenColumns = m_controller->getProperty("offset_between_columns");
 
   const te::color::RGBAColor& fontLegendColor = pFontColor.getValue().toColor();
   const Font& fontLegend = pLegendFont.getValue().toFont();
@@ -399,6 +412,8 @@ void te::layout::LegendItem::refreshLegendProperties()
   m_dispBetweenTitleAndSymbols = pDispBetweenTitleAndSymbols.getValue().toDouble();
   const te::color::RGBAColor& fontTitleColor = pFontTitleColor.getValue().toColor();
   const Font& fontTitle = pTitleFont.getValue().toFont();
+  m_rows = pRows.getValue().toInt();
+  m_offsetBetweenColumns = pOffsetBetweenColumns.getValue().toDouble();
 
   m_qFontLegendColor.setRgb(fontLegendColor.getRed(), fontLegendColor.getGreen(), fontLegendColor.getBlue(), fontLegendColor.getAlpha());
   m_qFontLegend = utils.convertToQfont(fontLegend);
@@ -421,16 +436,12 @@ void te::layout::LegendItem::verticalAdjustmentBetweenPairs(double& y1, std::str
   ItemUtils utils = sc->getItemUtils();
 
   QRectF textBoundary = utils.getMinimumTextBoundary(m_qFontLegend.family().toStdString(), m_qFontLegend.pointSize(), label);
-  if (textBoundary.height() > m_symbolSize)
-  {
-    y1 -= textBoundary.height();
-    m_maxHeight = textBoundary.height();
-  }
-  else
-  {
-    y1 -= m_symbolSize;
-    m_maxHeight = m_symbolSize;
-  }
+
+  double maxWidth = textBoundary.width() + m_symbolSize + m_displacementBetweenSymbolsAndText + m_borderDisplacement;
+  m_maxWidth = qMax(maxWidth, m_maxWidth);
+
+  m_currentMaxHeight = qMax(textBoundary.height(), m_symbolSize);
+  y1 -= m_currentMaxHeight;
 }
 
 QPointF te::layout::LegendItem::verticalLegendTextAdjustment(double x1, double y1, std::string text)
@@ -447,22 +458,42 @@ QPointF te::layout::LegendItem::verticalLegendTextAdjustment(double x1, double y
   pt.setX(x1);
 
   QRectF textBoundary = utils.getMinimumTextBoundary(m_qFontLegend.family().toStdString(), m_qFontLegend.pointSize(), text);
-  if (textBoundary.height() != m_maxHeight)
+  if (textBoundary.height() != m_currentMaxHeight)
   {
     // if the symbol is bigger than the font, then the text is to be centered
-    pt.setY(y1 + ((m_maxHeight/2.)-(textBoundary.height() / 2.)));
+    pt.setY(y1 + ((m_currentMaxHeight / 2.) - (textBoundary.height() / 2.)));
   }
   return pt;
 }
 
 QRectF te::layout::LegendItem::verticalLegendGeomAdjustment(QRectF geom)
 {
-  if (geom.height() != m_maxHeight)
+  if (geom.height() != m_currentMaxHeight)
   {
     // a font is bigger than the symbol, then the symbol must be centered
-    double y = geom.y() + ((m_maxHeight/2.)-(geom.height() / 2.));
+    double y = geom.y() + ((m_currentMaxHeight / 2.) - (geom.height() / 2.));
     geom.setRect(geom.x(), y, geom.width(), geom.height());
   }
   return geom;
+}
+
+void te::layout::LegendItem::initXY(double& x1, double& y1)
+{
+  QRectF boundRect = this->boundingRect();
+
+  x1 = boundRect.x() + m_borderDisplacement;
+  y1 = boundRect.bottomLeft().y() - m_borderDisplacement;
+}
+
+void te::layout::LegendItem::verifyLimitRows(double& x1, double& y1)
+{
+  if (m_countRows == m_rows)
+  {
+    m_countRows = 0;
+    double x = 0;
+    initXY(x, y1);
+    x1 += m_maxWidth + m_offsetBetweenColumns;
+  }
+  m_countRows++;
 }
 

@@ -68,6 +68,9 @@ te::layout::LegendModel::LegendModel()
   double symbolSize = 7.;
   std::string itemName = "";
   std::vector<std::string>  vString;
+  int rows = 1;
+  int columns = 1;
+  double offset = 2.;
 
   double width = 70.;
   double height = 50.;
@@ -177,6 +180,20 @@ te::layout::LegendModel::LegendModel()
     property.setName("symbol_size");
     property.setLabel(TR_LAYOUT("Symbol Size"));
     property.setValue(symbolSize, dataType->getDataTypeDouble());
+    prop_legend_body.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("rows");
+    property.setLabel(TR_LAYOUT("Rows"));
+    property.setValue(rows, dataType->getDataTypeInt());
+    prop_legend_body.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("offset_between_columns");
+    property.setLabel(TR_LAYOUT("Offset Between Columns"));
+    property.setValue(offset, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   m_properties.addProperty(prop_legend_body);
