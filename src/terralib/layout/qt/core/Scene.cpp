@@ -82,7 +82,8 @@ te::layout::Scene::Scene( QObject* object):
   m_paperConfig(0),
   m_currentItemEdition(0),
   m_isEditionMode(false),
-  m_context(0,0,0,0)
+  m_context(0,0,0,0),
+  m_increasedUnprintableArea(40.)
 {
   m_backgroundColor = QColor(109,109,109);
   setBackgroundBrush(QBrush(m_backgroundColor));
@@ -236,8 +237,8 @@ void te::layout::Scene::calculateMatrixViewScene()
 
 void te::layout::Scene::calculateWindow( double wMM, double hMM )
 {
-  double ppSizeWMM;
-  double ppSizeHMM;
+  double ppSizeWMM = 0;
+  double ppSizeHMM = 0;
 
   m_paperConfig->getPaperSize(ppSizeWMM, ppSizeHMM);
 
@@ -520,6 +521,9 @@ te::layout::MovingItemGroup* te::layout::Scene::createMovingItemGroup( const QLi
 
 void te::layout::Scene::calculateSceneMeasures(double widthMM, double heightMM)
 {
+  // increases the unprintable area for better visualization of the edges of the paper
+  increasedUnprintableArea(widthMM, heightMM);
+
   calculateWindow(widthMM, heightMM);
 
   double w = m_box.getWidth();
@@ -1569,5 +1573,21 @@ void te::layout::Scene::closeDock()
       }
     }
   }
+}
+
+void te::layout::Scene::increasedUnprintableArea(double& screenWMM, double& screenHMM)
+{
+  double ppSizeWMM = 0;
+  double ppSizeHMM = 0;
+
+  m_paperConfig->getPaperSize(ppSizeWMM, ppSizeHMM);
+
+  double wmaxMM = qMax(ppSizeWMM, screenWMM);
+  double wminMM = qMin(ppSizeWMM, screenWMM);
+  double hmaxMM = qMax(ppSizeHMM, screenHMM);
+  double hminMM = qMin(ppSizeHMM, screenHMM);
+
+  screenWMM += (wmaxMM - wminMM) + m_increasedUnprintableArea;
+  screenHMM += (hmaxMM - hminMM) + m_increasedUnprintableArea;
 }
 
