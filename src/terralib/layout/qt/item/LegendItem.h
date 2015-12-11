@@ -148,6 +148,7 @@ namespace te
         int                                   m_countColumns;
         int                                   m_countRows;
         double                                m_offsetBetweenColumns;
+        double                                m_penWidth;
 
         QColor                                m_qFontLegendColor;
         QFont                                 m_qFontLegend;

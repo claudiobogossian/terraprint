@@ -56,6 +56,7 @@ te::layout::LegendItem::LegendItem(AbstractItemController* controller)
   , m_countColumns(0)
   , m_countRows(0)
   , m_offsetBetweenColumns(0)
+  , m_penWidth(1.)
 {
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
@@ -86,6 +87,8 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
 
   m_countRows = 0;
   m_countColumns = 0;
+
+  m_penWidth = painter->pen().widthF();
 
   for (std::list<te::map::AbstractLayerPtr>::const_iterator it = m_layerList.begin(); it != m_layerList.end(); ++it)
   {
@@ -205,18 +208,17 @@ te::gm::Geometry* te::layout::LegendItem::createGeometry(QRectF geomRect, te::se
 te::gm::Geometry* te::layout::LegendItem::createPolygonSymbolizer(QRectF geomRect)
 {
   te::gm::Geometry* geom = 0;
-  double penWidth = 1.;
     
   double x1 = geomRect.x();
   double y1 = geomRect.y();
 
   te::gm::Polygon* polygon = new te::gm::Polygon(1, te::gm::PolygonType);
   te::gm::LinearRing* ring = new te::gm::LinearRing(5, te::gm::LineStringType);
-  ring->setPoint(0, x1 + penWidth, y1 + penWidth);
-  ring->setPoint(1, x1 + geomRect.width() - penWidth, y1 + penWidth);
-  ring->setPoint(2, x1 + geomRect.width() - penWidth, y1 + geomRect.height() - penWidth);
-  ring->setPoint(3, x1 + penWidth, y1 + geomRect.height() - penWidth);
-  ring->setPoint(4, x1 + penWidth, y1 + penWidth);
+  ring->setPoint(0, x1 + m_penWidth, y1 + m_penWidth);
+  ring->setPoint(1, x1 + geomRect.width() - m_penWidth, y1 + m_penWidth);
+  ring->setPoint(2, x1 + geomRect.width() - m_penWidth, y1 + geomRect.height() - m_penWidth);
+  ring->setPoint(3, x1 + m_penWidth, y1 + geomRect.height() - m_penWidth);
+  ring->setPoint(4, x1 + m_penWidth, y1 + m_penWidth);
   polygon->setRingN(0, ring);
   geom = polygon;
 
