@@ -38,6 +38,7 @@
 
 // STL
 #include <string>
+#include <vector>
 
 #include <QGraphicsItem>
 #include <QColor>
@@ -116,6 +117,8 @@ namespace te
         virtual void drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text);
 
         virtual void drawTitle(QPainter* painter, double& x1, double& y1, std::string title);
+
+        virtual void drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers);
 
         virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 

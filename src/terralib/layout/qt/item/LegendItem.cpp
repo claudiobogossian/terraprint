@@ -84,9 +84,6 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
 
   initXY(x1, y1);
 
-  double wtxtInPixels = 0.;
-  double htxtInPixels = 0.;
-
   m_countRows = 0;
   m_countColumns = 0;
 
@@ -162,25 +159,29 @@ void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLaye
 
       const std::vector<te::se::Symbolizer*>& symbolizers = item->getSymbolizers();
 
-      foreach(te::se::Symbolizer* symbol, symbolizers)
-      {
-        double offset = 2.0;
-        QRectF geomRect(x1, y1, m_symbolSize, m_symbolSize);
-        geomRect = verticalLegendGeomAdjustment(geomRect);
-
-        te::gm::Geometry* geom = createGeometry(geomRect, symbol);
-        if (!geom)
-          continue;
-
-        drawGeometry(painter, geomRect, symbol, geom);
-
-        delete geom;
-        geom = 0;
-      }
+      drawSymbolizers(painter, x1, y1, symbolizers);
 
       y1 -= m_displacementBetweenSymbols;
     }
   }  
+}
+
+void te::layout::LegendItem::drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers)
+{
+  foreach(te::se::Symbolizer* symbol, symbolizers)
+  {
+    QRectF geomRect(x1, y1, m_symbolSize, m_symbolSize);
+    geomRect = verticalLegendGeomAdjustment(geomRect);
+
+    te::gm::Geometry* geom = createGeometry(geomRect, symbol);
+    if (!geom)
+      continue;
+
+    drawGeometry(painter, geomRect, symbol, geom);
+
+    delete geom;
+    geom = 0;
+  }
 }
 
 te::gm::Geometry* te::layout::LegendItem::createGeometry(QRectF geomRect, te::se::Symbolizer* symbol)
@@ -493,6 +494,7 @@ void te::layout::LegendItem::verifyLimitRows(double& x1, double& y1)
     double x = 0;
     initXY(x, y1);
     x1 += m_maxWidth + m_offsetBetweenColumns;
+    m_countColumns++;
   }
   m_countRows++;
 }

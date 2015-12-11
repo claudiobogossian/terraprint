@@ -68,12 +68,12 @@ te::layout::LegendModel::LegendModel()
   double symbolSize = 7.;
   std::string itemName = "";
   std::vector<std::string>  vString;
-  int rows = 1;
+  int rows = 4;
   int columns = 1;
   double offset = 2.;
 
-  double width = 70.;
-  double height = 50.;
+  double width = 100.;
+  double height = 80.;
 
   SharedProperties sharedProps;
 
