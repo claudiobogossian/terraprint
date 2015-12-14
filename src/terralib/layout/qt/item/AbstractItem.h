@@ -516,7 +516,7 @@ namespace te
 
       int fontSize = painter->font().pointSize();
 
-      QPen pen;
+      QPen pen = painter->pen();
       pen.setWidthF(0);
 
       QBrush brush = painter->brush();

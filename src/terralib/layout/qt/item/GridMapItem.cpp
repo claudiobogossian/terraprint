@@ -32,6 +32,8 @@
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
 
+#include <QBrush>
+
 te::layout::GridMapItem::GridMapItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
   , m_maxWidthTextMM(0)
@@ -131,9 +133,8 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
   const Property& pTextColor = pGridSettings.containsSubProperty(settingsConfig.getTextColor());
-
 
   Font txtFont =  pTextFontFamily.getValue().toFont();
   const te::color::RGBAColor& textColor = pTextColor.getValue().toColor();
@@ -142,8 +143,8 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 
   ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
-  QPen pen (clrText);
-  painter->setPen(pen);
+  QBrush brush (clrText);
+  painter->setBrush(brush);
 }
 
 void te::layout::GridMapItem::clear()
@@ -262,7 +263,7 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pTopRotateText = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pTopRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -296,7 +297,7 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pBottomRotateText = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pBottomRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -330,7 +331,7 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pLeftRotateText = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pLeftRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -368,7 +369,7 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pRightRotateText = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pRightRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();

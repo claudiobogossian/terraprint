@@ -62,6 +62,7 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
     Property property(0);
     property.setName("geographic_box");
     property.setLabel(TR_LAYOUT("Geographic Box"));
+    property.setVisible(false);
     property.setValue(geographicBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
   }

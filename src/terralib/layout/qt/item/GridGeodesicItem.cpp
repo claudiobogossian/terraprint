@@ -219,8 +219,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
@@ -231,9 +230,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
   const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
-
-
-
+  
 //  std::string fontFamily = pFontFamily.getValue().toString();
 //  int textPointSize = pTextPointSize.getValue().toInt();
   double verticalGap = pVerticalGap.getValue().toDouble();
@@ -352,8 +349,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
   const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   const Property& pBottomRotate = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());  
   
   Font txtFont = pTextFontFamily.getValue().toFont();
 //  std::string fontFamily = pFontFamily.getValue().toString();
