@@ -32,6 +32,8 @@
 #include "terralib/color/RGBAColor.h"
 #include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
+#include "../core/property/TextGridSettingsConfigProperties.h"
+
 
 te::layout::TextGridModel::TextGridModel() 
 {
@@ -50,7 +52,130 @@ te::layout::TextGridModel::TextGridModel()
   m_headerHorizontalColor.setColor(192,192,192,255);
   m_headerVerticalColor.setColor(192,192,192,255);
   */
+  //adding subproperties
+
+
+
+  /*
+
+  double spacing = 1;
+  double padding = 1;
+  double width = 100;
+  bool addRow = false;
+  int rowNumber = 2;
+  bool addColumn = false;
+  int columnNumber = 1;
+  double columnWidth = 100;
+  double borderWidth = 0.5;
+  te::gm::Envelope box(0., 0., 190., 170.);
+  te::color::RGBAColor tableColor(0, 0, 0, 255);
+  te::color::RGBAColor borderGridColor(0, 0, 0, 255);
+
+  te::color::RGBAColor evenRow;
+  te::color::RGBAColor oddRow;
+
+
+
+  TextGridSettingsConfigProperties propertyNames;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  Property propertyGridSettings(0);
+
+  {
+    Property propertyGridSettings(0);
+    propertyGridSettings.setName(propertyNames.getName());
+    propertyGridSettings.setLabel(TR_LAYOUT("Settings"));
+    std::string sValuePlanar = "Settings";
+    propertyGridSettings.setMenu(true);
+    propertyGridSettings.setValue(sValuePlanar, dataType->getDataTypeTextGridSettings());
+
+    //adding subproperties
+    {
+      Property property(0);
+      property.setName(propertyNames.getSpacing());
+      property.setLabel(TR_LAYOUT("Spacing"));
+      property.setValue(spacing, dataType->getDataTypeDouble());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getPadding());
+      property.setLabel(TR_LAYOUT("Padding"));
+      property.setValue(padding, dataType->getDataTypeDouble());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getTableColor());
+      property.setLabel(TR_LAYOUT("Color"));
+      property.setValue(tableColor, dataType->getDataTypeColor());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getWidth());
+      property.setLabel(TR_LAYOUT("Width"));
+      property.setValue(width, dataType->getDataTypeDouble());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getRowNumber());
+      property.setLabel(TR_LAYOUT("Number of rows"));
+      property.setValue(rowNumber, dataType->getDataTypeInt());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getEvenRow());
+      property.setLabel(TR_LAYOUT("Even Row Color"));
+      property.setValue(evenRow, dataType->getDataTypeColor());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getOddRow());
+      property.setLabel(TR_LAYOUT("Odd Row Color"));
+      property.setValue(oddRow, dataType->getDataTypeColor());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getColumnNumber());
+      property.setLabel(TR_LAYOUT("Number of columns"));
+      property.setValue(columnNumber, dataType->getDataTypeInt());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getColumnWidth());
+      property.setLabel(TR_LAYOUT("Column Width"));
+      property.setValue(columnWidth, dataType->getDataTypeDouble());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getBorderWidth());
+      property.setLabel(TR_LAYOUT("Border Width"));
+      property.setValue(borderWidth, dataType->getDataTypeDouble());
+      propertyGridSettings.addSubProperty(property);
+    }
+    {
+      Property property(0);
+      property.setName(propertyNames.getBorderGridColor());
+      property.setLabel(TR_LAYOUT("Border Grid Color"));
+      property.setValue(borderGridColor, dataType->getDataTypeColor());
+      propertyGridSettings.addSubProperty(property);
+    }
+
+    m_properties.addProperty(propertyGridSettings);
+  }
+  */
+
 }
+
+
+
 
 te::layout::TextGridModel::~TextGridModel()
 {

@@ -58,6 +58,9 @@ namespace te
         std::string getRowNumber();
         std::string getEvenRow();
         std::string getOddRow();
+        std::string getTitleBackgroundColor();
+        std::string getBodyBackgroundColor();
+
 
         std::string getAddColunm();
         std::string getColumnNumber();
@@ -94,6 +97,9 @@ namespace te
         std::string m_rowNumber;
         std::string m_evenRow;
         std::string m_oddRow;
+        std::string m_titleBgColor;
+        std::string m_bodyBgColor;
+
 
         /* Columns */
 
