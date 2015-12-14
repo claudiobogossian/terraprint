@@ -27,10 +27,10 @@
 #define __TERRALIB_LAYOUT_INTERNAL_LEGEND_CHOICE_OUTSIDE_H
 
 // TerraLib
-#include "terralib/qt/widgets/utils/DoubleListWidget.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/Config.h"
 #include "../../core/property/Property.h"
+#include "DoubleTreeWidgetOutside.h"
 
 // STL
 #include <map>
@@ -57,24 +57,41 @@ namespace te
 
         ~LegendChoiceOutside();
         
-        virtual void setPosition( const double& x, const double& y );
+        /*!
+        \brief Load layers in double widget.
+        */
+        virtual void init();
+
+        virtual void setPosition(const double& x, const double& y);
 
         virtual te::gm::Coord2D getPosition();
 
       signals:
 
         void updateProperty(Property prop);
-        
-      protected slots:
+
+        void updateProperties(std::vector<Property> props);
+
+        protected slots:
 
         void onOkPushButtonClicked();
 
         void onCancelPushButtonClicked();
 
-      private:
+    protected:
 
-        std::auto_ptr<Ui::LegendChoice> m_ui;
-        std::auto_ptr<te::qt::widgets::DoubleListWidget> m_widget;
+      std::vector<std::string> intersectionLayersTitle(std::vector<std::string> output);
+
+    private:
+
+      std::auto_ptr<Ui::LegendChoice> m_ui;
+      std::auto_ptr<DoubleTreeWidgetOutside> m_widget;
+
+      te::map::AbstractLayerPtr m_selectedLayer;  //!< Layer 
+      std::vector<std::string> m_selectedProps; //!< Selected properties related to the selected Layer
+      std::vector<std::string> m_layersOnTheRight; //!< Layers on the right in the DoubleList Widget
+
+      std::list<te::map::AbstractLayerPtr> m_layersSelected; //!< Vector that will store selected layers (on the rigth DoubleList Widget)
     };
   }   
 }    

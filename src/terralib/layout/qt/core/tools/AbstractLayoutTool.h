@@ -29,6 +29,7 @@
 // Qt
 #include <QtCore/QObject>
 #include <QtGui/QCursor>
+#include <QSize>
 
 // Forward declarations
 class QMouseEvent;
@@ -142,8 +143,11 @@ namespace te
 
           virtual QCursor createCursor(std::string pathIcon);
 
-          View* m_view; //!< The QGraphicsView associated with the tool.
-          QCursor m_cursor;      //!< The default tool cursor.
+          QSize verifyToleranceSize(double width, double height);
+
+          View*     m_view; //!< The QGraphicsView associated with the tool.
+          QCursor   m_cursor;      //!< The default tool cursor.
+          QSize     m_minimumSize;
       };
 
   }   // end namespace layout

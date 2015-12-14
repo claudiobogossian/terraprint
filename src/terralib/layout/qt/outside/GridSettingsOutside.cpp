@@ -476,11 +476,11 @@ QString te::layout::GridSettingsOutside::DD2DMS(QString dd)
   QString output;
   if(degree < 0)
   {
-    output = ("-" + te::common::Convert2String(abs(degree)) + "�" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str();
+    output = QString::fromLatin1(("-" + te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
   }
   else
   {
-    output = (te::common::Convert2String(abs(degree)) + "�" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str();
+    output = QString::fromLatin1((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
   }
   return output;
 }
@@ -492,7 +492,7 @@ QString te::layout::GridSettingsOutside::DMS2DD(const QString dms)
   {
     pos = 1;
   }
-  int a = dms.indexOf('�');
+  int a = dms.indexOf('°');
   int b = dms.indexOf('\'');
   int c = dms.indexOf('\'', b + 1);
   double deg = dms.mid(pos, a - pos).replace(QString(" "), QString("")).toDouble();

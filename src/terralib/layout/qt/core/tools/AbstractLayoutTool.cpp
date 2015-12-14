@@ -37,6 +37,8 @@ te::layout::AbstractLayoutTool::AbstractLayoutTool(View* view, QObject* parent)
     m_cursor(Qt::BlankCursor)
 {
   assert(m_view);
+  m_minimumSize.setWidth(5);
+  m_minimumSize.setHeight(5);
 }
 
 te::layout::AbstractLayoutTool::~AbstractLayoutTool()
@@ -125,3 +127,23 @@ QCursor te::layout::AbstractLayoutTool::createCursor(std::string pathIcon)
 
   return cur;
 }
+QSize te::layout::AbstractLayoutTool::verifyToleranceSize(double width, double height)
+{
+  QSize size(width, height);
+
+  if (width == 0 && height == 0)
+    return size;
+
+  if (width < m_minimumSize.width())
+  {
+    size.setWidth(m_minimumSize.width());
+  }
+
+  if (height < m_minimumSize.height())
+  {
+    size.setHeight(m_minimumSize.height());
+  }
+
+  return size;
+}
+

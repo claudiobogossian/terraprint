@@ -291,7 +291,10 @@ QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
     {
       gatherProperties(pproperty, property); // gather properties (has a root property with a value and subproperties)
     }
-    else
+  }
+  else
+  {
+    if (property.getType() == dataType->getDataTypeGroupProperties())
     {
       createGroup(pproperty, property); // group subproperties (has a root property without a value (has subproperties). For group of types, styles, etc.)
     }

@@ -34,7 +34,7 @@
 te::layout::LegendChoiceModel::LegendChoiceModel() :
   AbstractOutsideModel()
 {
-  m_type = Enums::getInstance().getEnumObjectType()->getMapLayerChoice();
+  m_type = Enums::getInstance().getEnumObjectType()->getLegendChoice();
   m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
@@ -56,7 +56,74 @@ te::layout::Properties* te::layout::LegendChoiceModel::getProperties() const
   return m_properties;
 }
 
-void te::layout::LegendChoiceModel::updateProperties( te::layout::Properties* properties, bool notify )
+void te::layout::LegendChoiceModel::updateProperties(te::layout::Properties properties, bool notify)
 {
 
+}
+
+void te::layout::LegendChoiceModel::setPropertiesLegends(std::vector<te::layout::Properties> properties)
+{
+  m_mapProperties = properties;
+  m_selectedLayers = searchLayers();
+}
+
+void te::layout::LegendChoiceModel::setLayers(std::list<te::map::AbstractLayerPtr> layers)
+{
+  m_layers = layers;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceModel::getLayers()
+{
+  return m_layers;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceModel::getSelectedLayers()
+{
+  return m_selectedLayers;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceModel::searchLayers()
+{
+  std::list<te::map::AbstractLayerPtr> layers;
+
+  if (m_mapProperties.empty())
+  {
+    return layers;
+  }
+
+  std::vector<te::layout::Properties>::const_iterator itProp;
+  itProp = m_mapProperties.begin();
+
+  for (; itProp != m_mapProperties.end(); ++itProp)
+  {
+    Properties prop = (*itProp);
+    Property pp = prop.getProperty("layers");
+
+    if (pp.isNull())
+    {
+      continue;
+    }
+
+    m_layerProperties.push_back(pp);
+
+    std::list<te::map::AbstractLayerPtr> currentLayers = pp.getValue().toLayerList();
+    std::list<te::map::AbstractLayerPtr>::iterator itLayers = currentLayers.begin();
+    while (itLayers != currentLayers.end())
+    {
+      layers.push_back(*itLayers);
+      ++itLayers;
+    }
+  }
+
+  return layers;
+}
+
+std::vector<te::layout::Property> te::layout::LegendChoiceModel::getLayerProperties()
+{
+  return m_layerProperties;
+}
+
+void te::layout::LegendChoiceModel::refresh()
+{
+  m_selectedLayers = searchLayers();
 }

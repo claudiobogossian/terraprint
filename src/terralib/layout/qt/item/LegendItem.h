@@ -33,11 +33,38 @@
 // TerraLib
 #include "AbstractItem.h"
 #include "../../core/Config.h"
+#include "terralib/maptools/GroupingItem.h"
+#include "terralib/maptools/AbstractLayer.h"
+
+// STL
+#include <string>
+#include <vector>
 
 #include <QGraphicsItem>
+#include <QColor>
+#include <QFont>
 
 namespace te
 {
+  namespace gm
+  {
+    class Geometry;
+  }
+  namespace map
+  {
+    class Grouping;
+  }
+  namespace qt
+  {
+    namespace widgets
+    {
+      class Canvas;
+    }
+  }
+  namespace se
+  {
+    class Symbolizer;
+  }
   namespace layout
   {
     class AbstractItemController;
@@ -67,13 +94,66 @@ namespace te
          */
         virtual ~LegendItem();
 
-    protected:
+        virtual void refreshLegendProperties();
 
+      protected:
+        
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-    private:
+        virtual void drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1);
 
-        bool m_move;
+        virtual te::gm::Geometry* createGeometry(QRectF geomRect, te::se::Symbolizer* symbol);
+
+        virtual te::gm::Geometry* createPolygonSymbolizer(QRectF geomRect);
+
+        virtual te::gm::Geometry* createLineSymbolizer(QRectF geomRect);
+
+        virtual te::gm::Geometry* createPointSymbolizer(QRectF geomRect);
+
+        virtual void drawGeometry(QPainter* painter, QRectF geomRect, te::se::Symbolizer*symbol, te::gm::Geometry* geom);
+
+        virtual te::qt::widgets::Canvas* createCanvas(QRectF rectMM, te::se::Symbolizer*symbol);
+        
+        virtual void drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text);
+
+        virtual void drawTitle(QPainter* painter, double& x1, double& y1, std::string title);
+
+        virtual void drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers);
+
+        virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
+
+        virtual void resizeMark(te::qt::widgets::Canvas* geomCanvas, te::se::Symbolizer*symbol, int pxWidth, int pxHeight);
+
+        virtual void verticalAdjustmentBetweenPairs(double& y1, std::string label, double symbolSize);
+
+        virtual QPointF verticalLegendTextAdjustment(double x1, double y1, std::string text);
+
+        virtual QRectF verticalLegendGeomAdjustment(QRectF geom);
+
+        virtual void initXY(double& x1, double& y1);
+
+        virtual void verifyLimitRows(double& x1, double& y1);
+      
+      protected:
+
+        double                                m_currentMaxHeight; //!< max vertical size between text and symbol
+        double                                m_maxWidth; //!< max horizontal size between text and symbol
+        double                                m_displacementBetweenSymbols;
+        double                                m_displacementBetweenSymbolsAndText;
+        double                                m_symbolSize;
+        std::list<te::map::AbstractLayerPtr>  m_layerList;
+        int                                   m_borderDisplacement;
+        int                                   m_dispBetweenTitleAndSymbols;
+        int                                   m_rows;
+        int                                   m_countColumns;
+        int                                   m_countRows;
+        double                                m_offsetBetweenColumns;
+        double                                m_penWidth;
+
+        QColor                                m_qFontLegendColor;
+        QFont                                 m_qFontLegend;
+        QColor                                m_qFontTitleColor;
+        QFont                                 m_qFontTitle;
     };
   }
 }

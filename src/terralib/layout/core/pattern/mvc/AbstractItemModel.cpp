@@ -145,6 +145,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("zValue");
     property.setLabel(TR_LAYOUT("Order in which appears"));
     property.setValue(zValue, dataType->getDataTypeInt());
+    property.setEditable(false);
     m_properties.addProperty(property);
   }
 

@@ -27,6 +27,11 @@
 
 // TerraLib
 #include "ItemUtils.h"
+#include "terralib/maptools/ExternalGraphicRendererManager.h"
+#include "terralib/maptools/MarkRendererManager.h"
+#include "terralib/se/PointSymbolizer.h"
+#include "terralib/se/Graphic.h"
+#include "terralib/se/Utils.h" 
 #include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
@@ -701,3 +706,28 @@ void te::layout::ItemUtils::setTextDPI(double textDpi)
 {
   m_textDPI = textDpi;
 }
+
+te::color::RGBAColor** te::layout::ItemUtils::changePointMarkSize(te::se::PointSymbolizer* pointSymbol, std::size_t width, std::size_t height)
+{
+  te::color::RGBAColor** rgba = 0;
+
+  if (!pointSymbol)
+  {
+    return rgba;
+  }
+
+  const te::se::Graphic* graphic = pointSymbol->getGraphic();    
+  const std::vector<te::se::ExternalGraphic*> exgs = graphic->getExternalGraphics();
+
+  // Change the graphic size
+  if (!exgs.empty())
+    rgba = te::map::ExternalGraphicRendererManager::getInstance().render(exgs[0], height, width);
+  else
+  {
+    const std::vector<te::se::Mark*> marks = graphic->getMarks();
+    if (!marks.empty())
+      rgba = te::map::MarkRendererManager::getInstance().render(marks[0], height);
+  }
+  return rgba;
+}
+

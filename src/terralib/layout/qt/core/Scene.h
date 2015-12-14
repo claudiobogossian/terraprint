@@ -492,6 +492,14 @@ namespace te
         \param itemType type of the item
         */
         virtual void closeDock();
+
+        /*!
+        \brief Method to increases the unprintable area for better visualization of the edges of the paper.
+
+        \param screenWMM Screen width in millimeters (QGraphicsView)
+        \param screenHMM Screen height in millimeters (QGraphicsView)
+        */
+        void increasedUnprintableArea(double& screenWMM, double& screenHMM);
         
     protected:
 
@@ -509,6 +517,7 @@ namespace te
         ContextObject                      m_context;
         te::qt::widgets::Canvas*           m_canvas;
         std::map<std::string, ValueBase*>  m_contextValues;
+        double                             m_increasedUnprintableArea;
     };
 
     template <typename T>

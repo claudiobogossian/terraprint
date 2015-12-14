@@ -263,16 +263,22 @@ QtProperty* te::layout::ItemObserverManager::findProperty(const std::string& lab
 {
   QtProperty* prop = 0;
 
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
+  QList<QString> labelList = m_nameToLabel.values();
+
+  QString name(label.c_str());
+  if (!labelList.contains(name))
   {
-    return prop;
+    name = nameProperty(label);
+    if (name.compare("") == 0)
+    {
+      return prop;
+    }
   }
 
   QSet<QtProperty*> props = properties();
   foreach(QtProperty* p, props)
   {
-    if (p->propertyName() == name)
+    if (p->propertyName().compare(name) == 0)
     {
       prop = p;
       break;

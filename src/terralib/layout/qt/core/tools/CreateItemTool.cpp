@@ -114,9 +114,11 @@ bool te::layout::CreateItemTool::mouseReleaseEvent(QMouseEvent* e)
     coord.y = scenePos.y();
   }
 
+  QSize size = verifyToleranceSize(width, height);
+
   // create a new item
   BuildGraphicsItem buildItem(sc);
-  QGraphicsItem* item = buildItem.createItem(m_itemType, coord, width, height);
+  QGraphicsItem* item = buildItem.createItem(m_itemType, coord, size.width(), size.height());
   if (!item)
     return false;
 

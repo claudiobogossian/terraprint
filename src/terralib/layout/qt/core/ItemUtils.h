@@ -49,6 +49,14 @@ class QFont;
 
 namespace te
 {
+  namespace color
+  {
+    class RGBAColor;
+  }
+  namespace se
+  {
+    class PointSymbolizer;
+  }
   namespace layout
   {
     class MapItem;
@@ -215,6 +223,8 @@ namespace te
         static double getTextDPI();
 
         static void setTextDPI(double textDpi);
+
+        virtual te::color::RGBAColor** changePointMarkSize(te::se::PointSymbolizer* pointSymbol, std::size_t width, std::size_t height);
 
       protected:
 
