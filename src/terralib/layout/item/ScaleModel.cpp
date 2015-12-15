@@ -33,6 +33,7 @@
 #include "../core/property/Property.h"
 #include "../core/property/SharedProperties.h"
 #include "../core/pattern/mvc/AbstractItemView.h"
+#include "../core/Font.h"
 
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
@@ -46,6 +47,7 @@ te::layout::ScaleModel::ScaleModel()
   double scaleGapX = 20.;
   double scaleGapY = 5.;
   std::string itemName = "";
+  Font font;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -115,6 +117,14 @@ te::layout::ScaleModel::ScaleModel()
       property.addOption(v);
     }
 
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("font");
+    property.setLabel(TR_LAYOUT("Font"));
+    property.setValue(font, dataType->getDataTypeFont());
     m_properties.addProperty(property);
   }
 

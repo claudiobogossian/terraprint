@@ -27,7 +27,7 @@
 #include "ScaleItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/ScaleModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../../item/ScaleController.h"
 #include "../../../../item/ScaleItem.h"
 
 te::layout::AbstractItemView* te::layout::ScaleItemFactory::build(ItemFactoryParamsCreate params)
@@ -40,7 +40,7 @@ te::layout::AbstractItemView* te::layout::ScaleItemFactory::build(ItemFactoryPar
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  ScaleController* controller = new ScaleController(model);
   ScaleItem* view = new ScaleItem(controller);
   controller->setView(view);
 

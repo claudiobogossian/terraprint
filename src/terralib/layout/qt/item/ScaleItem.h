@@ -33,6 +33,7 @@
 // TerraLib
 #include "AbstractItem.h"
 #include "../../core/Config.h"
+#include "../../core/Font.h"
 
 #include <QGraphicsItem>
 
@@ -67,15 +68,20 @@ namespace te
          */
         virtual ~ScaleItem();
 
+        virtual void refreshScaleProperties();
+
       protected:
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-        virtual double getUnit(std::string& strUnit);
-        virtual double getGap(double& initialGap);
         virtual void drawDoubleAlternatingScaleBar(QPainter * painter);
         virtual void drawAlternatingScaleBar(QPainter * painter);
         virtual void drawHollowScaleBar(QPainter * painter);
+
+        double  m_scale;
+        double  m_gapX;
+        double  m_gapY;
+        Font   m_font;
     };
   }
 }
