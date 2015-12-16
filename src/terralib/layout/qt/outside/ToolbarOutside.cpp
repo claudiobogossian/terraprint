@@ -342,8 +342,8 @@ QToolButton* te::layout::ToolbarOutside::createGeometryToolButton()
   QAction* actionPolygon = createAction(tr("Polygon Object"), m_actionPolygon, "layout-polygon", "", menu);
   menu->addAction(actionPolygon);
 
-  QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, "layout-svg", "", menu);
-  menu->addAction(actionSVG);
+  /*QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, "layout-svg", "", menu);
+  menu->addAction(actionSVG);*/
 
   btnGeometry->setMenu(menu);
   btnGeometry->setPopupMode(QToolButton::MenuButtonPopup);
@@ -514,17 +514,17 @@ QToolButton* te::layout::ToolbarOutside::createTextToolButton()
   QAction* actionTitle = createAction(tr("Title Object"), m_actionTitle, "layout-title", "", menu);
   menu->addAction(actionTitle);
 
-  QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
-  menu->addAction(actionStringGrid);
+  /*QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
+  menu->addAction(actionStringGrid);*/
 
   QAction* actionImage = createAction(tr("Image Object"), m_actionImage, "layout-image", "", menu);
   menu->addAction(actionImage);
 
-  QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);
+  /*QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);
   menu->addAction(actionBalloon);
 
   QAction* actionBarCode = createAction(tr("BarCode Object"), m_actionBarCode, "layout-barcode", "", menu);
-  menu->addAction(actionBarCode);
+  menu->addAction(actionBarCode);*/
 
   btn->setMenu(menu);
   btn->setPopupMode(QToolButton::MenuButtonPopup);
