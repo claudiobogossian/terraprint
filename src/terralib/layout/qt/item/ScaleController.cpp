@@ -24,6 +24,7 @@
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../core/Value.h"
 #include "../core/Scene.h"
+#include "../../core/property/SharedProperties.h"
 
 // STL
 #include <algorithm>
@@ -44,6 +45,12 @@ void te::layout::ScaleController::update(const Subject* subject)
   {
     return;
   }
+
+  if (changeScaleWidthAfterConnection())
+  {
+    return;
+  }
+
   scaleItem->refreshScaleProperties();
 }
 
@@ -300,5 +307,43 @@ double te::layout::ScaleController::strToUnit(std::string& strUnit)
     unit = 1.0;
   }
   return unit;
+}
+
+bool te::layout::ScaleController::changeScaleWidthAfterConnection()
+{
+  bool change = false;
+
+  SharedProperties sharedProps;
+  const Property& pConnection = getProperty(sharedProps.getItemObserver());
+  if (pConnection.isNull())
+  {
+    return change;
+  }
+
+  const Property& pScaleWidth = getProperty("scale_width_rect_gap");
+  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
+  const Property& pScale = getProperty("scale");
+
+  double scale = pScale.getValue().toDouble();
+  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  double gapX = pScaleWidth.getValue().toDouble();
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  std::string strUnit;
+  double unit = getUnit(strUnit);
+  double spacing = scale / 100.;
+  double mmToCm = gapX / 10.;
+
+  double value = (spacing * mmToCm) / unit;
+  if (value != scaleInUnit)
+  {
+    Property prop;
+    prop.setName("scale_in_unit_width_rect_gap");
+    prop.setValue(value, dataType->getDataTypeDouble());
+    setProperty(prop);
+    change = true;
+  }
+  return change;
 }
 

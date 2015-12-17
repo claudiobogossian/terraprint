@@ -76,6 +76,8 @@ namespace te
 
         virtual Property checkScaleWidthAndUnit(const Properties& properties);
 
+        virtual bool changeScaleWidthAfterConnection();
+
         virtual Property calculateScaleWidthInMM(const Properties& properties);
 
         virtual Property calculateScaleWidthInUnit(const Properties& properties);
