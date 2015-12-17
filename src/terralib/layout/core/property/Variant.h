@@ -364,8 +364,8 @@ namespace te
           m_lValue == otherProp.toLong() &&
           m_fValue == otherProp.toFloat() &&
           m_bValue == otherProp.toBool() &&
-          m_colorValue == otherProp.toColor()/*&&
-          m_fontValue == otherProp.toFont()*/)
+          m_colorValue == otherProp.toColor() &&
+          m_fontValue == otherProp.toFont())
         {
           return true;
         }
@@ -389,8 +389,8 @@ namespace te
           m_iValue != otherProp.toInt() ||
           m_lValue != otherProp.toLong() ||
           m_fValue != otherProp.toFloat() ||
-          m_colorValue != otherProp.toColor() /*||
-          m_fontValue != otherProp.toFont()*/)
+          m_colorValue != otherProp.toColor() ||
+          m_fontValue != otherProp.toFont())
         {
           return true;
         }

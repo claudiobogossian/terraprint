@@ -169,6 +169,22 @@ namespace te
         */
         virtual void fromString(std::string font);
 
+        /*!
+        \brief 
+
+        \param
+        \return
+        */
+        bool operator==(const Font& font) const;
+
+        /*!
+        \brief 
+
+        \param
+        \return
+        */
+        bool operator!=(const Font& font) const;
+
       protected:
 
         /*!
@@ -194,6 +210,27 @@ namespace te
         bool m_kerning; //!< true if font use kerning, false otherwise  
         LayoutAlign m_textAlign; //!<
     };
+
+    inline bool te::layout::Font::operator==(const Font& font) const
+    {
+      bool result = false;
+      if (m_family == font.getFamily()
+        && m_pointSize == font.getPointSize()
+        && m_bold == font.isBold()
+        && m_italic == font.isItalic()
+        && m_underline == font.isUnderline()
+        && m_strikeout == font.isStrikeout()
+        && m_kerning == font.isKerning())
+      {
+        result = true;
+      }
+      return result;
+    }
+
+    inline bool te::layout::Font::operator!=(const Font& font) const
+    {
+      return !operator==(font);
+    }
   }
 }
 

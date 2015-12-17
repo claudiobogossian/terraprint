@@ -62,12 +62,9 @@ void te::layout::GridPlanarItem::drawGrid(QPainter* painter)
   {
     currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
   }
-
-
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
-  Font txtFont = pTextFontFamily.getValue().toFont();
-
   
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
+  Font txtFont = pTextFontFamily.getValue().toFont();  
 
   ItemUtils::ConfigurePainterForTexts(painter, txtFont);
   
@@ -131,7 +128,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
 
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
   Font txtFont = pTextFontFamily.getValue().toFont();
   
   double verticalGap = pVerticalGap.getValue().toDouble();
@@ -191,7 +188,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
   const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
   const Property& pUnit = pGridSettings.containsSubProperty(settingsConfig.getUnit());

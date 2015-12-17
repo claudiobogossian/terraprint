@@ -216,7 +216,7 @@ te::layout::GridMapModel::GridMapModel()
 
   {
     Property property(0);
-    property.setName(settingsConfig.getFontText());
+    property.setName(settingsConfig.getFont());
     property.setLabel(TR_LAYOUT("Font"));
     property.setValue(font, dataType->getDataTypeFont());
     prop_gridsettings.addSubProperty(property);

@@ -130,6 +130,10 @@ QCursor te::layout::AbstractLayoutTool::createCursor(std::string pathIcon)
 QSize te::layout::AbstractLayoutTool::verifyToleranceSize(double width, double height)
 {
   QSize size(width, height);
+
+  if (width == 0 && height == 0)
+    return size;
+
   if (width < m_minimumSize.width())
   {
     size.setWidth(m_minimumSize.width());

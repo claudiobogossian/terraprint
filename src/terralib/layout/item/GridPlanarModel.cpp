@@ -72,6 +72,7 @@ te::layout::GridPlanarModel::GridPlanarModel()
     Property property(0);
     property.setName("planar_box");
     property.setLabel(TR_LAYOUT("Planar Box"));
+    property.setVisible(false);
     property.setValue(planarBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
   }

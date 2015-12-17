@@ -56,8 +56,8 @@ namespace te
         std::string getLineStyle();
         std::string getLineColor();
         std::string getLineWidth();
-        std::string getPointTextSize();
-        std::string getFontText();
+        std::string getFont();
+        std::string getFontCorner();
         std::string getTextColor();
         std::string getVisibleAllTexts();
         std::string getSuperscriptText();
@@ -94,8 +94,8 @@ namespace te
         std::string m_lineWidth;
 
         /*Text: Basic Configuration*/
-        std::string m_pointTextSize;
-        std::string m_fontText;
+        std::string m_font;
+        std::string m_fontCorner;
         std::string m_textColor;
 
         /*Text: Advanced configuration*/
