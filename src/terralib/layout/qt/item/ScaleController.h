@@ -30,6 +30,7 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../core/property/Properties.h"
 
 // STL
 #include <string>
@@ -66,6 +67,22 @@ namespace te
         virtual double getUnit(std::string& strUnit);
 
         virtual double getGap(double& initialGap);
+
+        virtual void setProperty(const Property& property);
+
+        virtual void setProperties(const Properties& properties);
+
+      protected:
+
+        virtual Property checkScaleWidthAndUnit(const Properties& properties);
+
+        virtual Property calculateScaleWidthInMM(const Properties& properties);
+
+        virtual Property calculateScaleWidthInUnit(const Properties& properties);
+
+        virtual Property calculateScaleUnit(const Properties& properties);
+
+        virtual double strToUnit(std::string& strUnit);
     };
   }
 }

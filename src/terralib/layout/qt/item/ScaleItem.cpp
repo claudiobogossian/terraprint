@@ -120,7 +120,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   QRectF rectScale;
   QRectF newBoxSecond;
 
-  double initialGap;
+  double initialGap = 0;
   double gap = controller->getGap(initialGap);
   x1 += initialGap;
 
@@ -240,7 +240,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QRectF rectScale;
   QRectF newBoxSecond;
 
-  double initialGap;
+  double initialGap = 0;
   double gap = controller->getGap(initialGap);
   x1 += initialGap;
 
@@ -354,7 +354,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   QLineF lineVrt;
   QLineF lineHrz;
 
-  double initialGap;
+  double initialGap = 0;
   double gap = controller->getGap(initialGap);
   x1 += initialGap;
 
