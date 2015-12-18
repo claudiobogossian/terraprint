@@ -64,7 +64,6 @@ class QGraphicsItemGroup;
 class QLineF;
 class QContextMenuEvent;
 class QEvent;
-class QDialog;
 
 namespace te
 {
@@ -80,6 +79,7 @@ namespace te
     class Scene;
     class EnumType;
     class ToolbarItemInside;
+    class DialogItemToolbar;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -463,7 +463,7 @@ namespace te
         std::vector<AbstractLayoutTool*>     m_lateRemovalVec;
         bool                                 m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True
         QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item
-        QDialog*                             m_dialogItemToolbar;
+        DialogItemToolbar*                   m_dialogItemToolbar;
         EnumType*                            m_currentToolbarInsideType;
         bool                                 m_midButtonClicked;
     };
