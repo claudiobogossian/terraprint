@@ -134,14 +134,10 @@ QSize te::layout::AbstractLayoutTool::verifyToleranceSize(double width, double h
   if (width == 0 && height == 0)
     return size;
 
-  if (width < m_minimumSize.width())
+  if (width < m_minimumSize.width() || height < m_minimumSize.height())
   {
-    size.setWidth(m_minimumSize.width());
-  }
-
-  if (height < m_minimumSize.height())
-  {
-    size.setHeight(m_minimumSize.height());
+    size.setWidth(0);
+    size.setHeight(0);
   }
 
   return size;
