@@ -63,13 +63,18 @@ void te::layout::MapLocationItem::onDisplayPaintEvent(QPainter*)
   const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
   const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
 
-  if (referenceSrid == -1 || referenceBox.isValid() == false)
+  if (referenceSrid <= 0 || referenceBox.isValid() == false)
   {
     return;
   }
-  
+
   te::gm::Envelope envelope = m_mapDisplay->getExtent();
   int srid = m_mapDisplay->getSRID();
+
+	if (srid <= 0 || envelope.isValid() == false)
+	{
+		return;
+	}
 
   te::qt::widgets::Canvas canvas(m_mapDisplay->getDraftPixmap());
   canvas.calcAspectRatio(&envelope);
