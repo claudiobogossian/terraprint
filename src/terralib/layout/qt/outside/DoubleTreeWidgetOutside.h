@@ -26,6 +26,8 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_DOUBLE_TREE_WIDGET_OUTSIDE_H
 #define __TERRALIB_LAYOUT_INTERNAL_DOUBLE_TREE_WIDGET_OUTSIDE_H
 
+#include <memory>
+
 // TerraLib
 #include "../../core/Config.h"
 
