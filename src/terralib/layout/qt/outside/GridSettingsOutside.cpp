@@ -285,11 +285,11 @@ void te::layout::GridSettingsOutside::load()
 
   initCombo(m_ui->cmbPlanarLineType, m_planarGridSettings->getLineStyle(), m_planarType);
 
-  initCombo(m_ui->cmbPlanarLineWidth, m_planarGridSettings->getLineWidth(), m_planarType);
+  initDouble(m_ui->m_planarLineWidthDoubleSpinBox, m_planarGridSettings->getLineWidth(), m_planarType);
 
   initCombo(m_ui->cmbLineType, m_geodesicGridSettings->getStyle(), m_geodesicType);
 
-  initCombo(m_ui->cmbLineWidth, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
+  initDouble(m_ui->m_lineWidthDoubleSpinBox, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
 
   initColor(m_ui->fraLineColor, m_geodesicGridSettings->getLineColor(), m_geodesicType);
 
@@ -707,14 +707,16 @@ void te::layout::GridSettingsOutside::on_cmbPlanarLineType_currentIndexChanged( 
   }
 }
 
-void te::layout::GridSettingsOutside::on_cmbPlanarLineWidth_currentIndexChanged( const QString & text )
+void te::layout::GridSettingsOutside::on_m_planarLineWidthDoubleSpinBox_editingFinished()
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
+    QString text = m_ui->m_planarLineWidthDoubleSpinBox->text();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toInt(), dataType->getDataTypeInt());
+    variant.setValue(text.toDouble(), dataType->getDataTypeDouble());
     Property prop = controller->updateProperty(m_planarGridSettings->getLineWidth(), variant, m_planarType);
     emit updateProperty(prop);
   }
@@ -733,11 +735,13 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
   }
 }
 
-void te::layout::GridSettingsOutside::on_cmbLineWidth_currentIndexChanged( const QString & text )
+void te::layout::GridSettingsOutside::on_m_lineWidthDoubleSpinBox_editingFinished()
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
+    QString text = m_ui->m_lineWidthDoubleSpinBox->text();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(text.toDouble(), dataType->getDataTypeDouble());
