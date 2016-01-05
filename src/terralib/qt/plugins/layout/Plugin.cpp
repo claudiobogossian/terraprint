@@ -74,41 +74,21 @@ void te::qt::plugins::layout::Plugin::startup()
 // it initializes the Translator support for the TerraLib LayoutEditor Qt Plugin
   TE_ADD_TEXT_DOMAIN(TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN, TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN_DIR, "UTF-8");
 
-  TE_LOG_TRACE(TE_TR("TerraLib Qt Map Layout Plugin startup!"));
+  TE_LOG_TRACE(TE_TR("TerraLib Qt TerraPrint Plugin startup!"));
   
   // add plugin menu
   QMenu* pluginMenu = te::qt::af::AppCtrlSingleton::getInstance().getMenu("Plugins");
 
-  //if(!pluginMenu)
-  //  return;
-
-
-  // register actions
-  //registerActions();
-  //QMenu* mnu = te::qt::af::AppCtrlSingleton::getInstance().findMenu("Tools");
-  //QAction* act = te::qt::af::AppCtrlSingleton::getInstance().findAction("Tools.Customize");
-
-  //if(act)
-  //{
-//  evt.m_actions << m_showWindow;
-  //mnu->insertAction(act, m_showWindow);
-  //mnu->addSeparator();
-
-//  connect(m_showWindow, SIGNAL(triggered()), SLOT(showWindow()));
-
-  //if(!pluginsSeparator)
-  //  return;
-
   m_layoutMenu = new QMenu(pluginMenu);
   m_layoutMenu->setIcon(QIcon::fromTheme("map-layout-icon"));
-  m_layoutMenu->setTitle(tr("Map Layout"));
+  m_layoutMenu->setTitle(tr("TerraPrint"));
 
   // register actions
   registerActions();
 
   // layout log startup
   std::string path = te::qt::af::AppCtrlSingleton::getInstance().getUserDataDir().toStdString();
-  path += "/log/terralib_map_layout.log";
+  path += "/log/terralib_terraprint.log";
 
 #if defined(TERRALIB_APACHE_LOG4CXX_ENABLED) && defined(TERRALIB_LOGGER_ENABLED)
   std::string layout = "%d{ISO8601} [%t] %-5p %c - %m%n";
@@ -123,7 +103,7 @@ void te::qt::plugins::layout::Plugin::startup()
   log4cxx::BasicConfigurator::configure(log4cxx::AppenderPtr(fileAppender));
   log4cxx::Logger::getRootLogger()->setLevel(log4cxx::Level::getDebug());
 
-  log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("maplayout");
+  log4cxx::LoggerPtr logger = log4cxx::Logger::getLogger("terraprint");
   logger->setAdditivity(false);
   logger->addAppender(fileAppender);
 #endif
@@ -133,7 +113,7 @@ void te::qt::plugins::layout::Plugin::startup()
   evt.m_category = "Layout";
   evt.m_plgName = "Layout";
   QAction* act = m_layoutMenu->menuAction();
-  act->setText(tr("Map Layout"));
+  act->setText(tr("TerraPrint"));
 
   evt.m_actions.push_back(act);
 
@@ -161,7 +141,7 @@ void te::qt::plugins::layout::Plugin::shutdown()
   log4cxx::LogManager::shutdown();
 #endif
 
-  TE_LOG_TRACE(TE_TR("TerraLib Qt Map Layout Plugin shutdown!"));
+  TE_LOG_TRACE(TE_TR("TerraLib Qt TerraPrint Plugin shutdown!"));
 
   m_initialized = false;
 }

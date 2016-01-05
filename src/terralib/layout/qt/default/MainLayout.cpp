@@ -111,7 +111,7 @@ void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
 
   m_statusBar = new QStatusBar;
   m_statusBar->setMinimumSize(200, 10);
-  m_statusBar->showMessage(tr("Map Layout - TerraLib 5"));
+  m_statusBar->showMessage(tr("TerraPrint - TerraLib 5"));
 }
 
 void te::layout::MainLayout::postInit()

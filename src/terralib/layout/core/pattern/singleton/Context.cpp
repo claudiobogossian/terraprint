@@ -36,7 +36,7 @@
 #include "../proxy/AbstractProxyProject.h"
 
 te::layout::Context::Context() :
-  m_version("MAPLayoutQt5_1.0.0"),
+  m_version("TerraPrintQt5_1.0.0"),
   m_systematicConfig(0)
 {
   
