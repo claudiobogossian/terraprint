@@ -153,3 +153,39 @@ MACRO(addExternalLibrariesToRPATH LIBRARY_LIST)
 	  ENDFOREACH()
   ENDIF()
 ENDMACRO(addExternalLibrariesToRPATH)
+
+MACRO(GenerateTranslationQt5 translation_dir project_name qm_files)
+  set(_ts_file_name ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/${project_name}_pt_br.ts)
+  set(qm_file ${terralib_DIR}/share/terralib/translations/${project_name}_pt_br.qm)
+
+  add_custom_command(
+    TARGET ${project_name}
+	POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E make_directory "${terralib_DIR}/share/terralib/translations/"
+	  COMMAND ${Qt5_LUPDATE_EXECUTABLE} 
+	  ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
+	  COMMAND ${Qt5_LRELEASE_EXECUTABLE} 
+	  ARGS "${_ts_file_name}" -qm "${qm_file}"
+	  COMMENT "Generating ${project_name} translations"
+  )
+  message ("terralib_dir: ${terralib_DIR}")
+  list(APPEND ${qm_files} ${qm_file})
+ENDMACRO(GenerateTranslationQt5)
+
+MACRO(GenerateTranslationQt4 translation_dir project_name qm_files)
+  set(_ts_file_name ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/${project_name}_pt_br.ts)
+  set(qm_file ${CMAKE_BINARY_DIR}/translations/${project_name}_pt_br.qm)
+
+  add_custom_command(
+    TARGET ${project_name}
+	POST_BUILD
+          COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/translations"
+	  COMMAND ${QT_LUPDATE_EXECUTABLE} 
+	  ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
+	  COMMAND ${QT_LRELEASE_EXECUTABLE} 
+	  ARGS "${_ts_file_name}" -qm "${qm_file}"
+	  COMMENT "Generating ${project_name} translations"
+  )
+  
+  list(APPEND ${qm_files} ${qm_file})
+ENDMACRO(GenerateTranslationQt4)

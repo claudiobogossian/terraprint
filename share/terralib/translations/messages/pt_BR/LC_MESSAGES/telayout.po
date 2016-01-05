@@ -1,0 +1,450 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2015-12-16 17:35-0200\n"
+"PO-Revision-Date: 2016-01-04 10:23-0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.6\n"
+"X-Poedit-Basepath: ../../../../../../src/terralib/layout\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-KeywordsList: TR_LAYOUT\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: qt\n"
+
+#: core/pattern/mvc/AbstractItemModel.cpp:22
+msgid "Id"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:32
+msgid "Name"
+msgstr "Nome"
+
+#: core/pattern/mvc/AbstractItemModel.cpp:41
+msgid "X"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:50
+msgid "Y"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:59 item/TitleModel.cpp:109
+msgid "Width"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:67
+msgid "Height"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:75
+msgid "Background Color"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:84
+msgid "Frame Color"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:93
+msgid "Frame Thickness"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:103
+msgid "Show Frame"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:112 item/ItemGroupModel.cpp:42
+#: item/LineModel.cpp:106
+msgid "Resizable"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:121
+msgid "Keep Aspect on Resize"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:129
+msgid "Rotation"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:137
+msgid "Printable"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:146
+msgid "Order in which appears"
+msgstr ""
+
+#: core/pattern/mvc/AbstractItemModel.cpp:163
+msgid "Editable"
+msgstr ""
+
+#: item/ArrowModel.cpp:52 item/NorthModel.cpp:51
+msgid "Graphic Type"
+msgstr ""
+
+#: item/ArrowModel.cpp:78 item/EllipseModel.cpp:51 item/PointModel.cpp:81
+#: item/PolygonModel.cpp:51 item/RectangleModel.cpp:79
+msgid "Fill Color"
+msgstr ""
+
+#: item/ArrowModel.cpp:87 item/EllipseModel.cpp:60 item/PointModel.cpp:90
+#: item/PolygonModel.cpp:60 item/RectangleModel.cpp:88
+msgid "Contour Color"
+msgstr ""
+
+#: item/BalloonModel.cpp:51
+msgid "Border"
+msgstr ""
+
+#: item/BalloonModel.cpp:60 item/LineModel.cpp:88 item/NorthModel.cpp:76
+#: item/TextModel.cpp:68 item/TitleModel.cpp:102
+msgid "Color"
+msgstr ""
+
+#: item/BarCodeModel.cpp:59
+msgid "Barcode Size"
+msgstr ""
+
+#: item/GridGeodesicModel.cpp:64
+msgid "Geographic Box"
+msgstr ""
+
+#: item/GridGeodesicModel.cpp:75
+msgid "Show Degrees Text"
+msgstr ""
+
+#: item/GridGeodesicModel.cpp:82
+msgid "Show Minutes Text"
+msgstr ""
+
+#: item/GridGeodesicModel.cpp:89
+msgid "Show Seconds Text"
+msgstr ""
+
+#: item/GridMapModel.cpp:89
+msgid "Grid Settings"
+msgstr ""
+
+#: item/GridMapModel.cpp:98
+msgid "Visible"
+msgstr ""
+
+#: item/GridMapModel.cpp:106
+msgid "Horizontal Gap"
+msgstr "Lacuna horizontal"
+
+#: item/GridMapModel.cpp:114
+msgid "Vertical Gap"
+msgstr "Lacuna vertical"
+
+#: item/GridMapModel.cpp:122
+msgid "Initial Point X"
+msgstr ""
+
+#: item/GridMapModel.cpp:130
+msgid "Initial Point Y"
+msgstr ""
+
+#: item/GridMapModel.cpp:143
+msgid "Style"
+msgstr ""
+
+#: item/GridMapModel.cpp:174 item/LineModel.cpp:55
+msgid "Line Style"
+msgstr ""
+
+#: item/GridMapModel.cpp:201
+msgid "Line Color"
+msgstr ""
+
+#: item/GridMapModel.cpp:210 item/LineModel.cpp:80
+msgid "Line Width"
+msgstr ""
+
+#: item/GridMapModel.cpp:220 item/TextModel.cpp:52
+msgid "Font"
+msgstr ""
+
+#: item/GridMapModel.cpp:229
+msgid "Text Color"
+msgstr ""
+
+#: item/GridMapModel.cpp:239
+msgid "All Texts Visible"
+msgstr ""
+
+#: item/GridMapModel.cpp:248
+msgid "Superscript"
+msgstr ""
+
+#: item/GridMapModel.cpp:258
+msgid "Vertical Displacement"
+msgstr ""
+
+#: item/GridMapModel.cpp:267
+msgid "Horizontal Displacement"
+msgstr ""
+
+#: item/GridMapModel.cpp:276
+msgid "Bottom Text Visible"
+msgstr ""
+
+#: item/GridMapModel.cpp:284
+msgid "Left Text Visible"
+msgstr ""
+
+#: item/GridMapModel.cpp:292
+msgid "Right Text Visible"
+msgstr ""
+
+#: item/GridMapModel.cpp:300
+msgid "Top Text Visible"
+msgstr ""
+
+#: item/GridMapModel.cpp:308
+msgid "Bottom Text Rotate"
+msgstr ""
+
+#: item/GridMapModel.cpp:316
+msgid "Left Text Rotate"
+msgstr ""
+
+#: item/GridMapModel.cpp:324
+msgid "Right Text Rotate"
+msgstr ""
+
+#: item/GridMapModel.cpp:332
+msgid "Top Text Rotate"
+msgstr ""
+
+#: item/GridMapModel.cpp:340
+msgid "Cross Offset"
+msgstr ""
+
+#: item/GridMapModel.cpp:361 item/LegendModel.cpp:106
+#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:86
+msgid "Connection with"
+msgstr ""
+
+#: item/GridPlanarModel.cpp:65 item/ScaleModel.cpp:124
+msgid "Unit"
+msgstr ""
+
+#: item/GridPlanarModel.cpp:74
+msgid "Planar Box"
+msgstr ""
+
+#: item/ImageModel.cpp:51
+msgid "File Name"
+msgstr ""
+
+#: item/LegendModel.cpp:86
+msgid "Select the legend"
+msgstr ""
+
+#: item/LegendModel.cpp:95 item/MapModel.cpp:82
+msgid "URI"
+msgstr ""
+
+#: item/LegendModel.cpp:114
+msgid "Font Title"
+msgstr ""
+
+#: item/LegendModel.cpp:122
+msgid "Font Title Color"
+msgstr ""
+
+#: item/LegendModel.cpp:132
+msgid "Legend Body"
+msgstr ""
+
+#: item/LegendModel.cpp:137
+msgid "Font Legend"
+msgstr ""
+
+#: item/LegendModel.cpp:145
+msgid "Font Legend Color"
+msgstr ""
+
+#: item/LegendModel.cpp:153
+msgid "Border Displacement"
+msgstr ""
+
+#: item/LegendModel.cpp:160
+msgid "Displacement Between Symbols"
+msgstr ""
+
+#: item/LegendModel.cpp:167
+msgid "Displacement Between Title And Symbols"
+msgstr ""
+
+#: item/LegendModel.cpp:174
+msgid "Displacement Between Symbols And Texts"
+msgstr ""
+
+#: item/LegendModel.cpp:181
+msgid "Symbol Size"
+msgstr ""
+
+#: item/LegendModel.cpp:188
+msgid "Rows"
+msgstr ""
+
+#: item/LegendModel.cpp:195
+msgid "Offset Between Columns"
+msgstr ""
+
+#: item/LineModel.cpp:97 item/PolygonModel.cpp:69
+msgid "Geometry"
+msgstr ""
+
+#: item/MapLocationModel.cpp:69
+msgid "Reference Envelope Fill Color"
+msgstr ""
+
+#: item/MapLocationModel.cpp:77
+msgid "Reference Envelope Contour Color"
+msgstr ""
+
+#: item/MapModel.cpp:61
+msgid "Select layers"
+msgstr ""
+
+#: item/MapModel.cpp:71
+msgid "Layers"
+msgstr ""
+
+#: item/MapModel.cpp:92
+msgid "World Box"
+msgstr ""
+
+#: item/MapModel.cpp:100
+msgid "SRID"
+msgstr ""
+
+#: item/MapModel.cpp:108 item/ScaleModel.cpp:58
+msgid "Scale"
+msgstr ""
+
+#: item/PaperModel.cpp:56
+msgid "Paper Color"
+msgstr ""
+
+#: item/PaperModel.cpp:63
+msgid "Shadow Color"
+msgstr ""
+
+#: item/PaperModel.cpp:70
+msgid "Shadow padding"
+msgstr ""
+
+#: item/PaperModel.cpp:77
+msgid "Paper width"
+msgstr ""
+
+#: item/PaperModel.cpp:84
+msgid "Paper height"
+msgstr ""
+
+#: item/PaperModel.cpp:91
+msgid "Paper type"
+msgstr ""
+
+#: item/PaperModel.cpp:98
+msgid "Orientation"
+msgstr ""
+
+#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:98
+msgid "Graphic type"
+msgstr ""
+
+#: item/ScaleModel.cpp:67
+msgid "Scale Gap X"
+msgstr ""
+
+#: item/ScaleModel.cpp:76
+msgid "Scale Gap Y"
+msgstr ""
+
+#: item/TextModel.cpp:60
+msgid "Text"
+msgstr ""
+
+#: item/TextModel.cpp:79
+msgid "Alignment"
+msgstr ""
+
+#: item/ThreeNorthModel.cpp:56
+msgid "Map Name"
+msgstr ""
+
+#: item/ThreeNorthModel.cpp:68
+msgid "color"
+msgstr ""
+
+#: item/ThreeNorthModel.cpp:75
+msgid "magnetic_convergence"
+msgstr ""
+
+#: item/ThreeNorthModel.cpp:83
+msgid "magnetic_north"
+msgstr ""
+
+#: item/ThreeNorthModel.cpp:92
+msgid "angle_magnetic_convergence"
+msgstr ""
+
+#: item/ThreeNorthModel.cpp:101
+msgid "angle_magnetic_north"
+msgstr ""
+
+#: item/TitleModel.cpp:79
+msgid "Settings"
+msgstr ""
+
+#: item/TitleModel.cpp:88
+msgid "Spacing"
+msgstr ""
+
+#: item/TitleModel.cpp:95
+msgid "Padding"
+msgstr ""
+
+#: item/TitleModel.cpp:116
+msgid "Number of rows"
+msgstr ""
+
+#: item/TitleModel.cpp:123
+msgid "Even Row Color"
+msgstr ""
+
+#: item/TitleModel.cpp:130
+msgid "Odd Row Color"
+msgstr ""
+
+#: item/TitleModel.cpp:137
+msgid "Number of columns"
+msgstr ""
+
+#: item/TitleModel.cpp:144
+msgid "Column Width"
+msgstr ""
+
+#: item/TitleModel.cpp:151
+msgid "Border Width"
+msgstr ""
+
+#: item/TitleModel.cpp:158
+msgid "Border Grid Color"
+msgstr ""
+
+#: item/TitleModel.cpp:165
+msgid "Horizontal Header Color"
+msgstr ""
+
+#: item/TitleModel.cpp:172
+msgid "Vertical Header Color"
+msgstr ""
