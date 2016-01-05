@@ -731,3 +731,16 @@ te::color::RGBAColor** te::layout::ItemUtils::changePointMarkSize(te::se::PointS
   return rgba;
 }
 
+QPainterPath te::layout::ItemUtils::lineToQPath(const te::gm::LineString& line)
+{
+  QPainterPath path;
+
+  size_t numCoords = line.size();
+  for (size_t i = 0; i < numCoords; ++i)
+  {
+    te::gm::Point* point = line.getPointN(i);
+    path.lineTo(point->getX(), point->getY());
+  }
+
+  return path;
+}

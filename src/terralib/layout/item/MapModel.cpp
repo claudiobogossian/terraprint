@@ -40,7 +40,7 @@ te::layout::MapModel::MapModel()
 {
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getMapItem());
 
-  te::color::RGBAColor backgroundColor(255, 255, 255, 0);
+  te::color::RGBAColor backgroundColor(255, 255, 255, 255);
   bool enableChildren = true;
   te::gm::Envelope worldBox;
   int srid = -1;

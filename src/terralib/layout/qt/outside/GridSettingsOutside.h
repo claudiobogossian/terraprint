@@ -109,11 +109,11 @@ namespace te
 
         virtual void on_cmbPlanarLineType_currentIndexChanged ( const QString & text );
 
-        virtual void on_cmbPlanarLineWidth_currentIndexChanged ( const QString & text );  
+        virtual void on_m_planarLineWidthDoubleSpinBox_editingFinished();
 
         virtual void on_cmbLineType_currentIndexChanged ( const QString & text );
 
-        virtual void on_cmbLineWidth_currentIndexChanged ( const QString & text );
+        virtual void on_m_lineWidthDoubleSpinBox_editingFinished();
 
         virtual void on_pbLineColor_clicked();
 

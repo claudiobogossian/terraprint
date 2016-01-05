@@ -136,6 +136,11 @@ namespace te
       EnumAction = 3,
       EnumDialog = 4
     };
+
+    enum TELAYOUTEXPORT ItemAction
+    {
+      NO_ACTION, RESIZE_ACTION, MOVE_ACTION
+    };
   }
 }
 

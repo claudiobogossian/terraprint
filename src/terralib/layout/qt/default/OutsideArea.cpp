@@ -544,12 +544,12 @@ void te::layout::OutsideArea::onRefreshStatusBar()
 
   if(mode == te::layout::Enums::getInstance().getEnumModeType()->getModeNone())
   {
-    msg = tr("Map Layout - TerraLib 5").toStdString();
+    msg = tr("TerraPrint - TerraLib 5").toStdString();
     m_statusBar->showMessage(msg.c_str());
     return;
   }
   
-  msg = tr("Map Layout - TerraLib 5 | Context: ").toStdString();
+  msg = tr("TerraPrint - TerraLib 5 | Context: ").toStdString();
   
   std::string s_mode = mode->getLabel();
   if(s_mode.compare("") == 0)

@@ -60,7 +60,7 @@ void te::layout::GridGeodesicItem::drawGrid(QPainter* painter)
 
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
 
-  const std::string& style = pStyle.getValue().toString();
+  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
 
   EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
   if(currentStyle != 0)
@@ -293,19 +293,19 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
       continue;
     }
 
-    te::gm::Envelope* ev = const_cast<te::gm::Envelope*>(lineString->getMBR());
-
-    //QLineF lne(ev->getLowerLeftX(), ev->getLowerLeftY(), ev->getUpperRightX(), ev->getUpperRightY());
     size_t numCoords = lineString->size();
     te::gm::Point* firstPoint = lineString->getPointN(0);
     te::gm::Point* lastPoint = lineString->getPointN(numCoords - 1);
 
+    te::gm::LineString leftBorderLine(2, te::gm::LineStringType);
+    leftBorderLine.setPoint(0, boxMM.getLowerLeftX(), boxMM.getLowerLeftY());
+    leftBorderLine.setPoint(1, boxMM.getLowerLeftX(), boxMM.getUpperRightY());
 
-    QLineF gridLine(firstPoint->getX(), firstPoint->getY(), lastPoint->getX(), lastPoint->getY());
-    QLineF leftLine(boxMM.getLowerLeftX(), boxMM.getLowerLeftY(), boxMM.getLowerLeftX(), boxMM.getUpperRightY());
-    QLineF rightLine(boxMM.getUpperRightX(), boxMM.getLowerLeftY(), boxMM.getUpperRightX(), boxMM.getUpperRightY());
+    te::gm::LineString rightBorderLine(2, te::gm::LineStringType);
+    rightBorderLine.setPoint(0, boxMM.getUpperRightX(), boxMM.getLowerLeftY());
+    rightBorderLine.setPoint(1, boxMM.getUpperRightX(), boxMM.getUpperRightY());
 
-    m_horizontalLines.push_back(gridLine);
+    m_horizontalLines.push_back(te::gm::LineString(*lineString));
 
     std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText);
     QString qText = QString::fromLatin1(text.c_str());
@@ -314,14 +314,15 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
     QRectF rectF(textObject.boundingRect());
 
-    QPointF intersectonPoint;
-    if (gridLine.intersect(leftLine, &intersectonPoint) == QLineF::BoundedIntersection)
+
+    //as the grid lines an be curved, texts must only de drawn in the cases that the grid line reaches the top or the botton of the item bounding rect
+    if (lineString->intersects(&leftBorderLine) == true)
     {
-      calculateLeft(gridLine, rectF, qText, bLeftRotate, verticalDisplacement);
+      calculateLeft(QPointF(firstPoint->getX(), firstPoint->getY()), rectF, qText, bLeftRotate, verticalDisplacement);
     }
-    if (gridLine.intersect(rightLine, &intersectonPoint) == QLineF::BoundedIntersection)
+    if (lineString->intersects(&rightBorderLine) == true)
     {
-      calculateRight(gridLine, rectF, qText, bRightRotate, verticalDisplacement);
+      calculateRight(QPointF(lastPoint->getX(), lastPoint->getY()), rectF, qText, bRightRotate, verticalDisplacement);
     }
 
     if(line)
@@ -417,20 +418,19 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
       continue;
     }
 
-    te::gm::Envelope* ev = const_cast<te::gm::Envelope*>(lineString->getMBR());
-    
     size_t numCoords = lineString->size();
     te::gm::Point* firstPoint = lineString->getPointN(0);
     te::gm::Point* lastPoint = lineString->getPointN(numCoords - 1);
 
+    te::gm::LineString topBorderLine(2, te::gm::LineStringType);
+    topBorderLine.setPoint(0, boxMM.getLowerLeftX(), boxMM.getUpperRightY());
+    topBorderLine.setPoint(1, boxMM.getUpperRightX(), boxMM.getUpperRightY());
 
-    QLineF gridLine(firstPoint->getX(), firstPoint->getY(), lastPoint->getX(), lastPoint->getY());
-    QLineF topLine(boxMM.getLowerLeftX(), boxMM.getUpperRightY(), boxMM.getUpperRightX(), boxMM.getUpperRightY());
-    QLineF bottonLine(boxMM.getLowerLeftX(), boxMM.getLowerLeftY(), boxMM.getUpperRightX(), boxMM.getLowerLeftY());
-    
-    
-    m_verticalLines.push_back(gridLine);
+    te::gm::LineString bottomBorderLine(2, te::gm::LineStringType);
+    bottomBorderLine.setPoint(0, boxMM.getLowerLeftX(), boxMM.getLowerLeftY());
+    bottomBorderLine.setPoint(1, boxMM.getUpperRightX(), boxMM.getLowerLeftY());
 
+    m_verticalLines.push_back(te::gm::LineString(*lineString));
 
     std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText);
     QString qText = QString::fromLatin1(text.c_str());
@@ -439,15 +439,13 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     QRectF rectF(textObject.boundingRect());
 
     //as the grid lines an be curved, texts must only de drawn in the cases that the grid line reaches the top or the botton of the item bounding rect
-
-    QPointF intersectonPoint;
-    if (gridLine.intersect(topLine, &intersectonPoint) == QLineF::BoundedIntersection)
+    if (lineString->intersects(&bottomBorderLine) == true)
     {
-      calculateTop(gridLine, rectF, qText, bTopRotate, horizontalDisplacement);
+      calculateBottom(QPointF(firstPoint->getX(), firstPoint->getY()), rectF, qText, bBottomRotate, horizontalDisplacement);
     }
-    if (gridLine.intersect(bottonLine, &intersectonPoint) == QLineF::BoundedIntersection)
+    if (lineString->intersects(&topBorderLine) == true)
     {
-      calculateBottom(gridLine, rectF, qText, bBottomRotate, horizontalDisplacement);
+      calculateTop(QPointF(lastPoint->getX(), lastPoint->getY()), rectF, qText, bTopRotate, horizontalDisplacement);
     }
 
     if(line)

@@ -166,7 +166,12 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     transf.system1Tosystem2(geoBox.getUpperRightX(), y1, urx, y);
     
     QLineF line(llx, y, urx, y);
-    m_horizontalLines.push_back(line);
+
+    te::gm::LineString lineString(2, te::gm::LineStringType);
+    lineString.setPoint(0, llx, y);
+    lineString.setPoint(1, urx, y);
+
+    m_horizontalLines.push_back(lineString);
 
     double number = y1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
@@ -175,8 +180,8 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
 
     QRectF rectF(textObject.boundingRect());
 
-    calculateLeft(line, rectF, convert, bLeftRotate, verticalDisplacement);
-    calculateRight(line, rectF, convert, bRightRotate, verticalDisplacement);
+    calculateLeft(line.p1(), rectF, convert, bLeftRotate, verticalDisplacement);
+    calculateRight(line.p2(), rectF, convert, bRightRotate, verticalDisplacement);
   }
 }
 
@@ -242,7 +247,11 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     }
 
     QLineF line(x, lly, x, ury);
-    m_verticalLines.push_back(line);
+
+    te::gm::LineString lineString(2, te::gm::LineStringType);
+    lineString.setPoint(0, x, lly);
+    lineString.setPoint(1, x, ury);
+    m_verticalLines.push_back(lineString);
 
     double number = x1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
@@ -250,8 +259,8 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
     
-    calculateTop(line, rectF, convert, bTopRotate, horizontalDisplacement);
-    calculateBottom(line, rectF, convert, bBottomRotate, horizontalDisplacement);
+    calculateTop(line.p2(), rectF, convert, bTopRotate, horizontalDisplacement);
+    calculateBottom(line.p1(), rectF, convert, bBottomRotate, horizontalDisplacement);
   }
 }
 
