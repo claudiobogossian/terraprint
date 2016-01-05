@@ -54,6 +54,7 @@
 #include "../../core/WorldTransformer.h"
 #include "ItemUtils.h"
 #include "../../core/Utils.h"
+#include "pattern/command/ChangePropertyCommand.h"
 
 // STL
 #include <algorithm>
@@ -78,7 +79,7 @@ te::layout::Scene::Scene( QObject* object):
   QGraphicsScene(object),
   m_undoStack(0),
   m_align(0),
-  m_moveWatched(false),
+  m_moveOrResizeWatched(false),
   m_paperConfig(0),
   m_currentItemEdition(0),
   m_isEditionMode(false),
@@ -98,7 +99,7 @@ te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* 
   QGraphicsScene(object),
   m_undoStack(0),
   m_align(align),
-  m_moveWatched(false),
+  m_moveOrResizeWatched(false),
   m_paperConfig(paperConfig),
   m_context(0,0,0,0)
 {
@@ -877,9 +878,9 @@ void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
   }
 
   QGraphicsItem* item = mouseGrabberItem();
-  if (item) // MoveCommand block
+  if (item) // MoveCommand and ChangePropertyCommand block
   {
-    m_moveWatched = true;
+    m_moveOrResizeWatched = true;
   }
 }
 
@@ -894,40 +895,50 @@ void te::layout::Scene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
     emit selectionChanged();
   }
 
-  if (m_isEditionMode) // Don't have move event in edition mode
+  if (m_isEditionMode) // Don't have move or resize event in edition mode
   {
     return;
   }
   QGraphicsItem* item = mouseGrabberItem();
-  if (item) // MoveCommand block
+  if (item) // MoveCommand and ChangePropertyCommand block
   {
-    QList<QGraphicsItem*> its = selectedItems();
-    m_moveWatches.clear();
-    foreach(QGraphicsItem *item, its)
+    searchSelectedItemsInResizeMode();
+    if (m_resizeWatches.empty())
     {
-      QPointF pt = item->scenePos();
-      m_moveWatches[item] = pt;
+      searchSelectedItemsInMoveMode();
     }
   }
 }
 
 void te::layout::Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 {
-  if(!m_isEditionMode) // Don't have move event in edition mode
+  QGraphicsItem* item = mouseGrabberItem();
+
+  if (!m_isEditionMode) // Don't have move or resize event in edition mode
   {
-    QGraphicsItem* item = mouseGrabberItem();
-    if (item) // MoveCommand block
+    if (item) // MoveCommand and ChangePropertyCommand block
     {
-      if (m_moveWatched)
+      if (m_moveOrResizeWatched)
       {
-        QUndoCommand* command = new MoveCommand(m_moveWatches);
-        addUndoStack(command);
-        m_moveWatched = false;
+        addUndoCommandForMove();
+        QGraphicsScene::mouseReleaseEvent(mouseEvent);
+        addUndoCommandForResize();
+      }
+      else
+      {
+        QGraphicsScene::mouseReleaseEvent(mouseEvent);
       }
     }
-    m_moveWatches.clear();
   }
-  QGraphicsScene::mouseReleaseEvent(mouseEvent);
+  else
+  {
+    QGraphicsScene::mouseReleaseEvent(mouseEvent);
+  }  
+
+  m_moveWatches.clear();
+  m_resizeWatches.clear();
+
+  m_moveOrResizeWatched = false;
 }
 
 void te::layout::Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEvent)
@@ -1589,5 +1600,75 @@ void te::layout::Scene::increasedUnprintableArea(double& screenWMM, double& scre
 
   screenWMM += (wmaxMM - wminMM) + m_increasedUnprintableArea;
   screenHMM += (hmaxMM - hminMM) + m_increasedUnprintableArea;
+}
+
+void te::layout::Scene::searchSelectedItemsInResizeMode()
+{
+  QList<QGraphicsItem*> its = selectedItems();
+  m_resizeWatches.clear();
+
+  foreach(QGraphicsItem *itm, its)
+  {
+    AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(itm);
+    if (itemView)
+    {
+      // Undo/Redo for Resize (ChangePropertyCommand)
+      if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
+      {
+        m_resizeWatches[itm] = itemView->getController()->getProperties();
+      }
+    }
+  }
+}
+
+void te::layout::Scene::searchSelectedItemsInMoveMode()
+{
+  QList<QGraphicsItem*> its = selectedItems();
+  m_moveWatches.clear();
+  
+  foreach(QGraphicsItem *itm, its)
+  {
+    QPointF pt = itm->scenePos();
+    m_moveWatches[itm] = pt;
+  }
+}
+
+void te::layout::Scene::addUndoCommandForMove()
+{
+  if (m_moveOrResizeWatched)
+  {
+    if (!m_moveWatches.empty())
+    {
+      QUndoCommand* command = new MoveCommand(m_moveWatches);
+      addUndoStack(command);
+    }
+  }
+}
+
+void te::layout::Scene::addUndoCommandForResize()
+{
+  if (m_moveOrResizeWatched)
+  {
+    // Undo/Redo for Resize (ChangePropertyCommand)
+    if (!m_resizeWatches.empty())
+    {
+      std::vector<QGraphicsItem*> commandItems;
+      std::vector<Properties> commandOld;
+      std::vector<Properties> commandNew;
+
+      for (std::map<QGraphicsItem*, Properties>::iterator it = m_resizeWatches.begin(); it != m_resizeWatches.end(); ++it)
+      {
+        QGraphicsItem* item = it->first;
+        AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(item);
+        commandItems.push_back(item);
+        Properties oldProps = it->second;
+        commandOld.push_back(oldProps);
+        Properties newProps = itemView->getController()->getProperties();
+        commandNew.push_back(newProps);
+      }
+      QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew);
+      addUndoStack(command);
+    }
+  }
 }
 

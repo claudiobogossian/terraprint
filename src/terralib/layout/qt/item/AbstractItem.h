@@ -41,7 +41,7 @@
 #include "../../core/AbstractScene.h"
 #include "../../core/property/Property.h"
 #include "../../core/pattern/singleton/Context.h"
-
+#include "../../core/enum/AbstractType.h"
 
 //Qt
 #include <QPainter>
@@ -78,11 +78,6 @@ namespace te
     class AbstractItem : public T, public AbstractItemView
     {
       public:
-
-        enum Action
-        {
-          NO_ACTION, RESIZE_ACTION, MOVE_ACTION
-        };
 
         /*!
           \brief Constructor
@@ -136,6 +131,8 @@ namespace te
         virtual void leaveEditionMode();
 
         virtual void prepareGeometryChange();
+
+        virtual te::layout::ItemAction getCurrentAction();
 
       protected:
 
@@ -222,13 +219,13 @@ namespace te
      protected:
 
         //resize
-        QRectF            m_rect;
-        QPixmap           m_clonePixmap;
-        QPointF           m_initialCoord;
-        QPointF           m_finalCoord;
-        LayoutAlign       m_enumSides;
-        Action            m_currentAction;
-        double            m_marginResizePrecision; //precision
+        QRectF                            m_rect;
+        QPixmap                           m_clonePixmap;
+        QPointF                           m_initialCoord;
+        QPointF                           m_finalCoord;
+        LayoutAlign                       m_enumSides;
+        te::layout::ItemAction            m_currentAction;
+        double                            m_marginResizePrecision; //precision
 
     };
 
@@ -631,318 +628,324 @@ namespace te
       }
       T::hoverMoveEvent(event);
     }
-  }
-}
 
-template <class T>
-inline bool te::layout::AbstractItem<T>::checkTouchesCorner( const double& x, const double& y )
-{
-  bool result = true;
-  QRectF bRect = boundingRect();
-
-  QPointF ll = bRect.bottomLeft();
-  QPointF lr = bRect.bottomRight();
-  QPointF tl = bRect.topLeft();
-  QPointF tr = bRect.topRight();
-
-  if ((x >= (ll.x() - m_marginResizePrecision) && x <= (ll.x() + m_marginResizePrecision))
-    && (y >= (ll.y() - m_marginResizePrecision) && y <= (ll.y() + m_marginResizePrecision)))
-  {
-    T::setCursor(Qt::SizeFDiagCursor);
-    m_enumSides = TPTopLeft;
-  }
-  else if ((x >= (lr.x() - m_marginResizePrecision) && x <= (lr.x() + m_marginResizePrecision))
-    && (y >= (lr.y() - m_marginResizePrecision) && y <= (lr.y() + m_marginResizePrecision)))
-  {
-    T::setCursor(Qt::SizeBDiagCursor);
-    m_enumSides = TPTopRight;
-  }
-  else if ((x >= (tl.x() - m_marginResizePrecision) && x <= (tl.x() + m_marginResizePrecision))
-    && (y >= (tl.y() - m_marginResizePrecision) && y <= (tl.y() + m_marginResizePrecision)))
-  {
-    T::setCursor(Qt::SizeBDiagCursor);
-    m_enumSides = TPLowerLeft;
-  }
-  else if ((x >= (tr.x() - m_marginResizePrecision) && x <= (tr.x() + m_marginResizePrecision))
-    && (y >= (tr.y() - m_marginResizePrecision) && y <= (tr.y() + m_marginResizePrecision)))
-  {
-    T::setCursor(Qt::SizeFDiagCursor);
-    m_enumSides = TPLowerRight;
-  }
-  else
-  {
-    T::setCursor(Qt::ArrowCursor);
-    m_enumSides = TPNoneSide;
-    result = false;
-  }
-
-  return result;
-}
-
-template <class T>
-inline void te::layout::AbstractItem<T>::mousePressEvent( QGraphicsSceneMouseEvent * event )
-{
-  bool wasSelected = T::isSelected();
-  T::mousePressEvent(event);
-  bool continuedSelected = T::isSelected();
-
-  if (isEditionMode() == true)
-  {
-    return;
-  }
-
-  if (event->button() & Qt::LeftButton)
-  {
-    QList<QGraphicsItem*>	children = T::childItems();
-    QList<QGraphicsItem*>::iterator it = children.begin();
-    while (it != children.end())
+    template <class T>
+    inline bool te::layout::AbstractItem<T>::checkTouchesCorner(const double& x, const double& y)
     {
-      AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-      if (item != 0 && item->isSubSelected() == true)
+      bool result = true;
+      QRectF bRect = boundingRect();
+
+      QPointF ll = bRect.bottomLeft();
+      QPointF lr = bRect.bottomRight();
+      QPointF tl = bRect.topLeft();
+      QPointF tr = bRect.topRight();
+
+      if ((x >= (ll.x() - m_marginResizePrecision) && x <= (ll.x() + m_marginResizePrecision))
+        && (y >= (ll.y() - m_marginResizePrecision) && y <= (ll.y() + m_marginResizePrecision)))
       {
-        item->setSubSelection(false);
+        T::setCursor(Qt::SizeFDiagCursor);
+        m_enumSides = TPTopLeft;
+      }
+      else if ((x >= (lr.x() - m_marginResizePrecision) && x <= (lr.x() + m_marginResizePrecision))
+        && (y >= (lr.y() - m_marginResizePrecision) && y <= (lr.y() + m_marginResizePrecision)))
+      {
+        T::setCursor(Qt::SizeBDiagCursor);
+        m_enumSides = TPTopRight;
+      }
+      else if ((x >= (tl.x() - m_marginResizePrecision) && x <= (tl.x() + m_marginResizePrecision))
+        && (y >= (tl.y() - m_marginResizePrecision) && y <= (tl.y() + m_marginResizePrecision)))
+      {
+        T::setCursor(Qt::SizeBDiagCursor);
+        m_enumSides = TPLowerLeft;
+      }
+      else if ((x >= (tr.x() - m_marginResizePrecision) && x <= (tr.x() + m_marginResizePrecision))
+        && (y >= (tr.y() - m_marginResizePrecision) && y <= (tr.y() + m_marginResizePrecision)))
+      {
+        T::setCursor(Qt::SizeFDiagCursor);
+        m_enumSides = TPLowerRight;
+      }
+      else
+      {
+        T::setCursor(Qt::ArrowCursor);
+        m_enumSides = TPNoneSide;
+        result = false;
       }
 
-      ++it;
+      return result;
     }
 
-    if (wasSelected == true && continuedSelected == true)
+    template <class T>
+    inline void te::layout::AbstractItem<T>::mousePressEvent(QGraphicsSceneMouseEvent * event)
     {
-      //we try to select the children
-      QList<QGraphicsItem*>	children = T::childItems();
-      QList<QGraphicsItem*>::iterator it = children.begin();
-      while (it != children.end())
+      bool wasSelected = T::isSelected();
+      T::mousePressEvent(event);
+      bool continuedSelected = T::isSelected();
+
+      if (isEditionMode() == true)
       {
-        QPointF childrenPos = (*it)->mapFromParent(event->pos());
-        if ((*it)->contains(childrenPos))
+        return;
+      }
+
+      if (event->button() & Qt::LeftButton)
+      {
+        QList<QGraphicsItem*>	children = T::childItems();
+        QList<QGraphicsItem*>::iterator it = children.begin();
+        while (it != children.end())
         {
           AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-          if (item != 0)
+          if (item != 0 && item->isSubSelected() == true)
           {
-            item->setSubSelection(true);
-            break;
+            item->setSubSelection(false);
+          }
+
+          ++it;
+        }
+
+        if (wasSelected == true && continuedSelected == true)
+        {
+          //we try to select the children
+          QList<QGraphicsItem*>	children = T::childItems();
+          QList<QGraphicsItem*>::iterator it = children.begin();
+          while (it != children.end())
+          {
+            QPointF childrenPos = (*it)->mapFromParent(event->pos());
+            if ((*it)->contains(childrenPos))
+            {
+              AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+              if (item != 0)
+              {
+                item->setSubSelection(true);
+                break;
+              }
+            }
+            ++it;
           }
         }
-        ++it;
+      }
+
+
+      //checks if the item is resizable.
+      const Property& property = m_controller->getProperty("resizable");
+      if (property.getValue().toBool() == true)
+      {
+        //If so, checks if the resize operation must be started
+        bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
+        if (startResizing == true)
+        {
+          m_currentAction = RESIZE_ACTION;
+          setPixmap();
+          m_initialCoord = event->pos();
+        }
       }
     }
-  }
 
-    
-  //checks if the item is resizable.
-  const Property& property = m_controller->getProperty("resizable");
-  if (property.getValue().toBool() == true)
-  {
-    //If so, checks if the resize operation must be started
-    bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
-    if (startResizing == true)
+    template <class T>
+    inline void te::layout::AbstractItem<T>::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
     {
-      m_currentAction = RESIZE_ACTION;
-      setPixmap();
-      m_initialCoord = event->pos();
-    }
-  }
-}
+      if (isEditionMode() == true)
+      {
+        return;
+      }
 
-template <class T>
-inline void te::layout::AbstractItem<T>::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
-{
-  if (isEditionMode() == true)
-  {
-    return;
-  }
+      if (m_currentAction == RESIZE_ACTION)
+      {
+        T::setOpacity(0.5);
+        m_finalCoord = event->pos();
+        T::prepareGeometryChange();
+        calculateResize();
+      }
+      else
+      {
+        if (event->buttons() == Qt::LeftButton)
+        {
+          m_currentAction = MOVE_ACTION;
+        }
 
-  if(m_currentAction == RESIZE_ACTION)
-  {
-    T::setOpacity(0.5);
-    m_finalCoord = event->pos();
-    T::prepareGeometryChange();
-    calculateResize();
-  }
-  else
-  {
-    if(event->buttons() == Qt::LeftButton)
-    {
-      m_currentAction = MOVE_ACTION;
+        T::mouseMoveEvent(event);
+      }
     }
 
-    T::mouseMoveEvent(event);
-  }
-}
+    template <class T>
+    inline void te::layout::AbstractItem<T>::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+    {
+      if (m_currentAction == RESIZE_ACTION)
+      {
+        m_finalCoord = event->pos();
+        calculateResize();
+        QPointF newPos(m_rect.x(), m_rect.y());
+        newPos = T::mapToScene(newPos);
 
-template <class T>
-inline void te::layout::AbstractItem<T>::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
-{
-  if(m_currentAction == RESIZE_ACTION)
-  {
-    m_finalCoord = event->pos();
-    calculateResize();
-    QPointF newPos(m_rect.x(), m_rect.y());
-    newPos = T::mapToScene(newPos);
+        m_currentAction = NO_ACTION;
 
-    m_currentAction = NO_ACTION;
+        T::setPos(newPos);
+        m_rect.moveTo(0, 0);
+        T::setOpacity(1.);
+        m_controller->resized(m_rect.width(), m_rect.height());
+        resized();
+      }
+      else if (m_currentAction == MOVE_ACTION)
+      {
+        m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
+      }
 
-    T::setPos(newPos);
-    m_rect.moveTo(0, 0);
-    T::setOpacity(1.);
-    m_controller->resized(m_rect.width(), m_rect.height());
-    resized();
-  }
-  else if(m_currentAction == MOVE_ACTION)
-  {
-    m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
-  }
+      m_currentAction = NO_ACTION;
 
-  m_currentAction = NO_ACTION;
+      T::mouseReleaseEvent(event);
+    }
 
-  T::mouseReleaseEvent(event);
-}
+    template <class T>
+    inline void te::layout::AbstractItem<T>::calculateResize()
+    {
+      if (m_currentAction != RESIZE_ACTION)
+      {
+        return;
+      }
 
-template <class T>
-inline void te::layout::AbstractItem<T>::calculateResize()
-{
-  if (m_currentAction != RESIZE_ACTION)
-  {
-    return;
-  }
+      QRectF resizeRect = m_rect;
 
-  QRectF resizeRect = m_rect;
+      double width = m_controller->getProperty("width").getValue().toDouble();
+      double height = m_controller->getProperty("height").getValue().toDouble();
+      bool keepAspect = m_controller->getProperty("keep_aspect").getValue().toBool();
+      double factor = width / height;
 
-  double width = m_controller->getProperty("width").getValue().toDouble();
-  double height = m_controller->getProperty("height").getValue().toDouble();
-  bool keepAspect = m_controller->getProperty("keep_aspect").getValue().toBool();
-  double factor = width / height;
+      QPointF finalCoord = m_finalCoord;
 
-  QPointF finalCoord = m_finalCoord;
+      double dx = m_finalCoord.x() - m_initialCoord.x();
+      double dy = m_finalCoord.y() - m_initialCoord.y();
 
-  double dx = m_finalCoord.x() - m_initialCoord.x();
-  double dy = m_finalCoord.y() - m_initialCoord.y();
+      double correctionX = dx;
 
-  double correctionX = dx;
-
-  if (keepAspect == true)
-  {
-    correctionX = (dy * factor);
-  }
-
-  switch (m_enumSides)
-  {
-    case TPTopRight:
-      finalCoord.setX(m_initialCoord.x() + correctionX);
-      resizeRect.setBottomRight(finalCoord);
-      break;
-
-    case TPTopLeft:
       if (keepAspect == true)
-        finalCoord.setX(m_initialCoord.x() - correctionX);
-      else
+      {
+        correctionX = (dy * factor);
+      }
+
+      switch (m_enumSides)
+      {
+      case TPTopRight:
+        finalCoord.setX(m_initialCoord.x() + correctionX);
+        resizeRect.setBottomRight(finalCoord);
+        break;
+
+      case TPTopLeft:
+        if (keepAspect == true)
+          finalCoord.setX(m_initialCoord.x() - correctionX);
+        else
+          finalCoord.setX(m_initialCoord.x() + correctionX);
+
+        resizeRect.setBottomLeft(finalCoord);
+        break;
+
+      case TPLowerRight:
+        if (keepAspect == true)
+          finalCoord.setX(m_initialCoord.x() - correctionX);
+        else
+          finalCoord.setX(m_initialCoord.x() + correctionX);
+
+        resizeRect.setTopRight(finalCoord);
+        break;
+
+      case TPLowerLeft:
         finalCoord.setX(m_initialCoord.x() + correctionX);
 
-      resizeRect.setBottomLeft(finalCoord);
-      break;
+        resizeRect.setTopLeft(finalCoord);
+        break;
 
-    case TPLowerRight:
-      if (keepAspect == true)
-        finalCoord.setX(m_initialCoord.x() - correctionX);
-      else
-        finalCoord.setX(m_initialCoord.x() + correctionX);
+      default:
+        break;
+      }
 
-      resizeRect.setTopRight(finalCoord);
-      break;
+      if (isLimitExceeded(resizeRect) == false)
+      {
+        m_rect = resizeRect;
+      }
+    }
 
-    case TPLowerLeft:
-      finalCoord.setX(m_initialCoord.x() + correctionX);
-      
-      resizeRect.setTopLeft(finalCoord);
-      break;
+    template <class T>
+    inline bool te::layout::AbstractItem<T>::isLimitExceeded(QRectF resizeRect)
+    {
+      bool result = false;
 
-    default:
-      break;
-  }
+      double x = resizeRect.topLeft().x();
+      double y = resizeRect.topLeft().y();
 
-  if(isLimitExceeded(resizeRect) == false)
-  {
-    m_rect = resizeRect;
-  }
-}
+      if ((resizeRect.width() - m_marginResizePrecision) <= 0
+        || (resizeRect.height() - m_marginResizePrecision) <= 0)
+      {
+        result = true;
+      }
 
-template <class T>
-inline bool te::layout::AbstractItem<T>::isLimitExceeded(QRectF resizeRect)
-{
-  bool result = false;
-  
-  double x = resizeRect.topLeft().x();
-  double y = resizeRect.topLeft().y();
+      return result;
+    }
 
-  if ((resizeRect.width() - m_marginResizePrecision) <= 0 
-    || (resizeRect.height() - m_marginResizePrecision) <= 0)
-  {
-    result = true;
-  }
+    template <class T>
+    inline void te::layout::AbstractItem<T>::drawItemResized(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+    {
+      painter->save();
+      painter->setClipRect(boundingRect());
+      painter->drawPixmap(boundingRect(), m_clonePixmap, m_clonePixmap.rect());
+      painter->restore();
+    }
 
-  return result;
-}
+    template <class T>
+    inline void te::layout::AbstractItem<T>::setPixmap()
+    {
+      Utils utils = this->getScene()->getUtils();
+      QRectF itemBounding = boundingRect();
+      te::gm::Envelope box(0, 0, itemBounding.width(), itemBounding.height());
+      box = utils.viewportBox(box);
+      m_clonePixmap = QPixmap(box.getWidth(), box.getHeight());
+      m_clonePixmap.fill(Qt::transparent);
+      QPainter p(&m_clonePixmap);
+      double resX = box.getWidth() / itemBounding.width();
+      double resY = box.getHeight() / itemBounding.height();
+      QTransform transform;
+      transform.scale(resX, -resY);
+      transform.translate(-itemBounding.bottomLeft().x(), -itemBounding.bottomLeft().y());
+      p.setTransform(transform);
+      QStyleOptionGraphicsItem opt;
+      this->drawItem(&p, &opt, 0);
+      p.end();
+      QImage image = m_clonePixmap.toImage();
+      image = image.mirrored();
+      m_clonePixmap = QPixmap::fromImage(image);
+    }
 
-template <class T>
-inline void te::layout::AbstractItem<T>::drawItemResized( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
-{
-  painter->save();
-  painter->setClipRect(boundingRect());
-  painter->drawPixmap(boundingRect(), m_clonePixmap, m_clonePixmap.rect());
-  painter->restore();
-}
+    template <class T>
+    inline void te::layout::AbstractItem<T>::resized()
+    {
 
-template <class T>
-inline void te::layout::AbstractItem<T>::setPixmap()
-{
-  Utils utils = this->getScene()->getUtils();
-  QRectF itemBounding = boundingRect();
-  te::gm::Envelope box(0, 0, itemBounding.width(), itemBounding.height());
-  box = utils.viewportBox(box);
-  m_clonePixmap = QPixmap(box.getWidth(), box.getHeight());
-  m_clonePixmap.fill(Qt::transparent);
-  QPainter p(&m_clonePixmap);
-  double resX = box.getWidth() / itemBounding.width();
-  double resY = box.getHeight() / itemBounding.height();
-  QTransform transform;
-  transform.scale(resX, -resY);
-  transform.translate(-itemBounding.bottomLeft().x(), -itemBounding.bottomLeft().y());
-  p.setTransform(transform);
-  QStyleOptionGraphicsItem opt;
-  this->drawItem(&p, &opt, 0);
-  p.end();
-  QImage image = m_clonePixmap.toImage();
-  image = image.mirrored();
-  m_clonePixmap = QPixmap::fromImage(image);
-}
+    }
 
-template <class T>
-inline void te::layout::AbstractItem<T>::resized()
-{
+    template <class T>
+    inline te::layout::AbstractScene* te::layout::AbstractItem<T>::getScene()
+    {
+      QGraphicsScene* scene = T::scene();
+      if (scene == 0)
+      {
+        return 0;
+      }
 
-}
+      AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene);
+      if (myScene == 0)
+      {
+        return 0;
+      }
+      return myScene;
+    }
 
-template <class T>
-te::layout::AbstractScene* te::layout::AbstractItem<T>::getScene()
-{
-  QGraphicsScene* scene = T::scene();
-  if (scene == 0)
-  {
-    return 0;
-  }
+    template <class T>
+    inline void te::layout::AbstractItem<T>::prepareGeometryChange()
+    {
+      T::prepareGeometryChange();
+    }
 
-  AbstractScene* myScene = dynamic_cast<AbstractScene*>(scene);
-  if (myScene == 0)
-  {
-    return 0;
-  }
-  return myScene;
-}
-
-template <class T>
-void te::layout::AbstractItem<T>::prepareGeometryChange()
-{
-  T::prepareGeometryChange();
-}
+    template <class T>
+    inline te::layout::ItemAction te::layout::AbstractItem<T>::getCurrentAction()
+    {
+      return m_currentAction;
+    }
+  } // end namespace layout
+} // end namespace te
 
 #endif //__TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H

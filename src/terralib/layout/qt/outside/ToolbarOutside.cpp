@@ -121,6 +121,7 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_alignCenterVerticalToolButton(0),
   m_removeObjectToolButton(0),
   m_undoToolButton(0),
+  m_redoToolButton(0),
   m_drawMapToolButton(0),
   m_objectToImageButton(0),
   m_exitButton(0),
@@ -144,6 +145,7 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_actionAlignCenterVerticalToolButton(0),
   m_actionRemoveObjectToolButton(0),
   m_actionUndoToolButton(0),
+  m_actionRedoToolButton(0),
   m_actionDrawMapToolButton(0),
   m_actionObjectToImageButton(0),
   m_actionExitButton(0),
@@ -188,7 +190,9 @@ void te::layout::ToolbarOutside::createToolbar()
   createRecomposeToolButton();
   this->addSeparator();
 
+  // Undo/Redo Actions
   createUndoToolButton();
+  createRedoToolButton();
   this->addSeparator();
   
   createViewAreaToolButton();
@@ -646,7 +650,7 @@ QToolButton* te::layout::ToolbarOutside::createRemoveObjectToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
 {
-  QToolButton *btn = createToolButton(tr("Undo/Redo"), tr("Undo/Redo"), "");
+  QToolButton *btn = createToolButton(tr("Undo"), tr("Undo"), "");
 
   QMenu* menu = new QMenu(btn);
 
@@ -660,22 +664,36 @@ QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
   actionUndo->setObjectName(m_actionUndo);
   actionUndo->setIcon(QIcon::fromTheme("layout-undo"));
   actionUndo->setToolTip(tr("Undo Action"));
-  menu->addAction(actionUndo);
-
-  QAction* actionRedo  = undoStack->createRedoAction(menu, tr("&Redo"));
-  actionRedo->setShortcuts(QKeySequence::Redo);
-  actionRedo->setObjectName(m_actionRedo);
-  actionRedo->setIcon(QIcon::fromTheme("layout-redo"));
-  actionRedo->setToolTip(tr("Redo Action"));
-  menu->addAction(actionRedo);
-    
-  btn->setMenu(menu);
-  btn->setPopupMode(QToolButton::MenuButtonPopup);
   btn->setDefaultAction(actionUndo);
 
   m_actionUndoToolButton = this->addWidget(btn);
   
   m_undoToolButton = btn;
+
+  return btn;
+}
+
+QToolButton* te::layout::ToolbarOutside::createRedoToolButton()
+{
+  QToolButton *btn = createToolButton(tr("Redo"), tr("Redo"), "");
+
+  QMenu* menu = new QMenu(btn);
+
+  QUndoStack* undoStack = m_scene->getUndoStack();
+
+  if (!undoStack)
+    return 0;
+
+  QAction* actionRedo = undoStack->createRedoAction(menu, tr("&Redo"));
+  actionRedo->setShortcuts(QKeySequence::Redo);
+  actionRedo->setObjectName(m_actionRedo);
+  actionRedo->setIcon(QIcon::fromTheme("layout-redo"));
+  actionRedo->setToolTip(tr("Redo Action"));
+  btn->setDefaultAction(actionRedo);
+
+  m_actionUndoToolButton = this->addWidget(btn);
+
+  m_redoToolButton = btn;
 
   return btn;
 }
@@ -887,6 +905,11 @@ QToolButton* te::layout::ToolbarOutside::getRemoveObjectToolButton()
 QToolButton* te::layout::ToolbarOutside::getUndoToolButton()
 {
   return m_undoToolButton;
+}
+
+QToolButton* te::layout::ToolbarOutside::getRedoToolButton()
+{
+  return m_redoToolButton;
 }
 
 QToolButton* te::layout::ToolbarOutside::getDrawMapToolButton()
@@ -1227,6 +1250,11 @@ QAction* te::layout::ToolbarOutside::getActionRemoveObjectToolButton()
 QAction* te::layout::ToolbarOutside::getActionUndoToolButton()
 {
   return m_actionUndoToolButton;
+}
+
+QAction* te::layout::ToolbarOutside::getActionRedoToolButton()
+{
+  return m_actionRedoToolButton;
 }
 
 QAction* te::layout::ToolbarOutside::getActionDrawMapToolButton()
