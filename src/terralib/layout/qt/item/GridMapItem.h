@@ -33,6 +33,7 @@
 // TerraLib
 #include "AbstractItem.h"
 #include "../../core/Config.h"
+#include "terralib/geometry/LineString.h"
 
 namespace te
 {
@@ -116,17 +117,15 @@ namespace te
 
         virtual bool drawCrossIntersectMapBorder(QLineF vrt, QLineF hrz, QPainter* painter);
 
-        virtual void debugDrawLineEdges(QPainter* painter, const QLineF& line);
-
         virtual void debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, int rotate = 0);
 
-        virtual te::gm::Envelope calculateTop(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement);
+        virtual te::gm::Envelope calculateTop(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement);
 
-        virtual te::gm::Envelope calculateBottom(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement);
+        virtual te::gm::Envelope calculateBottom(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement);
 
-        virtual te::gm::Envelope calculateRight(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
+        virtual te::gm::Envelope calculateRight(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
 
-        virtual te::gm::Envelope calculateLeft(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
+        virtual te::gm::Envelope calculateLeft(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
 
       protected:
 
@@ -134,8 +133,8 @@ namespace te
         double                          m_maxHeigthTextMM;
         bool                            m_changeSize;
 
-        QList<QLineF>                   m_verticalLines;
-        QList<QLineF>                   m_horizontalLines;
+        QList<te::gm::LineString>       m_verticalLines;
+        QList<te::gm::LineString>       m_horizontalLines;
 
         std::vector<TextPosition>       m_topTexts;
         std::vector<TextPosition>       m_bottomTexts;
