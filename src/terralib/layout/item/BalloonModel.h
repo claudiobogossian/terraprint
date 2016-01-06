@@ -31,6 +31,7 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractItemModel.h"
 #include "../core/Config.h"
+#include "TextModel.h"
 
 
 namespace te
@@ -47,7 +48,7 @@ namespace te
 
       \sa te::layout::AbstractItemModel
     */
-    class TELAYOUTEXPORT BalloonModel : public AbstractItemModel
+    class TELAYOUTEXPORT BalloonModel : public TextModel
     {
       public:
 
