@@ -59,13 +59,32 @@ te::layout::GridPlanarModel::GridPlanarModel()
   Property prop_gridsettings = m_properties.getProperty("GridSettings");
 
   //adding properties
-  {
+ /* {
     Property property(0);
     property.setName(settingsConfig.getUnit());
     property.setLabel(TR_LAYOUT("Unit"));
     property.setValue((int)unit, dataType->getDataTypeInt());
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
+  */
+
+  {
+    Property property(0);
+    property.setName(settingsConfig.getUnit());
+    property.setLabel(TR_LAYOUT("Unit"));
+    property.setValue(std::string("km"), dataType->getDataTypeStringList());
+
+    Variant v;
+    v.setValue(std::string("km"), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    v.setValue(std::string("m"), dataType->getDataTypeString());
+    property.addOption(v);
+
+    m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
+  }
+
 
   // Reference Settings
   {

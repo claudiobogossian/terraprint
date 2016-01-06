@@ -1681,6 +1681,10 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
   {
     variant.setValue(QString(prop.getValue().toString().c_str()));
   }
+  else if (prop.getType() == dataType->getDataTypeStringList())
+  {
+    variant.setValue(QString(prop.getOptionByCurrentChoice().toString().c_str()));
+  }
 
   //When the value is not a QString
   QString value = variant.toString();
