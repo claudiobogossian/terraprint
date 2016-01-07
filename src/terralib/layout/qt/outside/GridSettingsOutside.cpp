@@ -36,6 +36,7 @@
 #include "../../outside/GridSettingsModel.h"
 #include "terralib/common/StringUtils.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/Font.h"
 
 // STL
 #include <string>
@@ -284,27 +285,27 @@ void te::layout::GridSettingsOutside::load()
 
   initCombo(m_ui->cmbPlanarLineType, m_planarGridSettings->getLineStyle(), m_planarType);
 
-  initCombo(m_ui->cmbPlanarLineWidth, m_planarGridSettings->getLineWidth(), m_planarType);
+  initDouble(m_ui->m_planarLineWidthDoubleSpinBox, m_planarGridSettings->getLineWidth(), m_planarType);
 
   initCombo(m_ui->cmbLineType, m_geodesicGridSettings->getStyle(), m_geodesicType);
 
-  initCombo(m_ui->cmbLineWidth, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
+  initDouble(m_ui->m_lineWidthDoubleSpinBox, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
 
   initColor(m_ui->fraLineColor, m_geodesicGridSettings->getLineColor(), m_geodesicType);
 
   ///*Text: Basic Configuration*/
 
-  initCombo(m_ui->cmbPlanarTextSize, m_planarGridSettings->getPointTextSize(), m_planarType);
+  initCombo(m_ui->cmbPlanarTextSize, m_planarGridSettings->getFont(), m_planarType);
 
-  initCombo(m_ui->cmbPlanarFont, m_planarGridSettings->getFontText(), m_planarType);
+  initCombo(m_ui->cmbPlanarFont, m_planarGridSettings->getFont(), m_planarType);
 
   initColor(m_ui->fraGridTextPlanarColor, m_planarGridSettings->getTextColor(), m_planarType);
 
   initBool(m_ui->chkSuperscriptPlanarText, m_planarGridSettings->getSuperscriptText(), m_planarType);
 
-  initCombo(m_ui->cmbGeoFont, m_geodesicGridSettings->getFontText(), m_geodesicType);
+  initCombo(m_ui->cmbGeoFont, m_geodesicGridSettings->getFont(), m_geodesicType);
 
-  initCombo(m_ui->cmbGeoTextSize, m_geodesicGridSettings->getPointTextSize(), m_geodesicType);
+  initCombo(m_ui->cmbGeoTextSize, m_geodesicGridSettings->getFont(), m_geodesicType);
 
   initColor(m_ui->fraGridTextGeoColor, m_geodesicGridSettings->getTextColor(), m_geodesicType);
 
@@ -370,9 +371,9 @@ void te::layout::GridSettingsOutside::load()
 
   initBool(m_ui->chkVisibleTextsGeoText, m_geodesicGridSettings->getVisibleAllTexts(), m_geodesicType);
 
-  initCombo(m_ui->cmbCornerGeoFont, m_geodesicGridSettings->getFontTextCorner(), m_geodesicType);
+  initCombo(m_ui->cmbCornerGeoFont, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
 
-  initCombo(m_ui->cmbCornerGeoTextSize, m_geodesicGridSettings->getPointTextSize(), m_geodesicType);
+  initCombo(m_ui->cmbCornerGeoTextSize, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
   
   initColor(m_ui->fraCornerTextGeoColor, m_geodesicGridSettings->getTextColorCorner(), m_geodesicType);
   
@@ -706,14 +707,16 @@ void te::layout::GridSettingsOutside::on_cmbPlanarLineType_currentIndexChanged( 
   }
 }
 
-void te::layout::GridSettingsOutside::on_cmbPlanarLineWidth_currentIndexChanged( const QString & text )
+void te::layout::GridSettingsOutside::on_m_planarLineWidthDoubleSpinBox_editingFinished()
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
+    QString text = m_ui->m_planarLineWidthDoubleSpinBox->text();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toInt(), dataType->getDataTypeInt());
+    variant.setValue(text.toDouble(), dataType->getDataTypeDouble());
     Property prop = controller->updateProperty(m_planarGridSettings->getLineWidth(), variant, m_planarType);
     emit updateProperty(prop);
   }
@@ -732,11 +735,13 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
   }
 }
 
-void te::layout::GridSettingsOutside::on_cmbLineWidth_currentIndexChanged( const QString & text )
+void te::layout::GridSettingsOutside::on_m_lineWidthDoubleSpinBox_editingFinished()
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
+    QString text = m_ui->m_lineWidthDoubleSpinBox->text();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(text.toDouble(), dataType->getDataTypeDouble());
@@ -765,10 +770,18 @@ void te::layout::GridSettingsOutside::on_cmbPlanarTextSize_currentIndexChanged( 
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(text.toInt(), dataType->getDataTypeInt());
-    Property prop = controller->updateProperty(m_planarGridSettings->getPointTextSize(), variant, m_planarType);
-    emit updateProperty(prop);
+
+    Property prop_font = controller->getProperty(m_planarGridSettings->getFont(), m_planarType);
+    if (!prop_font.isNull())
+    {
+      Font font = prop_font.getValue().toFont();
+      font.setPointSize(text.toInt());
+ 
+      Variant variant;
+      variant.setValue(font, dataType->getDataTypeFont());
+      Property prop = controller->updateProperty(m_planarGridSettings->getFont(), variant, m_planarType);
+      emit updateProperty(prop);
+    }
   }
 }
 
@@ -778,10 +791,18 @@ void te::layout::GridSettingsOutside::on_cmbPlanarFont_currentIndexChanged( cons
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_planarGridSettings->getFontText(), variant, m_planarType);
-    emit updateProperty(prop);
+
+    Property prop_font = controller->getProperty(m_planarGridSettings->getFont(), m_planarType);
+    if (!prop_font.isNull())
+    {
+      Font font = prop_font.getValue().toFont();
+      font.setFamily(text.toStdString());
+
+      Variant variant;
+      variant.setValue(font, dataType->getDataTypeFont());
+      Property prop = controller->updateProperty(m_planarGridSettings->getFont(), variant, m_planarType);
+      emit updateProperty(prop);
+    }
   }
 }
 
@@ -818,10 +839,18 @@ void te::layout::GridSettingsOutside::on_cmbGeoFont_currentIndexChanged( const Q
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getFontText(), variant, m_geodesicType);
-    emit updateProperty(prop);
+
+    Property prop_font = controller->getProperty(m_planarGridSettings->getFont(), m_geodesicType);
+    if (!prop_font.isNull())
+    {
+      Font font = prop_font.getValue().toFont();
+      font.setFamily(text.toStdString());
+
+      Variant variant;
+      variant.setValue(font, dataType->getDataTypeFont());
+      Property prop = controller->updateProperty(m_geodesicGridSettings->getFont(), variant, m_geodesicType);
+      emit updateProperty(prop);
+    }
   }
 }
 
@@ -831,10 +860,18 @@ void te::layout::GridSettingsOutside::on_cmbGeoTextSize_currentIndexChanged( con
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(text.toInt(), dataType->getDataTypeInt());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getPointTextSize(), variant, m_geodesicType);
-    emit updateProperty(prop);
+
+    Property prop_font = controller->getProperty(m_planarGridSettings->getFont(), m_geodesicType);
+    if (!prop_font.isNull())
+    {
+      Font font = prop_font.getValue().toFont();
+      font.setPointSize(text.toInt());
+
+      Variant variant;
+      variant.setValue(font, dataType->getDataTypeFont());
+      Property prop = controller->updateProperty(m_geodesicGridSettings->getFont(), variant, m_geodesicType);
+      emit updateProperty(prop);
+    }
   }
 }
 
@@ -1684,6 +1721,23 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
   else if (prop.getType() == dataType->getDataTypeStringList())
   {
     variant.setValue(QString(prop.getOptionByCurrentChoice().toString().c_str()));
+  }
+  else if (prop.getType() == dataType->getDataTypeFont())
+  {
+    if (widget->objectName().compare("cmbPlanarTextSize") == 0
+      || widget->objectName().compare("cmbGeoTextSize") == 0
+      || widget->objectName().compare("cmbCornerGeoTextSize") == 0)
+    {
+      int pointSize = prop.getValue().toFont().getPointSize();
+      variant.setValue(pointSize);
+    }
+    else if (widget->objectName().compare("cmbPlanarFont") == 0
+      || widget->objectName().compare("cmbGeoFont") == 0
+      || widget->objectName().compare("cmbCornerGeoFont") == 0)
+    {
+      QString txt(prop.getValue().toFont().getFamily().c_str());
+      variant.setValue(txt);
+    }
   }
 
   //When the value is not a QString
