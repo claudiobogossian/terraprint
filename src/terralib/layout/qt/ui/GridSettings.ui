@@ -290,12 +290,12 @@
                           <widget class="QComboBox" name="cmbUnit">
                            <item>
                             <property name="text">
-                             <string>km</string>
+                             <string>Kilometer</string>
                             </property>
                            </item>
                            <item>
                             <property name="text">
-                             <string>m</string>
+                             <string>Meters</string>
                             </property>
                            </item>
                           </widget>

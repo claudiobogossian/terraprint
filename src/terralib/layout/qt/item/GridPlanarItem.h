@@ -82,8 +82,6 @@ namespace te
         virtual double initVerticalLines(const te::gm::Envelope& geoBox);
 
         virtual double initHorizontalLines(const te::gm::Envelope& geoBox);
-        
-        virtual double getUnit(std::string strUnit);
     };
   }
 }

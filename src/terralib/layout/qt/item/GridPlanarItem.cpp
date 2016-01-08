@@ -133,10 +133,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   
   double verticalGap = pVerticalGap.getValue().toDouble();
   double verticalDisplacement = pVerticalDisplacement.getValue().toDouble();
-  
-  string strUnit = pUnit.getOptionByCurrentChoice().toString();
-  double unitV = getUnit(strUnit);
-  
+  LayoutUnit unit = (LayoutUnit)pUnit.getValue().toInt();
   bool bLeftRotate = pLeftRotate.getValue().toBool();
   bool bRightRotate = pRightRotate.getValue().toBool();
 
@@ -176,7 +173,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
 
     m_horizontalLines.push_back(lineString);
 
-    double number = y1 / unitV;
+    double number = y1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
 
     QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
@@ -208,10 +205,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
-  
-  string unitStr = pUnit.getOptionByCurrentChoice().toString();
-  double unitH = getUnit(unitStr);
-  
+  LayoutUnit unit = (LayoutUnit)pUnit.getValue().toInt();
   bool bTopRotate = pTopRotate.getValue().toBool();
   bool bBottomRotate = pBottomRotate.getValue().toBool();
 
@@ -259,7 +253,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     lineString.setPoint(1, x, ury);
     m_verticalLines.push_back(lineString);
 
-    double number = x1 / unitH;
+    double number = x1 / (double)unit;
     QString convert = QString::number(number, 'f', 0);
 
     QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
@@ -332,16 +326,4 @@ double te::layout::GridPlanarItem::initHorizontalLines( const te::gm::Envelope& 
   }
 
   return xInit;
-}
-
-double te::layout::GridPlanarItem::getUnit(std::string strUnit)
-{
-  double unit = 1000.0;
-  strUnit = "(" + strUnit + ")";
-
-  if (strUnit == "(m)")
-  {
-    unit = 1.0;
-  }
-  return unit;
 }

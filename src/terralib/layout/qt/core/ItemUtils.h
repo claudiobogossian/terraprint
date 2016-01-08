@@ -57,6 +57,11 @@ namespace te
   {
     class PointSymbolizer;
   }
+  namespace gm
+  {
+    class Line;
+  }
+
   namespace layout
   {
     class MapItem;
@@ -225,6 +230,8 @@ namespace te
         static void setTextDPI(double textDpi);
 
         virtual te::color::RGBAColor** changePointMarkSize(te::se::PointSymbolizer* pointSymbol, std::size_t width, std::size_t height);
+
+        static QPainterPath lineToQPath(const te::gm::LineString& line);
 
       protected:
 

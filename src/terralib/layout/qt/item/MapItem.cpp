@@ -116,8 +116,13 @@ void te::layout::MapItem::drawItem( QPainter * painter, const QStyleOptionGraphi
     return;
   }*/
 
+  const Property& property = m_controller->getProperty("background_color");
+  const te::color::RGBAColor& color = property.getValue().toColor();
+
+  QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
   QPixmap pixmap(m_mapDisplay->width(), m_mapDisplay->height());
-  pixmap.fill(Qt::transparent);
+  pixmap.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
 
   QPainter localPainter(&pixmap);
   m_mapDisplay->render(&localPainter, QPoint(), QRegion(), QWidget::DrawChildren);

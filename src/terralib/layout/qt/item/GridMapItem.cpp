@@ -32,6 +32,10 @@
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
 
+#include <QBrush>
+
+#include <memory>
+
 te::layout::GridMapItem::GridMapItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
   , m_maxWidthTextMM(0)
@@ -131,9 +135,8 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
   const Property& pTextColor = pGridSettings.containsSubProperty(settingsConfig.getTextColor());
-
 
   Font txtFont =  pTextFontFamily.getValue().toFont();
   const te::color::RGBAColor& textColor = pTextColor.getValue().toColor();
@@ -142,8 +145,8 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 
   ItemUtils::ConfigurePainterForTexts(painter, txtFont);
 
-  QPen pen (clrText);
-  painter->setPen(pen);
+  QBrush brush (clrText);
+  painter->setBrush(brush);
 }
 
 void te::layout::GridMapItem::clear()
@@ -175,30 +178,25 @@ void te::layout::GridMapItem::drawContinuousLines( QPainter* painter )
 
 void te::layout::GridMapItem::drawVerticalLines( QPainter* painter )
 {
-  QList<QLineF>::iterator it = m_verticalLines.begin();
+  QList<te::gm::LineString>::const_iterator it = m_verticalLines.begin();
   for( ; it != m_verticalLines.end() ; ++it )
   {
-    QLineF line = (*it);
-    painter->drawLine(line);
-    
-#ifdef _DEBUG
-    debugDrawLineEdges(painter, line);
-#endif
+    const te::gm::LineString& line = *it;
+
+    QPainterPath path = ItemUtils::lineToQPath(line);
+    painter->drawPath(path);
   }
 }
 
 void te::layout::GridMapItem::drawHorizontalLines( QPainter* painter )
 {
-  QList<QLineF>::iterator it = m_horizontalLines.begin();
-  for( ; it != m_horizontalLines.end() ; ++it )
+  QList<te::gm::LineString>::const_iterator it = m_horizontalLines.begin();
+  for (; it != m_horizontalLines.end(); ++it)
   {
-    QLineF line = (*it);
-    painter->drawLine(line);
+    const te::gm::LineString& line = *it;
 
-#ifdef _DEBUG
-    debugDrawLineEdges(painter, line);
-#endif
-    
+    QPainterPath path = ItemUtils::lineToQPath(line);
+    painter->drawPath(path);
   }
 }
 
@@ -262,7 +260,7 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pTopRotateText = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pTopRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -296,7 +294,7 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pBottomRotateText = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pBottomRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -330,7 +328,7 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pLeftRotateText = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pLeftRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -368,7 +366,7 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pRightRotateText = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFontText());
+  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
   bool bRotate = pRightRotateText.getValue().toBool();
   const Font& font = pFont.getValue().toFont();
@@ -423,32 +421,52 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
   const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
   double crossOffSet = pCrossOffset.getValue().toDouble();
 
-  QList<QLineF>::iterator itv = m_verticalLines.begin();
+  QList<te::gm::LineString>::iterator itv = m_verticalLines.begin();
   for( ; itv != m_verticalLines.end() ; ++itv )
   {
-    QLineF vtrLine = (*itv);
+    const te::gm::LineString& verticalLine = (*itv);
 
-    QList<QLineF>::iterator ith = m_horizontalLines.begin();
+    QList<te::gm::LineString>::iterator ith = m_horizontalLines.begin();
     for( ; ith != m_horizontalLines.end() ; ++ith )
     {
-      QLineF hrzLine = (*ith);
+      const te::gm::LineString& horizontalLine = (*ith);
 
-      QPointF intersectonPoint;
-      QLineF::IntersectType intersectionType = vtrLine.intersect(hrzLine, &intersectonPoint);
-
-      if (intersectionType == QLineF::BoundedIntersection)
+      std::auto_ptr<te::gm::Geometry> interGeometry;
+      try
       {
-        QLineF lneHrz(intersectonPoint.x() - crossOffSet, intersectonPoint.y(), intersectonPoint.x() + crossOffSet, intersectonPoint.y());
-        QLineF lneVrt(intersectonPoint.x(), intersectonPoint.y() - crossOffSet, intersectonPoint.x(), intersectonPoint.y() + crossOffSet);
-        
-        if(drawCrossIntersectMapBorder(lneVrt, lneHrz, painter) == true)
-        {
-          continue;
-        }
-
-        painter->drawLine(lneHrz);
-        painter->drawLine(lneVrt);
+        interGeometry.reset(verticalLine.intersection(&horizontalLine));
       }
+      catch (...)
+      {
+        continue;
+      }
+      
+      if (interGeometry.get() == 0 || interGeometry->isValid() == false)
+      {
+        continue;
+      }
+
+      if (interGeometry->getGeomTypeId() != te::gm::PointType)
+      {
+        continue;
+      }
+
+      te::gm::Point* interPoint = dynamic_cast<te::gm::Point*>(interGeometry.get());
+      if (interPoint == 0)
+      {
+        continue;
+      }
+
+      QLineF lneHrz(interPoint->getX() - crossOffSet, interPoint->getY(), interPoint->getX() + crossOffSet, interPoint->getY());
+      QLineF lneVrt(interPoint->getX(), interPoint->getY() - crossOffSet, interPoint->getX(), interPoint->getY() + crossOffSet);
+        
+      if(drawCrossIntersectMapBorder(lneVrt, lneHrz, painter) == true)
+      {
+        continue;
+      }
+
+      painter->drawLine(lneHrz);
+      painter->drawLine(lneVrt);
     }
   }
 
@@ -559,31 +577,7 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
   painter->restore();
 }
 
-void te::layout::GridMapItem::debugDrawLineEdges(QPainter* painter, const QLineF& line)
-{
-  if (m_showDebugDrawings == false)
-  {
-    return;
-  }
-
-  QPointF p1(line.p1());
-  QPointF p2(line.p2());
-
-  painter->save();
-
-  QPen linepen(Qt::red);
-  linepen.setCapStyle(Qt::RoundCap);
-  linepen.setWidth(1);
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  painter->setPen(linepen);
-
-  painter->drawPoint(p1);
-  painter->drawPoint(p2);
-
-  painter->restore();
-}
-
-te::gm::Envelope te::layout::GridMapItem::calculateTop(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement)
+te::gm::Envelope te::layout::GridMapItem::calculateTop(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement)
 {
   double textX = textBoundingRect.x();
   double textY = textBoundingRect.y();
@@ -599,8 +593,8 @@ te::gm::Envelope te::layout::GridMapItem::calculateTop(QLineF line, QRectF textB
     textHeight = textBoundingRect.width();
   }
 
-  double x = line.p2().x();
-  double ury = line.p2().y();
+  double x = referencePoint.x();
+  double ury = referencePoint.y();
 
   // text top
   QPointF ptTop(x - (textWidth / 2.), ury + horizontalDisplacement);
@@ -612,7 +606,7 @@ te::gm::Envelope te::layout::GridMapItem::calculateTop(QLineF line, QRectF textB
   return topTextBox;
 }
 
-te::gm::Envelope te::layout::GridMapItem::calculateBottom(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement)
+te::gm::Envelope te::layout::GridMapItem::calculateBottom(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement)
 {
   double textX = textBoundingRect.x();
   double textY = textBoundingRect.y();
@@ -628,8 +622,8 @@ te::gm::Envelope te::layout::GridMapItem::calculateBottom(QLineF line, QRectF te
     textHeight = textBoundingRect.width();
   }
 
-  double x = line.p1().x();
-  double lly = line.p1().y();
+  double x = referencePoint.x();
+  double lly = referencePoint.y();
 
   // text bottom
   QPointF ptBottom(x - (textWidth / 2.), lly - textHeight - horizontalDisplacement);
@@ -641,15 +635,15 @@ te::gm::Envelope te::layout::GridMapItem::calculateBottom(QLineF line, QRectF te
   return bottomTextBox;
 }
 
-te::gm::Envelope te::layout::GridMapItem::calculateRight(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement)
+te::gm::Envelope te::layout::GridMapItem::calculateRight(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement)
 {
   double textX = textBoundingRect.x();
   double textY = textBoundingRect.y();
   double textWidth = textBoundingRect.width();
   double textHeight = textBoundingRect.height();
 
-  double urx = line.p2().x();
-  double y = line.p2().y();
+  double urx = referencePoint.x();
+  double y = referencePoint.y();
 
   if (rotate)
   {
@@ -671,7 +665,7 @@ te::gm::Envelope te::layout::GridMapItem::calculateRight(QLineF line, QRectF tex
   return rightTextBox;
 }
 
-te::gm::Envelope te::layout::GridMapItem::calculateLeft(QLineF line, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement)
+te::gm::Envelope te::layout::GridMapItem::calculateLeft(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement)
 {
   double textX = textBoundingRect.x();
   double textY = textBoundingRect.y();
@@ -687,8 +681,8 @@ te::gm::Envelope te::layout::GridMapItem::calculateLeft(QLineF line, QRectF text
     textHeight = textBoundingRect.width();
   }
 
-  double llx = line.p1().x();
-  double y = line.p1().y();
+  double llx = referencePoint.x();
+  double y = referencePoint.y();
 
   double yReference = y + textY - (textHeight / 2.);
 

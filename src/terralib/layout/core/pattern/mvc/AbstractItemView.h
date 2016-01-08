@@ -31,6 +31,7 @@
 // TerraLib
 #include "../../Config.h"
 #include "../../../core/ContextObject.h"
+#include "../../../core/enum/AbstractType.h"
 
 namespace te
 {
@@ -114,6 +115,8 @@ namespace te
         virtual AbstractScene* getScene() = 0;
 
         virtual void prepareGeometryChange() = 0;
+
+        virtual te::layout::ItemAction getCurrentAction() = 0;
         
     protected:
 

@@ -45,6 +45,7 @@
 #include "Scene.h"
 #include "BuildGraphicsOutside.h"
 #include "../inside/ToolbarItemInside.h"
+#include "../inside/DialogItemToolbar.h"
 
 // Qt
 #include <QMouseEvent>
@@ -58,7 +59,6 @@
 #include <QPainterPath>
 #include <QEvent>
 #include <QToolBar>
-#include <QDialog>
 #include <QPoint>
 #include <QRect>
 #include <QSize>
@@ -88,16 +88,7 @@ te::layout::View::View( QWidget* widget) :
   m_horizontalRuler = new HorizontalRuler;
   m_verticalRuler = new VerticalRuler;
 
-  m_dialogItemToolbar = new QDialog(this->viewport());
-  m_dialogItemToolbar->setVisible(false);
-  m_dialogItemToolbar->setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
-  Qt::WindowFlags flags = m_dialogItemToolbar->windowFlags();
-
-  // Linux: for remove buttons in title bar
-  flags &= ~Qt::WindowContextHelpButtonHint;
-  flags &= ~Qt::WindowMinMaxButtonsHint;
-  flags &= ~Qt::WindowCloseButtonHint;
-  m_dialogItemToolbar->setWindowFlags(flags);
+  m_dialogItemToolbar = new DialogItemToolbar(this->viewport());
 }
 
 te::layout::View::~View()

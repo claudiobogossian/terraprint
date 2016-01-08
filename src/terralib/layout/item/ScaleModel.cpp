@@ -33,6 +33,7 @@
 #include "../core/property/Property.h"
 #include "../core/property/SharedProperties.h"
 #include "../core/pattern/mvc/AbstractItemView.h"
+#include "../core/Font.h"
 
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
@@ -43,9 +44,11 @@ te::layout::ScaleModel::ScaleModel()
   double width = 70.;
   double height = 30.;
   double scale = 250000.;
-  double scaleGapX = 20.;
+  double scaleGapX = 30.;
   double scaleGapY = 5.;
   std::string itemName = "";
+  Font font;
+  double scaleUnitGapX = 7.5;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -66,7 +69,6 @@ te::layout::ScaleModel::ScaleModel()
     property.setName("scale_width_rect_gap");
     property.setLabel(TR_LAYOUT("Scale Gap X"));
     property.setValue(scaleGapX, dataType->getDataTypeDouble());
-    property.setMenu(true);
     m_properties.addProperty(property);
   }
 
@@ -75,7 +77,6 @@ te::layout::ScaleModel::ScaleModel()
     property.setName("scale_height_rect_gap");
     property.setLabel(TR_LAYOUT("Scale Gap Y"));
     property.setValue(scaleGapY, dataType->getDataTypeDouble());
-    property.setMenu(true);
     m_properties.addProperty(property);
   }
 
@@ -120,6 +121,14 @@ te::layout::ScaleModel::ScaleModel()
 
   {
     Property property(0);
+    property.setName("font");
+    property.setLabel(TR_LAYOUT("Font"));
+    property.setValue(font, dataType->getDataTypeFont());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
     property.setName("Unit");
     property.setLabel(TR_LAYOUT("Unit"));
     property.setValue(std::string("km"), dataType->getDataTypeStringList());
@@ -132,6 +141,14 @@ te::layout::ScaleModel::ScaleModel()
     v.setValue(std::string("m"), dataType->getDataTypeString());
     property.addOption(v);
 
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("scale_in_unit_width_rect_gap");
+    property.setLabel(TR_LAYOUT("Scale Gap X In Unit"));
+    property.setValue(scaleUnitGapX, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
 

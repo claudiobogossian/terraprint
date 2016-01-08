@@ -27,6 +27,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_CONFIG_H
 
 #include "terralib/common/Translator.h"
+#include "terralib/common/PlatformUtils.h"
 
 #define TE_LAYOUT_MODULE_NAME "te.layout"
 
@@ -47,7 +48,7 @@
 
   \brief It contains the translation catalog directory.
  */
-#define TE_LAYOUT_TEXT_DOMAIN_DIR "locale"
+#define TE_LAYOUT_TEXT_DOMAIN_DIR te::common::FindInTerraLibPath("share/terralib/translations/messages")
 
 /*!
   \def TR_LAYOUT

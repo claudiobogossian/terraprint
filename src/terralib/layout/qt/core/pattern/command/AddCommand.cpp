@@ -70,9 +70,9 @@ void te::layout::AddCommand::undo()
   const Property& pName = abstractItem->getController()->getProperty("name");
   std::string nameItem = pName.getValue().toString();
 
-  bool result = scene->removeItemByName(nameItem);
-  
-  if (!result)
+  m_scene->removeItem(m_item);
+    
+  if (m_item->scene() != scene)
     return;
 
   scene->addItemStackWithoutScene(m_item);

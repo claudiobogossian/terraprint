@@ -126,6 +126,8 @@ namespace te
 
       virtual QToolButton* getUndoToolButton();
 
+      virtual QToolButton* getRedoToolButton();
+
       virtual QToolButton* getDrawMapToolButton();
 
       virtual QToolButton* getObjectToImageButton();
@@ -171,6 +173,8 @@ namespace te
       virtual QAction* getActionRemoveObjectToolButton();
 
       virtual QAction* getActionUndoToolButton();
+
+      virtual QAction* getActionRedoToolButton();
 
       virtual QAction* getActionDrawMapToolButton();
 
@@ -341,6 +345,8 @@ namespace te
 
       virtual QToolButton* createUndoToolButton();
 
+      virtual QToolButton* createRedoToolButton();
+
       virtual QToolButton* createDrawMapToolButton();
 
       virtual QToolButton* createObjectToImageButton();
@@ -448,6 +454,7 @@ namespace te
       QToolButton* m_alignCenterVerticalToolButton;
       QToolButton* m_removeObjectToolButton;
       QToolButton* m_undoToolButton;
+      QToolButton* m_redoToolButton;
       QToolButton* m_drawMapToolButton;
       QToolButton* m_objectToImageButton;
       QToolButton* m_exitButton;
@@ -474,6 +481,7 @@ namespace te
       QAction* m_actionAlignCenterVerticalToolButton;
       QAction* m_actionRemoveObjectToolButton;
       QAction* m_actionUndoToolButton;
+      QAction* m_actionRedoToolButton;
       QAction* m_actionDrawMapToolButton;
       QAction* m_actionObjectToImageButton;
       QAction* m_actionExitButton;

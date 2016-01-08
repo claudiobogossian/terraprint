@@ -500,24 +500,33 @@ namespace te
         \param screenHMM Screen height in millimeters (QGraphicsView)
         */
         void increasedUnprintableArea(double& screenWMM, double& screenHMM);
+
+        virtual void searchSelectedItemsInResizeMode();
+
+        virtual void searchSelectedItemsInMoveMode();
+
+        virtual void addUndoCommandForMove();
+
+        virtual void addUndoCommandForResize();
         
     protected:
 
-        QTransform                         m_matrix; //!< transformation matrix of the scene.
-        QColor                             m_backgroundColor; //!< background color that is applied to each observer(QGraphicsView) of the scene.
-        QUndoStack*                        m_undoStack; //!< Undo/Redo stack
-        int                                m_undoStackLimit; //!< Undo/Redo limit size
-        AlignItems*                        m_align; //!< object responsible for aligning objects in the scene.
-        bool                               m_moveWatched;
-        std::map<QGraphicsItem*, QPointF>  m_moveWatches;
-        QList<QGraphicsItem*>              m_itemStackWithoutScene; //!< Items that are not included in any scene 
-        PaperConfig*                       m_paperConfig; //!< paper settings
-        AbstractItemView*                  m_currentItemEdition;
-        bool                               m_isEditionMode;
-        ContextObject                      m_context;
-        te::qt::widgets::Canvas*           m_canvas;
-        std::map<std::string, ValueBase*>  m_contextValues;
-        double                             m_increasedUnprintableArea;
+        QTransform                            m_matrix; //!< transformation matrix of the scene.
+        QColor                                m_backgroundColor; //!< background color that is applied to each observer(QGraphicsView) of the scene.
+        QUndoStack*                           m_undoStack; //!< Undo/Redo stack
+        int                                   m_undoStackLimit; //!< Undo/Redo limit size
+        AlignItems*                           m_align; //!< object responsible for aligning objects in the scene.
+        bool                                  m_moveOrResizeWatched;
+        std::map<QGraphicsItem*, QPointF>     m_moveWatches;
+        QList<QGraphicsItem*>                 m_itemStackWithoutScene; //!< Items that are not included in any scene 
+        PaperConfig*                          m_paperConfig; //!< paper settings
+        AbstractItemView*                     m_currentItemEdition;
+        bool                                  m_isEditionMode;
+        ContextObject                         m_context;
+        te::qt::widgets::Canvas*              m_canvas;
+        std::map<std::string, ValueBase*>     m_contextValues;
+        double                                m_increasedUnprintableArea;
+        std::map<QGraphicsItem*, Properties>  m_resizeWatches;
     };
 
     template <typename T>

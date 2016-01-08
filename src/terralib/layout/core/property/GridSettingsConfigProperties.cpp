@@ -39,8 +39,8 @@ te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties():
   m_lineStyle("grid_lineStyle"),
   m_lineColor("grid_lineColor"),
   m_lineWidth("grid_lineWidth"),
-  m_pointTextSize("grid_pointTextSize"),
-  m_fontText("grid_fontText"),
+  m_font("grid_font"),
+  m_fontCorner("grid_font_corner"),
   m_textColor("grid_textColor"),
   m_visibleAllTexts("grid_visibleAllTexts"),
   m_superscriptText("grid_superscriptText"),
@@ -114,14 +114,14 @@ std::string te::layout::GridSettingsConfigProperties::getLineWidth()
   return m_lineWidth;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getPointTextSize()
+std::string te::layout::GridSettingsConfigProperties::getFont()
 {
-  return m_pointTextSize;
+  return m_font;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getFontText()
+std::string te::layout::GridSettingsConfigProperties::getFontCorner()
 {
-  return m_fontText;
+  return m_fontCorner;
 }
 
 std::string te::layout::GridSettingsConfigProperties::getTextColor()

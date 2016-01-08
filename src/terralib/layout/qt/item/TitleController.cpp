@@ -54,42 +54,22 @@ QSizeF te::layout::TitleController::updateView()
   TextGridSettingsConfigProperties propertyNames;
 
   const Property& pFont = m_model->getProperty("font");
-  const Property& pTitleFont = m_model->getProperty("title_font");
-  const Property& pBodyTitleFont = m_model->getProperty("bodytitle_font");
-  const Property& pBodyBgColor = m_model->getProperty(propertyNames.getBodyBackgroundColor());
-  const Property& ptitleBgColor = m_model->getProperty(propertyNames.getTitleBackgroundColor());
+  const Property& pVerticalColor = m_model->getProperty(propertyNames.getHeaderVerticalColor());
+  const Property& pHorizontalColor = m_model->getProperty(propertyNames.getHeaderHorizontalColor());
   const Property& pGridBorderColor = m_model->getProperty(propertyNames.getBorderGridColor());
   const Property& pOddRow = m_model->getProperty(propertyNames.getOddRow());
   const Property& pEvenRow = m_model->getProperty(propertyNames.getEvenRow());
   const Property& pTitle = m_model->getProperty(propertyNames.getTitle());
   const Property& pText = m_model->getProperty("text");
-  const Property& pTitleColor = m_model->getProperty("color");
-  const Property& pAligment = getProperty("alignment");
-
 
   const Font& font = pFont.getValue().toFont();
-  const Font& titleFont = pTitleFont.getValue().toFont();
-  const Font& bodyTitleFont = pBodyTitleFont.getValue().toFont();
-  
-  const te::color::RGBAColor& bodyBgColor = pBodyBgColor.getValue().toColor();
-  const te::color::RGBAColor& titleBgColor = ptitleBgColor.getValue().toColor();
+  const te::color::RGBAColor& verticalColor = pVerticalColor.getValue().toColor();
+  const te::color::RGBAColor& horizontalColor = pHorizontalColor.getValue().toColor();
   const te::color::RGBAColor& gridBorderColor = pGridBorderColor.getValue().toColor();
   const te::color::RGBAColor& oddRowColor = pOddRow.getValue().toColor();
   const te::color::RGBAColor& evenRowColor = pEvenRow.getValue().toColor();
-  const te::color::RGBAColor& titleColor = pTitleColor.getValue().toColor();
   const std::string& title = pTitle.getValue().toString();
   const std::string& text = pText.getValue().toString();
-
-  EnumAlignmentType enumAligmentType;
-  const std::string& label = pAligment.getOptionByCurrentChoice().toString();
-  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
-
-  const Property& pColor = getProperty("color");
-
-  const te::color::RGBAColor& color = pColor.getValue().toColor();
-
-  //converts the color
-  QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
   QTextDocument* doc = view->document();
   doc->clear();
@@ -112,72 +92,34 @@ QSizeF te::layout::TitleController::updateView()
   tableFormat.setColumnWidthConstraints(constraints);
   tableFormat.setHeaderRowCount(1);
 
-  QFont qftTitle = ItemUtils::convertToQfont(titleFont);
-  QFont qftBodyTitle = ItemUtils::convertToQfont(bodyTitleFont);
-
   m_table = cursor.insertTable(2, 1, tableFormat);
+  
+  QTextCharFormat format = cursor.charFormat();
+  format.setFontPointSize(font.getPointSize());
 
-    
-  QTextCharFormat formatTitle = cursor.charFormat();
- 
-  QTextCharFormat formatBodyTitle = cursor.charFormat();
-  //format.setFontPointSize(font.getPointSize());
-  formatTitle.setFont(qftTitle);
-
-  QTextOption txtOpt = view->document()->defaultTextOption();
-  if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
-  {
-    txtOpt.setAlignment(Qt::AlignCenter);
-  }
-
-  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
-  {
-    txtOpt.setAlignment(Qt::AlignLeft);
-  }
-
-  if (currentAligmentType == enumAligmentType.getAlignmentRightType())
-  {
-    txtOpt.setAlignment(Qt::AlignRight);
-  }
-
-  if (view->document()->defaultTextOption().alignment() != txtOpt.alignment())
-  {
-    view->document()->setDefaultTextOption(txtOpt);
-  }
-
-  if (view->defaultTextColor() != qColor)
-  {
-    view->setDefaultTextColor(qColor);
-  }
-
-  formatBodyTitle.setFont(qftBodyTitle);
-
-  QColor qBodyBgColor(bodyBgColor.getRed(), bodyBgColor.getGreen(), bodyBgColor.getBlue(), bodyBgColor.getAlpha());
-  QColor qTitleBgColor(titleBgColor.getRed(), titleBgColor.getGreen(), titleBgColor.getBlue(), titleBgColor.getAlpha());
+  QColor qHeaderVtrColor(verticalColor.getRed(), verticalColor.getGreen(), verticalColor.getBlue(), verticalColor.getAlpha());
+  QColor qHeaderHrzColor(horizontalColor.getRed(), horizontalColor.getGreen(), horizontalColor.getBlue(), horizontalColor.getAlpha());
   QColor qBorderColor(gridBorderColor.getRed(), gridBorderColor.getGreen(), gridBorderColor.getBlue(), gridBorderColor.getAlpha());
   QColor qEvenRowColor(evenRowColor.getRed(), evenRowColor.getGreen(), evenRowColor.getBlue(), evenRowColor.getAlpha());
   QColor qOddRowColor(oddRowColor.getRed(), oddRowColor.getGreen(), oddRowColor.getBlue(), oddRowColor.getAlpha());
 
   //Header
-  QBrush titleBgC(qTitleBgColor);
+  QBrush headerVrt(qHeaderVtrColor);
   QTextTableCell cellTwo = m_table->cellAt(0, 0);
   QTextCharFormat fmtTwo = cellTwo.format(); 
-  fmtTwo.setBackground(titleBgC);
+  fmtTwo.setBackground(headerVrt); 
   cellTwo.setFormat(fmtTwo);
   QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
-  cellCursorTwo.insertText(title.c_str(), formatTitle);
- 
-  // table
-  QBrush bodyBgC(qBodyBgColor);
-  
+  cellCursorTwo.insertText(title.c_str(), format);
 
+  // table
+  QBrush headerHrz(qHeaderHrzColor);
   QTextTableCell cellOne = m_table->cellAt(1, 0);
   QTextCharFormat fmtOne = cellOne.format(); 
-  fmtOne.setBackground(bodyBgC);
+  fmtOne.setBackground(headerHrz); 
   cellOne.setFormat(fmtOne);
   QTextCursor cellCursorOne = cellOne.firstCursorPosition();  
-  cellCursorOne.insertText(text.c_str(), formatBodyTitle);
-
+  cellCursorOne.insertText(text.c_str(), format);
 
   //we get the size in pixels
   QRectF rect = view->boundingRect();
@@ -185,9 +127,8 @@ QSizeF te::layout::TitleController::updateView()
 
   //then we convert to millimiters
   boundingRect = view->mapRectToScene(boundingRect);
-  
+
   //we finally return the new size in millimiters
-  
   return boundingRect.size();
 }
 

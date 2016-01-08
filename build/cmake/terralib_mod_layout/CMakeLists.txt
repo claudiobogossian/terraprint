@@ -256,7 +256,8 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/PropertiesDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/EditTemplateDock.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarInside.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h				 
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h	
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/DialogItemToolbar.h	
                                  )
 
   QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
@@ -286,6 +287,41 @@ set_target_properties(terralib_mod_layout
                       PROPERTIES VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
                                  SOVERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
                                  INSTALL_NAME_DIR "@executable_path/../lib")
+
+
+# translations
+
+set(mo_input_dir "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/messages/pt_BR/LC_MESSAGES")
+set(mo_output_dir "${CMAKE_BINARY_DIR}/share/terralib/translations/messages/pt_BR/LC_MESSAGES")
+
+file( MAKE_DIRECTORY ${mo_output_dir})
+file(COPY ${mo_input_dir}/telayout.mo DESTINATION ${mo_output_dir})
+
+
+set(_qm_files "")
+
+if (QT4_FOUND)
+  GenerateTranslationQt4("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files) 
+else()
+  if (Qt5_FOUND)
+    GenerateTranslationQt5("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files) 
+  endif()
+endif()
+
+
+install(
+  FILES ${mo_input_dir}/telayout.mo
+  DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/translations/messages/pt_BR/LC_MESSAGES
+  COMPONENT runtime
+)
+
+install(
+  FILES ${_qm_files}
+  DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/translations
+  COMPONENT runtime
+)
+
+# -------------
 
 install(TARGETS terralib_mod_layout
         EXPORT terralib-targets
@@ -370,7 +406,6 @@ if(UNIX)
 endif()	        
 
 export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
-
 
 if(MSVC)
   	add_custom_command(

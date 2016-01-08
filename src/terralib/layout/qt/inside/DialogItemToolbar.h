@@ -18,50 +18,52 @@
  */
 
 /*!
-  \file BalloonModel.h
+  \file DialogItemToolbar.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_DIALOG_ITEM_TOOLBAR_H 
+#define __TERRALIB_LAYOUT_INTERNAL_DIALOG_ITEM_TOOLBAR_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/Config.h"
+#include "../../core/Config.h"
 
+// Qt
+#include <QDialog>
+
+class QKeyEvent;
 
 namespace te
 {
   namespace layout
   {
-
     /*!
-      \brief Class that represents a "Model" part of Balloon MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
-          
+    \brief 
+    
       \ingroup layout
-
-      \sa te::layout::AbstractItemModel
     */
-    class TELAYOUTEXPORT BalloonModel : public AbstractItemModel
+    class TELAYOUTEXPORT DialogItemToolbar : public QDialog
     {
-      public:
-        
-        /*!
-          \brief Constructor
-        */
-        BalloonModel();
+      Q_OBJECT //for slots/signals
 
-        /*!
-          \brief Destructor
-        */ 
-        virtual ~BalloonModel();
+    public:
+
+      DialogItemToolbar(QWidget* parent = 0);
+
+      virtual ~DialogItemToolbar();
+
+    protected:
+
+      /*!
+      \brief Reimplemented from QDialog
+      */
+      virtual void keyPressEvent(QKeyEvent* keyEvent);
     };
   }
 }
 
 #endif
+

@@ -163,10 +163,10 @@ void te::layout::Font::fromString( std::string font )
   m_family = strings[0];
   m_pointSize = std::atoi(strings[1].c_str());
   m_bold = toBool(strings[2]);
-  m_italic = toBool(strings[3]);;
-  m_underline = toBool(strings[4]);;
-  m_strikeout = toBool(strings[5]);;
-  m_kerning = toBool(strings[6]);;  
+  m_italic = toBool(strings[3]);
+  m_underline = toBool(strings[4]);
+  m_strikeout = toBool(strings[5]);
+  m_kerning = toBool(strings[6]);
 }
 
 std::string te::layout::Font::toString( bool flag ) const

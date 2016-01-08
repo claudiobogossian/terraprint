@@ -51,9 +51,7 @@ te::layout::TextGridSettingsConfigProperties::TextGridSettingsConfigProperties()
   m_headerAlignment("textgrid_headeralignment"), 
   m_headerHorizontalColor("textgrid_headerhorizontalcolor"),
   m_headerVerticalColor("textgrid_headerverticalcolor"),
-  m_cellAlignment("textgrid_cellalignment"),
-  m_titleBgColor("title_bg_color"),
-  m_bodyBgColor("body_bg_color")
+  m_cellAlignment("textgrid_cellalignment")
 {
 
 }
@@ -116,15 +114,6 @@ std::string te::layout::TextGridSettingsConfigProperties::getEvenRow()
 std::string te::layout::TextGridSettingsConfigProperties::getOddRow()
 {
   return m_oddRow;
-}
-
-std::string te::layout::TextGridSettingsConfigProperties::getTitleBackgroundColor(){
-  return m_titleBgColor;
-}
-
-
-std::string te::layout::TextGridSettingsConfigProperties::getBodyBackgroundColor(){
-  return m_bodyBgColor;
 }
 
 std::string te::layout::TextGridSettingsConfigProperties::getAddColunm()
