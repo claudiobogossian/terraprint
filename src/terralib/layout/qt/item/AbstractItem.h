@@ -216,8 +216,6 @@ namespace te
 
         bool isLimitExceeded(QRectF resizeRect);
 
-        virtual bool hasChildrenInResizeMode();
-
      protected:
 
         //resize
@@ -588,31 +586,6 @@ namespace te
           m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
         }
       }
-      else if (change == QGraphicsItem::ItemSelectedHasChanged)
-      {
-        if (T::isSelected() == false)
-        {
-          //we remove the subSelection of the children
-          QList<QGraphicsItem*>	children = T::childItems();
-          QList<QGraphicsItem*>::iterator it = children.begin();
-          while (it != children.end())
-          {
-            AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-            if (item != 0 && item->isSubSelected() == true && item->getCurrentAction() != te::layout::RESIZE_ACTION)
-            {
-              bool result = true;
-              if (item->isEditionMode())
-              {
-                result = false;
-              }
-              item->setSubSelection(false);
-              T::setHandlesChildEvents(result);
-              (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, result);
-            }
-            ++it;
-          }
-        }
-      }
       else if (change == QGraphicsItem::ItemZValueHasChanged)
       {
         m_controller->itemZValueChanged(T::zValue());
@@ -700,63 +673,7 @@ namespace te
         }
       }
 
-      bool wasSelected = T::isSelected();
       T::mousePressEvent(event);
-      bool continuedSelected = T::isSelected();
-
-      bool is_childrenResizeMode = hasChildrenInResizeMode();
-
-      if (isEditionMode() == true)
-      {
-        return;
-      }
-
-      if (event->button() & Qt::LeftButton)
-      {
-        if (is_childrenResizeMode)
-        {
-          m_currentAction = te::layout::NO_ACTION;
-          return;
-        }
-
-        QList<QGraphicsItem*>	children = T::childItems();
-        QList<QGraphicsItem*>::iterator it = children.begin();
-        while (it != children.end())
-        {
-          AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-          if (item != 0 && item->isSubSelected() == true)
-          {
-            item->setSubSelection(false);
-            T::setHandlesChildEvents(true);
-            (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
-          }
-
-          ++it;
-        }
-
-        if (wasSelected == true && continuedSelected == true)
-        {
-          //we try to select the children
-          QList<QGraphicsItem*>	children = T::childItems();
-          QList<QGraphicsItem*>::iterator it = children.begin();
-          while (it != children.end())
-          {
-            QPointF childrenPos = (*it)->mapFromParent(event->pos());
-            if ((*it)->contains(childrenPos))
-            {
-              AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-              if (item != 0)
-              {
-                item->setSubSelection(true);
-                T::setHandlesChildEvents(false);
-                (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
-                break;
-              }
-            }
-            ++it;
-          }
-        }
-      }
     }
 
     template <class T>
@@ -779,12 +696,6 @@ namespace te
         if (event->buttons() == Qt::LeftButton)
         {
           m_currentAction = te::layout::MOVE_ACTION;
-        }
-
-        bool is_childrenResizeMode = hasChildrenInResizeMode();
-        if (is_childrenResizeMode)
-        {
-          m_currentAction = te::layout::NO_ACTION;
         }
 
         T::mouseMoveEvent(event);
@@ -970,27 +881,6 @@ namespace te
     inline te::layout::ItemAction te::layout::AbstractItem<T>::getCurrentAction()
     {
       return m_currentAction;
-    }
-    template <class T>
-    inline bool te::layout::AbstractItem<T>::hasChildrenInResizeMode()
-    {
-      bool result = false;
-
-      QList<QGraphicsItem*> children = T::childItems();
-      for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
-      {
-        AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-        if (item != 0 && item->isSubSelected() == true)
-        {
-          if (item->getCurrentAction() == te::layout::RESIZE_ACTION)
-          {
-            result = true;
-            break;
-          }
-        }
-      }
-
-      return result;
     }
   } // end namespace layout
 } // end namespace te

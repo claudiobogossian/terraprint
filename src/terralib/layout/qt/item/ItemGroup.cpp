@@ -92,6 +92,137 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
       }
     }
   }
+  else if (change == QGraphicsItem::ItemSelectedHasChanged)
+  {
+    if (isSelected() == false)
+    {
+      //we remove the subSelection of the children
+      QList<QGraphicsItem*>	children = childItems();
+      QList<QGraphicsItem*>::iterator it = children.begin();
+      while (it != children.end())
+      {
+        AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+        if (item != 0 && item->isSubSelected() == true && item->getCurrentAction() != te::layout::RESIZE_ACTION)
+        {
+          bool result = true;
+          if (item->isEditionMode())
+          {
+            result = false;
+          }
+          item->setSubSelection(false);
+          setHandlesChildEvents(result);
+          (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, result);
+        }
+        ++it;
+      }
+    }
+  }
 
   return AbstractItem<QGraphicsItemGroup>::itemChange(change, value);
 }
+
+void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
+{
+  bool wasSelected = isSelected();
+  AbstractItem<QGraphicsItemGroup>::mousePressEvent(event);
+  bool continuedSelected = isSelected();
+
+  bool is_childrenResizeMode = hasChildrenInResizeMode();
+
+  if (isEditionMode() == true)
+  {
+    return;
+  }
+
+  if (event->button() & Qt::LeftButton)
+  {
+    if (is_childrenResizeMode)
+    {
+      m_currentAction = te::layout::NO_ACTION;
+      return;
+    }
+
+    QList<QGraphicsItem*>	children = childItems();
+    QList<QGraphicsItem*>::iterator it = children.begin();
+    while (it != children.end())
+    {
+      AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+      if (item != 0 && item->isSubSelected() == true)
+      {
+        item->setSubSelection(false);
+        setHandlesChildEvents(true);
+        (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
+      }
+
+      ++it;
+    }
+
+    if (wasSelected == true && continuedSelected == true)
+    {
+      //we try to select the children
+      QList<QGraphicsItem*>	children = childItems();
+      QList<QGraphicsItem*>::iterator it = children.begin();
+      while (it != children.end())
+      {
+        QPointF childrenPos = (*it)->mapFromParent(event->pos());
+        if ((*it)->contains(childrenPos))
+        {
+          AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+          if (item != 0)
+          {
+            item->setSubSelection(true);
+            setHandlesChildEvents(false);
+            (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
+            break;
+          }
+        }
+        ++it;
+      }
+    }
+  }
+}
+
+void te::layout::ItemGroup::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+{
+  if (m_currentAction == te::layout::RESIZE_ACTION)
+  {
+    AbstractItem<QGraphicsItemGroup>::mouseMoveEvent(event);
+  }
+
+  bool is_childrenResizeMode = hasChildrenInResizeMode();
+  if (is_childrenResizeMode)
+  {
+    m_currentAction = te::layout::NO_ACTION;
+  }
+  else
+  {
+    if (event->buttons() == Qt::LeftButton)
+    {
+      m_currentAction = te::layout::MOVE_ACTION;
+    }
+  }
+
+  QGraphicsItemGroup::mouseMoveEvent(event);
+}
+
+bool te::layout::ItemGroup::hasChildrenInResizeMode()
+{
+  bool result = false;
+
+  QList<QGraphicsItem*> children = childItems();
+  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+  {
+    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+    if (item != 0 && item->isSubSelected() == true)
+    {
+      if (item->getCurrentAction() == te::layout::RESIZE_ACTION)
+      {
+        result = true;
+        break;
+      }
+    }
+  }
+
+  return result;
+}
+

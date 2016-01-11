@@ -75,6 +75,20 @@ namespace te
           \brief Reimplemented from QGraphicsItem to capture changes in the item
          */
         virtual QVariant itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value );
+
+      protected:
+
+        /*!
+        \brief Reimplemented from AbstractItem<QGraphicsItemGroup>
+        */
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
+
+        /*!
+        \brief Reimplemented from AbstractItem<QGraphicsItemGroup>
+        */
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
+
+        virtual bool hasChildrenInResizeMode();
     };
   }
 }
