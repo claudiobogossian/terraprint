@@ -799,16 +799,10 @@ namespace te
         m_finalCoord = event->pos();
         calculateResize();
         QPointF newPos(m_rect.x(), m_rect.y());
-        newPos = T::mapToScene(newPos);
+        newPos = T::mapToParent(newPos);
 
         m_currentAction = te::layout::NO_ACTION;
-
-        if (parentItem())
-        {
-          newPos = QPointF(m_rect.x(), m_rect.y());
-          newPos = T::mapToParent(newPos);
-        }
-
+        
         T::setPos(newPos);
         m_rect.moveTo(0, 0);
         T::setOpacity(1.);
