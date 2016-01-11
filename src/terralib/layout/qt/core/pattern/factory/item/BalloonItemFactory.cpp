@@ -29,6 +29,7 @@
 #include "../../../../../item/BalloonModel.h"
 #include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/BalloonItem.h"
+#include "../../../../item/BalloonController.h"
 
 te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryParamsCreate params)
 {
@@ -40,9 +41,10 @@ te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryP
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  BalloonController* controller = new BalloonController(model);
   BalloonItem* view = new BalloonItem(controller);
   controller->setView(view);
+  view->isInverted();
 
   if (!props.getProperties().empty())
   {
