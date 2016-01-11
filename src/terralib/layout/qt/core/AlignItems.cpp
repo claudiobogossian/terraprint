@@ -163,7 +163,7 @@ void te::layout::AlignItems::alignLeft()
   {
     if(item)
     {
-      QPointF pt(dbLeft, item->scenePos().y());
+      QPointF pt(dbLeft, item->sceneBoundingRect().y());
       itemsWithPoints[item] = item->scenePos();//it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -214,7 +214,7 @@ void te::layout::AlignItems::alignRight()
     if(item)
     {
       w = dbRight - item->sceneBoundingRect().width();
-      QPointF pt(w, item->scenePos().y());
+      QPointF pt(w, item->sceneBoundingRect().y());
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -365,7 +365,7 @@ void te::layout::AlignItems::alignCenterHorizontal()
     {
       w = item->sceneBoundingRect().width() / 2.;
 
-      QPointF pt(dbCenterHrz - w, item->scenePos().y());
+      QPointF pt(dbCenterHrz - w, item->sceneBoundingRect().y());
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }

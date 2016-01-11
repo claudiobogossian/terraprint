@@ -34,6 +34,8 @@
 
 #include <QBrush>
 
+#include <memory>
+
 te::layout::GridMapItem::GridMapItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
   , m_maxWidthTextMM(0)
@@ -429,7 +431,7 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
     {
       const te::gm::LineString& horizontalLine = (*ith);
 
-      std::unique_ptr<te::gm::Geometry> interGeometry;
+      std::auto_ptr<te::gm::Geometry> interGeometry;
       try
       {
         interGeometry.reset(verticalLine.intersection(&horizontalLine));
@@ -439,7 +441,7 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
         continue;
       }
       
-      if (interGeometry == 0 || interGeometry->isValid() == false)
+      if (interGeometry.get() == 0 || interGeometry->isValid() == false)
       {
         continue;
       }

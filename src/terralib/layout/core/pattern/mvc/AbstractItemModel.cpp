@@ -119,7 +119,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     Property property(0);
     property.setName("keep_aspect");
     property.setLabel(TR_LAYOUT("Keep Aspect on Resize"));
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue(false, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 
