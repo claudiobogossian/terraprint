@@ -48,10 +48,10 @@ namespace te
   {
     namespace widgets
     {
-      class MapDisplay;
       class Pan;
       class ZoomWheel;
       class AbstractTool;
+      class MapDisplay;
     }
   }
 
@@ -108,6 +108,12 @@ namespace te
         */
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
+
+        /*!
+        \brief Draws the map in the current device
+        */
+        virtual void drawMapOnDevice(QPaintDevice* device);
+
         /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
         */
@@ -160,7 +166,7 @@ namespace te
         virtual void recompose();
 
         virtual void createMapDisplay();
-        
+
     protected slots:
 
         void extentChanged();
@@ -176,6 +182,8 @@ namespace te
         te::qt::widgets::ZoomWheel*     m_zoomWheel;
         int                             m_tileSize;
         bool                            m_refreshEnabled;
+        bool                            m_isPrinting;
+        bool                            m_useQImage;
     };
   }
 }
