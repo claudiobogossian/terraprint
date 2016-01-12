@@ -263,17 +263,13 @@ namespace te
         return m_rect;
       }
 
-      //models stores information in scene CS.
-      //To ensure that everything works fine, we must convert the coordinates from scene CS to item CS
+      //models stores size information in item CS. 
       double x = 0.;
       double y = 0.;
       double width = m_controller->getProperty("width").getValue().toDouble();
       double height = m_controller->getProperty("height").getValue().toDouble();
 
-      QRectF rectSceneCS(x, y, width, height);
-      QRectF rectItemCS = this->mapRectFromScene(rectSceneCS);
-
-      QRectF boundingRect(0, 0, rectItemCS.width(), rectItemCS.height());
+      QRectF boundingRect(0, 0, width, height);
       return boundingRect;
     }
 
@@ -306,6 +302,20 @@ namespace te
       {
         angle = -angle;
       }
+
+      QTransform currentTransform = T::transform();
+
+      //checks if the is a negative scalling
+      //this is usually true form texts, images, etc., due to the inverted CS
+      if (currentTransform.m22() < 0)
+      {
+        angle = angle * -1;
+      }
+
+      if (angle == 0.)
+        T::setTransformOriginPoint(0, 0);
+      else
+        T::setTransformOriginPoint(boundingRect().width() / 2., boundingRect().height() / 2.);
 
       T::setRotation(angle);
     }
