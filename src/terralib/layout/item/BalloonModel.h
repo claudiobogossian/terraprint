@@ -31,6 +31,7 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractItemModel.h"
 #include "../core/Config.h"
+#include "TextModel.h"
 
 
 namespace te
@@ -47,10 +48,13 @@ namespace te
 
       \sa te::layout::AbstractItemModel
     */
-    class TELAYOUTEXPORT BalloonModel : public AbstractItemModel
+    class TELAYOUTEXPORT BalloonModel : public TextModel
     {
       public:
         
+        bool m_type;
+        te::gm::Envelope m_box;
+        bool m_border;
         /*!
           \brief Constructor
         */

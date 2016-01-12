@@ -32,15 +32,18 @@
 #include "terralib/color/RGBAColor.h"
 #include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
-#include "../core/pattern/mvc/AbstractItemModel.h"
+#include "TextModel.h"
 
 te::layout::BalloonModel::BalloonModel()
-  : AbstractItemModel()
+: TextModel()
 {
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getBalloonItem());
-  double width = 40.;
-  double height = 40.;
-  bool border = true;
+  m_type = Enums::getInstance().getEnumObjectType()->getBalloonItem();
+  
+  te::gm::Envelope boundingBox(0., 0., 20., 20.);
+
+  m_box = te::gm::Envelope(0., 0., 20., 20.);
+  m_border = true;
+
   te::color::RGBAColor color(0, 0, 0, 255);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -49,7 +52,7 @@ te::layout::BalloonModel::BalloonModel()
   Property property(0);
   property.setName("border");
   property.setLabel(TR_LAYOUT("Border"));
-  property.setValue(border, dataType->getDataTypeBool());
+  property.setValue(m_border, dataType->getDataTypeBool());
   property.setMenu(true);
   this->m_properties.addProperty(property);
  }
@@ -65,18 +68,30 @@ te::layout::BalloonModel::BalloonModel()
 
   //updating properties
   {
+    Property pWidth = getProperty("width");
     Property property(0);
-    property.setName("width");
-    property.setValue(width, dataType->getDataTypeDouble());
-    this->m_properties.updateProperty(property);
+    property.setName("balloonwidth");
+    property.setLabel(TR_LAYOUT("Balloon Width"));
+    property.setValue(pWidth.getValue().toDouble() + pWidth.getValue().toDouble()*0.1, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
+
+  {
+    Property pHeight = getProperty("height");
+    Property property(0);
+    property.setName("balloonheight");
+    property.setLabel(TR_LAYOUT("Balloon Height"));
+    property.setValue(pHeight.getValue().toDouble() + pHeight.getValue().toDouble()*0.2, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
   }
 
   {
     Property property(0);
-    property.setName("height");
-    property.setValue(height, dataType->getDataTypeDouble());
+    property.setName("resizable");
+    property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
+
 }
 
 te::layout::BalloonModel::~BalloonModel()

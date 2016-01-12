@@ -30,6 +30,7 @@
 
 // TerraLib
 #include "AbstractItem.h"
+#include "TextItem.h"
 #include "../../core/Config.h"
 
 #include <QGraphicsItem>
@@ -48,7 +49,7 @@ namespace te
 
       \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT BalloonItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT BalloonItem : public TextItem
     {
       public:
 
@@ -61,6 +62,12 @@ namespace te
         BalloonItem(AbstractItemController* controller, bool invertedMatrix = false);
 
         /*!
+        \brief Reimplemented from QGraphicsItem
+        */
+        virtual QRectF boundingRect() const;
+
+        
+        /*!
           \brief Destructor
          */
         virtual ~BalloonItem();
@@ -71,6 +78,7 @@ namespace te
         virtual void drawBalloon1(QPainter * painter);
         QColor setBrush(QPainter* painter);
     };
+
   }
 }
 
