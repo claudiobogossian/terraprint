@@ -36,17 +36,25 @@
 #include <QStyleOptionGraphicsItem>
 
 te::layout::ItemGroup::ItemGroup(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItemGroup>(controller, invertedMatrix)
+  : AbstractItem<QGraphicsItemGroup>(controller, invertedMatrix),
+  m_stacksBehindParent(false)
 {
-    this->setHandlesChildEvents(true);
+  this->setHandlesChildEvents(true);
 }
 
 te::layout::ItemGroup::~ItemGroup()
 {
+
 }
 
 QRectF te::layout::ItemGroup::boundingRect() const
 {
+  bool resizable = m_controller->getProperty("resizable").getValue().toBool();
+  if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
+  {
+    return AbstractItem<QGraphicsItemGroup>::boundingRect();
+  }
+
   QRectF rect = this->childrenBoundingRect();
   if(rect.isValid() == true)
   {
@@ -63,7 +71,6 @@ void te::layout::ItemGroup::drawItem( QPainter * painter, const QStyleOptionGrap
 
 QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
 {
-  
   if(change == QGraphicsItem::ItemChildAddedChange)
   {
     ItemGroupController* controller = dynamic_cast<ItemGroupController*>(m_controller);
@@ -77,6 +84,7 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     {
       child->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
     }
+    m_rect = boundingRect();
   }
   else if (change == QGraphicsItem::ItemChildRemovedChange)
   {
@@ -91,6 +99,7 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
         absItem->setSubSelection(false);
       }
     }
+    m_rect = boundingRect();
   }
   else if (change == QGraphicsItem::ItemSelectedHasChanged)
   {
@@ -172,7 +181,7 @@ void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
           {
             item->setSubSelection(true);
             setHandlesChildEvents(false);
-            (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
+            (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, m_stacksBehindParent);
             break;
           }
         }
@@ -180,29 +189,6 @@ void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
       }
     }
   }
-}
-
-void te::layout::ItemGroup::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
-{
-  if (m_currentAction == te::layout::RESIZE_ACTION)
-  {
-    AbstractItem<QGraphicsItemGroup>::mouseMoveEvent(event);
-  }
-
-  bool is_childrenResizeMode = hasChildrenInResizeMode();
-  if (is_childrenResizeMode)
-  {
-    m_currentAction = te::layout::NO_ACTION;
-  }
-  else
-  {
-    if (event->buttons() == Qt::LeftButton)
-    {
-      m_currentAction = te::layout::MOVE_ACTION;
-    }
-  }
-
-  QGraphicsItemGroup::mouseMoveEvent(event);
 }
 
 bool te::layout::ItemGroup::hasChildrenInResizeMode()
@@ -222,7 +208,6 @@ bool te::layout::ItemGroup::hasChildrenInResizeMode()
       }
     }
   }
-
   return result;
 }
 
