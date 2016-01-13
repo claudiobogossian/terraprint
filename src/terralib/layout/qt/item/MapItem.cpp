@@ -197,6 +197,7 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   {
     int srid = m_mapDisplay->getSRID();
     const te::gm::Envelope& envelope = m_mapDisplay->getExtent();
+    double scale = m_mapDisplay->getScale();
 
     //here we render the layers on the given device
     te::qt::widgets::Canvas canvas(device);
@@ -209,7 +210,7 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
     std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
     for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
     {
-      it->get()->draw(&canvas, envelope, srid);
+      it->get()->draw(&canvas, envelope, srid, scale);
     }
   }
   else
