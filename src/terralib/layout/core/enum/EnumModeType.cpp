@@ -34,6 +34,7 @@ te::layout::EnumModeType::EnumModeType() :
   m_modeMapZoomIn(0),
   m_modeMapZoomOut(0),
   m_modeMapRecompose(0),
+  m_modePrinterPreview(0),
   m_modePrinter(0),
   m_modeSystematicScale(0),
   m_modeUndo(0),
@@ -66,6 +67,19 @@ te::layout::EnumModeType::~EnumModeType()
     delete m_modeMapRecompose;
     m_modeMapRecompose = 0;
   }
+
+  if (m_modePrinterPreview)
+  {
+    delete m_modePrinterPreview;
+    m_modePrinterPreview = 0;
+  }
+
+  if (m_modePrinter)
+  {
+    delete m_modePrinter;
+    m_modePrinter = 0;
+  }
+
   if(m_modeSystematicScale)
   {
     delete m_modeSystematicScale;
@@ -109,6 +123,9 @@ void te::layout::EnumModeType::init()
   m_modeMapRecompose = createEnum("MapRecompose", this, "Map Recompose");
   m_modeMapRecompose->setType(te::layout::EnumAction);
 
+  m_modePrinterPreview = createEnum("Printer Preview", this, "Printer Preview");
+  m_modePrinterPreview->setType(te::layout::EnumDialog);
+
   m_modePrinter = createEnum("Printer", this, "Printer");
   m_modePrinter->setType(te::layout::EnumDialog);
 
@@ -146,6 +163,11 @@ te::layout::EnumType* te::layout::EnumModeType::getModeMapZoomOut() const
 te::layout::EnumType* te::layout::EnumModeType::getModeMapRecompose() const
 {
   return m_modeMapRecompose;
+}
+
+te::layout::EnumType* te::layout::EnumModeType::getModePrinterPreview() const
+{
+  return m_modePrinterPreview;
 }
 
 te::layout::EnumType* te::layout::EnumModeType::getModePrinter() const

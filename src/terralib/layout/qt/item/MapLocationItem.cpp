@@ -28,8 +28,8 @@
 // TerraLib
 #include "MapLocationItem.h"
 
-#include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/qt/widgets/canvas/Canvas.h"
+#include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/geometry/Utils.h"
 
 te::layout::MapLocationItem::MapLocationItem(AbstractItemController* controller) 
@@ -43,16 +43,10 @@ te::layout::MapLocationItem::~MapLocationItem()
 
 }
 
-void te::layout::MapLocationItem::createMapDisplay()
+void te::layout::MapLocationItem::drawMapOnDevice(QPaintDevice* device)
 {
-  te::layout::MapItem::createMapDisplay();
+  te::layout::MapItem::drawMapOnDevice(device);
 
-  connect(m_mapDisplay, SIGNAL(displayPaintEvent(QPainter*)), this, SLOT(onDisplayPaintEvent(QPainter*)));
-
-}
-
-void te::layout::MapLocationItem::onDisplayPaintEvent(QPainter*)
-{
   const Property& pSrid = m_controller->getProperty("reference_srid");
   const Property& pBox = m_controller->getProperty("reference_box");
   const Property& pFillColor = m_controller->getProperty("reference_box_fill_color");
@@ -71,15 +65,13 @@ void te::layout::MapLocationItem::onDisplayPaintEvent(QPainter*)
   te::gm::Envelope envelope = m_mapDisplay->getExtent();
   int srid = m_mapDisplay->getSRID();
 
-	if (srid <= 0 || envelope.isValid() == false)
-	{
-		return;
-	}
+  if (srid <= 0 || envelope.isValid() == false)
+  {
+    return;
+  }
 
-  te::qt::widgets::Canvas canvas(m_mapDisplay->getDraftPixmap());
-  canvas.calcAspectRatio(&envelope);
+  te::qt::widgets::Canvas canvas(device);
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
-  canvas.clear();
 
   if (srid != referenceSrid)
   {

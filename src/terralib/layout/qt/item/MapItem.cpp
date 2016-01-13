@@ -50,6 +50,7 @@
 #include <QEvent>
 #include <QWheelEvent>
 #include <QMouseEvent>
+#include <QPaintEngine>
 
 te::layout::MapItem::MapItem(AbstractItemController* controller)
   : AbstractItem<QGraphicsObject>(controller, false)
@@ -58,6 +59,8 @@ te::layout::MapItem::MapItem(AbstractItemController* controller)
   , m_zoomWheel(0)
   , m_tileSize(2048)
   , m_refreshEnabled(true)
+  , m_isPrinting(false)
+  , m_useQImage(false)
 {
   this->setAcceptDrops(true);
 
@@ -76,6 +79,23 @@ te::qt::widgets::MapDisplay* te::layout::MapItem::getMapDisplay()
 
 void te::layout::MapItem::contextUpdated(const ContextObject& context)
 {
+  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
+
+  m_isPrinting = false;
+  m_useQImage = false;
+  if (context.getCurrentMode() == enumMode->getModePrinterPreview())
+  {
+    m_isPrinting = true;
+    return;
+  }
+  else if (context.getCurrentMode() == enumMode->getModePrinter())
+  {
+    m_isPrinting = true;
+    m_useQImage = true;
+    return;
+  }
+
+
   int zoom = context.getZoom();
   ((MapController *) m_controller)->setZoom(zoom);
 
@@ -121,14 +141,83 @@ void te::layout::MapItem::drawItem( QPainter * painter, const QStyleOptionGraphi
 
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-  QPixmap pixmap(m_mapDisplay->width(), m_mapDisplay->height());
-  pixmap.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+  if (m_isPrinting == true)
+  {
+    //we first calculate the correct size
+    Utils utils = ((Scene*) this->scene())->getUtils();
 
-  QPainter localPainter(&pixmap);
-  m_mapDisplay->render(&localPainter, QPoint(), QRegion(), QWidget::DrawChildren);
-  localPainter.end();
+    QRectF boxMM = boundingRect();
 
-  drawPixmap(this->getAdjustedBoundingRect(painter), painter, pixmap);
+    te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
+    boxViewport = utils.viewportBox(boxViewport);
+
+    QSize newSize(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
+
+    //then we create the image to be rendered
+    QPaintDevice* device = 0;
+    if (m_useQImage == true)
+    {
+      device = new QImage(newSize, QImage::Format_ARGB32);
+      ((QImage*)device)->fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+    }
+    else
+    {
+      device = new QPixmap(newSize);
+      ((QPixmap*)device)->fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+    }
+
+    drawMapOnDevice(device);
+
+    //and finally we draw the rendered pixmap to the output (screen, pdf or printer)
+    if (m_useQImage == true)
+    {
+      drawImage(this->getAdjustedBoundingRect(painter), painter, *((QImage*)device));
+    }
+    else
+    {
+      drawPixmap(this->getAdjustedBoundingRect(painter), painter, *((QPixmap*)device));
+    }
+
+    delete device;
+  }
+  else
+  {
+    QPixmap pixmap(m_mapDisplay->width(), m_mapDisplay->height());
+    pixmap.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+
+    drawMapOnDevice(&pixmap);
+
+    drawPixmap(this->getAdjustedBoundingRect(painter), painter, pixmap);
+  }
+}
+
+void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
+{
+  if (m_isPrinting == true)
+  {
+    int srid = m_mapDisplay->getSRID();
+    const te::gm::Envelope& envelope = m_mapDisplay->getExtent();
+
+    //here we render the layers on the given device
+    te::qt::widgets::Canvas canvas(device);
+    canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
+    canvas.clear();
+
+    const Property& pLayerList = m_controller->getProperty("layers");
+    const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
+
+    std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
+    for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
+    {
+      it->get()->draw(&canvas, envelope, srid);
+    }
+  }
+  else
+  {
+    QPainter localPainter(device);
+    m_mapDisplay->render(&localPainter, QPoint(), QRegion(), QWidget::DrawChildren);
+    localPainter.end();
+  }
 }
 
 QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )

@@ -49,7 +49,7 @@ namespace te
     {
       public:
 
-        ContextObject( int zoom, int dpiX, int dpiY, EnumType* mode);
+        ContextObject(int zoom = 0, int dpiX = 0, int dpiY = 0, EnumType* mode = 0);
 
         virtual ~ContextObject();
 

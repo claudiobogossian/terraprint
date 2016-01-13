@@ -101,6 +101,13 @@ namespace te
       
           \return enum value      
         */
+        virtual EnumType* getModePrinterPreview() const;
+
+        /*!
+        \brief Returns value that represents printer mode type belonging to enumeration.
+
+        \return enum value
+        */
         virtual EnumType* getModePrinter() const;
         /*!
           \brief Returns value that represents systematic scale mode type belonging to enumeration.
@@ -152,6 +159,7 @@ namespace te
         EnumType* m_modeMapZoomOut; //!< value that represents map zoom out mode type belonging to enumeration
         EnumType* m_modeMapRecompose; //!< value that represents map recompose mode type belonging to enumeration
         EnumType* m_modePrinter; //!< value that represents printer mode type belonging to enumeration
+        EnumType* m_modePrinterPreview; //!< value that represents printer mode type belonging to enumeration
         EnumType* m_modeSystematicScale; //!< value that represents systematic scale mode type belonging to enumeration
         EnumType* m_modeUndo; //!< value that represents undo mode type belonging to enumeration
         EnumType* m_modeRedo; //!< value that represents redo mode type belonging to enumeration
