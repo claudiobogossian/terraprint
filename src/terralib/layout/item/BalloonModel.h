@@ -51,10 +51,6 @@ namespace te
     class TELAYOUTEXPORT BalloonModel : public TextModel
     {
       public:
-        
-        bool m_type;
-        te::gm::Envelope m_box;
-        bool m_border;
         /*!
           \brief Constructor
         */
