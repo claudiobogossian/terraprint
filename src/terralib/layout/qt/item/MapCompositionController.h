@@ -18,50 +18,48 @@
  */
 
 /*!
-  \file BalloonModel.h
+  \file MapCompositionController.h
    
-  \brief 
-
+  \brief Class that represents associate item group controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_CONTROLLER_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/Config.h"
-#include "TextModel.h"
-
+#include "../../core/Config.h"
+#include "ItemGroupController.h"
 
 namespace te
 {
   namespace layout
   {
-
+    class AbstractItemModel;
+    class AbstractItemView;
     /*!
-      \brief Class that represents a "Model" part of Balloon MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
-          
-      \ingroup layout
-
-      \sa te::layout::AbstractItemModel
+    \brief Class that represents associate item group controller.
+    
+    \ingroup layout
+    \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT BalloonModel : public TextModel
+    class TELAYOUTEXPORT MapCompositionController : public ItemGroupController
     {
       public:
+
         /*!
           \brief Constructor
-        */
-        BalloonModel();
+
+          \param controller "Controller" part of MVC component
+          \param o "Model" part of MVC component
+        */ 
+        MapCompositionController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~BalloonModel();
+        virtual ~MapCompositionController();
     };
   }
 }
-
-#endif
+#endif //__TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_CONTROLLER_H

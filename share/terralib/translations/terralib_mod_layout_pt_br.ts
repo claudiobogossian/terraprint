@@ -1787,7 +1787,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="138"/>
         <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="203"/>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="461"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="462"/>
         <source>Component::</source>
         <translation type="unfinished"></translation>
     </message>

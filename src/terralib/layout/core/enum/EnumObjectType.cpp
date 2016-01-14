@@ -41,6 +41,8 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_gridPlanarItem(0),
   m_gridGeodesicItem(0),
   m_itemGroup(0),
+  m_mapCompositionItem(0),
+  m_movingItemGroup(0),
   m_scaleItem(0),
   m_pageSetup(0),
   m_imageItem(0),
@@ -146,6 +148,18 @@ te::layout::EnumObjectType::~EnumObjectType()
   {
     delete m_itemGroup;
     m_itemGroup = 0;
+  }
+
+  if (m_mapCompositionItem)
+  {
+    delete m_mapCompositionItem;
+    m_mapCompositionItem = 0;
+  }
+
+  if (m_movingItemGroup)
+  {
+    delete m_movingItemGroup;
+    m_movingItemGroup = 0;
   }
 
   if(m_scaleItem)
@@ -347,6 +361,8 @@ void te::layout::EnumObjectType::init()
 
   m_itemGroup = createEnum("Item_Group", this);
 
+  m_mapCompositionItem = createEnum("Map_Composition_Item", this);
+
   m_scaleItem = createEnum("Scale_Item", this);
 
   m_pageSetup = createEnum("Page_Setup", this);
@@ -489,6 +505,11 @@ te::layout::EnumType* te::layout::EnumObjectType::getGridGeodesicItem() const
 te::layout::EnumType* te::layout::EnumObjectType::getItemGroup() const
 {
   return m_itemGroup;
+}
+
+te::layout::EnumType* te::layout::EnumObjectType::getMapCompositionItem() const
+{
+  return m_mapCompositionItem;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getMovingItemGroup() const

@@ -187,12 +187,12 @@ bool te::layout::GridSettingsOutside::checkValidDegreeValue(const QString &value
   std::basic_string <char>::size_type    index;
   std::string              strDegree = "";
 
-  strDegree = std::string(value.toLatin1());
-  if((index=strDegree.find("�")) !=std::string::npos)  
+  strDegree = std::string(value.toStdString());
+  if((index=strDegree.find("°")) !=std::string::npos)  
   {
     strDegree.replace(index,1,"");
   }
-  if((index=strDegree.find("�")) !=std::string::npos)
+  if((index=strDegree.find("°")) !=std::string::npos)
   {
     strDegree.replace(index,1,"");
   }
@@ -477,11 +477,11 @@ QString te::layout::GridSettingsOutside::DD2DMS(QString dd)
   QString output;
   if(degree < 0)
   {
-    output = QString::fromLatin1(("-" + te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
+    output = QString::fromStdString(("-" + te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
   }
   else
   {
-    output = QString::fromLatin1((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
+    output = QString::fromStdString((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
   }
   return output;
 }
@@ -1641,7 +1641,7 @@ void te::layout::GridSettingsOutside::initDouble( QWidget* widget, std::string n
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(convert.str().c_str());
+    edit->setText(QString::fromStdString(convert.str().c_str()));
   }
 }
 
