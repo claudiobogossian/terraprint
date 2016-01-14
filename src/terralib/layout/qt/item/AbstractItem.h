@@ -849,21 +849,34 @@ namespace te
     inline void te::layout::AbstractItem<T>::setPixmap()
     {
       Utils utils = this->getScene()->getUtils();
+
       QRectF itemBounding = boundingRect();
       te::gm::Envelope box(0, 0, itemBounding.width(), itemBounding.height());
       box = utils.viewportBox(box);
+
       m_clonePixmap = QPixmap(box.getWidth(), box.getHeight());
       m_clonePixmap.fill(Qt::transparent);
+
       QPainter p(&m_clonePixmap);
+
       double resX = box.getWidth() / itemBounding.width();
       double resY = box.getHeight() / itemBounding.height();
+
       QTransform transform;
       transform.scale(resX, -resY);
       transform.translate(-itemBounding.bottomLeft().x(), -itemBounding.bottomLeft().y());
       p.setTransform(transform);
+
       QStyleOptionGraphicsItem opt;
       this->drawItem(&p, &opt, 0);
+
+      if (!T::childItems().isEmpty())
+      {
+        drawSelection(&p);
+      }
+
       p.end();
+
       QImage image = m_clonePixmap.toImage();
       image = image.mirrored();
       m_clonePixmap = QPixmap::fromImage(image);
@@ -929,15 +942,15 @@ namespace te
     inline void te::layout::AbstractItem<T>::beginResize()
     {
       m_spaceBetweenParentChild.clear();
-      QList<QGraphicsItem*> children = childItems();
+      QList<QGraphicsItem*> children = T::childItems();
       for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
       {
         AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
         if (item)
         {
           QRectF boundRect = (*it)->boundingRect();
-          double width = childrenBoundingRect().width() - boundRect.width();
-          double height = childrenBoundingRect().height() - boundRect.height();
+          double width = T::childrenBoundingRect().width() - boundRect.width();
+          double height = T::childrenBoundingRect().height() - boundRect.height();
           m_spaceBetweenParentChild[item] = QSize(width, height);
         }
       }
