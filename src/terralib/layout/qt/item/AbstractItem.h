@@ -234,7 +234,7 @@ namespace te
       : T()
       , AbstractItemView(controller, invertedMatrix)
       , m_enumSides(TPNoneSide)
-      , m_currentAction(NO_ACTION)
+      , m_currentAction(te::layout::NO_ACTION)
       , m_marginResizePrecision(2.)
     {
       T::setFlags(QGraphicsItem::ItemIsMovable
@@ -256,22 +256,18 @@ namespace te
     template <class T>
     inline QRectF te::layout::AbstractItem<T>::boundingRect() const
     {
-      if (m_currentAction == RESIZE_ACTION)
+      if (m_currentAction == te::layout::RESIZE_ACTION)
       {
         return m_rect;
       }
 
-      //models stores information in scene CS.
-      //To ensure that everything works fine, we must convert the coordinates from scene CS to item CS
+      //models stores size information in item CS. 
       double x = 0.;
       double y = 0.;
       double width = m_controller->getProperty("width").getValue().toDouble();
       double height = m_controller->getProperty("height").getValue().toDouble();
 
-      QRectF rectSceneCS(x, y, width, height);
-      QRectF rectItemCS = this->mapRectFromScene(rectSceneCS);
-
-      QRectF boundingRect(0, 0, rectItemCS.width(), rectItemCS.height());
+      QRectF boundingRect(0, 0, width, height);
       return boundingRect;
     }
 
@@ -300,10 +296,24 @@ namespace te
       double w = boundingRect().width();
       double h = boundingRect().height();
 
-      if(m_invertedMatrix)
+      if (m_invertedMatrix)
       {
         angle = -angle;
       }
+
+      QTransform currentTransform = T::transform();
+
+      //checks if the is a negative scalling
+      //this is usually true form texts, images, etc., due to the inverted CS
+      if (currentTransform.m22() < 0)
+      {
+        angle = angle * -1;
+      }
+
+      if (angle == 0.)
+        T::setTransformOriginPoint(0, 0);
+      else
+        T::setTransformOriginPoint(boundingRect().width() / 2., boundingRect().height() / 2.);
 
       T::setRotation(angle);
     }
@@ -315,16 +325,16 @@ namespace te
     }
 
     template <class T>
-    inline void te::layout::AbstractItem<T>::paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0 */ )
+    inline void te::layout::AbstractItem<T>::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0 */)
     {
-      Q_UNUSED( option );
-      Q_UNUSED( widget );
-      if ( painter == 0 )
+      Q_UNUSED(option);
+      Q_UNUSED(widget);
+      if (painter == 0)
       {
         return;
       }
 
-      if (m_currentAction == RESIZE_ACTION)
+      if (m_currentAction == te::layout::RESIZE_ACTION)
       {
         drawItemResized(painter, option, widget);
         drawFrame(painter);
@@ -334,10 +344,10 @@ namespace te
       painter->save();
 
       //Draws the background
-      drawBackground( painter );
+      drawBackground(painter);
 
       //Draws the item
-      drawItem( painter, option, widget );
+      drawItem(painter, option, widget);
 
       //Draws the frame
       drawFrame(painter);
@@ -382,7 +392,7 @@ namespace te
     inline QRectF te::layout::AbstractItem<T>::getAdjustedBoundingRect(QPainter* painter) const
     {
       qreal penWidth = painter->pen().widthF();
-      if(painter->pen().style() == Qt::NoPen)
+      if (painter->pen().style() == Qt::NoPen)
       {
         penWidth = 0.;
       }
@@ -396,9 +406,9 @@ namespace te
     }
 
     template <class T>
-    inline void te::layout::AbstractItem<T>::drawBackground( QPainter * painter )
+    inline void te::layout::AbstractItem<T>::drawBackground(QPainter * painter)
     {
-      if ( !painter )
+      if (!painter)
       {
         return;
       }
@@ -406,12 +416,12 @@ namespace te
       const Property& pBackgroundColor = m_controller->getProperty("background_color");
       const te::color::RGBAColor& backgroundColor = pBackgroundColor.getValue().toColor();
       QColor qBackgroundColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
-      
+
       painter->save();
       painter->setPen(Qt::NoPen);
       painter->setBrush(QBrush(qBackgroundColor));
       painter->setBackground(QBrush(qBackgroundColor));
-      painter->setRenderHint( QPainter::Antialiasing, true );
+      painter->setRenderHint(QPainter::Antialiasing, true);
 
       //gets the adjusted boundigng rectangle based of the painter settings
       QRectF rectAdjusted = getAdjustedBoundingRect(painter);
@@ -423,14 +433,14 @@ namespace te
     }
 
     template <class T>
-    inline void te::layout::AbstractItem<T>::drawFrame( QPainter * painter )
+    inline void te::layout::AbstractItem<T>::drawFrame(QPainter * painter)
     {
-      if ( !painter )
+      if (!painter)
       {
         return;
       }
 
-      if(m_controller->getProperty("show_frame").getValue().toBool() == false)
+      if (m_controller->getProperty("show_frame").getValue().toBool() == false)
       {
         return;
       }
@@ -446,7 +456,7 @@ namespace te
       QPen pen(qFrameColor, frameThickness, Qt::SolidLine);
       painter->setPen(pen);
       painter->setBrush(Qt::NoBrush);
-      painter->setRenderHint( QPainter::Antialiasing, true );
+      painter->setRenderHint(QPainter::Antialiasing, true);
 
       //gets the adjusted boundigng rectangle based of the painter settings
       QRectF rectAdjusted = getAdjustedBoundingRect(painter);
@@ -458,9 +468,9 @@ namespace te
     }
 
     template <class T>
-    inline void te::layout::AbstractItem<T>::drawSelection( QPainter* painter )
+    inline void te::layout::AbstractItem<T>::drawSelection(QPainter* painter)
     {
-      if(!painter)
+      if (!painter)
       {
         return;
       }
@@ -470,8 +480,8 @@ namespace te
 
       painter->save();
 
-      const QColor fgcolor(0,255,0);
-      const QColor backgroundColor(0,0,0);
+      const QColor fgcolor(0, 255, 0);
+      const QColor backgroundColor(0, 0, 0);
 
       QPen penBackground(backgroundColor, frameThickness, Qt::SolidLine);
       painter->setPen(penBackground);
@@ -504,7 +514,7 @@ namespace te
 
       painter->restore();
     }
-    
+
     template <class T>
     inline void te::layout::AbstractItem<T>::drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate)
     {
@@ -538,7 +548,7 @@ namespace te
       transform.translate(0., rect.y() + rect.height());
       transform.scale(1., -1.);
       transform.translate(0., -rect.y());
-            
+
       painter->setTransform(transform, true);
       painter->drawImage(rect, image, image.rect());
 
@@ -562,9 +572,9 @@ namespace te
     }
 
     template <class T>
-    inline QVariant te::layout::AbstractItem<T>::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
+    inline QVariant te::layout::AbstractItem<T>::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
     {
-      if (change == QGraphicsItem::ItemPositionChange && m_currentAction != MOVE_ACTION)
+      if (change == QGraphicsItem::ItemPositionChange && m_currentAction != te::layout::MOVE_ACTION)
       {
         if (this->isInverted())
         {
@@ -581,27 +591,9 @@ namespace te
       }
       else if (change == QGraphicsItem::ItemPositionHasChanged)
       {
-        if(m_currentAction == NO_ACTION)
+        if (m_currentAction == te::layout::NO_ACTION)
         {
           m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
-        }
-      }
-      else if (change == QGraphicsItem::ItemSelectedHasChanged)
-      {
-        if (T::isSelected() == false)
-        {
-          //we remove the subSelection of the children
-          QList<QGraphicsItem*>	children = T::childItems();
-          QList<QGraphicsItem*>::iterator it = children.begin();
-          while (it != children.end())
-          {
-            AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-            if (item != 0 && item->isSubSelected() == true)
-            {
-              item->setSubSelection(false);
-            }
-            ++it;
-          }
         }
       }
       else if (change == QGraphicsItem::ItemZValueHasChanged)
@@ -620,9 +612,9 @@ namespace te
     }
 
     template <class T>
-    inline void te::layout::AbstractItem<T>::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
+    inline void te::layout::AbstractItem<T>::hoverMoveEvent(QGraphicsSceneHoverEvent * event)
     {
-      if(isEditionMode() == false && m_controller->getProperty("resizable").getValue().toBool())
+      if (isEditionMode() == false && m_controller->getProperty("resizable").getValue().toBool())
       {
         checkTouchesCorner(event->pos().x(), event->pos().y());
       }
@@ -677,53 +669,6 @@ namespace te
     template <class T>
     inline void te::layout::AbstractItem<T>::mousePressEvent(QGraphicsSceneMouseEvent * event)
     {
-      bool wasSelected = T::isSelected();
-      T::mousePressEvent(event);
-      bool continuedSelected = T::isSelected();
-
-      if (isEditionMode() == true)
-      {
-        return;
-      }
-
-      if (event->button() & Qt::LeftButton)
-      {
-        QList<QGraphicsItem*>	children = T::childItems();
-        QList<QGraphicsItem*>::iterator it = children.begin();
-        while (it != children.end())
-        {
-          AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-          if (item != 0 && item->isSubSelected() == true)
-          {
-            item->setSubSelection(false);
-          }
-
-          ++it;
-        }
-
-        if (wasSelected == true && continuedSelected == true)
-        {
-          //we try to select the children
-          QList<QGraphicsItem*>	children = T::childItems();
-          QList<QGraphicsItem*>::iterator it = children.begin();
-          while (it != children.end())
-          {
-            QPointF childrenPos = (*it)->mapFromParent(event->pos());
-            if ((*it)->contains(childrenPos))
-            {
-              AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-              if (item != 0)
-              {
-                item->setSubSelection(true);
-                break;
-              }
-            }
-            ++it;
-          }
-        }
-      }
-
-
       //checks if the item is resizable.
       const Property& property = m_controller->getProperty("resizable");
       if (property.getValue().toBool() == true)
@@ -732,11 +677,13 @@ namespace te
         bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
         if (startResizing == true)
         {
-          m_currentAction = RESIZE_ACTION;
+          m_currentAction = te::layout::RESIZE_ACTION;
           setPixmap();
           m_initialCoord = event->pos();
         }
       }
+
+      T::mousePressEvent(event);
     }
 
     template <class T>
@@ -747,7 +694,7 @@ namespace te
         return;
       }
 
-      if (m_currentAction == RESIZE_ACTION)
+      if (m_currentAction == te::layout::RESIZE_ACTION)
       {
         T::setOpacity(0.5);
         m_finalCoord = event->pos();
@@ -758,7 +705,7 @@ namespace te
       {
         if (event->buttons() == Qt::LeftButton)
         {
-          m_currentAction = MOVE_ACTION;
+          m_currentAction = te::layout::MOVE_ACTION;
         }
 
         T::mouseMoveEvent(event);
@@ -768,27 +715,27 @@ namespace te
     template <class T>
     inline void te::layout::AbstractItem<T>::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
     {
-      if (m_currentAction == RESIZE_ACTION)
+      if (m_currentAction == te::layout::RESIZE_ACTION)
       {
         m_finalCoord = event->pos();
         calculateResize();
         QPointF newPos(m_rect.x(), m_rect.y());
-        newPos = T::mapToScene(newPos);
+        newPos = T::mapToParent(newPos);
 
-        m_currentAction = NO_ACTION;
-
+        m_currentAction = te::layout::NO_ACTION;
+        
         T::setPos(newPos);
         m_rect.moveTo(0, 0);
         T::setOpacity(1.);
         m_controller->resized(m_rect.width(), m_rect.height());
         resized();
       }
-      else if (m_currentAction == MOVE_ACTION)
+      else if (m_currentAction == te::layout::MOVE_ACTION)
       {
         m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
       }
 
-      m_currentAction = NO_ACTION;
+      m_currentAction = te::layout::NO_ACTION;
 
       T::mouseReleaseEvent(event);
     }
@@ -796,7 +743,7 @@ namespace te
     template <class T>
     inline void te::layout::AbstractItem<T>::calculateResize()
     {
-      if (m_currentAction != RESIZE_ACTION)
+      if (m_currentAction != te::layout::RESIZE_ACTION)
       {
         return;
       }

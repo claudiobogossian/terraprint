@@ -18,50 +18,35 @@
  */
 
 /*!
-  \file BalloonModel.h
+  \file MapCompositionModel.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/Config.h"
-#include "TextModel.h"
+#include "MapCompositionModel.h"
 
-
-namespace te
+te::layout::MapCompositionModel::MapCompositionModel()
+  : ItemGroupModel()
 {
-  namespace layout
+  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getMapCompositionItem());
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  //updating properties
   {
-
-    /*!
-      \brief Class that represents a "Model" part of Balloon MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
-          
-      \ingroup layout
-
-      \sa te::layout::AbstractItemModel
-    */
-    class TELAYOUTEXPORT BalloonModel : public TextModel
-    {
-      public:
-        /*!
-          \brief Constructor
-        */
-        BalloonModel();
-
-        /*!
-          \brief Destructor
-        */ 
-        virtual ~BalloonModel();
-    };
+    Property property(0);
+    property.setName("resizable");
+    property.setLabel(TR_LAYOUT("Resizable"));
+    property.setValue(true, dataType->getDataTypeBool());
+    m_properties.updateProperty(property);
   }
 }
 
-#endif
+te::layout::MapCompositionModel::~MapCompositionModel()
+{
+
+}
+

@@ -170,7 +170,7 @@ namespace te
       
       \return items group of objects
         */
-        virtual QGraphicsItemGroup* createItemGroup( const QList<QGraphicsItem *> & items );
+        virtual QGraphicsItemGroup* createItemGroup( const QList<QGraphicsItem *> & items, EnumType* groupType = 0 );
 
         
         virtual te::layout::MovingItemGroup* createMovingItemGroup( const QList<QGraphicsItem*>& items);
@@ -508,6 +508,8 @@ namespace te
         virtual void addUndoCommandForMove();
 
         virtual void addUndoCommandForResize();
+
+        virtual QList<QGraphicsItem*> getListUngroupedItems(const QList<QGraphicsItem *> & items, EnumType* groupType);
         
     protected:
 

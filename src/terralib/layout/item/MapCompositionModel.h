@@ -18,50 +18,52 @@
  */
 
 /*!
-  \file BalloonModel.h
+  \file MapCompositionModel.h
    
-  \brief 
+   \brief Class that represents a "Model" part of ItemGroup MVC component.  
+   Its coordinate system is the same of scene (millimeters). 
+   This is also son of ItemModelObservable, so it can become observable.
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_MODEL_H
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_MODEL_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
 #include "../core/Config.h"
-#include "TextModel.h"
-
+#include "ItemGroupModel.h"
 
 namespace te
 {
   namespace layout
   {
-
     /*!
-      \brief Class that represents a "Model" part of Balloon MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
+    \brief Class that represents a "Model" part of ItemGroup MVC component.  
+    Its coordinate system is the same of scene (millimeters). 
+    This is also son of ItemModelObservable, so it can become observable.
           
       \ingroup layout
 
-      \sa te::layout::AbstractItemModel
+      \sa te::layout::ItemModelObservable
     */
-    class TELAYOUTEXPORT BalloonModel : public TextModel
+    class TELAYOUTEXPORT MapCompositionModel : public ItemGroupModel
     {
       public:
+
         /*!
           \brief Constructor
         */
-        BalloonModel();
+        MapCompositionModel();
 
         /*!
           \brief Destructor
         */ 
-        virtual ~BalloonModel();
+        virtual ~MapCompositionModel();
     };
   }
 }
 
-#endif
+#endif 
+
+

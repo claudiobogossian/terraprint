@@ -51,18 +51,24 @@ te::layout::PrintScene::PrintScene( QGraphicsScene* scene ):
   m_printState(te::layout::NoPrinter),
   m_currentPdfDpi(150)
 {
- 
 }
 
 te::layout::PrintScene::~PrintScene()
 {
-
 }
 
 void te::layout::PrintScene::printPreview()
 {
   if(!m_scene)
     return;
+
+
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return;
+
+  ContextObject oldContext = sc->getContext();
+
 
   QPrinter* printer = createPrinter();
   printer->setOutputFormat(QPrinter::NativeFormat);
@@ -90,6 +96,8 @@ void te::layout::PrintScene::printPreview()
       sc->redrawItems();
     }
   }
+
+  sc->setContext(oldContext);
 }
 
 void te::layout::PrintScene::printPaper( QPrinter* printer )
@@ -106,15 +114,19 @@ void te::layout::PrintScene::printPaper( QPrinter* printer )
   if(!sc)
     return;
 
-  ContextObject oldContext = sc->getContext();
-  
-  ContextObject context = createNewContext(printer);
+  if (m_printState == NoPrinter)
+  {
+    m_printState = PreviewScene;
+  }
+  else if (m_printState == PreviewScene)
+  {
+    m_printState = PrintingScene;
+  }
 
+  ContextObject context = createNewContext(printer);
   sc->setContext(context);
 
   renderScene(&newPainter, printer);
-
-  sc->setContext(oldContext);
 }
 
 QPrinter* te::layout::PrintScene::createPrinter()
@@ -138,6 +150,7 @@ QPrinter* te::layout::PrintScene::createPrinter()
   config->getPaperSize(w, h);
 
   printer = new QPrinter(QPrinter::HighResolution);
+  printer->setResolution(96);
   QSizeF sf(w, h);
 
   if (config->getPaperOrientantion() == Portrait)
@@ -181,15 +194,6 @@ void te::layout::PrintScene::renderScene( QPainter* newPainter, QPrinter* printe
 
   if(!printer)
     return;
-
-  if(m_printState == NoPrinter)
-  {
-    m_printState = PreviewScene;
-  }
-  else if(m_printState == PreviewScene)
-  {
-    m_printState = PrintingScene;
-  }
   
   double w = 0;
   double h = 0;
@@ -352,7 +356,15 @@ te::layout::ContextObject te::layout::PrintScene::createNewContext( QPrinter* pr
   double dpiY = printer->logicalDpiY();
   int zoom = 100;
   EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
-  EnumType* mode = enumMode->getModePrinter();
+  EnumType* mode = 0;
+  if (m_printState == PreviewScene)
+  {
+    mode = enumMode->getModePrinterPreview();
+  }
+  else if (m_printState == PrintingScene)
+  {
+    mode = enumMode->getModePrinter();
+  }
 
   ContextObject context(zoom, dpiX, dpiY, mode);
   return context;

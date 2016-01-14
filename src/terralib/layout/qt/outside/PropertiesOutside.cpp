@@ -389,7 +389,8 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
     }
 
     changeZValueOrder(listItemsToConnect); //if need to change the order of the z value 
-    QGraphicsItemGroup* newGroup = m_scene->createItemGroup(listItemsToConnect);
+    EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
+    QGraphicsItemGroup* newGroup = m_scene->createItemGroup(listItemsToConnect, objType->getMapCompositionItem());
     newGroup->setSelected(true);
   }
 }

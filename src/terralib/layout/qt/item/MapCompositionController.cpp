@@ -17,39 +17,17 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-/*!
-  \file RectangleModel.cpp
-   
-  \brief 
-
-  \ingroup layout
-*/
-
 // TerraLib
-#include "BalloonModel.h"
-//#include "../core/ContextItem.h"
-#include "terralib/geometry/Envelope.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/maptools/Canvas.h"
-#include "../core/enum/Enums.h"
-#include "TextModel.h"
+#include "MapCompositionController.h"
+#include "MapCompositionItem.h"
 
-te::layout::BalloonModel::BalloonModel()
-: TextModel()
-{
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  
-  {
-    Property property(0);
-    property.setName("resizable");
-    property.setValue(true, dataType->getDataTypeBool());
-    this->m_properties.updateProperty(property);
-  }
-}
-
-te::layout::BalloonModel::~BalloonModel()
+te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model)
+  : ItemGroupController(model)
 {
 
 }
 
+te::layout::MapCompositionController::~MapCompositionController()
+{
 
+}

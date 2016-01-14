@@ -18,33 +18,31 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/BalloonItemFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/MapCompositionItemFactory.cpp
 
-  \brief This is the concrete factory for balloon item.
+  \brief This is the concrete factory for item group item.
 */
 
 // TerraLib
-#include "BalloonItemFactory.h"
+#include "MapCompositionItemFactory.h"
+#include "../../../../item/MapCompositionController.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/BalloonModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
-#include "../../../../item/BalloonItem.h"
-#include "../../../../item/BalloonController.h"
+#include "../../../../../item/MapCompositionModel.h"
+#include "../../../../item/MapCompositionItem.h"
 
-te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryParamsCreate params)
+te::layout::AbstractItemView* te::layout::MapCompositionItemFactory::build(ItemFactoryParamsCreate params)
 {
   Properties      props = params.getProperties(); 
 
-  BalloonModel* model = new BalloonModel();
+  MapCompositionModel* model = new MapCompositionModel();
   if (props.getProperties().empty())
   {
     setProperties(model, params);
   }
 
-  BalloonController* controller = new BalloonController(model);
-  BalloonItem* view = new BalloonItem(controller);
+  MapCompositionController* controller = new MapCompositionController(model);
+  MapCompositionItem* view = new MapCompositionItem(controller);
   controller->setView(view);
-  view->isInverted();
 
   if (!props.getProperties().empty())
   {
@@ -53,13 +51,14 @@ te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryP
   return view;
 }
 
-te::layout::BalloonItemFactory::BalloonItemFactory() :
-  ItemFactory(Enums::getInstance().getEnumObjectType()->getBalloonItem()->getName())
+te::layout::MapCompositionItemFactory::MapCompositionItemFactory() :
+  ItemFactory(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName())
 {
 
 }
 
-te::layout::BalloonItemFactory::~BalloonItemFactory()
+te::layout::MapCompositionItemFactory::~MapCompositionItemFactory()
 {
 
 }
+

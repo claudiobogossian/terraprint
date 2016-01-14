@@ -21,11 +21,11 @@
 #include "MapController.h"
 #include "MapItem.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
-#include "terralib/qt/widgets/canvas/MapDisplay.h"
-#include "terralib/maptools/MapDisplay.h"
+#include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../core/Value.h"
 #include "../core/Scene.h"
-#include "../../core/pattern/proxy/AbstractProxyProject.h"
+
+#include "terralib/qt/widgets/canvas/MapDisplay.h"
 
 // STL
 #include <set>

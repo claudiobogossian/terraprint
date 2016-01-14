@@ -55,8 +55,6 @@ namespace te
   */
     class TELAYOUTEXPORT MapLocationItem : public MapItem
     {
-      Q_OBJECT //for slots/signals
-
       public:
 
         /*!
@@ -74,11 +72,7 @@ namespace te
 
     protected:
 
-        virtual void createMapDisplay();
-
-      protected slots:
-
-        void onDisplayPaintEvent(QPainter*);
+        virtual void drawMapOnDevice(QPaintDevice* device);
 
     };
   }
