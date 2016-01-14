@@ -2079,8 +2079,14 @@
                        </item>
                        <item>
                         <widget class="QCheckBox" name="chkSuperscriptGeoText">
+                         <property name="enabled">
+                          <bool>false</bool>
+                         </property>
                          <property name="text">
                           <string>Superscript</string>
+                         </property>
+                         <property name="tristate">
+                          <bool>false</bool>
                          </property>
                         </widget>
                        </item>
