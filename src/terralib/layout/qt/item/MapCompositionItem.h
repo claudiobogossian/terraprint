@@ -71,12 +71,7 @@ namespace te
 
       protected:
 
-        /*!
-        \brief Reimplemented from AbstractItem<QGraphicsItemGroup>
-        */
-        virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent * event);
-
-        virtual void updateObservableSize(AbstractItemView* observableItem);
+        virtual void updateChildSize(AbstractItemView* item);
     };
   }
 }

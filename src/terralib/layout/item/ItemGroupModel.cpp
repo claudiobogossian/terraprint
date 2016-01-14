@@ -40,7 +40,7 @@ te::layout::ItemGroupModel::ItemGroupModel()
     Property property(0);
     property.setName("resizable");
     property.setLabel(TR_LAYOUT("Resizable"));
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
 }

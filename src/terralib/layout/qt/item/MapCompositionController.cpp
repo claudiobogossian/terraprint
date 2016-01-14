@@ -31,3 +31,4 @@ te::layout::MapCompositionController::~MapCompositionController()
 {
 
 }
+

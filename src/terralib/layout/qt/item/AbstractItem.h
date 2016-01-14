@@ -53,6 +53,8 @@
 #include <QGraphicsScene>
 #include <QColor>
 #include <QGraphicsSceneHoverEvent>
+#include <QSize>
+#include <QMap>
 
 class QWidget;
 
@@ -133,6 +135,8 @@ namespace te
         virtual void prepareGeometryChange();
 
         virtual te::layout::ItemAction getCurrentAction();
+
+        virtual void updateChildren();
 
       protected:
 
@@ -216,6 +220,12 @@ namespace te
 
         bool isLimitExceeded(QRectF resizeRect);
 
+        virtual void updateChildSize(AbstractItemView* item);
+
+        virtual void beginResize();
+
+        virtual void endResize();
+        
      protected:
 
         //resize
@@ -226,6 +236,7 @@ namespace te
         LayoutAlign                       m_enumSides;
         te::layout::ItemAction            m_currentAction;
         double                            m_marginResizePrecision; //precision
+        QMap<AbstractItemView*, QSize>    m_spaceBetweenParentChild;
 
     };
 
@@ -680,6 +691,7 @@ namespace te
           m_currentAction = te::layout::RESIZE_ACTION;
           setPixmap();
           m_initialCoord = event->pos();
+          beginResize();
         }
       }
 
@@ -721,13 +733,12 @@ namespace te
         calculateResize();
         QPointF newPos(m_rect.x(), m_rect.y());
         newPos = T::mapToParent(newPos);
-
-        m_currentAction = te::layout::NO_ACTION;
         
         T::setPos(newPos);
         m_rect.moveTo(0, 0);
         T::setOpacity(1.);
         m_controller->resized(m_rect.width(), m_rect.height());
+        endResize();
         resized();
       }
       else if (m_currentAction == te::layout::MOVE_ACTION)
@@ -891,6 +902,71 @@ namespace te
     inline te::layout::ItemAction te::layout::AbstractItem<T>::getCurrentAction()
     {
       return m_currentAction;
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::updateChildSize(AbstractItemView* item)
+    {
+      if (!m_spaceBetweenParentChild.contains(item))
+      {
+        return;
+      }
+
+      QSize childSpace = m_spaceBetweenParentChild[item];
+            
+      double currentWidth = m_controller->getProperty("width").getValue().toDouble();
+      double currentHeight = m_controller->getProperty("height").getValue().toDouble();
+
+      double width = currentWidth - childSpace.width();
+      double height = currentHeight - childSpace.height();
+      
+      //update properties
+      item->getController()->resized(width, height);
+      item->prepareGeometryChange(); //update childrenBoundingRect
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::beginResize()
+    {
+      m_spaceBetweenParentChild.clear();
+      QList<QGraphicsItem*> children = childItems();
+      for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+      {
+        AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+        if (item)
+        {
+          QRectF boundRect = (*it)->boundingRect();
+          double width = childrenBoundingRect().width() - boundRect.width();
+          double height = childrenBoundingRect().height() - boundRect.height();
+          m_spaceBetweenParentChild[item] = QSize(width, height);
+        }
+      }
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::endResize()
+    {
+      AbstractItemView* observableItem = 0;
+      QRectF childrenBoundRect = T::childrenBoundingRect();
+      if (m_rect != childrenBoundRect)
+      {
+        updateChildren();
+      }
+      m_spaceBetweenParentChild.clear();
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::updateChildren()
+    {
+      QList<QGraphicsItem*> children = T::childItems();
+      for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+      {
+        AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+        if (item)
+        {
+          updateChildSize(item);
+        }
+      }
     }
   } // end namespace layout
 } // end namespace te
