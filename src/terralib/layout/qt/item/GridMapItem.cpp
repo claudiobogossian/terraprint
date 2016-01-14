@@ -274,14 +274,48 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
   }
 
   std::vector<TextPosition>::iterator it = m_topTexts.begin();
+
+
+  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  bool useSuperScript = pSuperscript.getValue().toBool();
+
   for( ; it != m_topTexts.end() ; ++it )
   {
     std::string txt = it->first;
     QPointF pt = it->second;
-    drawText(pt, painter, qFont, txt, iRotate);
+
+
+    if (useSuperScript == true && txt.size() > 2){
+      QFont fontSScript2 = qFont;
+      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+      QString completeTxt(txt.c_str());
+      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
+      int index = txt.size() / 2;
+      int indexNegative = (txt.size() - 1) / 2;
+
+      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
+      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+
+      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
+
+      QPointF pointSScript(pt.x(), pt.y());
+      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
+      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      pt.setX(pt.x() + textObject.boundingRect().width());
+
+      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+
+
+    }
+    else{
+      drawText(pt, painter, qFont, txt, iRotate);
+    }
+
 
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, iRotate);
+    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
 }
@@ -308,14 +342,46 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
   }
 
   std::vector<TextPosition>::iterator it = m_bottomTexts.begin();
+
+
+  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  bool useSuperScript = pSuperscript.getValue().toBool();
+
   for( ; it != m_bottomTexts.end() ; ++it )
   {
     std::string txt = it->first;
     QPointF pt = it->second;
-    drawText(pt, painter, qFont, txt, iRotate);
+
+
+    if (useSuperScript == true && txt.size() > 2){
+      QFont fontSScript2 = qFont;
+      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+      QString completeTxt(txt.c_str());
+      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
+      int index = txt.size() / 2;
+      int indexNegative = (txt.size() - 1) / 2;
+
+      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
+      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+
+      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
+
+      QPointF pointSScript(pt.x(), pt.y());
+      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
+      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      pt.setX(pt.x() + textObject.boundingRect().width());
+
+      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+
+    }
+    else{
+      drawText(pt, painter, qFont, txt, iRotate);
+    }
 
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, iRotate);
+    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
 }
@@ -345,14 +411,45 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
   double height = 0;
   
   std::vector<TextPosition>::iterator it = m_leftTexts.begin();
+
+  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  bool useSuperScript = pSuperscript.getValue().toBool();
+
+
   for( ; it != m_leftTexts.end() ; ++it )
   {
     std::string txt = it->first;
     QPointF pt = it->second;
-    drawText(pt, painter, qFont, txt, iRotate);
+
+    if (useSuperScript == true && txt.size() > 2){
+      QFont fontSScript2 = qFont;
+      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+      QString completeTxt(txt.c_str());
+      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
+      int index = txt.size() / 2;
+      int indexNegative = (txt.size() - 1) / 2;
+
+      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
+      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+
+      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
+
+      QPointF pointSScript(pt.x(), pt.y());
+      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
+      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      pt.setX(pt.x() + textObject.boundingRect().width());
+
+      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+
+    }
+    else{
+      drawText(pt, painter, qFont, txt, iRotate);
+    }
 
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, iRotate);
+    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
 
   }
@@ -373,6 +470,9 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 
   QFont qFont = ItemUtils::convertToQfont(font);
 
+  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  bool useSuperScript = pSuperscript.getValue().toBool();
+
   int iRotate = 0;
   if (bRotate)
   {
@@ -384,10 +484,37 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
   {
     std::string txt = it->first;
     QPointF pt = it->second;  
-    drawText(pt, painter, qFont, txt, iRotate);
 
+    if (useSuperScript == true && txt.size() > 2){
+      QFont fontSScript2 = qFont;
+      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+      QString completeTxt(txt.c_str());
+      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
+      int index = txt.size() / 2;
+      int indexNegative = (txt.size() - 1) / 2;
+
+      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
+      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+
+      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
+
+      QPointF pointSScript(pt.x(), pt.y());
+      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
+      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      pt.setX(pt.x() + textObject.boundingRect().width());
+
+      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+
+    }
+    else{
+
+      drawText(pt, painter, qFont, txt, iRotate);
+
+    }
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, iRotate);
+    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
 }
@@ -538,7 +665,7 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
   return intersects;
 }
 
-void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, int rotate)
+void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, QFont font, int rotate)
 {
   if (m_showDebugDrawings == false)
   {
@@ -561,7 +688,7 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
     return;
 
  //creates the rect
-  QPainterPath textObject = ItemUtils::textToVector(text.c_str(), painter->font(), point, rotate);
+  QPainterPath textObject = ItemUtils::textToVector(text.c_str(), font, point, rotate);
 
 //draws the rect
   painter->save();

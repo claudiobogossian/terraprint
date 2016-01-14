@@ -343,7 +343,7 @@ namespace te
         }
         else
         {
-          it->updateSubProperty(property);
+          it->completelyUpdateSubProperty(property);
         }
       }
       return result;
