@@ -114,3 +114,8 @@ void te::layout::MapCompositionItem::updateChildSize(AbstractItemView* item)
   }
 }
 
+void te::layout::MapCompositionItem::resized()
+{
+  
+}
+

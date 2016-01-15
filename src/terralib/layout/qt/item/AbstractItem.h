@@ -933,6 +933,11 @@ namespace te
       double width = currentWidth - childSpace.width();
       double height = currentHeight - childSpace.height();
       
+      if (width < m_marginResizePrecision || height < m_marginResizePrecision)
+      {
+        return;
+      }
+
       //update properties
       item->getController()->resized(width, height);
       item->prepareGeometryChange(); //update childrenBoundingRect
@@ -948,10 +953,13 @@ namespace te
         AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
         if (item)
         {
-          QRectF boundRect = (*it)->boundingRect();
-          double width = T::childrenBoundingRect().width() - boundRect.width();
-          double height = T::childrenBoundingRect().height() - boundRect.height();
-          m_spaceBetweenParentChild[item] = QSize(width, height);
+          if (item->getController()->getProperty("resizable").getValue().toBool())
+          {
+            QRectF boundRect = (*it)->boundingRect();
+            double width = T::childrenBoundingRect().width() - boundRect.width();
+            double height = T::childrenBoundingRect().height() - boundRect.height();
+            m_spaceBetweenParentChild[item] = QSize(width, height);
+          }
         }
       }
     }
@@ -965,6 +973,7 @@ namespace te
       {
         updateChildren();
       }
+
       m_spaceBetweenParentChild.clear();
     }
 

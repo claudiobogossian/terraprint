@@ -72,6 +72,8 @@ namespace te
       protected:
 
         virtual void updateChildSize(AbstractItemView* item);
+
+        virtual void resized();
     };
   }
 }

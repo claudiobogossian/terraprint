@@ -193,7 +193,7 @@ void te::layout::AbstractItemController::resized(const double& width, const doub
     property.setValue(height, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
-  m_model->setProperties(properties);
+  setProperties(properties);
 }
 
 void te::layout::AbstractItemController::itemPositionChanged(double x, double y)
