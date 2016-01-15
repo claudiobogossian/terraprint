@@ -974,6 +974,11 @@ namespace te
         updateChildren();
       }
 
+      if (!m_spaceBetweenParentChild.isEmpty())
+      {
+        update();
+      }
+
       m_spaceBetweenParentChild.clear();
     }
 
