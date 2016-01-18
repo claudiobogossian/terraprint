@@ -52,37 +52,19 @@ te::layout::ScaleSettingsOutside::~ScaleSettingsOutside()
 }
 
 void te::layout::ScaleSettingsOutside::init()
-{
-  m_ui->lblDPIInformation->clear();
-  m_ui->lblDPIInformation->setText("DPI: 150");
-
-  m_ui->txtEdtFile->setEnabled(false);
-  
-  if (m_ui->pBtnOK && m_ui->pBtnCancel && m_ui->pBtnSaveAs)
+{  
+  /*if (m_ui->pBtnOK && m_ui->pBtnCancel && m_ui->pBtnSaveAs)
   {
     connect(m_ui->pBtnOK, SIGNAL(pressed()), this, SLOT(onOkPushButtonPressed()));
     connect(m_ui->pBtnCancel, SIGNAL(pressed()), this, SLOT(onCancelPushButtonPressed()));
     connect(m_ui->pBtnSaveAs, SIGNAL(clicked()), this, SLOT(onSaveAsClicked()));
     connect(m_ui->cmbDPI, SIGNAL(currentIndexChanged(const QString)), this, SLOT(onCurrentIndexChanged(const QString)));
-  }
-
-  QStringList list;
-  list.append("150");
-  list.append("300");
-  list.append("600");
-  list.append("1200");
-
-  m_ui->cmbDPI->addItems(list);
+  }*/
 }
 
 void te::layout::ScaleSettingsOutside::onOkPushButtonPressed()
 {
-  if (!m_ui->txtEdtFile->text().isEmpty())
-  {
-    accept();
-    return;
-  }
-  QMessageBox::information(this, tr("PDF Settings"), tr("Please complete the filename."));
+ 
 }
 
 void te::layout::ScaleSettingsOutside::onCancelPushButtonPressed()
@@ -92,52 +74,12 @@ void te::layout::ScaleSettingsOutside::onCancelPushButtonPressed()
 
 void te::layout::ScaleSettingsOutside::onSaveAsClicked()
 {
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image File"), QDir::currentPath(), tr("PDF Files (*.pdf)"));
 
-  if (!fileName.isEmpty())
-  {
-    m_ui->txtEdtFile->setText(fileName);
-  }
-  if (fileName.endsWith(".pdf") == false)
-  {
-    fileName.append(".pdf");
-  }
 }
 
 void te::layout::ScaleSettingsOutside::onCurrentIndexChanged(const QString & text)
 {
-  QPalette palette = m_ui->lblDPIInformation->palette();
-  QString txtCurrentDPI = m_ui->cmbDPI->currentText();
-  int dpi = txtCurrentDPI.toInt();
-  if (dpi > 300)
-  {
-    //red text
-    QBrush brushRed(QColor(255, 0, 0, 255));
-    brushRed.setStyle(Qt::SolidPattern);
-    palette.setBrush(QPalette::Active, QPalette::WindowText, brushRed);
-
-    m_ui->lblDPIInformation->clear();
-    if (dpi < 900)
-    {
-      m_ui->lblDPIInformation->setText(tr("The DPI chosen is high. Can cause very large files."));
-    }
-    else
-    {
-      m_ui->lblDPIInformation->setText(tr("The DPI chosen is too high. Can cause very large files."));
-    }
-  }
-  else
-  {
-    //black text
-    QBrush brushBlack(QColor(0, 0, 0, 255));
-    brushBlack.setStyle(Qt::SolidPattern);
-    palette.setBrush(QPalette::Active, QPalette::WindowText, brushBlack);
-
-    QString txtDPI = "DPI: " + txtCurrentDPI;
-    m_ui->lblDPIInformation->clear();
-    m_ui->lblDPIInformation->setText(txtDPI);
-  }
-  m_ui->lblDPIInformation->setPalette(palette);
+ 
 }
 
 void te::layout::ScaleSettingsOutside::setPosition(const double& x, const double& y)
@@ -161,29 +103,17 @@ te::gm::Coord2D te::layout::ScaleSettingsOutside::getPosition()
 
 std::string te::layout::ScaleSettingsOutside::getFilePath()
 {
-  QString qTxt = m_ui->txtEdtFile->text();
-  if (!qTxt.isEmpty())
-  {
-    if (!qTxt.endsWith(".pdf", Qt::CaseInsensitive))
-    {
-      qTxt += ".pdf";
-      m_ui->txtEdtFile->clear();
-      m_ui->txtEdtFile->setText(qTxt);
-    }
-  }
-  return qTxt.toStdString();
+  std::string result = "";
+  return result;
 }
 
 int te::layout::ScaleSettingsOutside::getDPI()
 {
-  QString txtDPI = m_ui->cmbDPI->currentText();
-  return txtDPI.toInt();
+  return 0;
 }
 
 void te::layout::ScaleSettingsOutside::setCurrentDPI(int dpi)
 {
-  QString txt = QString::number(dpi);
-  int index = m_ui->cmbDPI->findText(txt);
-  m_ui->cmbDPI->setCurrentIndex(index);
+ 
 }
 
