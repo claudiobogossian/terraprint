@@ -38,6 +38,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/item/GridPlanarItemFactory.h"
 #include "pattern/factory/item/ImageItemFactory.h"
 #include "pattern/factory/item/ItemGroupItemFactory.h"
+#include "pattern/factory/item/MapCompositionItemFactory.h"
 #include "pattern/factory/item/LegendChildItemFactory.h"
 #include "pattern/factory/item/LegendItemFactory.h"
 #include "pattern/factory/item/MapItemFactory.h"
@@ -68,6 +69,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/outside/TextGridSettingsOutsideFactory.h"
 #include "pattern/factory/outside/ToolbarOutsideFactory.h"
 #include "pattern/factory/outside/PDFSettingsOutsideFactory.h"
+#include "pattern/factory/outside/MapSettingsOutsideFactory.h"
+#include "pattern/factory/outside/ScaleSettingsOutsideFactory.h"
 
 //templates
 #include "../../core/template/XmlTemplateFactory.h"
@@ -87,7 +90,6 @@ namespace te
         static CreateLineItemToolFactory CreateLineItemToolFactory_instance;
         static CreatePolygonItemToolFactory CreatePolygonItemToolFactory_instance;
         static CreateItemToolFactory CreateItemToolFactory_instance;
-		static ThreeNorthItemFactory ThreeNorthItemFactory_instance;
       }
 
       // Temporary
@@ -109,6 +111,8 @@ namespace te
         static TextGridSettingsOutsideFactory TextGridSettingsOutsideFactory_instance;
         static ToolbarOutsideFactory ToolbarOutsideFactory_instance;
         static PDFSettingsOutsideFactory PDFSettingsOutsideFactory_instance;
+        static MapSettingsOutsideFactory MapSettingsOutsideFactory_instance;
+        static ScaleSettingsOutsideFactory ScaleSettingsOutsideFactory_instance;
       }
     }
 
@@ -128,6 +132,7 @@ namespace te
         static GridPlanarItemFactory GridPlanarItemFactory_instance;
         static ImageItemFactory ImageItemFactory_instance;
         static ItemGroupItemFactory ItemGroupItemFactory_instance;
+        static MapCompositionItemFactory MapCompositionItemFactory_instance;
         static LegendChildItemFactory LegendChildItemFactory_instance;
         static LegendItemFactory LegendItemFactory_instance;
         static MapItemFactory MapItemFactory_instance;
@@ -143,6 +148,7 @@ namespace te
         static PolygonItemFactory PolygonItemFactory_instance;
         static LineItemFactory LineItemFactory_instance;
         static PaperItemFactory PaperItemFactory_instance;
+        static ThreeNorthItemFactory ThreeNorthItemFactory_instance;
       }
     }
 

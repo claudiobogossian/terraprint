@@ -149,6 +149,13 @@ namespace te
         virtual EnumType* getItemGroup() const;
 
         /*!
+        \brief Returns value that represents item group (MVC Component) type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getMapCompositionItem() const;
+
+        /*!
           \brief Returns value that represents moving item group (MVC Component) type belonging to enumeration.
       
           \return enum value      
@@ -366,6 +373,19 @@ namespace te
         */
         virtual EnumType* getThreeNorthItem() const;
 
+        /*!
+        \brief Returns value that represents Map Settings (MVC Component) type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getMapSettingsDialog() const;
+
+        /*!
+        \brief Returns value that represents Scale Settings (MVC Component) type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getScaleSettingsDialog() const;
 
       protected:
 
@@ -388,6 +408,7 @@ namespace te
         EnumType* m_gridPlanarItem; //!< value that represents grid planar type belonging to enumeration
         EnumType* m_gridGeodesicItem; //!< value that represents grid geodesic type belonging to enumeration
         EnumType* m_itemGroup; //!< value that represents item group (MVC Component) type belonging to enumeration
+        EnumType* m_mapCompositionItem; //!< value that represents map composition (MVC Component) type belonging to enumeration
         EnumType* m_movingItemGroup; //!< value that represents moving item group (MVC Component) type belonging to enumeration
         EnumType* m_scaleItem; //!< value that represents scale (MVC Component) type belonging to enumeration
         EnumType* m_pageSetup; //!< value that represents page setup window (MVC dialog) type belonging to enumeration
@@ -419,6 +440,8 @@ namespace te
         EnumType* m_svgItem; //!< value that represents SVG type belonging to enumeration
         EnumType* m_pdfSettingsDialog; //!< value that represents SVG type belonging to enumeration
         EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
+        EnumType* m_mapSettingsDialog; //!< value that represents map settings type belonging to enumeration
+        EnumType* m_scaleSettingsDialog; //!< value that represents scale settings type belonging to enumeration
     };
   }
 }

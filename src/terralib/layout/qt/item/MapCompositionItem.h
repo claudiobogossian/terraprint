@@ -18,22 +18,23 @@
  */
 
 /*!
-  \file ItemGroup.h
+  \file MapCompositionItem.h
    
    \brief Class that represents the grouping of objects of type QGraphicsItem, MVC components.
    Its coordinate system is the same of scene (millimeters). 
    It is also the son of AbstractItem, so it can become observer of a model (Observable). 
    The group component must be initialized with a position (setPos).
+   This group can be resized. Its internal items not.
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_ITEMGROUP_H
-#define __TERRALIB_LAYOUT_INTERNAL_ITEMGROUP_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_ITEM_H
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_ITEM_H
 
 //TerraLib
 #include "../../core/Config.h"
-#include "AbstractItem.h"
+#include "ItemGroup.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -43,55 +44,38 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemView;
     /*!
     \brief Class that represents the grouping of objects of type QGraphicsItem, MVC components.
         Its coordinate system is the same of scene (millimeters). 
         It is also the son of AbstractItem, so it can become observer of a model (Observable).  
         The group component must be initialized with a position (setPos).
+        This group can be resized. Its internal items not.
 
       \ingroup layout
 
       \sa te::layout::ItemObserver
     */
-    class TELAYOUTEXPORT ItemGroup : public AbstractItem<QGraphicsItemGroup>
+    class TELAYOUTEXPORT MapCompositionItem : public ItemGroup
     {
       public:
 
-        ItemGroup(AbstractItemController* controller, bool invertedMatrix = false);
+        MapCompositionItem(AbstractItemController* controller, bool invertedMatrix = false);
 
-        virtual ~ItemGroup();
-
+        virtual ~MapCompositionItem();
+        
         /*!
-          \brief Reimplemented from ParentItem
-         */
-        virtual QRectF boundingRect() const;
-
-        /*!
-          \brief For any specific drawing, the item must reimplement this function
+        \brief Reimplemented from QGraphicsItem to capture changes in the item
         */
-        virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
-
-        /*!
-          \brief Reimplemented from QGraphicsItem to capture changes in the item
-         */
-        virtual QVariant itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value );
+        virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value);
 
       protected:
 
-        /*!
-        \brief Reimplemented from AbstractItem<QGraphicsItemGroup>
-        */
-        virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
-        
-        virtual bool hasChildrenInResizeMode();
+        virtual void updateChildSize(AbstractItemView* item);
 
         virtual void resized();
-
-      protected:
-
-        bool m_stacksBehindParent;
     };
   }
 }
 
-#endif //__TERRALIB_LAYOUT_INTERNAL_ITEMGROUP_H
+#endif //__TERRALIB_LAYOUT_INTERNAL_ASSOCIATE_ITEMGROUP_H

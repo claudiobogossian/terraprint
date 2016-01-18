@@ -379,41 +379,57 @@ QUndoStack* te::layout::Scene::getUndoStack()
   return m_undoStack;
 }
 
-QGraphicsItemGroup* te::layout::Scene::createItemGroup( const QList<QGraphicsItem *> & items )
+QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGraphicsItem *> & items, EnumType* groupType)
 {
-  this->clearSelection();
-
   QList<QGraphicsItem*> listUngroupedItems;
+  if (!groupType)
+  {
+    return listUngroupedItems;
+  }
 
   EnumObjectType* object = Enums::getInstance().getEnumObjectType();
   size_t size = items.size();
-  for(int i = 0; i <  items.size(); ++i)
+  for (int i = 0; i < items.size(); ++i)
   {
     QGraphicsItem* item = items[i];
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
-    if(view == 0)
+    if (view == 0)
     {
       listUngroupedItems.append(item);
       continue;
     }
 
-    if(view->getController()->getProperties().getTypeObj() == object->getItemGroup())
+    if (view->getController()->getProperties().getTypeObj() == groupType)
     {
       QList<QGraphicsItem*> childItems = item->childItems();
-      foreach (QGraphicsItem* childItem, childItems)
+      foreach(QGraphicsItem* childItem, childItems)
       {
         listUngroupedItems.append(childItem);
       }
 
       this->removeItem(item);
-      destroyItemGroup((QGraphicsItemGroup*) item);
+      destroyItemGroup((QGraphicsItemGroup*)item);
     }
     else
     {
       listUngroupedItems.append(item);
     }
   }
+  return listUngroupedItems;
+}
 
+QGraphicsItemGroup* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, EnumType* groupType)
+{
+  this->clearSelection();
+
+  EnumObjectType* object = Enums::getInstance().getEnumObjectType();
+
+  if (!groupType)
+  {
+    groupType = object->getItemGroup();
+  }
+
+  QList<QGraphicsItem*> listUngroupedItems = getListUngroupedItems(items, groupType);
 
   //The scene create a new group with important restriction
   BuildGraphicsItem build(this);
@@ -442,7 +458,8 @@ QGraphicsItemGroup* te::layout::Scene::createItemGroup( const QList<QGraphicsIte
   
   // The group component must be initialized with a position (setPos).
   te::gm::Coord2D coord(x, y);
-  QGraphicsItem* item = build.createItem(object->getItemGroup(), coord);
+
+  QGraphicsItem* item = build.createItem(groupType, coord);
   ItemGroup* group = dynamic_cast<ItemGroup*>(item);
 
   if(group)
@@ -456,7 +473,7 @@ QGraphicsItemGroup* te::layout::Scene::createItemGroup( const QList<QGraphicsIte
     addUndoStack(command);
   }
 
-  emit addItemFinalized(item);
+  emit addItemFinalized(group);
   
   return group;
 }
@@ -937,6 +954,11 @@ void te::layout::Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 
   m_moveWatches.clear();
   m_resizeWatches.clear();
+
+  if (m_moveOrResizeWatched)
+  {
+    update();
+  }
 
   m_moveOrResizeWatched = false;
 }
@@ -1612,6 +1634,34 @@ void te::layout::Scene::searchSelectedItemsInResizeMode()
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(itm);
     if (itemView)
     {
+      searchSelectedChildItemsInResizeMode(itm);
+    }
+  }
+}
+
+void te::layout::Scene::searchSelectedChildItemsInResizeMode(QGraphicsItem* item)
+{
+  QList<QGraphicsItem*> its = item->childItems();
+  if (its.isEmpty())
+  {
+    AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(item);
+    // Undo/Redo for Resize (ChangePropertyCommand)
+    if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
+    {
+      m_resizeWatches[item] = itemView->getController()->getProperties();
+    }
+    return;
+  }
+
+  foreach(QGraphicsItem *itm, its)
+  {
+    AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(itm);
+    if (itemView)
+    {
+      if (!itm->childItems().isEmpty())
+      {
+        searchSelectedChildItemsInResizeMode(itm);
+      }
       // Undo/Redo for Resize (ChangePropertyCommand)
       if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
       {

@@ -53,6 +53,8 @@
 #include <QGraphicsScene>
 #include <QColor>
 #include <QGraphicsSceneHoverEvent>
+#include <QSize>
+#include <QMap>
 
 class QWidget;
 
@@ -133,6 +135,8 @@ namespace te
         virtual void prepareGeometryChange();
 
         virtual te::layout::ItemAction getCurrentAction();
+
+        virtual void updateChildren();
 
       protected:
 
@@ -216,8 +220,12 @@ namespace te
 
         bool isLimitExceeded(QRectF resizeRect);
 
-        virtual bool hasChildrenInResizeMode();
+        virtual void updateChildSize(AbstractItemView* item);
 
+        virtual void beginResize();
+
+        virtual void endResize();
+        
      protected:
 
         //resize
@@ -228,6 +236,7 @@ namespace te
         LayoutAlign                       m_enumSides;
         te::layout::ItemAction            m_currentAction;
         double                            m_marginResizePrecision; //precision
+        QMap<AbstractItemView*, QSize>    m_spaceBetweenParentChild;
 
     };
 
@@ -598,31 +607,6 @@ namespace te
           m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
         }
       }
-      else if (change == QGraphicsItem::ItemSelectedHasChanged)
-      {
-        if (T::isSelected() == false)
-        {
-          //we remove the subSelection of the children
-          QList<QGraphicsItem*>	children = T::childItems();
-          QList<QGraphicsItem*>::iterator it = children.begin();
-          while (it != children.end())
-          {
-            AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-            if (item != 0 && item->isSubSelected() == true && item->getCurrentAction() != te::layout::RESIZE_ACTION)
-            {
-              bool result = true;
-              if (item->isEditionMode())
-              {
-                result = false;
-              }
-              item->setSubSelection(false);
-              T::setHandlesChildEvents(result);
-              (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, result);
-            }
-            ++it;
-          }
-        }
-      }
       else if (change == QGraphicsItem::ItemZValueHasChanged)
       {
         m_controller->itemZValueChanged(T::zValue());
@@ -707,66 +691,11 @@ namespace te
           m_currentAction = te::layout::RESIZE_ACTION;
           setPixmap();
           m_initialCoord = event->pos();
+          beginResize();
         }
       }
 
-      bool wasSelected = T::isSelected();
       T::mousePressEvent(event);
-      bool continuedSelected = T::isSelected();
-
-      bool is_childrenResizeMode = hasChildrenInResizeMode();
-
-      if (isEditionMode() == true)
-      {
-        return;
-      }
-
-      if (event->button() & Qt::LeftButton)
-      {
-        if (is_childrenResizeMode)
-        {
-          m_currentAction = te::layout::NO_ACTION;
-          return;
-        }
-
-        QList<QGraphicsItem*>	children = T::childItems();
-        QList<QGraphicsItem*>::iterator it = children.begin();
-        while (it != children.end())
-        {
-          AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-          if (item != 0 && item->isSubSelected() == true)
-          {
-            item->setSubSelection(false);
-            T::setHandlesChildEvents(true);
-            (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
-          }
-
-          ++it;
-        }
-
-        if (wasSelected == true && continuedSelected == true)
-        {
-          //we try to select the children
-          QList<QGraphicsItem*>	children = T::childItems();
-          QList<QGraphicsItem*>::iterator it = children.begin();
-          while (it != children.end())
-          {
-            QPointF childrenPos = (*it)->mapFromParent(event->pos());
-            if ((*it)->contains(childrenPos))
-            {
-              AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-              if (item != 0)
-              {
-                item->setSubSelection(true);
-                T::setHandlesChildEvents(false);
-                (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, false);
-                break;
-              }
-            }
-            ++it;
-          }
-        }
-      }
     }
 
     template <class T>
@@ -791,12 +720,6 @@ namespace te
           m_currentAction = te::layout::MOVE_ACTION;
         }
 
-        bool is_childrenResizeMode = hasChildrenInResizeMode();
-        if (is_childrenResizeMode)
-        {
-          m_currentAction = te::layout::NO_ACTION;
-        }
-
         T::mouseMoveEvent(event);
       }
     }
@@ -810,13 +733,12 @@ namespace te
         calculateResize();
         QPointF newPos(m_rect.x(), m_rect.y());
         newPos = T::mapToParent(newPos);
-
-        m_currentAction = te::layout::NO_ACTION;
         
         T::setPos(newPos);
         m_rect.moveTo(0, 0);
         T::setOpacity(1.);
         m_controller->resized(m_rect.width(), m_rect.height());
+        endResize();
         resized();
       }
       else if (m_currentAction == te::layout::MOVE_ACTION)
@@ -927,21 +849,34 @@ namespace te
     inline void te::layout::AbstractItem<T>::setPixmap()
     {
       Utils utils = this->getScene()->getUtils();
+
       QRectF itemBounding = boundingRect();
       te::gm::Envelope box(0, 0, itemBounding.width(), itemBounding.height());
       box = utils.viewportBox(box);
+
       m_clonePixmap = QPixmap(box.getWidth(), box.getHeight());
       m_clonePixmap.fill(Qt::transparent);
+
       QPainter p(&m_clonePixmap);
+
       double resX = box.getWidth() / itemBounding.width();
       double resY = box.getHeight() / itemBounding.height();
+
       QTransform transform;
       transform.scale(resX, -resY);
       transform.translate(-itemBounding.bottomLeft().x(), -itemBounding.bottomLeft().y());
       p.setTransform(transform);
+
       QStyleOptionGraphicsItem opt;
       this->drawItem(&p, &opt, 0);
+
+      if (!T::childItems().isEmpty())
+      {
+        drawSelection(&p);
+      }
+
       p.end();
+
       QImage image = m_clonePixmap.toImage();
       image = image.mirrored();
       m_clonePixmap = QPixmap::fromImage(image);
@@ -981,26 +916,84 @@ namespace te
     {
       return m_currentAction;
     }
-    template <class T>
-    inline bool te::layout::AbstractItem<T>::hasChildrenInResizeMode()
-    {
-      bool result = false;
 
+    template <class T>
+    inline void te::layout::AbstractItem<T>::updateChildSize(AbstractItemView* item)
+    {
+      if (!m_spaceBetweenParentChild.contains(item))
+      {
+        return;
+      }
+
+      QSize childSpace = m_spaceBetweenParentChild[item];
+            
+      double currentWidth = m_controller->getProperty("width").getValue().toDouble();
+      double currentHeight = m_controller->getProperty("height").getValue().toDouble();
+
+      double width = currentWidth - childSpace.width();
+      double height = currentHeight - childSpace.height();
+      
+      if (width < m_marginResizePrecision || height < m_marginResizePrecision)
+      {
+        return;
+      }
+
+      //update properties
+      item->getController()->resized(width, height);
+      item->prepareGeometryChange(); //update childrenBoundingRect
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::beginResize()
+    {
+      m_spaceBetweenParentChild.clear();
       QList<QGraphicsItem*> children = T::childItems();
       for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
       {
         AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-        if (item != 0 && item->isSubSelected() == true)
+        if (item)
         {
-          if (item->getCurrentAction() == te::layout::RESIZE_ACTION)
+          if (item->getController()->getProperty("resizable").getValue().toBool())
           {
-            result = true;
-            break;
+            QRectF boundRect = (*it)->boundingRect();
+            double width = T::childrenBoundingRect().width() - boundRect.width();
+            double height = T::childrenBoundingRect().height() - boundRect.height();
+            m_spaceBetweenParentChild[item] = QSize(width, height);
           }
         }
       }
+    }
 
-      return result;
+    template <class T>
+    inline void te::layout::AbstractItem<T>::endResize()
+    {
+      AbstractItemView* observableItem = 0;
+      QRectF childrenBoundRect = T::childrenBoundingRect();
+      if (m_rect != childrenBoundRect)
+      {
+        updateChildren();
+      }
+
+      if (!m_spaceBetweenParentChild.isEmpty())
+      {
+        update();
+      }
+
+      m_spaceBetweenParentChild.clear();
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::updateChildren()
+    {
+      QList<QGraphicsItem*> children = T::childItems();
+      for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+      {
+        AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+        if (item)
+        {
+          updateChildSize(item);
+        }
+      }
     }
   } // end namespace layout
 } // end namespace te

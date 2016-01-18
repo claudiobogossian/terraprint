@@ -104,6 +104,9 @@ namespace te
         virtual void on_lneHorizontalGap_editingFinished();
 
         virtual void on_lneVerticalGap_editingFinished();
+
+        virtual void on_lneSecPrecision_editingFinished();
+        
         
         virtual void on_pbPlanarLineColor_clicked();
 

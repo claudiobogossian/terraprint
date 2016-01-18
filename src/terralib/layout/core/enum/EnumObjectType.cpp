@@ -41,6 +41,8 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_gridPlanarItem(0),
   m_gridGeodesicItem(0),
   m_itemGroup(0),
+  m_mapCompositionItem(0),
+  m_movingItemGroup(0),
   m_scaleItem(0),
   m_pageSetup(0),
   m_imageItem(0),
@@ -69,7 +71,9 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_starItem(0),
   m_svgItem(0),
   m_pdfSettingsDialog(0),
-  m_threeNorthItem(0)
+  m_threeNorthItem(0),
+  m_mapSettingsDialog(0),
+  m_scaleSettingsDialog(0)
 {
   init();
 }
@@ -146,6 +150,18 @@ te::layout::EnumObjectType::~EnumObjectType()
   {
     delete m_itemGroup;
     m_itemGroup = 0;
+  }
+
+  if (m_mapCompositionItem)
+  {
+    delete m_mapCompositionItem;
+    m_mapCompositionItem = 0;
+  }
+
+  if (m_movingItemGroup)
+  {
+    delete m_movingItemGroup;
+    m_movingItemGroup = 0;
   }
 
   if(m_scaleItem)
@@ -315,6 +331,18 @@ te::layout::EnumObjectType::~EnumObjectType()
     delete m_threeNorthItem;
     m_threeNorthItem = 0;
   } 
+
+  if (m_mapSettingsDialog)
+  {
+    delete m_mapSettingsDialog;
+    m_mapSettingsDialog = 0;
+  }
+
+  if (m_scaleSettingsDialog)
+  {
+    delete m_scaleSettingsDialog;
+    m_scaleSettingsDialog = 0;
+  }
 }
 
 void te::layout::EnumObjectType::init()
@@ -346,6 +374,8 @@ void te::layout::EnumObjectType::init()
   m_textItem = createEnum("Text_Item", this);
 
   m_itemGroup = createEnum("Item_Group", this);
+
+  m_mapCompositionItem = createEnum("Map_Composition_Item", this);
 
   m_scaleItem = createEnum("Scale_Item", this);
 
@@ -404,6 +434,10 @@ void te::layout::EnumObjectType::init()
   m_pdfSettingsDialog = createEnum("PDF_Settings", this);
 
   m_threeNorthItem = createEnum("Three_North_Item", this);
+
+  m_mapSettingsDialog = createEnum("Map_Settings", this);
+
+  m_scaleSettingsDialog = createEnum("Scale_Settings", this);
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getRectangleItem() const
@@ -489,6 +523,11 @@ te::layout::EnumType* te::layout::EnumObjectType::getGridGeodesicItem() const
 te::layout::EnumType* te::layout::EnumObjectType::getItemGroup() const
 {
   return m_itemGroup;
+}
+
+te::layout::EnumType* te::layout::EnumObjectType::getMapCompositionItem() const
+{
+  return m_mapCompositionItem;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getMovingItemGroup() const
@@ -616,9 +655,19 @@ te::layout::EnumType* te::layout::EnumObjectType::getPDFSettingsDialog() const
 {
   return m_pdfSettingsDialog;
 }
+
 te::layout::EnumType* te::layout::EnumObjectType::getThreeNorthItem() const
 {
   return m_threeNorthItem;
 }
 
+te::layout::EnumType* te::layout::EnumObjectType::getMapSettingsDialog() const
+{
+  return m_mapSettingsDialog;
+}
+
+te::layout::EnumType* te::layout::EnumObjectType::getScaleSettingsDialog() const
+{
+  return m_scaleSettingsDialog;
+}
 

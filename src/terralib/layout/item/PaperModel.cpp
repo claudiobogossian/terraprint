@@ -123,6 +123,14 @@ te::layout::PaperModel::PaperModel()
     property.setValue(name, dataType->getDataTypeString());
     m_properties.updateProperty(property);
   }
+
+  //updating properties
+  {
+    Property property(0);
+    property.setName("resizable");
+    property.setValue(false, dataType->getDataTypeBool());
+    m_properties.updateProperty(property);
+  }
 }
 
 te::layout::PaperModel::~PaperModel()

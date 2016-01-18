@@ -18,48 +18,38 @@
  */
 
 /*!
-  \file BalloonModel.h
+  \file MapSettingsModel.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_MODEL_H 
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_MODEL_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
+#include "../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../core/Config.h"
-#include "TextModel.h"
-
 
 namespace te
 {
   namespace layout
   {
+    class Properties;
 
-    /*!
-      \brief Class that represents a "Model" part of Balloon MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
-          
-      \ingroup layout
-
-      \sa te::layout::AbstractItemModel
-    */
-    class TELAYOUTEXPORT BalloonModel : public TextModel
+    class TELAYOUTEXPORT MapSettingsModel : public AbstractOutsideModel
     {
-      public:
-        /*!
-          \brief Constructor
-        */
-        BalloonModel();
+    public:
 
-        /*!
-          \brief Destructor
-        */ 
-        virtual ~BalloonModel();
+      MapSettingsModel();
+
+      virtual ~MapSettingsModel();
+
+      virtual void updateProperties(te::layout::Properties* properties, bool notify = true);
+
+      virtual Properties* getProperties() const;
+
     };
   }
 }

@@ -339,7 +339,7 @@ te::layout::WorldTransformer te::layout::Utils::getTransformGeo(te::gm::Envelope
   return transf;
 }
 
-std::string te::layout::Utils::convertDecimalToDegree( const double& value, bool bDegrees, bool bMinutes, bool bSeconds )
+std::string te::layout::Utils::convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision)
 {
   std::string    degreeValue;
   double      dbValue;
@@ -366,13 +366,11 @@ std::string te::layout::Utils::convertDecimalToDegree( const double& value, bool
     dbValue++;
   }
 
-  char n = (char)-80;
-
   std::string space = "";
 
   if (bDegrees)
   {
-    degreeValue = te::common::Convert2String(std::floor(degree), 0) + n;
+    degreeValue = te::common::Convert2String(std::floor(degree), 0) + "°";
     space = " ";
   }
   if (bMinutes)
@@ -382,11 +380,11 @@ std::string te::layout::Utils::convertDecimalToDegree( const double& value, bool
   }
   if (bSeconds)
   {
-    degreeValue += space + te::common::Convert2String(std::fabs(sec), 0) + "''";
+    degreeValue += space + te::common::Convert2String(std::fabs(sec), precision) + "''";
   }
 
   if(bDegrees == false && bMinutes == false && bSeconds == false)
-    degreeValue = te::common::Convert2String(std::floor(degree), 0) + n + te::common::Convert2String(std::fabs(min), 0) + "' " + te::common::Convert2String(std::fabs(sec), 0) + "''";
+    degreeValue = te::common::Convert2String(std::floor(degree), 0) + "°" + te::common::Convert2String(std::fabs(min), 0) + "' " + te::common::Convert2String(std::fabs(sec), precision) + "''";
 
   return degreeValue;
 }

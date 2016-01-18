@@ -18,50 +18,46 @@
  */
 
 /*!
-  \file BalloonModel.h
+  \file ScaleSettingsModel.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_MODEL_H
-
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/Config.h"
-#include "TextModel.h"
+#include "ScaleSettingsModel.h"
+#include "../core/property/Property.h"
+#include "../core/property/Properties.h"
+#include "../core/enum/Enums.h"
 
-
-namespace te
+te::layout::ScaleSettingsModel::ScaleSettingsModel() :
+  AbstractOutsideModel()
 {
-  namespace layout
-  {
-
-    /*!
-      \brief Class that represents a "Model" part of Balloon MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
-          
-      \ingroup layout
-
-      \sa te::layout::AbstractItemModel
-    */
-    class TELAYOUTEXPORT BalloonModel : public TextModel
-    {
-      public:
-        /*!
-          \brief Constructor
-        */
-        BalloonModel();
-
-        /*!
-          \brief Destructor
-        */ 
-        virtual ~BalloonModel();
-    };
-  }
+  m_type = Enums::getInstance().getEnumObjectType()->getPageSetup();
+  m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
-#endif
+te::layout::ScaleSettingsModel::~ScaleSettingsModel()
+{
+
+}
+
+te::layout::Properties* te::layout::ScaleSettingsModel::getProperties() const
+{
+  m_properties->clear();
+
+  Property pro_name(m_hashCode);
+  pro_name.setName(m_name);
+
+  m_properties->addProperty(pro_name);
+
+  m_properties->setTypeObj(m_type);
+  return m_properties;
+}
+
+void te::layout::ScaleSettingsModel::updateProperties(te::layout::Properties* properties, bool notify)
+{
+
+}
+

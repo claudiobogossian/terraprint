@@ -75,7 +75,7 @@ void te::layout::AbstractItemController::setProperty(const te::layout::Property&
     }
   }
 
-  m_model->setProperty(property);
+  setProperties(props);
 }
 
 const te::layout::Properties& te::layout::AbstractItemController::getProperties() const
@@ -121,6 +121,10 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
     m_view->prepareGeometryChange();
   }
   m_model->setProperties(properties);
+  if (hasGeometryChanged)
+  {
+    m_view->updateChildren(); // update children size
+  }
 }
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
@@ -189,7 +193,7 @@ void te::layout::AbstractItemController::resized(const double& width, const doub
     property.setValue(height, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
-  m_model->setProperties(properties);
+  setProperties(properties);
 }
 
 void te::layout::AbstractItemController::itemPositionChanged(double x, double y)

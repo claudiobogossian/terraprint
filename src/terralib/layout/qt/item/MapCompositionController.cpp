@@ -17,37 +17,18 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-/*!
-  \file ItemGroupModel.cpp
-   
-  \brief 
-
-  \ingroup layout
-*/
-
 // TerraLib
-#include "ItemGroupModel.h"
+#include "MapCompositionController.h"
+#include "MapCompositionItem.h"
 
-te::layout::ItemGroupModel::ItemGroupModel()
-  : AbstractItemModel()
-{
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getItemGroup());
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  //updating properties
-  {
-    Property property(0);
-    property.setName("resizable");
-    property.setLabel(TR_LAYOUT("Resizable"));
-    property.setValue(true, dataType->getDataTypeBool());
-    m_properties.updateProperty(property);
-  }
-}
-
-te::layout::ItemGroupModel::~ItemGroupModel()
+te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model)
+  : ItemGroupController(model)
 {
 
 }
 
+te::layout::MapCompositionController::~MapCompositionController()
+{
+
+}
 

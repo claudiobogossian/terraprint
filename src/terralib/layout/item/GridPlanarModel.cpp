@@ -58,6 +58,8 @@ te::layout::GridPlanarModel::GridPlanarModel()
 
   Property prop_gridsettings = m_properties.getProperty("GridSettings");
 
+  bool superscript = false;
+
   //adding properties
   /*{
     Property property(0);
@@ -92,6 +94,17 @@ te::layout::GridPlanarModel::GridPlanarModel()
     property.setVisible(false);
     property.setValue(planarBox, dataType->getDataTypeEnvelope());
     m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName(settingsConfig.getSuperscriptText());
+    property.setLabel(TR_LAYOUT("Superscript"));
+    property.setComposeWidget(true);
+    property.setVisible(true); 
+    property.setValue(superscript, dataType->getDataTypeBool());
+    m_properties.completelyUpdateProperty(property);
+
   }
 }
 
@@ -257,7 +270,10 @@ double te::layout::GridPlanarModel::getInitialCoord(double initialCoord, double 
   {
     if (gap <= gaps[i])
     {
-      gap = gaps[i - 1];
+      if (i > 0)
+      {
+        gap = gaps[i - 1];
+      }
       break;
     }
   }

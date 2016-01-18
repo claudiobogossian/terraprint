@@ -192,6 +192,14 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   {
     onShowViewDlg();
   }
+  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeMapSettings())
+  {
+    onShowMapSettingsDlg();
+  }
+  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeScaleSettings())
+  {
+    onShowScaleSettingsDlg();
+  }
 }
 
 void te::layout::MenuBuilder::checkedBool( bool checked )

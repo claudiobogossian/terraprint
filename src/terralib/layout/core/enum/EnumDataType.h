@@ -227,6 +227,20 @@ namespace te
         */
         virtual EnumType* getDataTypeGroupProperties() const;
 
+        /*!
+        \brief Returns value that represents type MapSettings (string) belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getDataTypeMapSettings() const;
+
+        /*!
+        \brief Returns value that represents type ScaleSettings (string) belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getDataTypeScaleSettings() const;
+
       protected:
 
         /*!
@@ -260,6 +274,8 @@ namespace te
         EnumType* m_dataTypeGeometry; //!< shared pointer to te::gm::Geometry belonging to enumeration
         EnumType* m_dataTypeItemObserver; //!< value that represents type item observer to belonging to enumeration
         EnumType* m_dataTypeGroupProperties; //!< value that represents type group properties to  belonging to enumeration
+        EnumType* m_dataTypeMapSettings; //!< value that represents type MapSettings (string) belonging to enumeration
+        EnumType* m_dataTypeScaleSettings; //!< value that represents type ScaleSettings (string) belonging to enumeration
     };
   }
 }
