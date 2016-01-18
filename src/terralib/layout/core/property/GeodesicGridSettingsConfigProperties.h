@@ -59,6 +59,7 @@ namespace te
         std::string getLowerLeftCornerText();
         std::string getUpperLeftCornerText();
         std::string getVisibleCornerTextsText();
+        std::string getSecondsPrecisionText();
         std::string getDefineScale();
         std::string getClip();
         std::string getScale();
@@ -89,6 +90,7 @@ namespace te
         std::string m_lowerLeftCornerText;
         std::string m_upperLeftCornerText;
         std::string m_visibleCornerTextsText;
+        std::string m_secondsPrecisionText;
 
         /* Geodesic: Topographic Map */
 
