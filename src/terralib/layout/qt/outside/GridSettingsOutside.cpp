@@ -292,6 +292,8 @@ void te::layout::GridSettingsOutside::load()
   initDouble(m_ui->m_lineWidthDoubleSpinBox, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
 
   initColor(m_ui->fraLineColor, m_geodesicGridSettings->getLineColor(), m_geodesicType);
+  
+  initInt(m_ui->lneSecPrecision, m_geodesicGridSettings->getSecondsPrecisionText(), m_geodesicType);
 
   ///*Text: Basic Configuration*/
 
@@ -483,6 +485,9 @@ QString te::layout::GridSettingsOutside::DD2DMS(QString dd)
   {
     output = QString::fromStdString((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
   }
+
+  string st = output.toLatin1();
+
   return output;
 }
 
@@ -519,11 +524,11 @@ void te::layout::GridSettingsOutside::setMask(QLineEdit *lat, QLineEdit *lon)
   }
   else
   {
-    QRegExp regExpLat("[\\+\\-]?[\\d]{1,2}�[\\d]{1,2}'[\\d]{1,2}.[\\d]{1,2}''");
+    QRegExp regExpLat("[\\+\\-]?[\\d]{1,2}°[\\d]{1,2}'[\\d]{1,2}.[\\d]{1,2}''");
     QValidator* validatorLat = new QRegExpValidator(regExpLat, 0);
     lat->setValidator(validatorLat);
 
-    QRegExp regExpLong("[\\+\\-]?[\\d]{1,3}�[\\d]{1,2}'[ \\d]{1,2}.[ \\d]{1,2}''");
+    QRegExp regExpLong("[\\+\\-]?[\\d]{1,3}°[\\d]{1,2}'[ \\d]{1,2}.[ \\d]{1,2}''");
     QValidator* validatorLong = new QRegExpValidator(regExpLong, 0);
     lon->setValidator(validatorLong);
   }
@@ -678,6 +683,22 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     Property prop = controller->updateProperty(m_geodesicGridSettings->getLneVrtGap(), variant, m_geodesicType);
     emit updateProperty(prop);
   }
+}
+
+void te::layout::GridSettingsOutside::on_lneSecPrecision_editingFinished(){
+
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (controller)
+  {
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+    QString secPrecision = m_ui->lneSecPrecision->text();
+    variant.setValue(secPrecision.toInt(), dataType->getDataTypeInt());
+    Property prop = controller->updateProperty(m_geodesicGridSettings->getSecondsPrecisionText(), variant, m_geodesicType);
+    emit updateProperty(prop);
+        
+  }
+
 }
 
 void te::layout::GridSettingsOutside::on_pbPlanarLineColor_clicked()

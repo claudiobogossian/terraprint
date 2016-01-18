@@ -230,6 +230,8 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
   const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
+
+  const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
 //  std::string fontFamily = pFontFamily.getValue().toString();
 //  int textPointSize = pTextPointSize.getValue().toInt();
@@ -243,6 +245,8 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   bool bLeftRotate = pLeftRotate.getValue().toBool();
   bool bRightRotate = pRightRotate.getValue().toBool();
   Font txtFont = pTextFontFamily.getValue().toFont();
+
+  int secPrecision = pSecPrecisionText.getValue().toInt();
   // Draw a horizontal line and the y coordinate change(vertical)
   Utils utils = ((Scene*) this->scene())->getUtils();
 
@@ -307,7 +311,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
     m_horizontalLines.push_back(te::gm::LineString(*lineString));
 
-    std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText);
+    std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
     QString qText = QString::fromLatin1(text.c_str());
 
     QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
@@ -351,6 +355,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   const Property& pBottomRotate = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
   const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());  
+  const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
   Font txtFont = pTextFontFamily.getValue().toFont();
 //  std::string fontFamily = pFontFamily.getValue().toString();
@@ -364,6 +369,8 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
   bool bTopRotate = pTopRotate.getValue().toBool();
   bool bBottomRotate = pBottomRotate.getValue().toBool();
+
+  int secPrecision = pSecPrecisionText.getValue().toInt();
 
   // Draw a vertical line and the x coordinate change(horizontal)
 
@@ -432,7 +439,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
 
     m_verticalLines.push_back(te::gm::LineString(*lineString));
 
-    std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText);
+    std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
     QString qText = QString::fromLatin1(text.c_str());
 
     QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);

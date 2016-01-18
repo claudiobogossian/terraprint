@@ -42,6 +42,7 @@ te::layout::GeodesicGridSettingsConfigProperties::GeodesicGridSettingsConfigProp
   m_lowerLeftCornerText("grid_lowerLeftCornerText_geodesic"),
   m_upperLeftCornerText("grid_upperLeftCornerText_geodesic"),
   m_visibleCornerTextsText("grid_visibleCornerTextsText_geodesic"),
+  m_secondsPrecisionText("grid_seconds_precisionText"),
 
   /* Geodesic: Topographic Map */
 
@@ -128,6 +129,11 @@ std::string te::layout::GeodesicGridSettingsConfigProperties::getUpperLeftCorner
 std::string te::layout::GeodesicGridSettingsConfigProperties::getVisibleCornerTextsText()
 {
   return m_visibleCornerTextsText;
+}
+
+std::string te::layout::GeodesicGridSettingsConfigProperties::getSecondsPrecisionText()
+{
+  return m_secondsPrecisionText;
 }
 
 std::string te::layout::GeodesicGridSettingsConfigProperties::getDefineScale()

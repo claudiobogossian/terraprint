@@ -51,6 +51,7 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
   bool showDegreesText = true;
   bool showMinutesText = false;
   bool showSecondsText = false;
+  int secPresicion = 0;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -88,6 +89,14 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
     property.setName(settingsConfig.getSecondsText());
     property.setLabel(TR_LAYOUT("Show Seconds Text"));
     property.setValue(showSecondsText, dataType->getDataTypeBool());
+    m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
+  }
+  {
+    Property property(0);
+    property.setName(settingsConfig.getSecondsPrecisionText());
+    property.setLabel(TR_LAYOUT("Seconds Text Precision"));
+    property.setValue(secPresicion, dataType->getDataTypeInt());
+    property.setVisible(false);
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
 }
