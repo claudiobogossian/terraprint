@@ -71,7 +71,9 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_starItem(0),
   m_svgItem(0),
   m_pdfSettingsDialog(0),
-  m_threeNorthItem(0)
+  m_threeNorthItem(0),
+  m_mapSettingsDialog(0),
+  m_scaleSettingsDialog(0)
 {
   init();
 }
@@ -329,6 +331,18 @@ te::layout::EnumObjectType::~EnumObjectType()
     delete m_threeNorthItem;
     m_threeNorthItem = 0;
   } 
+
+  if (m_mapSettingsDialog)
+  {
+    delete m_mapSettingsDialog;
+    m_mapSettingsDialog = 0;
+  }
+
+  if (m_scaleSettingsDialog)
+  {
+    delete m_scaleSettingsDialog;
+    m_scaleSettingsDialog = 0;
+  }
 }
 
 void te::layout::EnumObjectType::init()
@@ -420,6 +434,10 @@ void te::layout::EnumObjectType::init()
   m_pdfSettingsDialog = createEnum("PDF_Settings", this);
 
   m_threeNorthItem = createEnum("Three_North_Item", this);
+
+  m_mapSettingsDialog = createEnum("Map_Settings", this);
+
+  m_scaleSettingsDialog = createEnum("Scale_Settings", this);
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getRectangleItem() const
@@ -637,9 +655,19 @@ te::layout::EnumType* te::layout::EnumObjectType::getPDFSettingsDialog() const
 {
   return m_pdfSettingsDialog;
 }
+
 te::layout::EnumType* te::layout::EnumObjectType::getThreeNorthItem() const
 {
   return m_threeNorthItem;
 }
 
+te::layout::EnumType* te::layout::EnumObjectType::getMapSettingsDialog() const
+{
+  return m_mapSettingsDialog;
+}
+
+te::layout::EnumType* te::layout::EnumObjectType::getScaleSettingsDialog() const
+{
+  return m_scaleSettingsDialog;
+}
 

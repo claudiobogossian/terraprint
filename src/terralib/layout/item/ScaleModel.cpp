@@ -80,6 +80,17 @@ te::layout::ScaleModel::ScaleModel()
     m_properties.addProperty(property);
   }
 
+  {
+    std::string value = "Settings";
+    Property property(0);
+    property.setName("scaleSettings");
+    property.setLabel(TR_LAYOUT("Scale Settings"));
+    property.setValue(value, dataType->getDataTypeScaleSettings());
+    property.setSerializable(false);
+    property.setMenu(true);
+    m_properties.addProperty(property);
+  }
+
   // Observer pattern relationship. Associate: != 0 / Dissociate : == 0.
   {
     Property property(0);

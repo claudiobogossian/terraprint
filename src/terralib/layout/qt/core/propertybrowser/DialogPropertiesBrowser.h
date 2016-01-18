@@ -134,6 +134,10 @@ namespace te
 
         virtual void onShowViewDlg();
 
+        virtual void onShowMapSettingsDlg();
+
+        virtual void onShowScaleSettingsDlg();
+
       public slots:
 
       virtual void onShowImageDlg();

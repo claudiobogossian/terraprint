@@ -18,13 +18,13 @@
  */
 
 /*!
-  \file terralib/layout/qt/outside/SVGDialogOutside.h
+  \file terralib/layout/qt/outside/MapSettingsOutside.h
 
   \brief
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_OUTSIDE_H
-#define __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_OUTSIDE_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_OUTSIDE_H
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_OUTSIDE_H
 
 // TerraLib
 #include "../../core/Config.h"
@@ -34,7 +34,7 @@
 #include <QDialog>
 #include <QString>
 
-namespace Ui { class PDFSettings; }
+namespace Ui { class MapSettings; }
 
 namespace te
 {
@@ -42,15 +42,15 @@ namespace te
   {
     class AbstractOutsideController;
 
-    class TELAYOUTEXPORT PDFSettingsOutside : public QDialog, public AbstractOutsideView
+    class TELAYOUTEXPORT MapSettingsOutside : public QDialog, public AbstractOutsideView
     {
       Q_OBJECT
 
       public:
 
-        PDFSettingsOutside(AbstractOutsideController* controller);
+        MapSettingsOutside(AbstractOutsideController* controller);
 
-        virtual ~PDFSettingsOutside();
+        virtual ~MapSettingsOutside();
 
         /*!
           \brief Load layers in double widget.
@@ -85,7 +85,7 @@ namespace te
         
       private:
 
-        std::auto_ptr<Ui::PDFSettings> m_ui;
+        std::auto_ptr<Ui::MapSettings> m_ui;
         
     };
   }    
