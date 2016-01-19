@@ -84,12 +84,13 @@ te::layout::GridMapModel::GridMapModel()
   m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getGridMapItem());
 
   // Grid settings
+  std::string gridValue = TR_LAYOUT("Settings");
   Property prop_gridsettings(0);
   prop_gridsettings.setName("GridSettings");
   prop_gridsettings.setLabel(TR_LAYOUT("Grid Settings"));
   prop_gridsettings.setMenu(true);
   prop_gridsettings.setPublic(true);
-  prop_gridsettings.setValue(name, dataType->getDataTypeGridSettings());
+  prop_gridsettings.setValue(gridValue, dataType->getDataTypeGridSettings());
   
   // Grid: sub properties
   {

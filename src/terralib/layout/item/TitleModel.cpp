@@ -77,7 +77,7 @@ te::layout::TitleModel::TitleModel()
     Property propertyGridSettings(0);  
     propertyGridSettings.setName(propertyNames.getName());
     propertyGridSettings.setLabel(TR_LAYOUT("Settings"));
-    std::string sValuePlanar = "Settings";
+    std::string sValuePlanar = TR_LAYOUT("Settings");
     propertyGridSettings.setMenu(true);
     propertyGridSettings.setValue(sValuePlanar, dataType->getDataTypeTextGridSettings());
 

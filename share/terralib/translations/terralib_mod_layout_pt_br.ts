@@ -1347,62 +1347,122 @@ nononon</source>
 <context>
     <name>ScaleSettings</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="26"/>
         <source>PDF Settings</source>
-        <translation>Configurações do PDF</translation>
+        <translation type="vanished">Configurações do PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="68"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="32"/>
+        <source>Scale Settings</source>
+        <translation>Configurações da Escala</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="82"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="82"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="96"/>
         <source>Scale settings</source>
         <translation>Configurações da escala</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="94"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="106"/>
         <source>Settings</source>
         <translation>Configurações</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="107"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="123"/>
+        <source>Connected to:</source>
+        <translation>Conectado à:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="144"/>
+        <source>Type:</source>
+        <translation>Tipo:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="169"/>
+        <source>Scale:</source>
+        <translation>Escala:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="196"/>
+        <source>Font:</source>
+        <translation>Fonte:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="249"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="264"/>
+        <source>Gap in units</source>
+        <translation>Lacuna em unidades</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="272"/>
+        <source>Unit:</source>
+        <translation>Unidade:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="293"/>
+        <source>Scale Gap X In Unit:</source>
+        <translation>Lacuna na horizontal em unidade:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="315"/>
+        <source>Gap in millimeters</source>
+        <translation>Lacuna em milímetros</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="323"/>
+        <source>Scale Gap X:</source>
+        <translation>Lacuna na horizontal:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="344"/>
+        <source>Scale Gap Y:</source>
+        <translation>Lacuna na vertical:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="372"/>
+        <source>Number of graphical scale breaks:</source>
+        <translation>Número de quebras na escala gráfica:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="404"/>
+        <source>Only the first and the last value</source>
+        <translation>Apena o primeiro e o último valor</translation>
+    </message>
+    <message>
         <source>DPI:</source>
-        <translation>Resolução (DPI):</translation>
+        <translation type="vanished">Resolução (DPI):</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="134"/>
         <source>File:</source>
-        <translation>Arquivo:</translation>
+        <translation type="vanished">Arquivo:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="151"/>
         <source>Save As...</source>
-        <translation>Salvar como...</translation>
+        <translation type="vanished">Salvar como...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="185"/>
         <source>DPI Information</source>
-        <translation>Informação de DPI</translation>
+        <translation type="vanished">Informação de DPI</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="199"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="420"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="202"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="423"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="222"/>
-        <source>OK</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="229"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="443"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -1965,34 +2025,28 @@ nononon</source>
 <context>
     <name>te::layout::ScaleSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ScaleSettingsOutside.cpp" line="85"/>
         <source>PDF Settings</source>
-        <translation>Configurações do PDF</translation>
+        <translation type="vanished">Configurações do PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ScaleSettingsOutside.cpp" line="85"/>
         <source>Please complete the filename.</source>
-        <translation>Por favor, complete o nome do arquivo.</translation>
+        <translation type="vanished">Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ScaleSettingsOutside.cpp" line="95"/>
         <source>Save Image File</source>
-        <translation>Gravar o Arquivo de Imagem</translation>
+        <translation type="vanished">Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ScaleSettingsOutside.cpp" line="95"/>
         <source>PDF Files (*.pdf)</source>
-        <translation>Arquivos PDF (*.pdf)</translation>
+        <translation type="vanished">Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ScaleSettingsOutside.cpp" line="122"/>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="vanished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ScaleSettingsOutside.cpp" line="126"/>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
 </context>
 <context>

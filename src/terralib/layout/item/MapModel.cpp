@@ -66,7 +66,7 @@ te::layout::MapModel::MapModel()
   }
 
   {
-    std::string value = "Settings";
+    std::string value = TR_LAYOUT("Settings");
     Property property(0);
     property.setName("mapSettings");
     property.setLabel(TR_LAYOUT("Map Settings"));
