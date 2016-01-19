@@ -117,12 +117,16 @@ namespace te
         virtual void prepareGeometryChange() = 0;
 
         virtual te::layout::ItemAction getCurrentAction() = 0;
+
+        virtual void updateChildren() = 0;
         
     protected:
 
       virtual void enterEditionMode() = 0;
 
       virtual void leaveEditionMode() = 0;
+
+      virtual void updateChildSize(AbstractItemView* item) = 0;
                 
       protected:
 

@@ -47,6 +47,15 @@ else() # QT4_FOUND
 
 endif()
 
+find_package(GeographicLib 1.45)
+if(GEOGRAPHICLIB_FOUND)
+	include_directories(${GeographicLib_INCLUDE_DIRS})
+	
+	add_definitions(-DGEOGRAPHICLIB_ENABLED)
+	
+	file(GLOB GEOGRAPHICLIB_MODEL_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/magnetic_model/*.*)
+endif()
+
 file(GLOB TERRALIB_LAYOUT_CORE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/core/*.cpp)
 file(GLOB TERRALIB_LAYOUT_CORE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/core/*.h)
 file(GLOB TERRALIB_LAYOUT_CORE_ENUM_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/core/enum/*.cpp)
@@ -257,7 +266,9 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/EditTemplateDock.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarInside.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h	
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/DialogItemToolbar.h	
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/DialogItemToolbar.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapSettingsOutside.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ScaleSettingsOutside.h
                                  )
 
   QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
@@ -281,7 +292,8 @@ target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            terralib_mod_qt_widgets
                                            terralib_mod_srs
                                            terralib_mod_symbology
-                                           ${QTPROPERTYBROWSER_LIBRARY})
+                                           ${QTPROPERTYBROWSER_LIBRARY}
+                                           ${GeographicLib_STATIC_LIBRARIES})
 
 set_target_properties(terralib_mod_layout
                       PROPERTIES VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
@@ -320,6 +332,22 @@ install(
   DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/translations
   COMPONENT runtime
 )
+
+if(GEOGRAPHICLIB_FOUND)
+	#for build version
+	set(geographiclib_output_dir "${CMAKE_BINARY_DIR}/share/terralib/magnetic_model")
+	
+	file( MAKE_DIRECTORY ${geographiclib_output_dir})
+	file(COPY ${GEOGRAPHICLIB_MODEL_FILES} DESTINATION ${geographiclib_output_dir})
+
+	#for installed version
+	install(
+	  FILES ${GEOGRAPHICLIB_MODEL_FILES}
+	  DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/magnetic_model
+	  COMPONENT runtime
+	)
+endif()
+
 
 # -------------
 

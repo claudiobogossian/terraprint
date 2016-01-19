@@ -187,7 +187,7 @@ namespace te
           \param bSeconds true if should appear in the return string, false otherwise
           \return string value in degree
         */ 
-        virtual std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds);
+        virtual std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds,  int precision = 0);
 
         /*!
           \brief Converts degree geo coordinates to decimal.

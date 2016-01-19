@@ -96,74 +96,26 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   return ItemGroup::itemChange(change, value);
 }
 
-void te::layout::MapCompositionItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
+void te::layout::MapCompositionItem::updateChildSize(AbstractItemView* item)
 {
-  bool resize = false;
-  if (m_currentAction == te::layout::RESIZE_ACTION)
+  double width = m_controller->getProperty("width").getValue().toDouble();
+  double height = m_controller->getProperty("height").getValue().toDouble();
+  SharedProperties sharedProps;
+  if (item)
   {
-    resize = true;
-  }
-
-  ItemGroup::mouseReleaseEvent(event);
-
-  if (resize)
-  {
-    SharedProperties sharedProps;
-
-    AbstractItemView* observableItem = 0;
-    QRectF childrenBoundRect = childrenBoundingRect();
-    if (m_rect != childrenBoundRect)
+    // search for observable item
+    const Property& pConnectItemPosition = item->getController()->getProperty(sharedProps.getItemObserver());
+    if (pConnectItemPosition.isNull())
     {
-      QList<QGraphicsItem*> children = childItems();
-      for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
-      {
-        AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-        if (item)
-        {
-          //(*it)->setPos(0,0);
-          const Property& pConnectItemPosition = item->getController()->getProperty(sharedProps.getItemObserver());
-          if (pConnectItemPosition.isNull())
-          {
-            observableItem = item;
-          }
-        }
-      }
-    }
-
-    if (observableItem)
-    {
-      updateObservableSize(observableItem);
+      //update properties
+      item->getController()->resized(width, height);
+      item->prepareGeometryChange(); //update childrenBoundingRect
     }
   }
 }
 
-void te::layout::MapCompositionItem::updateObservableSize(AbstractItemView* observableItem)
+void te::layout::MapCompositionItem::resized()
 {
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  Properties props;
-
-  double width = m_rect.width();
-  double height = m_rect.height();
-
-  if (width > 0)
-  {
-    Property prop_width(0);
-    prop_width.setName("width");
-    prop_width.setLabel("Width");
-    prop_width.setValue(width, dataType->getDataTypeDouble());
-    props.addProperty(prop_width);
-  }
-
-  if (height > 0)
-  {
-    Property prop_height(0);
-    prop_height.setName("height");
-    prop_height.setLabel("Height");
-    prop_height.setValue(height, dataType->getDataTypeDouble());
-    props.addProperty(prop_height);
-  }
-
-  //update properties
-  observableItem->getController()->setProperties(props);
+  
 }
 

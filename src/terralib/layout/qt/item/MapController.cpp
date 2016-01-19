@@ -243,14 +243,7 @@ bool te::layout::MapController::syncMapDisplayProperties(const std::vector<te::l
   {
     height = itProperties->second.getValue().toDouble();
   }
-
-  //then we try to compute any uninitialized properties based on the layer list.
-  //if the layerList is empty, we are not able to initialize any other property
-  if (layerList.empty() == true)
-  {
-    return false;
-  }
-
+  
   if (layerList.empty() == false)
   {
     if (srid == -1)
@@ -308,10 +301,8 @@ bool te::layout::MapController::syncMapDisplayProperties(const std::vector<te::l
     if (myScene != 0)
     {
       Utils utils = myScene->getUtils();
-
-      QRectF boxMM = view->boundingRect();
-
-      te::gm::Envelope box(0, 0, boxMM.width(), boxMM.height());
+      
+      te::gm::Envelope box(0, 0, width, height);
       box = utils.viewportBox(box);
 
       widthPixels = qRound(box.getWidth());
@@ -337,7 +328,11 @@ bool te::layout::MapController::syncMapDisplayProperties(const std::vector<te::l
     }
   }
 
-  mapDisplay->setLayerList(layerList);
+  if (!layerList.empty())
+  {
+    mapDisplay->setLayerList(layerList);
+  }
+
   if (srid > 0)
   {
     mapDisplay->setSRID(srid, false);

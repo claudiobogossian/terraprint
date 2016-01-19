@@ -503,6 +503,8 @@ namespace te
 
         virtual void searchSelectedItemsInResizeMode();
 
+        virtual void searchSelectedChildItemsInResizeMode(QGraphicsItem* item);
+
         virtual void searchSelectedItemsInMoveMode();
 
         virtual void addUndoCommandForMove();

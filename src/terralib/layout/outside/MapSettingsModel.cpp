@@ -17,17 +17,46 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// TerraLib
-#include "MapCompositionController.h"
-#include "MapCompositionItem.h"
+/*!
+  \file MapSettingsModel.cpp
+   
+  \brief 
 
-te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model)
-  : ItemGroupController(model)
+  \ingroup layout
+*/
+
+// TerraLib
+#include "MapSettingsModel.h"
+#include "../core/property/Property.h"
+#include "../core/property/Properties.h"
+#include "../core/enum/Enums.h"
+
+te::layout::MapSettingsModel::MapSettingsModel() :
+  AbstractOutsideModel()
+{
+  m_type = Enums::getInstance().getEnumObjectType()->getPageSetup();
+  m_box = te::gm::Envelope(0., 0., 200., 200.);
+}
+
+te::layout::MapSettingsModel::~MapSettingsModel()
 {
 
 }
 
-te::layout::MapCompositionController::~MapCompositionController()
+te::layout::Properties* te::layout::MapSettingsModel::getProperties() const
+{
+  m_properties->clear();
+
+  Property pro_name(m_hashCode);
+  pro_name.setName(m_name);
+
+  m_properties->addProperty(pro_name);
+
+  m_properties->setTypeObj(m_type);
+  return m_properties;
+}
+
+void te::layout::MapSettingsModel::updateProperties(te::layout::Properties* properties, bool notify)
 {
 
 }

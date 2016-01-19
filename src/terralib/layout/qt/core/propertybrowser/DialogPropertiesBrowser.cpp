@@ -54,6 +54,10 @@
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../Scene.h"
 #include "../../../core/pattern/proxy/AbstractProxyProject.h"
+#include "../../outside/MapSettingsOutside.h"
+#include "../../../outside/MapSettingsModel.h"
+#include "../../outside/ScaleSettingsOutside.h"
+#include "../../../outside/ScaleSettingsModel.h"
 
 // STL
 #include <vector>
@@ -169,6 +173,14 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
   if(propt.getType() == dataType->getDataTypeFont())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowFontDlg()));
+  }
+  if (propt.getType() == dataType->getDataTypeMapSettings())
+  {
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapSettingsDlg()));
+  }
+  if (propt.getType() == dataType->getDataTypeScaleSettings())
+  {
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowScaleSettingsDlg()));
   }
 }
 
@@ -610,6 +622,74 @@ void te::layout::DialogPropertiesBrowser::onShowViewDlg()
   
   svgOutside->init();
   svgOutside->show();
+}
+
+void te::layout::DialogPropertiesBrowser::onShowMapSettingsDlg()
+{
+  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
+  if (!enumObj)
+  {
+    return;
+  }
+
+  QWidget* widget = createOutside(enumObj->getMapSettingsDialog());
+  if (!widget)
+  {
+    return;
+  }
+
+  MapSettingsOutside* mapSettings = dynamic_cast<MapSettingsOutside*>(widget);
+  if (!mapSettings)
+  {
+    return;
+  }
+
+  appendDialog(mapSettings);
+
+  AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(mapSettings->getController());
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
+  MapSettingsModel* model = dynamic_cast<MapSettingsModel*>(abstractModel);
+  if (!model)
+  {
+    return;
+  }
+  
+  mapSettings->show(); // modeless dialog
+  mapSettings->raise(); // top of the parent widget's stack
+}
+
+void te::layout::DialogPropertiesBrowser::onShowScaleSettingsDlg()
+{
+  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
+  if (!enumObj)
+  {
+    return;
+  }
+
+  QWidget* widget = createOutside(enumObj->getScaleSettingsDialog());
+  if (!widget)
+  {
+    return;
+  }
+
+  ScaleSettingsOutside* scaleSettings = dynamic_cast<ScaleSettingsOutside*>(widget);
+  if (!scaleSettings)
+  {
+    return;
+  }
+
+  appendDialog(scaleSettings);
+
+  AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(scaleSettings->getController());
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
+  ScaleSettingsModel* model = dynamic_cast<ScaleSettingsModel*>(abstractModel);
+  if (!model)
+  {
+    return;
+  }
+
+  scaleSettings->show(); // modeless dialog
+  scaleSettings->raise(); // top of the parent widget's stack
 }
 
 te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(const std::string& label)

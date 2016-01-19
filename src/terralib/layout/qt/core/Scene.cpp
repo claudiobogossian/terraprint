@@ -821,8 +821,7 @@ void te::layout::Scene::redrawSelectionMap()
     MapItem* mapItem = dynamic_cast<MapItem*>(item);
     if(mapItem)
     {
-      mapItem->doRefresh();
-      mapItem->refresh();
+      mapItem->redraw();
     }
   }
 }
@@ -954,6 +953,11 @@ void te::layout::Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 
   m_moveWatches.clear();
   m_resizeWatches.clear();
+
+  if (m_moveOrResizeWatched)
+  {
+    update();
+  }
 
   m_moveOrResizeWatched = false;
 }
@@ -1629,6 +1633,34 @@ void te::layout::Scene::searchSelectedItemsInResizeMode()
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(itm);
     if (itemView)
     {
+      searchSelectedChildItemsInResizeMode(itm);
+    }
+  }
+}
+
+void te::layout::Scene::searchSelectedChildItemsInResizeMode(QGraphicsItem* item)
+{
+  QList<QGraphicsItem*> its = item->childItems();
+  if (its.isEmpty())
+  {
+    AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(item);
+    // Undo/Redo for Resize (ChangePropertyCommand)
+    if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
+    {
+      m_resizeWatches[item] = itemView->getController()->getProperties();
+    }
+    return;
+  }
+
+  foreach(QGraphicsItem *itm, its)
+  {
+    AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(itm);
+    if (itemView)
+    {
+      if (!itm->childItems().isEmpty())
+      {
+        searchSelectedChildItemsInResizeMode(itm);
+      }
       // Undo/Redo for Resize (ChangePropertyCommand)
       if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
       {

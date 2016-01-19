@@ -51,6 +51,13 @@
 #define TE_LAYOUT_TEXT_DOMAIN_DIR te::common::FindInTerraLibPath("share/terralib/translations/messages")
 
 /*!
+\def TE_LAYOUT_MAGNET_MODEL_DIR
+
+\brief It contains the magnet models directory.
+*/
+#define TE_LAYOUT_MAGNET_MODEL_DIR te::common::FindInTerraLibPath("share/terralib/magnetic_model")
+
+/*!
   \def TR_LAYOUT
 
   \brief It marks a string in order to get translated. This is a special mark used in the Terrralib Layout module. 

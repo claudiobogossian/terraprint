@@ -85,6 +85,10 @@ namespace te
         
         virtual bool hasChildrenInResizeMode();
 
+        virtual void resized();
+
+      protected:
+
         bool m_stacksBehindParent;
     };
   }

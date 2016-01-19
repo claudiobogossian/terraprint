@@ -373,6 +373,19 @@ namespace te
         */
         virtual EnumType* getThreeNorthItem() const;
 
+        /*!
+        \brief Returns value that represents Map Settings (MVC Component) type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getMapSettingsDialog() const;
+
+        /*!
+        \brief Returns value that represents Scale Settings (MVC Component) type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getScaleSettingsDialog() const;
 
       protected:
 
@@ -427,6 +440,8 @@ namespace te
         EnumType* m_svgItem; //!< value that represents SVG type belonging to enumeration
         EnumType* m_pdfSettingsDialog; //!< value that represents SVG type belonging to enumeration
         EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
+        EnumType* m_mapSettingsDialog; //!< value that represents map settings type belonging to enumeration
+        EnumType* m_scaleSettingsDialog; //!< value that represents scale settings type belonging to enumeration
     };
   }
 }

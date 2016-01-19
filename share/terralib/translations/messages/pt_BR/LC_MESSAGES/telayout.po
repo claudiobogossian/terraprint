@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2015-12-16 17:35-0200\n"
-"PO-Revision-Date: 2016-01-04 10:23-0200\n"
+"POT-Creation-Date: 2016-01-19 09:56-0200\n"
+"PO-Revision-Date: 2016-01-19 10:02-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -18,7 +18,7 @@ msgstr ""
 
 #: core/pattern/mvc/AbstractItemModel.cpp:22
 msgid "Id"
-msgstr ""
+msgstr "Identificador"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:32
 msgid "Name"
@@ -26,425 +26,441 @@ msgstr "Nome"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:41
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:50
 msgid "Y"
-msgstr ""
+msgstr "Y"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:59 item/TitleModel.cpp:109
 msgid "Width"
-msgstr ""
+msgstr "Largura"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:67
 msgid "Height"
-msgstr ""
+msgstr "Altura"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:75
 msgid "Background Color"
-msgstr ""
+msgstr "Cor de Fundo"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:84
 msgid "Frame Color"
-msgstr ""
+msgstr "Cor da Borda"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:93
 msgid "Frame Thickness"
-msgstr ""
+msgstr "Expessura da Borda"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:103
 msgid "Show Frame"
-msgstr ""
+msgstr "Exibir Borda"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:112 item/ItemGroupModel.cpp:42
-#: item/LineModel.cpp:106
+#: item/LineModel.cpp:106 item/MapCompositionModel.cpp:42
 msgid "Resizable"
-msgstr ""
+msgstr "Redimensionável"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:121
 msgid "Keep Aspect on Resize"
-msgstr ""
+msgstr "Manter Relação de Aspecto"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:129
 msgid "Rotation"
-msgstr ""
+msgstr "Rotação"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:137
 msgid "Printable"
-msgstr ""
+msgstr "Imprimível"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:146
 msgid "Order in which appears"
-msgstr ""
+msgstr "Ordem em que aparece"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:163
 msgid "Editable"
-msgstr ""
+msgstr "Editável"
 
 #: item/ArrowModel.cpp:52 item/NorthModel.cpp:51
 msgid "Graphic Type"
-msgstr ""
+msgstr "Tipo do Gráfico"
 
 #: item/ArrowModel.cpp:78 item/EllipseModel.cpp:51 item/PointModel.cpp:81
 #: item/PolygonModel.cpp:51 item/RectangleModel.cpp:79
 msgid "Fill Color"
-msgstr ""
+msgstr "Cor de Preenchimento"
 
 #: item/ArrowModel.cpp:87 item/EllipseModel.cpp:60 item/PointModel.cpp:90
 #: item/PolygonModel.cpp:60 item/RectangleModel.cpp:88
 msgid "Contour Color"
-msgstr ""
-
-#: item/BalloonModel.cpp:51
-msgid "Border"
-msgstr ""
-
-#: item/BalloonModel.cpp:60 item/LineModel.cpp:88 item/NorthModel.cpp:76
-#: item/TextModel.cpp:68 item/TitleModel.cpp:102
-msgid "Color"
-msgstr ""
+msgstr "Cor de Contorno"
 
 #: item/BarCodeModel.cpp:59
 msgid "Barcode Size"
-msgstr ""
+msgstr "Tamanho do Código de Barras"
 
-#: item/GridGeodesicModel.cpp:64
+#: item/GridGeodesicModel.cpp:65
 msgid "Geographic Box"
-msgstr ""
+msgstr "Retângulo Geográfico"
 
-#: item/GridGeodesicModel.cpp:75
+#: item/GridGeodesicModel.cpp:76
 msgid "Show Degrees Text"
-msgstr ""
+msgstr "Exibir Texto de Graus"
 
-#: item/GridGeodesicModel.cpp:82
+#: item/GridGeodesicModel.cpp:83
 msgid "Show Minutes Text"
-msgstr ""
+msgstr "Exibir Texto de Minutos"
 
-#: item/GridGeodesicModel.cpp:89
+#: item/GridGeodesicModel.cpp:90
 msgid "Show Seconds Text"
-msgstr ""
+msgstr "Exibir Texto de Segundos"
 
-#: item/GridMapModel.cpp:89
+#: item/GridGeodesicModel.cpp:97
+msgid "Seconds Text Precision"
+msgstr "Precisão dos segundos"
+
+#: item/GridMapModel.cpp:87 item/MapModel.cpp:69 item/ScaleModel.cpp:84
+#: item/TitleModel.cpp:79 item/TitleModel.cpp:80
+msgid "Settings"
+msgstr "Configurações"
+
+#: item/GridMapModel.cpp:90
 msgid "Grid Settings"
-msgstr ""
+msgstr "Configurações da Grade"
 
-#: item/GridMapModel.cpp:98
+#: item/GridMapModel.cpp:99
 msgid "Visible"
-msgstr ""
+msgstr "Visível"
 
-#: item/GridMapModel.cpp:106
+#: item/GridMapModel.cpp:107
 msgid "Horizontal Gap"
 msgstr "Lacuna horizontal"
 
-#: item/GridMapModel.cpp:114
+#: item/GridMapModel.cpp:115
 msgid "Vertical Gap"
 msgstr "Lacuna vertical"
 
-#: item/GridMapModel.cpp:122
+#: item/GridMapModel.cpp:123
 msgid "Initial Point X"
-msgstr ""
+msgstr "Ponto Inicial em X"
 
-#: item/GridMapModel.cpp:130
+#: item/GridMapModel.cpp:131
 msgid "Initial Point Y"
-msgstr ""
+msgstr "Ponto Inicial em Y"
 
-#: item/GridMapModel.cpp:143
+#: item/GridMapModel.cpp:144
 msgid "Style"
-msgstr ""
+msgstr "Estilo"
 
-#: item/GridMapModel.cpp:174 item/LineModel.cpp:55
+#: item/GridMapModel.cpp:175 item/LineModel.cpp:55
 msgid "Line Style"
-msgstr ""
+msgstr "Estilo da Linha"
 
-#: item/GridMapModel.cpp:201
+#: item/GridMapModel.cpp:202
 msgid "Line Color"
-msgstr ""
+msgstr "Cor da Linha"
 
-#: item/GridMapModel.cpp:210 item/LineModel.cpp:80
+#: item/GridMapModel.cpp:211 item/LineModel.cpp:80
 msgid "Line Width"
-msgstr ""
+msgstr "Largura da Linha"
 
-#: item/GridMapModel.cpp:220 item/TextModel.cpp:52
+#: item/GridMapModel.cpp:221 item/ScaleModel.cpp:136 item/TextModel.cpp:52
 msgid "Font"
-msgstr ""
+msgstr "Fonte"
 
-#: item/GridMapModel.cpp:229
+#: item/GridMapModel.cpp:230
 msgid "Text Color"
-msgstr ""
+msgstr "Cor do Texto"
 
-#: item/GridMapModel.cpp:239
+#: item/GridMapModel.cpp:240
 msgid "All Texts Visible"
-msgstr ""
+msgstr "Exibir Todos os Textos"
 
-#: item/GridMapModel.cpp:248
+#: item/GridMapModel.cpp:249 item/GridPlanarModel.cpp:102
 msgid "Superscript"
-msgstr ""
+msgstr "Sobrescrito"
 
-#: item/GridMapModel.cpp:258
+#: item/GridMapModel.cpp:259
 msgid "Vertical Displacement"
-msgstr ""
+msgstr "Deslocamento Vertical"
 
-#: item/GridMapModel.cpp:267
+#: item/GridMapModel.cpp:268
 msgid "Horizontal Displacement"
-msgstr ""
+msgstr "Deslocamento Horizontal"
 
-#: item/GridMapModel.cpp:276
+#: item/GridMapModel.cpp:277
 msgid "Bottom Text Visible"
-msgstr ""
+msgstr "Exibir Textos de Baixo"
 
-#: item/GridMapModel.cpp:284
+#: item/GridMapModel.cpp:285
 msgid "Left Text Visible"
-msgstr ""
+msgstr "Exibir Textos da Esquerda"
 
-#: item/GridMapModel.cpp:292
+#: item/GridMapModel.cpp:293
 msgid "Right Text Visible"
-msgstr ""
+msgstr "Exibir Textos da Direita"
 
-#: item/GridMapModel.cpp:300
+#: item/GridMapModel.cpp:301
 msgid "Top Text Visible"
-msgstr ""
+msgstr "Exibir Textos de Cima"
 
-#: item/GridMapModel.cpp:308
+#: item/GridMapModel.cpp:309
 msgid "Bottom Text Rotate"
-msgstr ""
+msgstr "Rotação dos Textos de Baixo"
 
-#: item/GridMapModel.cpp:316
+#: item/GridMapModel.cpp:317
 msgid "Left Text Rotate"
-msgstr ""
+msgstr "Rotação dos Textos da Esquerda"
 
-#: item/GridMapModel.cpp:324
+#: item/GridMapModel.cpp:325
 msgid "Right Text Rotate"
-msgstr ""
+msgstr "Rotação dos Textos da Direita"
 
-#: item/GridMapModel.cpp:332
+#: item/GridMapModel.cpp:333
 msgid "Top Text Rotate"
-msgstr ""
+msgstr "Rotação dos Textos de Cima"
 
-#: item/GridMapModel.cpp:340
+#: item/GridMapModel.cpp:341
 msgid "Cross Offset"
-msgstr ""
+msgstr "Tamanho da Cruz"
 
-#: item/GridMapModel.cpp:361 item/LegendModel.cpp:106
-#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:86
+#: item/GridMapModel.cpp:362 item/LegendModel.cpp:106
+#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:98
 msgid "Connection with"
-msgstr ""
+msgstr "Conectar com"
 
-#: item/GridPlanarModel.cpp:65 item/ScaleModel.cpp:124
+#: item/GridPlanarModel.cpp:75 item/ScaleModel.cpp:144
 msgid "Unit"
-msgstr ""
+msgstr "Unidade"
 
-#: item/GridPlanarModel.cpp:74
+#: item/GridPlanarModel.cpp:93
 msgid "Planar Box"
-msgstr ""
+msgstr "Retângulo Planar"
 
 #: item/ImageModel.cpp:51
 msgid "File Name"
-msgstr ""
+msgstr "Nome do Arquivo"
 
 #: item/LegendModel.cpp:86
 msgid "Select the legend"
-msgstr ""
+msgstr "Selecione a legenda"
 
-#: item/LegendModel.cpp:95 item/MapModel.cpp:82
+#: item/LegendModel.cpp:95 item/MapModel.cpp:93
 msgid "URI"
-msgstr ""
+msgstr "URI"
 
 #: item/LegendModel.cpp:114
 msgid "Font Title"
-msgstr ""
+msgstr "Título da Fonte"
 
 #: item/LegendModel.cpp:122
 msgid "Font Title Color"
-msgstr ""
+msgstr "Cor do Título da Fonte"
 
 #: item/LegendModel.cpp:132
 msgid "Legend Body"
-msgstr ""
+msgstr "Corpo da Legenda"
 
 #: item/LegendModel.cpp:137
 msgid "Font Legend"
-msgstr ""
+msgstr "Fonte da Legenda"
 
 #: item/LegendModel.cpp:145
 msgid "Font Legend Color"
-msgstr ""
+msgstr "Cor da Fonte da Legenda"
 
 #: item/LegendModel.cpp:153
 msgid "Border Displacement"
-msgstr ""
+msgstr "Deslocamento da Borda"
 
 #: item/LegendModel.cpp:160
 msgid "Displacement Between Symbols"
-msgstr ""
+msgstr "Deslocamento entre Símbolos"
 
 #: item/LegendModel.cpp:167
 msgid "Displacement Between Title And Symbols"
-msgstr ""
+msgstr "Deslocamento entre o Título e os Símbolos"
 
 #: item/LegendModel.cpp:174
 msgid "Displacement Between Symbols And Texts"
-msgstr ""
+msgstr "Deslocamento entre os Símbolos e os Textos"
 
 #: item/LegendModel.cpp:181
 msgid "Symbol Size"
-msgstr ""
+msgstr "Tamanho do Símbolo"
 
 #: item/LegendModel.cpp:188
 msgid "Rows"
-msgstr ""
+msgstr "Linhas"
 
 #: item/LegendModel.cpp:195
 msgid "Offset Between Columns"
-msgstr ""
+msgstr "Deslocamento entre as colunas"
+
+#: item/LineModel.cpp:88 item/NorthModel.cpp:76 item/TextModel.cpp:68
+#: item/TitleModel.cpp:102
+msgid "Color"
+msgstr "Cor"
 
 #: item/LineModel.cpp:97 item/PolygonModel.cpp:69
 msgid "Geometry"
-msgstr ""
+msgstr "Geometria"
 
 #: item/MapLocationModel.cpp:69
 msgid "Reference Envelope Fill Color"
-msgstr ""
+msgstr "Cor de Preenchimento do Retângulo de Referência"
 
 #: item/MapLocationModel.cpp:77
 msgid "Reference Envelope Contour Color"
-msgstr ""
+msgstr "Cor de Contorno do Retângulo de Referência"
 
 #: item/MapModel.cpp:61
 msgid "Select layers"
-msgstr ""
+msgstr "Selecionar planos"
 
-#: item/MapModel.cpp:71
+#: item/MapModel.cpp:72
+msgid "Map Settings"
+msgstr "Configurações do mapa"
+
+#: item/MapModel.cpp:82
 msgid "Layers"
-msgstr ""
+msgstr "Planos"
 
-#: item/MapModel.cpp:92
+#: item/MapModel.cpp:103
 msgid "World Box"
-msgstr ""
+msgstr "Retângulo do Mundo"
 
-#: item/MapModel.cpp:100
+#: item/MapModel.cpp:111
 msgid "SRID"
-msgstr ""
+msgstr "SRID"
 
-#: item/MapModel.cpp:108 item/ScaleModel.cpp:58
+#: item/MapModel.cpp:119 item/ScaleModel.cpp:61
 msgid "Scale"
-msgstr ""
+msgstr "Escala"
 
 #: item/PaperModel.cpp:56
 msgid "Paper Color"
-msgstr ""
+msgstr "Cor do Papel"
 
 #: item/PaperModel.cpp:63
 msgid "Shadow Color"
-msgstr ""
+msgstr "Cor da Sombra"
 
 #: item/PaperModel.cpp:70
 msgid "Shadow padding"
-msgstr ""
+msgstr "Deslocamento da Sombra"
 
 #: item/PaperModel.cpp:77
 msgid "Paper width"
-msgstr ""
+msgstr "Largura do Papel"
 
 #: item/PaperModel.cpp:84
 msgid "Paper height"
-msgstr ""
+msgstr "Altura do Papel"
 
 #: item/PaperModel.cpp:91
 msgid "Paper type"
-msgstr ""
+msgstr "Tipo do Papel"
 
 #: item/PaperModel.cpp:98
 msgid "Orientation"
-msgstr ""
+msgstr "Orientação"
 
-#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:98
+#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:110
 msgid "Graphic type"
-msgstr ""
+msgstr "Tipo do Gráfico"
 
-#: item/ScaleModel.cpp:67
+#: item/ScaleModel.cpp:70
 msgid "Scale Gap X"
-msgstr ""
+msgstr "Intervalo da Escala em X"
 
-#: item/ScaleModel.cpp:76
+#: item/ScaleModel.cpp:78
 msgid "Scale Gap Y"
-msgstr ""
+msgstr "Intervalo da Escala em Y"
+
+#: item/ScaleModel.cpp:87
+msgid "Scale Settings"
+msgstr "Configurações da escala"
+
+#: item/ScaleModel.cpp:161
+msgid "Scale Gap X In Unit"
+msgstr "Lacuna na horizontal em unidade"
 
 #: item/TextModel.cpp:60
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #: item/TextModel.cpp:79
 msgid "Alignment"
-msgstr ""
+msgstr "Alinhamento"
 
 #: item/ThreeNorthModel.cpp:56
 msgid "Map Name"
-msgstr ""
+msgstr "Nome do Mapa"
 
 #: item/ThreeNorthModel.cpp:68
 msgid "color"
-msgstr ""
+msgstr "cor"
 
 #: item/ThreeNorthModel.cpp:75
 msgid "magnetic_convergence"
-msgstr ""
+msgstr "Convergência Meridiana"
 
 #: item/ThreeNorthModel.cpp:83
 msgid "magnetic_north"
-msgstr ""
+msgstr "Norte Magnético"
 
 #: item/ThreeNorthModel.cpp:92
 msgid "angle_magnetic_convergence"
-msgstr ""
+msgstr "Ângulo da Convergência Meridiana"
 
 #: item/ThreeNorthModel.cpp:101
 msgid "angle_magnetic_north"
-msgstr ""
-
-#: item/TitleModel.cpp:79
-msgid "Settings"
-msgstr ""
+msgstr "Ângulo do Norte  Magnético"
 
 #: item/TitleModel.cpp:88
 msgid "Spacing"
-msgstr ""
+msgstr "Espaçamento"
 
 #: item/TitleModel.cpp:95
 msgid "Padding"
-msgstr ""
+msgstr "Deslocamento"
 
 #: item/TitleModel.cpp:116
 msgid "Number of rows"
-msgstr ""
+msgstr "Número de Linhas"
 
 #: item/TitleModel.cpp:123
 msgid "Even Row Color"
-msgstr ""
+msgstr "Cor das Linhas Pares"
 
 #: item/TitleModel.cpp:130
 msgid "Odd Row Color"
-msgstr ""
+msgstr "Cor das Linhas Ímpares"
 
 #: item/TitleModel.cpp:137
 msgid "Number of columns"
-msgstr ""
+msgstr "Número de Colunas"
 
 #: item/TitleModel.cpp:144
 msgid "Column Width"
-msgstr ""
+msgstr "Largura da Coluna"
 
 #: item/TitleModel.cpp:151
 msgid "Border Width"
-msgstr ""
+msgstr "Largura da Borda"
 
 #: item/TitleModel.cpp:158
 msgid "Border Grid Color"
-msgstr ""
+msgstr "Cor da Borda da Grade"
 
 #: item/TitleModel.cpp:165
 msgid "Horizontal Header Color"
-msgstr ""
+msgstr "Cor do Cabeçalho Horizontal"
 
 #: item/TitleModel.cpp:172
 msgid "Vertical Header Color"
-msgstr ""
+msgstr "Cor do Cabeçalho Vertical"
+
+#~ msgid "Border"
+#~ msgstr "Borda"

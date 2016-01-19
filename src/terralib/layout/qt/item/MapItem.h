@@ -101,6 +101,10 @@ namespace te
 
         virtual void doRefresh();
 
+        virtual void recompose();
+
+        virtual void redraw();
+
       protected:
 
         /*!
@@ -163,9 +167,9 @@ namespace te
 
         virtual void drawTilesMap(QPainter* painter);
 
-        virtual void recompose();
-
         virtual void createMapDisplay();
+
+        virtual bool changeMapDisplay();
 
     protected slots:
 

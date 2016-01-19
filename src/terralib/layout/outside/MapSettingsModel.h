@@ -17,18 +17,41 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
+/*!
+  \file MapSettingsModel.h
+   
+  \brief 
+
+  \ingroup layout
+*/
+
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_MODEL_H 
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_MODEL_H
+
 // TerraLib
-#include "MapCompositionController.h"
-#include "MapCompositionItem.h"
+#include "../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../core/Config.h"
 
-te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model)
-  : ItemGroupController(model)
+namespace te
 {
+  namespace layout
+  {
+    class Properties;
 
+    class TELAYOUTEXPORT MapSettingsModel : public AbstractOutsideModel
+    {
+    public:
+
+      MapSettingsModel();
+
+      virtual ~MapSettingsModel();
+
+      virtual void updateProperties(te::layout::Properties* properties, bool notify = true);
+
+      virtual Properties* getProperties() const;
+
+    };
+  }
 }
 
-te::layout::MapCompositionController::~MapCompositionController()
-{
-
-}
-
+#endif
