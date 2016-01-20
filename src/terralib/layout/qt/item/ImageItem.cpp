@@ -54,7 +54,8 @@ void te::layout::ImageItem::setFileName(const std::string& fileName)
   }
   else
   {
-    if (m_image.load(m_fileName.c_str()) == true)
+    QString qFileName = ItemUtils::convert2QString(m_fileName);
+    if (m_image.load(qFileName) == true)
     {
       defineSize();
       m_image = m_image.mirrored();

@@ -138,11 +138,16 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
 
 QAction* te::layout::MenuBuilder::createAction( std::string text, std::string objName, std::string icon, std::string tooltip )
 {
-  QAction *actionMenu = new QAction(text.c_str(), this);
-  actionMenu->setObjectName(objName.c_str());
+  QString qText = ItemUtils::convert2QString(text);
+  QString qObjName = ItemUtils::convert2QString(text);
+  QString qIcon = ItemUtils::convert2QString(text);
+  QString qTooltip = ItemUtils::convert2QString(text);
 
-  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
-  actionMenu->setToolTip(tooltip.c_str());
+  QAction *actionMenu = new QAction(qText, this);
+  actionMenu->setObjectName(qObjName);
+
+  actionMenu->setIcon(QIcon::fromTheme(qIcon));
+  actionMenu->setToolTip(qTooltip);
 
   return actionMenu;
 }
@@ -152,7 +157,10 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   if(!m_menu)
     return;
 
-  m_currentPropertyClicked = findMnuProperty(action->objectName().toStdString());
+  QString qObjectName = action->objectName();
+  std::string objectName = ItemUtils::convert2StdString(qObjectName);
+
+  m_currentPropertyClicked = findMnuProperty(objectName);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -296,7 +304,7 @@ te::layout::Property te::layout::MenuBuilder::findMnuProperty( std::string name 
 
   foreach( Property pro, m_properties.getProperties()) 
   {
-    if(pro.getName().compare(name) == 0)
+    if (pro.getName().compare(name) == 0 || pro.getLabel().compare(name) == 0)
     {
       prop = pro;
       break;

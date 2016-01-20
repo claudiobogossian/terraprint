@@ -48,6 +48,7 @@ namespace te
     class Properties;
     class Property;
     class EnumType;
+    class Scene;
 
     /*!
     \brief Manage properties variants values.  
@@ -60,7 +61,7 @@ namespace te
 
       public:
 
-        VariantPropertiesBrowser(QObject *parent = 0);
+        VariantPropertiesBrowser(Scene* scene, QObject *parent = 0);
 
         virtual ~VariantPropertiesBrowser();
 
@@ -68,9 +69,9 @@ namespace te
 
         virtual bool updateProperty(const Property& property);
 
-        virtual Property getProperty(const std::string& label);
+        virtual Property getProperty(const QString& label);
 
-        virtual EnumType* getLayoutType(QVariant::Type type, const std::string& label = "");
+        virtual EnumType* getLayoutType(QVariant::Type type, const QString& label = "");
 
         virtual int getVariantType(EnumType* dataType);
 

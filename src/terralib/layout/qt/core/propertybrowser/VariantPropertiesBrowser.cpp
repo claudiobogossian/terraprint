@@ -29,6 +29,7 @@
 #include "VariantPropertiesBrowser.h"
 #include "../../../core/property/Properties.h"
 #include "../../../core/enum/Enums.h"
+#include "../../core/ItemUtils.h"
 
 // QtPropertyBrowser
 #include <QtPropertyBrowser/QtProperty>
@@ -41,8 +42,8 @@
 #include <QFont>
 #include <QColor>
 
-te::layout::VariantPropertiesBrowser::VariantPropertiesBrowser(QObject* parent) :
-  AbstractPropertiesBrowser(parent),
+te::layout::VariantPropertiesBrowser::VariantPropertiesBrowser(Scene* scene, QObject* parent) :
+  AbstractPropertiesBrowser(scene, parent),
   m_variantPropertyEditorManager(0),
   m_variantPropertyEditorFactory(0)
 {
@@ -91,15 +92,23 @@ QtProperty* te::layout::VariantPropertiesBrowser::addProperty( const Property& p
     return vproperty;
   }
 
-  std::string label = property.getLabel();
-  if (label.compare("") == 0)
-    label = property.getName();
+  std::string stdLabel = property.getLabel();
+  if (stdLabel.compare("") == 0)
+    stdLabel = property.getName();
+
+  QString label = ItemUtils::convert2QString(stdLabel);
 
   int type = getVariantType(property.getType());
-  vproperty = m_variantPropertyEditorManager->addProperty(type, tr(label.c_str()));
+  vproperty = m_variantPropertyEditorManager->addProperty(type, label);
   changeQtVariantPropertyValue(vproperty, property);
 
-  addPropertyItem(vproperty, QLatin1String(property.getName().c_str()), QLatin1String(property.getLabel().c_str()));
+  stdLabel = property.getLabel();
+  QString qLabel = ItemUtils::convert2QString(stdLabel);
+
+  std::string name = property.getName();
+  QString qName = ItemUtils::convert2QString(name);
+
+  addPropertyItem(vproperty, qName, qLabel);
 
   return vproperty;
 }
@@ -110,7 +119,10 @@ void te::layout::VariantPropertiesBrowser::addAttribute( QtVariantProperty* vpro
   QStringList  strList;
   foreach( Variant v, vrt) 
   {
-    strList.push_back(v.toString().c_str());
+    std::string value = v.toString();
+    QString qValue = ItemUtils::convert2QString(value);
+
+    strList.push_back(qValue);
   }
 
   /* "enumNames" is a name used by default in 
@@ -118,7 +130,7 @@ void te::layout::VariantPropertiesBrowser::addAttribute( QtVariantProperty* vpro
   vproperty->setAttribute("enumNames", strList);
 }
 
-te::layout::Property te::layout::VariantPropertiesBrowser::getProperty( const std::string& label )
+te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(const QString& label)
 {
   Property prop;
 
@@ -127,7 +139,9 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty( const st
   {
     return prop;
   }
-  prop.setName(name.toStdString());
+
+  std::string stdName = ItemUtils::convert2StdString(name);
+  prop.setName(stdName);
   
   QVariant variant = findPropertyValue(label);
 
@@ -147,25 +161,29 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty( const st
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   
+  QString qValue = variant.toString();
+  std::string valueString = ItemUtils::convert2StdString(qValue);
+
   if(type == dataType->getDataTypeString())
   {
-    prop.setValue(variant.toString().toStdString(), type);
+    prop.setValue(valueString, type);
   }
   else if(type == dataType->getDataTypeStringList())
   {
-    prop.setValue(variant.toString().toStdString(), type);
+    prop.setValue(valueString, type);
     if(vproperty)
     {
       QStringList list = variant.toStringList();
-      std::string value = list.value(vproperty->value().toInt()).toStdString();
+      QString qFoundValue = list.value(vproperty->value().toInt());
 
       Variant v;
       foreach(QString s, list)
       {
         v.clear();
-        v.setValue(s.toStdString(), dataType->getDataTypeString());
+        std::string currentString = ItemUtils::convert2StdString(s);
+        v.setValue(currentString, dataType->getDataTypeString());
         prop.addOption(v);
-        if(value.compare(s.toStdString()) == 0)
+        if (qFoundValue.compare(s) == 0)
         {
           prop.setOptionChoice(v);
         }
@@ -197,7 +215,11 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty( const st
   {
     QFont qfont = variant.value<QFont>();
     Font font;
-    font.setFamily(qfont.family().toStdString());
+
+    QString qFontName = qfont.family();
+    std::string fontName = ItemUtils::convert2StdString(qFontName);
+
+    font.setFamily(fontName);
     font.setPointSize(qfont.pointSize());
     font.setBold(qfont.bold());
     font.setItalic(qfont.italic());
@@ -217,7 +239,7 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty( const st
   return prop;
 }
 
-te::layout::EnumType* te::layout::VariantPropertiesBrowser::getLayoutType( QVariant::Type type, const std::string& label )
+te::layout::EnumType* te::layout::VariantPropertiesBrowser::getLayoutType(QVariant::Type type, const QString& label)
 {
   EnumDataType* dtType = Enums::getInstance().getEnumDataType();
 
@@ -341,7 +363,10 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   
   if(property.getType() == dataType->getDataTypeString())
   {
-    vproperty->setValue(property.getValue().toString().c_str());    
+    std::string value = property.getValue().toString();
+    QString qValue = ItemUtils::convert2QString(value);
+
+    vproperty->setValue(qValue);    
   }
   else if(property.getType() == dataType->getDataTypeStringList())
   {    
@@ -361,8 +386,11 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
     }
   }
   else if(property.getType() == dataType->getDataTypeGroup())
-  {    
-    vproperty->setValue(property.getValue().toString().c_str());  
+  {
+    std::string value = property.getValue().toString();
+    QString qValue = ItemUtils::convert2QString(value);
+
+    vproperty->setValue(qValue);  
   }
   else if(property.getType() == dataType->getDataTypeDouble())
   {
@@ -391,7 +419,10 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   {
     const Font& font = property.getValue().toFont();
     QFont qfont;
-    qfont.setFamily(font.getFamily().c_str());
+    std::string fontName = font.getFamily();
+    QString qFontName = ItemUtils::convert2QString(fontName);
+
+    qfont.setFamily(qFontName);
     qfont.setPointSize(font.getPointSize());
     qfont.setBold(font.isBold());
     qfont.setItalic(font.isItalic());
@@ -429,7 +460,9 @@ QtVariantPropertyManager* te::layout::VariantPropertiesBrowser::getVariantProper
 
 bool te::layout::VariantPropertiesBrowser::updateProperty( const Property& property )
 {
-  const std::string& label = property.getLabel();
+  const std::string& stdLabel = property.getLabel();
+  QString label = ItemUtils::convert2QString(stdLabel);
+
   QtProperty* qprop = findProperty(label);
   if (!qprop)
     return false;

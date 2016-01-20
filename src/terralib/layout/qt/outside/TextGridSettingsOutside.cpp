@@ -32,6 +32,7 @@
 #include "../../outside/TextGridSettingsController.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/property/TextGridSettingsConfigProperties.h"
+#include "../core/ItemUtils.h"
 
 // STL
 #include <string>
@@ -238,7 +239,10 @@ void te::layout::TextGridSettingsOutside::on_cmbColumnsWidthConstraints_currentI
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     controller->addUpdateProperty(m_propertiesNames->getColumnWidthConstraints(), variant);
   }
 }
@@ -250,7 +254,10 @@ void te::layout::TextGridSettingsOutside::on_cmbTableWidthConstraints_currentInd
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     controller->addUpdateProperty(m_propertiesNames->getWidthConstraints(), variant);
   }
 }
@@ -262,7 +269,10 @@ void te::layout::TextGridSettingsOutside::on_cmbHeaderAlign_currentIndexChanged(
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     controller->addUpdateProperty(m_propertiesNames->getHeaderAlignment(), variant);
   }
 }
@@ -274,7 +284,10 @@ void te::layout::TextGridSettingsOutside::on_cmbBorderStyle_currentIndexChanged(
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     controller->addUpdateProperty(m_propertiesNames->getBorderStyle(), variant);
   }
 }
@@ -286,7 +299,10 @@ void te::layout::TextGridSettingsOutside::on_cmbCellAlign_currentIndexChanged( c
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     controller->addUpdateProperty(m_propertiesNames->getCellAlignment(), variant);
   }
 }
@@ -386,7 +402,9 @@ void te::layout::TextGridSettingsOutside::initString( QWidget* widget, std::stri
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(prop.getValue().toString().c_str());
+    std::string value = prop.getValue().toString();
+    QString qValue = ItemUtils::convert2QString(value);
+    edit->setText(qValue);
     return;
   }
 }
@@ -404,7 +422,9 @@ void te::layout::TextGridSettingsOutside::initInt( QWidget* widget, std::string 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(convert.str().c_str());
+    std::string value = convert.str();
+    QString qValue = ItemUtils::convert2QString(value);
+    edit->setText(qValue);
   }
 }
 
@@ -423,7 +443,9 @@ void te::layout::TextGridSettingsOutside::initDouble( QWidget* widget, std::stri
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(convert.str().c_str());
+    std::string value = convert.str();
+    QString qValue = ItemUtils::convert2QString(value);
+    edit->setText(qValue);
   }
 }
 
@@ -498,7 +520,9 @@ void te::layout::TextGridSettingsOutside::initCombo( QWidget* widget, std::strin
   }
   else if(prop.getType() == dataType->getDataTypeString())
   {
-    variant.setValue(QString(prop.getValue().toString().c_str()));
+    std::string value = prop.getValue().toString();
+    QString qValue = ItemUtils::convert2QString(value);
+    variant.setValue(qValue);
   }
 
   index = combo->findData(variant);

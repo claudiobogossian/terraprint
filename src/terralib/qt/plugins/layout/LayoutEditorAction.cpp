@@ -58,7 +58,7 @@ te::qt::plugins::layout::LayoutEditorAction::LayoutEditorAction(QMenu* menu)
    m_statusBar(0),
    m_verticalLayout(0)
 {
-  createAction(tr("Layout Editor...").toStdString());
+  createAction(tr("Layout Editor..."));
 }
 
 te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
@@ -154,7 +154,7 @@ void te::qt::plugins::layout::LayoutEditorAction::onExit()
   QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
 
   m_menu->clear();
-  createAction(tr("Layout Editor...").toStdString());
+  createAction(tr("Layout Editor..."));
 
   if(m_mainLayout)
   {

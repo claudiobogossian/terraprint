@@ -26,6 +26,7 @@
 // TerraLib
 #include "MapSettingsOutside.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/ItemUtils.h"
 #include "ui_MapSettings.h"
 
 // Qt
@@ -171,7 +172,9 @@ std::string te::layout::MapSettingsOutside::getFilePath()
       m_ui->txtEdtFile->setText(qTxt);
     }
   }
-  return qTxt.toStdString();
+
+  std::string txt = ItemUtils::convert2StdString(qTxt);
+  return txt;
 }
 
 int te::layout::MapSettingsOutside::getDPI()

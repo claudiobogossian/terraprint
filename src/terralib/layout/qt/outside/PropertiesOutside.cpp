@@ -200,7 +200,10 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
 
   m_allItems = allItems;
 
-  m_nameLabel->setText(tr("Component::") + props.getObjectName().c_str());
+  std::string name = props.getObjectName();
+  QString qName = ItemUtils::convert2QString(name);
+
+  m_nameLabel->setText(tr("Component::") + qName);
   
   const std::vector<Property>& vecProperties = props.getProperties();
 

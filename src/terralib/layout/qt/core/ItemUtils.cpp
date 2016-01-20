@@ -285,35 +285,7 @@ QList<QGraphicsItem*> te::layout::ItemUtils::getItems( bool selected )
 
 void te::layout::ItemUtils::setCurrentToolInSelectedMapItems( EnumType* mode )
 {
-  /*
-  if(!mode)
-    return;
-
-  EnumModeType* type = Enums::getInstance().getEnumModeType();
-
-  if(mode == type->getModeNone())
-    return;
-
-  if(!isCurrentMapTools())
-    return;
-
-  QList<QGraphicsItem*> graphicsItems = getItems(true);
-  foreach(QGraphicsItem *item, graphicsItems) 
-  {
-    if(!item)
-      continue;
-
-    te::layout::ItemObserver* lItem = dynamic_cast<te::layout::ItemObserver*>(item);
-    if(!lItem)
-      continue;
-
-    te::layout::MapItem* mit = dynamic_cast<te::layout::MapItem*>(lItem);
-    if(!mit)
-      continue;
-
-    mit->changeCurrentTool(mode);
-  }
-  */
+  
 }
 
 void te::layout::ItemUtils::createTextGridAsObject()
@@ -323,133 +295,22 @@ void te::layout::ItemUtils::createTextGridAsObject()
 
 void te::layout::ItemUtils::createTextMapAsObject()
 {
-  /*
-  QGraphicsItem *item = m_scene->selectedItems().first();
-  if(item)
-  {
-    ItemObserver* it = dynamic_cast<ItemObserver*>(item);
-    if(it)
-    {
-      MapItem* mt = dynamic_cast<MapItem*>(it);
-      if(mt)
-      {
-        MapModel* model = dynamic_cast<MapModel*>(mt->getModel());
-        std::map<te::gm::Point*, std::string> map = model->getTextMapAsObjectInfo();
-        createTextItemFromObject(map);
-      }
-    }
-  }
-  */
+
 }
 
 void te::layout::ItemUtils::createTextItemFromObject( std::map<te::gm::Point*, std::string> map, QFont* ft )
 {
-  /*
-  Scene* scne = dynamic_cast<Scene*>(m_scene);
-
-  if(!scne)
-    return;
-
-  EnumModeType* mode = Enums::getInstance().getEnumModeType();
-
-  std::map<te::gm::Point*, std::string>::iterator it;
   
-  for (it = map.begin(); it != map.end(); ++it) 
-  {
-    te::gm::Point* pt = it->first;
-    std::string text = it->second;
-
-    QGraphicsItem* item = 0;
-    
-    te::gm::Coord2D coord(pt->getX(), pt->getY());
-    item = scne->createItem(coord);
-    if(!item)
-      continue;
-
-    TextItem* txtItem = dynamic_cast<TextItem*>(item);
-    if(txtItem)
-    {
-      TextModel* model = dynamic_cast<TextModel*>(txtItem->getModel());
-      if(model)
-      {
-        if(ft)
-        {
-          txtItem->setFont(*ft);
-          Font fnt = model->getFont();
-          fnt.setFamily(ft->family().toStdString());
-          fnt.setPointSize(ft->pointSize());
-          model->setFont(fnt);
-        }        
-        model->setText(text);
-        txtItem->document()->setPlainText(text.c_str());
-      }
-    }
-  }
-  */
 }
 
 void te::layout::ItemUtils::createLegendChildItemFromLegend( std::map<te::gm::Point*, std::string> map, te::layout::MapModel* visitable )
 {
-  /*
-  Scene* scne = dynamic_cast<Scene*>(m_scene);
-
-  if(!scne)
-    return;
-
-  if(!visitable)
-    return;
-
-  EnumModeType* mode = Enums::getInstance().getEnumModeType();
-
-  std::map<te::gm::Point*, std::string>::iterator it;
-
-  for (it = map.begin(); it != map.end(); ++it) 
-  {
-    te::gm::Point* pt = it->first;
-    std::string text = it->second;
-    
-    QGraphicsItem* item = 0;
-    te::gm::Coord2D coord(pt->getX(), pt->getY());
-    item = scne->createItem(coord);
-    if(!item)
-      continue;
-
-    LegendChildItem* lgItem = dynamic_cast<LegendChildItem*>(item);
-    if(lgItem)
-    {
-      QList<QGraphicsItem*> legends;
-      legends.push_back(lgItem);
-      te::layout::VisitorUtils::getInstance().changeMapVisitable(legends, visitable);
-    }
-  }
-  */
+ 
 }
 
 std::vector<te::layout::Properties*> te::layout::ItemUtils::getGridMapProperties()
 {
   std::vector<te::layout::Properties*> props;
-
-  /*
-  std::vector<te::layout::GridMapItem*> gridMapItems = getMapChildren();
-
-  std::vector<te::layout::GridMapItem*>::iterator it = gridMapItems.begin();
-  for( ; it != gridMapItems.end() ; ++it)
-  {
-    if(!(*it))
-    {
-      continue;
-    }
-
-    if(!(*it)->getModel())
-    {
-      continue;;
-    }
-
-    Properties* prop = (*it)->getModel()->getProperties();
-    props.push_back(prop);
-  }
-  */
-
   return props;
 }
 
@@ -744,3 +605,15 @@ QPainterPath te::layout::ItemUtils::lineToQPath(const te::gm::LineString& line)
 
   return path;
 }
+
+std::string te::layout::ItemUtils::convert2StdString(const QString& qString)
+{
+  std::string output(qString.toLatin1().constData());
+  return output;
+}
+
+QString te::layout::ItemUtils::convert2QString(const std::string& stdString)
+{
+  return QString::fromLatin1(stdString.c_str());
+}
+

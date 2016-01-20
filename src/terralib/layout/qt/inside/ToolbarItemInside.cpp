@@ -79,7 +79,7 @@ QToolBar* te::layout::ToolbarItemInside::getToolbar()
   return m_toolbar;
 }
 
-QToolButton* te::layout::ToolbarItemInside::createToolButton(std::string text, std::string tooltip, std::string icon)
+QToolButton* te::layout::ToolbarItemInside::createToolButton(const QString& text, const QString& tooltip, const QString& icon)
 {
   QToolButton *btn = 0;
 
@@ -87,18 +87,18 @@ QToolButton* te::layout::ToolbarItemInside::createToolButton(std::string text, s
     return btn;
 
   btn = new QToolButton(m_toolbar);
-  btn->setText(text.c_str());
+  btn->setText(text);
   btn->setGeometry(0, 0, 10, 10);
   btn->setCheckable(true);
-  btn->setToolTip(tooltip.c_str());
+  btn->setToolTip(tooltip);
 
-  if (!icon.empty())
-    btn->setIcon(QIcon::fromTheme(icon.c_str()));
+  if (!icon.isEmpty())
+    btn->setIcon(QIcon::fromTheme(icon));
 
   return btn;
 }
 
-QPushButton* te::layout::ToolbarItemInside::createPushButton(std::string text, std::string tooltip, std::string icon)
+QPushButton* te::layout::ToolbarItemInside::createPushButton(const QString& text, const QString& tooltip, const QString& icon)
 {
   QPushButton *btn = 0;
 
@@ -106,17 +106,17 @@ QPushButton* te::layout::ToolbarItemInside::createPushButton(std::string text, s
     return btn;
 
   btn = new QPushButton(m_toolbar);
-  btn->setText(text.c_str());
+  btn->setText(text);
   btn->setGeometry(0, 0, 10, 10);
   btn->setCheckable(true);
-  btn->setToolTip(tooltip.c_str());
+  btn->setToolTip(tooltip);
 
-  btn->setIcon(QIcon::fromTheme(icon.c_str()));
+  btn->setIcon(QIcon::fromTheme(icon));
 
   return btn;
 }
 
-QAction* te::layout::ToolbarItemInside::createAction(std::string text, std::string objName, std::string icon, std::string tooltip, QWidget* parent)
+QAction* te::layout::ToolbarItemInside::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip, QWidget* parent)
 {
   QAction *actionMenu = 0;
 
@@ -129,11 +129,11 @@ QAction* te::layout::ToolbarItemInside::createAction(std::string text, std::stri
     parentToUse = m_toolbar;
   }
 
-  actionMenu = new QAction(text.c_str(), parentToUse);
-  actionMenu->setObjectName(objName.c_str());
+  actionMenu = new QAction(text, parentToUse);
+  actionMenu->setObjectName(objName);
 
-  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
-  actionMenu->setToolTip(tooltip.c_str());
+  actionMenu->setIcon(QIcon::fromTheme(icon));
+  actionMenu->setToolTip(tooltip);
 
   return actionMenu;
 }

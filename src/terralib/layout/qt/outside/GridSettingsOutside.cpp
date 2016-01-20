@@ -37,6 +37,7 @@
 #include "terralib/common/StringUtils.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/Font.h"
+#include "../core/ItemUtils.h"
 
 // STL
 #include <string>
@@ -184,10 +185,9 @@ bool te::layout::GridSettingsOutside::checkValidDegreeValue(const QString &value
   int                  degree = 0, minute = 0;
   float                second = 0;
   int                  status = 0;
-  std::basic_string <char>::size_type    index;
-  std::string              strDegree = "";
+  std::basic_string <char>::size_type index;
 
-  strDegree = std::string(value.toStdString());
+  std::string strDegree = ItemUtils::convert2StdString(value);
   if((index=strDegree.find("°")) !=std::string::npos)  
   {
     strDegree.replace(index,1,"");
@@ -511,7 +511,9 @@ QString te::layout::GridSettingsOutside::DMS2DD(const QString dms)
   }
 
   std::string output = te::common::Convert2String(coord, 4);
-  return QString(output.c_str());
+  QString qValue = ItemUtils::convert2QString(output);
+
+  return qValue;
 }
 
 
@@ -551,7 +553,10 @@ void te::layout::GridSettingsOutside::on_cmbUnit_currentIndexChanged( const QStr
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->updateProperty(m_planarGridSettings->getUnit(), variant, m_planarType);
     emit updateProperty(prop);
   }
@@ -577,7 +582,10 @@ void te::layout::GridSettingsOutside::on_cmbPlanarStyle_currentIndexChanged( con
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->updateProperty(m_planarGridSettings->getStyle(), variant, m_planarType);
     emit updateProperty(prop);
   }
@@ -590,7 +598,10 @@ void te::layout::GridSettingsOutside::on_cmbGridStyle_currentIndexChanged( const
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->updateProperty(m_geodesicGridSettings->getStyle(), variant, m_geodesicType);
     emit updateProperty(prop);
   }
@@ -722,7 +733,10 @@ void te::layout::GridSettingsOutside::on_cmbPlanarLineType_currentIndexChanged( 
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->updateProperty(m_planarGridSettings->getLineStyle(), variant, m_planarType);
     emit updateProperty(prop);
   }
@@ -750,7 +764,10 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->updateProperty(m_geodesicGridSettings->getLineStyle(), variant, m_geodesicType);
     emit updateProperty(prop);
   }
@@ -817,7 +834,10 @@ void te::layout::GridSettingsOutside::on_cmbPlanarFont_currentIndexChanged( cons
     if (!prop_font.isNull())
     {
       Font font = prop_font.getValue().toFont();
-      font.setFamily(text.toStdString());
+
+      std::string stdText = ItemUtils::convert2StdString(text);
+
+      font.setFamily(stdText);
 
       Variant variant;
       variant.setValue(font, dataType->getDataTypeFont());
@@ -865,7 +885,10 @@ void te::layout::GridSettingsOutside::on_cmbGeoFont_currentIndexChanged( const Q
     if (!prop_font.isNull())
     {
       Font font = prop_font.getValue().toFont();
-      font.setFamily(text.toStdString());
+
+      std::string stdText = ItemUtils::convert2StdString(text);
+
+      font.setFamily(stdText);
 
       Variant variant;
       variant.setValue(font, dataType->getDataTypeFont());
@@ -1347,7 +1370,10 @@ void te::layout::GridSettingsOutside::on_cmbCornerGeoFont_currentIndexChanged( c
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toStdString(), dataType->getDataTypeString());
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->updateProperty(m_geodesicGridSettings->getFontTextCorner(), variant, m_geodesicType);
     emit updateProperty(prop);
   }
@@ -1625,7 +1651,10 @@ void te::layout::GridSettingsOutside::initString( QWidget* widget, std::string n
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(prop.getValue().toString().c_str());
+    std::string txt = prop.getValue().toString();
+    QString qText = ItemUtils::convert2QString(txt);
+
+    edit->setText(qText);
     return;
   }
 }
@@ -1643,7 +1672,9 @@ void te::layout::GridSettingsOutside::initInt( QWidget* widget, std::string name
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(convert.str().c_str());
+    std::string txt = convert.str();
+    QString qText = ItemUtils::convert2QString(txt);
+    edit->setText(qText);
   }
 }
 
@@ -1662,7 +1693,9 @@ void te::layout::GridSettingsOutside::initDouble( QWidget* widget, std::string n
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    edit->setText(QString::fromStdString(convert.str().c_str()));
+    std::string txt = convert.str();
+    QString qText = ItemUtils::convert2QString(txt);
+    edit->setText(qText);
   }
 }
 
@@ -1737,11 +1770,17 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
   }
   else if(prop.getType() == dataType->getDataTypeString())
   {
-    variant.setValue(QString(prop.getValue().toString().c_str()));
+    std::string txt = prop.getValue().toString();
+    QString qText = ItemUtils::convert2QString(txt);
+
+    variant.setValue(qText);
   }
   else if (prop.getType() == dataType->getDataTypeStringList())
   {
-    variant.setValue(QString(prop.getOptionByCurrentChoice().toString().c_str()));
+    std::string txt = prop.getOptionByCurrentChoice().toString();
+    QString qText = ItemUtils::convert2QString(txt);
+
+    variant.setValue(qText);
   }
   else if (prop.getType() == dataType->getDataTypeFont())
   {
@@ -1756,8 +1795,10 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
       || widget->objectName().compare("cmbGeoFont") == 0
       || widget->objectName().compare("cmbCornerGeoFont") == 0)
     {
-      QString txt(prop.getValue().toFont().getFamily().c_str());
-      variant.setValue(txt);
+      std::string txt = prop.getValue().toFont().getFamily();
+      QString qText = ItemUtils::convert2QString(txt);
+
+      variant.setValue(qText);
     }
   }
 
