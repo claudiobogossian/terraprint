@@ -81,7 +81,7 @@ namespace te
                 
     protected:
             
-      virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "");
+      virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "");
       
       virtual void changePropertyValue(Property property);
 

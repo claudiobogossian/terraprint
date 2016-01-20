@@ -121,12 +121,19 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
   {
     if(!prop.isMenu() || !prop.isVisible())
       continue;
+    
+    std::string stdLabel = prop.getLabel();
+    if (stdLabel.compare("") == 0)
+      stdLabel = prop.getName();
 
-    std::string label = prop.getLabel();
-    if(label.compare("") == 0)
-      label = prop.getName();
+    std::string name = prop.getName();
+    std::string icon = prop.getIcon();
 
-    QAction* action = createAction(label, prop.getName(), prop.getIcon());
+    QString qLabel = ItemUtils::convert2QString(stdLabel);
+    QString qName = ItemUtils::convert2QString(stdLabel);
+    QString qIcon = ItemUtils::convert2QString(stdLabel);
+
+    QAction* action = createAction(qLabel, qName, qIcon);
     m_menu->addAction(action);
     if(prop.getType() == dataType->getDataTypeBool())
     {
@@ -136,18 +143,13 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
   }
 }
 
-QAction* te::layout::MenuBuilder::createAction( std::string text, std::string objName, std::string icon, std::string tooltip )
+QAction* te::layout::MenuBuilder::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip)
 {
-  QString qText = ItemUtils::convert2QString(text);
-  QString qObjName = ItemUtils::convert2QString(text);
-  QString qIcon = ItemUtils::convert2QString(text);
-  QString qTooltip = ItemUtils::convert2QString(text);
+  QAction *actionMenu = new QAction(text, this);
+  actionMenu->setObjectName(objName);
 
-  QAction *actionMenu = new QAction(qText, this);
-  actionMenu->setObjectName(qObjName);
-
-  actionMenu->setIcon(QIcon::fromTheme(qIcon));
-  actionMenu->setToolTip(qTooltip);
+  actionMenu->setIcon(QIcon::fromTheme(icon));
+  actionMenu->setToolTip(tooltip);
 
   return actionMenu;
 }
