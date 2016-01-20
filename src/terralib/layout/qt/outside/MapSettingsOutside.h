@@ -41,6 +41,7 @@ namespace te
   namespace layout
   {
     class AbstractOutsideController;
+    class MapLayerChoiceOutside;
 
     class TELAYOUTEXPORT MapSettingsOutside : public QDialog, public AbstractOutsideView
     {
@@ -86,6 +87,8 @@ namespace te
       private:
 
         std::auto_ptr<Ui::MapSettings> m_ui;
+        std::auto_ptr<MapLayerChoiceOutside> m_widget;
+        void initDouble(QWidget* widget, std::string nameComponent);
         
     };
   }    

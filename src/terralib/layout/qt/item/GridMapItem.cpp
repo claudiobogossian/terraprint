@@ -291,8 +291,8 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
       QString completeTxt(txt.c_str());
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
       QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
@@ -359,8 +359,8 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
       QString completeTxt(txt.c_str());
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
       QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
@@ -427,8 +427,8 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 
       QString completeTxt(txt.c_str());
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
       QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
@@ -491,8 +491,8 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 
       QString completeTxt(txt.c_str());
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
       QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());

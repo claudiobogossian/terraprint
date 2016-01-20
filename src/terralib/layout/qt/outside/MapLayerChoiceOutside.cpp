@@ -43,7 +43,7 @@
 #include <QString>
 
 te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+  : QWidget(0),
     AbstractOutsideView(controller),
     m_ui(new Ui::MapLayerChoice)
 {
@@ -58,8 +58,6 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   m_widget->setLeftLabel(tr("Available Layers").toStdString());
   m_widget->setRightLabel(tr("Selected Layers").toStdString());
 
-  connect(m_ui->m_okPushButton, SIGNAL(clicked()), this, SLOT(onOkPushButtonClicked()));
-  connect(m_ui->m_cancelPushButton, SIGNAL(clicked()), this, SLOT(onCancelPushButtonClicked()));
 }
 
 te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
@@ -142,7 +140,7 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
   if (selectedLayers == m_layersSelected)
   {
     m_layersSelected.clear();
-    accept();
+    //accept();
     return;
   }
 
@@ -154,12 +152,12 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
 
   emit updateProperty(prop);
 
-  accept();
+  //accept();
 }
 
 void te::layout::MapLayerChoiceOutside::onCancelPushButtonClicked()
 {
-  reject();
+  //reject();
 }
 
 void te::layout::MapLayerChoiceOutside::setPosition( const double& x, const double& y )
