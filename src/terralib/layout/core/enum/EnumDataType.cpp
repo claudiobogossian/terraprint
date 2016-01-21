@@ -54,7 +54,8 @@ te::layout::EnumDataType::EnumDataType() :
   m_dataTypeItemObserver(0),
   m_dataTypeGroupProperties(0),
   m_dataTypeMapSettings(0),
-  m_dataTypeScaleSettings(0)
+  m_dataTypeScaleSettings(0),
+  m_dataTypeNorthSettings(0)
 {
   init();
 }
@@ -186,6 +187,11 @@ te::layout::EnumDataType::~EnumDataType()
     delete m_dataTypeScaleSettings;
     m_dataTypeScaleSettings = 0;
   }
+   if (m_dataTypeNorthSettings)
+  {
+	  delete m_dataTypeNorthSettings;
+	  m_dataTypeNorthSettings = 0;
+  }
 }
 
 void te::layout::EnumDataType::init()
@@ -241,6 +247,8 @@ void te::layout::EnumDataType::init()
   m_dataTypeMapSettings = createEnum("MapSettings", this, "Map Settings");
 
   m_dataTypeScaleSettings = createEnum("ScaleSettings", this, "Scale Settings");
+  
+  m_dataTypeNorthSettings = createEnum("NorthSettings", this, "North Settings");
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNone() const
@@ -373,3 +381,7 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypeScaleSettings() const
   return m_dataTypeScaleSettings;
 }
 
+te::layout::EnumType* te::layout::EnumDataType::getDataTypeNorthSettings() const
+{
+	return m_dataTypeNorthSettings;
+}

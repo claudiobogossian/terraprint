@@ -240,6 +240,13 @@ namespace te
         \return enum value
         */
         virtual EnumType* getDataTypeScaleSettings() const;
+		
+		/*!
+		\brief Returns value that represents type NorthSettings (string) belonging to enumeration
+
+		\return enum value
+		*/
+		virtual EnumType* getDataTypeNorthSettings() const;
 
       protected:
 
@@ -276,6 +283,7 @@ namespace te
         EnumType* m_dataTypeGroupProperties; //!< value that represents type group properties to  belonging to enumeration
         EnumType* m_dataTypeMapSettings; //!< value that represents type MapSettings (string) belonging to enumeration
         EnumType* m_dataTypeScaleSettings; //!< value that represents type ScaleSettings (string) belonging to enumeration
+		EnumType* m_dataTypeNorthSettings; //!< value that represents type NorthSettings (string) belonging to enumeration
     };
   }
 }
