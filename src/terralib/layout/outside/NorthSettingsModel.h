@@ -38,13 +38,13 @@ namespace te
 {
   namespace layout
   {
-	  class TELAYOUTEXPORT NorthSettingsModel : public AbstractOutsideModel
+    class TELAYOUTEXPORT NorthSettingsModel : public AbstractOutsideModel
     {
     public:
 
-		NorthSettingsModel();
+    NorthSettingsModel();
 
-		virtual ~NorthSettingsModel();
+    virtual ~NorthSettingsModel();
 
       virtual void setNorthProperties(te::layout::Properties properties);
             

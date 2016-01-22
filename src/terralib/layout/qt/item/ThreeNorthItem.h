@@ -75,14 +75,14 @@ namespace te
         
       protected:
 
-		  /*!
-		  \brief Drawing method of a True North
+        /*!
+        \brief Drawing method of a True North
 
-		  \param canvas
-		  \param utils
-		  \param box
-		  */
-		  virtual void drawTrueNorth(QPainter * painter);
+        \param canvas
+        \param utils
+        \param box
+        */
+        virtual void drawTrueNorth(QPainter * painter);
         
         /*!
           \brief Drawing method of a Magnetic North
@@ -91,7 +91,7 @@ namespace te
           \param utils
           \param box
          */
-		  virtual void drawMagneticNorth(QPainter * painter, double angleMN);
+        virtual void drawMagneticNorth(QPainter * painter, double angleMN);
         /*!
           \brief Drawing method of a Grid North
 
@@ -99,19 +99,19 @@ namespace te
           \param utils
           \param box
          */
-		  virtual void drawMeridianConvergence(QPainter * painter, double angleMC);
+        virtual void drawMeridianConvergence(QPainter * painter, double angleMC);
 
-		virtual void getAngles(double &angleMN, double &angleMC);
+        virtual void getAngles(double &angleMN, double &angleMC);
 
-		virtual void drawArc(QPainter * painter);
+        virtual void drawArc(QPainter * painter);
        
         void setBrush(QPainter* painter);
 
-		QString DMS2DD(const QString dms);
+       QString DMS2DD(const QString dms);
 
-		QString DD2DMS(const QString dms);
+        QString DD2DMS(const QString dms);
 
-		
+          
     };
   }
 }

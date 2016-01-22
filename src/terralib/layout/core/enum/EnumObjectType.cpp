@@ -137,8 +137,8 @@ te::layout::EnumObjectType::~EnumObjectType()
 
   if (m_northSettings)
   {
-	  delete m_northSettings;
-	  m_northSettings = 0;
+    delete m_northSettings;
+    m_northSettings = 0;
   }
 
   if(m_gridPlanarItem)
@@ -521,7 +521,7 @@ te::layout::EnumType* te::layout::EnumObjectType::getGridSettings() const
 
 te::layout::EnumType* te::layout::EnumObjectType::getNorthSettings() const
 {
-	return m_northSettings;
+  return m_northSettings;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getGridPlanarItem() const

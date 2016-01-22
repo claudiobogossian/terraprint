@@ -98,7 +98,7 @@ te::layout::Property te::layout::NorthSettingsController::getProperty(std::strin
   if(m_model)
   {
     AbstractOutsideModel* model = dynamic_cast<AbstractOutsideModel*>(m_model);
-	outsideModel = dynamic_cast<NorthSettingsModel*>(model);
+    outsideModel = dynamic_cast<NorthSettingsModel*>(model);
   }
 
   if(!outsideModel)

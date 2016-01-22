@@ -29,6 +29,7 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#include "../../core/property/NorthSettingsConfigProperties.h"
 
 // Qt
 #include <QDialog>
@@ -42,17 +43,17 @@ namespace te
   {
     class AbstractOutsideController;
 
-	class TELAYOUTEXPORT NorthSettingsOutside : public QDialog, public AbstractOutsideView
+    class TELAYOUTEXPORT NorthSettingsOutside : public QDialog, public AbstractOutsideView
     {
       Q_OBJECT
 
       public:
 
-		  NorthSettingsOutside(AbstractOutsideController* controller);
+        NorthSettingsOutside(AbstractOutsideController* controller);
 
-		  virtual ~NorthSettingsOutside();
+        virtual ~NorthSettingsOutside();
 
-		  virtual void load();
+        virtual void load();
 
         /*!
           \brief Load layers in double widget.
@@ -68,29 +69,35 @@ namespace te
 
         void onCancelPushButtonPressed();
 
-		void onSaveAsClicked();
-	
-	signals:
+        void onSaveAsClicked();
 
-		void updateProperty(Property prop);
+        virtual void on_pbNorthLineColor_clicked();
+  
+      signals:
 
-	protected:
+        void updateProperty(Property prop);
 
-		virtual te::color::RGBAColor configColor(QWidget* widget);
+      protected:
 
-		virtual void init();
+        virtual te::color::RGBAColor configColor(QWidget* widget);
 
-		//virtual void initString(QWidget* widget, std::string nameComponent, EnumType* northType);
+        virtual void init();
 
-		//virtual void initInt(QWidget* widget, std::string nameComponent, EnumType* northType);
+        NorthSettingsConfigProperties* m_northSettings;
+        EnumType* m_northType;
+        EnumType* m_geodesicType;
 
-		//virtual void initDouble(QWidget* widget, std::string nameComponent, EnumType* northType);
+        //virtual void initString(QWidget* widget, std::string nameComponent, EnumType* northType);
 
-		//virtual void initBool(QWidget* widget, std::string nameComponent, EnumType* northType);
+        //virtual void initInt(QWidget* widget, std::string nameComponent, EnumType* northType);
 
-		//virtual void initColor(QWidget* widget, std::string nameComponent, EnumType* northType);
+        //virtual void initDouble(QWidget* widget, std::string nameComponent, EnumType* northType);
 
-		//virtual void initCombo(QWidget* widget, std::string nameComponent, EnumType* northType);*/
+        //virtual void initBool(QWidget* widget, std::string nameComponent, EnumType* northType);
+
+        //virtual void initColor(QWidget* widget, std::string nameComponent, EnumType* northType);
+
+        //virtual void initCombo(QWidget* widget, std::string nameComponent, EnumType* northType);*/
 
         
       private:

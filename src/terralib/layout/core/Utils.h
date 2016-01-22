@@ -304,7 +304,7 @@ namespace te
         */
         static PaperConfig convertToPaperConfig(const Properties& properties);
 
-		virtual te::gm::Envelope getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
+        virtual te::gm::Envelope getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
 
       protected:
         

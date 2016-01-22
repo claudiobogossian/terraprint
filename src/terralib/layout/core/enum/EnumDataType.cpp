@@ -189,8 +189,8 @@ te::layout::EnumDataType::~EnumDataType()
   }
    if (m_dataTypeNorthSettings)
   {
-	  delete m_dataTypeNorthSettings;
-	  m_dataTypeNorthSettings = 0;
+    delete m_dataTypeNorthSettings;
+    m_dataTypeNorthSettings = 0;
   }
 }
 
@@ -383,5 +383,5 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypeScaleSettings() const
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNorthSettings() const
 {
-	return m_dataTypeNorthSettings;
+  return m_dataTypeNorthSettings;
 }
