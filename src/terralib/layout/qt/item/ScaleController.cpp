@@ -336,7 +336,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   double mmToCm = gapX / 10.;
 
   double value = (spacing * mmToCm) / unit;
-  if (value != scaleInUnit)
+  if ((value != scaleInUnit) && value > 0)
   {
     Property prop;
     prop.setName("scale_in_unit_width_rect_gap");

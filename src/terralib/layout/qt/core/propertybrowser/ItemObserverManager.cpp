@@ -239,11 +239,7 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
       const std::string itemName = property.getValue().toString();
       if (!itemName.empty())
       {
-        const Property& prop = data.item->getController()->getProperty("name");
-
-        std::string value = prop.getValue().toString();
-        QString qValue = ItemUtils::convert2QString(value);
-
+        QString qValue = ItemUtils::convert2QString(itemName);        
         if (qValue.compare(data.currentName) == 0)
         {
           bupdate_property = false;
@@ -264,10 +260,14 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
       }
       else
       {
-        if (data.item == 0)
+        if (data.item != 0)
         {
+          data.item = 0;
+          data.currentName = "";
+          setValue(qprop, data.currentName); //change qproperty
           bupdate_property = false;
         }
+        bupdate_property = false;
       }
     }
   }

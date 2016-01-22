@@ -49,6 +49,9 @@ te::layout::ScaleModel::ScaleModel()
   std::string itemName = "";
   Font font;
   double scaleUnitGapX = 7.5;
+  bool onlyFirstAndLastValue = false;
+  int numberOfBreaks = 1;
+  te::color::RGBAColor fontColor(0, 0, 0, 255);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -61,7 +64,6 @@ te::layout::ScaleModel::ScaleModel()
     property.setLabel(TR_LAYOUT("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
     property.setEditable(false);
-    property.setMenu(true);
     m_properties.addProperty(property);
   }
   {
@@ -140,6 +142,15 @@ te::layout::ScaleModel::ScaleModel()
 
   {
     Property property(0);
+    property.setName("font_color");
+    property.setLabel(TR_LAYOUT("Font Color"));
+    property.setValue(fontColor, dataType->getDataTypeColor());
+    property.setVisible(false);
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
     property.setName("Unit");
     property.setLabel(TR_LAYOUT("Unit"));
     property.setValue(std::string("km"), dataType->getDataTypeStringList());
@@ -160,6 +171,22 @@ te::layout::ScaleModel::ScaleModel()
     property.setName("scale_in_unit_width_rect_gap");
     property.setLabel(TR_LAYOUT("Scale Gap X In Unit"));
     property.setValue(scaleUnitGapX, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("only_first_and_last_value");
+    property.setLabel(TR_LAYOUT("Only the first and the last value"));
+    property.setValue(onlyFirstAndLastValue, dataType->getDataTypeBool());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("number_of_breaks");
+    property.setLabel(TR_LAYOUT("Number of graphical scale breaks"));
+    property.setValue(numberOfBreaks, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
 

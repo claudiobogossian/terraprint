@@ -26,14 +26,16 @@
 // TerraLib
 #include "ScaleSettingsOutsideFactory.h"
 #include "../../../../../outside/ScaleSettingsModel.h"
-#include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../../../../outside/ScaleSettingsController.h"
 #include "../../../../outside/ScaleSettingsOutside.h"
 
 te::layout::AbstractOutsideView* te::layout::ScaleSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
   ScaleSettingsModel* model = new ScaleSettingsModel();
 
-  AbstractOutsideController* controller = new AbstractOutsideController(model);
+  Scene* scene = params.getScene();
+
+  ScaleSettingsController* controller = new ScaleSettingsController(scene, model);
   ScaleSettingsOutside* view = new ScaleSettingsOutside(controller);
   controller->setView(view);
 
