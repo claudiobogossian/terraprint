@@ -57,7 +57,7 @@
 #include "../../outside/MapSettingsOutside.h"
 #include "../../../outside/MapSettingsModel.h"
 #include "../../outside/ScaleSettingsOutside.h"
-#include "../../../outside/ScaleSettingsModel.h"
+#include "../../outside/ScaleSettingsController.h"
 
 // STL
 #include <vector>
@@ -700,13 +700,13 @@ void te::layout::DialogPropertiesBrowser::onShowScaleSettingsDlg()
   appendDialog(scaleSettings);
 
   AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(scaleSettings->getController());
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
-  ScaleSettingsModel* model = dynamic_cast<ScaleSettingsModel*>(abstractModel);
-  if (!model)
+  ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(abstractController);
+  if (!controller)
   {
     return;
   }
-
+  
+  scaleSettings->load();
   scaleSettings->show(); // modeless dialog
   scaleSettings->raise(); // top of the parent widget's stack
 }
@@ -913,5 +913,4 @@ void te::layout::DialogPropertiesBrowser::appendDialog( QWidget* widget )
 
   widget->setAttribute(Qt::WA_DeleteOnClose);
 }
-
 

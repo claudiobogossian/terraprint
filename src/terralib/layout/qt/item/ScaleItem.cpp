@@ -106,7 +106,10 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   QColor firstRect = black;
   QColor secondRect = white;
   QColor changeColor;
-  QColor textColor(0, 0, 0, 255);
+
+  const Property& prop_font_color = m_controller->getProperty("font_color");
+  const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
+  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   double displacementBetweenScaleAndText = 2.;
   
@@ -228,7 +231,10 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QColor firstRect = black;
   QColor secondRect = white;
   QColor changeColor;
-  QColor textColor(0, 0, 0, 255);
+  
+  const Property& prop_font_color = m_controller->getProperty("font_color");
+  const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
+  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   QFont qFont = ItemUtils::convertToQfont(m_font);
 
@@ -339,7 +345,10 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   QColor firstRect = black;
   QColor secondRect = white;
   QColor changeColor;
-  QColor textColor(0, 0, 0, 255);
+  
+  const Property& prop_font_color = m_controller->getProperty("font_color");
+  const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
+  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   double displacementBetweenScaleAndText = 2.;
 
