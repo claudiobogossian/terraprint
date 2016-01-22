@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-01-19 09:56-0200\n"
-"PO-Revision-Date: 2016-01-19 10:02-0200\n"
+"POT-Creation-Date: 2016-01-22 15:34-0200\n"
+"PO-Revision-Date: 2016-01-22 15:36-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -81,7 +81,7 @@ msgstr "Ordem em que aparece"
 msgid "Editable"
 msgstr "Editável"
 
-#: item/ArrowModel.cpp:52 item/NorthModel.cpp:51
+#: item/ArrowModel.cpp:52 item/NorthModel.cpp:52
 msgid "Graphic Type"
 msgstr "Tipo do Gráfico"
 
@@ -119,7 +119,7 @@ msgstr "Exibir Texto de Segundos"
 msgid "Seconds Text Precision"
 msgstr "Precisão dos segundos"
 
-#: item/GridMapModel.cpp:87 item/MapModel.cpp:69 item/ScaleModel.cpp:84
+#: item/GridMapModel.cpp:87 item/MapModel.cpp:69 item/ScaleModel.cpp:86
 #: item/TitleModel.cpp:79 item/TitleModel.cpp:80
 msgid "Settings"
 msgstr "Configurações"
@@ -164,7 +164,7 @@ msgstr "Cor da Linha"
 msgid "Line Width"
 msgstr "Largura da Linha"
 
-#: item/GridMapModel.cpp:221 item/ScaleModel.cpp:136 item/TextModel.cpp:52
+#: item/GridMapModel.cpp:221 item/ScaleModel.cpp:138 item/TextModel.cpp:52
 msgid "Font"
 msgstr "Fonte"
 
@@ -225,11 +225,12 @@ msgid "Cross Offset"
 msgstr "Tamanho da Cruz"
 
 #: item/GridMapModel.cpp:362 item/LegendModel.cpp:106
-#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:98
+#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:100
+#: item/ThreeNorthModel.cpp:79
 msgid "Connection with"
 msgstr "Conectar com"
 
-#: item/GridPlanarModel.cpp:75 item/ScaleModel.cpp:144
+#: item/GridPlanarModel.cpp:75 item/ScaleModel.cpp:155
 msgid "Unit"
 msgstr "Unidade"
 
@@ -297,7 +298,7 @@ msgstr "Linhas"
 msgid "Offset Between Columns"
 msgstr "Deslocamento entre as colunas"
 
-#: item/LineModel.cpp:88 item/NorthModel.cpp:76 item/TextModel.cpp:68
+#: item/LineModel.cpp:88 item/NorthModel.cpp:77 item/TextModel.cpp:68
 #: item/TitleModel.cpp:102
 msgid "Color"
 msgstr "Cor"
@@ -326,17 +327,21 @@ msgstr "Configurações do mapa"
 msgid "Layers"
 msgstr "Planos"
 
-#: item/MapModel.cpp:103
+#: item/MapModel.cpp:103 item/ThreeNorthModel.cpp:158
 msgid "World Box"
 msgstr "Retângulo do Mundo"
 
-#: item/MapModel.cpp:111
+#: item/MapModel.cpp:111 item/ThreeNorthModel.cpp:166
 msgid "SRID"
 msgstr "SRID"
 
-#: item/MapModel.cpp:119 item/ScaleModel.cpp:61
+#: item/MapModel.cpp:119 item/ScaleModel.cpp:64
 msgid "Scale"
 msgstr "Escala"
+
+#: item/NorthModel.cpp:86
+msgid "North Settings"
+msgstr "Configuração do Norte"
 
 #: item/PaperModel.cpp:56
 msgid "Paper Color"
@@ -366,25 +371,37 @@ msgstr "Tipo do Papel"
 msgid "Orientation"
 msgstr "Orientação"
 
-#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:110
+#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:112
 msgid "Graphic type"
 msgstr "Tipo do Gráfico"
 
-#: item/ScaleModel.cpp:70
+#: item/ScaleModel.cpp:72
 msgid "Scale Gap X"
 msgstr "Intervalo da Escala em X"
 
-#: item/ScaleModel.cpp:78
+#: item/ScaleModel.cpp:80
 msgid "Scale Gap Y"
 msgstr "Intervalo da Escala em Y"
 
-#: item/ScaleModel.cpp:87
+#: item/ScaleModel.cpp:89
 msgid "Scale Settings"
 msgstr "Configurações da escala"
 
-#: item/ScaleModel.cpp:161
+#: item/ScaleModel.cpp:146
+msgid "Font Color"
+msgstr "Cor da fonte"
+
+#: item/ScaleModel.cpp:172
 msgid "Scale Gap X In Unit"
 msgstr "Lacuna na horizontal em unidade"
+
+#: item/ScaleModel.cpp:180
+msgid "Only the first and the last value"
+msgstr "Apenas o primeiro e o último valor "
+
+#: item/ScaleModel.cpp:188
+msgid "Number of graphical scale breaks"
+msgstr "Número de quebras da escala gráfica"
 
 #: item/TextModel.cpp:60
 msgid "Text"
@@ -394,29 +411,29 @@ msgstr "Texto"
 msgid "Alignment"
 msgstr "Alinhamento"
 
-#: item/ThreeNorthModel.cpp:56
-msgid "Map Name"
-msgstr "Nome do Mapa"
-
-#: item/ThreeNorthModel.cpp:68
+#: item/ThreeNorthModel.cpp:88
 msgid "color"
 msgstr "cor"
 
-#: item/ThreeNorthModel.cpp:75
-msgid "magnetic_convergence"
+#: item/ThreeNorthModel.cpp:96
+msgid "Meridian Convergence"
 msgstr "Convergência Meridiana"
 
-#: item/ThreeNorthModel.cpp:83
-msgid "magnetic_north"
+#: item/ThreeNorthModel.cpp:104
+msgid "Magnetic North"
 msgstr "Norte Magnético"
 
-#: item/ThreeNorthModel.cpp:92
-msgid "angle_magnetic_convergence"
-msgstr "Ângulo da Convergência Meridiana"
+#: item/ThreeNorthModel.cpp:114
+msgid "Angle Meridian Convergence"
+msgstr "Ângulo da convergência meridiana"
 
-#: item/ThreeNorthModel.cpp:101
-msgid "angle_magnetic_north"
-msgstr "Ângulo do Norte  Magnético"
+#: item/ThreeNorthModel.cpp:123
+msgid "Angle Magnetic North"
+msgstr "Ângulo do norte magnético"
+
+#: item/ThreeNorthModel.cpp:148
+msgid "Date"
+msgstr "Data"
 
 #: item/TitleModel.cpp:88
 msgid "Spacing"
@@ -461,6 +478,21 @@ msgstr "Cor do Cabeçalho Horizontal"
 #: item/TitleModel.cpp:172
 msgid "Vertical Header Color"
 msgstr "Cor do Cabeçalho Vertical"
+
+#~ msgid "Map Name"
+#~ msgstr "Nome do Mapa"
+
+#~ msgid "magnetic_convergence"
+#~ msgstr "Convergência Meridiana"
+
+#~ msgid "magnetic_north"
+#~ msgstr "Norte Magnético"
+
+#~ msgid "angle_magnetic_convergence"
+#~ msgstr "Ângulo da Convergência Meridiana"
+
+#~ msgid "angle_magnetic_north"
+#~ msgstr "Ângulo do Norte  Magnético"
 
 #~ msgid "Border"
 #~ msgstr "Borda"

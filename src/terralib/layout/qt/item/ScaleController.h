@@ -35,6 +35,9 @@
 // STL
 #include <string>
 
+// Qt
+#include <QString>
+
 namespace te
 {
   namespace layout
@@ -67,6 +70,8 @@ namespace te
         virtual double getUnit(std::string& strUnit);
 
         virtual double getGap(double& initialGap);
+
+        virtual QPainterPath getLastText();
 
         virtual void setProperty(const Property& property);
 

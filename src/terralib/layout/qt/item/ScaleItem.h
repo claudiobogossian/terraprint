@@ -73,9 +73,11 @@ namespace te
       protected:
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
-
+        
         virtual void drawDoubleAlternatingScaleBar(QPainter * painter);
+
         virtual void drawAlternatingScaleBar(QPainter * painter);
+        
         virtual void drawHollowScaleBar(QPainter * painter);
 
         double  m_scale;
