@@ -404,7 +404,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
       QLineF lne2(x, y, x1MeridianConvergence, y1MeridianConvergence);
     
 
-      if (angle_meridian == 0 && angle_magnetic == 0
+      if (angle_meridian == 0 && angle_magnetic == 0)
       {
         painter->restore();
         return;
