@@ -386,14 +386,14 @@ namespace te
         \return enum value
         */
         virtual EnumType* getScaleSettingsDialog() const;
-		
-				/*!
-		\brief Returns value that represents NorthSettings window (MVC dialog) type belonging to enumeration.
+    
+        /*!
+        \brief Returns value that represents NorthSettings window (MVC dialog) type belonging to enumeration.
 
-		\return enum value
-		*/
+        \return enum value
+        */
 
-		virtual EnumType* getNorthSettings() const;
+        virtual EnumType* getNorthSettings() const;
 
       protected:
 
@@ -416,7 +416,7 @@ namespace te
         EnumType* m_gridPlanarItem; //!< value that represents grid planar type belonging to enumeration
         EnumType* m_gridGeodesicItem; //!< value that represents grid geodesic type belonging to enumeration
         EnumType* m_northSettings; //!< value that represents NorthSettings window (MVC dialog) type belonging to enumeration
-		EnumType* m_itemGroup; //!< value that represents item group (MVC Component) type belonging to enumeration
+        EnumType* m_itemGroup; //!< value that represents item group (MVC Component) type belonging to enumeration
         EnumType* m_mapCompositionItem; //!< value that represents map composition (MVC Component) type belonging to enumeration
         EnumType* m_movingItemGroup; //!< value that represents moving item group (MVC Component) type belonging to enumeration
         EnumType* m_scaleItem; //!< value that represents scale (MVC Component) type belonging to enumeration

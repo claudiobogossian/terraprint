@@ -31,13 +31,13 @@
 
 te::layout::AbstractOutsideView* te::layout::NorthSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
-	NorthSettingsModel* model = new NorthSettingsModel();
+    NorthSettingsModel* model = new NorthSettingsModel();
 
-	NorthSettingsController* controller = new NorthSettingsController(model);
-	NorthSettingsOutside* view = new NorthSettingsOutside(controller);
-	controller->setView(view);
+    NorthSettingsController* controller = new NorthSettingsController(model);
+    NorthSettingsOutside* view = new NorthSettingsOutside(controller);
+    controller->setView(view);
 
-	return view;
+    return view;
 }
 
 te::layout::NorthSettingsOutsideFactory::NorthSettingsOutsideFactory() :

@@ -186,7 +186,7 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
   }
   if (propt.getType() == dataType->getDataTypeNorthSettings())
   {
-	  connect(parent, SIGNAL(showDlg()), this, SLOT(onShowNorthSettingsDlg()));
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowNorthSettingsDlg()));
   }
 }
 
@@ -265,7 +265,7 @@ bool te::layout::DialogPropertiesBrowser::checkDlgType( const Property& prop )
   if(prop.getType() == dataType->getDataTypeGridSettings()
     || prop.getType() == dataType->getDataTypeImage()
     || prop.getType() == dataType->getDataTypeTextGridSettings()
-	|| prop.getType() == dataType->getDataTypeNorthSettings())
+    || prop.getType() == dataType->getDataTypeNorthSettings())
   {
     result = true;
   }
@@ -377,19 +377,19 @@ void te::layout::DialogPropertiesBrowser::onShowNorthSettingsDlg()
   EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
   if (!enumObj)
   {
-	return;
+    return;
   }
 
   QWidget* widget = createOutside(enumObj->getNorthSettings());
   if (!widget)
   {
-	return;
+    return;
   }
 
   NorthSettingsOutside* northSettings = dynamic_cast<NorthSettingsOutside*>(widget);
   if (!northSettings)
   {
-	return;
+    return;
   }
 
   appendDialog(northSettings);
@@ -399,7 +399,7 @@ void te::layout::DialogPropertiesBrowser::onShowNorthSettingsDlg()
   NorthSettingsModel* model = dynamic_cast<NorthSettingsModel*>(abstractModel);
   if (!model)
   {
-	return;
+    return;
   }
 
   model->setNorthProperties(m_allProperties);
@@ -796,7 +796,7 @@ te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(const QStr
   }
   else if (prop.getType() == dataType->getDataTypeNorthSettings())
   {
-	  prop.setValue(variant.toString().toStdString(), prop.getType());
+    prop.setValue(variant.toString().toStdString(), prop.getType());
   }
 
   return prop;
@@ -833,10 +833,10 @@ te::layout::EnumType* te::layout::DialogPropertiesBrowser::getLayoutType(QVarian
           {
             dataType = dtType->getDataTypeImage();
           }
-		  if (prop.getType() == dtType->getDataTypeNorthSettings())
-		  {
-			  dataType = dtType->getDataTypeNorthSettings();
-		  }
+          if (prop.getType() == dtType->getDataTypeNorthSettings())
+          {
+            dataType = dtType->getDataTypeNorthSettings();
+          }
         }
       }
     }
@@ -869,7 +869,7 @@ int te::layout::DialogPropertiesBrowser::getVariantType( EnumType* dataType )
   }
   else if (dataType == dtType->getDataTypeNorthSettings())
   {
-	  type = QVariant::String;
+    type = QVariant::String;
   }
   else
   {

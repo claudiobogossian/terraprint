@@ -43,15 +43,15 @@ namespace te
 
       \sa NewOutsideFactory, ParameterizedAbstractFactory, AbstractOutsideView
     */
-	class TELAYOUTEXPORT NorthSettingsOutsideFactory : public OutsideFactory
+    class TELAYOUTEXPORT NorthSettingsOutsideFactory : public OutsideFactory
     {
       public:
 
         /*! It register the factory in the abstract dictionary. */
-		  NorthSettingsOutsideFactory();
+        NorthSettingsOutsideFactory();
 
         /*! \brief Destructor. */
-		  ~NorthSettingsOutsideFactory();
+        ~NorthSettingsOutsideFactory();
 
       protected:
 

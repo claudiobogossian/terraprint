@@ -28,7 +28,10 @@
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "ui_NorthSettings.h"
 #include "../../outside/NorthSettingsModel.h"
-
+#include "../../outside/NorthSettingsController.h"
+#include "../../core/property/NorthSettingsConfigProperties.h"
+#include "../../core/property/Variant.h"
+#include "../../core/enum/Enums.h"
 // Qt
 #include <QMessageBox>
 #include <QString>
@@ -55,36 +58,36 @@ te::layout::NorthSettingsOutside::~NorthSettingsOutside()
 
 void te::layout::NorthSettingsOutside::init()
 {
-	m_ui->colorNorth->setAutoFillBackground(true);
-	m_ui->cbNorth->hide();
-	//ui->doubleSpinBoxNorthHeight->setValue(true);
-	//ui->doubleSpinBoxNorthWidth->setValue(false);
+    m_ui->colorNorth->setAutoFillBackground(true);
+    m_ui->cbNorth->hide();
+    //ui->doubleSpinBoxNorthHeight->setValue(true);
+    //ui->doubleSpinBoxNorthWidth->setValue(false);
 
 }
 
 te::color::RGBAColor te::layout::NorthSettingsOutside::configColor(QWidget* widget)
 {
-	te::color::RGBAColor rgbaColor;
+    te::color::RGBAColor rgbaColor;
 
-	QPalette ptt(widget->palette());
-	QBrush brush = ptt.brush(widget->backgroundRole());
+    QPalette ptt(widget->palette());
+    QBrush brush = ptt.brush(widget->backgroundRole());
 
-	QColor bColor = brush.color();
-	rgbaColor.setColor(bColor.red(), bColor.green(), bColor.blue());
+    QColor bColor = brush.color();
+    rgbaColor.setColor(bColor.red(), bColor.green(), bColor.blue());
 
-	QColor color = QColorDialog::getColor(brush.color(), this, tr("Color"));
+   QColor color = QColorDialog::getColor(brush.color(), this, tr("Color"));
 
-	if (!color.isValid())
-		return rgbaColor;
+    if (!color.isValid())
+      return rgbaColor;
 
-	QPalette paltt(widget->palette());
-	paltt.setColor(widget->backgroundRole(), color);
-	widget->setPalette(paltt);
-	widget->setAutoFillBackground(true);
+    QPalette paltt(widget->palette());
+    paltt.setColor(widget->backgroundRole(), color);
+    widget->setPalette(paltt);
+    widget->setAutoFillBackground(true);
 
-	rgbaColor.setColor(color.red(), color.green(), color.blue());
+    rgbaColor.setColor(color.red(), color.green(), color.blue());
 
-	return rgbaColor;
+    return rgbaColor;
 }
 
 void te::layout::NorthSettingsOutside::load()
@@ -118,6 +121,20 @@ void te::layout::NorthSettingsOutside::onSaveAsClicked()
   {
     fileName.append(".pdf");
   }*/
+}
+
+void te::layout::NorthSettingsOutside::on_pbNorthLineColor_clicked()
+{
+  te::color::RGBAColor color = configColor(m_ui->colorNorth);
+  NorthSettingsController* controller = dynamic_cast<NorthSettingsController*>(m_controller);
+  if (controller)
+  {
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+    variant.setValue(color, dataType->getDataTypeColor());
+    Property prop = controller->updateProperty(m_northSettings->getLineColor(), variant, m_northType);
+    emit updateProperty(prop);
+  }
 }
 
 void te::layout::NorthSettingsOutside::setPosition(const double& x, const double& y)

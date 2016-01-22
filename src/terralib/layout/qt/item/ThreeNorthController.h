@@ -44,7 +44,7 @@ namespace te
     \ingroup layout
     \sa te::layout::AbstractItemController
     */
-	class TELAYOUTEXPORT ThreeNorthController : public AbstractItemController
+    class TELAYOUTEXPORT ThreeNorthController : public AbstractItemController
     {
       public:
 
@@ -54,12 +54,12 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-		  ThreeNorthController(AbstractItemModel* model);
+        ThreeNorthController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-		  virtual ~ThreeNorthController();
+        virtual ~ThreeNorthController();
 
         /*!
         \brief Method called by the subject to inform changes in the model

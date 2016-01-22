@@ -433,12 +433,12 @@ namespace te
         /*!
         \brief Reimplemented from QGraphicsScene
         */
-        virtual void	mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEvent);
+        virtual void mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEvent);
 
         /*!
         \brief Reimplemented from QGraphicsScene
         */
-        virtual void	keyPressEvent(QKeyEvent * keyEvent);
+        virtual void keyPressEvent(QKeyEvent * keyEvent);
 
         /*!
         \brief Reimplemented from QGraphicsScene

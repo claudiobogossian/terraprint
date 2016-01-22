@@ -1946,7 +1946,7 @@ nononon</source>
 <context>
     <name>te::layout::NorthSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/NorthSettingsOutside.cpp" line="75"/>
+        <location filename="../../../src/terralib/layout/qt/outside/NorthSettingsOutside.cpp" line="78"/>
         <source>Color</source>
         <translation type="unfinished">Cor</translation>
     </message>

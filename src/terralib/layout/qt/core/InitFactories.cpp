@@ -114,7 +114,7 @@ namespace te
         static PDFSettingsOutsideFactory PDFSettingsOutsideFactory_instance;
         static MapSettingsOutsideFactory MapSettingsOutsideFactory_instance;
         static ScaleSettingsOutsideFactory ScaleSettingsOutsideFactory_instance;
-		static NorthSettingsOutsideFactory NorthSettingsOutsideFactory_instance;
+        static NorthSettingsOutsideFactory NorthSettingsOutsideFactory_instance;
       }
     }
 

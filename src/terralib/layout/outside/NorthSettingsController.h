@@ -39,13 +39,13 @@ namespace te
   {
     class AbstractOutsideModel;
 
-	class TELAYOUTEXPORT NorthSettingsController : public AbstractOutsideController
+    class TELAYOUTEXPORT NorthSettingsController : public AbstractOutsideController
     {
       public:
 
-		  NorthSettingsController(AbstractOutsideModel* o);
+        NorthSettingsController(AbstractOutsideModel* o);
 
-		  virtual ~NorthSettingsController();
+        virtual ~NorthSettingsController();
         
         virtual Property updateProperty(std::string name, Variant variant, EnumType* enumType);
         
