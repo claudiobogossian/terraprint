@@ -109,8 +109,8 @@ namespace te
         {
           QString           currentName;
           QStringList       names;
-          AbstractItemView* item = 0;
-          EnumType*         typeSearchNames = 0;
+          AbstractItemView* item;
+          EnumType*         typeSearchNames;
         };
 
         QMap<const QtProperty *, Data>  m_values;
