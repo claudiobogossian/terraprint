@@ -36,6 +36,7 @@ te::layout::NorthModel::NorthModel()
   : AbstractItemModel()
 {
   te::color::RGBAColor color(0, 0, 0, 255);
+  std::string name = "Settings";
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getNorthItem());
 
@@ -78,6 +79,16 @@ te::layout::NorthModel::NorthModel()
     property.setMenu(true);
     this->m_properties.addProperty(property);
   }
+
+  // North settings
+  Property prop_northsettings(0);
+  prop_northsettings.setName("NorthSettings");
+  prop_northsettings.setLabel(TR_LAYOUT("North Settings"));
+  prop_northsettings.setMenu(true);
+  //prop_northsettings.setPublic(true);
+  prop_northsettings.setValue(name, dataType->getDataTypeNorthSettings());
+  this->m_properties.addProperty(prop_northsettings);
+
 }
 
 te::layout::NorthModel::~NorthModel()

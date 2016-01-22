@@ -209,6 +209,10 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   else if (m_currentPropertyClicked.getType() == dataType->getDataTypeScaleSettings())
   {
     onShowScaleSettingsDlg();
+  }  
+  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeNorthSettings())
+  {
+    onShowNorthSettingsDlg();
   }
 }
 
