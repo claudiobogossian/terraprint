@@ -39,7 +39,7 @@
 #include "../core/property/SharedProperties.h"
 
 #ifdef GEOGRAPHICLIB_ENABLED
-#include <GeographicLib/MagneticModel.hpp>
+  #include <GeographicLib/MagneticModel.hpp>
 #endif
 
 te::layout::ThreeNorthModel::ThreeNorthModel()
@@ -56,21 +56,19 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   std::string itemName = "";
   SharedProperties sharedProps;
 
-  bool magneticVisible = true;
-  bool magneticMenu = true;
-  bool magneticValue = true;
-  bool dateVisible = true;
-  bool dateMenu = true;
+  bool magneticVisible = false;
+  bool magneticMenu = false;
+  bool magneticValue = false;
+  bool dateVisible = false;
+  bool dateMenu = false;
 
-  if (GEOGRAPHICLIB_ENABLED ==  false)
-{
-      magneticVisible = false;
-      magneticMenu = false;
-      magneticValue = false;
-      dateVisible = false;
-      dateMenu = false;
-  }
-  
+#ifdef GEOGRAPHICLIB_ENABLED
+  magneticVisible = true;
+  magneticMenu = true;
+  magneticValue = true;
+  dateVisible = true;
+  dateMenu = true;
+#endif
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -349,7 +347,7 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
       properties.addProperty(dateNew);
     }*/
 
-
+#ifdef GEOGRAPHICLIB_ENABLED
     try
     {
       GeographicLib::MagneticModel magneticModel("igrf12", TE_LAYOUT_MAGNET_MODEL_DIR);
@@ -362,7 +360,7 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     {
       return throw;
     }
-
+#endif
 
     //end of magnet declination calculation
 
