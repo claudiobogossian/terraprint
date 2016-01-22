@@ -90,13 +90,13 @@ namespace te
 
         virtual bool checkDlgType(const Property& prop);
 
-        virtual Property findDlgProperty(const std::string& label);
+        virtual Property findDlgProperty(const QString& label);
 
         virtual Property findDlgProperty(EnumType* dataType);
         
-        virtual Property getProperty(const std::string& label);
+        virtual Property getProperty(const QString& label);
 
-        virtual EnumType* getLayoutType(QVariant::Type type, const std::string& label = "");
+        virtual EnumType* getLayoutType(QVariant::Type type, const QString& label = "");
 
         virtual int getVariantType(EnumType* dataType);
 
@@ -138,6 +138,8 @@ namespace te
 
         virtual void onShowScaleSettingsDlg();
 
+		virtual void onShowNorthSettingsDlg();
+
       public slots:
 
       virtual void onShowImageDlg();
@@ -152,7 +154,7 @@ namespace te
 
         virtual void createManager();
 
-        virtual void changeValueQtPropertyDlg(const std::string& label, const QVariant& variant);
+        virtual void changeValueQtPropertyDlg(const QString& label, const QVariant& variant);
 
         virtual QWidget* createOutside(EnumType* enumType);
 
@@ -165,7 +167,6 @@ namespace te
         std::map<std::string, Property> m_dlgProps;
         Property                        m_currentPropertyClicked;
         QList<QWidget*>                 m_dialogs;
-        Scene*                          m_scene;
         AbstractProxyProject*           m_proxyProject;
 
     };

@@ -15,6 +15,9 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TerraLib. See COPYING. If not, write to
     TerraLib Team at <terralib-team@terralib.org>.
+
+
+	Magnetic declination validated from NOAA www.ngdc.noaa.gov/geomag-web/
  */
 
 /*!
@@ -33,76 +36,142 @@
 #include "geos/platform.h"
 #include "../core/Utils.h"
 #include "../core/pattern/singleton/Context.h"
+#include "../core/property/SharedProperties.h"
+
+#ifdef GEOGRAPHICLIB_ENABLED
+#include <GeographicLib/MagneticModel.hpp>
+#endif
 
 te::layout::ThreeNorthModel::ThreeNorthModel()
 : AbstractItemModel()
 , Observer()
 {
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getThreeNorthItem());
-
+  te::gm::Envelope wbox;
+  int srid = 0;
   te::color::RGBAColor color(0, 0, 0, 255);
-  double magnetic_convergence_angle = 0;
-  double magnetic_angle = -0.17;
-  
+  double meridian_convergence = 0;
+  double magnetic_north = 0;
+  int date = 2015;
+  std::string itemName = "";
+  SharedProperties sharedProps;
+
+  bool magneticVisible = true;
+  bool magneticMenu = true;
+  bool magneticValue = true;
+  bool dateVisible = true;
+  bool dateMenu = true;
+
+  if (GEOGRAPHICLIB_ENABLED ==  false){
+	  magneticVisible = false;
+	  magneticMenu = false;
+	  magneticValue = false;
+	  dateVisible = false;
+	  dateMenu = false;
+  }
   
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   {
-	  std::string emptyString;
+	  {
+		  Property property(0);
+		  property.setName(sharedProps.getItemObserver());
+		  property.setLabel(TR_LAYOUT("Connection with"));
+		  property.setComposeWidget(true);
+		  property.setValue(itemName, dataType->getDataTypeItemObserver());
+		  m_properties.addProperty(property);
+	  }
 
-	  Property property(0);
-	  property.setName("map_name");
-    property.setLabel(TR_LAYOUT("Map Name"));
-	  property.setValue(emptyString, dataType->getDataTypeStringList());
+	  {
+		  Property property(0);
+		  property.setName("color");
+		  property.setLabel(TR_LAYOUT("color"));
+		  property.setValue(color, dataType->getDataTypeColor());
+		  this->m_properties.addProperty(property);
+	  }
 
-	  Variant v;
-	  v.setValue(emptyString, dataType->getDataTypeString());
-	  property.addOption(v);
-	  m_properties.addProperty(property);
+	  {
+		  Property property(0);
+		  property.setName("meridian_convergence");
+		  property.setLabel(TR_LAYOUT("Meridian Convergence"));
+		  property.setValue(true, dataType->getDataTypeBool());
+		  property.setMenu(true);
+		  this->m_properties.addProperty(property);
+	  }
+	  {
+		  Property property(0);
+		  property.setName("magnetic_north");
+		  property.setLabel(TR_LAYOUT("Magnetic North"));
+		  property.setValue(magneticValue, dataType->getDataTypeBool());
+		  property.setVisible(magneticVisible);
+		  property.setMenu(magneticMenu);
+		  this->m_properties.addProperty(property);
+	  }
+
+	 {
+		  Property property(0);
+		  property.setName("angle_meridian_convergence");
+		  property.setLabel(TR_LAYOUT("Angle Meridian Convergence"));
+		  property.setValue(meridian_convergence, dataType->getDataTypeDouble());
+		  property.setMenu(true);
+		  this->m_properties.addProperty(property);
+	  }
+
+	 {
+		  Property property(0);
+		  property.setName("angle_magnetic_north");
+		  property.setLabel(TR_LAYOUT("Angle Magnetic North"));
+		  property.setValue(magnetic_north, dataType->getDataTypeDouble());
+		  property.setVisible(magneticVisible);
+		  property.setMenu(magneticMenu);
+		  this->m_properties.addProperty(property);
+	  }
+
+	  {
+		  Property property(0);
+		  property.setName("width");
+		  property.setValue(110., dataType->getDataTypeDouble());
+		  m_properties.updateProperty(property);
+	  }
+
+	  {
+		 Property property(0);
+		 property.setName("keep_aspect");
+		 property.setValue(true, dataType->getDataTypeBool());
+		 property.setVisible(false);
+		 m_properties.completelyUpdateProperty(property);
+	 }
+
+	  {
+		  Property property(0);
+		  property.setName("date");
+		  property.setLabel(TR_LAYOUT("Date"));
+		  property.setValue(date, dataType->getDataTypeInt());
+		  property.setMenu(dateMenu);
+		  property.setVisible(dateVisible);
+		  m_properties.addProperty(property);
+	  }
+
+	  {
+		  Property property(0);
+		  property.setName("world_box");
+		  property.setLabel(TR_LAYOUT("World Box"));
+		  property.setValue(wbox, dataType->getDataTypeEnvelope());
+		  m_properties.addProperty(property);
+	  }
+
+	  {
+		  Property property(0);
+		  property.setName("srid");
+		  property.setLabel(TR_LAYOUT("SRID"));
+		  property.setValue(srid, dataType->getDataTypeInt());
+		  m_properties.addProperty(property);
+	  }
+	  
   }
 
-  {
-    Property property(0);
-    property.setName("color");
-    property.setLabel(TR_LAYOUT("color"));
-    property.setValue(color, dataType->getDataTypeColor());
-    this->m_properties.addProperty(property);
-  }
-  {
-    Property property(0);
-    property.setName("magnetic_convergence");
-    property.setLabel(TR_LAYOUT("magnetic_convergence"));
-    property.setValue(false, dataType->getDataTypeBool());
-    property.setMenu(true);
-    this->m_properties.addProperty(property);
-  }
-  {
-    Property property(0);
-    property.setName("magnetic_north");
-    property.setLabel(TR_LAYOUT("magnetic_north"));
-    property.setValue(false, dataType->getDataTypeBool());
-    property.setMenu(true);
-    this->m_properties.addProperty(property);
-  }
-
-  {
-	  Property property(0);
-	  property.setName("angle_magnetic_convergence");
-    property.setLabel(TR_LAYOUT("angle_magnetic_convergence"));
-	  property.setValue(magnetic_convergence_angle, dataType->getDataTypeDouble());
-	  property.setMenu(true);
-	  this->m_properties.addProperty(property);
-  }
-
-  {
-	  Property property(0);
-	  property.setName("angle_magnetic_north");
-    property.setLabel(TR_LAYOUT("angle_magnetic_north"));
-	  property.setValue(magnetic_angle, dataType->getDataTypeDouble());
-	  property.setMenu(true);
-	  this->m_properties.addProperty(property);
-  }
+  
 }
 
 void te::layout::ThreeNorthModel::update(const Subject* subject)
@@ -118,39 +187,12 @@ void te::layout::ThreeNorthModel::update(const Subject* subject)
 	const Property& pNewWorldBox = subjectModel->getProperty("world_box");
 	const Property& pNewSrid = subjectModel->getProperty("srid");
 
+	Properties properties;
 
-	Utils utils(0, 0);
-	int newSrid = pNewSrid.getValue().toInt();
-	const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
-	te::gm::Envelope newGeographicBox = utils.getWorldBoxInGeographic(newWorldBox, newSrid);
+	properties.addProperty(pNewWorldBox);
+	properties.addProperty(pNewSrid);
 
-	te::gm::Coord2D referenceCoord = newGeographicBox.getCenter();
-
-	double longitude = referenceCoord.x;
-	int meridiano = (int)(longitude / 6);
-	meridiano = meridiano * 6;
-
-	meridiano = abs(meridiano) + 3;
-
-	double centralMeridian = meridiano;
-	if (referenceCoord.x < 0.)
-	{
-		centralMeridian *= -1.;
-	}
-
-	double meridianconvergence = calculateMeridianConvergence(referenceCoord.y, referenceCoord.x, centralMeridian);
-	Property pMeridianConvergenceNew;
-	pMeridianConvergenceNew.setName("angle_magnetic_convergence");
-	pMeridianConvergenceNew.setValue(meridianconvergence, dataType->getDataTypeDouble());
-
-	const Property& pMeridianConvergenceCurrent = this->getProperty("angle_magnetic_convergence");
-	double meridianConvergenceNew = pMeridianConvergenceNew.getValue().toDouble();
-	double meridianConvergenceCurrent = pMeridianConvergenceCurrent.getValue().toDouble();
-
-	if (meridianConvergenceNew != meridianConvergenceCurrent)
-	{
-		setProperty(pMeridianConvergenceNew);
-	}
+	setProperties(properties);
 }
 
 double te::layout::ThreeNorthModel::calculateMeridianConvergence(const double &latitude, const double &longitude, const double &longitudeSource)
@@ -204,3 +246,149 @@ te::layout::ThreeNorthModel::~ThreeNorthModel()
 
 }
 
+
+void te::layout::ThreeNorthModel::setProperty(const Property& property)
+{
+	Properties properties;
+	properties.addProperty(property);
+	setProperties(properties);
+}
+
+void te::layout::ThreeNorthModel::setProperties(const Properties& properties)
+{
+	Properties newProperties;
+	const std::vector<Property>& vecProperties = properties.getProperties();
+	for (unsigned int i = 0; i < vecProperties.size(); ++i)
+	{
+		const Property& property = vecProperties[i];
+		newProperties.addProperty(property);
+	}
+
+	calculateThreeNorth(newProperties);
+	AbstractItemModel::setProperties(newProperties);
+	
+}
+
+
+void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
+{
+
+	EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+	Property pNewWorldBox = getProperty("world_box");
+	Property pNewSrid = getProperty("srid");
+
+	if (properties.contains("world_box"))
+	{
+		pNewWorldBox = properties.getProperty("world_box");
+	}
+
+	if (properties.contains("srid"))
+	{
+		pNewSrid = properties.getProperty("srid");
+	}
+
+	Utils utils(0, 0);
+	int newSrid = pNewSrid.getValue().toInt();
+	const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
+
+	if (newSrid <= 0 && !newWorldBox.isValid())
+	{
+		return;
+	}
+	te::gm::Envelope newGeographicBox = utils.getWorldBoxInGeographic(newWorldBox, newSrid);
+
+	te::gm::Coord2D referenceCoord = newGeographicBox.getCenter();
+	te::gm::Point point(referenceCoord.getX(), referenceCoord.getY(), newSrid);
+
+	double longitude = referenceCoord.x;
+	int meridiano = (int)(longitude / 6);
+	meridiano = meridiano * 6;
+
+	meridiano = abs(meridiano) + 3;
+
+	double centralMeridian = meridiano;
+	if (referenceCoord.x < 0.)
+	{
+		centralMeridian *= -1.;
+	}
+
+	//magnetic declination
+
+	//we must ensure that the point is in LatLong/WGS84 CS
+	if (newSrid != 4326)
+	{
+		point.transform(4326);
+	}
+
+	double Bx = 0.;
+	double By = 0.;
+	double Bz = 0.;
+	double H = 0.;
+	double F = 0.;
+	double D = 0.;
+	double I = 0.;
+
+	int date = getProperty("date").getValue().toInt();
+	Property pDateNew;
+	pDateNew.setName("date");
+	pDateNew.setValue(date, dataType->getDataTypeInt());
+
+	if (properties.contains("date"))
+	{
+		pDateNew = properties.getProperty("date");
+	}
+
+	const Property& pdateCurrent = this->getProperty("date");
+	int dateNew = pDateNew.getValue().toInt();
+	int dateCurrent = pdateCurrent.getValue().toInt();
+
+	/*if (dateNew != dateCurrent)
+	{
+		properties.addProperty(dateNew);
+	}*/
+
+
+	try{
+		GeographicLib::MagneticModel magneticModel("igrf12", TE_LAYOUT_MAGNET_MODEL_DIR);
+		magneticModel(dateNew, point.getY(), point.getX(), 0, Bx, By, Bz);
+
+		GeographicLib::MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
+	}
+
+	catch (const exception& e){
+		return throw;
+	}
+
+
+	//end of magnet declination calculation
+
+	double meridianconvergence = calculateMeridianConvergence(referenceCoord.y, referenceCoord.x, centralMeridian);
+	Property pMeridianConvergenceNew;
+	pMeridianConvergenceNew.setName("angle_meridian_convergence");
+	pMeridianConvergenceNew.setValue(meridianconvergence, dataType->getDataTypeDouble());
+
+	const Property& pMeridianConvergenceCurrent = this->getProperty("angle_meridian_convergence");
+	double meridianConvergenceNew = pMeridianConvergenceNew.getValue().toDouble();
+	double meridianConvergenceCurrent = pMeridianConvergenceCurrent.getValue().toDouble();
+
+
+	if (meridianConvergenceNew != meridianConvergenceCurrent)
+	{
+		properties.addProperty(pMeridianConvergenceNew);
+	}
+
+	double magneticDeclination = D;
+	Property pMagneticDeclinationNew;
+	pMagneticDeclinationNew.setName("angle_magnetic_north");
+	pMagneticDeclinationNew.setValue(magneticDeclination, dataType->getDataTypeDouble());
+
+	const Property& pMagneticDeclinationCurrent = this->getProperty("angle_magnetic_north");
+	double magneticDeclinationNew = pMagneticDeclinationNew.getValue().toDouble();
+	double magneticDeclinationCurrent = pMagneticDeclinationCurrent.getValue().toDouble();
+
+	if (magneticDeclinationNew != magneticDeclinationCurrent)
+	{
+		properties.addProperty(pMagneticDeclinationNew);
+	}
+}

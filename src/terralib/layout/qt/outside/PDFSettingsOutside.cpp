@@ -26,6 +26,7 @@
 // TerraLib
 #include "PDFSettingsOutside.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/ItemUtils.h"
 #include "ui_PDFSettings.h"
 
 // Qt
@@ -171,7 +172,8 @@ std::string te::layout::PDFSettingsOutside::getFilePath()
       m_ui->txtEdtFile->setText(qTxt);
     }
   }
-  return qTxt.toStdString();
+  std::string txt = ItemUtils::convert2StdString(qTxt);
+  return txt;
 }
 
 int te::layout::PDFSettingsOutside::getDPI()

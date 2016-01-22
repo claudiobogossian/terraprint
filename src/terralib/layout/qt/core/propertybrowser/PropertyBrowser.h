@@ -103,7 +103,7 @@ namespace te
 
         virtual void selectProperty(std::string label);
 
-        virtual QtProperty* findProperty(std::string label);
+        virtual QtProperty* findProperty(QString label);
 
         virtual bool addSubProperty(QtProperty* prop, QtProperty* subProp);
 
@@ -114,9 +114,9 @@ namespace te
         */
         virtual bool equalsProperties(Properties props);
 
-        QString nameProperty(const std::string& label);
+        QString nameProperty(const QString& label);
 
-        QString labelProperty(const std::string& name);
+        QString labelProperty(const QString& name);
                     
       protected slots:
 

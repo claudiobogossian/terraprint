@@ -110,7 +110,10 @@ QSizeF te::layout::TitleController::updateView()
   fmtTwo.setBackground(headerVrt); 
   cellTwo.setFormat(fmtTwo);
   QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
-  cellCursorTwo.insertText(title.c_str(), format);
+
+  QString qTitle = ItemUtils::convert2QString(title);
+
+  cellCursorTwo.insertText(qTitle, format);
 
   // table
   QBrush headerHrz(qHeaderHrzColor);
@@ -119,7 +122,10 @@ QSizeF te::layout::TitleController::updateView()
   fmtOne.setBackground(headerHrz); 
   cellOne.setFormat(fmtOne);
   QTextCursor cellCursorOne = cellOne.firstCursorPosition();  
-  cellCursorOne.insertText(text.c_str(), format);
+
+  QString qText = ItemUtils::convert2QString(text);
+
+  cellCursorOne.insertText(qText, format);
 
   //we get the size in pixels
   QRectF rect = view->boundingRect();
@@ -145,16 +151,18 @@ void te::layout::TitleController::textChanged()
     std::string currentTitle = pTitle.getValue().toString();
     std::string currentText = pText.getValue().toString();
 
-    QString qCurrentTitle(currentTitle.c_str());
-    QString qCurrentText(currentText.c_str());
-
+    QString qCurrentTitle = ItemUtils::convert2QString(currentTitle);
+    QString qCurrentText = ItemUtils::convert2QString(currentText);
+    
     QTextTableCell cellOne = m_table->cellAt(0, 0);
     QTextCursor cellCursorOne = cellOne.firstCursorPosition();
     QString qNewTitle = cellCursorOne.block().text();
+    std::string newTitle = ItemUtils::convert2StdString(qNewTitle);
 
     QTextTableCell cellTwo = m_table->cellAt(1, 0);
     QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
     QString qNewText = cellCursorTwo.block().text();
+    std::string newText = ItemUtils::convert2StdString(qNewText);
 
     if(qCurrentTitle != qNewTitle || qCurrentText != qNewText)
     {
@@ -162,11 +170,11 @@ void te::layout::TitleController::textChanged()
 
       Property propertyTitle(0);
       propertyTitle.setName(propertyNames.getTitle());
-      propertyTitle.setValue(qNewTitle.toStdString(), dataType->getDataTypeString());
+      propertyTitle.setValue(newTitle, dataType->getDataTypeString());
 
       Property propertyText(0);
       propertyText.setName("text");
-      propertyText.setValue(qNewText.toStdString(), dataType->getDataTypeString());
+      propertyText.setValue(newText, dataType->getDataTypeString());
 
       Properties properties("");
       properties.addProperty(propertyTitle);

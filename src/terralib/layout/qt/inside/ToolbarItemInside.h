@@ -35,6 +35,8 @@
 #include <string>
 
 // Qt
+#include <QString>
+
 class QToolBar;
 class QToolButton;
 class QPushButton;
@@ -76,11 +78,11 @@ namespace te
    
     protected:
 
-      virtual QToolButton* createToolButton(std::string text, std::string tooltip, std::string icon);
+      virtual QToolButton* createToolButton(const QString& text, const QString& tooltip, const QString& icon);
 
-      virtual QPushButton* createPushButton(std::string text, std::string tooltip, std::string icon);
+      virtual QPushButton* createPushButton(const QString& text, const QString& tooltip, const QString& icon);
 
-      virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "", QWidget* parent = 0);
+      virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "", QWidget* parent = 0);
 
       AbstractItemView*  m_item;
       QToolBar*          m_toolbar;

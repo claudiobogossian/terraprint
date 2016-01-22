@@ -530,7 +530,10 @@ namespace te
     inline void te::layout::AbstractItem<T>::drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate)
     {
       ItemUtils itemUtils = this->getScene()->getItemUtils();
-      QPainterPath textObject = itemUtils.textToVector(text.c_str(), font, point, rotate);
+
+      QString qText = ItemUtils::convert2QString(text);
+
+      QPainterPath textObject = itemUtils.textToVector(qText, font, point, rotate);
 
       int fontSize = painter->font().pointSize();
 
@@ -976,7 +979,7 @@ namespace te
 
       if (!m_spaceBetweenParentChild.isEmpty())
       {
-        update();
+        T::update();
       }
 
       m_spaceBetweenParentChild.clear();

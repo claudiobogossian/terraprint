@@ -25,6 +25,7 @@
 
 // TerraLib
 #include "DoubleTreeWidgetOutside.h"
+#include "../core/ItemUtils.h"
 #include "ui_DoubleTreeWidget.h"
 
 // Qt
@@ -94,7 +95,11 @@ void te::layout::DoubleTreeWidgetOutside::setInputValues(std::vector<std::string
   for(size_t i = 0; i < values.size(); ++i)
   {
     QTreeWidgetItem* item = new QTreeWidgetItem(m_ui->m_leftTreeWidget);
-    item->setText(0, values[i].c_str());
+
+    std::string value = values[i];
+    QString qValue = ItemUtils::convert2QString(value);
+
+    item->setText(0, qValue);
 
     m_ui->m_leftTreeWidget->addTopLevelItem(item);
   }
@@ -115,7 +120,11 @@ void te::layout::DoubleTreeWidgetOutside::setInputDataValues(std::vector<std::st
   for (size_t i = 0; i < values.size(); ++i)
   {
     QTreeWidgetItem* item = new QTreeWidgetItem(m_ui->m_leftTreeWidget);
-    item->setText(0, values[i].c_str());
+
+    std::string value = values[i];
+    QString qValue = ItemUtils::convert2QString(value);
+
+    item->setText(0, qValue);
     item->setData(0, Qt::UserRole, QVariant(ids[i]));
 
     m_ui->m_leftTreeWidget->addTopLevelItem(item);
@@ -134,7 +143,11 @@ void te::layout::DoubleTreeWidgetOutside::setOutputValues(std::vector<std::strin
   for(size_t i = 0; i < values.size(); ++i)
   {
     QTreeWidgetItem* item = new QTreeWidgetItem(m_ui->m_rightTreeWidget);
-    item->setText(0, values[i].c_str());
+
+    std::string value = values[i];
+    QString qValue = ItemUtils::convert2QString(value);
+
+    item->setText(0, qValue);
 
     m_ui->m_rightTreeWidget->addTopLevelItem(item);
   }
@@ -155,7 +168,11 @@ void te::layout::DoubleTreeWidgetOutside::setOutputDataValues(std::vector<std::s
   for (size_t i = 0; i < values.size(); ++i)
   {
     QTreeWidgetItem* item = new QTreeWidgetItem(m_ui->m_rightTreeWidget);
-    item->setText(0, values[i].c_str());
+
+    std::string value = values[i];
+    QString qValue = ItemUtils::convert2QString(value);
+
+    item->setText(0, qValue);
     item->setData(0, Qt::UserRole, QVariant(ids[i]));
 
     m_ui->m_rightTreeWidget->addTopLevelItem(item);
@@ -167,20 +184,29 @@ void te::layout::DoubleTreeWidgetOutside::setFixedOutputValues(std::vector<std::
   for(size_t i = 0; i < values.size(); ++i)
   {
     QTreeWidgetItem* item = new QTreeWidgetItem(m_ui->m_rightTreeWidget);
-    item->setText(0, values[i].c_str());
+
+    std::string value = values[i];
+    QString qValue = ItemUtils::convert2QString(value);
+
+    item->setText(0, qValue);
     item->setFlags(Qt::ItemIsEnabled);
-    item->setIcon(0, QIcon::fromTheme(iconName.c_str()));
+
+    QString qIconName = ItemUtils::convert2QString(iconName);
+
+    item->setIcon(0, QIcon::fromTheme(qIconName));
   }
 }
 
 void te::layout::DoubleTreeWidgetOutside::setLeftLabel(std::string value)
 {
-  m_ui->m_leftItemsLabel->setText(value.c_str());
+  QString qValue = ItemUtils::convert2QString(value);
+  m_ui->m_leftItemsLabel->setText(qValue);
 }
 
 void te::layout::DoubleTreeWidgetOutside::setRightLabel(std::string value)
 {
-  m_ui->m_rightItemsLabel->setText(value.c_str());
+  QString qValue = ItemUtils::convert2QString(value);
+  m_ui->m_rightItemsLabel->setText(qValue);
 }
 
 std::vector<std::string> te::layout::DoubleTreeWidgetOutside::getOutputValues()

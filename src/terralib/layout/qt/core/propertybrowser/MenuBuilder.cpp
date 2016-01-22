@@ -121,12 +121,19 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
   {
     if(!prop.isMenu() || !prop.isVisible())
       continue;
+    
+    std::string stdLabel = prop.getLabel();
+    if (stdLabel.compare("") == 0)
+      stdLabel = prop.getName();
 
-    std::string label = prop.getLabel();
-    if(label.compare("") == 0)
-      label = prop.getName();
+    std::string name = prop.getName();
+    std::string icon = prop.getIcon();
 
-    QAction* action = createAction(label, prop.getName(), prop.getIcon());
+    QString qLabel = ItemUtils::convert2QString(stdLabel);
+    QString qName = ItemUtils::convert2QString(stdLabel);
+    QString qIcon = ItemUtils::convert2QString(stdLabel);
+
+    QAction* action = createAction(qLabel, qName, qIcon);
     m_menu->addAction(action);
     if(prop.getType() == dataType->getDataTypeBool())
     {
@@ -136,13 +143,13 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
   }
 }
 
-QAction* te::layout::MenuBuilder::createAction( std::string text, std::string objName, std::string icon, std::string tooltip )
+QAction* te::layout::MenuBuilder::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip)
 {
-  QAction *actionMenu = new QAction(text.c_str(), this);
-  actionMenu->setObjectName(objName.c_str());
+  QAction *actionMenu = new QAction(text, this);
+  actionMenu->setObjectName(objName);
 
-  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
-  actionMenu->setToolTip(tooltip.c_str());
+  actionMenu->setIcon(QIcon::fromTheme(icon));
+  actionMenu->setToolTip(tooltip);
 
   return actionMenu;
 }
@@ -152,7 +159,10 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   if(!m_menu)
     return;
 
-  m_currentPropertyClicked = findMnuProperty(action->objectName().toStdString());
+  QString qObjectName = action->objectName();
+  std::string objectName = ItemUtils::convert2StdString(qObjectName);
+
+  m_currentPropertyClicked = findMnuProperty(objectName);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -199,6 +209,10 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   else if (m_currentPropertyClicked.getType() == dataType->getDataTypeScaleSettings())
   {
     onShowScaleSettingsDlg();
+  }  
+  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeNorthSettings())
+  {
+	  onShowNorthSettingsDlg();
   }
 }
 
@@ -296,7 +310,7 @@ te::layout::Property te::layout::MenuBuilder::findMnuProperty( std::string name 
 
   foreach( Property pro, m_properties.getProperties()) 
   {
-    if(pro.getName().compare(name) == 0)
+    if (pro.getName().compare(name) == 0 || pro.getLabel().compare(name) == 0)
     {
       prop = pro;
       break;

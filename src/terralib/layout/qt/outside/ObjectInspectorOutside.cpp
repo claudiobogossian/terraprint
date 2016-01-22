@@ -141,9 +141,12 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
     const std::string& parentName = pParentName.getValue().toString();
     std::string parentTypeName = absParentItem->getController()->getProperties().getTypeObj()->getName();
 
+    QString qParentName = ItemUtils::convert2QString(parentName);
+    QString qParentTypeName = ItemUtils::convert2QString(parentTypeName);
+
     QStringList parentList;
-    parentList.append(parentName.c_str());
-    parentList.append(parentTypeName.c_str());
+    parentList.append(qParentName);
+    parentList.append(qParentTypeName);
 
     QTreeWidgetItem* parentTreeItem = new QTreeWidgetItem(parentList);
 
@@ -160,9 +163,12 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
       const std::string& childName = pChildName.getValue().toString();
       std::string childTypeName = absChildItem->getController()->getProperties().getTypeObj()->getName();
 
+      QString qChildName = ItemUtils::convert2QString(childName);
+      QString qChildTypeName = ItemUtils::convert2QString(childTypeName);
+
       QStringList childList;
-      childList.append(childName.c_str());
-      childList.append(childTypeName.c_str());
+      childList.append(qChildName);
+      childList.append(qChildTypeName);
 
       QTreeWidgetItem* childTreeItem = new QTreeWidgetItem(childList);
       parentTreeItem->addChild(childTreeItem);
@@ -178,7 +184,9 @@ void te::layout::ObjectInspectorOutside::onRemoveProperties( std::vector<std::st
 {
   for(size_t i = 0; i < names.size(); ++i)
   {
-    QString qName(names[i].c_str());
+    std::string name = names[i];
+    QString qName = ItemUtils::convert2QString(name);
+
     QList<QTreeWidgetItem*> listItems = m_treeWidget->findItems(qName, Qt::MatchExactly, 0);
     for(int  j = 0; j < listItems.size(); ++j)
     {
@@ -203,8 +211,8 @@ void te::layout::ObjectInspectorOutside::selectItems( QList<QGraphicsItem*> grap
     const Property& pName = parentItem->getController()->getProperty("name");
     std::string name = pName.getValue().toString();
 
-    QString qName(name.c_str()); 
-
+    QString qName = ItemUtils::convert2QString(name);
+    
     QList<QTreeWidgetItem*> treeItems = m_treeWidget->findItems(qName, Qt::MatchExactly | Qt::MatchRecursive, 0);
     foreach(QTreeWidgetItem* treeItem, treeItems) 
     {
@@ -229,7 +237,8 @@ void te::layout::ObjectInspectorOutside::itemSelectionChanged()
   foreach(QTreeWidgetItem* treeItem, selectedTreeItems) 
   {
     QString qTreeItemName = treeItem->text(0);
-    std::string treeItemName = qTreeItemName.toStdString();
+
+    std::string treeItemName = ItemUtils::convert2StdString(qTreeItemName);
 
     foreach(QGraphicsItem* graphicsItem, m_graphicsItems) 
     {
@@ -284,13 +293,13 @@ void te::layout::ObjectInspectorOutside::onMenuTriggered(QAction*)
   removeSelectedItem();
 }
 
-QAction* te::layout::ObjectInspectorOutside::createAction(std::string text, std::string objName, std::string icon, std::string tooltip)
+QAction* te::layout::ObjectInspectorOutside::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip)
 {
-  QAction *actionMenu = new QAction(text.c_str(), this);
-  actionMenu->setObjectName(objName.c_str());
+  QAction *actionMenu = new QAction(text, this);
+  actionMenu->setObjectName(objName);
 
-  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
-  actionMenu->setToolTip(tooltip.c_str());
+  actionMenu->setIcon(QIcon::fromTheme(icon));
+  actionMenu->setToolTip(tooltip);
 
   return actionMenu;
 }
@@ -308,8 +317,10 @@ void te::layout::ObjectInspectorOutside::createMenu(std::string itemName)
   }
 
   std::string text = TR_LAYOUT("Delete ") + itemName;
+  QString qText = ItemUtils::convert2QString(text);
+  QString qItemName = ItemUtils::convert2QString(itemName);
   
-  QAction* action = createAction(text, itemName, "");
+  QAction* action = createAction(qText, qItemName, "");
   m_menu->addAction(action);
 }
 
@@ -350,7 +361,7 @@ std::string te::layout::ObjectInspectorOutside::selectItemName()
   QTreeWidgetItem* treeItem = selectedTreeItems.first();
 
   QString qTreeItemName = treeItem->text(0);
-  treeItemName = qTreeItemName.toStdString();
+  treeItemName = ItemUtils::convert2StdString(qTreeItemName);
 
   return treeItemName;
 }

@@ -109,8 +109,11 @@ QString te::layout::AddCommand::createCommandString( QGraphicsItem* item, const 
   if(!obs)
     return QObject::tr("%1");
   
+  std::string name = obs->getController()->getProperties().getTypeObj()->getName();
+  QString qName = ItemUtils::convert2QString(name);
+
   return QObject::tr("%1 at (%2, %3)")
-    .arg(obs->getController()->getProperties().getTypeObj()->getName().c_str())
+    .arg(qName)
     .arg(pos.x()).arg(pos.y());
 }
 

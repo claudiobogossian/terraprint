@@ -38,6 +38,7 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_objectInspectorWindow(0),
   m_toolbar(0),
   m_gridSettings(0),
+  m_northSettings(0),
   m_gridPlanarItem(0),
   m_gridGeodesicItem(0),
   m_itemGroup(0),
@@ -132,6 +133,12 @@ te::layout::EnumObjectType::~EnumObjectType()
   {
     delete m_gridSettings;
     m_gridSettings = 0;
+  }
+
+  if (m_northSettings)
+  {
+	  delete m_northSettings;
+	  m_northSettings = 0;
   }
 
   if(m_gridPlanarItem)
@@ -366,6 +373,8 @@ void te::layout::EnumObjectType::init()
   m_toolbar = createEnum("Toolbar", this);
 
   m_gridSettings  = createEnum("Grid_Settings", this);
+  
+  m_northSettings = createEnum("North_Settings", this);
 
   m_gridPlanarItem = createEnum("Grid_Planar_Item", this);
 
@@ -508,6 +517,11 @@ te::layout::EnumType* te::layout::EnumObjectType::getToolbar() const
 te::layout::EnumType* te::layout::EnumObjectType::getGridSettings() const
 {
   return m_gridSettings;
+}
+
+te::layout::EnumType* te::layout::EnumObjectType::getNorthSettings() const
+{
+	return m_northSettings;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getGridPlanarItem() const

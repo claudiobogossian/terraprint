@@ -44,9 +44,10 @@
 // STL
 #include <algorithm>    // std::find
 
-te::layout::AbstractPropertiesBrowser::AbstractPropertiesBrowser(QObject* parent) :
+te::layout::AbstractPropertiesBrowser::AbstractPropertiesBrowser(Scene* scene, QObject* parent) :
   QObject(parent),
-  m_changeProperty(false)
+  m_changeProperty(false),
+  m_scene(scene)
 {
   
 }
@@ -77,34 +78,34 @@ void te::layout::AbstractPropertiesBrowser::clearAll()
   m_allProperties.clear();
 }
 
-QString te::layout::AbstractPropertiesBrowser::nameProperty(const std::string& label)
+QString te::layout::AbstractPropertiesBrowser::nameProperty(const QString& label)
 {
   QList<QString> labelList = m_nameToLabel.values();
 
-  if (!labelList.contains(label.c_str()))
+  if (!labelList.contains(label))
   {
     return QString();
   }
 
-  int index = labelList.indexOf(label.c_str());
+  int index = labelList.indexOf(label);
   QString value = labelList.value(index);
   QString name = m_nameToLabel.key(value);
 
   return name;
 }
 
-QString te::layout::AbstractPropertiesBrowser::labelProperty(const std::string& name)
+QString te::layout::AbstractPropertiesBrowser::labelProperty(const QString& name)
 {
-  if (!m_nameToLabel.contains(name.c_str()))
+  if (!m_nameToLabel.contains(name))
   {
     return QString();
   }
 
-  QString foundLabel = m_nameToLabel[name.c_str()];
+  QString foundLabel = m_nameToLabel[name];
   return foundLabel;
 }
 
-QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue(const std::string& label)
+QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue(const QString& label)
 {
   QVariant variant;
 
@@ -138,7 +139,7 @@ QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue(const std::str
   return variant;
 }
 
-QtProperty* te::layout::AbstractPropertiesBrowser::findProperty(const std::string& label)
+QtProperty* te::layout::AbstractPropertiesBrowser::findProperty(const QString& label)
 {
   QtProperty* prop = 0;
 
@@ -182,8 +183,8 @@ bool te::layout::AbstractPropertiesBrowser::removeProperty( QtProperty* prop )
   {
     return false;
   }
-
-  QString name = nameProperty(prop->propertyName().toStdString());
+  
+  QString name = nameProperty(prop->propertyName());
   if (name.compare("") == 0)
   {
     return prop;

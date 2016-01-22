@@ -110,7 +110,9 @@ void te::layout::AbstractLayoutTool::setCursor(const QCursor& cursor)
 
 QCursor te::layout::AbstractLayoutTool::createCursor(std::string pathIcon)
 {
-  QIcon ico(QIcon::fromTheme(pathIcon.c_str()));
+  QString qPathIcon = ItemUtils::convert2QString(pathIcon);
+
+  QIcon ico(QIcon::fromTheme(qPathIcon));
 
   //search icon size
   QList<QSize> sizes = ico.availableSizes();

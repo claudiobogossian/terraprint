@@ -17,40 +17,32 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-/*!
-  \file terralib/qt/plugins/layout/AbstractAction.cpp
+// TerraLib
+#include "ThreeNorthController.h"
 
-  \brief This file defines the abstract class AbstractAction
-*/
+#include "../../core/pattern/mvc/AbstractItemModel.h"
+#include "ThreeNorthItem.h"
 
-#include "AbstractAction.h"
-
-// STL
-#include <cassert>
-
-te::qt::plugins::layout::AbstractAction::AbstractAction(QMenu* menu): m_menu(menu), m_action(0)
+te::layout::ThreeNorthController::ThreeNorthController(AbstractItemModel* model)
+  : AbstractItemController(model)
 {
+
 }
 
-te::qt::plugins::layout::AbstractAction::~AbstractAction()
+te::layout::ThreeNorthController::~ThreeNorthController()
 {
+
 }
 
-void te::qt::plugins::layout::AbstractAction::createAction(const QString& name, const QString& pixmap)
+void te::layout::ThreeNorthController::update(const Subject* subject)
 {
-  assert(m_menu);
-
-  m_action = new QAction(m_menu);
-
-  m_action->setText(name);
-
-  m_action->setObjectName("Layout");
-
-  if(pixmap.isEmpty() == false)
-    m_action->setIcon(QIcon::fromTheme(pixmap));
-
-  connect(m_action, SIGNAL(triggered(bool)), this, SLOT(onActionActivated(bool)));
-
-  m_menu->addAction(m_action);
+  AbstractItemController::update(subject);
+  
+  ThreeNorthItem* item = dynamic_cast<ThreeNorthItem*>(m_view);
+  if (item)
+  {
+    item->update();
+  }
 }
+
 

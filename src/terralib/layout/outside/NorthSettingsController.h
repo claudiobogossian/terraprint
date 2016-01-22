@@ -18,39 +18,43 @@
  */
 
 /*!
-  \file terralib/qt/plugins/layout/AbstractAction.cpp
+  \file GridSettingsController.h
+   
+  \brief 
 
-  \brief This file defines the abstract class AbstractAction
+  \ingroup layout
 */
 
-#include "AbstractAction.h"
+#ifndef __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_CONTROLLER_H 
+#define __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_CONTROLLER_H
 
-// STL
-#include <cassert>
+// TerraLib
+#include "../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/property/Property.h"
+#include "../core/Config.h"
 
-te::qt::plugins::layout::AbstractAction::AbstractAction(QMenu* menu): m_menu(menu), m_action(0)
+namespace te
 {
+  namespace layout
+  {
+    class AbstractOutsideModel;
+
+	class TELAYOUTEXPORT NorthSettingsController : public AbstractOutsideController
+    {
+      public:
+
+		  NorthSettingsController(AbstractOutsideModel* o);
+
+		  virtual ~NorthSettingsController();
+        
+        virtual Property updateProperty(std::string name, Variant variant, EnumType* enumType);
+        
+        virtual Property getProperty(std::string name, EnumType* enumType);
+    };
+  }
 }
 
-te::qt::plugins::layout::AbstractAction::~AbstractAction()
-{
-}
+#endif
 
-void te::qt::plugins::layout::AbstractAction::createAction(const QString& name, const QString& pixmap)
-{
-  assert(m_menu);
 
-  m_action = new QAction(m_menu);
-
-  m_action->setText(name);
-
-  m_action->setObjectName("Layout");
-
-  if(pixmap.isEmpty() == false)
-    m_action->setIcon(QIcon::fromTheme(pixmap));
-
-  connect(m_action, SIGNAL(triggered(bool)), this, SLOT(onActionActivated(bool)));
-
-  m_menu->addAction(m_action);
-}
 

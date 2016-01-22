@@ -32,6 +32,7 @@
 #include "../../core/property/GenericVariant.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/ItemUtils.h"
 #include "ui_MapLayerChoice.h"
 
 // STL
@@ -55,8 +56,14 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   QGridLayout* displayLayout = new QGridLayout(m_ui->m_widget);
   displayLayout->addWidget(m_widget.get());
 
-  m_widget->setLeftLabel(tr("Available Layers").toStdString());
-  m_widget->setRightLabel(tr("Selected Layers").toStdString());
+  QString qLeftLabel = tr("Available Layer");
+  std::string leftLabel = ItemUtils::convert2StdString(qLeftLabel);
+
+  QString qRightLabel = tr("Selected Layer");
+  std::string rightLabel = ItemUtils::convert2StdString(qRightLabel);
+
+  m_widget->setLeftLabel(leftLabel);
+  m_widget->setRightLabel(rightLabel);
 
   connect(m_ui->m_okPushButton, SIGNAL(clicked()), this, SLOT(onOkPushButtonClicked()));
   connect(m_ui->m_cancelPushButton, SIGNAL(clicked()), this, SLOT(onCancelPushButtonClicked()));

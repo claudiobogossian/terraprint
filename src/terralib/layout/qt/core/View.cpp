@@ -772,7 +772,9 @@ QImage te::layout::View::createImage()
 
 QCursor te::layout::View::createCursor( std::string pathIcon )
 {
-  QIcon ico(QIcon::fromTheme(pathIcon.c_str()));
+  QString qPathIcon = ItemUtils::convert2QString(pathIcon);
+
+  QIcon ico(QIcon::fromTheme(qPathIcon));
 
   //search icon size
   QList<QSize> sizes = ico.availableSizes();
@@ -1115,7 +1117,7 @@ bool te::layout::View::exportProperties( EnumType* type )
     fileName.append(".xml");
   }
 
-  std::string j_name = fileName.toStdString();
+  std::string j_name = ItemUtils::convert2StdString(fileName);
 
   Scene* scne = dynamic_cast<Scene*>(scene());
   if(!scne)
@@ -1151,7 +1153,7 @@ bool te::layout::View::importTemplate( EnumType* type )
     return false;
   }
 
-  std::string j_name = fileName.toStdString();  
+  std::string j_name = ItemUtils::convert2StdString(fileName); 
 
   Scene* scne = dynamic_cast<Scene*>(scene());
   if(!scne)
@@ -1185,7 +1187,7 @@ void te::layout::View::exportItemsToImage()
   if(dir.isEmpty())
     return;
 
-  std::string dirName = dir.toStdString();
+  std::string dirName = ItemUtils::convert2StdString(dir);
 
   scne->exportItemsToImage(dirName);
 
