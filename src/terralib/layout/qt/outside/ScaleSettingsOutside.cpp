@@ -179,7 +179,7 @@ void te::layout::ScaleSettingsOutside::on_cmbUnit_currentIndexChanged(const QStr
     prop.setValue(variant);
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
-    initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+    initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   }
 }
 
