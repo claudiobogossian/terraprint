@@ -106,7 +106,7 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     if (isSelected() == false)
     {
       //we remove the subSelection of the children
-      QList<QGraphicsItem*>	children = childItems();
+      QList<QGraphicsItem*> children = childItems();
       QList<QGraphicsItem*>::iterator it = children.begin();
       while (it != children.end())
       {
@@ -151,7 +151,7 @@ void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
       return;
     }
 
-    QList<QGraphicsItem*>	children = childItems();
+    QList<QGraphicsItem*> children = childItems();
     QList<QGraphicsItem*>::iterator it = children.begin();
     while (it != children.end())
     {
@@ -169,7 +169,7 @@ void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
     if (wasSelected == true && continuedSelected == true)
     {
       //we try to select the children
-      QList<QGraphicsItem*>	children = childItems();
+      QList<QGraphicsItem*> children = childItems();
       QList<QGraphicsItem*>::iterator it = children.begin();
       while (it != children.end())
       {

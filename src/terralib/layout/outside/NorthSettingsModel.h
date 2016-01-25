@@ -18,35 +18,48 @@
  */
 
 /*!
-  \file ScaleSettingsModel.h
+  \file NorthSettingsModel.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H 
-#define __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_MODEL_H 
+#define __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_MODEL_H
 
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../core/Config.h"
+#include "../core/property/Property.h"
+#include "../core/property/Properties.h"
 
 namespace te
 {
   namespace layout
   {
-    class Properties;
-
-    class TELAYOUTEXPORT ScaleSettingsModel : public AbstractOutsideModel
+    class TELAYOUTEXPORT NorthSettingsModel : public AbstractOutsideModel
     {
     public:
 
-      ScaleSettingsModel();
+    NorthSettingsModel();
 
-      virtual ~ScaleSettingsModel();
+    virtual ~NorthSettingsModel();
+
+      virtual void setNorthProperties(te::layout::Properties properties);
+            
+      virtual bool containsNorth(EnumType* enumType);
+
+      virtual te::layout::Property containsProperty( std::string name, EnumType* enumType );
+      
+      virtual bool updateProperty(Property prop, EnumType* enumType);
+
+    protected:
+
+      te::layout::Properties m_properties;
     };
   }
 }
 
 #endif
+

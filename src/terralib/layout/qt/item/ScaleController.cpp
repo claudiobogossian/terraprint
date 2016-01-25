@@ -85,6 +85,34 @@ double te::layout::ScaleController::getGap(double& initialGap)
   std::string strUnit;
   double unit = getUnit(strUnit);
   QPainterPath unitTextObject = ItemUtils::textToVector(strUnit.c_str(), qFont, QPointF(0, 0));
+
+  double unitGap = unitTextObject.boundingRect().width();
+  double gap = unitGap + 2.5;
+
+  QPainterPath lastTextObject = getLastText();
+  double finalGap = lastTextObject.boundingRect().width() / 2;
+  gap = finalGap + unitGap + 2.5;
+  return gap;
+}
+
+QPainterPath te::layout::ScaleController::getLastText()
+{
+  QPainterPath lastTextObject;
+  ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(this->getView());
+  if (scaleItem == 0)
+  {
+    return lastTextObject;
+  }
+
+  const Property& pTextFont = getProperty("font");
+  Font txtFont = pTextFont.getValue().toFont();
+  QFont qFont = ItemUtils::convertToQfont(txtFont);
+
+  std::string text = "0";
+
+  std::string strUnit;
+  double unit = getUnit(strUnit);
+  QPainterPath unitTextObject = ItemUtils::textToVector(strUnit.c_str(), qFont, QPointF(0, 0));
   double unitGap = unitTextObject.boundingRect().width();
 
   const Property& pScale = getProperty("scale");
@@ -114,10 +142,8 @@ double te::layout::ScaleController::getGap(double& initialGap)
 
     text = ss_value.str();
   }
-  QPainterPath lastTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
-  double finalGap = lastTextObject.boundingRect().width() / 2;
-  gap = finalGap + unitGap + 2.5;
-  return gap;
+  lastTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
+  return lastTextObject;
 }
 
 void te::layout::ScaleController::setProperty(const te::layout::Property& property)
@@ -336,7 +362,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   double mmToCm = gapX / 10.;
 
   double value = (spacing * mmToCm) / unit;
-  if (value != scaleInUnit)
+  if ((value != scaleInUnit) && value > 0)
   {
     Property prop;
     prop.setName("scale_in_unit_width_rect_gap");

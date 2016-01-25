@@ -380,7 +380,7 @@ namespace te
         /*!
         \brief Reimplemented from QGraphicsView
         */
-        virtual void	mouseDoubleClickEvent(QMouseEvent * event);
+        virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
     /*!
           \brief Reimplemented from QGraphicsView

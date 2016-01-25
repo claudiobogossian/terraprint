@@ -34,7 +34,7 @@ MACRO(TeInstallPlugins plugins location)
     list(APPEND _files ${_loc})
   endforeach()
   
-	install(FILES ${_files}
+  install(FILES ${_files}
            DESTINATION "${TERRALIB_BASE_DESTINATION_DIR}qtplugins/${location}"
            CONFIGURATIONS Release
            COMPONENT runtime)
@@ -75,9 +75,9 @@ MACRO(TeInstallQt5Plugins)
 #  if(APPLE)
 #    install (TARGETS
 #      Qt5::QWindowsIntegrationPlugin
-#  	  RUNTIME
-#	  DESTINATION qtplugins/platforms
-#	  COMPONENT runtime
+#        RUNTIME
+#      DESTINATION qtplugins/platforms
+#      COMPONENT runtime
 #    )
  # endif()
   
@@ -131,26 +131,26 @@ ENDMACRO(TeInstallQtPlugins)
 #Add library path to RPATH (This will make this project library to find automatically it's dependencies)
 #Verify if the lib is already on LD or not
 MACRO(addExternalLibraryToRPATH LIBRARY)
-	IF(UNIX)
-		get_filename_component(LIBRARY_PATH ${LIBRARY} DIRECTORY)
-		LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES ${LIBRARY_PATH} isSystemDir)
-		IF("${isSystemDir}" STREQUAL "-1")
-	    	list (APPEND CMAKE_INSTALL_RPATH ${LIBRARY_PATH})
-			MESSAGE(STATUS " -- Adding ${LIBRARY} to RPATH")
-		ENDIF("${isSystemDir}" STREQUAL "-1")
-	ENDIF()
+    IF(UNIX)
+        get_filename_component(LIBRARY_PATH ${LIBRARY} DIRECTORY)
+        LIST(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES ${LIBRARY_PATH} isSystemDir)
+        IF("${isSystemDir}" STREQUAL "-1")
+            list (APPEND CMAKE_INSTALL_RPATH ${LIBRARY_PATH})
+            MESSAGE(STATUS " -- Adding ${LIBRARY} to RPATH")
+        ENDIF("${isSystemDir}" STREQUAL "-1")
+    ENDIF()
 ENDMACRO(addExternalLibraryToRPATH)
 
 #Add a list of libraries to RPATH (This will make this project library to find automatically it's dependencies)
 #Verify if the lib is already on LD or not
 MACRO(addExternalLibrariesToRPATH LIBRARY_LIST)
   IF(UNIX)
-	  FOREACH(LIBRARY ${LIBRARY_LIST})
-		string(FIND ${LIBRARY} ".so" isShared)
-		IF(NOT "${isShared}" EQUAL "-1")
-			addExternalLibraryToRPATH(${LIBRARY})	
-		ENDIF()
-	  ENDFOREACH()
+      FOREACH(LIBRARY ${LIBRARY_LIST})
+        string(FIND ${LIBRARY} ".so" isShared)
+        IF(NOT "${isShared}" EQUAL "-1")
+            addExternalLibraryToRPATH(${LIBRARY})    
+        ENDIF()
+      ENDFOREACH()
   ENDIF()
 ENDMACRO(addExternalLibrariesToRPATH)
 
@@ -160,13 +160,13 @@ MACRO(GenerateTranslationQt5 translation_dir project_name qm_files)
 
   add_custom_command(
     TARGET ${project_name}
-	POST_BUILD
+    POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E make_directory "${terralib_DIR}/share/terralib/translations/"
-	  COMMAND ${Qt5_LUPDATE_EXECUTABLE} 
-	  ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
-	  COMMAND ${Qt5_LRELEASE_EXECUTABLE} 
-	  ARGS "${_ts_file_name}" -qm "${qm_file}"
-	  COMMENT "Generating ${project_name} translations"
+      COMMAND ${Qt5_LUPDATE_EXECUTABLE} 
+      ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
+      COMMAND ${Qt5_LRELEASE_EXECUTABLE} 
+      ARGS "${_ts_file_name}" -qm "${qm_file}"
+      COMMENT "Generating ${project_name} translations"
   )
   message ("terralib_dir: ${terralib_DIR}")
   list(APPEND ${qm_files} ${qm_file})
@@ -178,13 +178,13 @@ MACRO(GenerateTranslationQt4 translation_dir project_name qm_files)
 
   add_custom_command(
     TARGET ${project_name}
-	POST_BUILD
+    POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/translations"
-	  COMMAND ${QT_LUPDATE_EXECUTABLE} 
-	  ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
-	  COMMAND ${QT_LRELEASE_EXECUTABLE} 
-	  ARGS "${_ts_file_name}" -qm "${qm_file}"
-	  COMMENT "Generating ${project_name} translations"
+      COMMAND ${QT_LUPDATE_EXECUTABLE} 
+      ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
+      COMMAND ${QT_LRELEASE_EXECUTABLE} 
+      ARGS "${_ts_file_name}" -qm "${qm_file}"
+      COMMENT "Generating ${project_name} translations"
   )
   
   list(APPEND ${qm_files} ${qm_file})

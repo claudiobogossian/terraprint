@@ -49,11 +49,11 @@ endif()
 
 find_package(GeographicLib 1.45)
 if(GEOGRAPHICLIB_FOUND)
-	include_directories(${GeographicLib_INCLUDE_DIRS})
-	
-	add_definitions(-DGEOGRAPHICLIB_ENABLED)
-	
-	file(GLOB GEOGRAPHICLIB_MODEL_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/magnetic_model/*.*)
+  include_directories(${GeographicLib_INCLUDE_DIRS})
+  
+  add_definitions(-DGEOGRAPHICLIB_ENABLED)
+  
+  file(GLOB GEOGRAPHICLIB_MODEL_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/magnetic_model/*.*)
 endif()
 
 file(GLOB TERRALIB_LAYOUT_CORE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/core/*.cpp)
@@ -199,7 +199,7 @@ set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_HDR_FILES} 
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_SRC_FILES} 
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
-		   ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES} 
+       ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES} 
            ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
            
 if(Qt5_FOUND)
@@ -219,7 +219,8 @@ else()
   QT4_WRAP_UI(TERRALIB_LAYOUT_GEN_HDR_FILES ${TERRALIB_LAYOUT_UI_HDR_FILES})
 
 # moc'ing
-  set(TERRALIB_HDRS_TO_MOC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/Scene.h
+  set(TERRALIB_HDRS_TO_MOC_FILES 
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/Scene.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PropertiesOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ObjectInspectorOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ToolbarOutside.h
@@ -255,8 +256,8 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PDFSettingsOutside.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/DoubleTreeWidgetOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PDFSettingsOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/DoubleTreeWidgetOutside.h
                                  #Base Layout
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MainLayout.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/OutsideArea.h
@@ -264,11 +265,12 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/ObjectInspectorDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/PropertiesDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/EditTemplateDock.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarInside.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h	
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/DialogItemToolbar.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapSettingsOutside.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ScaleSettingsOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarInside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h  
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/DialogItemToolbar.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapSettingsOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ScaleSettingsOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/NorthSettingsOutside.h
                                  )
 
   QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
@@ -335,18 +337,18 @@ install(
 )
 
 if(GEOGRAPHICLIB_FOUND)
-	#for build version
-	set(geographiclib_output_dir "${CMAKE_BINARY_DIR}/share/terralib/magnetic_model")
-	
-	file( MAKE_DIRECTORY ${geographiclib_output_dir})
-	file(COPY ${GEOGRAPHICLIB_MODEL_FILES} DESTINATION ${geographiclib_output_dir})
+  #for build version
+  set(geographiclib_output_dir "${CMAKE_BINARY_DIR}/share/terralib/magnetic_model")
+  
+  file( MAKE_DIRECTORY ${geographiclib_output_dir})
+  file(COPY ${GEOGRAPHICLIB_MODEL_FILES} DESTINATION ${geographiclib_output_dir})
 
-	#for installed version
-	install(
-	  FILES ${GEOGRAPHICLIB_MODEL_FILES}
-	  DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/magnetic_model
-	  COMPONENT runtime
-	)
+  #for installed version
+  install(
+    FILES ${GEOGRAPHICLIB_MODEL_FILES}
+    DESTINATION ${TERRALIB_DESTINATION_SHARE}/terralib/magnetic_model
+    COMPONENT runtime
+  )
 endif()
 
 
@@ -399,7 +401,7 @@ install(FILES ${TERRALIB_LAYOUT_QT_CORE_HDR_FILES}
         
 install(FILES ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/default COMPONENT devel)
-		
+    
 install(FILES ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/inside COMPONENT devel)
 
@@ -429,28 +431,28 @@ install(FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES}
         
 if(UNIX)
   install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_layout.so.${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
-    	    DESTINATION ${terralib_DIR}/../../)
+          DESTINATION ${terralib_DIR}/../../)
   install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_layout.so
-    	    DESTINATION ${terralib_DIR}/../../)
-endif()	        
+          DESTINATION ${terralib_DIR}/../../)
+endif()          
 
 export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
 
 if(MSVC)
-  	add_custom_command(
+    add_custom_command(
         TARGET terralib_mod_layout
         POST_BUILD
-  	  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Debug ${terralib_DIR}/debug
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Debug ${terralib_DIR}/debug
         
         COMMENT "Copying plugin files..."
         VERBATIM
       )
-	add_custom_command(
-		TARGET terralib_mod_layout
-		POST_BUILD
-	  COMMAND ${CMAKE_COMMAND} -E  copy_directory ${CMAKE_BINARY_DIR}/Release ${terralib_DIR}/release
-		
-		COMMENT "Copying plugin files..."
-		VERBATIM
-	  )
+  add_custom_command(
+    TARGET terralib_mod_layout
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E  copy_directory ${CMAKE_BINARY_DIR}/Release ${terralib_DIR}/release
+    
+    COMMENT "Copying plugin files..."
+    VERBATIM
+    )
 endif()

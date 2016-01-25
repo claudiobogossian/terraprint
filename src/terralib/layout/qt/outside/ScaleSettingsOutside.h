@@ -29,10 +29,19 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#include "../../core/property/Variant.h"
+#include "../../core/Font.h"
+
+// STL
+#include <vector>
 
 // Qt
 #include <QDialog>
 #include <QString>
+#include <QColor>
+#include <QFont>
+
+class QComboBox;
 
 namespace Ui { class ScaleSettings; }
 
@@ -52,21 +61,12 @@ namespace te
 
         virtual ~ScaleSettingsOutside();
 
-        /*!
-          \brief Load layers in double widget.
-        */
-        virtual void init();
-
         virtual void setPosition(const double& x, const double& y);
 
         virtual te::gm::Coord2D getPosition();
 
-        virtual std::string getFilePath();
-
-        virtual int getDPI();
-
-        virtual void setCurrentDPI(int dpi);
-
+        virtual void load();
+        
       signals:
 
         void updateProperty(Property prop);
@@ -74,14 +74,55 @@ namespace te
         void updateProperties(std::vector<Property> props);
                         
       protected slots:
+      
+        void on_pBtnCancel_clicked();
 
-        void onOkPushButtonPressed();
+        void on_pbtnFont_clicked();
 
-        void onCancelPushButtonPressed();
+        void on_cmbConnectedTo_currentIndexChanged(const QString & text);
 
-        void onSaveAsClicked();
+        void on_cmbType_currentIndexChanged(const QString & text);
 
-        void onCurrentIndexChanged(const QString & text);
+        void on_cmbUnit_currentIndexChanged(const QString & text);
+
+        void on_chkOnlyFirstAndLastValue_clicked();
+
+        void on_txtScaleGapXInUnit_editingFinished();
+
+        void on_txtScaleGapX_editingFinished();
+
+        void on_txtScaleGapY_editingFinished();
+
+        void on_txtNumberOfBreaks_editingFinished();
+
+      protected:
+
+        /*!
+        \brief Load layers in double widget.
+        */
+        virtual void init();
+
+        virtual void initString(QWidget* widget, std::string nameComponent);
+
+        virtual void initInt(QWidget* widget, std::string nameComponent);
+
+        virtual void initDouble(QWidget* widget, std::string nameComponent);
+
+        virtual void initBool(QWidget* widget, std::string nameComponent);
+        
+        virtual void initCombo(QWidget* widget, std::string nameComponent);
+
+        virtual void initTextEdit(QWidget* widget, std::string nameComponent);
+
+        virtual void addComboOptions(QComboBox* combo, std::vector<Variant> options);
+
+        virtual QString fontHTML(const Property& prop);
+
+        virtual Font configFont(QWidget* widget);
+
+        Font qFont2Font(QFont qFont);
+
+        QFont font2QFont(Font font);
         
       private:
 

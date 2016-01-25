@@ -37,6 +37,8 @@
 #include "../../../outside/MapLayerChoiceModel.h"
 #include "../../outside/LegendChoiceOutside.h"
 #include "../../../outside/LegendChoiceModel.h"
+#include "../../outside/NorthSettingsOutside.h"
+#include "../../../outside/NorthSettingsModel.h"
 #include "../../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../../../item/MapModel.h"
 #include "../../../outside/ColorDialogModel.h"
@@ -50,6 +52,7 @@
 #include "../ItemUtils.h"
 #include "../BuildGraphicsOutside.h"
 #include "../../item/GridMapItem.h"
+#include "../../item/NorthItem.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../Scene.h"
@@ -57,7 +60,7 @@
 #include "../../outside/MapSettingsOutside.h"
 #include "../../../outside/MapSettingsModel.h"
 #include "../../outside/ScaleSettingsOutside.h"
-#include "../../../outside/ScaleSettingsModel.h"
+#include "../../outside/ScaleSettingsController.h"
 
 // STL
 #include <vector>
@@ -181,6 +184,10 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowScaleSettingsDlg()));
   }
+  if (propt.getType() == dataType->getDataTypeNorthSettings())
+  {
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowNorthSettingsDlg()));
+  }
 }
 
 QtStringPropertyManager* te::layout::DialogPropertiesBrowser::getStringPropertyManager()
@@ -257,7 +264,8 @@ bool te::layout::DialogPropertiesBrowser::checkDlgType( const Property& prop )
 
   if(prop.getType() == dataType->getDataTypeGridSettings()
     || prop.getType() == dataType->getDataTypeImage()
-    || prop.getType() == dataType->getDataTypeTextGridSettings())
+    || prop.getType() == dataType->getDataTypeTextGridSettings()
+    || prop.getType() == dataType->getDataTypeNorthSettings())
   {
     result = true;
   }
@@ -362,6 +370,43 @@ void te::layout::DialogPropertiesBrowser::onShowGridSettingsDlg()
   gridSettings->load();
   gridSettings->show(); // modeless dialog
   gridSettings->raise(); // top of the parent widget's stack
+}
+
+void te::layout::DialogPropertiesBrowser::onShowNorthSettingsDlg()
+{
+  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
+  if (!enumObj)
+  {
+    return;
+  }
+
+  QWidget* widget = createOutside(enumObj->getNorthSettings());
+  if (!widget)
+  {
+    return;
+  }
+
+  NorthSettingsOutside* northSettings = dynamic_cast<NorthSettingsOutside*>(widget);
+  if (!northSettings)
+  {
+    return;
+  }
+
+  appendDialog(northSettings);
+
+  AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(northSettings->getController());
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
+  NorthSettingsModel* model = dynamic_cast<NorthSettingsModel*>(abstractModel);
+  if (!model)
+  {
+    return;
+  }
+
+  model->setNorthProperties(m_allProperties);
+
+  //northSettings->load();
+  northSettings->show(); // modeless dialog
+  northSettings->raise(); // top of the parent widget's stack
 }
 
 void te::layout::DialogPropertiesBrowser::onShowImageDlg()
@@ -700,13 +745,13 @@ void te::layout::DialogPropertiesBrowser::onShowScaleSettingsDlg()
   appendDialog(scaleSettings);
 
   AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(scaleSettings->getController());
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
-  ScaleSettingsModel* model = dynamic_cast<ScaleSettingsModel*>(abstractModel);
-  if (!model)
+  ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(abstractController);
+  if (!controller)
   {
     return;
   }
-
+  
+  scaleSettings->load();
   scaleSettings->show(); // modeless dialog
   scaleSettings->raise(); // top of the parent widget's stack
 }
@@ -749,6 +794,10 @@ te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(const QStr
   {
     prop.setValue(valueString, prop.getType());
   }
+  else if (prop.getType() == dataType->getDataTypeNorthSettings())
+  {
+    prop.setValue(variant.toString().toStdString(), prop.getType());
+  }
 
   return prop;
 }
@@ -784,6 +833,10 @@ te::layout::EnumType* te::layout::DialogPropertiesBrowser::getLayoutType(QVarian
           {
             dataType = dtType->getDataTypeImage();
           }
+          if (prop.getType() == dtType->getDataTypeNorthSettings())
+          {
+            dataType = dtType->getDataTypeNorthSettings();
+          }
         }
       }
     }
@@ -811,6 +864,10 @@ int te::layout::DialogPropertiesBrowser::getVariantType( EnumType* dataType )
     type = QVariant::String;
   }
   else if(dataType == dtType->getDataTypeImage())
+  {
+    type = QVariant::String;
+  }
+  else if (dataType == dtType->getDataTypeNorthSettings())
   {
     type = QVariant::String;
   }
@@ -913,5 +970,4 @@ void te::layout::DialogPropertiesBrowser::appendDialog( QWidget* widget )
 
   widget->setAttribute(Qt::WA_DeleteOnClose);
 }
-
 

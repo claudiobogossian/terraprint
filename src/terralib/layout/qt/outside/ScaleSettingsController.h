@@ -18,35 +18,54 @@
  */
 
 /*!
-  \file ScaleSettingsModel.h
+  \file ScaleSettingsController.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H 
-#define __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_CONTROLLER_H 
+#define __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_CONTROLLER_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideModel.h"
-#include "../core/Config.h"
+#include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../../core/property/Property.h"
+#include "../../core/property/Properties.h"
+#include "../../core/Config.h"
+
+// Qt
+#include <QStringList>
+
+class QGraphicsItem;
 
 namespace te
 {
   namespace layout
   {
-    class Properties;
+    class AbstractOutsideModel;
+    class Scene;
 
-    class TELAYOUTEXPORT ScaleSettingsModel : public AbstractOutsideModel
+    class TELAYOUTEXPORT ScaleSettingsController : public AbstractOutsideController
     {
-    public:
+      public:
 
-      ScaleSettingsModel();
+        ScaleSettingsController(Scene* scene, AbstractOutsideModel* o);
 
-      virtual ~ScaleSettingsModel();
+        virtual ~ScaleSettingsController();
+                
+        virtual Property getScaleProperty(std::string name);
+
+        virtual QStringList getItemNames(QStringList list, const EnumType* type);
+        
+      protected:
+                
+        Scene*                 m_scene;
     };
   }
 }
 
 #endif
+
+
+

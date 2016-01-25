@@ -103,18 +103,18 @@ install(FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/plugins/te.qt.layout.
         
 if(UNIX)
   install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_qt_plugins_layout.so.${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
-    	    DESTINATION ${terralib_DIR}/../../)
+          DESTINATION ${terralib_DIR}/../../)
   install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_qt_plugins_layout.so
-    	    DESTINATION ${terralib_DIR}/../../)
-endif()	  
+          DESTINATION ${terralib_DIR}/../../)
+endif()    
 
 export(TARGETS terralib_mod_qt_plugins_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
 
 if(MSVC)
-  	add_custom_command(
+    add_custom_command(
         TARGET terralib_mod_qt_plugins_layout
         POST_BUILD
-  	  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Debug ${terralib_DIR}/debug
+      COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Debug ${terralib_DIR}/debug
         
         COMMENT "Copying plugin files..."
         VERBATIM

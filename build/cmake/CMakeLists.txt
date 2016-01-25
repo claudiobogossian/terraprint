@@ -203,9 +203,9 @@ find_package(CppUnit)
 
 
 include_directories(${terralib_DIR}
-					${terralib_INCLUDE_DIRS}
-					${terralib_INCLUDE_DIRS}/terralib
-					)
+          ${terralib_INCLUDE_DIRS}
+          ${terralib_INCLUDE_DIRS}/terralib
+          )
 
 
 #
@@ -404,8 +404,8 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
     IMMEDIATE @ONLY)
 
-	
+  
 
 add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-	
+  

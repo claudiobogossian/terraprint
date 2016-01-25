@@ -18,37 +18,35 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/outside/ScaleSettingsOutsideFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/outside/ColorDialogOutsideFactory.cpp
 
   \brief This is the concrete factory for arrow item.
 */
 
 // TerraLib
-#include "ScaleSettingsOutsideFactory.h"
-#include "../../../../../outside/ScaleSettingsModel.h"
-#include "../../../../outside/ScaleSettingsController.h"
-#include "../../../../outside/ScaleSettingsOutside.h"
+#include "NorthSettingsOutsideFactory.h"
+#include "../../../../../outside/NorthSettingsModel.h"
+#include "../../../../../outside/NorthSettingsController.h"
+#include "../../../../outside/NorthSettingsOutside.h"
 
-te::layout::AbstractOutsideView* te::layout::ScaleSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
+te::layout::AbstractOutsideView* te::layout::NorthSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
-  ScaleSettingsModel* model = new ScaleSettingsModel();
+    NorthSettingsModel* model = new NorthSettingsModel();
 
-  Scene* scene = params.getScene();
+    NorthSettingsController* controller = new NorthSettingsController(model);
+    NorthSettingsOutside* view = new NorthSettingsOutside(controller);
+    controller->setView(view);
 
-  ScaleSettingsController* controller = new ScaleSettingsController(scene, model);
-  ScaleSettingsOutside* view = new ScaleSettingsOutside(controller);
-  controller->setView(view);
-
-  return view;
+    return view;
 }
 
-te::layout::ScaleSettingsOutsideFactory::ScaleSettingsOutsideFactory() :
-  OutsideFactory(Enums::getInstance().getEnumObjectType()->getScaleSettingsDialog()->getName())
+te::layout::NorthSettingsOutsideFactory::NorthSettingsOutsideFactory() :
+OutsideFactory(Enums::getInstance().getEnumObjectType()->getNorthSettings()->getName())
 {
 
 }
 
-te::layout::ScaleSettingsOutsideFactory::~ScaleSettingsOutsideFactory()
+te::layout::NorthSettingsOutsideFactory::~NorthSettingsOutsideFactory()
 {
 
 }
