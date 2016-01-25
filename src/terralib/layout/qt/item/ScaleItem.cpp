@@ -38,6 +38,7 @@ te::layout::ScaleItem::ScaleItem(AbstractItemController* controller, bool invert
   , m_scale(0)
   , m_gapX(0)
   , m_gapY(0)
+  , m_scaleUnitGapX(0)
 {  
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
@@ -91,12 +92,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   
   std::string strUnit;
   double unit = controller->getUnit(strUnit);
-
-  //convert millimeters to centimeters
-  double mmToCm = m_gapX / 10.;
-
-  double spacing = m_scale / 100.;
-
+  
   double value = 0.;
   double width = 0.;
   double x1 = boundRect.bottomLeft().x();
@@ -138,7 +134,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     if (width == 0)
       width = m_gapX;
     else
-      value += (spacing * mmToCm) / unit;
+      value += m_scaleUnitGapX;
 
     ss_value.str(std::string()); // clear
     ss_value.clear();
@@ -239,11 +235,6 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   std::string strUnit;
   double unit = controller->getUnit(strUnit);
 
-  //convert millimeters to centimeters
-  double mmToCm = m_gapX / 10.;
-
-  double spacing = m_scale / 100.;
-
   double value = 0.;
   double width = 0.;
   double x1 = boundRect.bottomLeft().x();
@@ -283,7 +274,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
     if (width == 0)
       width = m_gapX;
     else
-      value += (spacing * mmToCm) / unit;
+      value += m_scaleUnitGapX;
 
     ss_value.str(std::string()); // clear
     ss_value.clear();
@@ -374,12 +365,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   
   std::string strUnit;
   double unit = controller->getUnit(strUnit);
-
-  //convert millimeters to centimeters
-  double mmToCm = m_gapX / 10.;
-
-  double spacing = m_scale / 100.;
-
+  
   double value = 0.;
   double width = 0.;
   double x1 = boundRect.bottomLeft().x();
@@ -422,7 +408,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     if (width == 0)
       width = m_gapX;
     else
-      value += (spacing * mmToCm) / unit;
+      value += m_scaleUnitGapX;
 
     ss_value.str(std::string()); // clear
     ss_value.clear();
@@ -509,10 +495,12 @@ void te::layout::ScaleItem::refreshScaleProperties()
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
   const Property& pTextFont = m_controller->getProperty("font");
+  const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
 
   m_scale = pScale.getValue().toDouble();
   m_gapX = pScaleGapX.getValue().toDouble();
   m_gapY = pScaleGapY.getValue().toDouble();
   m_font = pTextFont.getValue().toFont();
+  m_scaleUnitGapX = pScaleUnitGapX.getValue().toInt();
 }
 

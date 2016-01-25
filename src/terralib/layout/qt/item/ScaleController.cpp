@@ -28,6 +28,7 @@
 
 // STL
 #include <algorithm>
+#include <math.h> /* round */
 
 te::layout::ScaleController::ScaleController(te::layout::AbstractItemModel* model)
   : AbstractItemController(model)
@@ -192,8 +193,8 @@ te::layout::Property te::layout::ScaleController::checkScaleWidthAndUnit(const P
     return newProperty;
   }
 
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
-  double scaleInUnitFromModel = pScaleInUnitFromModel.getValue().toDouble();
+  double scaleInUnit = pScaleInUnit.getValue().toInt();
+  double scaleInUnitFromModel = pScaleInUnitFromModel.getValue().toInt();
   double scale = pScale.getValue().toDouble();
 
   if (!pScaleInUnit.isNull())
@@ -232,7 +233,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInMM(const 
   const Property& pScale = m_model->getProperty("scale");
 
   double scale = pScale.getValue().toDouble();
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
 
   std::string strUnit;
   double unit = getUnit(strUnit);
@@ -265,7 +266,6 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   const Property& pCurrentScaleWidth = properties.getProperty("scale_width_rect_gap");
 
   double scale = pScale.getValue().toDouble();
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
   double gapX = pCurrentScaleWidth.getValue().toDouble();
 
   std::string strUnit;
@@ -273,10 +273,11 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   double spacing = scale / 100.;
   double mmToCm = gapX / 10.;
   
-  double value = (spacing * mmToCm) / unit;
+  double valueDouble = (spacing * mmToCm) / unit;
+  int value = (int)std::round(valueDouble);
 
   prop.setName("scale_in_unit_width_rect_gap");
-  prop.setValue(value, dataType->getDataTypeDouble());
+  prop.setValue(value, dataType->getDataTypeInt());
 
   return prop;
 }
@@ -296,7 +297,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
     return prop;
   }
 
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
 
   std::string strUnit = pUnit.getOptionByCurrentChoice().toString();
   std::string strNewUnit = pNewUnit.getOptionByCurrentChoice().toString();
@@ -310,17 +311,22 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
   }
 
   double unit = std::max(currentUnit, newUnit);
+
+  double scaleInUnitDouble = 0;
+
   if (currentUnit > newUnit)
   {
-    scaleInUnit = scaleInUnit * unit;
+    scaleInUnitDouble = scaleInUnit * unit;
   }
   else
   {
-    scaleInUnit = scaleInUnit / unit;
+    scaleInUnitDouble = scaleInUnit / unit;
   }
 
+  scaleInUnit = (int)std::round(scaleInUnitDouble);
+
   prop = pScaleInUnit;
-  prop.setValue(scaleInUnit, dataType->getDataTypeDouble());
+  prop.setValue(scaleInUnit, dataType->getDataTypeInt());
 
   return prop;
 }
@@ -351,7 +357,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   const Property& pScale = getProperty("scale");
 
   double scale = pScale.getValue().toDouble();
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
   double gapX = pScaleWidth.getValue().toDouble();
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -361,12 +367,14 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   double spacing = scale / 100.;
   double mmToCm = gapX / 10.;
 
-  double value = (spacing * mmToCm) / unit;
+  double valueDouble = (spacing * mmToCm) / unit;
+  int value = (int)std::round(valueDouble);
+
   if ((value != scaleInUnit) && value > 0)
   {
     Property prop;
     prop.setName("scale_in_unit_width_rect_gap");
-    prop.setValue(value, dataType->getDataTypeDouble());
+    prop.setValue(value, dataType->getDataTypeInt());
     setProperty(prop);
     change = true;
   }
