@@ -869,6 +869,8 @@ void te::layout::View::print()
     return;
   }
 
+  emit aboutToPerformIO();
+
   setCurrentMode(enumMode->getModePrinter());
 
   resetDefaultConfig();
@@ -883,10 +885,14 @@ void te::layout::View::print()
   enableUpdate();
 
   setCurrentMode(enumMode->getModeNone());
+
+  emit endedPerformingIO();
 }
 
 void te::layout::View::exportToPDF()
 {
+  emit aboutToPerformIO();
+
   Scene* scne = dynamic_cast<Scene*>(scene());
 
   resetDefaultConfig();
@@ -899,6 +905,8 @@ void te::layout::View::exportToPDF()
   printer.exportToPDF();
 
   enableUpdate();
+
+  emit endedPerformingIO();
 }
 
 void te::layout::View::recompose()
@@ -1103,6 +1111,12 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
 
 bool te::layout::View::exportProperties( EnumType* type )
 {
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+    return false;
+
+  emit aboutToPerformIO();
+
   bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
@@ -1110,6 +1124,7 @@ bool te::layout::View::exportProperties( EnumType* type )
 
   if(fileName.isEmpty())
   {
+    emit endedPerformingIO();
     return is_export;
   }
   if (fileName.endsWith(".xml") == false)
@@ -1118,10 +1133,6 @@ bool te::layout::View::exportProperties( EnumType* type )
   }
 
   std::string j_name = ItemUtils::convert2StdString(fileName);
-
-  Scene* scne = dynamic_cast<Scene*>(scene());
-  if(!scne)
-    return false;
 
   is_export = scne->exportPropertiesToTemplate(type, j_name);
 
@@ -1138,6 +1149,8 @@ bool te::layout::View::exportProperties( EnumType* type )
     msgBox.setText(tr("Error exporting template!"));
   }
 
+  emit endedPerformingIO();
+
   msgBox.exec();
 
   return is_export;
@@ -1145,21 +1158,27 @@ bool te::layout::View::exportProperties( EnumType* type )
 
 bool te::layout::View::importTemplate( EnumType* type )
 {  
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if(!scne)
+    return false;
+
+  emit aboutToPerformIO();
+
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
     QDir::currentPath(), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {
+    emit endedPerformingIO();
     return false;
   }
 
   std::string j_name = ItemUtils::convert2StdString(fileName); 
 
-  Scene* scne = dynamic_cast<Scene*>(scene());
-  if(!scne)
-    return false;
-
   bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+
+  emit endedPerformingIO();
+
   return result;
 }
 
