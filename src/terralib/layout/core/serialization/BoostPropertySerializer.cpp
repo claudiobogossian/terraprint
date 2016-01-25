@@ -39,7 +39,8 @@
 // Boost
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
-#include "boost/system/system_error.hpp"
+#include <boost/system/system_error.hpp>
+#include <boost/locale.hpp>
 
 // STL
 #include <iostream>
@@ -122,7 +123,10 @@ std::vector<te::layout::Properties> te::layout::BoostPropertySerializer::retriev
         prop.setName(valName);
         EnumType* tp = dataType->getEnum(v.second.data());
         Variant vt;
-        vt.fromPtree(tree, tp);
+
+        std::string value = tree.get_value<std::string>();
+
+        vt.fromString(value, tp);
         prop.setValue(vt);
         props.addProperty(prop); 
         prop.clear();
@@ -395,7 +399,7 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const st
     boost::property_tree::ptree propertyNode;
     propertyNode.add("name", name);
     propertyNode.add("type", type);
-    propertyNode.add("value", value);
+    propertyNode.add("value", toUTF8(value));
     propertyNode.add("currentChoice", currentChoice);
 
     const std::vector<te::layout::Property>& vecSubProperty = property.getSubProperty();
@@ -453,8 +457,8 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
 {
   std::string name = propertyNode.get<std::string>("name");
   std::string type = propertyNode.get<std::string>("type");
-  std::string value = propertyNode.get<std::string>("value");
-  std::string currentChoice = propertyNode.get<std::string>("currentChoice");
+  std::string value = fromUTF8(propertyNode.get<std::string>("value"));
+  std::string currentChoice = propertyNode.get<std::string>("currentChoice"); 
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   EnumType* valueType = dataType->getEnum(type);
@@ -462,18 +466,21 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   Property property;
   property.setName(name);
 
-  const boost::property_tree::ptree& valueNode = propertyNode.get_child("value");
+  const boost::property_tree::ptree& bValueNode = propertyNode.get_child("value");
+  std::string cValue = fromUTF8(bValueNode.get_value<std::string>());
+
   Variant variantValue;
-  variantValue.fromPtree(valueNode, valueType);
+  variantValue.fromString(cValue, valueType);
 
   property.setValue(variantValue);
 
   if (currentChoice.empty() == false)
   {
     const boost::property_tree::ptree& currentChoiceNode = propertyNode.get_child("currentChoice");
+    std::string cCurrentChoiceValue = fromUTF8(currentChoiceNode.get_value<std::string>());
 
     Variant variantCurrentChoice;
-    variantCurrentChoice.fromPtree(currentChoiceNode, dataType->getDataTypeString());
+    variantCurrentChoice.fromString(cCurrentChoiceValue, dataType->getDataTypeString());
 
     property.setOptionChoice(variantCurrentChoice);
   }
@@ -491,4 +498,16 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   }
   
   return property;
+}
+
+std::string te::layout::BoostPropertySerializer::toUTF8(const std::string& latin1String) const
+{
+  std::string utf8_string = boost::locale::conv::to_utf<char>(latin1String, "ISO-8859-1");
+  return utf8_string;
+}
+
+std::string te::layout::BoostPropertySerializer::fromUTF8(const std::string& utf8String) const
+{
+  std::string latin1_string = boost::locale::conv::from_utf(utf8String, "ISO-8859-1");
+  return latin1_string;
 }

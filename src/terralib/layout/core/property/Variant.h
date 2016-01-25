@@ -116,7 +116,7 @@ namespace te
         /*!
           \brief 
         */ 
-        virtual void fromPtree(boost::property_tree::ptree tree, EnumType* type);
+        virtual void fromString(const std::string& value, EnumType* type);
 
         /*!
           \brief Returns data type of this object.

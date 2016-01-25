@@ -123,7 +123,7 @@ namespace te
         /*!
           \brief 
         */ 
-        virtual void fromPtree(boost::property_tree::ptree tree);
+        virtual void fromString(const std::string& value);
 
         EnumType* getType();
 
