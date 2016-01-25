@@ -293,7 +293,8 @@ target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            terralib_mod_srs
                                            terralib_mod_symbology
                                            ${QTPROPERTYBROWSER_LIBRARY}
-                                           ${GeographicLib_STATIC_LIBRARIES})
+                                           ${GeographicLib_STATIC_LIBRARIES}
+										   ${Boost_LIBRARIES})
 
 set_target_properties(terralib_mod_layout
                       PROPERTIES VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
