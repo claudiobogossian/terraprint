@@ -28,7 +28,6 @@
 
 // STL
 #include <algorithm>
-#include <math.h> /* round */
 
 te::layout::ScaleController::ScaleController(te::layout::AbstractItemModel* model)
   : AbstractItemController(model)
@@ -274,7 +273,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   double mmToCm = gapX / 10.;
   
   double valueDouble = (spacing * mmToCm) / unit;
-  int value = (int)std::round(valueDouble);
+  int value = (int)qRound(valueDouble);
 
   prop.setName("scale_in_unit_width_rect_gap");
   prop.setValue(value, dataType->getDataTypeInt());
@@ -323,7 +322,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
     scaleInUnitDouble = scaleInUnit / unit;
   }
 
-  scaleInUnit = (int)std::round(scaleInUnitDouble);
+  scaleInUnit = (int)qRound(scaleInUnitDouble);
 
   prop = pScaleInUnit;
   prop.setValue(scaleInUnit, dataType->getDataTypeInt());
@@ -368,7 +367,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   double mmToCm = gapX / 10.;
 
   double valueDouble = (spacing * mmToCm) / unit;
-  int value = (int)std::round(valueDouble);
+  int value = (int)qRound(valueDouble);
 
   if ((value != scaleInUnit) && value > 0)
   {
