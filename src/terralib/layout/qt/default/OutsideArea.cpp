@@ -119,7 +119,6 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
   {
     connect(m_view, SIGNAL(reloadProperties()), this, SLOT(onSelectionChanged()));
     connect(m_view->scene(), SIGNAL(addItemFinalized(QGraphicsItem*)), this, SLOT(onAddItemFinalized(QGraphicsItem*)));
-    connect(m_view, SIGNAL(hideView()), this, SLOT(onHideView()));
     connect(m_view, SIGNAL(closeView()), this, SLOT(onCloseView()));
     connect(m_view, SIGNAL(showView()), this, SLOT(onShowView()));
     connect(this, SIGNAL(changeMenuMode(te::layout::EnumType*)), m_view, SLOT(onMainMenuChangeMode(te::layout::EnumType*)));
@@ -514,13 +513,6 @@ void te::layout::OutsideArea::onShowView()
 {
   openAllDocks();
   openMainMenu();
-}
-
-void te::layout::OutsideArea::onHideView()
-{
-  closeAllDocks();
-  closeMainMenu();
-  m_view->closeOutsideWindows();
 }
 
 void te::layout::OutsideArea::onCloseView()
