@@ -30,6 +30,7 @@
 #include "../PaperConfig.h"
 #include "../property/Property.h"
 #include "../property/Properties.h"
+#include "terralib/common/CharEncodingConv.h"
 #include "terralib/common/Exception.h"
 #include "terralib/common/STLUtils.h"
 #include "terralib/common/Translator.h"
@@ -40,7 +41,6 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/foreach.hpp>
 #include <boost/system/system_error.hpp>
-#include <boost/locale.hpp>
 
 // STL
 #include <iostream>
@@ -502,12 +502,15 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
 
 std::string te::layout::BoostPropertySerializer::toUTF8(const std::string& latin1String) const
 {
-  std::string utf8_string = boost::locale::conv::to_utf<char>(latin1String, "ISO-8859-1");
+  te::common::CharEncodingConv convert(te::common::LATIN1, te::common::UTF8);
+  std::string utf8_string = convert.conv(latin1String);
   return utf8_string;
 }
 
 std::string te::layout::BoostPropertySerializer::fromUTF8(const std::string& utf8String) const
 {
-  std::string latin1_string = boost::locale::conv::from_utf(utf8String, "ISO-8859-1");
+  te::common::CharEncodingConv convert(te::common::UTF8, te::common::LATIN1);
+  std::string latin1_string = convert.conv(utf8String);
+
   return latin1_string;
 }
