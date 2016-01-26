@@ -74,11 +74,15 @@ void te::layout::ScaleSettingsOutside::load()
   initCombo(m_ui->cmbUnit, "Unit");
   initBool(m_ui->chkOnlyFirstAndLastValue, "only_first_and_last_value");
   initDouble(m_ui->txtScale, "scale");
-  initInt(m_ui->txtNumberOfBreaks, "number_of_breaks");
   initDouble(m_ui->txtScaleGapX, "scale_width_rect_gap");
   initDouble(m_ui->txtScaleGapY, "scale_height_rect_gap");
-  initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   initTextEdit(m_ui->txtFont, "font");
+
+  initInt(m_ui->txtNumberOfBreaks, "number_of_breaks");
+  createIntValidator(m_ui->txtNumberOfBreaks);
+
+  initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+  createIntValidator(m_ui->txtScaleGapXInUnit);
 }
 
 void te::layout::ScaleSettingsOutside::setPosition(const double& x, const double& y)
@@ -174,7 +178,7 @@ void te::layout::ScaleSettingsOutside::on_cmbUnit_currentIndexChanged(const QStr
     prop.setValue(variant);
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
-    initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+    initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   }
 }
 
@@ -197,10 +201,21 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
+    int scaleGapXInUnit = m_ui->txtScaleGapXInUnit->text().toInt();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(m_ui->txtScaleGapXInUnit->text().toDouble(), dataType->getDataTypeDouble());
+    variant.setValue(scaleGapXInUnit, dataType->getDataTypeInt());
     Property prop = controller->getScaleProperty("scale_in_unit_width_rect_gap");
+
+    if (m_ui->txtScaleGapXInUnit->text().compare("") == 0
+      || scaleGapXInUnit == prop.getValue().toInt())
+    {
+      QString qScaleGapXInUnit = QString::number(prop.getValue().toInt());
+      m_ui->txtScaleGapXInUnit->setText(qScaleGapXInUnit);
+      return;
+    }
+
     prop.setValue(variant);
     emit updateProperty(prop);
     initDouble(m_ui->txtScaleGapX, "scale_width_rect_gap");
@@ -212,13 +227,24 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapX_editingFinished()
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
+    double scaleGapX = m_ui->txtScaleGapX->text().toDouble();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(m_ui->txtScaleGapX->text().toDouble(), dataType->getDataTypeDouble());
+    variant.setValue(scaleGapX, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_width_rect_gap");
+
+    if (m_ui->txtScaleGapX->text().compare("") == 0
+      || scaleGapX == prop.getValue().toDouble())
+    {
+      QString qScaleGapX = QString::number(prop.getValue().toDouble());
+      m_ui->txtScaleGapX->setText(qScaleGapX);
+      return;
+    }
+
     prop.setValue(variant);
     emit updateProperty(prop);
-    initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+    initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   }
 }
 
@@ -227,10 +253,21 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapY_editingFinished()
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
+    double scaleGapY = m_ui->txtScaleGapY->text().toDouble();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(m_ui->txtScaleGapY->text().toDouble(), dataType->getDataTypeDouble());
+    variant.setValue(scaleGapY, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_height_rect_gap");
+
+    if (m_ui->txtScaleGapY->text().compare("") == 0
+      || scaleGapY == prop.getValue().toDouble())
+    {
+      QString qScaleGapY = QString::number(prop.getValue().toDouble());
+      m_ui->txtScaleGapY->setText(qScaleGapY);
+      return;
+    }
+
     prop.setValue(variant);
     emit updateProperty(prop);
   }
@@ -241,10 +278,21 @@ void te::layout::ScaleSettingsOutside::on_txtNumberOfBreaks_editingFinished()
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
+    int numberOfBreaks = m_ui->txtNumberOfBreaks->text().toInt();
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(m_ui->txtNumberOfBreaks->text().toDouble(), dataType->getDataTypeInt());
+    variant.setValue(numberOfBreaks, dataType->getDataTypeInt());
     Property prop = controller->getScaleProperty("number_of_breaks");
+
+    if (m_ui->txtNumberOfBreaks->text().compare("") == 0
+      || numberOfBreaks == prop.getValue().toInt())
+    {
+      QString qNumberOfBreaks = QString::number(prop.getValue().toInt());
+      m_ui->txtNumberOfBreaks->setText(qNumberOfBreaks);
+      return;
+    }
+
     prop.setValue(variant);
     emit updateProperty(prop);
   }
@@ -550,5 +598,17 @@ QFont te::layout::ScaleSettingsOutside::font2QFont(Font font)
   qFont.setUnderline(underline);
 
   return qFont;
+}
+
+void te::layout::ScaleSettingsOutside::createIntValidator(QWidget* widget)
+{  
+  QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
+  if (edit)
+  {
+    /* integers 1 to 9999 and space | 0 and 12 digits */
+    QRegExp regExp("(^$)|([1-9]\\d{0,12}$)");
+    QValidator* validator = new QRegExpValidator(regExp, widget);
+    edit->setValidator(validator);
+  }
 }
 

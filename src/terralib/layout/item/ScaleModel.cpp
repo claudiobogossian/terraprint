@@ -44,11 +44,11 @@ te::layout::ScaleModel::ScaleModel()
   double width = 70.;
   double height = 30.;
   double scale = 250000.;
-  double scaleGapX = 30.;
+  double scaleGapX = 28.;
   double scaleGapY = 5.;
   std::string itemName = "";
   Font font;
-  double scaleUnitGapX = 7.5;
+  int scaleUnitGapX = 7;
   bool onlyFirstAndLastValue = false;
   int numberOfBreaks = 1;
   te::color::RGBAColor fontColor(0, 0, 0, 255);
@@ -170,7 +170,7 @@ te::layout::ScaleModel::ScaleModel()
     Property property(0);
     property.setName("scale_in_unit_width_rect_gap");
     property.setLabel(TR_LAYOUT("Scale Gap X In Unit"));
-    property.setValue(scaleUnitGapX, dataType->getDataTypeDouble());
+    property.setValue(scaleUnitGapX, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
 

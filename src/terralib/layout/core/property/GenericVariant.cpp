@@ -91,7 +91,7 @@ void te::layout::GenericVariant::clear()
   m_listLayer.clear();
 }
 
-void te::layout::GenericVariant::fromPtree( boost::property_tree::ptree tree )
+void te::layout::GenericVariant::fromString( const std::string& value )
 {
 
 }

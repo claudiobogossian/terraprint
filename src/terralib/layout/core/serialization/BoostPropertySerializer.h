@@ -107,6 +107,16 @@ namespace te
         */
         virtual te::layout::Property decodeProperty(const boost::property_tree::ptree& propertyNode);
 
+        /*
+        \brief Converts the given Latin1 string to UTF-8
+        */
+        virtual std::string toUTF8(const std::string& latin1String) const;
+
+        /*
+        \brief Converts the given UTF-8 string to Latin1
+        */
+        virtual std::string fromUTF8(const std::string& utf8String) const;
+
     protected:
 
         boost::property_tree::ptree m_array;

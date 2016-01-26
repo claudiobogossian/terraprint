@@ -85,6 +85,34 @@ double te::layout::ScaleController::getGap(double& initialGap)
   std::string strUnit;
   double unit = getUnit(strUnit);
   QPainterPath unitTextObject = ItemUtils::textToVector(strUnit.c_str(), qFont, QPointF(0, 0));
+
+  double unitGap = unitTextObject.boundingRect().width();
+  double gap = unitGap + 2.5;
+
+  QPainterPath lastTextObject = getLastText();
+  double finalGap = lastTextObject.boundingRect().width() / 2;
+  gap = finalGap + unitGap + 2.5;
+  return gap;
+}
+
+QPainterPath te::layout::ScaleController::getLastText()
+{
+  QPainterPath lastTextObject;
+  ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(this->getView());
+  if (scaleItem == 0)
+  {
+    return lastTextObject;
+  }
+
+  const Property& pTextFont = getProperty("font");
+  Font txtFont = pTextFont.getValue().toFont();
+  QFont qFont = ItemUtils::convertToQfont(txtFont);
+
+  std::string text = "0";
+
+  std::string strUnit;
+  double unit = getUnit(strUnit);
+  QPainterPath unitTextObject = ItemUtils::textToVector(strUnit.c_str(), qFont, QPointF(0, 0));
   double unitGap = unitTextObject.boundingRect().width();
 
   const Property& pScale = getProperty("scale");
@@ -114,10 +142,8 @@ double te::layout::ScaleController::getGap(double& initialGap)
 
     text = ss_value.str();
   }
-  QPainterPath lastTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
-  double finalGap = lastTextObject.boundingRect().width() / 2;
-  gap = finalGap + unitGap + 2.5;
-  return gap;
+  lastTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
+  return lastTextObject;
 }
 
 void te::layout::ScaleController::setProperty(const te::layout::Property& property)
@@ -166,8 +192,8 @@ te::layout::Property te::layout::ScaleController::checkScaleWidthAndUnit(const P
     return newProperty;
   }
 
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
-  double scaleInUnitFromModel = pScaleInUnitFromModel.getValue().toDouble();
+  double scaleInUnit = pScaleInUnit.getValue().toInt();
+  double scaleInUnitFromModel = pScaleInUnitFromModel.getValue().toInt();
   double scale = pScale.getValue().toDouble();
 
   if (!pScaleInUnit.isNull())
@@ -206,7 +232,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInMM(const 
   const Property& pScale = m_model->getProperty("scale");
 
   double scale = pScale.getValue().toDouble();
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
 
   std::string strUnit;
   double unit = getUnit(strUnit);
@@ -239,7 +265,6 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   const Property& pCurrentScaleWidth = properties.getProperty("scale_width_rect_gap");
 
   double scale = pScale.getValue().toDouble();
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
   double gapX = pCurrentScaleWidth.getValue().toDouble();
 
   std::string strUnit;
@@ -247,10 +272,11 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   double spacing = scale / 100.;
   double mmToCm = gapX / 10.;
   
-  double value = (spacing * mmToCm) / unit;
+  double valueDouble = (spacing * mmToCm) / unit;
+  int value = (int)qRound(valueDouble);
 
   prop.setName("scale_in_unit_width_rect_gap");
-  prop.setValue(value, dataType->getDataTypeDouble());
+  prop.setValue(value, dataType->getDataTypeInt());
 
   return prop;
 }
@@ -270,7 +296,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
     return prop;
   }
 
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
 
   std::string strUnit = pUnit.getOptionByCurrentChoice().toString();
   std::string strNewUnit = pNewUnit.getOptionByCurrentChoice().toString();
@@ -284,17 +310,22 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
   }
 
   double unit = std::max(currentUnit, newUnit);
+
+  double scaleInUnitDouble = 0;
+
   if (currentUnit > newUnit)
   {
-    scaleInUnit = scaleInUnit * unit;
+    scaleInUnitDouble = scaleInUnit * unit;
   }
   else
   {
-    scaleInUnit = scaleInUnit / unit;
+    scaleInUnitDouble = scaleInUnit / unit;
   }
 
+  scaleInUnit = (int)qRound(scaleInUnitDouble);
+
   prop = pScaleInUnit;
-  prop.setValue(scaleInUnit, dataType->getDataTypeDouble());
+  prop.setValue(scaleInUnit, dataType->getDataTypeInt());
 
   return prop;
 }
@@ -325,7 +356,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   const Property& pScale = getProperty("scale");
 
   double scale = pScale.getValue().toDouble();
-  double scaleInUnit = pScaleInUnit.getValue().toDouble();
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
   double gapX = pScaleWidth.getValue().toDouble();
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -335,12 +366,14 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   double spacing = scale / 100.;
   double mmToCm = gapX / 10.;
 
-  double value = (spacing * mmToCm) / unit;
+  double valueDouble = (spacing * mmToCm) / unit;
+  int value = (int)qRound(valueDouble);
+
   if ((value != scaleInUnit) && value > 0)
   {
     Property prop;
     prop.setName("scale_in_unit_width_rect_gap");
-    prop.setValue(value, dataType->getDataTypeDouble());
+    prop.setValue(value, dataType->getDataTypeInt());
     setProperty(prop);
     change = true;
   }
