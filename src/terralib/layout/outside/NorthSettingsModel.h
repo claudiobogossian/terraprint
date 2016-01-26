@@ -45,18 +45,6 @@ namespace te
     NorthSettingsModel();
 
     virtual ~NorthSettingsModel();
-
-      virtual void setNorthProperties(te::layout::Properties properties);
-            
-      virtual bool containsNorth(EnumType* enumType);
-
-      virtual te::layout::Property containsProperty( std::string name, EnumType* enumType );
-      
-      virtual bool updateProperty(Property prop, EnumType* enumType);
-
-    protected:
-
-      te::layout::Properties m_properties;
     };
   }
 }
