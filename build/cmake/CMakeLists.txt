@@ -166,7 +166,7 @@ include(terralib_layout_macros.cmake)
 
 find_package ( terralib 5.0.1 )
 
-find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread locale)
+find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread)
 
 if(NOT Boost_FOUND)
   message(FATAL_ERROR "TerraLib: could not find required Boost libraries!")
