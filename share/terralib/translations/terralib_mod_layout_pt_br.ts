@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -1421,7 +1421,7 @@ nononon</source>
     <name>ScaleSettings</name>
     <message>
         <source>PDF Settings</source>
-        <translation>Configurações do PDF</translation>
+        <translation type="vanished">Configurações do PDF</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="32"/>
@@ -1506,23 +1506,23 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="425"/>
         <source>Only the first and the last value</source>
-        <translation>Apenas o primeiro e o último valores</translation>
+        <translation>Apenas o primeiro e o último valor</translation>
     </message>
     <message>
         <source>DPI:</source>
-        <translation>Resolução (DPI):</translation>
+        <translation type="vanished">Resolução (DPI):</translation>
     </message>
     <message>
         <source>File:</source>
-        <translation>Arquivo:</translation>
+        <translation type="vanished">Arquivo:</translation>
     </message>
     <message>
         <source>Save As...</source>
-        <translation>Salvar como...</translation>
+        <translation type="vanished">Salvar como...</translation>
     </message>
     <message>
         <source>DPI Information</source>
-        <translation>Informação de DPI</translation>
+        <translation type="vanished">Informação de DPI</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="441"/>
@@ -1845,11 +1845,11 @@ nononon</source>
     <name>te::layout::MapLayerChoiceOutside</name>
     <message>
         <source>Available Layers</source>
-        <translation>Planos Disponíveis</translation>
+        <translation type="vanished">Planos Disponíveis</translation>
     </message>
     <message>
         <source>Selected Layers</source>
-        <translation>Planos Selecionados</translation>
+        <translation type="vanished">Planos Selecionados</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="59"/>
@@ -2115,27 +2115,27 @@ nononon</source>
     <name>te::layout::ScaleSettingsOutside</name>
     <message>
         <source>PDF Settings</source>
-        <translation>Configurações do PDF</translation>
+        <translation type="vanished">Configurações do PDF</translation>
     </message>
     <message>
         <source>Please complete the filename.</source>
-        <translation>Por favor, complete o nome do arquivo.</translation>
+        <translation type="vanished">Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
         <source>Save Image File</source>
-        <translation>Gravar o Arquivo de Imagem</translation>
+        <translation type="vanished">Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
         <source>PDF Files (*.pdf)</source>
-        <translation>Arquivos PDF (*.pdf)</translation>
+        <translation type="vanished">Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="vanished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
 </context>
 <context>

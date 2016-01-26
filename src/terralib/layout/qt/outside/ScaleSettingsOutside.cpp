@@ -74,17 +74,15 @@ void te::layout::ScaleSettingsOutside::load()
   initCombo(m_ui->cmbUnit, "Unit");
   initBool(m_ui->chkOnlyFirstAndLastValue, "only_first_and_last_value");
   initDouble(m_ui->txtScale, "scale");
-  initInt(m_ui->txtNumberOfBreaks, "number_of_breaks");
   initDouble(m_ui->txtScaleGapX, "scale_width_rect_gap");
   initDouble(m_ui->txtScaleGapY, "scale_height_rect_gap");
   initTextEdit(m_ui->txtFont, "font");
 
-  /* integers 1 to 9999 and space | 0 and 12 digits */
-  initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+  initInt(m_ui->txtNumberOfBreaks, "number_of_breaks");
+  createIntValidator(m_ui->txtNumberOfBreaks);
 
-  QRegExp regExp("(^$)|([1-9]\\d{0,12}$)");
-  QValidator* validator = new QRegExpValidator(regExp, m_ui->txtScaleGapXInUnit);
-  m_ui->txtScaleGapXInUnit->setValidator(validator);
+  initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+  createIntValidator(m_ui->txtScaleGapXInUnit);
 }
 
 void te::layout::ScaleSettingsOutside::setPosition(const double& x, const double& y)
@@ -600,5 +598,17 @@ QFont te::layout::ScaleSettingsOutside::font2QFont(Font font)
   qFont.setUnderline(underline);
 
   return qFont;
+}
+
+void te::layout::ScaleSettingsOutside::createIntValidator(QWidget* widget)
+{  
+  QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
+  if (edit)
+  {
+    /* integers 1 to 9999 and space | 0 and 12 digits */
+    QRegExp regExp("(^$)|([1-9]\\d{0,12}$)");
+    QValidator* validator = new QRegExpValidator(regExp, widget);
+    edit->setValidator(validator);
+  }
 }
 
