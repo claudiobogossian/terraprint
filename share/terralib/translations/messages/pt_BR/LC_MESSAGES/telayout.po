@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-01-22 15:34-0200\n"
-"PO-Revision-Date: 2016-01-22 15:36-0200\n"
+"POT-Creation-Date: 2016-01-26 10:56-0200\n"
+"PO-Revision-Date: 2016-01-26 10:56-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -119,7 +119,7 @@ msgstr "Exibir Texto de Segundos"
 msgid "Seconds Text Precision"
 msgstr "Precisão dos segundos"
 
-#: item/GridMapModel.cpp:87 item/MapModel.cpp:69 item/ScaleModel.cpp:86
+#: item/GridMapModel.cpp:87 item/MapModel.cpp:69 item/ScaleModel.cpp:87
 #: item/TitleModel.cpp:79 item/TitleModel.cpp:80
 msgid "Settings"
 msgstr "Configurações"
@@ -164,7 +164,7 @@ msgstr "Cor da Linha"
 msgid "Line Width"
 msgstr "Largura da Linha"
 
-#: item/GridMapModel.cpp:221 item/ScaleModel.cpp:138 item/TextModel.cpp:52
+#: item/GridMapModel.cpp:221 item/ScaleModel.cpp:139 item/TextModel.cpp:52
 msgid "Font"
 msgstr "Fonte"
 
@@ -225,12 +225,12 @@ msgid "Cross Offset"
 msgstr "Tamanho da Cruz"
 
 #: item/GridMapModel.cpp:362 item/LegendModel.cpp:106
-#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:100
+#: item/MapLocationModel.cpp:86 item/ScaleModel.cpp:101
 #: item/ThreeNorthModel.cpp:79
 msgid "Connection with"
 msgstr "Conectar com"
 
-#: item/GridPlanarModel.cpp:75 item/ScaleModel.cpp:155
+#: item/GridPlanarModel.cpp:75 item/ScaleModel.cpp:156
 msgid "Unit"
 msgstr "Unidade"
 
@@ -335,7 +335,7 @@ msgstr "Retângulo do Mundo"
 msgid "SRID"
 msgstr "SRID"
 
-#: item/MapModel.cpp:119 item/ScaleModel.cpp:64
+#: item/MapModel.cpp:119 item/ScaleModel.cpp:65
 msgid "Scale"
 msgstr "Escala"
 
@@ -371,35 +371,39 @@ msgstr "Tipo do Papel"
 msgid "Orientation"
 msgstr "Orientação"
 
-#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:112
+#: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:113
 msgid "Graphic type"
 msgstr "Tipo do Gráfico"
 
-#: item/ScaleModel.cpp:72
+#: item/ScaleModel.cpp:73
 msgid "Scale Gap X"
 msgstr "Intervalo da Escala em X"
 
-#: item/ScaleModel.cpp:80
+#: item/ScaleModel.cpp:81
 msgid "Scale Gap Y"
 msgstr "Intervalo da Escala em Y"
 
-#: item/ScaleModel.cpp:89
+#: item/ScaleModel.cpp:90
 msgid "Scale Settings"
 msgstr "Configurações da escala"
 
-#: item/ScaleModel.cpp:146
+#: item/ScaleModel.cpp:147
 msgid "Font Color"
 msgstr "Cor da fonte"
 
-#: item/ScaleModel.cpp:172
+#: item/ScaleModel.cpp:173
 msgid "Scale Gap X In Unit"
 msgstr "Lacuna na horizontal em unidade"
 
-#: item/ScaleModel.cpp:180
+#: item/ScaleModel.cpp:181
 msgid "Only the first and the last value"
 msgstr "Apenas o primeiro e o último valor "
 
-#: item/ScaleModel.cpp:188
+#: item/ScaleModel.cpp:189
+msgid "By Breaks"
+msgstr "Por quebras"
+
+#: item/ScaleModel.cpp:197
 msgid "Number of graphical scale breaks"
 msgstr "Número de quebras da escala gráfica"
 

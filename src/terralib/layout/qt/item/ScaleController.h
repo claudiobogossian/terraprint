@@ -69,9 +69,11 @@ namespace te
 
         virtual double getUnit(std::string& strUnit);
 
-        virtual double getGap(double& initialGap);
+        virtual double getGap(double& initialGap, int numberOfBreaks = 0);
 
         virtual QPainterPath getLastText();
+
+        virtual QPainterPath getLastTextByBreaks(int numberOfBreaks);
 
         virtual void setProperty(const Property& property);
 
@@ -90,6 +92,10 @@ namespace te
         virtual Property calculateScaleUnit(const Properties& properties);
 
         virtual double strToUnit(std::string& strUnit);
+
+        virtual Properties checkByBreaks(const Properties& properties);
+
+        virtual double getFullWidthByBreaks(int numberOfBreaks);
     };
   }
 }

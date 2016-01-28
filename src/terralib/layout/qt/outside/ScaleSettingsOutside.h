@@ -95,6 +95,8 @@ namespace te
 
         void on_txtNumberOfBreaks_editingFinished();
 
+        void on_chkByBreaks_clicked();
+
       protected:
 
         /*!

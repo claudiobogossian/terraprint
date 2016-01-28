@@ -150,8 +150,8 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     }
 
     QRectF newBoxFirst;
-
-    if ((x1 + m_gapX + gap) < boundRect.topRight().x())
+    
+    if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
     {
       painter->setPen(Qt::NoPen);
 
@@ -291,7 +291,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
     QRectF newBoxFirst;
 
-    if ((x1 + m_gapX + gap) < boundRect.topRight().x())
+    if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
     {
       painter->setPen(Qt::NoPen);
       painter->setBrush(QBrush(secondRect));
@@ -423,7 +423,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
       x1 += displacementBetweenScaleAndText + textRect.width();
     }
 
-    if ((x1 + m_gapX + gap) < boundRect.topRight().x())
+    if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
     {
       QPen penScale(black, 0, Qt::SolidLine);
       penScale.setColor(firstRect);

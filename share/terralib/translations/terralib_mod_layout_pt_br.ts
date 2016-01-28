@@ -1499,12 +1499,17 @@ nononon</source>
         <translation>Lacuna na vertical:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="393"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="391"/>
+        <source>By Breaks</source>
+        <translation>Por quebras</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="402"/>
         <source>Number of graphical scale breaks:</source>
         <translation>Número de quebras na escala gráfica:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="425"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="434"/>
         <source>Only the first and the last value</source>
         <translation>Apenas o primeiro e o último valor</translation>
     </message>
@@ -1525,17 +1530,17 @@ nononon</source>
         <translation type="vanished">Informação de DPI</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="441"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="452"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="444"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="455"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="464"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="475"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
