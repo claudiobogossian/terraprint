@@ -140,7 +140,7 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   if(m_mainLayout->getEditTemplate())
   {
     m_mainLayout->getEditTemplate()->setParent(mw);
-    mw->addDockWidget(Qt::RightDockWidgetArea, m_mainLayout->getEditTemplate());
+    mw->addDockWidget(Qt::LeftDockWidgetArea, m_mainLayout->getEditTemplate());
     bool visible = m_mainLayout->getEditTemplate()->isVisible();
     m_mainLayout->getEditTemplate()->setVisible(visible);
   }

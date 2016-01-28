@@ -91,8 +91,6 @@ namespace te
 
       virtual void onShowView();
 
-      virtual void onHideView();
-
       virtual void onCloseView();
 
       virtual void onRefreshStatusBar();

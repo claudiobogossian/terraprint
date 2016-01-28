@@ -1042,72 +1042,72 @@
 <context>
     <name>NorthSettings</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="32"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="26"/>
         <source>Dialog</source>
         <translation>Diálogo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="75"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="717"/>
         <source>North visualization settings</source>
         <translation>Configurações de visualização do Norte</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="94"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="703"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="108"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="59"/>
         <source>OK</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="115"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="66"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="122"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="36"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="125"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="39"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="149"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="75"/>
         <source>Settings</source>
         <translation>Configurações</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="164"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="90"/>
         <source>Type:</source>
         <translation>Tipo:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="636"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="584"/>
         <source>Color...</source>
         <translation>Cor...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="670"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="635"/>
         <source>Width:</source>
         <translation>Largura:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="684"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="642"/>
         <source>Height:</source>
         <translation>Altura:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="702"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="615"/>
         <source>Millimeters</source>
         <translation>Milímetros</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="709"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="622"/>
         <source>Centimeters</source>
         <translation>Centímetros</translation>
     </message>
@@ -1768,27 +1768,27 @@ nononon</source>
 <context>
     <name>te::layout::DialogPropertiesBrowser</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="415"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="405"/>
         <source>Images</source>
         <translation>Imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="428"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="418"/>
         <source>Select an Image File</source>
         <translation>Selecione um Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="436"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="426"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="436"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="426"/>
         <source>The selected image cannot be loaded.</source>
         <translation>A imagem selecionada não pôde ser carregada.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="499"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="489"/>
         <source>Select Font</source>
         <translation>Selecione a Fonte</translation>
     </message>
@@ -1951,7 +1951,7 @@ nononon</source>
 <context>
     <name>te::layout::NorthSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/NorthSettingsOutside.cpp" line="78"/>
+        <location filename="../../../src/terralib/layout/qt/outside/NorthSettingsOutside.cpp" line="82"/>
         <source>Color</source>
         <translation>Cor</translation>
     </message>
