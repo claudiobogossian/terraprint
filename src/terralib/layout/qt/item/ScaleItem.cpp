@@ -124,7 +124,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   std::stringstream ss_value;
 
   double initialGap = 0;
-  double gap = controller->getGap(initialGap);
+  double gap = controller->getGap(initialGap, m_font);
   x1 += initialGap;
 
   double firstTextWidth = 0;
@@ -264,7 +264,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   std::stringstream ss_value;
 
   double initialGap = 0;
-  double gap = controller->getGap(initialGap);
+  double gap = controller->getGap(initialGap, m_font);
   x1 += initialGap;
 
   double firstTextWidth = 0;
@@ -398,7 +398,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   std::stringstream ss_value;
 
   double initialGap = 0;
-  double gap = controller->getGap(initialGap);
+  double gap = controller->getGap(initialGap, m_font);
   x1 += initialGap;
 
   double firstTextWidth = 0;

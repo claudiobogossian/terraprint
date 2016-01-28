@@ -1985,67 +1985,67 @@ nononon</source>
 <context>
     <name>te::layout::OutsideArea</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="213"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="212"/>
         <source>Print Model</source>
         <translation>Modelo de Impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="218"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="217"/>
         <source>New</source>
         <translation>Novo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="221"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="220"/>
         <source>Update Map</source>
         <translation>Atualizar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="226"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="225"/>
         <source>Import Map</source>
         <translation>Importar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="227"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="226"/>
         <source>Export Map</source>
         <translation>Exportar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="229"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="228"/>
         <source>Import Xml Map</source>
         <translation>Importar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="232"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="231"/>
         <source>Export XML Map</source>
         <translation>Exportar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="237"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="236"/>
         <source>Dock Inspector</source>
         <translation>Exibir Inspetor de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="242"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="241"/>
         <source>Dock Properties</source>
         <translation>Exibir Editor de Propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="249"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="248"/>
         <source>Page Config...</source>
         <translation>Configuração da Página...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="252"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="251"/>
         <source>Print...</source>
         <translation>Imprimir...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="547"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="539"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="552"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="544"/>
         <source>TerraPrint - TerraLib 5 | Context: </source>
         <translation>TerraPrint - TerraLib 5 | Contexto:</translation>
     </message>
