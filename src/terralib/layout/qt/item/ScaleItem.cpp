@@ -33,6 +33,9 @@
 #include "../core/Scene.h"
 #include "../item/ScaleController.h"
 
+// STL
+#include <iostream>
+
 te::layout::ScaleItem::ScaleItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
   , m_scale(0)
@@ -90,8 +93,8 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
   painter->save();
   
-  std::string strUnit;
-  double unit = controller->getUnit(strUnit);
+  std::string strCurrentUnit;
+  double unit = controller->getCurrentUnit(strCurrentUnit);
   
   double value = 0.;
   double width = 0.;
@@ -121,7 +124,9 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   QPointF coordText;
   QRectF rectScale;
   QRectF newBoxSecond;
+  
   std::stringstream ss_value;
+  ss_value.precision(15);
 
   double initialGap = 0;
   double gap = controller->getGap(initialGap, m_font);
@@ -209,7 +214,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
   //middle-bottom text
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, qFont, strUnit);
+  drawText(unitCoord, painter, qFont, strCurrentUnit);
 
   painter->restore();
 }
@@ -232,8 +237,8 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
   double displacementBetweenScaleAndText = 2.;
   
-  std::string strUnit;
-  double unit = controller->getUnit(strUnit);
+  std::string strCurrentUnit;
+  double unit = controller->getCurrentUnit(strCurrentUnit);
 
   double value = 0.;
   double width = 0.;
@@ -262,6 +267,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QRectF rectScale;
   QRectF newBoxSecond;
   std::stringstream ss_value;
+  ss_value.precision(15);
 
   double initialGap = 0;
   double gap = controller->getGap(initialGap, m_font);
@@ -342,7 +348,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
   //middle-bottom text
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, qFont, strUnit);
+  drawText(unitCoord, painter, qFont, strCurrentUnit);
 
   painter->restore();
 }
@@ -363,8 +369,8 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   painter->save();
   
-  std::string strUnit;
-  double unit = controller->getUnit(strUnit);
+  std::string strCurrentUnit;
+  double unit = controller->getCurrentUnit(strCurrentUnit);
   
   double value = 0.;
   double width = 0.;
@@ -396,6 +402,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   QLineF lineVrt;
   QLineF lineHrz;
   std::stringstream ss_value;
+  ss_value.precision(15);
 
   double initialGap = 0;
   double gap = controller->getGap(initialGap, m_font);
@@ -484,7 +491,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   //middle-bottom text
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, qFont, strUnit);
+  drawText(unitCoord, painter, qFont, strCurrentUnit);
 
   painter->restore();
 }
