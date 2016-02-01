@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-01-22 15:34-0200\n"
-"PO-Revision-Date: 2016-01-22 15:36-0200\n"
+"POT-Creation-Date: 2016-02-01 10:45-0200\n"
+"PO-Revision-Date: 2016-02-01 10:46-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -338,6 +338,10 @@ msgstr "SRID"
 #: item/MapModel.cpp:119 item/ScaleModel.cpp:64
 msgid "Scale"
 msgstr "Escala"
+
+#: item/MapModel.cpp:127
+msgid "Fixed Scale"
+msgstr "Escala Fixa"
 
 #: item/NorthModel.cpp:86
 msgid "North Settings"
