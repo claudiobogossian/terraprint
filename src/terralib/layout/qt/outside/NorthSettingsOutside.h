@@ -30,10 +30,17 @@
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/property/NorthSettingsConfigProperties.h"
+#include "../../core/Config.h"
+#include "terralib/geometry/Envelope.h"
+#include "terralib/color/RGBAColor.h"
+#include "../../core/property/Property.h"
 
 // Qt
 #include <QDialog>
 #include <QString>
+#include <QWidget>
+#include <QVariant>
+#include <QComboBox>
 
 namespace Ui { class NorthSettings; }
 
@@ -42,6 +49,7 @@ namespace te
   namespace layout
   {
     class AbstractOutsideController;
+    class NorthSettingsConfigProperties;
 
     class TELAYOUTEXPORT NorthSettingsOutside : public QDialog, public AbstractOutsideView
     {
@@ -55,23 +63,27 @@ namespace te
 
         virtual void load();
 
-        /*!
-          \brief Load layers in double widget.
-        */
-
         virtual void setPosition(const double& x, const double& y);
 
         virtual te::gm::Coord2D getPosition();
                         
       protected slots:
 
-        void onOkPushButtonPressed();
+        void on_nBtnOK_clicked();
 
-        void onCancelPushButtonPressed();
+        void on_nBtnCancel_clicked();
 
-        void onSaveAsClicked();
+        virtual void on_btnColor_clicked();
 
-        virtual void on_pbNorthLineColor_clicked();
+        virtual void on_rdbMillimeters_clicked();
+
+        virtual void on_rdbCentimeters_clicked();
+
+        virtual void on_lineEditNorthWidth_editingFinished();
+
+        virtual void on_lineEditNorthHeight_editingFinished();
+
+        virtual void on_cbNorth_currentIndexChanged(const QString & text);
   
       signals:
 
@@ -83,23 +95,20 @@ namespace te
 
         virtual void init();
 
+        virtual void initDouble(QWidget* widget, std::string nameComponent);
+
+        virtual void initBool(QWidget* widget, std::string nameComponent);
+
+        virtual void initColor(QWidget* widget, std::string nameComponent);
+
+        virtual void initCombo(QWidget* widget, std::string nameComponent);
+
+        virtual void addComboOptions(QComboBox* combo, std::vector<Variant> options);
+
+      protected:
+
         NorthSettingsConfigProperties* m_northSettings;
-        EnumType* m_northType;
-        EnumType* m_geodesicType;
 
-        //virtual void initString(QWidget* widget, std::string nameComponent, EnumType* northType);
-
-        //virtual void initInt(QWidget* widget, std::string nameComponent, EnumType* northType);
-
-        //virtual void initDouble(QWidget* widget, std::string nameComponent, EnumType* northType);
-
-        //virtual void initBool(QWidget* widget, std::string nameComponent, EnumType* northType);
-
-        //virtual void initColor(QWidget* widget, std::string nameComponent, EnumType* northType);
-
-        //virtual void initCombo(QWidget* widget, std::string nameComponent, EnumType* northType);*/
-
-        
       private:
 
         std::auto_ptr<Ui::NorthSettings> m_ui;

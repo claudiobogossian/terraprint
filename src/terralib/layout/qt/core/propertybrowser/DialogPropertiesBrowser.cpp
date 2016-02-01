@@ -394,17 +394,7 @@ void te::layout::DialogPropertiesBrowser::onShowNorthSettingsDlg()
 
   appendDialog(northSettings);
 
-  AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(northSettings->getController());
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
-  NorthSettingsModel* model = dynamic_cast<NorthSettingsModel*>(abstractModel);
-  if (!model)
-  {
-    return;
-  }
-
-  model->setNorthProperties(m_allProperties);
-
-  //northSettings->load();
+  northSettings->load();
   northSettings->show(); // modeless dialog
   northSettings->raise(); // top of the parent widget's stack
 }

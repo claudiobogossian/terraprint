@@ -46,73 +46,15 @@ namespace te
 
       virtual ~NorthSettingsConfigProperties();
 
-      std::string getLineColor();
-        /*std::string getName();
-        std::string getVisible();
-        std::string getLneHrzGap();
-        std::string getLneVrtGap();
-        std::string getInitialGridPointX();
-        std::string getInitialGridPointY();
-        std::string getStyle();
-        std::string getLineStyle();
-        std::string getLineColor();
-        std::string getLineWidth();
-        std::string getFont();
-        std::string getFontCorner();
-        std::string getTextColor();
-        std::string getVisibleAllTexts();
-        std::string getSuperscriptText();
-        std::string getLneVrtDisplacement();
-        std::string getLneHrzDisplacement();
-        std::string getBottomText();
-        std::string getLeftText();
-        std::string getRightText();
-        std::string getTopText();
-        std::string getBottomRotateText();
-        std::string getLeftRotateText();
-        std::string getRightRotateText();
-        std::string getTopRotateText();
-        std::string getCrossOffset();*/
-              
-      //protected:
+        std::string getBtnColor();
+        std::string getDoubleSpinBoxNorthWidth();
+        std::string getDoubleSpinBoxNorthHeight();
+        std::string getCbNorth();
 
-        //std::string m_name;
-
-        ///* Grid */
-
-        //std::string m_visible;
-        //std::string m_lneHrzGap;
-        //std::string m_lneVrtGap;
-        //std::string m_initialGridPointX; 
-        //std::string m_initialGridPointY; 
-
-        ///* Just one is visible */
-        //std::string m_style;
-
-        ///* Line */
-        //std::string m_lineStyle;
-        std::string m_lineColor;
-        //std::string m_lineWidth;
-
-        ///*Text: Basic Configuration*/
-        //std::string m_font;
-        //std::string m_fontCorner;
-        //std::string m_textColor;
-
-        ///*Text: Advanced configuration*/
-        //std::string m_visibleAllTexts;
-        //std::string m_superscriptText;
-        //std::string m_lneVrtDisplacement;
-        //std::string m_lneHrzDisplacement;
-        //std::string m_bottomText;
-        //std::string m_leftText;
-        //std::string m_rightText;
-        //std::string m_topText;
-        //std::string m_bottomRotateText;
-        //std::string m_leftRotateText;
-        //std::string m_rightRotateText;
-        //std::string m_topRotateText;
-        //std::string m_crossOffset;
+        std::string m_btnColor;
+        std::string m_doubleSpinBoxNorthWidth;
+        std::string m_doubleSpinBoxNorthHeight;
+        std::string m_cbNorth;
     };
   }
 }

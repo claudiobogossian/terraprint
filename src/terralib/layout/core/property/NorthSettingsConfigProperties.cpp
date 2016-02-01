@@ -27,9 +27,13 @@
 
 // TerraLib
 #include "NorthSettingsConfigProperties.h"
+//#include "AbstractItemModel.h"
 
 te::layout::NorthSettingsConfigProperties::NorthSettingsConfigProperties():
-m_lineColor("btnColor")
+m_btnColor("color"),
+m_doubleSpinBoxNorthHeight("height"),
+m_doubleSpinBoxNorthWidth("width"),
+m_cbNorth("northArrow_type")
 {
   
 }
@@ -66,27 +70,27 @@ te::layout::NorthSettingsConfigProperties::~NorthSettingsConfigProperties()
 
 }
 
-std::string te::layout::NorthSettingsConfigProperties::getLineColor()
+std::string te::layout::NorthSettingsConfigProperties::getBtnColor()
 {
-  return m_lineColor;
+  return m_btnColor;
 }
 
 
-//std::string te::layout::GridSettingsConfigProperties::getName()
-//{
-//  return m_name;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getVisible()
-//{
-//  return m_visible;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLneHrzGap()
-//{
-//  return m_lneHrzGap;
-//}
-//
+std::string te::layout::NorthSettingsConfigProperties::getDoubleSpinBoxNorthHeight()
+{
+  return m_doubleSpinBoxNorthHeight;
+}
+
+std::string te::layout::NorthSettingsConfigProperties::getDoubleSpinBoxNorthWidth()
+{
+  return m_doubleSpinBoxNorthWidth;
+}
+
+std::string te::layout::NorthSettingsConfigProperties::getCbNorth()
+{
+  return m_cbNorth;
+}
+
 //std::string te::layout::GridSettingsConfigProperties::getLneVrtGap()
 //{
 //  return m_lneVrtGap;

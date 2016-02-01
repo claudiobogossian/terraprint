@@ -95,6 +95,8 @@ namespace te
 
         void on_txtNumberOfBreaks_editingFinished();
 
+        void on_chkByBreaks_clicked();
+
       protected:
 
         /*!
@@ -123,6 +125,8 @@ namespace te
         Font qFont2Font(QFont qFont);
 
         QFont font2QFont(Font font);
+
+        virtual void createIntValidator(QWidget* widget);
         
       private:
 

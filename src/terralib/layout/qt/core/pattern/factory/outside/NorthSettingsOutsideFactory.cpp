@@ -26,14 +26,14 @@
 // TerraLib
 #include "NorthSettingsOutsideFactory.h"
 #include "../../../../../outside/NorthSettingsModel.h"
-#include "../../../../../outside/NorthSettingsController.h"
+#include "../../../../../qt/outside/NorthSettingsController.h"
 #include "../../../../outside/NorthSettingsOutside.h"
 
 te::layout::AbstractOutsideView* te::layout::NorthSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
     NorthSettingsModel* model = new NorthSettingsModel();
 
-    NorthSettingsController* controller = new NorthSettingsController(model);
+    NorthSettingsController* controller = new NorthSettingsController(params.getScene(), model);
     NorthSettingsOutside* view = new NorthSettingsOutside(controller);
     controller->setView(view);
 

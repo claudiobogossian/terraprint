@@ -18,43 +18,48 @@
  */
 
 /*!
-  \file GridSettingsController.h
+  \file NorthSettingsController.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_CONTROLLER_H 
-#define __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_CONTROLLER_H
-
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideController.h"
-#include "../core/property/Property.h"
-#include "../core/Config.h"
+#include "../../qt/outside/NorthSettingsController.h"
+#include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../outside/NorthSettingsModel.h"
+#include "../../qt/item/NorthItem.h"
+#include "../../qt/core/Scene.h"
 
-namespace te
+#include <QGraphicsItem>
+
+
+te::layout::NorthSettingsController::NorthSettingsController(Scene* scene, AbstractOutsideModel* o) :
+  AbstractOutsideController(o),
+  m_scene(scene)
 {
-  namespace layout
-  {
-    class AbstractOutsideModel;
-
-    class TELAYOUTEXPORT NorthSettingsController : public AbstractOutsideController
-    {
-      public:
-
-        NorthSettingsController(AbstractOutsideModel* o);
-
-        virtual ~NorthSettingsController();
-        
-        virtual Property updateProperty(std::string name, Variant variant, EnumType* enumType);
-        
-        virtual Property getProperty(std::string name, EnumType* enumType);
-    };
-  }
+  
 }
 
-#endif
+te::layout::NorthSettingsController::~NorthSettingsController()
+{
 
+}
 
+te::layout::Property te::layout::NorthSettingsController::getNorthProperty(std::string name)
+{
+  Property prop;
 
+  QList<QGraphicsItem*> items = m_scene->selectedItems();
+  if (items.isEmpty())
+    return prop;
+
+  QGraphicsItem* item = items.first();
+  NorthItem* northItem = dynamic_cast<NorthItem*>(item);
+  if (northItem)
+  {
+    prop = northItem->getController()->getProperty(name);
+  }
+  return prop;
+}
