@@ -30,7 +30,6 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
-#include "../../core/property/Property.h"
 
 #include "terralib/maptools/AbstractLayer.h"
 
@@ -40,6 +39,8 @@ namespace te
   {
     class AbstractItemModel;
     class AbstractProxyProject;
+    class Property;
+    class Properties;
     /*!
     \brief Class that represents text controller.
     
@@ -63,49 +64,41 @@ namespace te
         */ 
         virtual ~MapController();
 
+        virtual void recomposeExtent();
+
+        virtual void zoom(const te::gm::Point& pointWorld, bool zoomIn);
+
+        virtual void zoom(const te::gm::Envelope& box);
+
+        virtual void pan(double dx, double dy);
+
         /*!
           \brief Method called by the view to inform that new layers have been added
         */
         virtual void addLayers(const std::list<te::map::AbstractLayerPtr>& layerList);
 
-        /*!
-          \brief Method called by the view to inform that the extent and scale have been changed
-        */
-        virtual void extentChanged(const te::gm::Envelope& envelope, double scale, int srid);
-
-        virtual void setZoom(const int& zoom);
-
         virtual void setProperty(const Property& property);
 
         virtual void setProperties(const Properties& properties);
 
-        virtual Properties getExtentChangedProperties(const te::gm::Envelope& envelope, double scale, int srid);
-
-        /*!
-          \brief Checks if the given property is a property to be sync with the map display
-        */
-        virtual bool isMapDisplayProperty(const Property& property) const;
-
         virtual std::list<te::map::AbstractLayerPtr> getIntersection(const std::list<te::map::AbstractLayerPtr>& listA, const std::list<te::map::AbstractLayerPtr>& listB) const;
 
-        /*!
-        \brief Syncs the given Map Display properties. If the values are the same, returns FALSE. If the values had to be sync, return TRUE.
-        */
-        virtual bool syncMapDisplayProperties(const std::vector<Property>& vecProperties);
-                
-        virtual Property syncLayersAndURIs(const Property& property);
+      protected:
 
         virtual Property syncLayersFromURIs(const Property& property);
 
         virtual Property syncURIsFromLayers(const Property& property);
 
-      protected:
+        virtual bool syncLayersProperties(Properties& properties);
+
+        virtual bool syncSridAndEnvelope(Properties& properties);
+
+        virtual bool syncMapSizeProperties(Properties& properties);
+
+        virtual bool syncMapScaleProperties(Properties& properties);
 
         virtual AbstractProxyProject* getAbstractProxyProject();
-
-        int m_zoom;
-        bool m_ignoreExtentChangedEvent;
     };
   }
 }
-#endif 
+#endif //__TERRALIB_LAYOUT_INTERNAL_MAP_CONTROLLER_H
