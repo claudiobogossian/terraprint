@@ -138,6 +138,8 @@ namespace te
 
         virtual void onShowScaleSettingsDlg();
 
+        virtual void onShowNorthSettingsDlg();
+
       public slots:
 
       virtual void onShowImageDlg();

@@ -979,7 +979,7 @@ namespace te
 
       if (!m_spaceBetweenParentChild.isEmpty())
       {
-        update();
+        T::update();
       }
 
       m_spaceBetweenParentChild.clear();

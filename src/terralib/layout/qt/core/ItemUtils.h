@@ -237,6 +237,20 @@ namespace te
         static std::string convert2StdString(const QString& qString);
         
         static QString convert2QString(const std::string& stdString);
+
+        static void addOrUpdateProperty(const Property& property, Properties& properties);
+
+        static void calculateAspectRatio(double widthMM, double heightMM, double& llx, double& lly, double& urx, double& ury);
+
+        static void calculateAspectRatio(double widthMM, double heightMM, te::gm::Envelope& worldBox);
+
+        static double calculateScaleFromBox(double widthMM, double heightMM, int srid, const te::gm::Envelope& worldBox);
+
+        static te::gm::Envelope calculateBoxFromScale(double widthMM, double heightMM, int srid, const te::gm::Envelope& worldBox, double scale);
+
+        static te::gm::Envelope calculateZoom(const te::gm::Envelope& envelope, double factor, bool zoomIn, const te::gm::Point& pointToCenter = te::gm::Point());
+
+        static te::gm::Envelope calculatePan(const te::gm::Envelope& envelope, double dx, double dy);
         
       protected:
 

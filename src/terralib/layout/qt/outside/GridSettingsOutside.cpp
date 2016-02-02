@@ -486,8 +486,6 @@ QString te::layout::GridSettingsOutside::DD2DMS(QString dd)
     output = QString::fromStdString((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
   }
 
-  string st = output.toLatin1();
-
   return output;
 }
 

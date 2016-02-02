@@ -18,35 +18,27 @@
  */
 
 /*!
-  \file ScaleSettingsModel.h
+  \file NorthSettingsModel.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H 
-#define __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H
-
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideModel.h"
-#include "../core/Config.h"
+#include "NorthSettingsModel.h"
+#include "../core/enum/Enums.h"
 
-namespace te
+te::layout::NorthSettingsModel::NorthSettingsModel() :
+  AbstractOutsideModel()
 {
-  namespace layout
-  {
-    class Properties;
+  m_type = Enums::getInstance().getEnumObjectType()->getNorthSettings();
 
-    class TELAYOUTEXPORT ScaleSettingsModel : public AbstractOutsideModel
-    {
-    public:
-
-      ScaleSettingsModel();
-
-      virtual ~ScaleSettingsModel();
-    };
-  }
+  m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
-#endif
+te::layout::NorthSettingsModel::~NorthSettingsModel()
+{
+
+}
+

@@ -269,7 +269,7 @@ void te::layout::Variant::convertValue( const void* valueCopy )
   m_null = null;
 }
 
-void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType* type )
+void te::layout::Variant::fromString(const std::string& value, EnumType* type)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -293,37 +293,37 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
   {
     if (type == dataType->getDataTypeString() || type == dataType->getDataTypeStringList())
     {
-      m_sValue = tree.data();
+      m_sValue = value;
       null = false;
     }
     else if(type == dataType->getDataTypeDouble())
     {
-      m_dValue = std::atof(tree.data().c_str());
+      m_dValue = std::atof(value.c_str());
       null = false;
     }
     else if(type == dataType->getDataTypeInt())
     {
-      m_iValue = std::atoi(tree.data().c_str());
+      m_iValue = std::atoi(value.c_str());
       null = false;
     }
     else if(type == dataType->getDataTypeLong())
     {
-      m_lValue = std::atol(tree.data().c_str());
+      m_lValue = std::atol(value.c_str());
       null = false;
     }
     else if(type == dataType->getDataTypeFloat())
     {
-      m_fValue = (float)std::atof(tree.data().c_str());
+      m_fValue = (float)std::atof(value.c_str());
       null = false;
     }
     else if(type == dataType->getDataTypeBool())
     {
-      m_bValue = toBool(tree.data());
+      m_bValue = toBool(value);
       null = false;
     }
     else if(type == dataType->getDataTypeColor())
     {
-      std::string color = tree.data();
+      std::string color = value;
 
       std::vector<std::string> strings;
       std::istringstream f(color);
@@ -348,14 +348,14 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
     }
     else if(type == dataType->getDataTypeFont())
     {
-      std::string font = tree.data();
+      std::string font = value;
       m_fontValue.fromString(font);
       m_complex = true;
       null = false;
     }
     else if(type == dataType->getDataTypeEnvelope())
     {
-      std::string color = tree.data();
+      std::string color = value;
 
       std::vector<std::string> strings;
       std::istringstream f(color);
@@ -380,11 +380,11 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
     }
     else if(type == dataType->getDataTypeGenericVariant())
     {
-      m_generic.fromPtree(tree);
+      m_generic.fromString(value);
     }
     else if (type == dataType->getDataTypeGeometry())
     {
-      te::gm::Geometry* geometry = te::gm::WKTReader::read(tree.data().c_str());
+      te::gm::Geometry* geometry = te::gm::WKTReader::read(value.c_str());
       m_geometryPtr.reset(geometry);
 
       m_complex = true;
@@ -392,7 +392,7 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
     }
     else if (type == dataType->getDataTypeStringVector())
     {
-      std::string vString = tree.data();
+      std::string vString = value;
       std::istringstream f(vString);
       std::string s;
       while (std::getline(f, s, ','))
@@ -407,7 +407,7 @@ void te::layout::Variant::fromPtree( boost::property_tree::ptree tree, EnumType*
     }
     else // Any remaining data will be by default "std::string"  
     {
-      m_sValue = tree.data();
+      m_sValue = value;
       null = false;
     }
   }

@@ -97,7 +97,7 @@ namespace te
         /*!
         \brief Reimplemented from QGraphicsTextItem
         */
-        virtual void	mousePressEvent(QGraphicsSceneMouseEvent * event);
+        virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
 
         /*!
           \brief Reimplemented from QGraphicsTextItem

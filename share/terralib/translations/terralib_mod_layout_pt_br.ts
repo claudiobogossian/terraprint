@@ -1062,6 +1062,79 @@
     </message>
 </context>
 <context>
+    <name>NorthSettings</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="26"/>
+        <source>Dialog</source>
+        <translation>Diálogo</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="717"/>
+        <source>North visualization settings</source>
+        <translation>Configurações de visualização do Norte</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="703"/>
+        <source>Imagem</source>
+        <translation>Imagem</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="59"/>
+        <source>OK</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="66"/>
+        <source>Cancel</source>
+        <translation>Cancelar</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="36"/>
+        <source>&amp;Help</source>
+        <translation>&amp;Ajuda</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="39"/>
+        <source>Alt+H</source>
+        <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="75"/>
+        <source>Settings</source>
+        <translation>Configurações</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="90"/>
+        <source>Type:</source>
+        <translation>Tipo:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="584"/>
+        <source>Color...</source>
+        <translation>Cor...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="635"/>
+        <source>Width:</source>
+        <translation>Largura:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="642"/>
+        <source>Height:</source>
+        <translation>Altura:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="615"/>
+        <source>Millimeters</source>
+        <translation>Milímetros</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="622"/>
+        <source>Centimeters</source>
+        <translation>Centímetros</translation>
+    </message>
+</context>
+<context>
     <name>PDFSettings</name>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PDFSettings.ui" line="26"/>
@@ -1418,44 +1491,49 @@ nononon</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="264"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="267"/>
         <source>Gap in units</source>
         <translation>Lacuna em unidades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="272"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="275"/>
         <source>Unit:</source>
         <translation>Unidade:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="293"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="296"/>
         <source>Scale Gap X In Unit:</source>
         <translation>Lacuna na horizontal em unidade:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="315"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="324"/>
         <source>Gap in millimeters</source>
         <translation>Lacuna em milímetros</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="323"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="332"/>
         <source>Scale Gap X:</source>
         <translation>Lacuna na horizontal:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="344"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="359"/>
         <source>Scale Gap Y:</source>
         <translation>Lacuna na vertical:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="372"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="391"/>
+        <source>By Breaks</source>
+        <translation>Por quebras</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="402"/>
         <source>Number of graphical scale breaks:</source>
         <translation>Número de quebras na escala gráfica:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="404"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="434"/>
         <source>Only the first and the last value</source>
-        <translation>Apena o primeiro e o último valor</translation>
+        <translation>Apenas o primeiro e o último valor</translation>
     </message>
     <message>
         <source>DPI:</source>
@@ -1474,17 +1552,17 @@ nononon</source>
         <translation type="vanished">Informação de DPI</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="420"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="452"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="423"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="455"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="443"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="475"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -1712,27 +1790,27 @@ nononon</source>
 <context>
     <name>te::layout::DialogPropertiesBrowser</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="370"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="405"/>
         <source>Images</source>
         <translation>Imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="383"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="418"/>
         <source>Select an Image File</source>
         <translation>Selecione um Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="391"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="426"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="391"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="426"/>
         <source>The selected image cannot be loaded.</source>
         <translation>A imagem selecionada não pôde ser carregada.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="454"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="489"/>
         <source>Select Font</source>
         <translation>Selecione a Fonte</translation>
     </message>
@@ -1803,12 +1881,12 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="60"/>
         <source>Available Layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Camada Disponível</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="63"/>
         <source>Selected Layer</source>
-        <translation type="unfinished"></translation>
+        <translation>Camada Selecionada</translation>
     </message>
 </context>
 <context>
@@ -1897,6 +1975,14 @@ nononon</source>
     </message>
 </context>
 <context>
+    <name>te::layout::NorthSettingsOutside</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/NorthSettingsOutside.cpp" line="82"/>
+        <source>Color</source>
+        <translation>Cor</translation>
+    </message>
+</context>
+<context>
     <name>te::layout::ObjectInspectorDock</name>
     <message>
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
@@ -1925,67 +2011,67 @@ nononon</source>
 <context>
     <name>te::layout::OutsideArea</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="213"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="212"/>
         <source>Print Model</source>
         <translation>Modelo de Impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="218"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="217"/>
         <source>New</source>
         <translation>Novo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="221"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="220"/>
         <source>Update Map</source>
         <translation>Atualizar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="226"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="225"/>
         <source>Import Map</source>
         <translation>Importar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="227"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="226"/>
         <source>Export Map</source>
         <translation>Exportar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="229"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="228"/>
         <source>Import Xml Map</source>
         <translation>Importar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="232"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="231"/>
         <source>Export XML Map</source>
         <translation>Exportar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="237"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="236"/>
         <source>Dock Inspector</source>
         <translation>Exibir Inspetor de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="242"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="241"/>
         <source>Dock Properties</source>
         <translation>Exibir Editor de Propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="249"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="248"/>
         <source>Page Config...</source>
         <translation>Configuração da Página...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="252"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="251"/>
         <source>Print...</source>
         <translation>Imprimir...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="547"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="539"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="552"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="544"/>
         <source>TerraPrint - TerraLib 5 | Context: </source>
         <translation>TerraPrint - TerraLib 5 | Contexto:</translation>
     </message>
@@ -2382,43 +2468,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1108"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1122"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1109"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1149"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1123"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1168"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1133"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1144"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1138"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1149"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1148"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1167"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1177"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1196"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1184"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1203"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1195"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1214"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

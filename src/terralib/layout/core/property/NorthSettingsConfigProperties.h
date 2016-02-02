@@ -18,33 +18,43 @@
  */
 
 /*!
-  \file ScaleSettingsModel.h
+  \file NorthSettingsConfigProperties.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H 
-#define __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_CONFIG_PROPERTIES_H
+#define __TERRALIB_LAYOUT_INTERNAL_NORTH_SETTINGS_CONFIG_PROPERTIES_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideModel.h"
-#include "../core/Config.h"
+#include "../Config.h"
+
+// STL
+#include <string>
 
 namespace te
 {
   namespace layout
   {
-    class Properties;
-
-    class TELAYOUTEXPORT ScaleSettingsModel : public AbstractOutsideModel
+    class TELAYOUTEXPORT NorthSettingsConfigProperties
     {
-    public:
+      public:
 
-      ScaleSettingsModel();
+      NorthSettingsConfigProperties();
 
-      virtual ~ScaleSettingsModel();
+      virtual ~NorthSettingsConfigProperties();
+
+        std::string getBtnColor();
+        std::string getDoubleSpinBoxNorthWidth();
+        std::string getDoubleSpinBoxNorthHeight();
+        std::string getCbNorth();
+
+        std::string m_btnColor;
+        std::string m_doubleSpinBoxNorthWidth;
+        std::string m_doubleSpinBoxNorthHeight;
+        std::string m_cbNorth;
     };
   }
 }

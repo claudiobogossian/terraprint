@@ -360,6 +360,16 @@ namespace te
           */
         void modeChanged(int mode);
 
+        /*!
+        \brief This signal is emitted when the view is about to perform an IO operation.
+        */
+        void aboutToPerformIO();
+
+        /*!
+        \brief This signal is emitted when the view just ended performing the IO operation.
+        */
+        void endedPerformingIO();
+
       protected:
 
     /*!
@@ -380,7 +390,7 @@ namespace te
         /*!
         \brief Reimplemented from QGraphicsView
         */
-        virtual void	mouseDoubleClickEvent(QMouseEvent * event);
+        virtual void mouseDoubleClickEvent(QMouseEvent * event);
 
     /*!
           \brief Reimplemented from QGraphicsView

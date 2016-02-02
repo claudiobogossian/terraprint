@@ -17,36 +17,32 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-/*!
-  \file ScaleSettingsModel.h
-   
-  \brief 
-
-  \ingroup layout
-*/
-
-#ifndef __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H 
-#define __TERRALIB_LAYOUT_INTERNAL_SCALE_SETTINGS_MODEL_H
-
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideModel.h"
-#include "../core/Config.h"
+#include "ThreeNorthController.h"
 
-namespace te
+#include "../../core/pattern/mvc/AbstractItemModel.h"
+#include "ThreeNorthItem.h"
+
+te::layout::ThreeNorthController::ThreeNorthController(AbstractItemModel* model)
+  : AbstractItemController(model)
 {
-  namespace layout
+
+}
+
+te::layout::ThreeNorthController::~ThreeNorthController()
+{
+
+}
+
+void te::layout::ThreeNorthController::update(const Subject* subject)
+{
+  AbstractItemController::update(subject);
+  
+  ThreeNorthItem* item = dynamic_cast<ThreeNorthItem*>(m_view);
+  if (item)
   {
-    class Properties;
-
-    class TELAYOUTEXPORT ScaleSettingsModel : public AbstractOutsideModel
-    {
-    public:
-
-      ScaleSettingsModel();
-
-      virtual ~ScaleSettingsModel();
-    };
+    item->update();
   }
 }
 
-#endif
+
