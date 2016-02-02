@@ -51,7 +51,6 @@ namespace te
       class Pan;
       class ZoomWheel;
       class AbstractTool;
-      class MapDisplay;
     }
   }
 
@@ -91,8 +90,6 @@ namespace te
         */ 
         virtual ~MapItem();
 
-        virtual te::qt::widgets::MapDisplay* getMapDisplay();
-
         virtual void contextUpdated(const ContextObject& context);
 
         virtual bool changeCurrentTool(EnumType* tool);
@@ -101,9 +98,9 @@ namespace te
 
         virtual void doRefresh();
 
-        virtual void recompose();
-
         virtual void redraw();
+
+        virtual void recompose();
 
       protected:
 
@@ -151,43 +148,30 @@ namespace te
         /*!
           \brief Reimplemented from QGraphicsProxyWidget
         */
-        virtual void  wheelEvent ( QGraphicsSceneWheelEvent * event );
+        virtual void  wheelEvent(QGraphicsSceneWheelEvent * event);
 
-        virtual bool sceneEventFilter(QGraphicsItem * watched, QEvent * event);
-        
         virtual void enterEditionMode();
 
         virtual void leaveEditionMode();
 
-        virtual QPointF remapPointToViewport(const QPointF& point, const QRectF& item, const QRectF& widget) const;
-
         virtual QCursor createCursor(std::string pathIcon);
 
-        virtual void resized();
-
-        virtual void drawTilesMap(QPainter* painter);
-
-        virtual void createMapDisplay();
-
-        virtual bool changeMapDisplay();
+        virtual QPixmap& getDraftPixmap();
 
     protected slots:
-
-        void extentChanged();
 
         virtual void  dragLeaveEvent ( QGraphicsSceneDragDropEvent * event );
 
         virtual void  dragMoveEvent ( QGraphicsSceneDragDropEvent * event );
 
       protected:
-        
-        te::qt::widgets::MapDisplay*    m_mapDisplay;
-        te::qt::widgets::AbstractTool*  m_currentTool;
-        te::qt::widgets::ZoomWheel*     m_zoomWheel;
-        int                             m_tileSize;
-        bool                            m_refreshEnabled;
+
+        EnumType*                       m_currentEditionMode;
         bool                            m_isPrinting;
         bool                            m_useQImage;
+        QPixmap                         m_screenCache;
+        QPixmap                         m_screenDraft;
+        te::gm::Point                   m_clickedPointMM;
     };
   }
 }

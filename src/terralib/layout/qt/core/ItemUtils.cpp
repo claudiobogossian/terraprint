@@ -29,9 +29,11 @@
 #include "ItemUtils.h"
 #include "terralib/maptools/ExternalGraphicRendererManager.h"
 #include "terralib/maptools/MarkRendererManager.h"
+#include "terralib/maptools/Utils.h"
 #include "terralib/se/PointSymbolizer.h"
 #include "terralib/se/Graphic.h"
 #include "terralib/se/Utils.h" 
+#include "terralib/srs/SpatialReferenceSystemManager.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
@@ -617,3 +619,172 @@ QString te::layout::ItemUtils::convert2QString(const std::string& stdString)
   return QString::fromLatin1(stdString.c_str());
 }
 
+void te::layout::ItemUtils::addOrUpdateProperty(const Property& property, Properties& properties)
+{
+  if (properties.contains(property.getName()) == true)
+  {
+    properties.updateProperty(property);
+  }
+  else
+  {
+    properties.addProperty(property);
+  }
+}
+
+void te::layout::ItemUtils::calculateAspectRatio(double widthMM, double heightMM, double& llx, double& lly, double& urx, double& ury)
+{
+  double ww = urx - llx;
+  double wh = ury - lly;
+  double centerX = llx + (ww / 2.0);
+  double centerY = lly + (wh / 2.0);
+
+  double widthByHeight = widthMM / heightMM;
+
+  if (widthByHeight > ww / wh)
+  {
+    double v = ww;
+
+    ww = wh * widthByHeight;
+
+    llx = centerX - (ww / 2.0);
+    urx = centerX + (ww / 2.0);
+  }
+  else
+  {
+    double v = wh;
+
+    wh = ww / widthByHeight;
+
+    lly = centerY - (wh / 2.0);
+    ury = centerY + (wh / 2.0);
+  }
+}
+
+void te::layout::ItemUtils::calculateAspectRatio(double widthMM, double heightMM, te::gm::Envelope& worldBox)
+{
+  calculateAspectRatio(widthMM, heightMM, worldBox.m_llx, worldBox.m_lly, worldBox.m_urx, worldBox.m_ury);
+}
+
+double te::layout::ItemUtils::calculateScaleFromBox(double widthMM, double heightMM, int srid, const te::gm::Envelope& worldBox)
+{
+  double wMM = widthMM;
+
+  te::common::UnitOfMeasurePtr unitPtr = te::srs::SpatialReferenceSystemManager::getInstance().getUnit(srid);
+
+  te::gm::Envelope envelope = worldBox;
+
+  double wdx = envelope.getWidth();
+  double wdy = envelope.getHeight();
+
+  double scale = 1.;
+  if (unitPtr != NULL)
+  {
+    std::string unit = unitPtr->getName();
+
+    if (unit == "DEGREE")
+    {
+      //here we do a simple but not precise unit convertion
+      wdx = envelope.getWidth() * 111133.;
+      wdy = envelope.getHeight() * 111133.;
+
+      unit = "METRE";
+    }
+
+    double dx = widthMM / wdx;
+    double dy = heightMM / wdy;
+    double f = (dx > dy) ? dx : dy;
+
+    double wT = wMM;
+
+    if (unit == "METRE")
+      wT = wMM / 1000.;
+    else if (unit == "KILOMETRE")
+      wT = wMM / 1000000.;
+    else if (unit == "FOOT")
+      wT = wMM / (12. * 25.4);
+
+    double wp = wT / widthMM;
+    scale = (1. / f) / wp;
+  }
+
+  return scale;
+}
+
+te::gm::Envelope te::layout::ItemUtils::calculateBoxFromScale(double widthMM, double heightMM, int srid, const te::gm::Envelope& worldBox, double scale)
+{
+  double worldWidth = worldBox.getWidth();
+  double worldHeight = worldBox.getHeight();
+  double centerX = worldBox.getCenter().getX();
+  double centerY = worldBox.getCenter().getY();
+
+  double currentScale = calculateScaleFromBox(widthMM, heightMM, srid, worldBox);
+  double factor = scale / currentScale;
+
+  double llx = centerX - (worldWidth / 2.0 * factor);
+  double lly = centerY - (worldHeight / 2.0 * factor);
+  double urx = centerX + (worldWidth / 2.0 * factor);
+  double ury = centerY + (worldHeight / 2.0 * factor);
+
+  te::gm::Envelope newWorld(llx, lly, urx, ury);
+  return newWorld;
+}
+
+te::gm::Envelope te::layout::ItemUtils::calculateZoom(const te::gm::Envelope& envelope, double factor, bool zoomIn, const te::gm::Point& pointToCenter)
+{
+  if (envelope.isValid() == false)
+    return envelope;
+
+  // Adjusting zoom factor based on zoomType
+  if (zoomIn == true)
+    factor = 1 / factor;
+
+  // If point is not null, the zoom extent will be centered on this point. Otherwise, keep the current center.
+  te::gm::Envelope extent;
+  if (pointToCenter.isValid() == true)
+  {
+    te::gm::Coord2D reference = te::gm::Coord2D(pointToCenter.getX(), pointToCenter.getY());
+
+    double dxPercentage = (reference.getX() - envelope.getLowerLeftX()) / envelope.getWidth();
+    double dyPercentage = (reference.getY() - envelope.getLowerLeftY()) / envelope.getHeight();
+
+    // Bulding the zoom extent based on zoom factor value and the given point
+    double w = envelope.getWidth() * factor;
+    double h = envelope.getHeight() * factor;
+
+    double leftWidth = w * dxPercentage;
+    double rightWidth = w * (1. - dxPercentage);
+
+    double lowerHeight = h * dyPercentage;
+    double upperHeight = h * (1. - dyPercentage);
+
+    extent.init(reference.x - leftWidth, reference.y - lowerHeight, reference.x + rightWidth, reference.y + upperHeight);
+  }
+  else
+  {
+    te::gm::Coord2D reference = envelope.getCenter();
+
+    // Bulding the zoom extent based on zoom factor value and the given point
+    double w = envelope.getWidth() * factor * 0.5;
+    double h = envelope.getHeight() * factor * 0.5;
+
+    extent.init(reference.x - w, reference.y - h, reference.x + w, reference.y + h);
+  }
+
+  return extent;
+}
+
+te::gm::Envelope te::layout::ItemUtils::calculatePan(const te::gm::Envelope& envelope, double dx, double dy)
+{
+  if (envelope.isValid() == false)
+    return envelope;
+
+  te::gm::Coord2D oldCenter = envelope.getCenter();
+  double x = oldCenter.getX() - dx;
+  double y = oldCenter.getY() - dy;
+
+  double halfWidth = envelope.getWidth() / 2.;
+  double halfHeight = envelope.getHeight() / 2.;
+
+  te::gm::Envelope extent(x - halfWidth, y - halfHeight, x + halfWidth, y + halfHeight);
+  return extent;
+}
