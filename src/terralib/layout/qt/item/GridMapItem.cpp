@@ -289,23 +289,39 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
       QFont fontSScript2 = qFont;
       fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
 
-      QString completeTxt(txt.c_str());
+      QString completeTxt = ItemUtils::convert2QString(txt);
+
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
       int index = (int) txt.size() / 2;
       int indexNegative = (int) (txt.size() - 1) / 2;
 
-      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
-      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
+      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+      std::string txtSubstr2 = txt.substr(0, index).c_str();
+      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
+      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
+      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
 
       QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
 
       QPointF pointSScript(pt.x(), pt.y());
       pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
+      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
 
       pt.setX(pt.x() + textObject.boundingRect().width());
 
-      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
+      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
 
 
     }
@@ -357,23 +373,39 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
       QFont fontSScript2 = qFont;
       fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
 
-      QString completeTxt(txt.c_str());
+      QString completeTxt = ItemUtils::convert2QString(txt);
+
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
       int index = (int) txt.size() / 2;
       int indexNegative = (int) (txt.size() - 1) / 2;
 
-      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
-      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
+      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+      std::string txtSubstr2 = txt.substr(0, index).c_str();
+      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
+      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
+      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
 
       QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
 
       QPointF pointSScript(pt.x(), pt.y());
       pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
+      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
 
       pt.setX(pt.x() + textObject.boundingRect().width());
 
-      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
+      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
 
     }
     else{
@@ -425,23 +457,39 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
       QFont fontSScript2 = qFont;
       fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
 
-      QString completeTxt(txt.c_str());
+      QString completeTxt = ItemUtils::convert2QString(txt);
+
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
       int index = (int) txt.size() / 2;
       int indexNegative = (int) (txt.size() - 1) / 2;
 
-      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
-      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
+      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+      std::string txtSubstr2 = txt.substr(0, index).c_str();
+      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
+      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
+      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
 
       QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
 
       QPointF pointSScript(pt.x(), pt.y());
       pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
+      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
 
       pt.setX(pt.x() + textObject.boundingRect().width());
 
-      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
+      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
 
     }
     else{
@@ -489,23 +537,39 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
       QFont fontSScript2 = qFont;
       fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
 
-      QString completeTxt(txt.c_str());
+      QString completeTxt = ItemUtils::convert2QString(txt);
+
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
       int index = (int) txt.size() / 2;
       int indexNegative = (int) (txt.size() - 1) / 2;
 
-      QString txtSScript1(txt.at(0) == '-' ? txt.substr(0, indexNegative + 1).c_str() : txt.substr(0, index).c_str());
-      QString txtSScript2(txt.at(0) == '-' ? txt.substr(indexNegative + 1, txt.size()).c_str() : txt.substr(index, txt.size()).c_str());
+      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
+      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+      std::string txtSubstr2 = txt.substr(0, index).c_str();
+      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
+      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
+      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
 
       QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
 
       QPointF pointSScript(pt.x(), pt.y());
       pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-      drawText(pointSScript, painter, fontSScript2, txtSScript1.toStdString(), iRotate);
+
+      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
+      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
 
       pt.setX(pt.x() + textObject.boundingRect().width());
 
-      drawText(pt, painter, qFont, txtSScript2.toStdString(), iRotate);
+      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
+      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
 
     }
     else{
@@ -687,8 +751,10 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
 
+  QString qText = ItemUtils::convert2QString(text);
+
  //creates the rect
-  QPainterPath textObject = ItemUtils::textToVector(text.c_str(), font, point, rotate);
+  QPainterPath textObject = ItemUtils::textToVector(qText, font, point, rotate);
 
 //draws the rect
   painter->save();
@@ -725,7 +791,9 @@ te::gm::Envelope te::layout::GridMapItem::calculateTop(QPointF referencePoint, Q
 
   // text top
   QPointF ptTop(x - (textWidth / 2.), ury + horizontalDisplacement);
-  m_topTexts.push_back(TextPosition(text.toStdString(), ptTop));
+
+  std::string stdText = ItemUtils::convert2StdString(text);
+  m_topTexts.push_back(TextPosition(stdText, ptTop));
 
   te::gm::Envelope topTextBox(ptTop.x(), ptTop.y(), ptTop.x() + textWidth, ptTop.y() + textHeight);
   m_boundingBox.Union(topTextBox);
@@ -754,7 +822,9 @@ te::gm::Envelope te::layout::GridMapItem::calculateBottom(QPointF referencePoint
 
   // text bottom
   QPointF ptBottom(x - (textWidth / 2.), lly - textHeight - horizontalDisplacement);
-  m_bottomTexts.push_back(TextPosition(text.toStdString(), ptBottom));
+
+  std::string stdText = ItemUtils::convert2StdString(text);
+  m_bottomTexts.push_back(TextPosition(stdText, ptBottom));
 
   te::gm::Envelope bottomTextBox(ptBottom.x(), ptBottom.y(), ptBottom.x() + textWidth, ptBottom.y() + textHeight);
   m_boundingBox.Union(bottomTextBox);
@@ -784,7 +854,9 @@ te::gm::Envelope te::layout::GridMapItem::calculateRight(QPointF referencePoint,
 
   // text right
   QPointF ptRight(urx + verticalDisplacement, yReference);
-  m_rightTexts.push_back(TextPosition(text.toStdString(), ptRight));
+
+  std::string stdText = ItemUtils::convert2StdString(text);
+  m_rightTexts.push_back(TextPosition(stdText, ptRight));
 
   te::gm::Envelope rightTextBox(ptRight.x(), ptRight.y(), ptRight.x() + textWidth, ptRight.y() + textHeight);
   m_boundingBox.Union(rightTextBox);
@@ -815,7 +887,9 @@ te::gm::Envelope te::layout::GridMapItem::calculateLeft(QPointF referencePoint, 
 
   // text left
   QPointF ptLeft(llx - textX - textWidth - verticalDisplacement, yReference);
-  m_leftTexts.push_back(TextPosition(text.toStdString(), ptLeft));
+
+  std::string stdText = ItemUtils::convert2StdString(text);
+  m_leftTexts.push_back(TextPosition(stdText, ptLeft));
 
   te::gm::Envelope leftTextBox(ptLeft.x(), ptLeft.y(), ptLeft.x() + textWidth, ptLeft.y() + textHeight);
   m_boundingBox.Union(leftTextBox);

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>524</width>
-    <height>555</height>
+    <width>528</width>
+    <height>559</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -16,19 +16,25 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>528</width>
+    <height>559</height>
+   </size>
+  </property>
   <property name="maximumSize">
    <size>
-    <width>530</width>
-    <height>800</height>
+    <width>528</width>
+    <height>559</height>
    </size>
   </property>
   <property name="windowTitle">
-   <string>PDF Settings</string>
+   <string>Map Settings</string>
   </property>
   <property name="modal">
    <bool>true</bool>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>9</x>
@@ -116,15 +122,15 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox_2">
+            <widget class="QComboBox" name="cmbUnit">
              <item>
               <property name="text">
-               <string>Centimeters</string>
+               <string>Centimeter</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Millimeters</string>
+               <string>Millimeter</string>
               </property>
              </item>
             </widget>
@@ -154,7 +160,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lneWidth"/>
+            <widget class="QLineEdit" name="lneWidth">
+             <property name="inputMask">
+              <string/>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer_5">
@@ -181,7 +191,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QLineEdit" name="lneHeight"/>
+            <widget class="QLineEdit" name="lneHeight">
+             <property name="inputMask">
+              <string/>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer_6">
@@ -208,7 +222,11 @@
             </widget>
            </item>
            <item>
-            <widget class="QComboBox" name="comboBox"/>
+            <widget class="QComboBox" name="cmbScale">
+             <property name="editable">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item>
             <spacer name="horizontalSpacer_7">
@@ -226,9 +244,9 @@
           </layout>
          </item>
          <item>
-          <widget class="QCheckBox" name="checkBox">
+          <widget class="QCheckBox" name="ckbFixedScale">
            <property name="text">
-            <string>Fixed Zoom</string>
+            <string>Fixed Scale</string>
            </property>
           </widget>
          </item>
@@ -256,7 +274,6 @@
           <height>280</height>
          </size>
         </property>
-        <zorder>gridLayoutWidget</zorder>
        </widget>
       </item>
      </layout>

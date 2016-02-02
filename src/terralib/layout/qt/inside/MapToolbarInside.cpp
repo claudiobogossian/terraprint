@@ -100,7 +100,7 @@ QToolButton* te::layout::MapToolbarInside::createPanButton()
   if (!m_toolbar)
     return btn;
 
-  btn = createToolButton(tr("Pan Tool").toStdString(), tr("Pan Tool").toStdString(), "layout-map-pan");
+  btn = createToolButton(tr("Pan Tool"), tr("Pan Tool"), "layout-map-pan");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onPanToolClicked(bool)));
@@ -117,7 +117,7 @@ QToolButton* te::layout::MapToolbarInside::createZoomInButton()
   if (!m_toolbar)
     return btn;
   
-  btn = createToolButton(tr("Zoom In").toStdString(), tr("Zoom In").toStdString(), "layout-map-zoom-in");
+  btn = createToolButton(tr("Zoom In"), tr("Zoom In"), "layout-map-zoom-in");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onZoomInClicked(bool)));
@@ -134,7 +134,7 @@ QToolButton* te::layout::MapToolbarInside::createZoomOutButton()
   if (!m_toolbar)
     return btn;
   
-  btn = createToolButton(tr("Zoom Out").toStdString(), tr("Zoom Out").toStdString(), "layout-map-zoom-out");
+  btn = createToolButton(tr("Zoom Out"), tr("Zoom Out"), "layout-map-zoom-out");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onZoomOutClicked(bool)));
@@ -151,7 +151,7 @@ QToolButton* te::layout::MapToolbarInside::createRecomposeButton()
   if (!m_toolbar)
     return btn;
 
-  btn = createToolButton(tr("Recompose").toStdString(), tr("Recompose").toStdString(), "layout-recompose");
+  btn = createToolButton(tr("Recompose"), tr("Recompose"), "layout-recompose");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onRecomposeClicked(bool)));
@@ -168,7 +168,7 @@ QToolButton* te::layout::MapToolbarInside::createSystematicScaleButton()
   if (!m_toolbar)
     return btn;
   
-  btn = createToolButton(tr("Systematic Scale").toStdString(), tr("Systematic Scale").toStdString(), "layout-systematic-map");
+  btn = createToolButton(tr("Systematic Scale"), tr("Systematic Scale"), "layout-systematic-map");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onSystematicScaleClicked(bool)));
@@ -185,7 +185,7 @@ QToolButton* te::layout::MapToolbarInside::createTextGridAsObjectButton()
   if (!m_toolbar)
     return btn;
 
-  btn = createToolButton(tr("Text Grid as Object").toStdString(), tr("Text Grid as Object").toStdString(), "layout-createtext-as-obj");
+  btn = createToolButton(tr("Text Grid as Object"), tr("Text Grid as Object"), "layout-createtext-as-obj");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onTextGridAsObjectClicked(bool)));
@@ -202,7 +202,7 @@ QToolButton* te::layout::MapToolbarInside::createTextMapAsObjectButton()
   if (!m_toolbar)
     return btn;
   
-  btn = createToolButton(tr("Text Map as Object").toStdString(), tr("Text Map as Object").toStdString(), "layout-createmap-text-as-objs");
+  btn = createToolButton(tr("Text Map as Object"), tr("Text Map as Object"), "layout-createmap-text-as-objs");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onTextMapAsObjectClicked(bool)));
@@ -219,7 +219,7 @@ QToolButton* te::layout::MapToolbarInside::createLegendAsObjectButton()
   if (!m_toolbar)
     return btn;
   
-  btn = createToolButton(tr("Legend as Object").toStdString(), tr("Legend as Object").toStdString(), "layout-legend-child");
+  btn = createToolButton(tr("Legend as Object"), tr("Legend as Object"), "layout-legend-child");
   btn->setCheckable(false);
 
   connect(btn, SIGNAL(clicked(bool)), m_controller, SLOT(onLegendAsObjectClicked(bool)));

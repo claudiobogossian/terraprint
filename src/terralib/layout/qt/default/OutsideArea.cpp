@@ -215,10 +215,10 @@ void te::layout::OutsideArea::createMainMenu()
 
    connect(m_layoutMenu, SIGNAL(triggered(QAction*)), this, SLOT(onMainMenuTriggered(QAction*)));
 
-   QAction* actionNew = createAction(tr("New").toStdString(), m_optionNew, "layout-new");
+   QAction* actionNew = createAction(tr("New"), m_optionNew, "layout-new");
    m_layoutMenu->addAction(actionNew);
 
-   QAction* actionSave = createAction(tr("Update Map").toStdString(), m_optionUpdate, "layout-save");
+   QAction* actionSave = createAction(tr("Update Map"), m_optionUpdate, "layout-save");
    m_layoutMenu->addAction(actionSave);
 
    m_layoutMenu->addSeparator();
@@ -226,30 +226,30 @@ void te::layout::OutsideArea::createMainMenu()
    QMenu* mnuImport = m_layoutMenu->addMenu(tr("Import Map"));
    QMenu* mnuExport = m_layoutMenu->addMenu(tr("Export Map"));
 
-   QAction* actionImportJSON = createAction(tr("Import Xml Map").toStdString(), m_optionImportXml, "layout-import");
+   QAction* actionImportJSON = createAction(tr("Import Xml Map"), m_optionImportXml, "layout-import");
    mnuImport->addAction(actionImportJSON);
 
-   QAction* actionExportJSON = createAction(tr("Export XML Map").toStdString(), m_optionExportXml, "layout-export");
+   QAction* actionExportJSON = createAction(tr("Export XML Map"), m_optionExportXml, "layout-export");
    mnuExport->addAction(actionExportJSON);
 
    m_layoutMenu->addSeparator();
 
-   QAction* actionDockInspector = createAction(tr("Dock Inspector").toStdString(), m_optionDockInspector, "");
+   QAction* actionDockInspector = createAction(tr("Dock Inspector"), m_optionDockInspector, "");
    actionDockInspector->setCheckable(true);
    actionDockInspector->setChecked(true);
    m_layoutMenu->addAction(actionDockInspector);
 
-   QAction* actionDockProperties = createAction(tr("Dock Properties").toStdString(), m_optionDockProperties, "");
+   QAction* actionDockProperties = createAction(tr("Dock Properties"), m_optionDockProperties, "");
    actionDockProperties->setCheckable(true);
    actionDockProperties->setChecked(true);
    m_layoutMenu->addAction(actionDockProperties);
 
    m_layoutMenu->addSeparator();
 
-   QAction* actionPageConfig = createAction(tr("Page Config...").toStdString(), m_optionPageConfig, "layout-page-setup");
+   QAction* actionPageConfig = createAction(tr("Page Config..."), m_optionPageConfig, "layout-page-setup");
    m_layoutMenu->addAction(actionPageConfig);
 
-   QAction* actionPrint = createAction(tr("Print...").toStdString(), m_optionPrint, "layout-printer");
+   QAction* actionPrint = createAction(tr("Print..."), m_optionPrint, "layout-printer");
    m_layoutMenu->addAction(actionPrint);
 
    m_layoutMenu->addSeparator();
@@ -258,38 +258,38 @@ void te::layout::OutsideArea::createMainMenu()
 
 void te::layout::OutsideArea::onMainMenuTriggered( QAction* action )
 {
-  if(action->objectName().compare(m_optionNew.c_str()) == 0)
+  if(action->objectName().compare(m_optionNew) == 0)
   {
     m_view->newTemplate();
   }
-  else if(action->objectName().compare(m_optionUpdate.c_str()) == 0)
+  else if(action->objectName().compare(m_optionUpdate) == 0)
   {
     //changeAction wiil be TypeSaveCurrentTemplate
   }
-  else if(action->objectName().compare(m_optionImportXml.c_str()) == 0)
+  else if(action->objectName().compare(m_optionImportXml) == 0)
   {
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
     m_view->importTemplate(enumTemplate->getXmlType());
   }
-  else if(action->objectName().compare(m_optionExportXml.c_str()) == 0)
+  else if(action->objectName().compare(m_optionExportXml) == 0)
   {
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
     m_view->exportProperties(enumTemplate->getXmlType());
   }
-  else if(action->objectName().compare(m_optionPageConfig.c_str()) == 0)
+  else if(action->objectName().compare(m_optionPageConfig) == 0)
   {    
     m_view->showPageSetup();
   }
-  else if(action->objectName().compare(m_optionPrint.c_str()) == 0)
+  else if(action->objectName().compare(m_optionPrint) == 0)
   {
     m_view->print();
   }
-  else if(action->objectName().compare(m_optionExit.c_str()) == 0)
+  else if(action->objectName().compare(m_optionExit) == 0)
   {
     m_view->close();
     emit exit();
   }
-  else if(action->objectName().compare(m_optionDockInspector.c_str()) == 0)
+  else if(action->objectName().compare(m_optionDockInspector) == 0)
   {
     if(m_dockInspector->isVisible())
     {
@@ -300,7 +300,7 @@ void te::layout::OutsideArea::onMainMenuTriggered( QAction* action )
       m_dockInspector->setVisible(true);
     }
   }
-  else if(action->objectName().compare(m_optionDockProperties.c_str()) == 0)
+  else if(action->objectName().compare(m_optionDockProperties) == 0)
   {
     if(m_dockProperties->isVisible())
     {
@@ -311,7 +311,7 @@ void te::layout::OutsideArea::onMainMenuTriggered( QAction* action )
       m_dockProperties->setVisible(true);
     }
   }
-  else if(action->objectName().compare(m_optionDockEditTemplate.c_str()) == 0)
+  else if(action->objectName().compare(m_optionDockEditTemplate) == 0)
   {
     if(m_dockEditTemplate->isVisible())
     {
@@ -324,13 +324,13 @@ void te::layout::OutsideArea::onMainMenuTriggered( QAction* action )
   }
 }
 
-QAction* te::layout::OutsideArea::createAction( std::string text, std::string objName, std::string icon, std::string tooltip )
+QAction* te::layout::OutsideArea::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip)
 {
-  QAction *actionMenu = new QAction(text.c_str(), m_layoutMenu);
-  actionMenu->setObjectName(objName.c_str());
+  QAction *actionMenu = new QAction(text, m_layoutMenu);
+  actionMenu->setObjectName(objName);
 
-  actionMenu->setIcon(QIcon::fromTheme(icon.c_str()));
-  actionMenu->setToolTip(tooltip.c_str());
+  actionMenu->setIcon(QIcon::fromTheme(icon));
+  actionMenu->setToolTip(tooltip);
 
   return actionMenu;
 }
@@ -540,24 +540,27 @@ void te::layout::OutsideArea::onRefreshStatusBar()
 
   te::layout::EnumType* mode = m_view->getCurrentMode();
 
-  std::string msg;
+  QString msg("");
 
   if(mode == te::layout::Enums::getInstance().getEnumModeType()->getModeNone())
   {
-    msg = tr("TerraPrint - TerraLib 5").toStdString();
-    m_statusBar->showMessage(msg.c_str());
+    msg = tr("TerraPrint - TerraLib 5");
+    m_statusBar->showMessage(msg);
     return;
   }
   
-  msg = tr("TerraPrint - TerraLib 5 | Context: ").toStdString();
-  
+  msg = tr("TerraPrint - TerraLib 5 | Context: ");
+
   std::string s_mode = mode->getLabel();
   if(s_mode.compare("") == 0)
   {
     s_mode = mode->getName();
   }
-  msg += s_mode;
-  m_statusBar->showMessage(msg.c_str());
+
+  QString qMode = ItemUtils::convert2QString(s_mode);
+
+  msg += qMode;
+  m_statusBar->showMessage(msg);
 }
 
 void te::layout::OutsideArea::onAddChildFinalized( QGraphicsItem* parent, QGraphicsItem* child )

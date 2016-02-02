@@ -37,6 +37,7 @@
 
 // Qt
 #include <QObject>
+#include <QString>
 
 class QWidget;
 class QMenu;
@@ -61,33 +62,51 @@ namespace te
     public:
 
       OutsideArea(AbstractProxyProject* proxyProject, te::layout::View* view, QStatusBar* status = 0);
+
       virtual ~OutsideArea();
 
       PropertiesDock* getPropertiesDock();
+
       ObjectInspectorDock* getObjectInspectorDock();
+
       te::layout::ToolbarOutside* getToolbar();
+
       te::layout::EditTemplateDock* getEditTemplate();
+
       QMenu* getMenu(QMenu* parentMenu);
 
       virtual void openAllDocks();
+
       virtual void closeAllDocks();
 
       virtual void openMainMenu();
+
       virtual void closeMainMenu();
 
     public slots:
 
       virtual void onMainMenuTriggered(QAction* action);
+
       virtual void onAddItemFinalized(QGraphicsItem* item);
+
       virtual void onShowView();
+
       virtual void onHideView();
+
       virtual void onCloseView();
+
       virtual void onRefreshStatusBar();
+
       virtual void onAddChildFinalized(QGraphicsItem* parent, QGraphicsItem* child);
+
       virtual void onDeleteFinalized(std::vector<std::string>);
+
       virtual void onSelectionChanged(QList<QGraphicsItem*> selectedItems);
+
       virtual void onSelectionChanged();
+
       virtual void onEditionFinalized();
+
       virtual void onEditionInitialized();
 
     signals:
@@ -99,13 +118,18 @@ namespace te
     protected:
 
       virtual void init(AbstractProxyProject* proxyProject);
+
       virtual void createPropertiesDock(AbstractProxyProject* proxyProject);
+
       virtual void createInspectorDock();
+
       virtual void createToolbar();
+
       virtual void createMainMenu();
+
       virtual void createEditTemplateDock();
 
-      virtual QAction* createAction(std::string text, std::string objName, std::string icon, std::string tooltip = "");
+      virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "");
 
       virtual void addAllItemToolbars();
 
@@ -121,17 +145,17 @@ namespace te
 
       /* Menu options */
 
-      std::string m_optionNew;
-      std::string m_optionUpdate;
-      std::string m_optionImportXml;
-      std::string m_optionExportXml;
-      std::string m_optionPageConfig;
-      std::string m_optionPrint;
-      std::string m_optionExit;
-      std::string m_optionDockInspector;
-      std::string m_optionDockProperties;
-      std::string m_optionDockToolbar;
-      std::string m_optionDockEditTemplate;
+      QString m_optionNew;
+      QString m_optionUpdate;
+      QString m_optionImportXml;
+      QString m_optionExportXml;
+      QString m_optionPageConfig;
+      QString m_optionPrint;
+      QString m_optionExit;
+      QString m_optionDockInspector;
+      QString m_optionDockProperties;
+      QString m_optionDockToolbar;
+      QString m_optionDockEditTemplate;
     };
   }
 }

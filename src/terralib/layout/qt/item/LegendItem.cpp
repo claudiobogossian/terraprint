@@ -110,7 +110,9 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  QRectF textBoundary = utils.getMinimumTextBoundary(m_qFontTitle.family().toStdString(), m_qFontTitle.pointSize(), title);
+  QString qFontName = m_qFontTitle.family();
+  std::string fontName = ItemUtils::convert2StdString(qFontName);
+  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, m_qFontTitle.pointSize(), title);
 
   y1 -= textBoundary.height();
 
@@ -438,7 +440,9 @@ void te::layout::LegendItem::verticalAdjustmentBetweenPairs(double& y1, std::str
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  QRectF textBoundary = utils.getMinimumTextBoundary(m_qFontLegend.family().toStdString(), m_qFontLegend.pointSize(), label);
+  QString qFontName = m_qFontLegend.family();
+  std::string fontName = ItemUtils::convert2StdString(qFontName);
+  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, m_qFontLegend.pointSize(), label);
 
   double maxWidth = textBoundary.width() + m_symbolSize + m_displacementBetweenSymbolsAndText + m_borderDisplacement;
   m_maxWidth = qMax(maxWidth, m_maxWidth);
@@ -460,7 +464,9 @@ QPointF te::layout::LegendItem::verticalLegendTextAdjustment(double x1, double y
   x1 += m_symbolSize + m_displacementBetweenSymbolsAndText;
   pt.setX(x1);
 
-  QRectF textBoundary = utils.getMinimumTextBoundary(m_qFontLegend.family().toStdString(), m_qFontLegend.pointSize(), text);
+  QString qFontName = m_qFontLegend.family();
+  std::string fontName = ItemUtils::convert2StdString(qFontName);
+  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, m_qFontLegend.pointSize(), text);
   if (textBoundary.height() != m_currentMaxHeight)
   {
     // if the symbol is bigger than the font, then the text is to be centered

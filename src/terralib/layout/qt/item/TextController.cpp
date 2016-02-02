@@ -61,7 +61,11 @@ QSizeF te::layout::TextController::updateView()
 
     //converts information about the font
     QFont qft;
-    qft.setFamily(ft.getFamily().c_str());
+
+    std::string fontName = ft.getFamily();
+    QString qFontName = ItemUtils::convert2QString(fontName);
+
+    qft.setFamily(qFontName);
     qft.setBold(ft.isBold());
     qft.setItalic(ft.isItalic());
     qft.setKerning(ft.isKerning());
@@ -72,9 +76,8 @@ QSizeF te::layout::TextController::updateView()
 
     qft.setPointSizeF(ft.getPointSize());
 
-
     //converts the text
-    QString qText(text.c_str());
+    QString qText = ItemUtils::convert2QString(text);
 
     //converts the color
     QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -199,7 +202,9 @@ void te::layout::TextController::textChanged()
   {
     const Property& pText = getProperty("text");
     std::string currentText = pText.getValue().toString();
-    QString qCurrentText(currentText.c_str());
+
+    QString qCurrentText = ItemUtils::convert2QString(currentText);
+
     QString qNewText = view->toPlainText();
 
     if(qCurrentText != qNewText)
@@ -208,7 +213,9 @@ void te::layout::TextController::textChanged()
 
       Property propertyText(0);
       propertyText.setName("text");
-      propertyText.setValue(qNewText.toStdString(), dataType->getDataTypeString());
+
+      std::string newText = ItemUtils::convert2StdString(qNewText);
+      propertyText.setValue(newText, dataType->getDataTypeString());
 
       Properties oldCommand = m_model->getProperties();
       m_model->setProperty(propertyText);

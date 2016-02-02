@@ -95,12 +95,25 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
     return;
   }
 
+  changeMapDisplay();
+  
+}
+
+bool te::layout::MapItem::changeMapDisplay()
+{
+  bool result = false;
+
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  if (!myScene)
+  {
+    return result;
+  }
+  
+  const ContextObject& context = myScene->getContext();
 
   int zoom = context.getZoom();
-  ((MapController *) m_controller)->setZoom(zoom);
-
-  //AbstractScene* scene = ((AbstractItem<QGraphicsItem>*) this)->getScene();
-
+  ((MapController *)m_controller)->setZoom(zoom);
+  
   Utils utils = ((Scene*) this->scene())->getUtils();
 
   QRectF boxMM = boundingRect();
@@ -110,7 +123,7 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
 
   QSize currentSize = m_mapDisplay->size();
   QSize newSize(qRound(box.getWidth()), qRound(box.getHeight()));
-  if(currentSize != newSize)
+  if (currentSize != newSize)
   {
     const Properties& properties = m_controller->getProperties();
 
@@ -118,13 +131,17 @@ void te::layout::MapItem::contextUpdated(const ContextObject& context)
 
     m_mapDisplay->setOverrideDPI(context.getDpiX(), context.getDpiY());
     m_mapDisplay->resize(newSize);
-   
+
     m_refreshEnabled = false;
     m_controller->setProperties(properties);
     m_refreshEnabled = true;
 
+    result = true;
+
     update();
   }
+
+  return result;
 }
 
 void te::layout::MapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
@@ -652,7 +669,9 @@ bool te::layout::MapItem::removeCurrentTool()
 
 QCursor te::layout::MapItem::createCursor(std::string pathIcon)
 {
-  QIcon ico(QIcon::fromTheme(pathIcon.c_str()));
+  QString qPathIcon = ItemUtils::convert2QString(pathIcon);
+
+  QIcon ico(QIcon::fromTheme(qPathIcon));
 
   //search icon size
   QList<QSize> sizes = ico.availableSizes();
@@ -699,5 +718,14 @@ void te::layout::MapItem::createMapDisplay()
   m_mapDisplay->resize(10, 10);
 
   connect(m_mapDisplay, SIGNAL(extentChanged()), this, SLOT(extentChanged()));
+}
+
+void te::layout::MapItem::redraw()
+{
+  if (!changeMapDisplay())
+  {
+    doRefresh();
+    refresh();
+  }
 }
 

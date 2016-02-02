@@ -191,18 +191,18 @@ void te::layout::PageSetupOutside::switchSize()
 
 void te::layout::PageSetupOutside::on_cmbPageSize_currentIndexChanged( const QString & text )
 {
-  std::string curItem;
-  if (text.toStdString().compare("ISO A0 - 841 x 1189 mm") == 0)
+  std::string stdText = ItemUtils::convert2StdString(text);
+  if (stdText.compare("ISO A0 - 841 x 1189 mm") == 0)
     m_paperType = te::layout::A0;
-  else if (text.toStdString().compare("ISO A1 - 594 x 841 mm") == 0)
+  else if (stdText.compare("ISO A1 - 594 x 841 mm") == 0)
     m_paperType = te::layout::A1;
-  else if (text.toStdString().compare("ISO A2 - 420 x 594 mm") == 0)
+  else if (stdText.compare("ISO A2 - 420 x 594 mm") == 0)
     m_paperType = te::layout::A2;
-  else if (text.toStdString().compare("ISO A3 - 297 x 420 mm") == 0)
+  else if (stdText.compare("ISO A3 - 297 x 420 mm") == 0)
     m_paperType = te::layout::A3;
-  else if (text.toStdString().compare("ISO A4 - 210 x 297 mm") == 0)
+  else if (stdText.compare("ISO A4 - 210 x 297 mm") == 0)
     m_paperType = te::layout::A4;
-  else if (text.toStdString().compare("ISO A5 - 148 x 210 mm") == 0)
+  else if (stdText.compare("ISO A5 - 148 x 210 mm") == 0)
     m_paperType = te::layout::A5;
   else
     m_paperType = te::layout::Custom; 

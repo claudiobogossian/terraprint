@@ -122,11 +122,11 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
   if (event->matches(QKeySequence::Paste))
   {
     QTextCursor cursor(textCursor());
-    std::string plainText = toPlainText().toStdString();
+    QString qPlainText = toPlainText();
     cursor.select(QTextCursor::Document);
     cursor.deleteChar();
     setTextCursor(cursor);
-    setPlainText(plainText.c_str());
+    setPlainText(qPlainText);
   }
 }
 

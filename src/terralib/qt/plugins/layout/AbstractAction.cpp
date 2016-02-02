@@ -36,20 +36,21 @@ te::qt::plugins::layout::AbstractAction::~AbstractAction()
 {
 }
 
-void te::qt::plugins::layout::AbstractAction::createAction(std::string name, std::string pixmap)
+void te::qt::plugins::layout::AbstractAction::createAction(const QString& name, const QString& pixmap)
 {
   assert(m_menu);
 
   m_action = new QAction(m_menu);
 
-  m_action->setText(name.c_str());
+  m_action->setText(name);
 
   m_action->setObjectName("Layout");
 
-  if(pixmap.empty() == false)
-    m_action->setIcon(QIcon::fromTheme(pixmap.c_str()));
+  if(pixmap.isEmpty() == false)
+    m_action->setIcon(QIcon::fromTheme(pixmap));
 
   connect(m_action, SIGNAL(triggered(bool)), this, SLOT(onActionActivated(bool)));
 
   m_menu->addAction(m_action);
 }
+

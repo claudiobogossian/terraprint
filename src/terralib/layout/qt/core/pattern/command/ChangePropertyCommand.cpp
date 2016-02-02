@@ -31,6 +31,7 @@
 #include "../../../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../outside/PropertiesOutside.h"
+#include "../../ItemUtils.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -151,8 +152,11 @@ QString te::layout::ChangePropertyCommand::createCommandString( QGraphicsItem* i
 
   QPointF pos = m_item->scenePos();
 
+  std::string name = absView->getController()->getProperties().getTypeObj()->getName();
+  QString qName = ItemUtils::convert2QString(name);
+
   return QObject::tr("%1 at (%2, %3)")
-    .arg(absView->getController()->getProperties().getTypeObj()->getName().c_str())
+    .arg(qName)
     .arg(pos.x()).arg(pos.y());
 }
 

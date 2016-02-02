@@ -27,8 +27,10 @@
 #include "MapSettingsOutside.h"
 #include "MapLayerChoiceOutside.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/ItemUtils.h"
+
 #include "ui_MapSettings.h"
-#include "../item/MapController.h"
+#include "../../outside/MapSettingsController.h"
 
 // Qt
 #include <QMessageBox>
@@ -41,9 +43,17 @@ te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* co
   m_ui(new Ui::MapSettings),
   m_widget(0)
 {
+
   m_ui->setupUi(this);
 
-  m_widget.reset(new te::layout::MapLayerChoiceOutside(controller));
+  m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
+  m_ui->lneWidth->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneWidth));
+
+  MapSettingsController* controllerSettings = dynamic_cast<MapSettingsController*>(m_controller);
+  MapLayerChoiceOutside *mapChoice = controllerSettings->getMapLayerChoice();
+  mapChoice->setParent(this);
+  m_widget.reset(mapChoice);
+  mapChoice->init();
 
   QGridLayout* layout = new QGridLayout(m_ui->m_widget_MapChoice);
   layout->addWidget(m_widget.get());
@@ -59,6 +69,18 @@ te::layout::MapSettingsOutside::~MapSettingsOutside()
   
 }
 
+
+void te::layout::MapSettingsOutside::load()
+{
+
+  loadScaleCombobox();
+  initDouble(m_ui->lneHeight, "height");
+  initDouble(m_ui->lneWidth, "width");
+  initCombo(m_ui->cmbUnit, "size_unit");
+  initCombo(m_ui->cmbScale, "scale");
+
+}
+
 void te::layout::MapSettingsOutside::init()
 {
   if (m_ui->pBtnOK && m_ui->pBtnCancel)
@@ -68,36 +90,16 @@ void te::layout::MapSettingsOutside::init()
 
   }
 
-  initDouble(m_ui->lneHeight, "height");
-  initDouble(m_ui->lneWidth, "width");
-
-
- /* m_ui->lblDPIInformation->clear();
-  m_ui->lblDPIInformation->setText("DPI: 150");
-
-  m_ui->txtEdtFile->setEnabled(false);
-  
-  if (m_ui->pBtnOK && m_ui->pBtnCancel && m_ui->pBtnSaveAs)
-  {
-    connect(m_ui->pBtnOK, SIGNAL(pressed()), this, SLOT(onOkPushButtonPressed()));
-    connect(m_ui->pBtnCancel, SIGNAL(pressed()), this, SLOT(onCancelPushButtonPressed()));
-    connect(m_ui->pBtnSaveAs, SIGNAL(clicked()), this, SLOT(onSaveAsClicked()));
-    connect(m_ui->cmbDPI, SIGNAL(currentIndexChanged(const QString)), this, SLOT(onCurrentIndexChanged(const QString)));
-  }
-
-  QStringList list;
-  list.append("150");
-  list.append("300");
-  list.append("600");
-  list.append("1200");
-
-  m_ui->cmbDPI->addItems(list);*/
 }
 
 void te::layout::MapSettingsOutside::onOkPushButtonPressed()
 {
   if (!m_ui->lneWidth->text().isEmpty() && !m_ui->lneHeight->text().isEmpty())
   {
+    MapLayerChoiceOutside* mapLayerChoice = dynamic_cast<MapLayerChoiceOutside*>(m_widget.get());
+    Property prop = mapLayerChoice->getSavedLayers();
+    emit updateProperty(prop); 
+    
     accept();
     return;
   }
@@ -109,57 +111,6 @@ void te::layout::MapSettingsOutside::onCancelPushButtonPressed()
   reject();
 }
 
-void te::layout::MapSettingsOutside::onSaveAsClicked()
-{
-  /*QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image File"), QDir::currentPath(), tr("PDF Files (*.pdf)"));
-
-  if (!fileName.isEmpty())
-  {
-    m_ui->txtEdtFile->setText(fileName);
-  }
-  if (fileName.endsWith(".pdf") == false)
-  {
-    fileName.append(".pdf");
-  }*/
-}
-
-void te::layout::MapSettingsOutside::onCurrentIndexChanged(const QString & text)
-{
-  /*QPalette palette = m_ui->lblDPIInformation->palette();
-  QString txtCurrentDPI = m_ui->cmbDPI->currentText();
-  int dpi = txtCurrentDPI.toInt();
-  if (dpi > 300)
-  {
-    //red text
-    QBrush brushRed(QColor(255, 0, 0, 255));
-    brushRed.setStyle(Qt::SolidPattern);
-    palette.setBrush(QPalette::Active, QPalette::WindowText, brushRed);
-
-    m_ui->lblDPIInformation->clear();
-    if (dpi < 900)
-    {
-      m_ui->lblDPIInformation->setText(tr("The DPI chosen is high. Can cause very large files."));
-    }
-    else
-    {
-      m_ui->lblDPIInformation->setText(tr("The DPI chosen is too high. Can cause very large files."));
-    }
-  }
-  else
-  {
-    //black text
-    QBrush brushBlack(QColor(0, 0, 0, 255));
-    brushBlack.setStyle(Qt::SolidPattern);
-    palette.setBrush(QPalette::Active, QPalette::WindowText, brushBlack);
-
-    QString txtDPI = "DPI: " + txtCurrentDPI;
-    m_ui->lblDPIInformation->clear();
-    m_ui->lblDPIInformation->setText(txtDPI);
-  }
-  m_ui->lblDPIInformation->setPalette(palette);
-  */
-
-}
 
 void te::layout::MapSettingsOutside::setPosition(const double& x, const double& y)
 {
@@ -180,50 +131,303 @@ te::gm::Coord2D te::layout::MapSettingsOutside::getPosition()
   return coordinate;
 }
 
-std::string te::layout::MapSettingsOutside::getFilePath()
-{
-  QString qTxt;// = m_ui->txtEdtFile->text();
- /* if (!qTxt.isEmpty())
-  {
-    if (!qTxt.endsWith(".pdf", Qt::CaseInsensitive))
-    {
-      qTxt += ".pdf";
-      m_ui->txtEdtFile->clear();
-      m_ui->txtEdtFile->setText(qTxt);
-    }
-  }*/
-  return qTxt.toStdString();
-}
-
-int te::layout::MapSettingsOutside::getDPI()
-{
-  QString txtDPI;// = m_ui->cmbDPI->currentText();
-  return txtDPI.toInt();
-}
-
-void te::layout::MapSettingsOutside::setCurrentDPI(int dpi)
-{
- /* QString txt = QString::number(dpi);
-  int index = m_ui->cmbDPI->findText(txt);
-  m_ui->cmbDPI->setCurrentIndex(index);*/
-}
 
 
 void te::layout::MapSettingsOutside::initDouble(QWidget* widget, std::string nameComponent)
 {
-  MapController* controller = dynamic_cast<MapController*>(m_controller);
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
   if (!controller)
     return;
 
   std::ostringstream convert;
-  convert.precision(15);
-  Property prop = controller->getProperty(nameComponent);
-  double number = prop.getValue().toDouble();
-  convert << number;
+  convert.precision(3);
+
+  std::string unit = controller->getProperty("size_unit").getOptionByCurrentChoice().convertToString();
+
+  if ((nameComponent == "height" || nameComponent == "width") && unit == "Centimeter"){
+
+    Property prop = controller->getProperty(nameComponent);
+    double number = prop.getValue().toDouble();
+    double convertedNumber = mm2cm(number);
+    convert << convertedNumber;
+
+  }
+  else{
+
+    Property prop = controller->getProperty(nameComponent);
+    double number = prop.getValue().toDouble();
+    convert << number;
+  }
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if (edit)
   {
     edit->setText(convert.str().c_str());
   }
+}
+
+void te::layout::MapSettingsOutside::initCombo(QWidget* widget, std::string nameComponent){
+
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+  if (!controller)
+    return;
+
+  Property prop = controller->getProperty(nameComponent);
+
+  QComboBox* combo = dynamic_cast<QComboBox*>(widget);
+
+  if (!combo)
+    return;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  int index = -1;
+  QVariant variant;
+
+  if (prop.getType() == dataType->getDataTypeDouble())
+  {
+    variant.setValue(prop.getValue().toDouble());
+  }
+  else if (prop.getType() == dataType->getDataTypeInt())
+  {
+    variant.setValue(prop.getValue().toInt());
+  }
+  else if (prop.getType() == dataType->getDataTypeString())
+  {
+    std::string txt = prop.getValue().toString();
+    QString qText = ItemUtils::convert2QString(txt);
+
+    variant.setValue(qText);
+  }
+  else if (prop.getType() == dataType->getDataTypeStringList()){
+
+    std::string txt = prop.getOptionByCurrentChoice().toString();
+    QString qText = ItemUtils::convert2QString(txt);
+
+    variant.setValue(qText);
+
+  }
+
+  QString value = variant.toString();
+  variant.setValue(value);
+
+  index = combo->findData(variant, Qt::DisplayRole);
+  if (index == -1)
+  {
+    index = combo->findText(value);
+    if (index != -1)
+    {
+      combo->setCurrentIndex(index);
+    }
+  }
+  else
+  {
+    combo->setCurrentIndex(index);
+  }
+
+}
+
+void te::layout::MapSettingsOutside::on_lneWidth_editingFinished(){
+
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+  if (controller){
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    double widthSize = m_ui->lneWidth->text().trimmed().replace(",", ".").toDouble();
+
+
+    std::string unit = controller->getProperty("size_unit").getOptionByCurrentChoice().convertToString();
+
+    if (unit == "Centimeter"){
+     
+      widthSize = cm2mm(widthSize);
+
+    }
+
+    Variant variant;
+    variant.setValue(widthSize, dataType->getDataTypeDouble());
+
+    Property prop = controller->getProperty("width");
+    prop.setValue(variant);
+    
+    emit updateProperty(prop);
+  }
+
+}
+
+void te::layout::MapSettingsOutside::on_lneHeight_editingFinished(){
+
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+  if (controller){
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    double heightSize = m_ui->lneHeight->text().trimmed().replace(",", ".").toDouble();
+
+    std::string unit = controller->getProperty("size_unit").getOptionByCurrentChoice().convertToString();
+    if (unit == "Centimeter"){
+
+      heightSize = cm2mm(heightSize);
+
+    }
+
+    Variant variant;
+    variant.setValue(heightSize, dataType->getDataTypeDouble());
+
+    Property prop = controller->getProperty("height");
+    prop.setValue(variant);
+    emit updateProperty(prop);
+  }
+
+}
+
+void te::layout::MapSettingsOutside::loadScaleCombobox(){
+
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+  if (controller){
+    Property prop = controller->getProperty("scale");
+    int currentScale = (int) prop.getValue().toDouble();
+    std::string stringValue = to_string(currentScale).c_str();
+    std::string concatString = "Initial Scale (" + stringValue + ")";
+    m_ui->cmbScale->addItem(concatString.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));
+  
+  }
+
+  m_ui->cmbScale->addItem("1 000", QVariant((double)1000));
+  m_ui->cmbScale->addItem("2 000", QVariant((double)2000));
+  m_ui->cmbScale->addItem("2 500", QVariant((double)2500));
+  m_ui->cmbScale->addItem("5 000", QVariant((double)5000));
+  m_ui->cmbScale->addItem("10 000", QVariant((double)10000));
+  m_ui->cmbScale->addItem("20 000", QVariant((double)20000));
+  m_ui->cmbScale->addItem("25 000", QVariant((double)25000));
+  m_ui->cmbScale->addItem("50 000", QVariant((double)50000));
+  m_ui->cmbScale->addItem("100 000", QVariant((double)100000));
+  m_ui->cmbScale->addItem("200 000", QVariant((double)200000));
+  m_ui->cmbScale->addItem("250 000", QVariant((double)250000));
+  m_ui->cmbScale->addItem("500 000", QVariant((double)500000));
+  m_ui->cmbScale->addItem("1 000 000", QVariant((double)1000000));
+  m_ui->cmbScale->addItem("2 000 000", QVariant((double)2000000));
+  m_ui->cmbScale->addItem("2 500 000", QVariant((double)2500000));
+  m_ui->cmbScale->addItem("5 000 000", QVariant((double)5000000));
+  m_ui->cmbScale->addItem("10 000 000", QVariant((double)10000000));
+  m_ui->cmbScale->addItem("20 000 000", QVariant((double)20000000));
+  m_ui->cmbScale->addItem("25 000 000", QVariant((double)25000000));
+  m_ui->cmbScale->addItem("50 000 000", QVariant((double)50000000));
+  m_ui->cmbScale->addItem("100 000 000", QVariant((double)100000000));
+
+}
+
+void te::layout::MapSettingsOutside::on_cmbScale_currentIndexChanged(const QString & text){
+
+
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+
+  double inputValue = text.toDouble();
+
+  if (inputValue > 0.0){
+    if (controller)
+    {
+      Property prop = controller->getProperty("scale");
+      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+      
+      Variant variant;
+
+      variant.setValue(inputValue, dataType->getDataTypeDouble());
+      prop.setValue(variant);
+
+      emit updateProperty(prop);
+    }
+  }
+  else{
+
+    if (controller)
+    {
+      Property prop = controller->getProperty("scale");
+      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+      QVariant selectedValue = m_ui->cmbScale->itemData(m_ui->cmbScale->currentIndex());
+      
+      if (selectedValue.toDouble() == 0.0){
+        return;
+      }
+
+      Variant variant;
+      variant.setValue(selectedValue, dataType->getDataTypeDouble());
+      prop.setValue(variant);
+
+      emit updateProperty(prop);
+
+    }
+  }
+
+}
+
+void te::layout::MapSettingsOutside::on_cmbUnit_currentIndexChanged(const QString & text){
+  
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+  if (controller)
+  {
+
+    std::string cm = TR_LAYOUT("Centimeter");
+    std::string mm = TR_LAYOUT("Millimeter");
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    Property prop = controller->getProperty("size_unit");
+
+    if (stdText != prop.getOptionByCurrentChoice().convertToString()){
+      if (stdText == cm){
+
+        double cmWidth = mm2cm(m_ui->lneWidth->text().toDouble());
+        m_ui->lneWidth->setText(ItemUtils::convert2QString(std::to_string(cmWidth)));
+
+        double cmHeight = mm2cm(m_ui->lneHeight->text().toDouble());
+        m_ui->lneHeight->setText(ItemUtils::convert2QString(std::to_string(cmHeight)));
+    }
+
+    if (stdText == mm){
+
+      double cmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
+      m_ui->lneWidth->setText(ItemUtils::convert2QString(std::to_string(cmWidth)));
+
+      double cmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
+      m_ui->lneHeight->setText(ItemUtils::convert2QString(std::to_string(cmHeight)));
+
+    }
+
+    }
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+    variant.setValue(stdText, dataType->getDataTypeStringList());
+
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
+
+    emit updateProperty(prop);
+  }
+}
+
+double te::layout::MapSettingsOutside::mm2cm(double mmSize){
+  return mmSize / 10.;
+}
+
+double  te::layout::MapSettingsOutside::cm2mm(double cmSize){
+  return cmSize * 10.;
+}
+
+void  te::layout::MapSettingsOutside::on_ckbFixedScale_clicked(){
+    
+  MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+  if (controller)
+  {
+    Property prop = controller->getProperty("fixed_scale");
+
+    bool isBlocked = m_ui->ckbFixedScale->isChecked();
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+    variant.setValue(isBlocked, dataType->getDataTypeBool());
+
+    prop.setValue(variant);
+
+    emit updateProperty(prop);
+
+  }
+
 }

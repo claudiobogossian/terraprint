@@ -821,8 +821,7 @@ void te::layout::Scene::redrawSelectionMap()
     MapItem* mapItem = dynamic_cast<MapItem*>(item);
     if(mapItem)
     {
-      mapItem->doRefresh();
-      mapItem->refresh();
+      mapItem->redraw();
     }
   }
 }

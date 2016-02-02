@@ -32,6 +32,7 @@
 #include "terralib/qt/af/events/ApplicationEvents.h"
 #include "Plugin.h"
 #include "terralib/qt/af/Utils.h"
+#include "../../../layout/qt/core/ItemUtils.h"
 
 #if defined(TERRALIB_APACHE_LOG4CXX_ENABLED) && defined(TERRALIB_LOGGER_ENABLED)
 //Log4cxx
@@ -72,7 +73,7 @@ void te::qt::plugins::layout::Plugin::startup()
     return;
 
 // it initializes the Translator support for the TerraLib LayoutEditor Qt Plugin
-  TE_ADD_TEXT_DOMAIN(TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN, TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN_DIR, "UTF-8");
+  TE_ADD_TEXT_DOMAIN(TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN, TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN_DIR, "ISO-8859-1");
 
   TE_LOG_TRACE(TE_TR("TerraLib Qt TerraPrint Plugin startup!"));
   
@@ -87,7 +88,9 @@ void te::qt::plugins::layout::Plugin::startup()
   registerActions();
 
   // layout log startup
-  std::string path = te::qt::af::AppCtrlSingleton::getInstance().getUserDataDir().toStdString();
+  QString qPath = te::qt::af::AppCtrlSingleton::getInstance().getUserDataDir(); 
+  std::string path = te::layout::ItemUtils::convert2StdString(qPath);
+
   path += "/log/terralib_terraprint.log";
 
 #if defined(TERRALIB_APACHE_LOG4CXX_ENABLED) && defined(TERRALIB_LOGGER_ENABLED)

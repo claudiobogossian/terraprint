@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QMenu>
 #include <QAction>
+#include <QString>
 
 namespace te
 {
@@ -89,7 +90,7 @@ namespace te
 
               \param pixmap The action pixmap name.
             */
-            void createAction(std::string name, std::string pixmap = "");
+            void createAction(const QString& name, const QString& pixmap = "");
 
           protected:
 

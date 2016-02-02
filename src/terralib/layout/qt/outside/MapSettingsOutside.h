@@ -57,16 +57,16 @@ namespace te
           \brief Load layers in double widget.
         */
         virtual void init();
+        
+        virtual void load();
+        
+        virtual void loadScaleCombobox();
 
         virtual void setPosition(const double& x, const double& y);
 
         virtual te::gm::Coord2D getPosition();
 
-        virtual std::string getFilePath();
 
-        virtual int getDPI();
-
-        virtual void setCurrentDPI(int dpi);
 
       signals:
 
@@ -80,15 +80,25 @@ namespace te
 
         void onCancelPushButtonPressed();
 
-        void onSaveAsClicked();
+        void on_lneWidth_editingFinished();
 
-        void onCurrentIndexChanged(const QString & text);
+        void on_lneHeight_editingFinished();
+
+        void on_ckbFixedScale_clicked();
+
+        virtual void on_cmbUnit_currentIndexChanged(const QString & text);
+
+        virtual void on_cmbScale_currentIndexChanged(const QString & text);
+
         
       private:
 
         std::auto_ptr<Ui::MapSettings> m_ui;
         std::auto_ptr<MapLayerChoiceOutside> m_widget;
         void initDouble(QWidget* widget, std::string nameComponent);
+        void initCombo(QWidget* widget, std::string nameComponent);
+        double mm2cm(double mmSize);
+        double cm2mm(double cmSize);
         
     };
   }    

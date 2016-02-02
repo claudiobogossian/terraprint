@@ -33,7 +33,9 @@ te::layout::AbstractOutsideView* te::layout::MapLayerChoiceOutsideFactory::build
 {
   MapLayerChoiceModel* model = new MapLayerChoiceModel();
 
-  MapLayerChoiceController* controller = new MapLayerChoiceController(model);
+  Scene * scene = params.getScene();
+  AbstractProxyProject * proxy = params.getProxyProject();
+  MapLayerChoiceController* controller = new MapLayerChoiceController(scene, proxy, model);
   MapLayerChoiceOutside* view = new MapLayerChoiceOutside(controller);
   controller->setView(view);
 

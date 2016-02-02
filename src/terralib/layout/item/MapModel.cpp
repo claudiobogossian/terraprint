@@ -50,6 +50,7 @@ te::layout::MapModel::MapModel()
   double width = 120.;
   double height = 120.;
   std::vector<std::string>  vString;
+  std::string unit = "Millimeter";
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -66,7 +67,7 @@ te::layout::MapModel::MapModel()
   }
 
   {
-    std::string value = "Settings";
+    std::string value = TR_LAYOUT("Settings");
     Property property(0);
     property.setName("mapSettings");
     property.setLabel(TR_LAYOUT("Map Settings"));
@@ -120,6 +121,26 @@ te::layout::MapModel::MapModel()
     property.setValue(scale, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
+
+  {
+    Property property;
+    property.setName("size_unit");
+    property.setLabel(TR_LAYOUT("Size Unit"));
+    property.setValue(unit, dataType->getDataTypeStringList());
+    //property.setEditable(false);
+    //property.setVisible(false);
+    Variant v;
+    v.setValue(std::string("Millimeter"), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    v.setValue(std::string("Centimeter"), dataType->getDataTypeString());
+    property.addOption(v);
+
+    property.setSerializable(false);
+    m_properties.addProperty(property);
+  }
+
 
 //updating properties
   {

@@ -248,11 +248,7 @@ void te::layout::ToolbarController::onComboZoomActivated()
   }
 
   QString textCopy = text;
-  std::string cText = textCopy.toStdString();
-
   textCopy.replace(QString("%"), QString(""));
-
-  std::string cText2 = textCopy.toStdString();
 
   bool converted = false;
   int newZoom = textCopy.toInt(&converted);

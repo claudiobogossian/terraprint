@@ -42,6 +42,7 @@
 #include <QList>
 #include <QPainter>
 #include <QFont>
+#include <QString>
 
 class QGraphicsItem;
 class QGraphicsScene;
@@ -233,6 +234,10 @@ namespace te
 
         static QPainterPath lineToQPath(const te::gm::LineString& line);
 
+        static std::string convert2StdString(const QString& qString);
+        
+        static QString convert2QString(const std::string& stdString);
+        
       protected:
 
         /*!

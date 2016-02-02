@@ -81,7 +81,7 @@ te::layout::ScaleModel::ScaleModel()
   }
 
   {
-    std::string value = "Settings";
+    std::string value = TR_LAYOUT("Settings");
     Property property(0);
     property.setName("scaleSettings");
     property.setLabel(TR_LAYOUT("Scale Settings"));

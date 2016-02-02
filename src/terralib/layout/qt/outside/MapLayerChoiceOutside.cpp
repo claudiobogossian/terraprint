@@ -32,7 +32,9 @@
 #include "../../core/property/GenericVariant.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/ItemUtils.h"
 #include "ui_MapLayerChoice.h"
+#include "../../outside/MapLayerChoiceController.h"
 
 // STL
 #include <algorithm>
@@ -55,8 +57,15 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   QGridLayout* displayLayout = new QGridLayout(m_ui->m_widget);
   displayLayout->addWidget(m_widget.get());
 
-  m_widget->setLeftLabel(tr("Available Layers").toStdString());
-  m_widget->setRightLabel(tr("Selected Layers").toStdString());
+  QString qLeftLabel = tr("Available Layer");
+  std::string leftLabel = ItemUtils::convert2StdString(qLeftLabel);
+
+  QString qRightLabel = tr("Selected Layer");
+  std::string rightLabel = ItemUtils::convert2StdString(qRightLabel);
+
+  m_widget->setLeftLabel(leftLabel);
+  m_widget->setRightLabel(rightLabel);
+
 
 }
 
@@ -66,6 +75,7 @@ te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
 
 void te::layout::MapLayerChoiceOutside::init()
 {
+
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
   if(!model)
@@ -77,10 +87,10 @@ void te::layout::MapLayerChoiceOutside::init()
   std::vector <std::string> namesToOutput;
 
   // Layers From Map Items
-  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+  std::list<te::map::AbstractLayerPtr> selectedLayers = getSelectedLayers();//model->getSelectedLayers();
   
   // All Layers from Project
-  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+  std::list<te::map::AbstractLayerPtr> layers = getLayers();//model->getLayers();
 
   for (std::list<te::map::AbstractLayerPtr>::iterator it = selectedLayers.begin(); it != selectedLayers.end(); ++it)
   {
@@ -96,21 +106,22 @@ void te::layout::MapLayerChoiceOutside::init()
   
   m_widget->setInputValues(namesToInput);
   m_widget->setOutputValues(namesToOutput);
+
 }
 
-void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
+te::layout::Property te::layout::MapLayerChoiceOutside::getSavedLayers()
 {
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
   if(!model)
   {
-    return;
+    //return;
   }
   
   m_layersOnTheRight = m_widget->getOutputValues();
 
 
-  std::list<te::map::AbstractLayerPtr> layerListMap = model->getLayers();
+  std::list<te::map::AbstractLayerPtr> layerListMap = getLayers();//model->getLayers();
 
   std::vector<std::string>::iterator itString = m_layersOnTheRight.begin();
   for ( ; itString != m_layersOnTheRight.end() ; ++itString)
@@ -135,29 +146,27 @@ void te::layout::MapLayerChoiceOutside::onOkPushButtonClicked()
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   // Layers From Map Items
-  std::list<te::map::AbstractLayerPtr> selectedLayers = model->getSelectedLayers();
+  std::list<te::map::AbstractLayerPtr> selectedLayers = getSelectedLayers();//model->getSelectedLayers();
 
   if (selectedLayers == m_layersSelected)
   {
     m_layersSelected.clear();
-    //accept();
-    return;
+    //return;
   }
 
-  Property prop;
-  prop.setName("layers");
+  Property prop = getProperty("layers");
   prop.setValue(m_layersSelected, dataType->getDataTypeLayerList());
 
   m_layersSelected.clear();
 
-  emit updateProperty(prop);
+  return prop;
 
-  //accept();
+  //emit updateProperty(prop);
 }
 
 void te::layout::MapLayerChoiceOutside::onCancelPushButtonClicked()
 {
-  //reject();
+ 
 }
 
 void te::layout::MapLayerChoiceOutside::setPosition( const double& x, const double& y )
@@ -192,7 +201,7 @@ std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTi
 
   // All Layers from Project
 
-  std::list<te::map::AbstractLayerPtr> layers = model->getLayers();
+  std::list<te::map::AbstractLayerPtr> layers = getLayers();//model->getLayers();
 
   for (std::list<te::map::AbstractLayerPtr>::iterator it = layers.begin(); it != layers.end(); ++it)
   {
@@ -207,3 +216,34 @@ std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTi
   return namesToInput;
 }
 
+std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getLayers(){
+
+  std::list<te::map::AbstractLayerPtr> currentLayers;
+  MapLayerChoiceController* controllerlayers = dynamic_cast<MapLayerChoiceController*>(m_controller);
+  if (!controllerlayers)
+    currentLayers;
+
+  return   controllerlayers->getlistLayers();;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getSelectedLayers(){
+
+  std::list<te::map::AbstractLayerPtr> currentLayers;
+  MapLayerChoiceController* controllerlayers = dynamic_cast<MapLayerChoiceController*>(m_controller);
+  if (!controllerlayers)
+    currentLayers;
+
+  return   controllerlayers->getSelectedlayers();
+}
+
+te::layout::Property te::layout::MapLayerChoiceOutside::getProperty(std::string name)
+{
+
+  std::list<te::map::AbstractLayerPtr> currentLayers;
+  MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
+  if (!controller)
+    currentLayers;
+
+  return   controller->getProperty(name);
+
+}

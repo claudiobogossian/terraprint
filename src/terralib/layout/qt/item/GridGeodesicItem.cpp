@@ -259,7 +259,10 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
     return;
   }
 
-  QFont ft(txtFont.getFamily().c_str(), txtFont.getPointSize());
+  std::string fontName = txtFont.getFamily();
+  QString qFontName = ItemUtils::convert2QString(fontName);
+
+  QFont ft(qFontName, txtFont.getPointSize());
 
   double y1 = initVerticalLines(geoBox);
   double y2 = geoBox.getUpperRightY();
@@ -312,8 +315,9 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
     m_horizontalLines.push_back(te::gm::LineString(*lineString));
 
     std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
-    QString qText = QString::fromLatin1(text.c_str());
 
+    QString qText = ItemUtils::convert2QString(text);
+    
     QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
 
     QRectF rectF(textObject.boundingRect());
@@ -385,7 +389,10 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     return;
   }
 
-  QFont ft(txtFont.getFamily().c_str(), txtFont.getPointSize());
+  std::string fontName = txtFont.getFamily();
+  QString qFontName = ItemUtils::convert2QString(fontName);
+
+  QFont ft(qFontName, txtFont.getPointSize());
 
   //as the geographic grid comes from the result of a reprojection, the geographic box sometimes can be smaller than the planar box, maninly when the distance from equator gets higher.
   //when this happens, these calculated lines do not reach the boundaries of the item, and consequently the texts are not drawn in the correct position
@@ -440,7 +447,8 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     m_verticalLines.push_back(te::gm::LineString(*lineString));
 
     std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
-    QString qText = QString::fromLatin1(text.c_str());
+
+    QString qText = ItemUtils::convert2QString(text);
 
     QPainterPath textObject = ItemUtils::textToVector(qText, ft, QPointF(), 0);
     QRectF rectF(textObject.boundingRect());
