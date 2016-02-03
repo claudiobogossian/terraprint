@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::MapSettingsOutsideFactory::build(Ou
   MapSettingsModel* model = new MapSettingsModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  MapSettingsOutside* view = new MapSettingsOutside(controller);
+  MapSettingsOutside* view = new MapSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

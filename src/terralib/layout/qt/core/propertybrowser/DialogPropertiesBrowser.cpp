@@ -917,7 +917,7 @@ QWidget* te::layout::DialogPropertiesBrowser::createOutside( EnumType* enumType 
   }
   
   BuildGraphicsOutside build;
-  widget = build.createOuside(enumType, m_scene, m_proxyProject);
+  widget = build.createOutside(enumType, m_scene, (QWidget*) this->parent(), m_proxyProject);
   return widget;
 }
 

@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::GridSettingsOutsideFactory::build(O
   GridSettingsModel* model = new GridSettingsModel();
 
   GridSettingsController* controller = new GridSettingsController(model);
-  GridSettingsOutside* view = new GridSettingsOutside(controller);
+  GridSettingsOutside* view = new GridSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

@@ -62,7 +62,7 @@ namespace te
 
       public:
 
-        ColorDialogOutside(AbstractOutsideController* controller);
+        ColorDialogOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~ColorDialogOutside();
 

@@ -44,16 +44,13 @@
 #include <QComboBox>
 
 
-te::layout::NorthSettingsOutside::NorthSettingsOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::NorthSettingsOutside::NorthSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::NorthSettings)
 {
   m_ui->setupUi(this);
 
-  setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
-  
   init();
 }
 

@@ -43,8 +43,8 @@
 #include <QMessageBox>
 #include <QString>
 
-te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
     AbstractOutsideView(controller),
     m_ui(new Ui::MapLayerChoice)
 {
@@ -56,14 +56,8 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   QGridLayout* displayLayout = new QGridLayout(m_ui->m_widget);
   displayLayout->addWidget(m_widget.get());
 
-  QString qLeftLabel = tr("Available Layer");
-  std::string leftLabel = ItemUtils::convert2StdString(qLeftLabel);
-
-  QString qRightLabel = tr("Selected Layer");
-  std::string rightLabel = ItemUtils::convert2StdString(qRightLabel);
-
-  m_widget->setLeftLabel(leftLabel);
-  m_widget->setRightLabel(rightLabel);
+  m_widget->setLeftLabel(tr("Available Layer"));
+  m_widget->setRightLabel(tr("Selected Layer"));
 
   connect(m_ui->m_okPushButton, SIGNAL(clicked()), this, SLOT(onOkPushButtonClicked()));
   connect(m_ui->m_cancelPushButton, SIGNAL(clicked()), this, SLOT(onCancelPushButtonClicked()));

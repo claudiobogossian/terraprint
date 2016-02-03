@@ -55,7 +55,7 @@ namespace te
 
       public:
 
-        MapLayerChoiceOutside(AbstractOutsideController* controller);
+        MapLayerChoiceOutside(AbstractOutsideController* controller, QWidget* parent);
 
         ~MapLayerChoiceOutside();
 

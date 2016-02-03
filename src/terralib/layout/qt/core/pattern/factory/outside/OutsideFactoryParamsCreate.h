@@ -35,6 +35,8 @@
 // STL
 #include <string>
 
+class QWidget;
+
 namespace te
 {
   namespace layout
@@ -65,7 +67,7 @@ namespace te
         \param
         \param
         */
-        OutsideFactoryParamsCreate(Scene* scene, AbstractProxyProject* proxyProject);
+        OutsideFactoryParamsCreate(Scene* scene, AbstractProxyProject* proxyProject, QWidget* parent);
 
         /*!
           \brief Destructor
@@ -80,10 +82,13 @@ namespace te
 
         AbstractProxyProject* getProxyProject();
 
+        QWidget* getParent();
+
       private:
 
         Scene* m_scene;
         AbstractProxyProject* m_proxyProject;
+        QWidget* m_parent;
     };
   }
 }

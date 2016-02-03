@@ -57,7 +57,7 @@ namespace te
 
       public:
 
-        ScaleSettingsOutside(AbstractOutsideController* controller);
+        ScaleSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~ScaleSettingsOutside();
 

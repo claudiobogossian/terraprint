@@ -33,8 +33,8 @@
 #include <string>
 #include <sstream> 
 
-te::layout::EditTemplateOutside::EditTemplateOutside(AbstractOutsideController* controller) :
-  QWidget(0),
+te::layout::EditTemplateOutside::EditTemplateOutside(AbstractOutsideController* controller, QWidget* parent) :
+  QWidget(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::EditTemplate)
 {

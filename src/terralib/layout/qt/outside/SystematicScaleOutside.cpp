@@ -43,16 +43,12 @@
 #include <QMessageBox>
 #include <QObjectList>
 
-te::layout::SystematicScaleOutside::SystematicScaleOutside(AbstractOutsideController* controller) :
-  QDialog(0),
+te::layout::SystematicScaleOutside::SystematicScaleOutside(AbstractOutsideController* controller, QWidget* parent) :
+  QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::SystematicScale)
 {
   m_ui->setupUi(this);
-
-  setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint 
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint );
-
 }
 
 te::layout::SystematicScaleOutside::~SystematicScaleOutside()

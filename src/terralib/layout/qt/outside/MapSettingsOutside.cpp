@@ -34,15 +34,12 @@
 #include <QString>
 #include <QFileDialog>
 
-te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::MapSettings)
 {
   m_ui->setupUi(this);
-
-  setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
   
   init();
 }
