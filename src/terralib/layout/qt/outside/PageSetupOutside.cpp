@@ -148,6 +148,9 @@ void te::layout::PageSetupOutside::configurePageSize()
   index = m_ui->cmbPageSize->findData("ISO A5 - 148 x 210 mm");
   m_ui->cmbPageSize->insertItem(index,"ISO A5 - 148 x 210 mm");
 
+  index = m_ui->cmbPageSize->findData("Custom");
+  m_ui->cmbPageSize->insertItem(index, "Custom");
+
   QString curItem;
   if (pConfig->getPaperType() == te::layout::A0)
     curItem = "ISO A0 - 841 x 1189 mm";
@@ -206,17 +209,49 @@ void te::layout::PageSetupOutside::on_cmbPageSize_currentIndexChanged( const QSt
     m_paperType = te::layout::A5;
   else
     m_paperType = te::layout::Custom; 
+  
+  bool custom = false;
+  if (m_paperType == te::layout::Custom)
+  {
+    custom = true;
+  }
+  m_ui->gbCustom->setEnabled(custom);
 }
 
 void te::layout::PageSetupOutside::on_pbApply_clicked()
 {
   PaperConfig* pConfig = m_scene->getPaperConfig();
+
+  if (m_paperType == te::layout::Custom)
+  {
+    if (m_ui->lneCustomWidth->text().compare("") == 0
+      || m_ui->lneCustomHeight->text().compare("") == 0)
+    {
+      return;
+    }
+  }
+
+  double customWidth = m_ui->lneCustomWidth->text().toDouble();
+  double customHeight = m_ui->lneCustomHeight->text().toDouble();
+
+  double currentPaperWidth = 0;
+  double currentPaperHeight = 0;
+
+  pConfig->getPaperSize(currentPaperWidth, currentPaperHeight);
   
   if(m_orientation != pConfig->getPaperOrientantion() 
-    || m_paperType != pConfig->getPaperType())
+    || m_paperType != pConfig->getPaperType()
+    || customWidth != currentPaperWidth
+    || customHeight != currentPaperHeight)
   {
     pConfig->setPaperType(m_paperType);
-    pConfig->setPaperOrientation(m_orientation);
+    pConfig->setPaperOrientation(m_orientation);    
+
+    if (m_paperType == te::layout::Custom)
+    {
+      pConfig->setPaperSizeCustom(customWidth, customHeight);
+    }
+
     emit changeConfig();
   }
 }
