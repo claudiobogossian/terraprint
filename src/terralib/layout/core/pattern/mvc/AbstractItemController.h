@@ -132,14 +132,14 @@ namespace te
         virtual void refresh();
 
         /*!
-          \brief Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+          \brief Sync properties related to the item position
         */
-        virtual void associateChange(const Property& property);
+        virtual bool syncItemPos(Properties& properties);
 
         /*!
-          \brief 
+          \brief Sync properties related to the item association
         */
-        virtual void updateItemPos(const Properties& properties);
+        virtual bool syncItemAssociation(Properties& properties);
         
         AbstractItemModel*    m_model; //!< The model of the view
         AbstractItemView*     m_view; //!< The view
