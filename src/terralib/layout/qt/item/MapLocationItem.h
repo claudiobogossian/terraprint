@@ -70,6 +70,8 @@ namespace te
         */ 
         virtual ~MapLocationItem();
 
+        void refresh();
+
     protected:
 
         virtual void drawMapOnDevice(QPaintDevice* device);

@@ -758,6 +758,9 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
   getView()->onChangeConfig();
 
+  te::layout::EnumType* groupType = Enums::getInstance().getEnumObjectType()->getItemGroup();
+  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+
   //we create the items
   std::map<std::string, te::layout::Properties> mapProperties;
   for (it = properties.begin(); it != properties.end(); ++it)
@@ -767,7 +770,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
     if(proper.getProperties().empty())
       continue;
 
-    if (proper.getTypeObj() == Enums::getInstance().getEnumObjectType()->getItemGroup())
+    if (proper.getTypeObj() == groupType || proper.getTypeObj() == mapCompositionType)
     {
       mapProperties[proper.getProperty("name").getValue().toString()] = proper;
       continue;
@@ -793,11 +796,13 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
       listItems.append(qItem);
     }
 
-    QGraphicsItemGroup* qItemGroup = createItemGroup(listItems);
+    const Properties& groupProperties = mapProperties[groupName];
+
+    QGraphicsItemGroup* qItemGroup = createItemGroup(listItems, groupProperties.getTypeObj());
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(qItemGroup);
     if (itemView != 0)
     {
-      itemView->getController()->setProperties(mapProperties[groupName]);
+      itemView->getController()->setProperties(groupProperties);
     }
 
     ++itGroups;

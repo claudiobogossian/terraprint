@@ -43,17 +43,26 @@ te::layout::MapLocationItem::~MapLocationItem()
 
 }
 
+void te::layout::MapLocationItem::refresh()
+{
+  te::layout::MapItem::doRefresh();
+  te::layout::MapItem::refresh();
+}
+
 void te::layout::MapLocationItem::drawMapOnDevice(QPaintDevice* device)
 {
   te::layout::MapItem::drawMapOnDevice(device);
 
-  const Property& pSrid = m_controller->getProperty("reference_srid");
-  const Property& pBox = m_controller->getProperty("reference_box");
+
+  const Property& pSrid = m_controller->getProperty("srid");
+  const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pReferenceSrid = m_controller->getProperty("reference_srid");
+  const Property& pReferenceBox = m_controller->getProperty("reference_box");
   const Property& pFillColor = m_controller->getProperty("reference_box_fill_color");
   const Property& pContourColor = m_controller->getProperty("reference_box_contour_color");
 
-  int referenceSrid = pSrid.getValue().toInt();
-  te::gm::Envelope referenceBox = pBox.getValue().toEnvelope();
+  int referenceSrid = pReferenceSrid.getValue().toInt();
+  te::gm::Envelope referenceBox = pReferenceBox.getValue().toEnvelope();
   const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
   const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
 
@@ -62,8 +71,8 @@ void te::layout::MapLocationItem::drawMapOnDevice(QPaintDevice* device)
     return;
   }
 
-  te::gm::Envelope envelope = m_mapDisplay->getExtent();
-  int srid = m_mapDisplay->getSRID();
+  te::gm::Envelope envelope = pWorldBox.getValue().toEnvelope();
+  int srid = pSrid.getValue().toInt();
 
   if (srid <= 0 || envelope.isValid() == false)
   {

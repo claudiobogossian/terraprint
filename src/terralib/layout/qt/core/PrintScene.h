@@ -45,6 +45,7 @@ namespace te
 {
   namespace layout
   {
+    class PaperConfig;
     /*!
     \brief Class responsible for printing the entire content or part of the scene. As the scene is upside down, it is necessary to invert the y of the painter before printing.
     
@@ -94,6 +95,8 @@ namespace te
         virtual void renderScene( QPainter* newPainter, QPrinter* printer );
 
         virtual ContextObject createNewContext(QPrinter* printer);
+
+        virtual te::layout::LayoutAbstractPaperType changePageSizeType(QPrinter* printer, PaperConfig* paperConfig);
 
         QGraphicsScene*           m_scene;
         te::layout::PrinterScene  m_printState;

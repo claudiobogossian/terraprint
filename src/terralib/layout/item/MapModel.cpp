@@ -121,6 +121,14 @@ te::layout::MapModel::MapModel()
     m_properties.addProperty(property);
   }
 
+  {
+    Property property(0);
+    property.setName("fixed_scale");
+    property.setLabel(TR_LAYOUT("Fixed Scale"));
+    property.setValue(fixedScale, dataType->getDataTypeBool());
+    m_properties.addProperty(property);
+  }
+
 //updating properties
   {
     Property property(0);
