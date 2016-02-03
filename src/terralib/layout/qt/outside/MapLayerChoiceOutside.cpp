@@ -71,6 +71,7 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
 
 te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
 {
+
 }
 
 void te::layout::MapLayerChoiceOutside::init()
@@ -148,12 +149,12 @@ te::layout::Property te::layout::MapLayerChoiceOutside::getSavedLayers()
   // Layers From Map Items
   std::list<te::map::AbstractLayerPtr> selectedLayers = getSelectedLayers();//model->getSelectedLayers();
 
-  if (selectedLayers == m_layersSelected)
+ /* if (selectedLayers == m_layersSelected)
   {
     m_layersSelected.clear();
     //return;
   }
-
+  */
   Property prop = getProperty("layers");
   prop.setValue(m_layersSelected, dataType->getDataTypeLayerList());
 
@@ -161,7 +162,6 @@ te::layout::Property te::layout::MapLayerChoiceOutside::getSavedLayers()
 
   return prop;
 
-  //emit updateProperty(prop);
 }
 
 void te::layout::MapLayerChoiceOutside::onCancelPushButtonClicked()

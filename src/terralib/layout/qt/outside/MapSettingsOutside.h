@@ -97,8 +97,10 @@ namespace te
         std::auto_ptr<MapLayerChoiceOutside> m_widget;
         void initDouble(QWidget* widget, std::string nameComponent);
         void initCombo(QWidget* widget, std::string nameComponent);
+        void initBool(QWidget* widget, std::string nameComponent);
         double mm2cm(double mmSize);
         double cm2mm(double cmSize);
+        std::string formatScaleValue(std::string inputValue);
         
     };
   }    

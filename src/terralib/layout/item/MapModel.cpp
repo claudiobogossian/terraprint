@@ -62,7 +62,7 @@ te::layout::MapModel::MapModel()
     property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setSerializable(false);
-    property.setMenu(true);
+    property.setMenu(false);
     m_properties.addProperty(property);
   }
 
@@ -128,7 +128,7 @@ te::layout::MapModel::MapModel()
     property.setLabel(TR_LAYOUT("Size Unit"));
     property.setValue(unit, dataType->getDataTypeStringList());
     //property.setEditable(false);
-    //property.setVisible(false);
+    property.setVisible(false);
     Variant v;
     v.setValue(std::string("Millimeter"), dataType->getDataTypeString());
     property.addOption(v);

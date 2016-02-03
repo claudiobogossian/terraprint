@@ -40,7 +40,7 @@
      <x>9</x>
      <y>9</y>
      <width>504</width>
-     <height>541</height>
+     <height>535</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout_3">
@@ -109,11 +109,11 @@
       <property name="flat">
        <bool>true</bool>
       </property>
-      <layout class="QGridLayout" name="gridLayout">
+      <layout class="QGridLayout" name="gridLayout_6">
        <item row="0" column="0">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout">
+        <layout class="QGridLayout" name="gridLayout_5">
+         <item row="0" column="0">
+          <layout class="QVBoxLayout" name="verticalLayout">
            <item>
             <widget class="QLabel" name="label_4">
              <property name="text">
@@ -122,6 +122,31 @@
             </widget>
            </item>
            <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Width:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Heigth:</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Scale:</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="1">
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="0">
             <widget class="QComboBox" name="cmbUnit">
              <item>
               <property name="text">
@@ -135,7 +160,7 @@
              </item>
             </widget>
            </item>
-           <item>
+           <item row="0" column="1">
             <spacer name="horizontalSpacer_4">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -148,25 +173,20 @@
              </property>
             </spacer>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QLabel" name="label">
-             <property name="text">
-              <string>Width:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
+           <item row="1" column="0" colspan="2">
             <widget class="QLineEdit" name="lneWidth">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="inputMask">
               <string/>
              </property>
             </widget>
            </item>
-           <item>
+           <item row="1" column="2">
             <spacer name="horizontalSpacer_5">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -179,25 +199,20 @@
              </property>
             </spacer>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <widget class="QLabel" name="label_2">
-             <property name="text">
-              <string>Heigth:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
+           <item row="2" column="0" colspan="2">
             <widget class="QLineEdit" name="lneHeight">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="inputMask">
               <string/>
              </property>
             </widget>
            </item>
-           <item>
+           <item row="2" column="2">
             <spacer name="horizontalSpacer_6">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -210,25 +225,14 @@
              </property>
             </spacer>
            </item>
-          </layout>
-         </item>
-         <item>
-          <layout class="QHBoxLayout" name="horizontalLayout_4">
-           <item>
-            <widget class="QLabel" name="label_3">
-             <property name="text">
-              <string>Scale:</string>
-             </property>
-            </widget>
-           </item>
-           <item>
+           <item row="3" column="0">
             <widget class="QComboBox" name="cmbScale">
              <property name="editable">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item>
+           <item row="3" column="1">
             <spacer name="horizontalSpacer_7">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -243,14 +247,14 @@
            </item>
           </layout>
          </item>
-         <item>
-          <widget class="QCheckBox" name="ckbFixedScale">
-           <property name="text">
-            <string>Fixed Scale</string>
-           </property>
-          </widget>
-         </item>
         </layout>
+       </item>
+       <item row="1" column="0">
+        <widget class="QCheckBox" name="ckbFixedScale">
+         <property name="text">
+          <string>Fixed Scale</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

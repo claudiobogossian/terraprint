@@ -40,14 +40,25 @@ te::layout::MapLayerChoiceController::MapLayerChoiceController(Scene * scene, Ab
 
 te::layout::MapLayerChoiceController::~MapLayerChoiceController()
 {
+  /*
+  if (m_scene != 0)
+  {
+    delete m_scene;
+    m_scene = 0;
+  }
 
+  if (m_proxy != 0)
+  {
+    delete m_proxy;
+    m_proxy = 0;
+  }
+  */
 }
 
 
 te::layout::Property te::layout::MapLayerChoiceController::getProperty(std::string name)
 {
   Property prop;
-
 
   QList<QGraphicsItem*> items = m_scene->selectedItems();
   if (items.isEmpty())
