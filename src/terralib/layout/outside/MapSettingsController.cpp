@@ -45,18 +45,7 @@ m_parent(parent)
 
 te::layout::MapSettingsController::~MapSettingsController()
 {
- /* if (m_scene != 0)
-  {
-    delete m_scene;
-    m_scene = 0;
-  }
 
-  if (m_proxy != 0)
-  {
-    delete m_proxy;
-    m_proxy = 0;
-  }
-  */
 }
 
 te::layout::Property te::layout::MapSettingsController::getProperty(std::string name)

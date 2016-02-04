@@ -972,7 +972,7 @@
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="32"/>
         <source>Map Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurações do Mapa</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="83"/>
@@ -992,37 +992,37 @@
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="120"/>
         <source>Unit:</source>
-        <translation type="unfinished">Unidade:</translation>
+        <translation>Unidade:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="153"/>
         <source>Centimeter</source>
-        <translation type="unfinished"></translation>
+        <translation>Centímetro</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="158"/>
         <source>Millimeter</source>
-        <translation type="unfinished"></translation>
+        <translation>Milímetro</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="127"/>
         <source>Width:</source>
-        <translation type="unfinished">Largura:</translation>
+        <translation>Largura:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="261"/>
         <source>Fixed Scale</source>
-        <translation type="unfinished"></translation>
+        <translation>Escala Fixa</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="134"/>
         <source>Heigth:</source>
-        <translation type="unfinished"></translation>
+        <translation>Altura:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="141"/>
         <source>Scale:</source>
-        <translation type="unfinished">Escala:</translation>
+        <translation>Escala:</translation>
     </message>
     <message>
         <source>DPI:</source>
@@ -1918,12 +1918,12 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="107"/>
         <source>Map Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurações do Mapa</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="107"/>
-        <source>Please set Width and Height.</source>
-        <translation type="unfinished"></translation>
+        <source>Set Width and Height.</source>
+        <translation>Configure Largura e Altura.</translation>
     </message>
 </context>
 <context>

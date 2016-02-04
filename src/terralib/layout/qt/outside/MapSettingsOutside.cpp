@@ -104,7 +104,7 @@ void te::layout::MapSettingsOutside::onOkPushButtonPressed()
     accept();
     return;
   }
-  QMessageBox::information(this, tr("Map Settings"), tr("Please set Width and Height."));
+  QMessageBox::information(this, tr("Map Settings"), tr("Set Width and Height."));
 }
 
 void te::layout::MapSettingsOutside::onCancelPushButtonPressed()
@@ -212,7 +212,19 @@ void te::layout::MapSettingsOutside::initCombo(QWidget* widget, std::string name
   QString value = variant.toString();
   variant.setValue(value);
 
-  index = combo->findData(variant, Qt::DisplayRole);
+
+
+  if (nameComponent == "size_unit"){
+
+    index = combo->findData(variant);
+  
+  }
+  else{
+
+    index = combo->findData(variant, Qt::DisplayRole);
+
+  }
+
   if (index == -1)
   {
     index = combo->findText(value);

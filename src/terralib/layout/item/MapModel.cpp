@@ -127,7 +127,6 @@ te::layout::MapModel::MapModel()
     property.setName("size_unit");
     property.setLabel(TR_LAYOUT("Size Unit"));
     property.setValue(unit, dataType->getDataTypeStringList());
-    //property.setEditable(false);
     property.setVisible(false);
     Variant v;
     v.setValue(std::string("Millimeter"), dataType->getDataTypeString());
@@ -136,6 +135,8 @@ te::layout::MapModel::MapModel()
 
     v.setValue(std::string("Centimeter"), dataType->getDataTypeString());
     property.addOption(v);
+
+    property.setVisible(false);
 
     property.setSerializable(false);
     m_properties.addProperty(property);
