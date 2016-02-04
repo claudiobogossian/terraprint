@@ -37,6 +37,8 @@
 #include <QString>
 #include <QFileDialog>
 
+#include <boost/lexical_cast.hpp>
+
 te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
   : QDialog(parent),
   AbstractOutsideView(controller),
@@ -300,7 +302,7 @@ void te::layout::MapSettingsOutside::loadScaleCombobox(){
     int currentScale = (int) prop.getValue().toDouble();
 
 
-    std::string stringValue =  formatScaleValue(std::to_string(currentScale));
+    std::string stringValue =  formatScaleValue(boost::lexical_cast<std::string>(currentScale));
     std::string concatString = TR_LAYOUT("Initial Scale (") + stringValue + ")";
     m_ui->cmbScale->addItem(concatString.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));
   
@@ -397,19 +399,19 @@ void te::layout::MapSettingsOutside::on_cmbUnit_currentIndexChanged(const QStrin
       if (selectedUnit == cm){
         
         double cmWidth = mm2cm(m_ui->lneWidth->text().toDouble());
-        m_ui->lneWidth->setText(ItemUtils::convert2QString(std::to_string(cmWidth)));
+        m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(cmWidth).c_str()));
 
         double cmHeight = mm2cm(m_ui->lneHeight->text().toDouble());
-        m_ui->lneHeight->setText(ItemUtils::convert2QString(std::to_string(cmHeight)));
+        m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(cmHeight).c_str()));
     }
       
       if (selectedUnit == mm){
 
-        double cmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
-        m_ui->lneWidth->setText(ItemUtils::convert2QString(std::to_string(cmWidth)));
+        double mmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
+        m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(mmWidth).c_str()));
 
-        double cmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
-        m_ui->lneHeight->setText(ItemUtils::convert2QString(std::to_string(cmHeight)));
+        double mmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
+        m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(mmHeight).c_str()));
 
     }
 
