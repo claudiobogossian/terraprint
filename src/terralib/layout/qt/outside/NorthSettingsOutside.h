@@ -57,7 +57,7 @@ namespace te
 
       public:
 
-        NorthSettingsOutside(AbstractOutsideController* controller);
+        NorthSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~NorthSettingsOutside();
 

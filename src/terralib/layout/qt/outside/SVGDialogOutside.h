@@ -54,8 +54,7 @@ namespace te
 
       public:
 
-        SVGDialogOutside(AbstractOutsideController* controller);
-
+        SVGDialogOutside(AbstractOutsideController* controller, QWidget* parent);
         ~SVGDialogOutside();
 
         /*!

@@ -53,8 +53,8 @@
 #include <QMessageBox>
 #include <QObjectList>
 
-te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* controller) :
-  QDialog(0),
+te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* controller, QWidget* parent) :
+  QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::GridSettings)
 {
@@ -70,9 +70,6 @@ te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* 
   }
 
   m_ui->setupUi(this);
-
-  setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint 
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint );
 
   init();
 }

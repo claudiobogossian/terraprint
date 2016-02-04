@@ -76,7 +76,7 @@ namespace te
 
     public:
 
-      ToolbarOutside(AbstractOutsideController* controller, Scene* scene);
+      ToolbarOutside(AbstractOutsideController* controller, Scene* scene, QWidget* parent);
 
       virtual ~ToolbarOutside();
       

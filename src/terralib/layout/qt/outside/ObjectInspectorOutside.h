@@ -66,7 +66,7 @@ namespace te
 
     public:
 
-      ObjectInspectorOutside(Scene* scene, AbstractOutsideController* controller);
+      ObjectInspectorOutside(Scene* scene, AbstractOutsideController* controller, QWidget* parent);
       
       virtual ~ObjectInspectorOutside();
             

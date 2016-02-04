@@ -49,7 +49,7 @@ namespace te
 
       public:
 
-        MapSettingsOutside(AbstractOutsideController* controller);
+        MapSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~MapSettingsOutside();
 

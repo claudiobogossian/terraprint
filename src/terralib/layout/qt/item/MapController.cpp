@@ -108,13 +108,38 @@ void te::layout::MapController::pan(double dx, double dy)
   this->setProperty(pWorldBoxPan);
 }
 
-void te::layout::MapController::addLayers(const std::list<te::map::AbstractLayerPtr>& layerList)
+void te::layout::MapController::addLayers(const std::list<te::map::AbstractLayerPtr>& newLayerList)
 {
+  const Property& pCurrentLayers = this->getProperty("layers");
+  std::list<te::map::AbstractLayerPtr> currentLayersList = pCurrentLayers.getValue().toLayerList();
+  std::list<te::map::AbstractLayerPtr>::const_iterator itNewList = newLayerList.begin();
+  while (itNewList != newLayerList.end())
+  {
+    bool add = true;
+    std::list<te::map::AbstractLayerPtr>::const_iterator itCurrentList = currentLayersList.begin();
+    while (itCurrentList != currentLayersList.end())
+    {
+      if (itNewList->get()->getId() == itCurrentList->get()->getId())
+      {
+        add = false;
+        break;
+      }
+
+      ++itCurrentList;
+    }
+    if (add == true)
+    {
+      currentLayersList.push_back(*itNewList);
+    }
+
+    ++itNewList;
+  }
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   
   Property property;
   property.setName("layers");
-  property.setValue(layerList, dataType->getDataTypeLayerList());
+  property.setValue(currentLayersList, dataType->getDataTypeLayerList());
 
   setProperty(property);
 }

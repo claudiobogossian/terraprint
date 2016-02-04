@@ -37,8 +37,8 @@
 #include <QString>
 #include <QFileDialog>
 
-te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::MapSettings),
   m_widget(0)
@@ -61,9 +61,6 @@ te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* co
   QGridLayout* layout = new QGridLayout(m_ui->m_widget_MapChoice);
   layout->addWidget(m_widget.get());
 
-  setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
-  
   init();
 }
 

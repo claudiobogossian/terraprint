@@ -36,7 +36,7 @@ te::layout::AbstractOutsideView* te::layout::ScaleSettingsOutsideFactory::build(
   Scene* scene = params.getScene();
 
   ScaleSettingsController* controller = new ScaleSettingsController(scene, model);
-  ScaleSettingsOutside* view = new ScaleSettingsOutside(controller);
+  ScaleSettingsOutside* view = new ScaleSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

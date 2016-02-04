@@ -46,7 +46,7 @@ namespace te
     {
     public:
 
-      MapSettingsController(Scene * scene, AbstractProxyProject * proxy,  AbstractOutsideModel* o);
+      MapSettingsController(Scene * scene, AbstractProxyProject * proxy, QWidget* parent, AbstractOutsideModel* o);
 
       virtual ~MapSettingsController();
       virtual Property getProperty(std::string name);
@@ -55,6 +55,7 @@ namespace te
     private:
       Scene * m_scene;
       AbstractProxyProject * m_proxy;
+      QWidget* m_parent;
     };
   }
 }

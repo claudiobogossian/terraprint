@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::NorthSettingsOutsideFactory::build(
     NorthSettingsModel* model = new NorthSettingsModel();
 
     NorthSettingsController* controller = new NorthSettingsController(params.getScene(), model);
-    NorthSettingsOutside* view = new NorthSettingsOutside(controller);
+    NorthSettingsOutside* view = new NorthSettingsOutside(controller, params.getParent());
     controller->setView(view);
 
     return view;

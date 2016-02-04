@@ -52,8 +52,8 @@
 #include <QUndoStack>
 #include <QLineEdit>
 
-te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller, Scene* scene) :
-  QToolBar(0),
+te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller, Scene* scene, QWidget* parent) :
+  QToolBar(parent),
   AbstractOutsideView(controller),
   m_comboZoom(0),
   m_actionMapDefault("map_default"),

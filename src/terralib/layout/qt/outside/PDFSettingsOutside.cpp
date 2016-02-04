@@ -34,16 +34,13 @@
 #include <QString>
 #include <QFileDialog>
 
-te::layout::PDFSettingsOutside::PDFSettingsOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::PDFSettingsOutside::PDFSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::PDFSettings)
 {
   m_ui->setupUi(this);
 
-  setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
-  
   init();
 }
 

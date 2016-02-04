@@ -32,6 +32,7 @@
 #include "BuildGraphicsOutside.h"
 #include "../outside/PDFSettingsOutside.h"
 #include "Scene.h"
+#include "PrintPreviewDialog.h"
 
 // STL
 #include <sstream>
@@ -41,7 +42,6 @@
 #include <QGraphicsItem>
 #include <QPrinter>
 #include <QPainter>
-#include <QPrintPreviewDialog>
 #include <QFileDialog>
 #include <QApplication>
 #include <QMessageBox>
@@ -62,18 +62,16 @@ void te::layout::PrintScene::printPreview()
   if(!m_scene)
     return;
 
-
   Scene* sc = dynamic_cast<Scene*>(m_scene);
   if (!sc)
     return;
 
   ContextObject oldContext = sc->getContext();
 
-
   QPrinter* printer = createPrinter();
   printer->setOutputFormat(QPrinter::NativeFormat);
 
-  QPrintPreviewDialog *preview = new QPrintPreviewDialog(printer);
+  PrintPreviewDialog *preview = new PrintPreviewDialog(printer, (QWidget*) sc->getView());
   connect(preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPaper(QPrinter*)));
 
   if(preview->exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
@@ -105,8 +103,8 @@ void te::layout::PrintScene::printPaper( QPrinter* printer )
   if(!printer)
     return;
 
-  //Impressão de parte da Cena
-  //Não é necessário mudar a escala do View
+  //Part print scene
+  //It's not necessary to change the scale of View
   QPainter newPainter(printer);
   newPainter.setRenderHint(QPainter::Antialiasing);
 
@@ -172,9 +170,13 @@ QPrinter* te::layout::PrintScene::createPrinter()
     sf.setWidth(h);
   }
 
-  printer->setPaperSize(sf, QPrinter::Millimeter);
   printer->pageRect(QPrinter::Millimeter);
 
+  if (changePageSizeType(printer, config) == te::layout::Custom)
+  {
+    printer->setPaperSize(sf, QPrinter::Millimeter);
+  }
+    
   return printer;
 }
 
@@ -271,7 +273,7 @@ bool te::layout::PrintScene::exportToPDF()
 
   BuildGraphicsOutside build;
   EnumObjectType* type = Enums::getInstance().getEnumObjectType();
-  QWidget* outside = build.createOuside(type->getPDFSettingsDialog(), sc);
+  QWidget* outside = build.createOutside(type->getPDFSettingsDialog(), sc, (QWidget*) sc->getView());
   PDFSettingsOutside* pdfSettings = dynamic_cast<PDFSettingsOutside*>(outside);
   pdfSettings->setCurrentDPI(m_currentPdfDpi);
     
@@ -370,4 +372,45 @@ te::layout::ContextObject te::layout::PrintScene::createNewContext( QPrinter* pr
   return context;
 }
 
+te::layout::LayoutAbstractPaperType te::layout::PrintScene::changePageSizeType(QPrinter* printer, PaperConfig* paperConfig)
+{
+  te::layout::LayoutAbstractPaperType type = te::layout::Custom;
+
+  if (paperConfig->getPaperType() == te::layout::A0)
+  {
+    printer->setPaperSize(QPrinter::A0);
+    type = te::layout::A0;
+  }
+  else if (paperConfig->getPaperType() == te::layout::A1)
+  {
+    printer->setPaperSize(QPrinter::A1);
+    type = te::layout::A1;
+  }
+  else if (paperConfig->getPaperType() == te::layout::A2)
+  {
+    printer->setPaperSize(QPrinter::A2);
+    type = te::layout::A2;
+  }
+  else if (paperConfig->getPaperType() == te::layout::A3)
+  {
+    printer->setPaperSize(QPrinter::A3);
+    type = te::layout::A3;
+  }
+  else if (paperConfig->getPaperType() == te::layout::A4)
+  {
+    printer->setPaperSize(QPrinter::A4);
+    type = te::layout::A4;
+  }
+  else if (paperConfig->getPaperType() == te::layout::A5)
+  {
+    printer->setPaperSize(QPrinter::A5);
+    type = te::layout::A5;
+  }
+  else 
+  {
+    printer->setPaperSize(QPrinter::Custom);
+  }
+
+  return type;
+}
 

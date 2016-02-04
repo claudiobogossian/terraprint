@@ -63,18 +63,6 @@ void te::layout::AbstractItemController::setProperty(const te::layout::Property&
   Properties props(m_model->getName(), m_model->getType());
   props.addProperty(property);
 
-  updateItemPos(props);
-
-  SharedProperties sharedPropertiesName;
-  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-  if (property.getName().compare(sharedPropertiesName.getItemObserver()) == 0)
-  {
-    if (!property.isNull())
-    {
-      associateChange(property);
-    }
-  }
-
   setProperties(props);
 }
 
@@ -85,31 +73,27 @@ const te::layout::Properties& te::layout::AbstractItemController::getProperties(
 
 void te::layout::AbstractItemController::setProperties(const te::layout::Properties& properties)
 {
-  updateItemPos(properties);
+  Properties propertiesCopy = properties;
 
-  SharedProperties sharedPropertiesName;
-  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-  Property propItemObserver = properties.getProperty(sharedPropertiesName.getItemObserver());
-  if (!propItemObserver.isNull())
-  {
-    associateChange(propItemObserver);
-  }
+  syncItemPos(propertiesCopy);
+
+  syncItemAssociation(propertiesCopy);
 
   bool hasGeometryChanged = false;
-  bool hasWidth = !properties.getProperty("width").isNull();
+  bool hasWidth = !propertiesCopy.getProperty("width").isNull();
   if (hasWidth)
   {
-    double newWidth = properties.getProperty("width").getValue().toDouble();
+    double newWidth = propertiesCopy.getProperty("width").getValue().toDouble();
     double currentWidth = m_model->getProperty("width").getValue().toDouble();
     if (newWidth != currentWidth)
     {
       hasGeometryChanged = true;
     }
   }
-  bool hasHeight = !properties.getProperty("height").isNull();
+  bool hasHeight = !propertiesCopy.getProperty("height").isNull();
   if (hasHeight)
   {
-    double newHeight = properties.getProperty("height").getValue().toDouble();
+    double newHeight = propertiesCopy.getProperty("height").getValue().toDouble();
     double currentHeight = m_model->getProperty("height").getValue().toDouble();
     if (newHeight != currentHeight)
     {
@@ -120,7 +104,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   {
     m_view->prepareGeometryChange();
   }
-  m_model->setProperties(properties);
+  m_model->setProperties(propertiesCopy);
   if (hasGeometryChanged)
   {
     m_view->updateChildren(); // update children size
@@ -237,11 +221,11 @@ void te::layout::AbstractItemController::refresh()
   // do nothing
 }
 
-void te::layout::AbstractItemController::updateItemPos(const Properties& properties)
+bool te::layout::AbstractItemController::syncItemPos(Properties& properties)
 {
   if (properties.getProperties().empty())
   {
-    return;
+    return false;
   }
 
   Property prop_x = properties.getProperty("x");
@@ -249,7 +233,7 @@ void te::layout::AbstractItemController::updateItemPos(const Properties& propert
 
   if (prop_x.isNull() && prop_y.isNull())
   {
-    return;
+    return false;
   }
 
   if (prop_x.isNull())
@@ -272,39 +256,58 @@ void te::layout::AbstractItemController::updateItemPos(const Properties& propert
     if (gItem->pos() != newPos)
     {
       m_view->setItemPosition(x, y);
+      return true;
     }
   }
+
+  return false;
 }
 
-void te::layout::AbstractItemController::associateChange(const Property& property)
+bool te::layout::AbstractItemController::syncItemAssociation(Properties& properties)
 {
-  if (property.isNull())
-    return;
-
-  AbstractScene* scene = m_view->getScene();
-  if (!scene)
-    return;
-
   SharedProperties sharedPropertiesName;
-
+  //we first check if there the property that associated two items is being set  
   // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-  Property existPropItemObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
-  if (!existPropItemObserver.isNull())
+  const Property& pNewObserver = properties.getProperty(sharedPropertiesName.getItemObserver());
+  const Property& pCurrentObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
+  if (pNewObserver.isNull() == true)
   {
-    AbstractItemView* existItem = scene->getItem(existPropItemObserver.getValue().toString());
-    if (existItem)
-    {
-      existItem->getController()->detach(this);
-    }
+    return false;
+  }
+  if (pCurrentObserver.isNull() == true)
+  {
+    return false;
   }
 
-  if (!property.isNull())
+  AbstractScene* scene = m_view->getScene();
+  if (scene == 0)
   {
-    AbstractItemView* item = scene->getItem(property.getValue().toString());
-    if (item)
-    {
-      item->getController()->attach(this);
-    }
-  }  
+    return false;
+  }
+
+  std::string strNewObserver = pNewObserver.getValue().toString();
+  std::string strCurrentObserver = pCurrentObserver.getValue().toString();
+  if (strNewObserver == strCurrentObserver)
+  {
+    return false;
+  }
+
+  //if this property is being set, we first remove the current association (if it exists)
+
+  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+  AbstractItemView* currentObserver = scene->getItem(strCurrentObserver);
+  if (currentObserver != 0)
+  {
+    currentObserver->getController()->detach(this);
+  }
+
+  //and then we make the new association (if there is a valid item)
+  AbstractItemView* newObserver = scene->getItem(strNewObserver);
+  if (newObserver != 0)
+  {
+    newObserver->getController()->attach(this);
+  }
+
+  return true;
 }
 

@@ -206,9 +206,6 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     te::gm::Envelope defaultPlanarBox(0, 0, 10000, 10000);
     if(newPlanarBox.equals(defaultPlanarBox) == false)
     {
-      double gapX = 0;
-      double gapY = 0;
-
       if (!newPlanarBox.isValid())
       {
         newPlanarBox = defaultPlanarBox;
@@ -219,64 +216,8 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
           properties.updateProperty(property);
         }
       }
-
-      double distance = newPlanarBox.getWidth();
-      double initialX = getInitialCoord(newPlanarBox.getLowerLeftX(), distance, gapX);
-      {
-        Property property(0);
-        property.setName(settingsConfig.getInitialGridPointX());
-        property.setValue(initialX, dataType->getDataTypeDouble());
-        properties.addProperty(property);
-      }
-
-      distance = newPlanarBox.getHeight();
-      double initialY = getInitialCoord(newPlanarBox.getLowerLeftY(), distance, gapY);
-      {
-        Property property(0);
-        property.setName(settingsConfig.getInitialGridPointY());
-        property.setValue(initialY, dataType->getDataTypeDouble());
-        properties.addProperty(property);
-      }
-      {
-        Property property(0);
-        property.setName(settingsConfig.getLneHrzGap());
-        property.setValue(gapX, dataType->getDataTypeDouble());
-        properties.addProperty(property);
-      }
-      {
-        Property property(0);
-        property.setName(settingsConfig.getLneVrtGap());
-        property.setValue(gapY, dataType->getDataTypeDouble());
-        properties.addProperty(property);
-      }
     }
 
     setProperties(properties);
   }
-}
-
-double te::layout::GridPlanarModel::getInitialCoord(double initialCoord, double distance, double& gap)
-{
-  if (distance <= 0)
-  {
-    gap = 0;
-    return 0;
-  }
-  unsigned const int size = 25;
-  int gaps[size] = { 1000, 1500, 2000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 50000, 100000, 125000, 150000, 175000, 200000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 1750000, 2000000 };
-  int numberOfIntervals = 5;
-  gap = (int)(distance / numberOfIntervals);
-  for (unsigned int i = 0; i < size; i++)
-  {
-    if (gap <= gaps[i])
-    {
-      if (i > 0)
-      {
-        gap = gaps[i - 1];
-      }
-      break;
-    }
-  }
-  int interval = (int)(initialCoord / gap);
-  return interval * gap;
 }

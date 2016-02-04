@@ -50,11 +50,11 @@ te::layout::BuildGraphicsOutside::~BuildGraphicsOutside()
  
 }
 
-QWidget* te::layout::BuildGraphicsOutside::createOuside( te::layout::EnumType* type, te::layout::Scene* scene, te::layout::AbstractProxyProject* proxyProject)
+QWidget* te::layout::BuildGraphicsOutside::createOutside( te::layout::EnumType* type, te::layout::Scene* scene, QWidget* parent, te::layout::AbstractProxyProject* proxyProject)
 {
   QWidget* widget = 0;
     
-  OutsideFactoryParamsCreate params(scene, proxyProject);
+  OutsideFactoryParamsCreate params(scene, proxyProject, parent);
 
   std::string name = type->getName();
 

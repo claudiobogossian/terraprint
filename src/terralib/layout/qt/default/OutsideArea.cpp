@@ -184,7 +184,7 @@ void te::layout::OutsideArea::createToolbar()
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getToolbar(), m_view->getScene());
+  QWidget* widget = buildOutside.createOutside(objectType->getToolbar(), m_view->getScene(), (QWidget*) m_view->parent());
   if(!widget)
   {
     return;

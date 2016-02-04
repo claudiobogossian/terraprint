@@ -35,8 +35,9 @@ te::layout::AbstractOutsideView* te::layout::MapSettingsOutsideFactory::build(Ou
 
   Scene * scene = params.getScene();
   AbstractProxyProject * proxy = params.getProxyProject();
-  MapSettingsController* controller = new MapSettingsController(scene, proxy, model);
-  MapSettingsOutside* view = new MapSettingsOutside(controller);
+  QWidget* parent = params.getParent();
+  MapSettingsController* controller = new MapSettingsController(scene, proxy, parent, model);
+  MapSettingsOutside* view = new MapSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
 

@@ -37,8 +37,8 @@
 // Qt
 #include <QGridLayout>
 
-te::layout::LegendChoiceOutside::LegendChoiceOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::LegendChoiceOutside::LegendChoiceOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::LegendChoice)
 {

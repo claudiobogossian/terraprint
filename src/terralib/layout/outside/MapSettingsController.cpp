@@ -34,10 +34,11 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../qt/item/MapItem.h"
 #include "../../layout/outside/MapLayerChoiceController.h"
 
-te::layout::MapSettingsController::MapSettingsController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o) :
+te::layout::MapSettingsController::MapSettingsController(Scene * scene, AbstractProxyProject * proxy, QWidget* parent, AbstractOutsideModel* o) :
 AbstractOutsideController(o),
 m_scene(scene),
-m_proxy(proxy)
+m_proxy(proxy),
+m_parent(parent)
 {
   
 }
@@ -83,7 +84,7 @@ te::layout::MapLayerChoiceOutside*  te::layout::MapSettingsController::getMapLay
 
   BuildGraphicsOutside build;
   
-  QWidget* widget = build.createOuside(enumObj->getMapLayerChoice(), m_scene, m_proxy);
+  QWidget* widget = build.createOutside(enumObj->getMapLayerChoice(), m_scene, m_parent, m_proxy);
   MapLayerChoiceOutside* controllerSettings = dynamic_cast<MapLayerChoiceOutside*>(widget);
 
   AbstractOutsideController* abstractControllerLayer = const_cast<AbstractOutsideController*>(controllerSettings->getController());
