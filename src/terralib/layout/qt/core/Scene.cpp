@@ -434,11 +434,15 @@ QGraphicsItemGroup* te::layout::Scene::createItemGroup(const QList<QGraphicsItem
   //The scene create a new group with important restriction
   BuildGraphicsItem build(this);
   
+  //we need to reorder the z values in order to make the group be correctly placed on the map
+  std::vector<int> vecZValues;
   double x = 0.;
   double y = 0.;
   for(int i = 0; i <  listUngroupedItems.size(); ++i)
   {
     QGraphicsItem* currentItem = listUngroupedItems[i];
+    vecZValues.push_back(currentItem->zValue());
+
     if(i == 0)
     {
       x = currentItem->pos().x();
@@ -462,11 +466,16 @@ QGraphicsItemGroup* te::layout::Scene::createItemGroup(const QList<QGraphicsItem
   QGraphicsItem* item = build.createItem(groupType, coord);
   ItemGroup* group = dynamic_cast<ItemGroup*>(item);
 
+  vecZValues.push_back(item->zValue());
+
   if(group)
-  {   
-    foreach(QGraphicsItem *item, listUngroupedItems)
+  {
+    item->setZValue(vecZValues[0]);
+
+    for (int i = 0; i < listUngroupedItems.size(); ++i)
     {
-      group->addToGroup(item);
+      listUngroupedItems[i]->setZValue(vecZValues[i+1]);
+      group->addToGroup(listUngroupedItems[i]);
     }
 
     QUndoCommand* command = new AddCommand(group);
@@ -485,9 +494,15 @@ void te::layout::Scene::destroyItemGroup( QGraphicsItemGroup *group )
   QList<QGraphicsItem*> listUngroupedItems;
   QList<QGraphicsItem*> childItems = group->childItems();
 
-  foreach(QGraphicsItem* childItem, childItems)
+  std::vector<int> vecZValues;
+  vecZValues.push_back(group->zValue());
+  for (int i = 0; i < childItems.size(); ++i)
   {
-    group->removeFromGroup(childItem);
+    vecZValues.push_back(childItems[i]->zValue());
+
+    childItems[i]->setZValue(vecZValues[i]);
+
+    group->removeFromGroup(childItems[i]);
   }
 
   std::vector<std::string> vecNames;

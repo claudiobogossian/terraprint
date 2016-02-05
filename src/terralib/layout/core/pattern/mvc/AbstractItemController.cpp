@@ -77,6 +77,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
 
   syncItemPos(propertiesCopy);
 
+  syncZValue(propertiesCopy);
+
   syncItemAssociation(propertiesCopy);
 
   bool hasGeometryChanged = false;
@@ -256,6 +258,35 @@ bool te::layout::AbstractItemController::syncItemPos(Properties& properties)
     if (gItem->pos() != newPos)
     {
       m_view->setItemPosition(x, y);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+bool te::layout::AbstractItemController::syncZValue(Properties& properties)
+{
+  if (properties.getProperties().empty())
+  {
+    return false;
+  }
+
+  Property pZValue = properties.getProperty("zValue");
+
+  if (pZValue.isNull() == true)
+  {
+    return false;
+  }
+
+  double zValue = (double)pZValue.getValue().toInt();
+  
+  QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_view);
+  if (gItem != 0)
+  {
+    if (gItem->zValue() != zValue)
+    {
+      gItem->setZValue(zValue);
       return true;
     }
   }
