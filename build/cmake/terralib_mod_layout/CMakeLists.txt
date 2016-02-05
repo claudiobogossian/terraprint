@@ -324,7 +324,8 @@ endif()
 file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
 file(COPY ${translated_files} DESTINATION "${terralib_DIR}/share/terralib/translations/")
 list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/qt_property_browser_pt_br.qm")
-list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/qt_pt.qm")
+list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/qt_pt_br.qm")
+list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/terralib_mod_qt_plugins_layout_pt_br.qm")
 
 install(
   FILES ${mo_input_dir}/telayout.mo
