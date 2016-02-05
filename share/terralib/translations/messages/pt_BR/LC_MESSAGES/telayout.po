@@ -1,20 +1,32 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-02-04 16:21-0200\n"
-"PO-Revision-Date: 2016-02-04 16:25-0200\n"
+"POT-Creation-Date: 2016-02-05 16:22-0200\n"
+"PO-Revision-Date: 2016-02-05 16:30-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.8.7\n"
 "X-Poedit-Basepath: ../../../../../../src/terralib/layout\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Poedit-KeywordsList: TR_LAYOUT\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: qt\n"
+
+#: core/enum/EnumNorthArrowType.cpp:49
+msgid "North Arrow 1"
+msgstr ""
+
+#: core/enum/EnumNorthArrowType.cpp:51
+msgid "North Arrow 2"
+msgstr ""
+
+#: core/enum/EnumNorthArrowType.cpp:53
+msgid "North Arrow 3"
+msgstr ""
 
 #: core/enum/EnumScaleType.cpp:67
 msgid "Alternating Scale Bar"
@@ -131,8 +143,8 @@ msgstr "Exibir Texto de Segundos"
 msgid "Seconds Text Precision"
 msgstr "Precisão dos segundos"
 
-#: item/GridMapModel.cpp:87 item/MapModel.cpp:70 item/ScaleModel.cpp:87
-#: item/TitleModel.cpp:79 item/TitleModel.cpp:80
+#: item/GridMapModel.cpp:87 item/MapModel.cpp:70 item/NorthModel.cpp:39
+#: item/ScaleModel.cpp:87 item/TitleModel.cpp:79 item/TitleModel.cpp:80
 msgid "Settings"
 msgstr "Configurações"
 
