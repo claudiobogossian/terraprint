@@ -53,7 +53,7 @@ namespace te
     
       public:
         
-        TextGridSettingsOutside(AbstractOutsideController* controller);
+        TextGridSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~TextGridSettingsOutside();
         

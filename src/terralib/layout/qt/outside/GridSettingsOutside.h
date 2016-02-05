@@ -64,7 +64,7 @@ namespace te
     
       public:
         
-        GridSettingsOutside(AbstractOutsideController* controller);
+        GridSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~GridSettingsOutside();
         

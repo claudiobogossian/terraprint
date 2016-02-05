@@ -45,8 +45,8 @@
 #include <QMessageBox>
 #include <QObjectList>
 
-te::layout::PageSetupOutside::PageSetupOutside(AbstractOutsideController* controller, Scene* scene) :
-  QDialog(0),
+te::layout::PageSetupOutside::PageSetupOutside(AbstractOutsideController* controller, Scene* scene, QWidget* parent) :
+  QDialog(parent),
   AbstractOutsideView(controller),
   m_orientation(te::layout::Portrait),
   m_paperType(te::layout::A4),
@@ -54,9 +54,6 @@ te::layout::PageSetupOutside::PageSetupOutside(AbstractOutsideController* contro
   m_scene(scene)
 {
   m_ui->setupUi(this);
-
-  setWindowFlags( Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint 
-  | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint );
 
   init();
 }

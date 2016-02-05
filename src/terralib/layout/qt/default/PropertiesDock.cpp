@@ -59,7 +59,7 @@ void te::layout::PropertiesDock::create(AbstractProxyProject* proxyProject, te::
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getPropertiesWindow(), scene, proxyProject);
+  QWidget* widget = buildOutside.createOutside(objectType->getPropertiesWindow(), scene, this, proxyProject);
   if(!widget)
   {
     return;

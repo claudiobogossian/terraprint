@@ -45,8 +45,8 @@
 #include <QPainter>
 #include <QIcon>
 
-te::layout::SVGDialogOutside::SVGDialogOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::SVGDialogOutside::SVGDialogOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
     AbstractOutsideView(controller),
     m_ui(new Ui::SVGView), 
     m_property(0)

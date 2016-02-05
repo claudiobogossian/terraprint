@@ -50,7 +50,7 @@ namespace te
     
       public:
         
-        EditTemplateOutside(AbstractOutsideController* controller);
+        EditTemplateOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~EditTemplateOutside();
         

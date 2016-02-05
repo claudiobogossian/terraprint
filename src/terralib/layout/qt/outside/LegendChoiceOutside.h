@@ -53,7 +53,7 @@ namespace te
 
       public:
 
-        LegendChoiceOutside(AbstractOutsideController* controller);
+        LegendChoiceOutside(AbstractOutsideController* controller, QWidget* parent);
 
         ~LegendChoiceOutside();
         

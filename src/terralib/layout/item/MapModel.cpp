@@ -50,6 +50,7 @@ te::layout::MapModel::MapModel()
   double width = 120.;
   double height = 120.;
   std::vector<std::string>  vString;
+  std::string unit = "Millimeter";
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -61,7 +62,7 @@ te::layout::MapModel::MapModel()
     property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setSerializable(false);
-    property.setMenu(true);
+    property.setMenu(false);
     m_properties.addProperty(property);
   }
 
@@ -120,6 +121,27 @@ te::layout::MapModel::MapModel()
     property.setValue(scale, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
+
+  {
+    Property property;
+    property.setName("size_unit");
+    property.setLabel(TR_LAYOUT("Size Unit"));
+    property.setValue(unit, dataType->getDataTypeStringList());
+    property.setVisible(false);
+    Variant v;
+    v.setValue(std::string("Millimeter"), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    v.setValue(std::string("Centimeter"), dataType->getDataTypeString());
+    property.addOption(v);
+
+    property.setVisible(false);
+
+    property.setSerializable(false);
+    m_properties.addProperty(property);
+  }
+
 
   {
     Property property(0);

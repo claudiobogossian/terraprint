@@ -53,7 +53,7 @@ namespace te
     
       public:
         
-        PageSetupOutside(AbstractOutsideController* controller, Scene* scene);
+        PageSetupOutside(AbstractOutsideController* controller, Scene* scene, QWidget* parent);
 
         virtual ~PageSetupOutside();
         

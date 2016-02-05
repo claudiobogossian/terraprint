@@ -57,7 +57,7 @@ namespace te
 
       public:
 
-        FontDialogOutside(AbstractOutsideController* controller);
+        FontDialogOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~FontDialogOutside();
         

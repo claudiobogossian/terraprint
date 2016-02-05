@@ -50,6 +50,17 @@ namespace te
 
       virtual Properties* getProperties() const;
 
+      virtual Property getProperty(std::string name);
+
+      virtual bool updateProperty(Property prop);
+
+      virtual void setPropertiesMaps(std::vector<te::layout::Properties> properties);
+
+
+    private:
+      std::vector<te::layout::Properties>   m_mapProperties;
+
+      
     };
   }
 }

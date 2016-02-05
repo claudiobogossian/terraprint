@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::TextGridSettingsOutsideFactory::bui
   TextGridSettingsModel* model = new TextGridSettingsModel();
 
   TextGridSettingsController* controller = new TextGridSettingsController(model);
-  TextGridSettingsOutside* view = new TextGridSettingsOutside(controller);
+  TextGridSettingsOutside* view = new TextGridSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;
