@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-02-01 10:45-0200\n"
-"PO-Revision-Date: 2016-02-01 10:46-0200\n"
+"POT-Creation-Date: 2016-02-04 16:21-0200\n"
+"PO-Revision-Date: 2016-02-04 16:25-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -15,6 +15,18 @@ msgstr ""
 "X-Poedit-KeywordsList: TR_LAYOUT\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: qt\n"
+
+#: core/enum/EnumScaleType.cpp:67
+msgid "Alternating Scale Bar"
+msgstr "Barra de escala alternada"
+
+#: core/enum/EnumScaleType.cpp:69
+msgid "Double Alternating Scale Bar"
+msgstr "Barra de escala dupla alternada"
+
+#: core/enum/EnumScaleType.cpp:71
+msgid "Hollow Scale Bar"
+msgstr "Barra de escala sem preenchimento"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:22
 msgid "Id"
@@ -119,7 +131,7 @@ msgstr "Exibir Texto de Segundos"
 msgid "Seconds Text Precision"
 msgstr "Precisão dos segundos"
 
-#: item/GridMapModel.cpp:87 item/MapModel.cpp:69 item/ScaleModel.cpp:87
+#: item/GridMapModel.cpp:87 item/MapModel.cpp:70 item/ScaleModel.cpp:87
 #: item/TitleModel.cpp:79 item/TitleModel.cpp:80
 msgid "Settings"
 msgstr "Configurações"
@@ -246,7 +258,7 @@ msgstr "Nome do Arquivo"
 msgid "Select the legend"
 msgstr "Selecione a legenda"
 
-#: item/LegendModel.cpp:95 item/MapModel.cpp:93
+#: item/LegendModel.cpp:95 item/MapModel.cpp:94
 msgid "URI"
 msgstr "URI"
 
@@ -315,31 +327,35 @@ msgstr "Cor de Preenchimento do Retângulo de Referência"
 msgid "Reference Envelope Contour Color"
 msgstr "Cor de Contorno do Retângulo de Referência"
 
-#: item/MapModel.cpp:61
+#: item/MapModel.cpp:62
 msgid "Select layers"
 msgstr "Selecionar planos"
 
-#: item/MapModel.cpp:72
+#: item/MapModel.cpp:73
 msgid "Map Settings"
 msgstr "Configurações do mapa"
 
-#: item/MapModel.cpp:82
+#: item/MapModel.cpp:83
 msgid "Layers"
 msgstr "Planos"
 
-#: item/MapModel.cpp:103 item/ThreeNorthModel.cpp:158
+#: item/MapModel.cpp:104 item/ThreeNorthModel.cpp:158
 msgid "World Box"
 msgstr "Retângulo do Mundo"
 
-#: item/MapModel.cpp:111 item/ThreeNorthModel.cpp:166
+#: item/MapModel.cpp:112 item/ThreeNorthModel.cpp:166
 msgid "SRID"
 msgstr "SRID"
 
-#: item/MapModel.cpp:119 item/ScaleModel.cpp:65
+#: item/MapModel.cpp:120 item/ScaleModel.cpp:65
 msgid "Scale"
 msgstr "Escala"
 
-#: item/MapModel.cpp:127
+#: item/MapModel.cpp:128
+msgid "Size Unit"
+msgstr ""
+
+#: item/MapModel.cpp:149
 msgid "Fixed Scale"
 msgstr "Escala Fixa"
 
