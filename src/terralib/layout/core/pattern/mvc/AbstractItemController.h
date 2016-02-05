@@ -137,6 +137,11 @@ namespace te
         virtual bool syncItemPos(Properties& properties);
 
         /*!
+        \brief Sync properties related to the Z value
+        */
+        virtual bool syncZValue(Properties& properties);
+
+        /*!
           \brief Sync properties related to the item association
         */
         virtual bool syncItemAssociation(Properties& properties);
