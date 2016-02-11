@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-02-05 16:22-0200\n"
-"PO-Revision-Date: 2016-02-05 16:30-0200\n"
+"POT-Creation-Date: 2016-02-05 18:01-0200\n"
+"PO-Revision-Date: 2016-02-05 18:01-0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -89,19 +89,19 @@ msgstr "Redimensionável"
 msgid "Keep Aspect on Resize"
 msgstr "Manter Relação de Aspecto"
 
-#: core/pattern/mvc/AbstractItemModel.cpp:129
+#: core/pattern/mvc/AbstractItemModel.cpp:130
 msgid "Rotation"
 msgstr "Rotação"
 
-#: core/pattern/mvc/AbstractItemModel.cpp:137
+#: core/pattern/mvc/AbstractItemModel.cpp:138
 msgid "Printable"
 msgstr "Imprimível"
 
-#: core/pattern/mvc/AbstractItemModel.cpp:146
+#: core/pattern/mvc/AbstractItemModel.cpp:147
 msgid "Order in which appears"
 msgstr "Ordem em que aparece"
 
-#: core/pattern/mvc/AbstractItemModel.cpp:163
+#: core/pattern/mvc/AbstractItemModel.cpp:164
 msgid "Editable"
 msgstr "Editável"
 
@@ -339,6 +339,10 @@ msgstr "Cor de Preenchimento do Retângulo de Referência"
 msgid "Reference Envelope Contour Color"
 msgstr "Cor de Contorno do Retângulo de Referência"
 
+#: item/MapModel.cpp:59
+msgid "Choice"
+msgstr "Escolha"
+
 #: item/MapModel.cpp:62
 msgid "Select layers"
 msgstr "Selecionar planos"
@@ -353,7 +357,7 @@ msgstr "Planos"
 
 #: item/MapModel.cpp:104 item/ThreeNorthModel.cpp:158
 msgid "World Box"
-msgstr "Retângulo do Mundo"
+msgstr "Retângulo envolvente"
 
 #: item/MapModel.cpp:112 item/ThreeNorthModel.cpp:166
 msgid "SRID"

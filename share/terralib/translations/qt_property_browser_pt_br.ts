@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>QtBoolEdit</name>
     <message>
@@ -306,7 +306,7 @@
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4586"/>
         <source>[(%1, %2), %3 x %4]</source>
-        <translation>Largura</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4742"/>
@@ -321,7 +321,7 @@
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4758"/>
         <source>Width</source>
-        <translation></translation>
+        <translation>Largura</translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4767"/>

@@ -1916,12 +1916,12 @@ nononon</source>
         <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="107"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="109"/>
         <source>Map Settings</source>
         <translation>Configurações do Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="107"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="109"/>
         <source>Set Width and Height.</source>
         <translation>Configure Largura e Altura.</translation>
     </message>
