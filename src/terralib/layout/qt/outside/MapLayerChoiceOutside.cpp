@@ -45,7 +45,7 @@
 #include <QString>
 
 te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller, QWidget* parent)
-  : QWidget(parent),
+  : QDialog(parent),
     AbstractOutsideView(controller),
     m_ui(new Ui::MapLayerChoice)
 {

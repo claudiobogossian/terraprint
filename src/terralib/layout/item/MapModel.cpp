@@ -62,6 +62,7 @@ te::layout::MapModel::MapModel()
     property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setSerializable(false);
+    property.setVisible(false);
     property.setMenu(false);
     m_properties.addProperty(property);
   }
