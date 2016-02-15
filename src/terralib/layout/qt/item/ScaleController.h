@@ -67,11 +67,15 @@ namespace te
 
         virtual void update(const Subject* subject);
 
-        virtual double getUnit(std::string& strUnit);
+        virtual double getCurrentUnit(std::string& strUnit);
 
-        virtual double getGap(double& initialGap);
+        virtual double getUnitValue(std::string strUnit);
+
+        virtual double getGap(double& initialGap, Font font, int numberOfBreaks = 0, double scaleWidthX = 0, std::string strUnit = "");
 
         virtual QPainterPath getLastText();
+
+        virtual QPainterPath getLastTextByBreaks(int numberOfBreaks, Font font, double scaleWidthX = 0, std::string strUnit = "");
 
         virtual void setProperty(const Property& property);
 
@@ -90,6 +94,10 @@ namespace te
         virtual Property calculateScaleUnit(const Properties& properties);
 
         virtual double strToUnit(std::string& strUnit);
+
+        virtual Properties checkByBreaks(const Properties& properties);
+
+        virtual double getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit = "");
     };
   }
 }

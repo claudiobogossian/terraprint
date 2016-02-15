@@ -46,11 +46,11 @@ void te::layout::EnumNorthArrowType::init()
 {
   m_noneType = createEnum("NoneScale", this, "None Scale");
 
-  m_northArrow1 = createEnum("North Arrow 1", this);
+  m_northArrow1 = createEnum(TR_LAYOUT("North Arrow 1"), this);
 
-  m_northArrow2 = createEnum("North Arrow 2", this);
+  m_northArrow2 = createEnum(TR_LAYOUT("North Arrow 2"), this);
 
-  m_northArrow3 = createEnum("North Arrow 3", this);
+  m_northArrow3 = createEnum(TR_LAYOUT("North Arrow 3"), this);
 
 }
 

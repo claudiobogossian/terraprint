@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::FontDialogOutsideFactory::build(Out
   FontDialogModel* model = new FontDialogModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  FontDialogOutside* view = new FontDialogOutside(controller);
+  FontDialogOutside* view = new FontDialogOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

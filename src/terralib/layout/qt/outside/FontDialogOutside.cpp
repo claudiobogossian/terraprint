@@ -28,8 +28,8 @@
 // TerraLib
 #include "FontDialogOutside.h"
 
-te::layout::FontDialogOutside::FontDialogOutside(AbstractOutsideController* controller) :
-  QFontDialog(0),
+te::layout::FontDialogOutside::FontDialogOutside(AbstractOutsideController* controller, QWidget* parent) :
+  QFontDialog(parent),
   AbstractOutsideView(controller)
 {
   

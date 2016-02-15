@@ -58,7 +58,7 @@ void te::layout::ObjectInspectorDock::create(te::layout::Scene* scene)
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getObjectInspectorWindow(), scene);
+  QWidget* widget = buildOutside.createOutside(objectType->getObjectInspectorWindow(), scene, this);
   if(!widget)
   {
     return;

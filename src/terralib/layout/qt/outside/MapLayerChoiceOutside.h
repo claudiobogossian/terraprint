@@ -55,7 +55,7 @@ namespace te
 
       public:
 
-        MapLayerChoiceOutside(AbstractOutsideController* controller);
+        MapLayerChoiceOutside(AbstractOutsideController* controller, QWidget* parent);
 
         ~MapLayerChoiceOutside();
 
@@ -67,22 +67,25 @@ namespace te
         virtual void setPosition( const double& x, const double& y );
 
         virtual te::gm::Coord2D getPosition();
+        
+        virtual Property getSavedLayers();
 
       signals:
 
         void updateProperty(Property prop);
 
         void updateProperties(std::vector<Property> props);
+
+
         
       protected slots:
 
-        void onOkPushButtonClicked();
-
-        void onCancelPushButtonClicked();
+       void onCancelPushButtonClicked();
 
       protected:
 
         std::vector<std::string> intersectionLayersTitle(std::vector<std::string> output);
+        virtual Property getProperty(std::string name);
 
       private:
 
@@ -92,6 +95,9 @@ namespace te
         std::vector<std::string> m_selectedProps; //!< Selected properties related to the selected Layer
         std::vector<std::string> m_layersOnTheRight; //!< Layers on the right in the DoubleList Widget
         std::list<te::map::AbstractLayerPtr> m_layersSelected; //!< Vector that will store selected layers (on the rigth DoubleList Widget)
+
+        virtual std::list<te::map::AbstractLayerPtr> getLayers();
+        virtual std::list<te::map::AbstractLayerPtr> getSelectedLayers();
     };
   }    
 }     

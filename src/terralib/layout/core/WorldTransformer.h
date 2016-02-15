@@ -27,6 +27,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_WORLDTRANSFORMER_H
 
 // TerraLib
+#include "terralib/geometry/Coord2D.h"
 #include "terralib/geometry/Envelope.h"
 
 namespace te
@@ -75,7 +76,7 @@ namespace te
           \param system1Box Box in System 1 Coordinate System.
           \param system2Box Box in System 2 Coordinate System.
         */
-        WorldTransformer(te::gm::Envelope system1Box, te::gm::Envelope system2Box);
+        WorldTransformer(const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box);
 
         /*! \brief Destructor */
         ~WorldTransformer();
@@ -94,7 +95,7 @@ namespace te
           \param system1Box Box in System 1 Coordinate System.
           \param system2Box Box in System 2 Coordinate System.
         */
-        void setTransformationParameters(te::gm::Envelope system1Box, te::gm::Envelope system2Box);
+        void setTransformationParameters(const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box);
 
         /*!
           \brief It transforms the coordinate wx and wy from world coordinates to
@@ -114,6 +115,14 @@ namespace te
           \param dy Y value in system 2 coordinates.
         */
         void system1Tosystem2(const double& wx, const double& wy, double& dx, double& dy) const;
+
+        /*!
+        \brief It transforms the coordinate wx and wy from world coordinates to other(system) coordinates (dx and dy).
+
+        \param c1 Coordinate in CS 1.
+        \return Coord CS2
+        */
+        te::gm::Coord2D system1Tosystem2(const te::gm::Coord2D& c1) const;
 
         /*!
           \brief It transforms the coordinate dx and dy from system 2 coordinates to
@@ -165,7 +174,7 @@ namespace te
 
       protected:
 
-        void initVariables(te::gm::Envelope system1Box, te::gm::Envelope system2Box);
+        void initVariables(const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box);
 
         //@}
 
@@ -228,7 +237,7 @@ namespace te
       setTransformationParameters(system1Box, system2Box);
     }
 
-    inline WorldTransformer::WorldTransformer( te::gm::Envelope system1Box, te::gm::Envelope system2Box )
+    inline WorldTransformer::WorldTransformer( const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box )
     {
       setTransformationParameters(system1Box, system2Box);
     }
@@ -238,7 +247,7 @@ namespace te
     }
     
     inline void WorldTransformer::setTransformationParameters( 
-                te::gm::Envelope system1Box, te::gm::Envelope system2Box )
+                const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box )
     {
       m_valid = true;
       if((!system1Box.isValid()) || (!system2Box.isValid()))
@@ -281,6 +290,17 @@ namespace te
       }
     }
 
+    inline te::gm::Coord2D WorldTransformer::system1Tosystem2(const te::gm::Coord2D& c1) const
+    {
+      double x2 = 0.;
+      double y2 = 0.;
+
+      system1Tosystem2(c1.getX(), c1.getY(), x2, y2);
+
+      te::gm::Coord2D c2(x2, y2);
+      return c2;
+    }
+
     inline void WorldTransformer::system2Tosystem1(double& dx, double& dy) const
     {
       double dyCopy = dy;
@@ -309,7 +329,7 @@ namespace te
     }
 
     inline void WorldTransformer::initVariables( 
-                te::gm::Envelope system1Box, te::gm::Envelope system2Box )
+                const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box )
     {
       m_scaleX = 0.;
       m_scaleY = 0.;

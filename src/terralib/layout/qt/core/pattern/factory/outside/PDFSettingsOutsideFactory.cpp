@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::PDFSettingsOutsideFactory::build(Ou
   PDFSettingsModel* model = new PDFSettingsModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  PDFSettingsOutside* view = new PDFSettingsOutside(controller);
+  PDFSettingsOutside* view = new PDFSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

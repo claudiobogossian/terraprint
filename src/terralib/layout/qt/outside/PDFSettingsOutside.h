@@ -48,7 +48,7 @@ namespace te
 
       public:
 
-        PDFSettingsOutside(AbstractOutsideController* controller);
+        PDFSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~PDFSettingsOutside();
 

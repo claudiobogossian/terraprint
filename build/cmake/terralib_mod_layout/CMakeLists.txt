@@ -271,6 +271,7 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ScaleSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/NorthSettingsOutside.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/PrintPreviewDialog.h
                                  )
 
   QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
@@ -312,9 +313,7 @@ set(mo_output_dir "${CMAKE_BINARY_DIR}/share/terralib/translations/messages/pt_B
 file( MAKE_DIRECTORY ${mo_output_dir})
 file(COPY ${mo_input_dir}/telayout.mo DESTINATION ${mo_output_dir})
 
-
-set(_qm_files "")
-
+file(GLOB _qm_files)
 if (QT4_FOUND)
   GenerateTranslationQt4("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files) 
 else()
@@ -322,7 +321,11 @@ else()
     GenerateTranslationQt5("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files) 
   endif()
 endif()
-
+file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
+file(COPY ${translated_files} DESTINATION "${terralib_DIR}/share/terralib/translations/")
+list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/qt_property_browser_pt_br.qm")
+list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/qt_pt_br.qm")
+list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/terralib_mod_qt_plugins_layout_pt_br.qm")
 
 install(
   FILES ${mo_input_dir}/telayout.mo

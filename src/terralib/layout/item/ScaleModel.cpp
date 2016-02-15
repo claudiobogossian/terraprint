@@ -50,6 +50,7 @@ te::layout::ScaleModel::ScaleModel()
   Font font;
   int scaleUnitGapX = 7;
   bool onlyFirstAndLastValue = false;
+  bool byBreaks = false;
   int numberOfBreaks = 1;
   te::color::RGBAColor fontColor(0, 0, 0, 255);
 
@@ -179,6 +180,14 @@ te::layout::ScaleModel::ScaleModel()
     property.setName("only_first_and_last_value");
     property.setLabel(TR_LAYOUT("Only the first and the last value"));
     property.setValue(onlyFirstAndLastValue, dataType->getDataTypeBool());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("by_breaks");
+    property.setLabel(TR_LAYOUT("By Breaks"));
+    property.setValue(byBreaks, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 

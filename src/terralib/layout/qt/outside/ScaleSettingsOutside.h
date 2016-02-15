@@ -57,7 +57,7 @@ namespace te
 
       public:
 
-        ScaleSettingsOutside(AbstractOutsideController* controller);
+        ScaleSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~ScaleSettingsOutside();
 
@@ -94,6 +94,8 @@ namespace te
         void on_txtScaleGapY_editingFinished();
 
         void on_txtNumberOfBreaks_editingFinished();
+
+        void on_chkByBreaks_clicked();
 
       protected:
 

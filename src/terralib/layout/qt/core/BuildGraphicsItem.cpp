@@ -119,6 +119,12 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
     m_scene->insertItem(item);
   }
 
+  if (m_props.getProperties().empty() == false)
+  { 
+    abstractItem->getController()->setProperties(m_props);
+  }
+  
+
   afterBuild(item, addUndo);
 
   return item;
@@ -211,7 +217,8 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
   std::string name = findName(m_props);
   if (name.empty())
   {
-    return ItemFactoryParamsCreate(strName, m_coord, m_props);
+    Properties pEmpty;
+    return ItemFactoryParamsCreate(strName, m_coord, pEmpty);
   }  
   return ItemFactoryParamsCreate(m_props);
 }

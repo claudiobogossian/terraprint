@@ -54,7 +54,7 @@ void te::layout::ScaleController::update(const Subject* subject)
   scaleItem->refreshScaleProperties();
 }
 
-double te::layout::ScaleController::getUnit(std::string& strUnit)
+double te::layout::ScaleController::getCurrentUnit(std::string& strUnit)
 {
   double unit = 1000.0;
   strUnit = "(" + getProperty("Unit").getOptionByCurrentChoice().toString() + ")";
@@ -66,7 +66,17 @@ double te::layout::ScaleController::getUnit(std::string& strUnit)
   return unit;
 }
 
-double te::layout::ScaleController::getGap(double& initialGap)
+double te::layout::ScaleController::getUnitValue(std::string strUnit)
+{
+  double unit = 1000.0;
+  if (strUnit == "(m)" || strUnit == "m")
+  {
+    unit = 1.0;
+  }
+  return unit;
+}
+
+double te::layout::ScaleController::getGap(double& initialGap, Font font, int numberOfBreaks, double scaleWidthX, std::string strUnit)
 {
   ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(this->getView());
   if (scaleItem == 0)
@@ -74,22 +84,36 @@ double te::layout::ScaleController::getGap(double& initialGap)
     return 0;
   }
 
-  const Property& pTextFont = getProperty("font");
-  Font txtFont = pTextFont.getValue().toFont();
-  QFont qFont = ItemUtils::convertToQfont(txtFont);
+  QFont qFont = ItemUtils::convertToQfont(font);
 
   std::string text = "0";
   QPainterPath firstTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
   initialGap = firstTextObject.boundingRect().width() / 2;
 
-  std::string strUnit;
-  double unit = getUnit(strUnit);
-  QPainterPath unitTextObject = ItemUtils::textToVector(strUnit.c_str(), qFont, QPointF(0, 0));
+  std::string strCurrentUnit;
+  double unit = getCurrentUnit(strCurrentUnit);
+
+  if (strUnit.compare("") != 0)
+  {
+    unit = getUnitValue(strUnit);
+    strCurrentUnit = strUnit;
+  }
+
+  QPainterPath unitTextObject = ItemUtils::textToVector(strCurrentUnit.c_str(), qFont, QPointF(0, 0));
 
   double unitGap = unitTextObject.boundingRect().width();
   double gap = unitGap + 2.5;
 
-  QPainterPath lastTextObject = getLastText();
+  QPainterPath lastTextObject;
+  if (numberOfBreaks > 0)
+  {
+    lastTextObject = getLastTextByBreaks(numberOfBreaks, font, scaleWidthX, strUnit);
+  }
+  else
+  {
+    lastTextObject  = getLastText();
+  }
+
   double finalGap = lastTextObject.boundingRect().width() / 2;
   gap = finalGap + unitGap + 2.5;
   return gap;
@@ -111,7 +135,7 @@ QPainterPath te::layout::ScaleController::getLastText()
   std::string text = "0";
 
   std::string strUnit;
-  double unit = getUnit(strUnit);
+  double unit = getCurrentUnit(strUnit);
   QPainterPath unitTextObject = ItemUtils::textToVector(strUnit.c_str(), qFont, QPointF(0, 0));
   double unitGap = unitTextObject.boundingRect().width();
 
@@ -138,8 +162,65 @@ QPainterPath te::layout::ScaleController::getLastText()
       value += (spacing * mmToCm) / unit;
 
     std::stringstream ss_value;
+    ss_value.precision(15);
     ss_value << value;
 
+    text = ss_value.str();
+  }
+  lastTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
+  return lastTextObject;
+}
+
+QPainterPath te::layout::ScaleController::getLastTextByBreaks(int numberOfBreaks, Font font, double scaleWidthX, std::string strUnit)
+{
+  QPainterPath lastTextObject;
+  ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(this->getView());
+  if (scaleItem == 0)
+  {
+    return lastTextObject;
+  }
+
+  QFont qFont = ItemUtils::convertToQfont(font);
+
+  std::string text = "0";
+
+  std::string strCurrentUnit;
+  double unit = getCurrentUnit(strCurrentUnit);
+
+  if (strUnit.compare("") != 0)
+  {
+    unit = getUnitValue(strUnit);
+    strCurrentUnit = strUnit;
+  }
+
+  QPainterPath unitTextObject = ItemUtils::textToVector(strCurrentUnit.c_str(), qFont, QPointF(0, 0));
+  double unitGap = unitTextObject.boundingRect().width();
+
+  const Property& pScale = getProperty("scale");
+
+  const Property& pScaleGapX = getProperty("scale_width_rect_gap");
+
+  double scale = pScale.getValue().toDouble();
+  double gapX = pScaleGapX.getValue().toDouble();
+
+  if (scaleWidthX != 0)
+  {
+    gapX = scaleWidthX;
+  }
+
+  //convert millimeters to centimeters
+  double mmToCm = gapX / 10.;
+  double spacing = scale / 100.;
+
+  double value = 0.;
+
+  for (int i = 0; i < numberOfBreaks; ++i)
+  {
+    value += (spacing * mmToCm) / unit;
+
+    std::stringstream ss_value;
+    ss_value.precision(15);
+    ss_value << value; 
     text = ss_value.str();
   }
   lastTextObject = ItemUtils::textToVector(text.c_str(), qFont, QPointF(0, 0));
@@ -170,6 +251,17 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
   if (!newProperty.isNull())
   {
     propertiesCopy.addProperty(newProperty);
+  }
+
+  Properties newProperties = checkByBreaks(propertiesCopy);
+  if (!newProperties.getProperties().empty())
+  {
+    std::vector<Property> props = newProperties.getProperties();
+    for (std::vector<Property>::iterator it = props.begin(); it != props.end(); ++it)
+    {
+      newProperty = (*it);
+      propertiesCopy.addProperty(newProperty);
+    }
   }
 
   //we finally set the properties into the model
@@ -235,7 +327,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInMM(const 
   int scaleInUnit = pScaleInUnit.getValue().toInt();
 
   std::string strUnit;
-  double unit = getUnit(strUnit);
+  double unit = getCurrentUnit(strUnit);
   double spacing = scale / 100.;
 
   double newGapX = (scaleInUnit * unit) / spacing;
@@ -268,7 +360,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   double gapX = pCurrentScaleWidth.getValue().toDouble();
 
   std::string strUnit;
-  double unit = getUnit(strUnit);
+  double unit = getCurrentUnit(strUnit);
   double spacing = scale / 100.;
   double mmToCm = gapX / 10.;
   
@@ -362,7 +454,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   std::string strUnit;
-  double unit = getUnit(strUnit);
+  double unit = getCurrentUnit(strUnit);
   double spacing = scale / 100.;
   double mmToCm = gapX / 10.;
 
@@ -378,5 +470,142 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
     change = true;
   }
   return change;
+}
+
+te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properties& properties)
+{
+  Properties props;
+  
+  const Property& pNewNumberOfBreaks = properties.getProperty("number_of_breaks");
+  const Property& pNumberOfBreaks = getProperty("number_of_breaks");
+  const Property& pNewByBreaks = properties.getProperty("by_breaks");
+  const Property& pByBreaks = getProperty("by_breaks");
+  const Property& pNewScaleWidth = properties.getProperty("scale_width_rect_gap");
+  const Property& pScaleWidth = getProperty("scale_width_rect_gap");
+  const Property& pNewScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
+  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
+  const Property& pNewTextFont = properties.getProperty("font");
+  const Property& pTextFont = getProperty("font");
+  const Property& pNewUnit = properties.getProperty("Unit");
+  const Property& pUnit = getProperty("Unit");
+  Property pCurrentWidth = getProperty("width");
+  Property pResizable = getProperty("resizable");
+
+  if (pNewNumberOfBreaks.isNull() && pNewByBreaks.isNull()
+      && pNewScaleWidth.isNull() && pNewScaleInUnit.isNull()
+      && pNewTextFont.isNull())
+  {
+    return props;
+  }
+
+  int numberOfBreaks = pNumberOfBreaks.getValue().toInt();
+  bool byBreaks = pByBreaks.getValue().toBool();
+  double currentWidth = pCurrentWidth.getValue().toDouble();
+  double scaleWidth = pScaleWidth.getValue().toDouble();;
+  int scaleInUnit = pScaleInUnit.getValue().toInt();
+  Font font = pTextFont.getValue().toFont();
+  std::string strUnit = pUnit.getValue().toString();
+
+  bool resizable = pResizable.getValue().toBool();
+  double width = 0;
+
+  if (!pNewNumberOfBreaks.isNull())
+  {
+    numberOfBreaks = pNewNumberOfBreaks.getValue().toInt();
+  }
+  if (!pNewByBreaks.isNull())
+  {
+    byBreaks = pNewByBreaks.getValue().toBool();
+  }
+  if (!pNewScaleWidth.isNull())
+  {
+    scaleWidth = pNewScaleWidth.getValue().toDouble();
+  }
+  if (!pNewScaleInUnit.isNull())
+  {
+    scaleInUnit = pNewScaleInUnit.getValue().toInt();
+  }
+  if (!pNewTextFont.isNull())
+  {
+    font = pNewTextFont.getValue().toFont();
+  }
+  if (!pNewUnit.isNull())
+  {
+    strUnit = pNewUnit.getValue().toString();
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  resizable = !byBreaks;
+  pResizable.setValue(resizable, dataType->getDataTypeBool());
+  props.addProperty(pResizable);
+
+  if (!byBreaks)
+  {
+    return props;
+  }
+  
+  strUnit = "(" + strUnit + ")";
+
+  width = getFullWidthByBreaks(numberOfBreaks, scaleWidth, scaleInUnit, font, strUnit);
+  if (width <= 0)
+  {
+    return props;
+  }
+
+  if (width != currentWidth)
+  {
+    pCurrentWidth.setValue(width, dataType->getDataTypeDouble());
+    props.addProperty(pCurrentWidth);
+  }
+
+  return props;
+}
+
+double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit)
+{
+  //if somehow the item is invalid, we do nothing
+  ScaleItem* view = dynamic_cast<ScaleItem*>(m_view);
+  if (view == 0)
+  {
+    return 0;
+  }
+
+  if (!view->scene())
+    return 0;
+
+  Scene* sc = dynamic_cast<Scene*>(view->scene());
+  ItemUtils utils = sc->getItemUtils();
+  
+  double value = 0.;
+  double width = 0;
+
+  double displacementBetweenScaleAndText = 2.;
+  std::stringstream ss_value;
+  ss_value.precision(15);
+
+  double initialGap = 0;
+  double gap = getGap(initialGap, font, numberOfBreaks, scaleGapX, strUnit);
+  width += initialGap;
+
+  for (int i = 0; i < numberOfBreaks; ++i)
+  {
+    ss_value << value;
+    const std::string& text = ss_value.str();
+    if (value == 0)
+    {
+      QRectF textRect = utils.getMinimumTextBoundary(font.getFamily(), font.getPointSize(), text);
+
+      double firstTextWidth = textRect.width();
+      width += displacementBetweenScaleAndText + textRect.width();
+    }
+
+    value += scaleUnitGapX;
+    width += scaleGapX;
+  }
+
+  width += gap;
+
+  return width;
 }
 

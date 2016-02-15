@@ -34,7 +34,7 @@
 te::layout::MapSettingsModel::MapSettingsModel() :
   AbstractOutsideModel()
 {
-  m_type = Enums::getInstance().getEnumObjectType()->getPageSetup();
+  m_type = Enums::getInstance().getEnumObjectType()->getMapSettingsDialog();
   m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
@@ -60,4 +60,28 @@ void te::layout::MapSettingsModel::updateProperties(te::layout::Properties* prop
 {
 
 }
+
+te::layout::Property te::layout::MapSettingsModel::getProperty(std::string name){
+  
+   Property  prop = m_properties->getProperty(name);
+
+   return prop;
+
+}
+
+bool te::layout::MapSettingsModel::updateProperty(Property prop)
+{
+  bool result = m_properties->updateProperty(prop);
+  
+  return result;
+}
+
+
+
+void te::layout::MapSettingsModel::setPropertiesMaps(std::vector<te::layout::Properties> properties)
+{
+  m_mapProperties = properties;
+
+}
+
 

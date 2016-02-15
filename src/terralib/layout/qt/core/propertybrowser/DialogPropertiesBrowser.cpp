@@ -702,12 +702,18 @@ void te::layout::DialogPropertiesBrowser::onShowMapSettingsDlg()
 
   AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(mapSettings->getController());
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
+
   MapSettingsModel* model = dynamic_cast<MapSettingsModel*>(abstractModel);
   if (!model)
   {
     return;
   }
-  
+
+  std::vector<te::layout::Properties> properties;
+  properties.push_back(m_allProperties);
+  model->setPropertiesMaps(properties);
+
+  mapSettings->load();
   mapSettings->show(); // modeless dialog
   mapSettings->raise(); // top of the parent widget's stack
 }
@@ -917,7 +923,7 @@ QWidget* te::layout::DialogPropertiesBrowser::createOutside( EnumType* enumType 
   }
   
   BuildGraphicsOutside build;
-  widget = build.createOuside(enumType, m_scene, m_proxyProject);
+  widget = build.createOutside(enumType, m_scene, (QWidget*) this->parent(), m_proxyProject);
   return widget;
 }
 

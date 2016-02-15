@@ -71,7 +71,7 @@ namespace te
       
           \return item value
         */
-        QWidget* createOuside(te::layout::EnumType* type, Scene* scene, AbstractProxyProject* proxyProject = 0);
+        QWidget* createOutside(te::layout::EnumType* type, Scene* scene, QWidget* parent, AbstractProxyProject* proxyProject = 0);
     };
   }
 }

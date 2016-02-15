@@ -42,16 +42,13 @@
 #include <QCheckBox> 
 #include <QFontDialog>
 
-te::layout::ScaleSettingsOutside::ScaleSettingsOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::ScaleSettingsOutside::ScaleSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::ScaleSettings)
 {
   m_ui->setupUi(this);
 
-  setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
-  
   init();
 }
 
@@ -72,10 +69,17 @@ void te::layout::ScaleSettingsOutside::load()
   initCombo(m_ui->cmbConnectedTo, sharedProps.getItemObserver());
   initCombo(m_ui->cmbType, "scale_type");
   initCombo(m_ui->cmbUnit, "Unit");
+  
   initBool(m_ui->chkOnlyFirstAndLastValue, "only_first_and_last_value");
+  initBool(m_ui->chkByBreaks, "by_breaks");
+
+  bool byBreaks = m_ui->chkByBreaks->isChecked();
+  m_ui->txtNumberOfBreaks->setEnabled(byBreaks);
+
   initDouble(m_ui->txtScale, "scale");
   initDouble(m_ui->txtScaleGapX, "scale_width_rect_gap");
   initDouble(m_ui->txtScaleGapY, "scale_height_rect_gap");
+
   initTextEdit(m_ui->txtFont, "font");
 
   initInt(m_ui->txtNumberOfBreaks, "number_of_breaks");
@@ -295,6 +299,24 @@ void te::layout::ScaleSettingsOutside::on_txtNumberOfBreaks_editingFinished()
 
     prop.setValue(variant);
     emit updateProperty(prop);
+  }
+}
+
+void te::layout::ScaleSettingsOutside::on_chkByBreaks_clicked()
+{
+  ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
+  if (controller)
+  {
+    bool byBreaks = m_ui->chkByBreaks->isChecked();
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+    variant.setValue(byBreaks, dataType->getDataTypeBool());
+    Property prop = controller->getScaleProperty("by_breaks");
+    prop.setValue(variant);
+    emit updateProperty(prop);
+
+    m_ui->txtNumberOfBreaks->setEnabled(byBreaks);
   }
 }
 

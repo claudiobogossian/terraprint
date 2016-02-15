@@ -85,7 +85,7 @@ void te::layout::EditTemplateDock::create()
     return;
   }
 
-  QWidget* widget = buildOutside.createOuside(objectType->getEditTemplate(), m_scene);
+  QWidget* widget = buildOutside.createOutside(objectType->getEditTemplate(), m_scene, this);
   if(!widget)
   {
     return;

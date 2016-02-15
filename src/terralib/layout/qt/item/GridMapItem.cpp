@@ -292,8 +292,8 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
       QString completeTxt = ItemUtils::convert2QString(txt);
 
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
       QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
@@ -376,8 +376,8 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
       QString completeTxt = ItemUtils::convert2QString(txt);
 
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
       QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
@@ -460,8 +460,8 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
       QString completeTxt = ItemUtils::convert2QString(txt);
 
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
       QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
@@ -540,8 +540,8 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
       QString completeTxt = ItemUtils::convert2QString(txt);
 
       QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = txt.size() / 2;
-      int indexNegative = (txt.size() - 1) / 2;
+      int index = (int) txt.size() / 2;
+      int indexNegative = (int) (txt.size() - 1) / 2;
 
       std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
       QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);

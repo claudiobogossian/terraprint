@@ -102,7 +102,7 @@ void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProj
     this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
 
   // Dialog properties
-  m_dialogPropertiesBrowser = new DialogPropertiesBrowser(scene, proxyProject);
+  m_dialogPropertiesBrowser = new DialogPropertiesBrowser(scene, proxyProject, this->parent());
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeDlgProperty(Property)));
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(std::vector<Property>)), this, SLOT(onChangeDlgProperty(std::vector<Property>)));
 

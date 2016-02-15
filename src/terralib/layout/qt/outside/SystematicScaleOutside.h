@@ -52,7 +52,7 @@ namespace te
     
       public:
         
-        SystematicScaleOutside(AbstractOutsideController* controller);
+        SystematicScaleOutside(AbstractOutsideController* controller, QWidget* parent);
 
         virtual ~SystematicScaleOutside();
         

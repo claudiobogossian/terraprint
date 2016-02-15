@@ -50,18 +50,20 @@ te::layout::MapModel::MapModel()
   double width = 120.;
   double height = 120.;
   std::vector<std::string>  vString;
+  std::string unit = "Millimeter";
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
 //adding properties
   {
-    std::string value = "Choice";
+    std::string value = TR_LAYOUT("Choice");
     Property property(0);
     property.setName("mapChoice");
     property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setSerializable(false);
-    property.setMenu(true);
+    property.setVisible(false);
+    property.setMenu(false);
     m_properties.addProperty(property);
   }
 
@@ -118,6 +120,35 @@ te::layout::MapModel::MapModel()
     property.setName("scale");
     property.setLabel(TR_LAYOUT("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("size_unit");
+    property.setLabel(TR_LAYOUT("Size Unit"));
+    property.setValue(unit, dataType->getDataTypeStringList());
+    property.setVisible(false);
+    Variant v;
+    v.setValue(std::string("Millimeter"), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    v.setValue(std::string("Centimeter"), dataType->getDataTypeString());
+    property.addOption(v);
+
+    property.setVisible(false);
+
+    property.setSerializable(false);
+    m_properties.addProperty(property);
+  }
+
+
+  {
+    Property property(0);
+    property.setName("fixed_scale");
+    property.setLabel(TR_LAYOUT("Fixed Scale"));
+    property.setValue(fixedScale, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 
