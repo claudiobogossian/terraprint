@@ -36,7 +36,7 @@ te::layout::NorthModel::NorthModel()
   : AbstractItemModel()
 {
   te::color::RGBAColor color(0, 0, 0, 255);
-  std::string name = "Settings";
+  std::string name = TR_LAYOUT("Settings");
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getNorthItem());
 

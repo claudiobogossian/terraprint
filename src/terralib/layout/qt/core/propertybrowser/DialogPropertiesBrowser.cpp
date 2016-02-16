@@ -713,39 +713,6 @@ void te::layout::DialogPropertiesBrowser::onShowMapSettingsDlg()
   properties.push_back(m_allProperties);
   model->setPropertiesMaps(properties);
 
-  QWidget* widgetLayerChoice = createOutside(enumObj->getMapLayerChoice());
-  if (!widget)
-  {
-    return;
-  }
-  
-  MapLayerChoiceOutside* layerChoice = dynamic_cast<MapLayerChoiceOutside*>(widgetLayerChoice);
-  if (!layerChoice)
-  {
-    return;
-  }
-
-  AbstractOutsideController* abstractControllerLayer = const_cast<AbstractOutsideController*>(layerChoice->getController());
-  AbstractOutsideModel* abstractModelLayer = const_cast<AbstractOutsideModel*>(abstractControllerLayer->getModel());
-  MapLayerChoiceModel* modelLayerChoice = dynamic_cast<MapLayerChoiceModel*>(abstractModelLayer);
-  if (!modelLayerChoice)
-  {
-    return;
-  }
-
-  if (!m_proxyProject)
-  {
-    return;
-  }
-
-  std::list<te::map::AbstractLayerPtr> listLayers = m_proxyProject->getAllLayers();
-  modelLayerChoice->setLayers(listLayers);
-
-  std::vector<te::layout::Properties> propertiesLayerChoice;
-  propertiesLayerChoice.push_back(m_allProperties);
-  modelLayerChoice->setPropertiesMaps(propertiesLayerChoice);
-  
-
   mapSettings->load();
   mapSettings->show(); // modeless dialog
   mapSettings->raise(); // top of the parent widget's stack

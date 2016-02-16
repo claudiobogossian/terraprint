@@ -74,8 +74,10 @@ void te::layout::AlignItems::bringToFront()
       {        
         if((item->zValue() >= zValue))
         {
-          maxZValue = item->zValue();
-          itemMaxZValue = item;     
+          if (maxZValue < item->zValue()){
+            maxZValue = item->zValue();
+            itemMaxZValue = item;
+          }
         }
       }
     }

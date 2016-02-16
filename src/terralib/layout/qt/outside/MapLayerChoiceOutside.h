@@ -49,7 +49,7 @@ namespace te
   {
     class AbstractOutsideController;
 
-    class TELAYOUTEXPORT MapLayerChoiceOutside : public QWidget, public AbstractOutsideView
+    class TELAYOUTEXPORT MapLayerChoiceOutside : public QDialog, public AbstractOutsideView
     {
       Q_OBJECT
 

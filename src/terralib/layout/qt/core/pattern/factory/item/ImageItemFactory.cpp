@@ -32,7 +32,7 @@
 
 te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  Properties props = params.getProperties(); 
 
   ImageModel* model = new ImageModel();
   if (props.getProperties().empty())
@@ -42,6 +42,9 @@ te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryPar
 
   AbstractItemController* controller = new ImageController(model);
   ImageItem* view = new ImageItem(controller);
+  double width = model->getProperty("width").getValue().toDouble();
+  double height = model->getProperty("height").getValue().toDouble();
+  view->setPos(params.getCoord().getX() - width / 2, params.getCoord().getY() - height / 2);
   controller->setView(view);
 
   if (!props.getProperties().empty())

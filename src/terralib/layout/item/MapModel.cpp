@@ -56,12 +56,13 @@ te::layout::MapModel::MapModel()
 
 //adding properties
   {
-    std::string value = "Choice";
+    std::string value = TR_LAYOUT("Choice");
     Property property(0);
     property.setName("mapChoice");
     property.setLabel(TR_LAYOUT("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setSerializable(false);
+    property.setVisible(false);
     property.setMenu(false);
     m_properties.addProperty(property);
   }
