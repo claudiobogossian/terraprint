@@ -29,6 +29,7 @@
 #include <QGraphicsTextItem>
 #include <QTextDocument>
 #include <QFontMetricsF>
+#include <QTextCursor>
 
 te::layout::TextController::TextController(AbstractItemModel* model)
   : AbstractItemController(model)
@@ -43,6 +44,7 @@ te::layout::TextController::~TextController()
 QSizeF te::layout::TextController::updateView()
 {
   TextItem* view = dynamic_cast<TextItem*>(m_view);
+
   if(view != 0)
   {
     //reads the properties
@@ -86,17 +88,37 @@ QSizeF te::layout::TextController::updateView()
     QTextOption txtOpt = view->document()->defaultTextOption();
     if(currentAligmentType == enumAligmentType.getAlignmentCenterType())
     {
+
       txtOpt.setAlignment(Qt::AlignCenter);
+      view->setTextWidth(-1);
+      view->setTextWidth(view->boundingRect().width());
+
     }
 
     if(currentAligmentType == enumAligmentType.getAlignmentLeftType())
     {
       txtOpt.setAlignment(Qt::AlignLeft);
+      view->setTextWidth(-1);
+      view->setTextWidth(view->boundingRect().width());
     }
 
     if(currentAligmentType == enumAligmentType.getAlignmentRightType())
     {
+
       txtOpt.setAlignment(Qt::AlignRight);
+      view->setTextWidth(-1);
+      view->setTextWidth(view->boundingRect().width());
+
+    }
+
+    if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+    {
+
+      txtOpt.setAlignment(Qt::AlignJustify);
+      view->setTextWidth(-1);
+      //setting width to broken text lines. Text width must be < than bounding rect width
+      view->setTextWidth(view->boundingRect().width() -  0.01);
+      
     }
 
     // We now synchronize the attributes of the view based on he attributes of the model
