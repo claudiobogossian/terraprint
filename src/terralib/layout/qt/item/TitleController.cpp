@@ -61,6 +61,11 @@ QSizeF te::layout::TitleController::updateView()
   const Property& pEvenRow = m_model->getProperty(propertyNames.getEvenRow());
   const Property& pTitle = m_model->getProperty(propertyNames.getTitle());
   const Property& pText = m_model->getProperty("text");
+  const Property& pAligment = m_model->getProperty("alignment");
+
+  EnumAlignmentType enumAligmentType;
+  const std::string& label = pAligment.getOptionByCurrentChoice().toString();
+  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
 
   const Font& font = pFont.getValue().toFont();
   const te::color::RGBAColor& verticalColor = pVerticalColor.getValue().toColor();
@@ -80,6 +85,7 @@ QSizeF te::layout::TitleController::updateView()
   QBrush blackBrush(Qt::SolidPattern);
 
   QTextTableFormat tableFormat;
+
   tableFormat.setAlignment(Qt::AlignLeft);
 
   QVector<QTextLength> constraints;
@@ -111,9 +117,36 @@ QSizeF te::layout::TitleController::updateView()
   cellTwo.setFormat(fmtTwo);
   QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
 
+  QTextBlockFormat formatCellTitle = cellCursorTwo.blockFormat();
+
+
+  if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+  {
+    formatCellTitle.setAlignment(Qt::AlignHCenter);
+  }
+
+  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+  {
+    formatCellTitle.setAlignment(Qt::AlignLeft);
+  }
+
+  if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+  {
+    formatCellTitle.setAlignment(Qt::AlignRight);
+  }
+
+  if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+  {
+    formatCellTitle.setAlignment(Qt::AlignJustify);
+  }
+
+  
+  cellCursorTwo.setBlockFormat(formatCellTitle);
+
   QString qTitle = ItemUtils::convert2QString(title);
 
   cellCursorTwo.insertText(qTitle, format);
+
 
   // table
   QBrush headerHrz(qHeaderHrzColor);
@@ -121,11 +154,37 @@ QSizeF te::layout::TitleController::updateView()
   QTextCharFormat fmtOne = cellOne.format(); 
   fmtOne.setBackground(headerHrz); 
   cellOne.setFormat(fmtOne);
-  QTextCursor cellCursorOne = cellOne.firstCursorPosition();  
+  QTextCursor cellCursorOne = cellOne.firstCursorPosition();
+
+  QTextBlockFormat formatCellText = cellCursorTwo.blockFormat();
+
+
+  if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+  {
+    formatCellText.setAlignment(Qt::AlignHCenter);
+  }
+
+  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+  {
+    formatCellText.setAlignment(Qt::AlignLeft);
+  }
+
+  if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+  {
+    formatCellText.setAlignment(Qt::AlignRight);
+  }
+
+  if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+  {
+    formatCellText.setAlignment(Qt::AlignJustify);
+  }
+
+  cellCursorOne.setBlockFormat(formatCellText);
 
   QString qText = ItemUtils::convert2QString(text);
 
   cellCursorOne.insertText(qText, format);
+  
 
   //we get the size in pixels
   QRectF rect = view->boundingRect();
