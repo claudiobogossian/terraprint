@@ -77,7 +77,7 @@ namespace te
 
       public:
 
-        PropertiesOutside(Scene* scene, AbstractProxyProject* proxyProject, AbstractOutsideController* controller, PropertyBrowser* propertyBrowser = 0);
+        PropertiesOutside(Scene* scene, AbstractProxyProject* proxyProject, AbstractOutsideController* controller, QWidget* parent, PropertyBrowser* propertyBrowser = 0);
 
         virtual ~PropertiesOutside();
         

@@ -143,11 +143,13 @@ void te::layout::TextItem::enterEditionMode()
 
   //If enabled is true, this item will accept hover events
   setTextInteractionFlags(Qt::TextEditorInteraction);
+
   setCursor(Qt::IBeamCursor);
   QTextCursor cursor(textCursor());
   cursor.clearSelection();
   setTextCursor(cursor);
   setFocus();
+
 }
 
 void te::layout::TextItem::leaveEditionMode()

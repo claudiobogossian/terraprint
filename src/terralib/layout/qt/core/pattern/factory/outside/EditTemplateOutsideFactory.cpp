@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::EditTemplateOutsideFactory::build(O
   EditTemplateModel* model = new EditTemplateModel();
 
   EditTemplateController* controller = new EditTemplateController(model);
-  EditTemplateOutside* view = new EditTemplateOutside(controller);
+  EditTemplateOutside* view = new EditTemplateOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

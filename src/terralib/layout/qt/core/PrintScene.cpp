@@ -70,8 +70,8 @@ void te::layout::PrintScene::printPreview()
 
   QPrinter* printer = createPrinter();
   printer->setOutputFormat(QPrinter::NativeFormat);
-  
-  PrintPreviewDialog *preview = new PrintPreviewDialog(printer);
+
+  PrintPreviewDialog *preview = new PrintPreviewDialog(printer, (QWidget*) sc->getView());
   connect(preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPaper(QPrinter*)));
 
   if(preview->exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
@@ -273,7 +273,7 @@ bool te::layout::PrintScene::exportToPDF()
 
   BuildGraphicsOutside build;
   EnumObjectType* type = Enums::getInstance().getEnumObjectType();
-  QWidget* outside = build.createOuside(type->getPDFSettingsDialog(), sc);
+  QWidget* outside = build.createOutside(type->getPDFSettingsDialog(), sc, (QWidget*) sc->getView());
   PDFSettingsOutside* pdfSettings = dynamic_cast<PDFSettingsOutside*>(outside);
   pdfSettings->setCurrentDPI(m_currentPdfDpi);
     

@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::LegendChoiceOutsideFactory::build(O
   LegendChoiceModel* model = new LegendChoiceModel();
 
   LegendChoiceController* controller = new LegendChoiceController(model);
-  LegendChoiceOutside* view = new LegendChoiceOutside(controller);
+  LegendChoiceOutside* view = new LegendChoiceOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

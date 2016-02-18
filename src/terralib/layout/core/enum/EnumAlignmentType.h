@@ -78,6 +78,13 @@ namespace te
           \return enum value      
         */
         virtual EnumType* getAlignmentRightType() const;
+
+        /*!
+        \brief Returns value that represents alignment justify type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getAlignmentJustifyType() const;
         
     
       protected:
@@ -93,6 +100,7 @@ namespace te
         EnumType* m_alignmentCenter; //!< value that represents alignment center type belonging to enumeration
         EnumType* m_alignmentLeft; //!< value that represents alignment left type belonging to enumeration
         EnumType* m_alignmentRight; //!< value that represents alignment right type belonging to enumeration
+        EnumType* m_alignmentJustify; //!< value that represents alignment justify type belonging to enumeration
  
     };
   }

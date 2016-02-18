@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::ColorDialogOutsideFactory::build(Ou
   ColorDialogModel* model = new ColorDialogModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  ColorDialogOutside* view = new ColorDialogOutside(controller);
+  ColorDialogOutside* view = new ColorDialogOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

@@ -26,16 +26,20 @@
 // TerraLib
 #include "MapSettingsOutsideFactory.h"
 #include "../../../../../outside/MapSettingsModel.h"
-#include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../../../../../outside/MapSettingsController.h"
 #include "../../../../outside/MapSettingsOutside.h"
 
 te::layout::AbstractOutsideView* te::layout::MapSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
   MapSettingsModel* model = new MapSettingsModel();
 
-  AbstractOutsideController* controller = new AbstractOutsideController(model);
-  MapSettingsOutside* view = new MapSettingsOutside(controller);
+  Scene * scene = params.getScene();
+  AbstractProxyProject * proxy = params.getProxyProject();
+  QWidget* parent = params.getParent();
+  MapSettingsController* controller = new MapSettingsController(scene, proxy, parent, model);
+  MapSettingsOutside* view = new MapSettingsOutside(controller, params.getParent());
   controller->setView(view);
+
 
   return view;
 }

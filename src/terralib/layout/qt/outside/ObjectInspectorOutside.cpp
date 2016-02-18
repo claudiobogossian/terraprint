@@ -46,8 +46,8 @@
 #include <QMenu>
 #include <QPoint>
 
-te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, AbstractOutsideController* controller)
-  : QWidget(0)
+te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, AbstractOutsideController* controller, QWidget* parent)
+  : QWidget(parent)
   , AbstractOutsideView(controller)
   , m_treeWidget(0)
   , m_isChangingSelection(false)
@@ -62,7 +62,6 @@ te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, Abstrac
   setVisible(false);
   setWindowTitle(tr("Object Inspector"));
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  
   
   QVBoxLayout* layout = new QVBoxLayout(this);
   layout->setMargin(0);

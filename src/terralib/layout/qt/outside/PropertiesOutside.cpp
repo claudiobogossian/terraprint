@@ -57,8 +57,8 @@
 
 #include <QtPropertyBrowser/QtTreePropertyBrowser>
 
-te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProject* proxyProject, AbstractOutsideController* controller, PropertyBrowser* propertyBrowser) :
-  QWidget(0),
+te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProject* proxyProject, AbstractOutsideController* controller, QWidget* parent, PropertyBrowser* propertyBrowser) :
+  QWidget(parent),
   AbstractOutsideView(controller),
   m_updatingValues(false),
   m_sharedProps(0),
@@ -75,7 +75,7 @@ te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProj
   m_propUtils = new PropertiesUtils;
 
   if(!propertyBrowser)
-    m_layoutPropertyBrowser = new PropertyBrowser(scene, proxyProject);
+    m_layoutPropertyBrowser = new PropertyBrowser(scene, proxyProject, parent);
   else
     m_layoutPropertyBrowser = propertyBrowser;
   

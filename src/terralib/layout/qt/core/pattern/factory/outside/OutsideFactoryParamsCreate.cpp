@@ -27,16 +27,18 @@
 #include "OutsideFactoryParamsCreate.h"
 #include "../../../Scene.h"
 #include "../../../../../core/pattern/proxy/AbstractProxyProject.h"
+#include <QWidget>
 
 te::layout::OutsideFactoryParamsCreate::OutsideFactoryParamsCreate(const OutsideFactoryParamsCreate& rhs)
 {
   this->operator=(rhs);
 }
 
-te::layout::OutsideFactoryParamsCreate::OutsideFactoryParamsCreate(te::layout::Scene* scene, AbstractProxyProject* proxyProject)
+te::layout::OutsideFactoryParamsCreate::OutsideFactoryParamsCreate(te::layout::Scene* scene, AbstractProxyProject* proxyProject, QWidget* parent)
 {
   m_scene = scene;
   m_proxyProject = proxyProject;
+  m_parent = parent;
 }
 
 te::layout::OutsideFactoryParamsCreate::~OutsideFactoryParamsCreate()
@@ -63,5 +65,10 @@ te::layout::Scene* te::layout::OutsideFactoryParamsCreate::getScene()
 te::layout::AbstractProxyProject* te::layout::OutsideFactoryParamsCreate::getProxyProject()
 {
   return m_proxyProject;
+}
+
+QWidget* te::layout::OutsideFactoryParamsCreate::getParent()
+{
+  return m_parent;
 }
 

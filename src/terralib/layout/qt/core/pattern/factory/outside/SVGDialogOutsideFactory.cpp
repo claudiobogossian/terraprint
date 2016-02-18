@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::SVGDialogOutsideFactory::build(Outs
   SVGDialogModel* model = new SVGDialogModel();
 
   SVGDialogController* controller = new SVGDialogController(model);
-  SVGDialogOutside* view = new SVGDialogOutside(controller);
+  SVGDialogOutside* view = new SVGDialogOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;

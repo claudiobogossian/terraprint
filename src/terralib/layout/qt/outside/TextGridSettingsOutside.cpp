@@ -42,8 +42,8 @@
 #include <QCheckBox>
 #include <QColorDialog>
 
-te::layout::TextGridSettingsOutside::TextGridSettingsOutside(AbstractOutsideController* controller) :
-  QDialog(0),
+te::layout::TextGridSettingsOutside::TextGridSettingsOutside(AbstractOutsideController* controller, QWidget* parent) :
+  QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::TextGridSettings)
 {

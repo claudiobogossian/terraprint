@@ -35,8 +35,8 @@
 // Qt
 #include <QColor>
 
-te::layout::ColorDialogOutside::ColorDialogOutside(AbstractOutsideController* controller) :
-  QColorDialog(0),
+te::layout::ColorDialogOutside::ColorDialogOutside(AbstractOutsideController* controller, QWidget* parent) :
+  QColorDialog(parent),
   AbstractOutsideView(controller),
   m_okClicked(false)
 {

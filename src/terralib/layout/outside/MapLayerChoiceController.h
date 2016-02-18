@@ -31,20 +31,32 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/Config.h"
+#include "../qt/core/Scene.h"
+#include "../core/pattern/proxy/AbstractProxyProject.h"
 
 namespace te
 {
   namespace layout
   {
     class AbstractOutsideModel;
+    class Scene;
+    class AbstractProxyProject;
 
     class TELAYOUTEXPORT MapLayerChoiceController : public AbstractOutsideController
     {
       public:
 
-        MapLayerChoiceController(AbstractOutsideModel* o);
+        MapLayerChoiceController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o);
 
         virtual ~MapLayerChoiceController();
+        virtual Property getProperty(std::string name);
+        virtual   std::list<te::map::AbstractLayerPtr> getlistLayers();
+        virtual   std::list<te::map::AbstractLayerPtr> searchLayers();
+        virtual   std::list<te::map::AbstractLayerPtr> getSelectedlayers();
+
+      private:
+        Scene * m_scene;
+        AbstractProxyProject * m_proxy;
     };
   }
 }

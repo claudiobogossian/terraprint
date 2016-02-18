@@ -486,7 +486,7 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   }
 
   boost::optional<const boost::property_tree::ptree&> child = propertyNode.get_child_optional("sub_property");
-  if (child != 0)
+  if (child)
   {
     const boost::property_tree::ptree& vecSubPropertyNode = propertyNode.get_child("sub_property");
 

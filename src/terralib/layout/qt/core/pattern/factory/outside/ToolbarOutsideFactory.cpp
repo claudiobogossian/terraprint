@@ -35,7 +35,7 @@ te::layout::AbstractOutsideView* te::layout::ToolbarOutsideFactory::build(Outsid
   ToolbarModel* model = new ToolbarModel();
 
   ToolbarController* controller = new ToolbarController(model, params.getScene());
-  ToolbarOutside* view = new ToolbarOutside(controller, params.getScene());
+  ToolbarOutside* view = new ToolbarOutside(controller, params.getScene(), params.getParent());
   controller->setView(view);
   view->createToolbar();
 

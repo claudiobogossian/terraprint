@@ -42,16 +42,13 @@
 #include <QCheckBox> 
 #include <QFontDialog>
 
-te::layout::ScaleSettingsOutside::ScaleSettingsOutside(AbstractOutsideController* controller)
-  : QDialog(0),
+te::layout::ScaleSettingsOutside::ScaleSettingsOutside(AbstractOutsideController* controller, QWidget* parent)
+  : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::ScaleSettings)
 {
   m_ui->setupUi(this);
 
-  setWindowFlags(Qt::CustomizeWindowHint | Qt::WindowCloseButtonHint
-    | Qt::WindowTitleHint | Qt::WindowStaysOnTopHint);
-  
   init();
 }
 

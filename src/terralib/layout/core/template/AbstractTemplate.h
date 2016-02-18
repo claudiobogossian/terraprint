@@ -32,8 +32,10 @@
 #include "../Config.h"
 
 // STL
+#include <map>
 #include <vector>
 #include <string>
+#include <map>
 
 namespace te
 {

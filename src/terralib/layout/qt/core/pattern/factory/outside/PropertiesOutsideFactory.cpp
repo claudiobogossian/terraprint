@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::PropertiesOutsideFactory::build(Out
   PropertiesModel* model = new PropertiesModel();
 
   PropertiesController* controller = new PropertiesController(model);
-  PropertiesOutside* view = new PropertiesOutside(params.getScene(), params.getProxyProject(), controller);
+  PropertiesOutside* view = new PropertiesOutside(params.getScene(), params.getProxyProject(), controller, params.getParent());
   controller->setView(view);
 
   return view;

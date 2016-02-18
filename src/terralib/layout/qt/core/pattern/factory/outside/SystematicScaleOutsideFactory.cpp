@@ -34,7 +34,7 @@ te::layout::AbstractOutsideView* te::layout::SystematicScaleOutsideFactory::buil
   SystematicScaleModel* model = new SystematicScaleModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  SystematicScaleOutside* view = new SystematicScaleOutside(controller);
+  SystematicScaleOutside* view = new SystematicScaleOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;
