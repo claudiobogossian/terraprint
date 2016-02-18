@@ -57,14 +57,8 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   QGridLayout* displayLayout = new QGridLayout(m_ui->m_widget);
   displayLayout->addWidget(m_widget.get());
 
-  QString qAvailable = tr("Available Layer");
-  std::string available = ItemUtils::convert2StdString(qAvailable);
-
-  QString qSelected = tr("Selected Layer");
-  std::string selected = ItemUtils::convert2StdString(qSelected);
-
-  m_widget->setLeftLabel(available);
-  m_widget->setRightLabel(selected);
+  m_widget->setLeftLabel(tr("Available Layer"));
+  m_widget->setRightLabel(tr("Selected Layer"));
 }
 
 te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
