@@ -1884,7 +1884,7 @@ nononon</source>
         <translation>Camada Disponível</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="61"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="63"/>
         <source>Selected Layer</source>
         <translation>Camada Selecionada</translation>
     </message>
