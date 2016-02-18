@@ -40,8 +40,8 @@
 
 te::layout::LineItem::LineItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
-{  
-
+{
+    setFlag(QGraphicsItem::ItemClipsToShape);
 }
 
 te::layout::LineItem::~LineItem()
@@ -69,7 +69,6 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   const Property& width = m_controller->getProperty("line_width");
   double w = width.getValue().toDouble();
-
   painter->save();
   QPen penStyle = searchStyle();
   QPen pn(qColor, w, penStyle.style());
