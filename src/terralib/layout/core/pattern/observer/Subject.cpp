@@ -36,6 +36,14 @@ te::layout::Subject::Subject()
 
 te::layout::Subject::~Subject()
 {
+  std::vector<Observer*>::iterator it = m_observers.begin();
+  while (it != m_observers.end())
+  {
+    Observer* observer = (*it);
+    detach(observer); // remove from vector
+    it = m_observers.begin();
+  }
+
   m_observers.clear();
 }
 
@@ -56,6 +64,7 @@ bool te::layout::Subject::attach(Observer* observer)
     ++it;
   }
 
+  observer->setSubject(this);
   observer->update(this);
 
   m_observers.push_back(observer);
@@ -75,6 +84,7 @@ bool te::layout::Subject::detach(Observer* observer)
   {
     if(*it == observer)
     {
+      (*it)->setSubject(0);
       m_observers.erase(it);
       return true;
     }

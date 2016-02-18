@@ -65,6 +65,10 @@ namespace te
          */ 
         virtual void update(const Subject* subject) = 0;
 
+        Subject* getSubject();
+
+        void setSubject(Subject* subject);
+
       protected:
 
         Subject*  m_subject;

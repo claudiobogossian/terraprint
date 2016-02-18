@@ -99,6 +99,10 @@ namespace te
         \brief Reimplemented from AbstractItemController
         */
         virtual void refresh();
+
+        QRectF m_originalRect;
+        
+       
     };
   }
 }

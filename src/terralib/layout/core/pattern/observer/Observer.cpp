@@ -41,3 +41,14 @@ te::layout::Observer::~Observer()
   if(m_subject != 0)
     m_subject->detach(this);
 }
+
+te::layout::Subject* te::layout::Observer::getSubject()
+{
+  return m_subject;
+}
+
+void te::layout::Observer::setSubject(Subject* subject)
+{
+  m_subject = subject;
+}
+
