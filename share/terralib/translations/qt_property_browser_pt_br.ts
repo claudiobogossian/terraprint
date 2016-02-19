@@ -257,7 +257,7 @@
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="3081"/>
         <source>(%1, %2)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="3152"/>
@@ -275,7 +275,7 @@
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="2841"/>
         <source>(%1, %2)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="2878"/>
@@ -293,12 +293,12 @@
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertybrowserutils.cpp" line="187"/>
         <source>[%1, %2, %3] (%4)</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertybrowserutils.cpp" line="214"/>
         <source>[%1, %2]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -306,17 +306,17 @@
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4586"/>
         <source>[(%1, %2), %3 x %4]</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4742"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4750"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../../qtpropertybrowser/src/qtpropertymanager.cpp" line="4758"/>
