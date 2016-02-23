@@ -400,7 +400,7 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const st
     propertyNode.add("name", name);
     propertyNode.add("type", type);
     propertyNode.add("value", toUTF8(value));
-    propertyNode.add("currentChoice", currentChoice);
+    propertyNode.add("currentChoice", toUTF8(currentChoice));
 
     const std::vector<te::layout::Property>& vecSubProperty = property.getSubProperty();
     if (vecSubProperty.empty() == false)
@@ -458,7 +458,7 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   std::string name = propertyNode.get<std::string>("name");
   std::string type = propertyNode.get<std::string>("type");
   std::string value = fromUTF8(propertyNode.get<std::string>("value"));
-  std::string currentChoice = propertyNode.get<std::string>("currentChoice"); 
+  std::string currentChoice = fromUTF8(propertyNode.get<std::string>("currentChoice"));
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   EnumType* valueType = dataType->getEnum(type);
