@@ -78,6 +78,8 @@ namespace te
         virtual void onMenuTriggered(QAction* action);
 
         virtual void onChangeDlgProperty(Property property);
+
+        virtual void onShowPageSetupDlg();
                 
     protected:
             

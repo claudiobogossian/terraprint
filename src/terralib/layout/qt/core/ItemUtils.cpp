@@ -52,6 +52,7 @@
 #include "Scene.h"
 #include "../item/GridMapItem.h"
 #include "View.h"
+#include "../item/PaperItem.h"
 
 // STL
 #include <stddef.h>  // defines NULL
@@ -372,6 +373,45 @@ QGraphicsItem* te::layout::ItemUtils::intersectionSelectionItem( int x, int y )
       {
         intersectionItem = item;
         break;
+      }
+    }
+  }
+
+  return intersectionItem;
+}
+
+QGraphicsItem* te::layout::ItemUtils::intersectionOnlyPaperItem(int x, int y)
+{
+  QGraphicsItem* intersectionItem = 0;
+
+  if (!m_scene)
+  {
+    return intersectionItem;
+  }
+
+  QList<QGraphicsItem*> items = m_scene->items();
+
+  QPointF ptScene(x, y);
+
+  bool intersectOnlyPaper = true;
+
+  foreach(QGraphicsItem *item, items)
+  {
+    if (item)
+    {
+      QPointF ptLocal = item->mapFromScene(ptScene);
+      if (item->contains(ptLocal) == true)
+      {
+        PaperItem* paper = dynamic_cast<PaperItem*>(item);
+        if (paper)
+        {
+          intersectionItem = item;
+        }
+        else
+        {
+          intersectionItem = 0;
+          break;
+        }
       }
     }
   }
