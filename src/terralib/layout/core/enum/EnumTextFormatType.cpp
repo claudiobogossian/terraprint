@@ -51,9 +51,9 @@ te::layout::EnumTextFormatType::~EnumTextFormatType()
 
 void te::layout::EnumTextFormatType::init()
 {
-  m_defaultFormat = createEnum("DefaultFormat", this, TR_LAYOUT("Default Format - GGºMM'SS''"));
+  m_defaultFormat = createEnum("DefaultFormat", this, TR_LAYOUT("Default Format"));
 
-  m_ANPFormat = createEnum("ANPFormat", this, TR_LAYOUT("ANP Format - GG:MM:SS"));
+  m_ANPFormat = createEnum("ANPFormat", this, TR_LAYOUT("ANP Format"));
 }
 
 te::layout::EnumType* te::layout::EnumTextFormatType::getDefaultFormat() const
