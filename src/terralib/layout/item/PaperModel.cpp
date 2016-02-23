@@ -100,20 +100,19 @@ te::layout::PaperModel::PaperModel()
     m_properties.addProperty(property);
   }
 
-
   //updating properties
   {
     Property property(0);
     property.setName("frame_color");
     property.setValue(frameColor, dataType->getDataTypeColor());
-    m_properties.updateProperty(property);
+    m_properties.completelyUpdateProperty(property);
   }
 
   {
     Property property(0);
     property.setName("printable");
     property.setValue(false, dataType->getDataTypeBool());
-    m_properties.updateProperty(property);
+    m_properties.completelyUpdateProperty(property);
   }
 
   {
@@ -121,15 +120,27 @@ te::layout::PaperModel::PaperModel()
     Property property(0);
     property.setName("name");
     property.setValue(name, dataType->getDataTypeString());
-    m_properties.updateProperty(property);
+    m_properties.completelyUpdateProperty(property);
   }
 
-  //updating properties
   {
     Property property(0);
     property.setName("resizable");
     property.setValue(false, dataType->getDataTypeBool());
-    m_properties.updateProperty(property);
+    m_properties.completelyUpdateProperty(property);
+  }
+
+  invisibleAllProperties();
+
+  //Visible Properties
+  {
+    Property property(0);
+    std::string value = TR_LAYOUT("Setup");
+    property.setName("page_setup");
+    property.setLabel(TR_LAYOUT("Page Setup"));
+    property.setValue(value, dataType->getDataTypePageSetup());
+    property.setMenu(true);
+    m_properties.addProperty(property);
   }
 }
 
@@ -236,77 +247,14 @@ te::layout::Properties te::layout::PaperModel::handleNewPaperSize(double paperWi
   return properties;
 }
 
-/*
-void te::layout::PaperModel::config()
+void te::layout::PaperModel::invisibleAllProperties()
 {
-  if(!m_paperConfig)
-    return;
-
-  double pw = 0.;
-  double ph = 0.;
-
-  m_paperConfig->getPaperSize(pw, ph);
-  m_box = te::gm::Envelope(0., - m_shadowPadding, pw + m_shadowPadding, ph);
-
-  ContextItem context;
-  context.setChangePos(true);
-  
-  te::gm::Coord2D coord(m_box.m_llx, m_box.m_lly);
-  context.setPos(coord);
-
-  notifyAll(context);
+  const std::vector<Property>& vecProperties = m_properties.getProperties();
+  for (unsigned int i = 0; i < vecProperties.size(); ++i)
+  {
+    Property property = vecProperties[i];
+    property.setVisible(false);
+    m_properties.completelyUpdateProperty(property);
+  }
 }
 
-te::color::RGBAColor te::layout::PaperModel::getShadowColor()
-{
-  return m_shadowColor;
-}
-
-void te::layout::PaperModel::setShadowColor( te::color::RGBAColor color )
-{
-  m_shadowColor = color;
-}
-
-void te::layout::PaperModel::setPaperConfig( PaperConfig* pConfig )
-{
-  m_paperConfig = pConfig;
-  config();
-}
-
-te::layout::PaperConfig* te::layout::PaperModel::getPaperConfig() const
-{
-  return m_paperConfig;
-}
-
-void te::layout::PaperModel::setShadowPadding( double padding )
-{
-  m_shadowPadding = padding;
-}
-
-double te::layout::PaperModel::getShadowPadding()
-{
-  return m_shadowPadding;
-}
-
-void te::layout::PaperModel::setBox( te::gm::Envelope box )
-{
-  if(!m_paperConfig)
-    return;
-
-  double pw = 0.;
-  double ph = 0.;
-
-  m_paperConfig->getPaperSize(pw, ph);
-  m_box = te::gm::Envelope(box.m_llx, box.m_lly - m_shadowPadding, pw + m_shadowPadding, ph);
-}
-
-te::color::RGBAColor te::layout::PaperModel::getPaperColor()
-{
-  return m_paperColor;
-}
-
-void te::layout::PaperModel::setPaperColor( te::color::RGBAColor color )
-{
-  m_paperColor = color;
-}
-*/

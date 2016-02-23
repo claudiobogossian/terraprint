@@ -74,6 +74,8 @@ namespace te
         virtual void updateChildSize(AbstractItemView* item);
 
         virtual void resized();
+
+        virtual void beginResize();
     };
   }
 }

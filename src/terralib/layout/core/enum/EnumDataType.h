@@ -245,8 +245,15 @@ namespace te
         \brief Returns value that represents type NorthSettings (string) belonging to enumeration
 
         \return enum value
-    */
+        */
         virtual EnumType* getDataTypeNorthSettings() const;
+
+        /*!
+        \brief Returns value that represents type PageSetup (string) belonging to enumeration
+
+        \return enum value
+        */
+        virtual EnumType* getDataTypePageSetup() const;
 
       protected:
 
@@ -284,6 +291,7 @@ namespace te
         EnumType* m_dataTypeMapSettings; //!< value that represents type MapSettings (string) belonging to enumeration
         EnumType* m_dataTypeScaleSettings; //!< value that represents type ScaleSettings (string) belonging to enumeration
         EnumType* m_dataTypeNorthSettings; //!< value that represents type NorthSettings (string) belonging to enumeration
+        EnumType* m_dataTypePageSetup; //!< value that represents type PageSetup (string) belonging to enumeration
     };
   }
 }
