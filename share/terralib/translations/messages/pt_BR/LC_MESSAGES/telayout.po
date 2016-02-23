@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-02-05 18:01-0200\n"
-"PO-Revision-Date: 2016-02-05 18:01-0200\n"
+"POT-Creation-Date: 2016-02-23 08:43-0300\n"
+"PO-Revision-Date: 2016-02-23 08:53-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -16,17 +16,442 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: qt\n"
 
+#: core/enum/EnumAlignmentType.cpp:48 core/enum/EnumArrowType.cpp:47
+#: core/enum/EnumDataType.cpp:199 core/enum/EnumDataType.cpp:235
+#: core/enum/EnumGridStyleType.cpp:60 core/enum/EnumModeType.cpp:112
+#: core/enum/EnumNorthArrowType.cpp:47 core/enum/EnumObjectType.cpp:357
+#: core/enum/EnumPointType.cpp:53 core/enum/EnumRectangleType.cpp:47
+#: core/enum/EnumScaleType.cpp:65 core/enum/EnumTemplateType.cpp:54
+#: core/enum/EnumToolType.cpp:77
+msgid "None"
+msgstr "Nenhum"
+
+#: core/enum/EnumAlignmentType.cpp:50
+msgid "Center"
+msgstr "Centralizado"
+
+#: core/enum/EnumAlignmentType.cpp:52
+msgid "Left"
+msgstr "Esquerda"
+
+#: core/enum/EnumAlignmentType.cpp:54
+msgid "Right"
+msgstr "Direita"
+
+#: core/enum/EnumAlignmentType.cpp:56
+msgid "Justify"
+msgstr "Justificado"
+
+#: core/enum/EnumArrowType.cpp:49
+msgid "Right Arrow"
+msgstr "Seta à Direita"
+
+#: core/enum/EnumArrowType.cpp:51
+msgid "Left Arrow"
+msgstr "Seta à Esquerda"
+
+#: core/enum/EnumArrowType.cpp:53
+msgid "Double Arrow"
+msgstr "Seta Dupla"
+
+#: core/enum/EnumDataType.cpp:201
+msgid "Int"
+msgstr "Inteiro"
+
+#: core/enum/EnumDataType.cpp:203
+msgid "Double"
+msgstr "Duplo"
+
+#: core/enum/EnumDataType.cpp:205
+msgid "Long"
+msgstr "Long"
+
+#: core/enum/EnumDataType.cpp:207
+msgid "Float"
+msgstr "Real"
+
+#: core/enum/EnumDataType.cpp:209
+msgid "String"
+msgstr "Texto"
+
+#: core/enum/EnumDataType.cpp:211
+msgid "Bool"
+msgstr "Booleano"
+
+#: core/enum/EnumDataType.cpp:213 item/LineModel.cpp:88 item/NorthModel.cpp:77
+#: item/TextModel.cpp:68 item/TitleModel.cpp:102
+msgid "Color"
+msgstr "Cor"
+
+#: core/enum/EnumDataType.cpp:215 core/enum/EnumObjectType.cpp:375
+#: item/GridMapModel.cpp:90
+msgid "Grid Settings"
+msgstr "Configurações da Grade"
+
+#: core/enum/EnumDataType.cpp:217
+msgid "String List"
+msgstr "Lista de Textos"
+
+#: core/enum/EnumDataType.cpp:219 item/GridMapModel.cpp:221
+#: item/ScaleModel.cpp:139 item/TextModel.cpp:52
+msgid "Font"
+msgstr "Fonte"
+
+#: core/enum/EnumDataType.cpp:221
+msgid "Envelope"
+msgstr "Envelope"
+
+#: core/enum/EnumDataType.cpp:223
+msgid "Image"
+msgstr "Imagem"
+
+#: core/enum/EnumDataType.cpp:225 core/enum/EnumObjectType.cpp:409
+msgid "Text Grid Settings"
+msgstr "Configurações do Texto da Grade"
+
+#: core/enum/EnumDataType.cpp:227
+msgid "Group"
+msgstr "Grupo"
+
+#: core/enum/EnumDataType.cpp:229
+msgid "Map Choice"
+msgstr "Escolha do Mapa"
+
+#: core/enum/EnumDataType.cpp:231 core/enum/EnumObjectType.cpp:437
+msgid "Legend Choice"
+msgstr "Escolha da Legenda"
+
+#: core/enum/EnumDataType.cpp:233
+msgid "Generic Variant"
+msgstr "Variante Genérico"
+
+#: core/enum/EnumDataType.cpp:237
+msgid "String Vector"
+msgstr "Vetor de Textos"
+
+#: core/enum/EnumDataType.cpp:239
+msgid "SVG View"
+msgstr "Vista SVG"
+
+#: core/enum/EnumDataType.cpp:241 item/LineModel.cpp:97
+#: item/PolygonModel.cpp:69
+msgid "Geometry"
+msgstr "Geometria"
+
+#: core/enum/EnumDataType.cpp:243
+msgid "Item Observer"
+msgstr "Observer do Item"
+
+#: core/enum/EnumDataType.cpp:245
+msgid "Group Properties"
+msgstr "Propriedades do Grupo"
+
+#: core/enum/EnumDataType.cpp:247 core/enum/EnumObjectType.cpp:447
+#: item/MapModel.cpp:74
+msgid "Map Settings"
+msgstr "Configurações do mapa"
+
+#: core/enum/EnumDataType.cpp:249 core/enum/EnumObjectType.cpp:449
+#: item/ScaleModel.cpp:90
+msgid "Scale Settings"
+msgstr "Configurações da escala"
+
+#: core/enum/EnumDataType.cpp:251 core/enum/EnumObjectType.cpp:377
+#: item/NorthModel.cpp:86
+msgid "North Settings"
+msgstr "Configuração do Norte"
+
+#: core/enum/EnumGridStyleType.cpp:62
+msgid "Continuous Lines"
+msgstr "Linhas Contínuas"
+
+#: core/enum/EnumGridStyleType.cpp:64
+msgid "Cross Lines"
+msgstr "Cruzetas"
+
+#: core/enum/EnumLineStyleType.cpp:84
+msgid "No Line"
+msgstr "Nenhuma Linha"
+
+#: core/enum/EnumLineStyleType.cpp:86
+msgid "Continuous"
+msgstr "Contínuo"
+
+#: core/enum/EnumLineStyleType.cpp:88
+msgid "Dashed"
+msgstr "Tracejado"
+
+#: core/enum/EnumLineStyleType.cpp:90
+msgid "Dotted"
+msgstr "Pontilhado"
+
+#: core/enum/EnumLineStyleType.cpp:92
+msgid "Dash Dot"
+msgstr "Traço-Ponto"
+
+#: core/enum/EnumLineStyleType.cpp:94
+msgid "Dash Dot Dot"
+msgstr "Traço-Ponto-Ponto"
+
+#: core/enum/EnumModeType.cpp:114
+msgid "Map Pan"
+msgstr "Voo no Mapa"
+
+#: core/enum/EnumModeType.cpp:117
+msgid "Map Zoom In"
+msgstr "Zoom Mais no Mapa"
+
+#: core/enum/EnumModeType.cpp:120
+msgid "Map Zoom Out"
+msgstr "Zoom Menos no Mapa"
+
+#: core/enum/EnumModeType.cpp:123
+msgid "Map Recompose"
+msgstr "Recompor Mapa"
+
+#: core/enum/EnumModeType.cpp:126
+msgid "Printer Preview"
+msgstr "Pré-visualização de Impressão"
+
+#: core/enum/EnumModeType.cpp:129
+msgid "Printer"
+msgstr "Impressora"
+
+#: core/enum/EnumModeType.cpp:132 core/enum/EnumObjectType.cpp:395
+msgid "Systematic Scale"
+msgstr "Escala Sistemática"
+
+#: core/enum/EnumModeType.cpp:135
+msgid "Undo"
+msgstr "Desfazer"
+
+#: core/enum/EnumModeType.cpp:138
+msgid "Redo"
+msgstr "Refazer"
+
+#: core/enum/EnumModeType.cpp:141
+msgid "Text Editor Interaction"
+msgstr "Interação com Editor de Texto"
+
+#: core/enum/EnumModeType.cpp:144
+msgid "Arrow Cursor"
+msgstr "Ponteiro"
+
 #: core/enum/EnumNorthArrowType.cpp:49
 msgid "North Arrow 1"
-msgstr ""
+msgstr "Seta de Norte 1"
 
 #: core/enum/EnumNorthArrowType.cpp:51
 msgid "North Arrow 2"
-msgstr ""
+msgstr "Seta de Norte 2"
 
 #: core/enum/EnumNorthArrowType.cpp:53
 msgid "North Arrow 3"
-msgstr ""
+msgstr "Seta de Norte 3"
+
+#: core/enum/EnumObjectType.cpp:359
+msgid "Rectangle Item"
+msgstr "Item de Retângulo"
+
+#: core/enum/EnumObjectType.cpp:361
+msgid "Map Item"
+msgstr "Item de Mapa"
+
+#: core/enum/EnumObjectType.cpp:363
+msgid "Paper Item"
+msgstr "Item de Papel"
+
+#: core/enum/EnumObjectType.cpp:365
+msgid "Legend Item"
+msgstr "Item de Legenda"
+
+#: core/enum/EnumObjectType.cpp:367
+msgid "Properties Window"
+msgstr "Janela de Propriedades"
+
+#: core/enum/EnumObjectType.cpp:369
+msgid "Display Window"
+msgstr "Janela de Exibição"
+
+#: core/enum/EnumObjectType.cpp:371
+msgid "Object Inspector Window"
+msgstr "Janela de Inspetor de Objetos"
+
+#: core/enum/EnumObjectType.cpp:373
+msgid "Toolbar"
+msgstr "Barra de Ferramentas"
+
+#: core/enum/EnumObjectType.cpp:379
+msgid "Grid Planar Item"
+msgstr "Item da Grade Planar"
+
+#: core/enum/EnumObjectType.cpp:381
+msgid "Grid Geodesic Item"
+msgstr "Item da Grade Geodésica"
+
+#: core/enum/EnumObjectType.cpp:383
+msgid "Text Item"
+msgstr "Item de Texto"
+
+#: core/enum/EnumObjectType.cpp:385
+msgid "Item Group"
+msgstr "Item de Grupo"
+
+#: core/enum/EnumObjectType.cpp:387
+msgid "Map Composition Item"
+msgstr "Item de Composição de Mapa"
+
+#: core/enum/EnumObjectType.cpp:389
+msgid "Scale Item"
+msgstr "Item de Escala"
+
+#: core/enum/EnumObjectType.cpp:391
+msgid "Page Setup"
+msgstr "Configuração da Página"
+
+#: core/enum/EnumObjectType.cpp:393
+msgid "Image Item"
+msgstr "Item de Imagem"
+
+#: core/enum/EnumObjectType.cpp:397
+msgid "Point Item"
+msgstr "Item de Ponto"
+
+#: core/enum/EnumObjectType.cpp:399
+msgid "Arrow Item"
+msgstr "Item de Seta"
+
+#: core/enum/EnumObjectType.cpp:401
+msgid "Ellipse Item"
+msgstr "Item de Elipse"
+
+#: core/enum/EnumObjectType.cpp:403
+msgid "Title Item"
+msgstr "Item de Título"
+
+#: core/enum/EnumObjectType.cpp:405
+msgid "Text Grid Item"
+msgstr "Item de Grade de Textos"
+
+#: core/enum/EnumObjectType.cpp:407
+msgid "Edit Template"
+msgstr "Editar Modelo"
+
+#: core/enum/EnumObjectType.cpp:411
+msgid "Legend Child Item"
+msgstr "Item de Filho da Legenda"
+
+#: core/enum/EnumObjectType.cpp:413
+msgid "Moving Item Group"
+msgstr "Grupo de Item em Movimento"
+
+#: core/enum/EnumObjectType.cpp:415
+msgid "Line Item"
+msgstr "Item de Linha"
+
+#: core/enum/EnumObjectType.cpp:417
+msgid "Polygon Item"
+msgstr "Item de Polígono"
+
+#: core/enum/EnumObjectType.cpp:419
+msgid "Balloon Item"
+msgstr "Item de Balão"
+
+#: core/enum/EnumObjectType.cpp:421
+msgid "BarCode Item"
+msgstr "Item de Código de Barras"
+
+#: core/enum/EnumObjectType.cpp:423
+msgid "Grid Map Item"
+msgstr "Item de Grade do Mapa"
+
+#: core/enum/EnumObjectType.cpp:425
+msgid "Map Layout Choice"
+msgstr "Escolha do Layout do Mapa"
+
+#: core/enum/EnumObjectType.cpp:427
+msgid "SVG Dialog"
+msgstr "Diálogo de SVG"
+
+#: core/enum/EnumObjectType.cpp:429
+msgid "North Item"
+msgstr "Item de Norte"
+
+#: core/enum/EnumObjectType.cpp:431
+msgid "Map Location Item"
+msgstr "Item de Mapa de Localização"
+
+#: core/enum/EnumObjectType.cpp:433
+msgid "Color Dialog"
+msgstr "Diálogo de Cor"
+
+#: core/enum/EnumObjectType.cpp:435
+msgid "Font Dialog"
+msgstr "Diálogo de Fonte"
+
+#: core/enum/EnumObjectType.cpp:439
+msgid "Star Item"
+msgstr "Item de Estrela"
+
+#: core/enum/EnumObjectType.cpp:441
+msgid "SVG Item"
+msgstr "Item de SVG"
+
+#: core/enum/EnumObjectType.cpp:443
+msgid "PDF Settings"
+msgstr "Configurações de PDF"
+
+#: core/enum/EnumObjectType.cpp:445
+msgid "Three North Item"
+msgstr "Item 3-Nortes"
+
+#: core/enum/EnumPointType.cpp:55
+msgid "5-Points Star"
+msgstr "Estrela de 5 Pontos"
+
+#: core/enum/EnumPointType.cpp:57
+msgid "6-Points Star"
+msgstr "Estrela de 6 Pontos"
+
+#: core/enum/EnumPointType.cpp:59
+msgid "7-Points Star"
+msgstr "Estrela de 7 Pontos"
+
+#: core/enum/EnumPointType.cpp:61
+msgid "8-Points Star"
+msgstr "Estrela de 8 Pontos"
+
+#: core/enum/EnumPointType.cpp:63
+msgid "Circle"
+msgstr "Círculo"
+
+#: core/enum/EnumPointType.cpp:65 core/pattern/mvc/AbstractItemModel.cpp:41
+msgid "X"
+msgstr "X"
+
+#: core/enum/EnumPointType.cpp:67
+msgid "Square"
+msgstr "Quadrado"
+
+#: core/enum/EnumPointType.cpp:69
+msgid "Rhombus"
+msgstr "Losango"
+
+#: core/enum/EnumPointType.cpp:71
+msgid "Cross"
+msgstr "Cruz"
+
+#: core/enum/EnumRectangleType.cpp:49
+msgid "Simple Rectangle"
+msgstr "Retângulo Simples"
+
+#: core/enum/EnumRectangleType.cpp:51
+msgid "Rounded Rectangle"
+msgstr "Retângulo Arredondado"
+
+#: core/enum/EnumRectangleType.cpp:53
+msgid "Single Corner Trimmed Rectangle"
+msgstr "Retângulo com um Canto Cortado"
 
 #: core/enum/EnumScaleType.cpp:67
 msgid "Alternating Scale Bar"
@@ -40,6 +465,30 @@ msgstr "Barra de escala dupla alternada"
 msgid "Hollow Scale Bar"
 msgstr "Barra de escala sem preenchimento"
 
+#: core/enum/EnumTemplateType.cpp:56
+msgid "XML Template"
+msgstr "Modelo de XML"
+
+#: core/enum/EnumTextType.cpp:48
+msgid "Font Item"
+msgstr "Item de Fonte"
+
+#: core/enum/EnumToolType.cpp:79
+msgid "Zoom Area Tool"
+msgstr "Ferramenta de Zoom Área"
+
+#: core/enum/EnumToolType.cpp:81
+msgid "Create Line Item Tool"
+msgstr "Ferramenta de Criação de Item de Linha"
+
+#: core/enum/EnumToolType.cpp:83
+msgid "Create Polygon Item Tool"
+msgstr "Ferramenta de Criação de Item de Polígono"
+
+#: core/enum/EnumToolType.cpp:85
+msgid "Create Item Tool"
+msgstr "Ferramenta de Criação de Item"
+
 #: core/pattern/mvc/AbstractItemModel.cpp:22
 msgid "Id"
 msgstr "Identificador"
@@ -47,10 +496,6 @@ msgstr "Identificador"
 #: core/pattern/mvc/AbstractItemModel.cpp:32
 msgid "Name"
 msgstr "Nome"
-
-#: core/pattern/mvc/AbstractItemModel.cpp:41
-msgid "X"
-msgstr "X"
 
 #: core/pattern/mvc/AbstractItemModel.cpp:50
 msgid "Y"
@@ -143,14 +588,10 @@ msgstr "Exibir Texto de Segundos"
 msgid "Seconds Text Precision"
 msgstr "Precisão dos segundos"
 
-#: item/GridMapModel.cpp:87 item/MapModel.cpp:70 item/NorthModel.cpp:39
+#: item/GridMapModel.cpp:87 item/MapModel.cpp:71 item/NorthModel.cpp:39
 #: item/ScaleModel.cpp:87 item/TitleModel.cpp:79 item/TitleModel.cpp:80
 msgid "Settings"
 msgstr "Configurações"
-
-#: item/GridMapModel.cpp:90
-msgid "Grid Settings"
-msgstr "Configurações da Grade"
 
 #: item/GridMapModel.cpp:99
 msgid "Visible"
@@ -187,10 +628,6 @@ msgstr "Cor da Linha"
 #: item/GridMapModel.cpp:211 item/LineModel.cpp:80
 msgid "Line Width"
 msgstr "Largura da Linha"
-
-#: item/GridMapModel.cpp:221 item/ScaleModel.cpp:139 item/TextModel.cpp:52
-msgid "Font"
-msgstr "Fonte"
 
 #: item/GridMapModel.cpp:230
 msgid "Text Color"
@@ -270,7 +707,7 @@ msgstr "Nome do Arquivo"
 msgid "Select the legend"
 msgstr "Selecione a legenda"
 
-#: item/LegendModel.cpp:95 item/MapModel.cpp:94
+#: item/LegendModel.cpp:95 item/MapModel.cpp:95
 msgid "URI"
 msgstr "URI"
 
@@ -322,15 +759,6 @@ msgstr "Linhas"
 msgid "Offset Between Columns"
 msgstr "Deslocamento entre as colunas"
 
-#: item/LineModel.cpp:88 item/NorthModel.cpp:77 item/TextModel.cpp:68
-#: item/TitleModel.cpp:102
-msgid "Color"
-msgstr "Cor"
-
-#: item/LineModel.cpp:97 item/PolygonModel.cpp:69
-msgid "Geometry"
-msgstr "Geometria"
-
 #: item/MapLocationModel.cpp:69
 msgid "Reference Envelope Fill Color"
 msgstr "Cor de Preenchimento do Retângulo de Referência"
@@ -347,37 +775,29 @@ msgstr "Escolha"
 msgid "Select layers"
 msgstr "Selecionar planos"
 
-#: item/MapModel.cpp:73
-msgid "Map Settings"
-msgstr "Configurações do mapa"
-
-#: item/MapModel.cpp:83
+#: item/MapModel.cpp:84
 msgid "Layers"
 msgstr "Planos"
 
-#: item/MapModel.cpp:104 item/ThreeNorthModel.cpp:158
+#: item/MapModel.cpp:105 item/ThreeNorthModel.cpp:158
 msgid "World Box"
 msgstr "Retângulo envolvente"
 
-#: item/MapModel.cpp:112 item/ThreeNorthModel.cpp:166
+#: item/MapModel.cpp:113 item/ThreeNorthModel.cpp:166
 msgid "SRID"
 msgstr "SRID"
 
-#: item/MapModel.cpp:120 item/ScaleModel.cpp:65
+#: item/MapModel.cpp:121 item/ScaleModel.cpp:65
 msgid "Scale"
 msgstr "Escala"
 
-#: item/MapModel.cpp:128
+#: item/MapModel.cpp:129
 msgid "Size Unit"
-msgstr ""
+msgstr "Unidade do Tamanho"
 
-#: item/MapModel.cpp:149
+#: item/MapModel.cpp:150
 msgid "Fixed Scale"
 msgstr "Escala Fixa"
-
-#: item/NorthModel.cpp:86
-msgid "North Settings"
-msgstr "Configuração do Norte"
 
 #: item/PaperModel.cpp:56
 msgid "Paper Color"
@@ -418,10 +838,6 @@ msgstr "Intervalo da Escala em X"
 #: item/ScaleModel.cpp:81
 msgid "Scale Gap Y"
 msgstr "Intervalo da Escala em Y"
-
-#: item/ScaleModel.cpp:90
-msgid "Scale Settings"
-msgstr "Configurações da escala"
 
 #: item/ScaleModel.cpp:147
 msgid "Font Color"
@@ -518,6 +934,9 @@ msgstr "Cor do Cabeçalho Horizontal"
 #: item/TitleModel.cpp:172
 msgid "Vertical Header Color"
 msgstr "Cor do Cabeçalho Vertical"
+
+#~ msgid "Custom Dash"
+#~ msgstr "Tracejado Customizado"
 
 #~ msgid "Map Name"
 #~ msgstr "Nome do Mapa"

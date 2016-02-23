@@ -196,59 +196,59 @@ te::layout::EnumDataType::~EnumDataType()
 
 void te::layout::EnumDataType::init()
 {
-  m_dataTypeNone = createEnum("None", this);
+  m_dataTypeNone = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_dataTypeInt = createEnum("Int", this);
+  m_dataTypeInt = createEnum("Int", this, TR_LAYOUT("Int"));
 
-  m_dataTypeDouble = createEnum("Double", this);
+  m_dataTypeDouble = createEnum("Double", this, TR_LAYOUT("Double"));
 
-  m_dataTypeLong = createEnum("Long", this);
+  m_dataTypeLong = createEnum("Long", this, TR_LAYOUT("Long"));
 
-  m_dataTypeFloat = createEnum("Float", this);
+  m_dataTypeFloat = createEnum("Float", this, TR_LAYOUT("Float"));
 
-  m_dataTypeString = createEnum("String", this);
+  m_dataTypeString = createEnum("String", this, TR_LAYOUT("String"));
 
-  m_dataTypeBool = createEnum("Bool", this);
+  m_dataTypeBool = createEnum("Bool", this, TR_LAYOUT("Bool"));
 
-  m_dataTypeColor = createEnum("Color", this);
+  m_dataTypeColor = createEnum("Color", this, TR_LAYOUT("Color"));
 
-  m_dataTypeGridSettings = createEnum("GridSettings", this, "Grid Settings");
+  m_dataTypeGridSettings = createEnum("GridSettings", this, TR_LAYOUT("Grid Settings"));
 
-  m_dataTypeStringList = createEnum("StringList", this);
+  m_dataTypeStringList = createEnum("StringList", this, TR_LAYOUT("String List"));
 
-  m_dataTypeFont = createEnum("Font", this);
+  m_dataTypeFont = createEnum("Font", this, TR_LAYOUT("Font"));
 
-  m_dataTypeEnvelope = createEnum("Envelope", this);
+  m_dataTypeEnvelope = createEnum("Envelope", this, TR_LAYOUT("Envelope"));
 
-  m_dataTypeImage = createEnum("Image", this);
+  m_dataTypeImage = createEnum("Image", this, TR_LAYOUT("Image"));
 
-  m_dataTypeTextGridSettings = createEnum("TextGridSettings", this);
+  m_dataTypeTextGridSettings = createEnum("TextGridSettings", this, TR_LAYOUT("Text Grid Settings"));
 
-  m_dataTypeGroup = createEnum("Group", this);
+  m_dataTypeGroup = createEnum("Group", this, TR_LAYOUT("Group"));
 
-  m_dataTypeMapChoice = createEnum("MapChoice", this, "Legend Choice");
+  m_dataTypeMapChoice = createEnum("MapChoice", this, TR_LAYOUT("Map Choice"));
 
-  m_dataTypeLegendChoice = createEnum("LegendChoice", this, "Legend Choice");
+  m_dataTypeLegendChoice = createEnum("LegendChoice", this, TR_LAYOUT("Legend Choice"));
 
-  m_dataTypeGenericVariant = createEnum("GenericVariant", this, "Generic Variant");
+  m_dataTypeGenericVariant = createEnum("GenericVariant", this, TR_LAYOUT("Generic Variant"));
 
-  m_dataTypeLayerList = createEnum("Layer", this, "Layer");
+  m_dataTypeLayerList = createEnum("Layer", this, TR_LAYOUT("None"));
 
-  m_dataTypeStringVector = createEnum("StringVector", this, "String Vector");
+  m_dataTypeStringVector = createEnum("StringVector", this, TR_LAYOUT("String Vector"));
 
-  m_dataTypeSVGView = createEnum("SVGView", this, "SVG View");
+  m_dataTypeSVGView = createEnum("SVGView", this, TR_LAYOUT("SVG View"));
 
-  m_dataTypeGeometry = createEnum("Geometry", this, "Geometry");
+  m_dataTypeGeometry = createEnum("Geometry", this, TR_LAYOUT("Geometry"));
 
-  m_dataTypeItemObserver = createEnum("ItemObserver", this, "Item Observer");
+  m_dataTypeItemObserver = createEnum("ItemObserver", this, TR_LAYOUT("Item Observer"));
 
-  m_dataTypeGroupProperties = createEnum("GroupProperties", this, "Group Properties");
+  m_dataTypeGroupProperties = createEnum("GroupProperties", this, TR_LAYOUT("Group Properties"));
 
-  m_dataTypeMapSettings = createEnum("MapSettings", this, "Map Settings");
+  m_dataTypeMapSettings = createEnum("MapSettings", this, TR_LAYOUT("Map Settings"));
 
-  m_dataTypeScaleSettings = createEnum("ScaleSettings", this, "Scale Settings");
+  m_dataTypeScaleSettings = createEnum("ScaleSettings", this, TR_LAYOUT("Scale Settings"));
   
-  m_dataTypeNorthSettings = createEnum("NorthSettings", this, "North Settings");
+  m_dataTypeNorthSettings = createEnum("NorthSettings", this, TR_LAYOUT("North Settings"));
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNone() const

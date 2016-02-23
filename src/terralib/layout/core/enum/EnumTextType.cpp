@@ -45,7 +45,7 @@ te::layout::EnumTextType::~EnumTextType()
 
 void te::layout::EnumTextType::init()
 {
-  m_fontItem = createEnum("Font Item", this);
+  m_fontItem = createEnum("Font Item", this, TR_LAYOUT("Font Item"));
 }
 
 te::layout::EnumType* te::layout::EnumTextType::getFontItem() const
