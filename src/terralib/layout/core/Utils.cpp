@@ -384,9 +384,98 @@ std::string te::layout::Utils::convertDecimalToDegree(const double& value, bool 
   }
 
   if(bDegrees == false && bMinutes == false && bSeconds == false)
-    degreeValue = te::common::Convert2String(std::floor(degree), 0) + "°" + te::common::Convert2String(std::fabs(min), 0) + "' " + te::common::Convert2String(std::fabs(sec), precision) + "''";
+    degreeValue = te::common::Convert2String(std::floor(degree), 0) + "° " + te::common::Convert2String(std::fabs(min), 0) + "' " + te::common::Convert2String(std::fabs(sec), precision) + "''";
 
   return degreeValue;
+}
+
+std::string te::layout::Utils::convertDecimalToDegreeANP(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision)
+{
+  double      dbValue;
+  double      degree;
+  double      sec;
+  double      min;
+
+  degree = (int)value;
+  dbValue = value - degree;
+
+  min = std::fabs((dbValue - (int)dbValue)*60.);
+  sec = std::fabs(std::fabs((min - int(min))*60.));
+
+  if (roundNumber(sec) >= 60)
+  {
+    min++;
+    sec = 0;
+  }
+
+  min = std::floor(min);
+  if (min >= 60.0)
+  {
+    min = 0;
+    dbValue++;
+  }
+
+  std::string space = "";
+
+  std::string signal = "+";
+  if (degree < 0.)
+  {
+    signal = "-";
+  }
+
+  std::string degreeValue;
+  std::string minuteValue;
+  std::string secondValue;
+
+  degreeValue = te::common::Convert2String(std::floor(std::fabs(degree)), 0);
+  degreeValue = lpadString(degreeValue, 2, '0');
+  degreeValue = signal + degreeValue;
+
+  minuteValue = te::common::Convert2String(std::floor(min), 0);
+  minuteValue = lpadString(minuteValue, 2, '0');
+
+  secondValue = te::common::Convert2String(std::fabs(sec), precision);
+  if (precision == 0)
+  {
+    secondValue = lpadString(secondValue, 2, '0');
+  }
+  else
+  {
+    //we must consider the decimal separator
+    secondValue = lpadString(secondValue, precision + 3, '0');
+  }
+
+  std::string formattedNumber = "";
+  if (bDegrees)
+  {
+    formattedNumber = degreeValue;
+    space = ":";
+  }
+  if (bMinutes)
+  {
+    formattedNumber += space + minuteValue;
+    space = ":";
+  }
+  if (bSeconds)
+  {
+    formattedNumber += space + secondValue;
+  }
+
+  if (bDegrees == false && bMinutes == false && bSeconds == false)
+    formattedNumber = degreeValue + ":" + minuteValue + ":" + secondValue;
+
+  return formattedNumber;
+}
+
+std::string te::layout::Utils::lpadString(std::string& text, size_t length, char lpadValue)
+{
+  std::string output = text;
+  while (output.size() < length)
+  {
+    output = lpadValue + output;
+  }
+
+  return output;
 }
 
 int te::layout::Utils::roundNumber( const double& value )

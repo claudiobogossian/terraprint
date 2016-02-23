@@ -30,6 +30,7 @@
 
 #include "../core/ItemUtils.h"
 #include "../../core/WorldTransformer.h"
+#include "../../core/enum/EnumTextFormatType.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "terralib/maptools/Utils.h"
@@ -226,6 +227,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   const Property& pShowDegreesText = pGridSettings.containsSubProperty(settingsConfig.getDegreesText());
   const Property& pShowMinutesText = pGridSettings.containsSubProperty(settingsConfig.getMinutesText());
   const Property& pShowSecondsText = pGridSettings.containsSubProperty(settingsConfig.getSecondsText());
+  const Property& pTextFormat = pGridSettings.containsSubProperty(settingsConfig.getTextFormat());
   const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
   const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
   const Property& pLeftRotate = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
@@ -240,6 +242,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   bool showDegreesText = pShowDegreesText.getValue().toBool();
   bool showMinutesText = pShowMinutesText.getValue().toBool();
   bool showSecondsText = pShowSecondsText.getValue().toBool();
+  std::string textFormat = pTextFormat.getOptionByCurrentChoice().toString();
   double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
   double verticalDisplacement = pVerticalDisplacement.getValue().toDouble();
   bool bLeftRotate = pLeftRotate.getValue().toBool();
@@ -247,6 +250,15 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
   Font txtFont = pTextFontFamily.getValue().toFont();
 
   int secPrecision = pSecPrecisionText.getValue().toInt();
+
+
+  EnumTextFormatType textFormatEnum;
+  EnumType* currentTextFormat = textFormatEnum.getEnum(textFormat);
+  if (currentTextFormat == 0)
+  {
+    currentTextFormat = Enums::getInstance().getEnumGridStyleType()->searchLabel(textFormat);
+  }
+
   // Draw a horizontal line and the y coordinate change(vertical)
   Utils utils = ((Scene*) this->scene())->getUtils();
 
@@ -314,7 +326,15 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
     m_horizontalLines.push_back(te::gm::LineString(*lineString));
 
-    std::string text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+    std::string text = "";
+    if (currentTextFormat->getName() == textFormatEnum.getDefaultFormat()->getName())
+    {
+      text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+    }
+    else if (currentTextFormat->getName() == textFormatEnum.getANPFormat()->getName())
+    {
+      text = utils.convertDecimalToDegreeANP(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+    }
 
     QString qText = ItemUtils::convert2QString(text);
     
@@ -354,6 +374,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pShowDegreesText = pGridSettings.containsSubProperty(settingsConfig.getDegreesText());
   const Property& pShowMinutesText = pGridSettings.containsSubProperty(settingsConfig.getMinutesText());
   const Property& pShowSecondsText = pGridSettings.containsSubProperty(settingsConfig.getSecondsText());
+  const Property& pTextFormat = pGridSettings.containsSubProperty(settingsConfig.getTextFormat());
   const Property& pVerticalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneVrtDisplacement());
   const Property& pHorizontalDisplacement = pGridSettings.containsSubProperty(settingsConfig.getLneHrzDisplacement());
   const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
@@ -369,12 +390,20 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   bool showDegreesText = pShowDegreesText.getValue().toBool();
   bool showMinutesText = pShowMinutesText.getValue().toBool();
   bool showSecondsText = pShowSecondsText.getValue().toBool();
+  std::string textFormat = pTextFormat.getOptionByCurrentChoice().toString();
   double verticalDisplacement = pVerticalDisplacement.getValue().toDouble();
   double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
   bool bTopRotate = pTopRotate.getValue().toBool();
   bool bBottomRotate = pBottomRotate.getValue().toBool();
 
   int secPrecision = pSecPrecisionText.getValue().toInt();
+
+  EnumTextFormatType textFormatEnum;
+  EnumType* currentTextFormat = textFormatEnum.getEnum(textFormat);
+  if (currentTextFormat == 0)
+  {
+    currentTextFormat = Enums::getInstance().getEnumGridStyleType()->searchLabel(textFormat);
+  }
 
   // Draw a vertical line and the x coordinate change(horizontal)
 
@@ -446,7 +475,16 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
 
     m_verticalLines.push_back(te::gm::LineString(*lineString));
 
-    std::string text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+    std::string text = "";
+    if (currentTextFormat->getName() == textFormatEnum.getDefaultFormat()->getName())
+    {
+      text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+    }
+    else if (currentTextFormat->getName() == textFormatEnum.getANPFormat()->getName())
+    {
+      text = utils.convertDecimalToDegreeANP(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+    }
+
 
     QString qText = ItemUtils::convert2QString(text);
 

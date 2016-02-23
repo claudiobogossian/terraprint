@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-02-23 08:43-0300\n"
-"PO-Revision-Date: 2016-02-23 08:53-0300\n"
+"POT-Creation-Date: 2016-02-23 15:51-0300\n"
+"PO-Revision-Date: 2016-02-23 15:52-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: qt\n"
 
 #: core/enum/EnumAlignmentType.cpp:48 core/enum/EnumArrowType.cpp:47
-#: core/enum/EnumDataType.cpp:199 core/enum/EnumDataType.cpp:235
+#: core/enum/EnumDataType.cpp:205 core/enum/EnumDataType.cpp:241
 #: core/enum/EnumGridStyleType.cpp:60 core/enum/EnumModeType.cpp:112
 #: core/enum/EnumNorthArrowType.cpp:47 core/enum/EnumObjectType.cpp:357
 #: core/enum/EnumPointType.cpp:53 core/enum/EnumRectangleType.cpp:47
@@ -54,112 +54,117 @@ msgstr "Seta à Esquerda"
 msgid "Double Arrow"
 msgstr "Seta Dupla"
 
-#: core/enum/EnumDataType.cpp:201
+#: core/enum/EnumDataType.cpp:207
 msgid "Int"
 msgstr "Inteiro"
 
-#: core/enum/EnumDataType.cpp:203
+#: core/enum/EnumDataType.cpp:209
 msgid "Double"
 msgstr "Duplo"
 
-#: core/enum/EnumDataType.cpp:205
+#: core/enum/EnumDataType.cpp:211
 msgid "Long"
 msgstr "Long"
 
-#: core/enum/EnumDataType.cpp:207
+#: core/enum/EnumDataType.cpp:213
 msgid "Float"
 msgstr "Real"
 
-#: core/enum/EnumDataType.cpp:209
+#: core/enum/EnumDataType.cpp:215
 msgid "String"
 msgstr "Texto"
 
-#: core/enum/EnumDataType.cpp:211
+#: core/enum/EnumDataType.cpp:217
 msgid "Bool"
 msgstr "Booleano"
 
-#: core/enum/EnumDataType.cpp:213 item/LineModel.cpp:88 item/NorthModel.cpp:77
+#: core/enum/EnumDataType.cpp:219 item/LineModel.cpp:88 item/NorthModel.cpp:77
 #: item/TextModel.cpp:68 item/TitleModel.cpp:102
 msgid "Color"
 msgstr "Cor"
 
-#: core/enum/EnumDataType.cpp:215 core/enum/EnumObjectType.cpp:375
+#: core/enum/EnumDataType.cpp:221 core/enum/EnumObjectType.cpp:375
 #: item/GridMapModel.cpp:90
 msgid "Grid Settings"
 msgstr "Configurações da Grade"
 
-#: core/enum/EnumDataType.cpp:217
+#: core/enum/EnumDataType.cpp:223
 msgid "String List"
 msgstr "Lista de Textos"
 
-#: core/enum/EnumDataType.cpp:219 item/GridMapModel.cpp:221
+#: core/enum/EnumDataType.cpp:225 item/GridMapModel.cpp:221
 #: item/ScaleModel.cpp:139 item/TextModel.cpp:52
 msgid "Font"
 msgstr "Fonte"
 
-#: core/enum/EnumDataType.cpp:221
+#: core/enum/EnumDataType.cpp:227
 msgid "Envelope"
 msgstr "Envelope"
 
-#: core/enum/EnumDataType.cpp:223
+#: core/enum/EnumDataType.cpp:229
 msgid "Image"
 msgstr "Imagem"
 
-#: core/enum/EnumDataType.cpp:225 core/enum/EnumObjectType.cpp:409
+#: core/enum/EnumDataType.cpp:231 core/enum/EnumObjectType.cpp:409
 msgid "Text Grid Settings"
 msgstr "Configurações do Texto da Grade"
 
-#: core/enum/EnumDataType.cpp:227
+#: core/enum/EnumDataType.cpp:233
 msgid "Group"
 msgstr "Grupo"
 
-#: core/enum/EnumDataType.cpp:229
+#: core/enum/EnumDataType.cpp:235
 msgid "Map Choice"
 msgstr "Escolha do Mapa"
 
-#: core/enum/EnumDataType.cpp:231 core/enum/EnumObjectType.cpp:437
+#: core/enum/EnumDataType.cpp:237 core/enum/EnumObjectType.cpp:437
 msgid "Legend Choice"
 msgstr "Escolha da Legenda"
 
-#: core/enum/EnumDataType.cpp:233
+#: core/enum/EnumDataType.cpp:239
 msgid "Generic Variant"
 msgstr "Variante Genérico"
 
-#: core/enum/EnumDataType.cpp:237
+#: core/enum/EnumDataType.cpp:243
 msgid "String Vector"
 msgstr "Vetor de Textos"
 
-#: core/enum/EnumDataType.cpp:239
+#: core/enum/EnumDataType.cpp:245
 msgid "SVG View"
 msgstr "Vista SVG"
 
-#: core/enum/EnumDataType.cpp:241 item/LineModel.cpp:97
+#: core/enum/EnumDataType.cpp:247 item/LineModel.cpp:97
 #: item/PolygonModel.cpp:69
 msgid "Geometry"
 msgstr "Geometria"
 
-#: core/enum/EnumDataType.cpp:243
+#: core/enum/EnumDataType.cpp:249
 msgid "Item Observer"
 msgstr "Observer do Item"
 
-#: core/enum/EnumDataType.cpp:245
+#: core/enum/EnumDataType.cpp:251
 msgid "Group Properties"
 msgstr "Propriedades do Grupo"
 
-#: core/enum/EnumDataType.cpp:247 core/enum/EnumObjectType.cpp:447
+#: core/enum/EnumDataType.cpp:253 core/enum/EnumObjectType.cpp:447
 #: item/MapModel.cpp:74
 msgid "Map Settings"
 msgstr "Configurações do mapa"
 
-#: core/enum/EnumDataType.cpp:249 core/enum/EnumObjectType.cpp:449
+#: core/enum/EnumDataType.cpp:255 core/enum/EnumObjectType.cpp:449
 #: item/ScaleModel.cpp:90
 msgid "Scale Settings"
 msgstr "Configurações da escala"
 
-#: core/enum/EnumDataType.cpp:251 core/enum/EnumObjectType.cpp:377
+#: core/enum/EnumDataType.cpp:257 core/enum/EnumObjectType.cpp:377
 #: item/NorthModel.cpp:86
 msgid "North Settings"
 msgstr "Configuração do Norte"
+
+#: core/enum/EnumDataType.cpp:259 core/enum/EnumObjectType.cpp:391
+#: item/PaperModel.cpp:140
+msgid "Page Setup"
+msgstr "Configuração da Página"
 
 #: core/enum/EnumGridStyleType.cpp:62
 msgid "Continuous Lines"
@@ -304,10 +309,6 @@ msgstr "Item de Composição de Mapa"
 #: core/enum/EnumObjectType.cpp:389
 msgid "Scale Item"
 msgstr "Item de Escala"
-
-#: core/enum/EnumObjectType.cpp:391
-msgid "Page Setup"
-msgstr "Configuração da Página"
 
 #: core/enum/EnumObjectType.cpp:393
 msgid "Image Item"
@@ -469,6 +470,14 @@ msgstr "Barra de escala sem preenchimento"
 msgid "XML Template"
 msgstr "Modelo de XML"
 
+#: core/enum/EnumTextFormatType.cpp:54
+msgid "Default Format"
+msgstr "Formato Padrão"
+
+#: core/enum/EnumTextFormatType.cpp:56
+msgid "ANP Format"
+msgstr "Formato ANP"
+
 #: core/enum/EnumTextType.cpp:48
 msgid "Font Item"
 msgstr "Item de Fonte"
@@ -568,25 +577,29 @@ msgstr "Cor de Contorno"
 msgid "Barcode Size"
 msgstr "Tamanho do Código de Barras"
 
-#: item/GridGeodesicModel.cpp:65
+#: item/GridGeodesicModel.cpp:66
 msgid "Geographic Box"
 msgstr "Retângulo Geográfico"
 
-#: item/GridGeodesicModel.cpp:76
+#: item/GridGeodesicModel.cpp:77
 msgid "Show Degrees Text"
 msgstr "Exibir Texto de Graus"
 
-#: item/GridGeodesicModel.cpp:83
+#: item/GridGeodesicModel.cpp:84
 msgid "Show Minutes Text"
 msgstr "Exibir Texto de Minutos"
 
-#: item/GridGeodesicModel.cpp:90
+#: item/GridGeodesicModel.cpp:91
 msgid "Show Seconds Text"
 msgstr "Exibir Texto de Segundos"
 
-#: item/GridGeodesicModel.cpp:97
+#: item/GridGeodesicModel.cpp:99
 msgid "Seconds Text Precision"
 msgstr "Precisão dos segundos"
+
+#: item/GridGeodesicModel.cpp:111
+msgid "Text Format"
+msgstr "Formato do Texto"
 
 #: item/GridMapModel.cpp:87 item/MapModel.cpp:71 item/NorthModel.cpp:39
 #: item/ScaleModel.cpp:87 item/TitleModel.cpp:79 item/TitleModel.cpp:80
@@ -826,6 +839,10 @@ msgstr "Tipo do Papel"
 #: item/PaperModel.cpp:98
 msgid "Orientation"
 msgstr "Orientação"
+
+#: item/PaperModel.cpp:138
+msgid "Setup"
+msgstr "Configuração"
 
 #: item/PointModel.cpp:54 item/RectangleModel.cpp:52 item/ScaleModel.cpp:113
 msgid "Graphic type"
