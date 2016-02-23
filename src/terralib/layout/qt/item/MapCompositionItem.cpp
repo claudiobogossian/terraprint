@@ -127,6 +127,23 @@ void te::layout::MapCompositionItem::updateChildSize(AbstractItemView* item)
   }
 }
 
+void te::layout::MapCompositionItem::beginResize()
+{
+  m_spaceBetweenParentChild.clear();
+  QList<QGraphicsItem*> children = childItems();
+  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+  {
+    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+    if (item)
+    {
+      QRectF boundRect = (*it)->boundingRect();
+      double width = childrenBoundingRect().width() - boundRect.width();
+      double height = childrenBoundingRect().height() - boundRect.height();
+      m_spaceBetweenParentChild[item] = QSize(width, height);
+    }
+  }
+}
+
 void te::layout::MapCompositionItem::resized()
 {
   
