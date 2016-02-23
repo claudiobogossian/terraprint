@@ -98,19 +98,32 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
 
 void te::layout::MapCompositionItem::updateChildSize(AbstractItemView* item)
 {
-  double width = m_controller->getProperty("width").getValue().toDouble();
-  double height = m_controller->getProperty("height").getValue().toDouble();
-  SharedProperties sharedProps;
-  if (item)
+  if (!m_spaceBetweenParentChild.contains(item))
   {
-    // search for observable item
-    const Property& pConnectItemPosition = item->getController()->getProperty(sharedProps.getItemObserver());
-    if (pConnectItemPosition.isNull())
-    {
-      //update properties
-      item->getController()->resized(width, height);
-      item->prepareGeometryChange(); //update childrenBoundingRect
-    }
+    return;
+  }
+
+  QSize childSpace = m_spaceBetweenParentChild[item];
+
+  double currentWidth = m_controller->getProperty("width").getValue().toDouble();
+  double currentHeight = m_controller->getProperty("height").getValue().toDouble();
+
+  double width = currentWidth - childSpace.width();
+  double height = currentHeight - childSpace.height();
+
+  if (width < m_marginResizePrecision || height < m_marginResizePrecision)
+  {
+    return;
+  }
+
+  SharedProperties sharedProps;
+  // search for observable item
+  const Property& pConnectItemPosition = item->getController()->getProperty(sharedProps.getItemObserver());
+  if (pConnectItemPosition.isNull())
+  {
+    //update properties
+    item->getController()->resized(width, height);
+    item->prepareGeometryChange(); //update childrenBoundingRect
   }
 }
 
