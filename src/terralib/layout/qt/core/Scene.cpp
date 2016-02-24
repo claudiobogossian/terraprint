@@ -1049,6 +1049,7 @@ void te::layout::Scene::drawForeground(QPainter * painter, const QRectF & rect)
       painter->save();
 
       QRectF rec = item->sceneBoundingRect();
+      painter->setClipRect(rec);
 
       QPainterPath outerPath;
       outerPath.setFillRule(Qt::WindingFill);
