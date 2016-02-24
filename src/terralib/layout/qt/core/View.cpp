@@ -962,6 +962,12 @@ void te::layout::View::fitZoom(const QRectF& rect)
   {
     setCurrentZoom(newZoom);
 
+    if (isLimitExceeded(newZoom) == true)
+    {
+      setZoom(this->getMaxZoomLimit());
+      return;
+    }
+
     Scene* sce = dynamic_cast<Scene*>(scene());
     if(sce)
     {
