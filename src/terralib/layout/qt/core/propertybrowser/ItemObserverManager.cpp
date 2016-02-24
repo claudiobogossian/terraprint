@@ -115,6 +115,13 @@ void te::layout::ItemObserverManager::initializeProperty(QtProperty *property)
 void te::layout::ItemObserverManager::uninitializeProperty(QtProperty *property)
 {
   m_values.remove(property);
+
+  QList<QString> labelList = m_nameToLabel.values();
+  QString name = property->propertyName();
+  if (labelList.contains(name))
+  {
+    m_nameToLabel.remove(name);
+  }
 }
 
 te::layout::AbstractItemView* te::layout::ItemObserverManager::findItem(const QString &name)
