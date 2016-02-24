@@ -190,6 +190,22 @@ namespace te
         virtual std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds,  int precision = 0);
 
         /*!
+        \brief Converts decimal geo coordinates to degrees, using the ANP pattern.
+
+        \param value in decimal
+        \param bDegrees true if should appear in the return string, false otherwise
+        \param bMinutes true if should appear in the return string, false otherwise
+        \param bSeconds true if should appear in the return string, false otherwise
+        \return string value in degree
+        */
+        virtual std::string convertDecimalToDegreeANP(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision = 0);
+
+        /*!
+        \brief Concatenates the given 'lpadValue' to the left of the given 'text' until it reaches the given 'length'
+        */
+        virtual std::string lpadString(std::string& text, size_t length, char lpadValue);
+
+        /*!
           \brief Converts degree geo coordinates to decimal.
           
           \return double value in decimal

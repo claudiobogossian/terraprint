@@ -154,13 +154,16 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   const Property& pSrid = m_controller->getProperty("srid");
   const Property& pWorldBox = m_controller->getProperty("world_box");
   const Property& pScale = m_controller->getProperty("scale");
+  const Property& property = m_controller->getProperty("background_color");
 
   int srid = pSrid.getValue().toInt();;
   const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
   double scale = pScale.getValue().toDouble();
+  const te::color::RGBAColor& color = property.getValue().toColor();
 
   //here we render the layers on the given device
   te::qt::widgets::Canvas canvas(device);
+  canvas.setBackgroundColor(color);
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
   canvas.clear();
 

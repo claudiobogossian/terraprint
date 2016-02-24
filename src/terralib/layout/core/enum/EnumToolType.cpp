@@ -74,15 +74,15 @@ te::layout::EnumToolType::~EnumToolType()
 
 void te::layout::EnumToolType::init()
 {
-  m_noneTool = createEnum("NoneTool", this);
+  m_noneTool = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_zoomAreaTool = createEnum("ZoomAreaTool", this);
+  m_zoomAreaTool = createEnum("ZoomAreaTool", this, TR_LAYOUT("Zoom Area Tool"));
 
-  m_createLineItemTool = createEnum("CreateLineItemTool", this);
+  m_createLineItemTool = createEnum("CreateLineItemTool", this, TR_LAYOUT("Create Line Item Tool"));
 
-  m_createPolygonItemTool = createEnum("CreatePolygonItemTool", this);
+  m_createPolygonItemTool = createEnum("CreatePolygonItemTool", this, TR_LAYOUT("Create Polygon Item Tool"));
 
-  m_createItemTool = createEnum("CreateItemTool", this);
+  m_createItemTool = createEnum("CreateItemTool", this, TR_LAYOUT("Create Item Tool"));
 }
 
 te::layout::EnumType* te::layout::EnumToolType::getNoneTool() const

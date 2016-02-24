@@ -218,7 +218,7 @@ namespace te
 
         virtual AbstractScene* getScene();
 
-        bool isLimitExceeded(QRectF resizeRect);
+        virtual bool isLimitExceeded(QRectF resizeRect);
 
         virtual void updateChildSize(AbstractItemView* item);
 
@@ -819,10 +819,7 @@ namespace te
     inline bool te::layout::AbstractItem<T>::isLimitExceeded(QRectF resizeRect)
     {
       bool result = false;
-
-      double x = resizeRect.topLeft().x();
-      double y = resizeRect.topLeft().y();
-
+      
       if ((resizeRect.width() - m_marginResizePrecision) <= 0
         || (resizeRect.height() - m_marginResizePrecision) <= 0)
       {

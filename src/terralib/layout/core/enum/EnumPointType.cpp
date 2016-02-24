@@ -50,25 +50,25 @@ te::layout::EnumPointType::~EnumPointType()
 
 void te::layout::EnumPointType::init()
 {
-  m_noneType = createEnum("NoneScale", this, "None Scale");
+  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_star1 = createEnum("Star 5 points", this);
+  m_star1 = createEnum("5-Points Star", this, TR_LAYOUT("5-Points Star"));
 
-  m_star2 = createEnum("Star 6 points", this);
+  m_star2 = createEnum("6-Points Star", this, TR_LAYOUT("6-Points Star"));
 
-  m_star3 = createEnum("Star 7 points", this);
+  m_star3 = createEnum("7-Points Star", this, TR_LAYOUT("7-Points Star"));
 
-  m_star4 = createEnum("Star 8 points", this);
+  m_star4 = createEnum("8-Points Star", this, TR_LAYOUT("8-Points Star"));
 
-  m_circle = createEnum("Circle", this);
+  m_circle = createEnum("Circle", this, TR_LAYOUT("Circle"));
 
-  m_x = createEnum("X", this);
+  m_x = createEnum("X", this, TR_LAYOUT("X"));
 
-  m_square = createEnum("Square", this);
+  m_square = createEnum("Square", this, TR_LAYOUT("Square"));
 
-  m_rhombus = createEnum("Rhombus", this);
+  m_rhombus = createEnum("Rhombus", this, TR_LAYOUT("Rhombus"));
 
-  m_cross = createEnum("Cross", this);
+  m_cross = createEnum("Cross", this, TR_LAYOUT("Cross"));
 }
 
 te::layout::EnumType* te::layout::EnumPointType::getNoneType() const

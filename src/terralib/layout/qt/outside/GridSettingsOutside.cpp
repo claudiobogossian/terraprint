@@ -1733,6 +1733,18 @@ void te::layout::GridSettingsOutside::initColor( QWidget* widget, std::string na
   widget->setAutoFillBackground(true);
 }
 
+void te::layout::GridSettingsOutside::addComboOptions(QComboBox* combo, std::vector<Variant> options)
+{
+  QStringList list;
+  for (std::vector<Variant>::iterator it = options.begin(); it != options.end(); ++it)
+  {
+    std::string value = (*it).toString();
+    QString qValue = ItemUtils::convert2QString(value);
+    list.append(qValue);
+  }
+  combo->addItems(list);
+}
+
 void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string nameComponent, EnumType* gridType )
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
@@ -1776,6 +1788,11 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
     QString qText = ItemUtils::convert2QString(txt);
 
     variant.setValue(qText);
+
+    if (combo->count() == 0)
+    {
+      addComboOptions(combo, prop.getOptionChoices());
+    }
   }
   else if (prop.getType() == dataType->getDataTypeFont())
   {

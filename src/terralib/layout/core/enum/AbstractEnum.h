@@ -73,7 +73,7 @@ namespace te
           \param name 
           \return value found in the enumeration or null 
         */ 
-        virtual EnumType* getEnum(std::string name) const;
+        virtual EnumType* getEnum(const std::string& name) const;
 
         /*!
           \brief Searching for an enumeration value by name

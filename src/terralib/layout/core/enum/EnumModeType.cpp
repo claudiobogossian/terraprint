@@ -109,39 +109,39 @@ te::layout::EnumModeType::~EnumModeType()
 
 void te::layout::EnumModeType::init()
 {
-  m_modeNone = createEnum("None", this, "None");
+  m_modeNone = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_modeMapPan = createEnum("MapPan", this, "Map Pan");
+  m_modeMapPan = createEnum("MapPan", this, TR_LAYOUT("Map Pan"));
   m_modeMapPan->setType(te::layout::EnumTool);
 
-  m_modeMapZoomIn = createEnum("MapZoomIn", this, "Map Zoom In");
+  m_modeMapZoomIn = createEnum("MapZoomIn", this, TR_LAYOUT("Map Zoom In"));
   m_modeMapZoomIn->setType(te::layout::EnumTool);
 
-  m_modeMapZoomOut = createEnum("MapZoomOut", this, "Map Zoom Out");
+  m_modeMapZoomOut = createEnum("MapZoomOut", this, TR_LAYOUT("Map Zoom Out"));
   m_modeMapZoomOut->setType(te::layout::EnumTool);
     
-  m_modeMapRecompose = createEnum("MapRecompose", this, "Map Recompose");
+  m_modeMapRecompose = createEnum("MapRecompose", this, TR_LAYOUT("Map Recompose"));
   m_modeMapRecompose->setType(te::layout::EnumAction);
 
-  m_modePrinterPreview = createEnum("Printer Preview", this, "Printer Preview");
+  m_modePrinterPreview = createEnum("Printer Preview", this, TR_LAYOUT("Printer Preview"));
   m_modePrinterPreview->setType(te::layout::EnumDialog);
 
-  m_modePrinter = createEnum("Printer", this, "Printer");
+  m_modePrinter = createEnum("Printer", this, TR_LAYOUT("Printer"));
   m_modePrinter->setType(te::layout::EnumDialog);
 
-  m_modeSystematicScale = createEnum("SystematicScale", this, "Systematic Scale");
+  m_modeSystematicScale = createEnum("SystematicScale", this, TR_LAYOUT("Systematic Scale"));
   m_modeSystematicScale->setType(te::layout::EnumDialog);
 
-  m_modeUndo = createEnum("Undo", this, "Undo");
+  m_modeUndo = createEnum("Undo", this, TR_LAYOUT("Undo"));
   m_modeUndo->setType(te::layout::EnumAction);
 
-  m_modeRedo = createEnum("Redo", this, "Redo");
+  m_modeRedo = createEnum("Redo", this, TR_LAYOUT("Redo"));
   m_modeRedo->setType(te::layout::EnumAction);
 
-  m_modeTextEditorInteraction = createEnum("Text Editor Interaction", this, "Text Editor Interaction");
+  m_modeTextEditorInteraction = createEnum("TextEditorInteraction", this, TR_LAYOUT("Text Editor Interaction"));
   m_modeTextEditorInteraction->setType(te::layout::EnumAction);
 
-  m_modeArrowCursor = createEnum("Arrow Cursor", this, "Arrow Cursor");
+  m_modeArrowCursor = createEnum("Arrow Cursor", this, TR_LAYOUT("Arrow Cursor"));
   m_modeArrowCursor->setType(te::layout::EnumAction);
 }
 
