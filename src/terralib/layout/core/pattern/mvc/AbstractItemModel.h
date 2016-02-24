@@ -92,6 +92,9 @@ namespace te
 
         virtual te::gm::Envelope getBoundingRect();
 
+        virtual bool completelyUpdateProperty(const Property& property);
+
+
         /*!
         \brief Checks if the coordinate is contained within the bounding rectangle.
 

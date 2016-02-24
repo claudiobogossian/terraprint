@@ -211,6 +211,12 @@ std::string te::layout::AbstractItemModel::getName()
   return m_properties.getProperty(prop).getValue().toString();
 }
 
+bool te::layout::AbstractItemModel::completelyUpdateProperty(const Property& property)
+{
+  return m_properties.completelyUpdateProperty(property);
+}
+
+
 bool te::layout::AbstractItemModel::isPrintable()
 {
   std::string propertyName = "printable";

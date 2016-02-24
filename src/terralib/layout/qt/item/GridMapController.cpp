@@ -21,6 +21,7 @@
 #include "GridMapController.h"
 
 #include "../../core/pattern/mvc/AbstractItemModel.h"
+#include "../../core/property/SharedProperties.h"
 #include "GridMapItem.h"
 
 te::layout::GridMapController::GridMapController(AbstractItemModel* model)
@@ -45,4 +46,46 @@ void te::layout::GridMapController::update(const Subject* subject)
   }
 }
 
+bool te::layout::GridMapController::syncItemAssociation(Properties& properties){
+  
+  
+  SharedProperties sharedProps;
+
+  Properties prop = m_model->getProperties();
+
+  Property propObserv = properties.getProperty(sharedProps.getItemObserver());
+
+  if (propObserv.getValue().isNull()){
+
+    return false;
+
+  }
+
+  Property propertyHeigh = prop.getProperty("height");
+  Property propertyWidth = prop.getProperty("width");
+
+  std::string itemObservable = propObserv.getValue().toString();
+
+  if (!itemObservable.empty()){
+
+    propertyHeigh.setEditable(false);
+    propertyWidth.setEditable(false);
+
+    m_model->completelyUpdateProperty(propertyHeigh);
+    m_model->completelyUpdateProperty(propertyWidth);
+
+  }
+  else{
+
+    propertyHeigh.setEditable(true);
+    propertyWidth.setEditable(true);
+
+    m_model->completelyUpdateProperty(propertyHeigh);
+    m_model->completelyUpdateProperty(propertyWidth);
+
+  }
+  
+  return AbstractItemController::syncItemAssociation(properties);
+
+}
 
