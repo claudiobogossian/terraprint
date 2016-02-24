@@ -181,6 +181,16 @@ namespace te
         virtual QGraphicsItem* intersectionSelectionItem(int x, int y);
 
         /*!
+        \brief Checks whether the coordinated intersects an paper item and returns.
+
+        \param x axis x coordinate, in scene CS
+        \param y axis y coordinate, in scene CS
+
+        \return
+        */
+        virtual QGraphicsItem* intersectionOnlyPaperItem(int x, int y);
+
+        /*!
           \brief Get text boundary in mm.
       
           \param w

@@ -49,7 +49,31 @@ te::layout::ScaleItem::ScaleItem(AbstractItemController* controller, bool invert
 
 te::layout::ScaleItem::~ScaleItem()
 {
+  
+}
 
+bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)
+{
+  bool result = true;
+
+  if (!scene())
+    return result;
+
+  Scene* sc = dynamic_cast<Scene*>(scene());
+  ItemUtils utils = sc->getItemUtils();
+
+  std::string text = "A";
+  QRectF textRect = utils.getMinimumTextBoundary(m_font.getFamily(), m_font.getPointSize(), text);
+
+  double displacementBetweenScaleAndText = 2.;
+  double height = (textRect.height() * 2) + (m_gapY * 2) + (displacementBetweenScaleAndText * 2); // because it has two sides: top and bottom
+  double width = (textRect.width() * 2) + (m_gapX * 2) + (displacementBetweenScaleAndText * 2); // because it has two sides: left and right
+  result = resizeRect.height() < height ? true : false;
+  if (!result)
+  {
+    result = resizeRect.width() < width ? true : false;
+  }
+  return result;  
 }
 
 void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

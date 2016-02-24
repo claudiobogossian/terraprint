@@ -44,13 +44,13 @@ te::layout::EnumRectangleType::~EnumRectangleType()
 
 void te::layout::EnumRectangleType::init()
 {
-  m_noneType = createEnum("NoneScale", this, "None Scale");
+  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_simpleRect = createEnum("Simple Rectangle", this);
+  m_simpleRect = createEnum("Simple Rectangle", this, TR_LAYOUT("Simple Rectangle"));
 
-  m_roundedRect = createEnum("Rounded Rectangle", this);
+  m_roundedRect = createEnum("Rounded Rectangle", this, TR_LAYOUT("Rounded Rectangle"));
 
-  m_singleCornerTrimmedRect = createEnum("Single Corner Trimmed Rectangle", this);
+  m_singleCornerTrimmedRect = createEnum("Single Corner Trimmed Rectangle", this, TR_LAYOUT("Single Corner Trimmed Rectangle"));
 }
 
 te::layout::EnumType* te::layout::EnumRectangleType::getNoneType() const

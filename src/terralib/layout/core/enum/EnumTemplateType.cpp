@@ -51,9 +51,9 @@ te::layout::EnumTemplateType::~EnumTemplateType()
 
 void te::layout::EnumTemplateType::init()
 {
-  m_noneType = createEnum("NoneTemplate", this);
+  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_xmlType = createEnum("XmlTemplate", this);
+  m_xmlType = createEnum("XmlTemplate", this, TR_LAYOUT("XML Template"));
 }
 
 te::layout::EnumType* te::layout::EnumTemplateType::getNoneType() const

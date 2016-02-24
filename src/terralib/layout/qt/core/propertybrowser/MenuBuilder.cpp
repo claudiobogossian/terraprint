@@ -42,6 +42,7 @@
 #include "PropertiesUtils.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../core/pattern/mvc/AbstractItemModel.h"
+#include "../View.h"
 
 //STL
 #include <string>
@@ -214,6 +215,10 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   {
     onShowNorthSettingsDlg();
   }
+  else if (m_currentPropertyClicked.getType() == dataType->getDataTypePageSetup())
+  {
+    onShowPageSetupDlg();
+  }
 }
 
 void te::layout::MenuBuilder::checkedBool( bool checked )
@@ -341,6 +346,19 @@ void te::layout::MenuBuilder::setCurrentProperty(std::string name)
   m_currentPropertyClicked = findMnuProperty(name);
 }
 
+void te::layout::MenuBuilder::onShowPageSetupDlg()
+{
+  if (!m_scene)
+  {
+    return;
+  }
 
+  View* view = m_scene->getView();
+  if (!view)
+  {
+    return;
+  }
 
+  view->showPageSetup();
+}
 

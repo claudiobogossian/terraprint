@@ -55,15 +55,17 @@ te::layout::EnumType* te::layout::AbstractEnum::getEnum( int enumId ) const
   return enumTp;
 }
 
-te::layout::EnumType* te::layout::AbstractEnum::getEnum( std::string name ) const
+te::layout::EnumType* te::layout::AbstractEnum::getEnum( const std::string& name ) const
 {
+  //tries to find the enum assuming that the NAME or LABEL was received by parameter
   EnumType* enumTp = 0;
 
-  name = te::common::Convert2UCase(name);
+  std::string label = name;
+  std::string upperName = te::common::Convert2UCase(name);
 
   for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); it++)
   {
-    if((*it)->getName().compare(name) == 0)
+    if ((*it)->getName().compare(upperName) == 0 || (*it)->getLabel().compare(label) == 0)
     {
       enumTp = (*it);
       break;

@@ -80,6 +80,11 @@ namespace te
         
         virtual void drawHollowScaleBar(QPainter * painter);
 
+        /*!
+        \brief Implemented from AbstractItem.
+        */
+        virtual bool isLimitExceeded(QRectF resizeRect);
+
         double  m_scale;
         double  m_gapX;
         double  m_gapY;

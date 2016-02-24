@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file EnumObjectType.cpp
+  \file EnumTextFormatType.cpp
    
   \brief 
 
@@ -26,29 +26,42 @@
 */
 
 // TerraLib
-#include "EnumTextType.h"
+#include "EnumTextFormatType.h"
 
-te::layout::EnumTextType::EnumTextType() :
-  m_fontItem(0)
+te::layout::EnumTextFormatType::EnumTextFormatType()
+  : m_defaultFormat(0)
+  , m_ANPFormat(0)
 {
   init();
 }
 
-te::layout::EnumTextType::~EnumTextType()
+te::layout::EnumTextFormatType::~EnumTextFormatType()
 {
-  if(m_fontItem)
+  if(m_defaultFormat)
   {
-    delete m_fontItem;
-    m_fontItem = 0;
-  } 
+    delete m_defaultFormat;
+    m_defaultFormat = 0;
+  }
+  if(m_ANPFormat)
+  {
+    delete m_ANPFormat;
+    m_ANPFormat = 0;
+  }
 }
 
-void te::layout::EnumTextType::init()
+void te::layout::EnumTextFormatType::init()
 {
-  m_fontItem = createEnum("Font Item", this, TR_LAYOUT("Font Item"));
+  m_defaultFormat = createEnum("DefaultFormat", this, TR_LAYOUT("Default Format"));
+
+  m_ANPFormat = createEnum("ANPFormat", this, TR_LAYOUT("ANP Format"));
 }
 
-te::layout::EnumType* te::layout::EnumTextType::getFontItem() const
+te::layout::EnumType* te::layout::EnumTextFormatType::getDefaultFormat() const
 {
-  return m_fontItem;
+  return m_defaultFormat;
+}
+
+te::layout::EnumType* te::layout::EnumTextFormatType::getANPFormat() const
+{
+  return m_ANPFormat;
 }

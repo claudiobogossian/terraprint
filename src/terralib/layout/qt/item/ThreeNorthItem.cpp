@@ -380,8 +380,13 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
 
     //Convert to degree, minute and second
 
-    QString dmsAngleMerC = DD2DMS(qangleM);
-    QString dmsAngleMagN = DD2DMS(qangleN);
+    Utils util = ((Scene*) this->scene())->getUtils(); 
+    
+    std::string dmsAngleMer = util.convertDecimalToDegree(angleMerC, true, true, true, 3);
+    std::string dmsAngleMag = util.convertDecimalToDegree(angleMagN, true, true, true, 3);
+
+    QString dmsAngleMerC = utils.convert2QString(dmsAngleMer);
+    QString dmsAngleMagN = utils.convert2QString(dmsAngleMag);
 
     //Paths Magnetic North and Meridian Convergence
     QPainterPath anglePathMagN;
@@ -642,7 +647,7 @@ QString te::layout::ThreeNorthItem::DMS2DD(const QString dms)
     }
 
     std::string output = te::common::Convert2String(coord, 4);
-    return QString(output.c_str());
+    return ItemUtils::convert2QString(output);
 }
 
 QString te::layout::ThreeNorthItem::DD2DMS(QString dd)

@@ -28,15 +28,16 @@
 // TerraLib
 #include "GridGeodesicModel.h"
 
+#include "../core/enum/EnumTextFormatType.h"
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
 #include "../core/property/Properties.h"
 #include "../core/pattern/mvc/AbstractItemView.h"
 #include "../core/pattern/mvc/AbstractItemController.h"
-#include "terralib/common/StringUtils.h"
-#include "terralib/common/UnitOfMeasure.h"
-#include "terralib/srs/SpatialReferenceSystemManager.h"
+#include <terralib/common/StringUtils.h>
+#include <terralib/common/UnitOfMeasure.h>
+#include <terralib/srs/SpatialReferenceSystemManager.h>
 
 // STL
 #include <string>
@@ -92,11 +93,39 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
   {
+    //seconds precision
     Property property(0);
     property.setName(settingsConfig.getSecondsPrecisionText());
     property.setLabel(TR_LAYOUT("Seconds Text Precision"));
     property.setValue(secPresicion, dataType->getDataTypeInt());
-    property.setVisible(false);
+    m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
+  }
+
+  // Text Format
+  {
+    EnumTextFormatType textFormatType;
+    EnumType* defaultTextFormat = textFormatType.getDefaultFormat();
+
+    Property property(0);
+    property.setName(settingsConfig.getTextFormat());
+    property.setLabel(TR_LAYOUT("Text Format"));
+    property.setComposeWidget(true);
+    property.setValue(defaultTextFormat->getLabel(), dataType->getDataTypeStringList());
+
+    for (int i = 0; i < textFormatType.size(); ++i)
+    {
+      EnumType* enumType = textFormatType.getEnum(i);
+
+      Variant v;
+      v.setValue(enumType->getLabel(), dataType->getDataTypeString());
+      property.addOption(v);
+
+      if (defaultTextFormat->getName() == enumType->getName())
+      {
+        property.setOptionChoice(v);
+      }
+    }
+
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
 }

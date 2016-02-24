@@ -62,7 +62,7 @@ te::layout::EnumScaleType::~EnumScaleType()
 }
 void te::layout::EnumScaleType::init()
 {
-  m_noneType = createEnum("NoneScale", this, "None Scale");
+  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
 
   m_alternatingScaleBarType = createEnum("AlternatingScaleBar", this, TR_LAYOUT("Alternating Scale Bar"));
 

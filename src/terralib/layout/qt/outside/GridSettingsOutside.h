@@ -40,6 +40,7 @@
 #include <QDialog>
 
 class QLineEdit;
+class QComboBox;
 
 namespace Ui { class GridSettings; }
 
@@ -263,6 +264,8 @@ namespace te
         virtual void initBool( QWidget* widget, std::string nameComponent, EnumType* gridType );
 
         virtual void initColor( QWidget* widget, std::string nameComponent, EnumType* gridType );
+
+        virtual void addComboOptions(QComboBox* combo, std::vector<Variant> options);
 
         virtual void initCombo(QWidget* widget, std::string nameComponent, EnumType* gridType);
 

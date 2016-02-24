@@ -76,6 +76,7 @@ void te::layout::AbstractPropertiesBrowser::clearAll()
   m_propertyToId.clear();
   m_idToProperty.clear();
   m_allProperties.clear();
+  m_nameToLabel.clear();
 }
 
 QString te::layout::AbstractPropertiesBrowser::nameProperty(const QString& label)

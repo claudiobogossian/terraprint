@@ -246,19 +246,6 @@
                        </item>
                        <item>
                         <widget class="QComboBox" name="cmbPlanarStyle">
-                         <property name="currentIndex">
-                          <number>0</number>
-                         </property>
-                         <item>
-                          <property name="text">
-                           <string>Continuous Lines</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Cross Lines</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item>
@@ -288,16 +275,6 @@
                          </item>
                          <item>
                           <widget class="QComboBox" name="cmbUnit">
-                           <item>
-                            <property name="text">
-                             <string>km</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>m</string>
-                            </property>
-                           </item>
                           </widget>
                          </item>
                         </layout>
@@ -362,31 +339,6 @@
                          </item>
                          <item>
                           <widget class="QComboBox" name="cmbPlanarLineType">
-                           <item>
-                            <property name="text">
-                             <string>Continuous</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dashed</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dotted</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dash Dot</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dash Dot Dot</string>
-                            </property>
-                           </item>
                           </widget>
                          </item>
                          <item>
@@ -1498,31 +1450,6 @@
                          </item>
                          <item>
                           <widget class="QComboBox" name="cmbLineType">
-                           <item>
-                            <property name="text">
-                             <string>Continuous</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dashed</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dotted</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dash Dot</string>
-                            </property>
-                           </item>
-                           <item>
-                            <property name="text">
-                             <string>Dash Dot Dot</string>
-                            </property>
-                           </item>
                           </widget>
                          </item>
                         </layout>
@@ -2058,16 +1985,6 @@
                          <property name="currentIndex">
                           <number>0</number>
                          </property>
-                         <item>
-                          <property name="text">
-                           <string>Continuous Lines</string>
-                          </property>
-                         </item>
-                         <item>
-                          <property name="text">
-                           <string>Cross Lines</string>
-                          </property>
-                         </item>
                         </widget>
                        </item>
                        <item>

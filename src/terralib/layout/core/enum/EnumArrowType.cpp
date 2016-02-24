@@ -44,13 +44,13 @@ te::layout::EnumArrowType::~EnumArrowType()
 
 void te::layout::EnumArrowType::init()
 {
-  m_noneType = createEnum("NoneScale", this, "None Scale");
+  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
 
-  m_rightArrow = createEnum("Right Arrow", this);
+  m_rightArrow = createEnum("Right Arrow", this, TR_LAYOUT("Right Arrow"));
 
-  m_leftArrow = createEnum("Left Arrow", this);
+  m_leftArrow = createEnum("Left Arrow", this, TR_LAYOUT("Left Arrow"));
 
-  m_doubleArrow = createEnum("Double Arrow", this);
+  m_doubleArrow = createEnum("Double Arrow", this, TR_LAYOUT("Double Arrow"));
 
 }
 

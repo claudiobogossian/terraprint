@@ -734,16 +734,23 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
   ItemUtils iUtils = ((Scene*) scene())->getItemUtils();
 
   QGraphicsItem* hasItem = iUtils.intersectionSelectionItem(pt.x(), pt.y());
-  if(!hasItem)
-    return;
+  QList<QGraphicsItem*> graphicsItems = getSelectedGraphicsItems();
+  if (!hasItem)
+  {
+    hasItem = iUtils.intersectionOnlyPaperItem(pt.x(), pt.y());
+    graphicsItems.clear();
+    graphicsItems.append(hasItem);
+    if (!hasItem)
+    {
+      return;
+    }
+  }
 
   if(!m_menuBuilder)
   {
     m_menuBuilder = new MenuBuilder((Scene*)scene(), 0, this);
     connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
   }
-
-  QList<QGraphicsItem*> graphicsItems = getSelectedGraphicsItems();
 
   m_menuBuilder->createMenu(graphicsItems);
   m_menuBuilder->menuExec(event->globalX(), event->globalY());
@@ -954,6 +961,12 @@ void te::layout::View::fitZoom(const QRectF& rect)
   if(newZoom > 0)
   {
     setCurrentZoom(newZoom);
+
+    if (isLimitExceeded(newZoom) == true)
+    {
+      setZoom(this->getMaxZoomLimit());
+      return;
+    }
 
     Scene* sce = dynamic_cast<Scene*>(scene());
     if(sce)
