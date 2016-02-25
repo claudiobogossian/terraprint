@@ -65,6 +65,8 @@ namespace te
         \brief Method called by the subject to inform changes in the model
         */
         virtual void update(const Subject* subject);
+
+        bool syncItemAssociation(Properties& properties);
     };
   }
 }
