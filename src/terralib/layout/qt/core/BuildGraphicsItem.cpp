@@ -220,6 +220,8 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
     Properties pEmpty;
     return ItemFactoryParamsCreate(strName, m_coord, pEmpty);
   }  
-  return ItemFactoryParamsCreate(m_props);
+
+  Properties pEmpty;
+  return ItemFactoryParamsCreate(name, m_id, m_coord, m_width, m_height);
 }
 

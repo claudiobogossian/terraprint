@@ -740,6 +740,8 @@ QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGrap
 
 void te::layout::Scene::reset()
 {
+  m_currentItemEdition = 0;
+
   if(!m_undoStack)
     return;
 
