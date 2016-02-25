@@ -162,7 +162,7 @@ namespace te
         virtual void exportToPDF();
 
         /*!
-      \brief This method allows to refresh all properties of the selected item.
+      \brief This method allows to refresh all properties of the selected item (send a signal).
     */
         virtual void refreshAllProperties();
 
