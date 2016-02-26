@@ -76,6 +76,10 @@ namespace te
 
         virtual void onSendToBackClicked(bool checked);
 
+        virtual void onBringForwardClicked(bool checked);
+
+        virtual void onSendBackwardClicked(bool checked);
+
         virtual void onRecomposeClicked(bool checked);
 
         virtual void onTextToolsTriggered(QAction* action);

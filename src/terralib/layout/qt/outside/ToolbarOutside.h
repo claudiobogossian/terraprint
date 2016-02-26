@@ -106,6 +106,10 @@ namespace te
 
       virtual QToolButton* getSendToBackToolButton();
 
+      virtual QToolButton* getBringForwardToolButton();
+
+      virtual QToolButton* getSendBackwardToolButton();
+
       virtual QToolButton* getRecomposeToolButton();
 
       virtual QToolButton* getTextToolButton();
@@ -153,6 +157,10 @@ namespace te
       virtual QAction* getActionBringToFrontToolButton();
 
       virtual QAction* getActionSendToBackToolButton();
+
+      virtual QAction* getActionBringForwardToolButton();
+
+      virtual QAction* getActionSendBackwardToolButton();
 
       virtual QAction* getActionRecomposeToolButton();
 
@@ -321,9 +329,13 @@ namespace te
             
       virtual QToolButton* createBringToFrontToolButton();
 
-      virtual QComboBox* createSceneZoomCombobox();
-
       virtual QToolButton* createSendToBackToolButton();
+
+      virtual QToolButton* createBringForwardToolButton();
+
+      virtual QToolButton* createSendBackwardToolButton();
+
+      virtual QComboBox* createSceneZoomCombobox();
 
       virtual QToolButton* createRecomposeToolButton();
 
@@ -444,6 +456,8 @@ namespace te
       QToolButton* m_itemTools;
       QToolButton* m_bringToFrontToolButton;
       QToolButton* m_sendToBackToolButton;
+      QToolButton* m_bringForwardToolButton;
+      QToolButton* m_sendBackwardToolButton;
       QToolButton* m_recomposeToolButton;
       QToolButton* m_textToolButton;
       QToolButton* m_alignLeftToolButton;
@@ -471,6 +485,8 @@ namespace te
       QAction* m_actionItemTools;
       QAction* m_actionBringToFrontToolButton;
       QAction* m_actionSendToBackToolButton;
+      QAction* m_actionBringForwardToolButton;
+      QAction* m_actionSendBackwardToolButton;
       QAction* m_actionRecomposeToolButton;
       QAction* m_actionTextToolButton;
       QAction* m_actionAlignLeftToolButton;
