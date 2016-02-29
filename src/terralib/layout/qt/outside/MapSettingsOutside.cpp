@@ -303,8 +303,8 @@ void te::layout::MapSettingsOutside::loadScaleCombobox(){
 
 
     std::string stringValue =  formatScaleValue(boost::lexical_cast<std::string>(currentScale));
-    std::string concatString = TR_LAYOUT("Initial Scale (") + stringValue + ")";
-    m_ui->cmbScale->addItem(concatString.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));
+
+    m_ui->cmbScale->addItem(stringValue.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));
   
   }
 
