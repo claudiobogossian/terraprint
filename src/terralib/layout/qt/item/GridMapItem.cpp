@@ -286,44 +286,7 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
 
     if (useSuperScript == true && txt.size() > 2){
-      QFont fontSScript2 = qFont;
-      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
-
-      QString completeTxt = ItemUtils::convert2QString(txt);
-
-      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = (int) txt.size() / 2;
-      int indexNegative = (int) (txt.size() - 1) / 2;
-
-      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
-      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
-
-      std::string txtSubstr2 = txt.substr(0, index).c_str();
-      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
-
-      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
-      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
-
-      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
-      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
-
-      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
-      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
-
-      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
-
-      QPointF pointSScript(pt.x(), pt.y());
-      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-
-      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
-      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
-
-      pt.setX(pt.x() + textObject.boundingRect().width());
-
-      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
-      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
-
-
+      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
     }
     else{
       drawText(pt, painter, qFont, txt, iRotate);
@@ -370,43 +333,7 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
 
     if (useSuperScript == true && txt.size() > 2){
-      QFont fontSScript2 = qFont;
-      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
-
-      QString completeTxt = ItemUtils::convert2QString(txt);
-
-      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = (int) txt.size() / 2;
-      int indexNegative = (int) (txt.size() - 1) / 2;
-
-      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
-      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
-
-      std::string txtSubstr2 = txt.substr(0, index).c_str();
-      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
-
-      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
-      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
-
-      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
-      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
-
-      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
-      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
-
-      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
-
-      QPointF pointSScript(pt.x(), pt.y());
-      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-
-      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
-      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
-
-      pt.setX(pt.x() + textObject.boundingRect().width());
-
-      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
-      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
-
+      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
     }
     else{
       drawText(pt, painter, qFont, txt, iRotate);
@@ -454,44 +381,8 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
     QPointF pt = it->second;
 
     if (useSuperScript == true && txt.size() > 2){
-      QFont fontSScript2 = qFont;
-      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
-
-      QString completeTxt = ItemUtils::convert2QString(txt);
-
-      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = (int) txt.size() / 2;
-      int indexNegative = (int) (txt.size() - 1) / 2;
-
-      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
-      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
-
-      std::string txtSubstr2 = txt.substr(0, index).c_str();
-      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
-
-      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
-      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
-
-      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
-      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
-
-      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
-      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
-
-      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
-
-      QPointF pointSScript(pt.x(), pt.y());
-      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-
-      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
-      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
-
-      pt.setX(pt.x() + textObject.boundingRect().width());
-
-      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
-      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
-
-    }
+      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
+      }
     else{
       drawText(pt, painter, qFont, txt, iRotate);
     }
@@ -534,44 +425,8 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
     QPointF pt = it->second;  
 
     if (useSuperScript == true && txt.size() > 2){
-      QFont fontSScript2 = qFont;
-      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
-
-      QString completeTxt = ItemUtils::convert2QString(txt);
-
-      QPainterPath completeTxtObject = ItemUtils::textToVector(completeTxt, qFont, QPointF(), 0);
-      int index = (int) txt.size() / 2;
-      int indexNegative = (int) (txt.size() - 1) / 2;
-
-      std::string txtSubstr1 = txt.substr(0, indexNegative + 1).c_str();
-      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
-
-      std::string txtSubstr2 = txt.substr(0, index).c_str();
-      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
-
-      std::string txtSubstr3 = txt.substr(indexNegative + 1, txt.size()).c_str();
-      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
-
-      std::string txtSubstr4 = txt.substr(index, txt.size()).c_str();
-      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
-
-      QString txtSScript1(txt.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
-      QString txtSScript2(txt.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
-
-      QPainterPath textObject = ItemUtils::textToVector(txtSScript1, fontSScript2, QPointF(), 0);
-
-      QPointF pointSScript(pt.x(), pt.y());
-      pointSScript.setY(pt.y() + ((completeTxtObject.boundingRect().height() / 2)));
-
-      std::string stdTxtSScript1 = ItemUtils::convert2StdString(txtSScript1);
-      drawText(pointSScript, painter, fontSScript2, stdTxtSScript1, iRotate);
-
-      pt.setX(pt.x() + textObject.boundingRect().width());
-
-      std::string stdTxtSScript2 = ItemUtils::convert2StdString(txtSScript2);
-      drawText(pt, painter, qFont, stdTxtSScript2, iRotate);
-
-    }
+      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
+      }
     else{
 
       drawText(pt, painter, qFont, txt, iRotate);
