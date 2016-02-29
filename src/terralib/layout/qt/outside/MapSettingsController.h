@@ -28,10 +28,10 @@ TerraLib Team at <terralib-team@terralib.org>.
 #define __TERRALIB_LAYOUT_MAP_SETTINGS_CONTROLLER_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideController.h"
-#include "../core/property/Property.h"
-#include "../core/Config.h"
-#include "../qt/core/Scene.h"
+#include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../../core/property/Property.h"
+#include "../../core/Config.h"
+#include "../core/Scene.h"
 
 namespace te
 {

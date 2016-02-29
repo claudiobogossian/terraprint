@@ -26,7 +26,7 @@
 // TerraLib
 #include "MapSettingsOutsideFactory.h"
 #include "../../../../../outside/MapSettingsModel.h"
-#include "../../../../../outside/MapSettingsController.h"
+#include "../../../../outside/MapSettingsController.h"
 #include "../../../../outside/MapSettingsOutside.h"
 
 te::layout::AbstractOutsideView* te::layout::MapSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
