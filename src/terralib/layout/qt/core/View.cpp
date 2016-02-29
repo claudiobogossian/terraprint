@@ -907,8 +907,12 @@ void te::layout::View::exportToPDF()
   // Rulers aren't print
   disableUpdate();
 
+  ContextObject oldContext = scne->getContext();
+
   PrintScene printer(scne);
   printer.exportToPDF();
+
+  scne->setContext(oldContext);
 
   enableUpdate();
 

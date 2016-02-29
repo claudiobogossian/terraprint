@@ -59,34 +59,28 @@ void te::layout::AlignItems::bringToFront()
     return;
 
   QGraphicsItem* selectedItem = m_scene->selectedItems().first();
-  QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
+  QList<QGraphicsItem *> items = m_scene->items(Qt::AscendingOrder);
 
   qreal maxZValue = selectedItem->zValue();
-  QGraphicsItem* itemMaxZValue = selectedItem;
-
   qreal zValue = selectedItem->zValue();
-  foreach (QGraphicsItem *item, overlapItems) 
+  qreal beforeZValue = selectedItem->zValue();
+
+  foreach(QGraphicsItem *item, items)
   {
     if(item)
     {
-      AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
-      if(it)
-      {        
-        if((item->zValue() >= zValue))
+      if ((item->zValue() >= zValue))
+      {
+        if (item->zValue() > maxZValue)
         {
-          if (maxZValue < item->zValue()){
-            maxZValue = item->zValue();
-            itemMaxZValue = item;
-          }
+          beforeZValue = maxZValue;
+          maxZValue = item->zValue();
+          item->setZValue(beforeZValue);
         }
       }
     }
   }
   selectedItem->setZValue(maxZValue);
-  if(itemMaxZValue)
-  {
-    itemMaxZValue->setZValue(zValue);
-  }
 }
 
 void te::layout::AlignItems::sendToBack()
@@ -95,35 +89,32 @@ void te::layout::AlignItems::sendToBack()
     return;
 
   QGraphicsItem *selectedItem = m_scene->selectedItems().first();
-  QList<QGraphicsItem *> overlapItems = selectedItem->collidingItems();
+  QList<QGraphicsItem *> items = m_scene->items(Qt::DescendingOrder);
 
   qreal minimumZValue = selectedItem->zValue();
-  QGraphicsItem* itemMinimumZValue = selectedItem;
-
   qreal zValue = selectedItem->zValue();
-  foreach (QGraphicsItem *item, overlapItems) 
+  qreal beforeZValue = selectedItem->zValue();
+
+  foreach(QGraphicsItem *item, items)
   {
     if(item)
     {
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if(it)
       {
-        if (item->zValue() <= zValue)
+        if (item->zValue() <= zValue && item->zValue() > m_minimunZValue)
         {
-          if (item->zValue() > m_minimunZValue) 
+          if (item->zValue() < minimumZValue)
           {
+            beforeZValue = minimumZValue;
             minimumZValue = item->zValue();
-            itemMinimumZValue = item;
+            item->setZValue(beforeZValue);
           }
         }
       }
     }
   }
   selectedItem->setZValue(minimumZValue);
-  if(itemMinimumZValue)
-  {
-    itemMinimumZValue->setZValue(zValue);
-  }
 }
 
 void te::layout::AlignItems::alignLeft()

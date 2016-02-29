@@ -282,11 +282,21 @@ void te::layout::ToolbarController::onZoomChanged(int zoom)
 void te::layout::ToolbarController::onBringToFrontClicked(bool checked)
 {    
   m_scene->getAlignItems()->bringToFront();
+  View* viewport = m_scene->getView();
+  if (viewport)
+  {
+    viewport->refreshAllProperties();
+  }
 }
 
 void te::layout::ToolbarController::onSendToBackClicked(bool checked)
 {
   m_scene->getAlignItems()->sendToBack();
+  View* viewport = m_scene->getView();
+  if (viewport)
+  {
+    viewport->refreshAllProperties();
+  }
 }
 
 void te::layout::ToolbarController::onRecomposeClicked(bool checked)

@@ -2444,43 +2444,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1128"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1138"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1129"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1174"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1139"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1184"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1150"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1160"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1155"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1165"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1173"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1183"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1202"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1212"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1209"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1219"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1220"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1230"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>
