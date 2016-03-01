@@ -113,11 +113,11 @@ namespace te
 
         virtual void on_cmbPlanarLineType_currentIndexChanged ( const QString & text );
 
-        virtual void on_m_planarLineWidthDoubleSpinBox_editingFinished();
-
+        virtual void on_m_planarLineWidthDoubleSpinBox_valueChanged(double d);
+        
         virtual void on_cmbLineType_currentIndexChanged ( const QString & text );
 
-        virtual void on_m_lineWidthDoubleSpinBox_editingFinished();
+        virtual void on_m_lineWidthDoubleSpinBox_valueChanged(double d);
 
         virtual void on_pbLineColor_clicked();
 
@@ -242,7 +242,7 @@ namespace te
         virtual void on_lneY3_editingFinished();
 
         virtual void on_lneY4_editingFinished();
-
+        
       signals:
 
         void updateProperty(Property prop);
@@ -269,19 +269,25 @@ namespace te
 
         virtual void initCombo(QWidget* widget, std::string nameComponent, EnumType* gridType);
 
+        void setGeodesicValues();
+
+        void setGeodesicValues2GMS();
+
+        void setGeodesicValues2Degrees();
+
+        void setMask(QLineEdit *lat, QLineEdit *lon);
+
+        QString DD2DMS(QString dd);
+
+        QString DMS2DD(const QString dms);
+        
       protected:
 
         PlanarGridSettingsConfigProperties* m_planarGridSettings;
         GeodesicGridSettingsConfigProperties* m_geodesicGridSettings;
         EnumType* m_planarType;
         EnumType* m_geodesicType;
-
-        void setGeodesicValues();
-        void setGeodesicValues2GMS();
-        void setGeodesicValues2Degrees();
-        void setMask(QLineEdit *lat, QLineEdit *lon);
-        QString DD2DMS(QString dd);
-        QString DMS2DD(const QString dms);
+        bool  m_doubleSpinBoxChangeValue;
 
       private:
 

@@ -1818,7 +1818,7 @@ nononon</source>
 <context>
     <name>te::layout::GridSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/GridSettingsOutside.cpp" line="223"/>
+        <location filename="../../../src/terralib/layout/qt/outside/GridSettingsOutside.cpp" line="226"/>
         <source>Color</source>
         <translation>Cor</translation>
     </message>
