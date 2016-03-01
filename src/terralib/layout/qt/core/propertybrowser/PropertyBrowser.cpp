@@ -568,6 +568,10 @@ void te::layout::PropertyBrowser::updateProperties( Properties props )
   foreach( Property prop, props.getProperties()) 
   {
     updateProperty(prop);
+    foreach(Property sub, prop.getSubProperty())
+    {
+      updateProperty(sub);
+    }
   }
 
   m_variantPropertiesBrowser->setAllProperties(props);
