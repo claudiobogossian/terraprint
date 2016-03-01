@@ -297,17 +297,19 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     }
     te::gm::Envelope newGeographicBox = utils.getWorldBoxInGeographic(newWorldBox, newSrid);
 
-    te::gm::Coord2D referenceCoord = newGeographicBox.getCenter();
+    te::gm::Coord2D referenceCoord = newWorldBox.getCenter();
+    te::gm::Coord2D geographicReferenceCoord = newGeographicBox.getCenter();
     te::gm::Point point(referenceCoord.getX(), referenceCoord.getY(), newSrid);
 
-    double longitude = referenceCoord.x;
+
+    double longitude = geographicReferenceCoord.x;
     int meridiano = (int)(longitude / 6);
     meridiano = meridiano * 6;
 
     meridiano = abs(meridiano) + 3;
 
     double centralMeridian = meridiano;
-    if (referenceCoord.x < 0.)
+    if (geographicReferenceCoord.x < 0.)
     {
       centralMeridian *= -1.;
     }
@@ -364,7 +366,7 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
 
     //end of magnet declination calculation
 
-    double meridianconvergence = calculateMeridianConvergence(referenceCoord.y, referenceCoord.x, centralMeridian);
+    double meridianconvergence = calculateMeridianConvergence(geographicReferenceCoord.y, geographicReferenceCoord.x, centralMeridian);
     Property pMeridianConvergenceNew;
     pMeridianConvergenceNew.setName("angle_meridian_convergence");
     pMeridianConvergenceNew.setValue(meridianconvergence, dataType->getDataTypeDouble());
