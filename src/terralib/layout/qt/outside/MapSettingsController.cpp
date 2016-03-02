@@ -26,13 +26,14 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "MapSettingsController.h"
-#include "../core/pattern/mvc/AbstractOutsideModel.h"
-#include "MapSettingsModel.h"
-#include "../qt/core/BuildGraphicsOutside.h"
-#include "../qt/outside/MapLayerChoiceOutside.h"
-#include "QGraphicsItem"
-#include "../qt/item/MapItem.h"
-#include "../../layout/outside/MapLayerChoiceController.h"
+#include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../outside/MapSettingsModel.h"
+#include "../core/BuildGraphicsOutside.h"
+#include "../outside/MapLayerChoiceOutside.h"
+#include "../item/MapItem.h"
+#include "../../outside/MapLayerChoiceController.h"
+
+# include <QGraphicsItem>
 
 te::layout::MapSettingsController::MapSettingsController(Scene * scene, AbstractProxyProject * proxy, QWidget* parent, AbstractOutsideModel* o) :
 AbstractOutsideController(o),
@@ -52,19 +53,20 @@ te::layout::Property te::layout::MapSettingsController::getProperty(std::string 
 {
   Property prop;
 
+  ItemUtils utils(m_scene);
+  std::vector<MapItem*> mapList = utils.getMapItemList();
 
-  QList<QGraphicsItem*> items = m_scene->selectedItems();
-  if (items.isEmpty())
+  if (mapList.size() == 0)
     return prop;
 
-  QGraphicsItem* item = items.first();
+  QGraphicsItem* item = mapList[0];
   MapItem* mapItem = dynamic_cast<MapItem*>(item);
   if (mapItem)
   {
     prop = mapItem->getController()->getProperty(name);
   }
-  return prop;
 
+  return prop;
 }
 
 te::layout::MapLayerChoiceOutside*  te::layout::MapSettingsController::getMapLayerChoice(){

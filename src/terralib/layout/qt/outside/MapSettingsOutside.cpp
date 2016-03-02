@@ -30,7 +30,7 @@
 #include "../core/ItemUtils.h"
 
 #include "ui_MapSettings.h"
-#include "../../outside/MapSettingsController.h"
+#include "MapSettingsController.h"
 
 // Qt
 #include <QMessageBox>
@@ -45,7 +45,6 @@ te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* co
   m_ui(new Ui::MapSettings),
   m_widget(0)
 {
-
   m_ui->setupUi(this);
 
   m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
@@ -90,7 +89,6 @@ void te::layout::MapSettingsOutside::init()
   {
     connect(m_ui->pBtnOK, SIGNAL(pressed()), this, SLOT(onOkPushButtonPressed()));
     connect(m_ui->pBtnCancel, SIGNAL(pressed()), this, SLOT(onCancelPushButtonPressed()));
-
   }
 
 }
@@ -134,8 +132,6 @@ te::gm::Coord2D te::layout::MapSettingsOutside::getPosition()
   return coordinate;
 }
 
-
-
 void te::layout::MapSettingsOutside::initDouble(QWidget* widget, std::string nameComponent)
 {
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
@@ -147,16 +143,15 @@ void te::layout::MapSettingsOutside::initDouble(QWidget* widget, std::string nam
 
   std::string unit = controller->getProperty("size_unit").getOptionByCurrentChoice().convertToString();
 
-  if ((nameComponent == "height" || nameComponent == "width") && unit == "Centimeter"){
-
+  if ((nameComponent == "height" || nameComponent == "width") && unit == "Centimeter")
+  {
     Property prop = controller->getProperty(nameComponent);
     double number = prop.getValue().toDouble();
     double convertedNumber = mm2cm(number);
     convert << convertedNumber;
-
   }
-  else{
-
+  else
+  {
     Property prop = controller->getProperty(nameComponent);
     double number = prop.getValue().toDouble();
     convert << number;
@@ -214,8 +209,6 @@ void te::layout::MapSettingsOutside::initCombo(QWidget* widget, std::string name
   QString value = variant.toString();
   variant.setValue(value);
 
-
-
   if (nameComponent == "size_unit"){
 
     index = combo->findData(variant);
@@ -239,23 +232,21 @@ void te::layout::MapSettingsOutside::initCombo(QWidget* widget, std::string name
   {
     combo->setCurrentIndex(index);
   }
-
 }
 
 void te::layout::MapSettingsOutside::on_lneWidth_editingFinished(){
 
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
-  if (controller){
+  if (controller)
+  {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     double widthSize = m_ui->lneWidth->text().trimmed().replace(",", ".").toDouble();
 
-
     std::string unit = controller->getProperty("size_unit").getOptionByCurrentChoice().convertToString();
 
-    if (unit == "Centimeter"){
-     
+    if (unit == "Centimeter")
+    {     
       widthSize = cm2mm(widthSize);
-
     }
 
     Variant variant;
@@ -278,10 +269,9 @@ void te::layout::MapSettingsOutside::on_lneHeight_editingFinished(){
     double heightSize = m_ui->lneHeight->text().trimmed().replace(",", ".").toDouble();
 
     std::string unit = controller->getProperty("size_unit").getOptionByCurrentChoice().convertToString();
-    if (unit == "Centimeter"){
-
+    if (unit == "Centimeter")
+    {
       heightSize = cm2mm(heightSize);
-
     }
 
     Variant variant;
@@ -291,21 +281,19 @@ void te::layout::MapSettingsOutside::on_lneHeight_editingFinished(){
     prop.setValue(variant);
     emit updateProperty(prop);
   }
-
 }
 
 void te::layout::MapSettingsOutside::loadScaleCombobox(){
 
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
-  if (controller){
+  if (controller)
+  {
     Property prop = controller->getProperty("scale");
     int currentScale = (int) prop.getValue().toDouble();
 
-
     std::string stringValue =  formatScaleValue(boost::lexical_cast<std::string>(currentScale));
     std::string concatString = TR_LAYOUT("Initial Scale (") + stringValue + ")";
-    m_ui->cmbScale->addItem(concatString.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));
-  
+    m_ui->cmbScale->addItem(concatString.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));  
   }
 
   m_ui->cmbScale->addItem("1 000", QVariant((double)1000));
@@ -329,18 +317,16 @@ void te::layout::MapSettingsOutside::loadScaleCombobox(){
   m_ui->cmbScale->addItem("25 000 000", QVariant((double)25000000));
   m_ui->cmbScale->addItem("50 000 000", QVariant((double)50000000));
   m_ui->cmbScale->addItem("100 000 000", QVariant((double)100000000));
-
 }
 
 void te::layout::MapSettingsOutside::on_cmbScale_currentIndexChanged(const QString & text){
-
-
 
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
 
   double inputValue = text.toDouble();
 
-  if (inputValue > 0.0){
+  if (inputValue > 0.0)
+  {
     if (controller)
     {
       string formatedString = formatScaleValue(text.toStdString());
@@ -359,8 +345,8 @@ void te::layout::MapSettingsOutside::on_cmbScale_currentIndexChanged(const QStri
       emit updateProperty(prop);
     }
   }
-  else{
-
+  else
+  {
     if (controller)
     {
       Property prop = controller->getProperty("scale");
@@ -387,7 +373,6 @@ void te::layout::MapSettingsOutside::on_cmbUnit_currentIndexChanged(const QStrin
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
   if (controller)
   {
-
     std::string cm = "Centimeter";
     std::string mm = "Millimeter";
 
@@ -395,26 +380,24 @@ void te::layout::MapSettingsOutside::on_cmbUnit_currentIndexChanged(const QStrin
     //std::string stdText = ItemUtils::convert2StdString(text);
 
     Property prop = controller->getProperty("size_unit");
-    if (selectedUnit != prop.getOptionByCurrentChoice().convertToString()){
-      if (selectedUnit == cm){
-        
+    if (selectedUnit != prop.getOptionByCurrentChoice().convertToString())
+    {
+      if (selectedUnit == cm)
+      {        
         double cmWidth = mm2cm(m_ui->lneWidth->text().toDouble());
         m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(cmWidth).c_str()));
 
         double cmHeight = mm2cm(m_ui->lneHeight->text().toDouble());
         m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(cmHeight).c_str()));
-    }
-      
-      if (selectedUnit == mm){
-
+      }      
+      if (selectedUnit == mm)
+      {
         double mmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
         m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(mmWidth).c_str()));
 
         double mmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
         m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(mmHeight).c_str()));
-
-    }
-
+      }
     }
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -451,9 +434,7 @@ void  te::layout::MapSettingsOutside::on_ckbFixedScale_clicked(){
     prop.setValue(variant);
 
     emit updateProperty(prop);
-
   }
-
 }
 
 void te::layout::MapSettingsOutside::initBool(QWidget* widget, std::string nameComponent)
@@ -478,33 +459,25 @@ std::string  te::layout::MapSettingsOutside::formatScaleValue(std::string inputV
 
   string formatedString = "";
 
-
   int size = (int) formatedValue.size();
   
-  int indexSpace = 1;
-  
+  int indexSpace = 1;  
 
-  for (int i = size - 1; i >= 0; i--){
-
+  for (int i = size - 1; i >= 0; i--)
+  {
     if (((indexSpace % 3) == 0) && i > 0){
 
       std::string tempBuffer = " ";
       tempBuffer += formatedValue[i];
       tempBuffer += formatedString;
 
-      formatedString = tempBuffer;
-
-    
+      formatedString = tempBuffer;    
     }
-    else{
-
+    else
+    {
       formatedString = formatedValue[i] + formatedString;
-
     }
-
-    indexSpace++;
-  
+    indexSpace++;  
   }
-
   return formatedString;
 }

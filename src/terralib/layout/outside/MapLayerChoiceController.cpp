@@ -40,60 +40,40 @@ te::layout::MapLayerChoiceController::MapLayerChoiceController(Scene * scene, Ab
 
 te::layout::MapLayerChoiceController::~MapLayerChoiceController()
 {
-  /*
-  if (m_scene != 0)
-  {
-    delete m_scene;
-    m_scene = 0;
-  }
 
-  if (m_proxy != 0)
-  {
-    delete m_proxy;
-    m_proxy = 0;
-  }
-  */
 }
-
 
 te::layout::Property te::layout::MapLayerChoiceController::getProperty(std::string name)
 {
   Property prop;
 
-  QList<QGraphicsItem*> items = m_scene->selectedItems();
-  if (items.isEmpty())
+  ItemUtils utils(m_scene);
+  std::vector<MapItem*> mapList = utils.getMapItemList();
+
+  if (mapList.size() == 0)
     return prop;
 
-  QGraphicsItem* item = items.first();
+  QGraphicsItem* item = mapList[0];
   MapItem* mapItem = dynamic_cast<MapItem*>(item);
   if (mapItem)
   {
     prop = mapItem->getController()->getProperty(name);
   }
-  return prop;
 
+  return prop;
 }
 
 std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::getlistLayers(){
   
   return m_proxy->getAllLayers();
-
 }
 
 std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::searchLayers()
 {
   std::list<te::map::AbstractLayerPtr> layers;
 
-  Property prop;
-
-  QList<QGraphicsItem*> items = m_scene->selectedItems();
-
-  QGraphicsItem* item = items.first();
-  MapItem* mapItem = dynamic_cast<MapItem*>(item);
-  if (mapItem)
-  {
-    prop = mapItem->getController()->getProperty("layers");
-  }
+  std::string nameProp = "layers";
+  Property prop = getProperty(nameProp);
 
   std::list<te::map::AbstractLayerPtr> currentLayers = prop.getValue().toLayerList();
   std::list<te::map::AbstractLayerPtr>::iterator itLayers = currentLayers.begin();

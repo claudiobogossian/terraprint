@@ -281,21 +281,53 @@ void te::layout::ToolbarController::onZoomChanged(int zoom)
 
 void te::layout::ToolbarController::onBringToFrontClicked(bool checked)
 {    
-  m_scene->getAlignItems()->bringToFront();
-  View* viewport = m_scene->getView();
-  if (viewport)
+  bool result = m_scene->getAlignItems()->bringToFront();
+  if (result)
   {
-    viewport->refreshAllProperties();
+    View* viewport = m_scene->getView();
+    if (viewport)
+    {
+      viewport->refreshAllProperties();
+    }
   }
 }
 
 void te::layout::ToolbarController::onSendToBackClicked(bool checked)
 {
-  m_scene->getAlignItems()->sendToBack();
-  View* viewport = m_scene->getView();
-  if (viewport)
+  bool result = m_scene->getAlignItems()->sendToBack();
+  if (result)
   {
-    viewport->refreshAllProperties();
+    View* viewport = m_scene->getView();
+    if (viewport)
+    {
+      viewport->refreshAllProperties();
+    }
+  }
+}
+
+void te::layout::ToolbarController::onBringForwardClicked(bool checked)
+{
+  bool result = m_scene->getAlignItems()->bringForward();
+  if (result)
+  {
+    View* viewport = m_scene->getView();
+    if (viewport)
+    {
+      viewport->refreshAllProperties();
+    }
+  }
+}
+
+void te::layout::ToolbarController::onSendBackwardClicked(bool checked)
+{
+  bool result = m_scene->getAlignItems()->sendBackward();
+  if (result)
+  {
+    View* viewport = m_scene->getView();
+    if (viewport)
+    {
+      viewport->refreshAllProperties();
+    }
   }
 }
 

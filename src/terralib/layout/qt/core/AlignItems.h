@@ -66,14 +66,24 @@ namespace te
         virtual ~AlignItems();
 
         /*!
-          \brief
+          \brief Move an item in front of several items.
         */
-        virtual void bringToFront();
+        virtual bool bringToFront(bool oneLevel = false);
 
         /*!
-          \brief
+          \brief Move an item behind of several items.
         */
-        virtual void sendToBack();
+        virtual bool sendToBack(bool oneLevel = false);
+
+        /*!
+        \brief Change the ordering by one level to front.
+        */
+        virtual bool bringForward();
+
+        /*!
+        \brief Change the ordering by one level to back.
+        */
+        virtual bool sendBackward();
 
         /*!
           \brief

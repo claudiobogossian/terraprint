@@ -212,6 +212,8 @@ void te::layout::ToolbarOutside::createToolbar()
   createRemoveObjectToolButton();
   this->addSeparator();
 
+  createBringForwardToolButton();
+  createSendBackwardToolButton();
   createBringToFrontToolButton();
   createSendToBackToolButton();
   this->addSeparator();
@@ -490,6 +492,35 @@ QToolButton* te::layout::ToolbarOutside::createSendToBackToolButton()
   return btn;
 }
 
+QToolButton* te::layout::ToolbarOutside::createBringForwardToolButton()
+{
+  QToolButton *btn = createToolButton(tr("Bring Forward"), tr("Bring Forward"), "layout-bring-forward");
+  btn->setCheckable(false);
+
+  ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
+  connect(btn, SIGNAL(clicked(bool)), controller, SLOT(onBringForwardClicked(bool)));
+
+  m_actionBringForwardToolButton = this->addWidget(btn);
+
+  m_bringForwardToolButton = btn;
+
+  return btn;
+}
+
+QToolButton* te::layout::ToolbarOutside::createSendBackwardToolButton()
+{
+  QToolButton *btn = createToolButton(tr("Send Backward"), tr("Send Backward"), "layout-send-backward");
+  btn->setCheckable(false);
+
+  ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
+  connect(btn, SIGNAL(clicked(bool)), controller, SLOT(onSendBackwardClicked(bool)));
+
+  m_actionSendBackwardToolButton = this->addWidget(btn);
+
+  m_sendBackwardToolButton = btn;
+
+  return btn;
+}
 
 QToolButton* te::layout::ToolbarOutside::createRecomposeToolButton()
 {
@@ -857,6 +888,16 @@ QToolButton* te::layout::ToolbarOutside::getSendToBackToolButton()
   return m_sendToBackToolButton;
 }
 
+QToolButton* te::layout::ToolbarOutside::getBringForwardToolButton()
+{
+  return m_bringForwardToolButton;
+}
+
+QToolButton* te::layout::ToolbarOutside::getSendBackwardToolButton()
+{
+  return m_sendBackwardToolButton;
+}
+
 QToolButton* te::layout::ToolbarOutside::getRecomposeToolButton()
 {
   return m_recomposeToolButton;
@@ -1200,6 +1241,16 @@ QAction* te::layout::ToolbarOutside::getActionBringToFrontToolButton()
 QAction* te::layout::ToolbarOutside::getActionSendToBackToolButton()
 {
   return m_actionSendToBackToolButton;
+}
+
+QAction* te::layout::ToolbarOutside::getActionBringForwardToolButton()
+{
+  return m_actionBringForwardToolButton;
+}
+
+QAction* te::layout::ToolbarOutside::getActionSendBackwardToolButton()
+{
+  return m_actionSendBackwardToolButton;
 }
 
 QAction* te::layout::ToolbarOutside::getActionRecomposeToolButton()

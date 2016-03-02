@@ -53,10 +53,12 @@ te::layout::AlignItems::~AlignItems()
 
 }
 
-void te::layout::AlignItems::bringToFront()
+bool te::layout::AlignItems::bringToFront(bool oneLevel)
 {
+  bool result = false;
+
   if (m_scene->selectedItems().isEmpty())
-    return;
+    return result;
 
   QGraphicsItem* selectedItem = m_scene->selectedItems().first();
   QList<QGraphicsItem *> items = m_scene->items(Qt::AscendingOrder);
@@ -76,17 +78,30 @@ void te::layout::AlignItems::bringToFront()
           beforeZValue = maxZValue;
           maxZValue = item->zValue();
           item->setZValue(beforeZValue);
+          if (oneLevel)
+          {
+            break;
+          }
         }
       }
     }
   }
+
   selectedItem->setZValue(maxZValue);
+
+  if (maxZValue != zValue)
+  {
+    result = true;
+  }
+  return result;
 }
 
-void te::layout::AlignItems::sendToBack()
+bool te::layout::AlignItems::sendToBack(bool oneLevel)
 {
+  bool result = false;
+
   if (m_scene->selectedItems().isEmpty())
-    return;
+    return result;
 
   QGraphicsItem *selectedItem = m_scene->selectedItems().first();
   QList<QGraphicsItem *> items = m_scene->items(Qt::DescendingOrder);
@@ -109,12 +124,35 @@ void te::layout::AlignItems::sendToBack()
             beforeZValue = minimumZValue;
             minimumZValue = item->zValue();
             item->setZValue(beforeZValue);
+            if (oneLevel)
+            {
+              break;
+            }
           }
         }
       }
     }
   }
+
   selectedItem->setZValue(minimumZValue);
+
+  if (minimumZValue != zValue)
+  {
+    result = true;
+  }
+  return result;
+}
+
+bool te::layout::AlignItems::bringForward()
+{
+  // one level
+  return bringToFront(true);
+}
+
+bool te::layout::AlignItems::sendBackward()
+{
+  // one level
+  return sendToBack(true);
 }
 
 void te::layout::AlignItems::alignLeft()

@@ -118,6 +118,9 @@ void te::layout::GridSettingsOutside::init()
   m_ui->fraGridTextGeoColor->setAutoFillBackground(true);
   m_ui->fraGridTextPlanarColor->setAutoFillBackground(true);
   m_ui->fraPlanarLineColor->setAutoFillBackground(true);  
+
+  m_ui->m_planarLineWidthDoubleSpinBox->setKeyboardTracking(false);
+  m_ui->m_lineWidthDoubleSpinBox->setKeyboardTracking(false);
 }
 
 void te::layout::GridSettingsOutside::setPosition( const double& x, const double& y )
@@ -282,9 +285,9 @@ void te::layout::GridSettingsOutside::load()
 
   initCombo(m_ui->cmbPlanarLineType, m_planarGridSettings->getLineStyle(), m_planarType);
 
-  initDouble(m_ui->m_planarLineWidthDoubleSpinBox, m_planarGridSettings->getLineWidth(), m_planarType);
+  initCombo(m_ui->cmbLineType, m_geodesicGridSettings->getLineStyle(), m_geodesicType);
 
-  initCombo(m_ui->cmbLineType, m_geodesicGridSettings->getStyle(), m_geodesicType);
+  initDouble(m_ui->m_planarLineWidthDoubleSpinBox, m_planarGridSettings->getLineWidth(), m_planarType);
 
   initDouble(m_ui->m_lineWidthDoubleSpinBox, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
 
@@ -737,16 +740,15 @@ void te::layout::GridSettingsOutside::on_cmbPlanarLineType_currentIndexChanged( 
   }
 }
 
-void te::layout::GridSettingsOutside::on_m_planarLineWidthDoubleSpinBox_editingFinished()
+void te::layout::GridSettingsOutside::on_m_planarLineWidthDoubleSpinBox_valueChanged(double d)
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
-  {
-    QString text = m_ui->m_planarLineWidthDoubleSpinBox->text();
-
+  { 
+    double value = d;
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toDouble(), dataType->getDataTypeDouble());
+    variant.setValue(value, dataType->getDataTypeDouble());
     Property prop = controller->updateProperty(m_planarGridSettings->getLineWidth(), variant, m_planarType);
     emit updateProperty(prop);
   }
@@ -768,16 +770,15 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
   }
 }
 
-void te::layout::GridSettingsOutside::on_m_lineWidthDoubleSpinBox_editingFinished()
+void te::layout::GridSettingsOutside::on_m_lineWidthDoubleSpinBox_valueChanged(double d)
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
-    QString text = m_ui->m_lineWidthDoubleSpinBox->text();
-
+    double value = d;
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(text.toDouble(), dataType->getDataTypeDouble());
+    variant.setValue(value, dataType->getDataTypeDouble());
     Property prop = controller->updateProperty(m_geodesicGridSettings->getLineWidth(), variant, m_geodesicType);
     emit updateProperty(prop);
   }
@@ -1676,7 +1677,7 @@ void te::layout::GridSettingsOutside::initInt( QWidget* widget, std::string name
 void te::layout::GridSettingsOutside::initDouble( QWidget* widget, std::string nameComponent, EnumType* gridType )
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
-  if(!controller)
+  if (!controller)
     return;
 
   std::ostringstream convert;
@@ -1686,11 +1687,21 @@ void te::layout::GridSettingsOutside::initDouble( QWidget* widget, std::string n
   convert << number;
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
-  if(edit)
+  if (edit)
   {
     std::string txt = convert.str();
     QString qText = ItemUtils::convert2QString(txt);
     edit->setText(qText);
+  }
+  else
+  {
+    QDoubleSpinBox* spin = dynamic_cast<QDoubleSpinBox*>(widget);
+    if (spin)
+    {
+      spin->blockSignals(true);
+      spin->setValue(number);
+      spin->blockSignals(false);
+    }
   }
 }
 
