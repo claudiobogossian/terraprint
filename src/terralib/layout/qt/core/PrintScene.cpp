@@ -148,7 +148,8 @@ QPrinter* te::layout::PrintScene::createPrinter()
   config->getPaperSize(w, h);
 
   printer = new QPrinter(QPrinter::HighResolution);
-  printer->setResolution(96);
+  //printer->setResolution(96);
+
   QSizeF sf(w, h);
 
   if (config->getPaperOrientantion() == Portrait)
