@@ -285,9 +285,9 @@ void te::layout::GridSettingsOutside::load()
 
   initCombo(m_ui->cmbPlanarLineType, m_planarGridSettings->getLineStyle(), m_planarType);
 
-  initDouble(m_ui->m_planarLineWidthDoubleSpinBox, m_planarGridSettings->getLineWidth(), m_planarType);
+  initCombo(m_ui->cmbLineType, m_geodesicGridSettings->getLineStyle(), m_geodesicType);
 
-  initCombo(m_ui->cmbLineType, m_geodesicGridSettings->getStyle(), m_geodesicType);
+  initDouble(m_ui->m_planarLineWidthDoubleSpinBox, m_planarGridSettings->getLineWidth(), m_planarType);
 
   initDouble(m_ui->m_lineWidthDoubleSpinBox, m_geodesicGridSettings->getLineWidth(), m_geodesicType);
 
