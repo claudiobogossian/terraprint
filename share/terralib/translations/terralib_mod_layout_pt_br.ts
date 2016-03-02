@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.0" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -162,11 +162,11 @@
     </message>
     <message>
         <source>Continuous Lines</source>
-        <translation type="vanished">Linhas Contínuas</translation>
+        <translation>Linhas Contínuas</translation>
     </message>
     <message>
         <source>Cross Lines</source>
-        <translation type="vanished">Cruzetas</translation>
+        <translation>Cruzetas</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="254"/>
@@ -198,23 +198,23 @@
     </message>
     <message>
         <source>Continuous</source>
-        <translation type="vanished">Contínuo</translation>
+        <translation>Contínuo</translation>
     </message>
     <message>
         <source>Dashed</source>
-        <translation type="vanished">Tracejado</translation>
+        <translation>Tracejado</translation>
     </message>
     <message>
         <source>Dotted</source>
-        <translation type="vanished">Pontilhado</translation>
+        <translation>Pontilhado</translation>
     </message>
     <message>
         <source>Dash Dot</source>
-        <translation type="vanished">Traço-Ponto</translation>
+        <translation>Traço-Ponto</translation>
     </message>
     <message>
         <source>Dash Dot Dot</source>
-        <translation type="vanished">Traço-Ponto-Ponto</translation>
+        <translation>Traço-Ponto-Ponto</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="347"/>
@@ -928,22 +928,22 @@
     </message>
     <message>
         <source>Imagem</source>
-        <translation type="vanished">Imagem</translation>
+        <translation>Imagem</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Cancelar</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="vanished">&amp;Ajuda</translation>
+        <translation>&amp;Ajuda</translation>
     </message>
 </context>
 <context>
     <name>MapSettings</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation>Configurações do PDF</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="32"/>
@@ -1002,19 +1002,19 @@
     </message>
     <message>
         <source>DPI:</source>
-        <translation type="vanished">Resolução (DPI):</translation>
+        <translation>Resolução (DPI):</translation>
     </message>
     <message>
         <source>File:</source>
-        <translation type="vanished">Arquivo:</translation>
+        <translation>Arquivo:</translation>
     </message>
     <message>
         <source>Save As...</source>
-        <translation type="vanished">Salvar como...</translation>
+        <translation>Salvar como...</translation>
     </message>
     <message>
         <source>DPI Information</source>
-        <translation type="vanished">Informação de Resolução (DPI)</translation>
+        <translation>Informação de Resolução (DPI)</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="299"/>
@@ -1419,7 +1419,7 @@ nononon</source>
     <name>ScaleSettings</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation>Configurações do PDF</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="32"/>
@@ -1469,7 +1469,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="267"/>
         <source>Gap in units</source>
-        <translation>Lacuna em unidades</translation>
+        <translation>Intervalo em unidades</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="275"/>
@@ -1479,22 +1479,22 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="296"/>
         <source>Scale Gap X In Unit:</source>
-        <translation>Lacuna na horizontal em unidade:</translation>
+        <translation>Intervalo horizontal em unidade:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="324"/>
         <source>Gap in millimeters</source>
-        <translation>Lacuna em milímetros</translation>
+        <translation>Intervalo em milímetros</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="332"/>
         <source>Scale Gap X:</source>
-        <translation>Lacuna na horizontal:</translation>
+        <translation>Intervalo horizontal:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="359"/>
         <source>Scale Gap Y:</source>
-        <translation>Lacuna na vertical:</translation>
+        <translation>Intervalo vertical:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="391"/>
@@ -1513,19 +1513,19 @@ nononon</source>
     </message>
     <message>
         <source>DPI:</source>
-        <translation type="vanished">Resolução (DPI):</translation>
+        <translation>Resolução (DPI):</translation>
     </message>
     <message>
         <source>File:</source>
-        <translation type="vanished">Arquivo:</translation>
+        <translation>Arquivo:</translation>
     </message>
     <message>
         <source>Save As...</source>
-        <translation type="vanished">Salvar como...</translation>
+        <translation>Salvar como...</translation>
     </message>
     <message>
         <source>DPI Information</source>
-        <translation type="vanished">Informação de DPI</translation>
+        <translation>Informação de DPI</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="452"/>
@@ -1848,11 +1848,11 @@ nononon</source>
     <name>te::layout::MapLayerChoiceOutside</name>
     <message>
         <source>Available Layers</source>
-        <translation type="vanished">Planos Disponíveis</translation>
+        <translation>Planos Disponíveis</translation>
     </message>
     <message>
         <source>Selected Layers</source>
-        <translation type="vanished">Planos Selecionados</translation>
+        <translation>Planos Selecionados</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="60"/>
@@ -1869,27 +1869,27 @@ nononon</source>
     <name>te::layout::MapSettingsOutside</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation>Configurações do PDF</translation>
     </message>
     <message>
         <source>Please complete the filename.</source>
-        <translation type="vanished">Por favor, complete o nome do arquivo.</translation>
+        <translation>Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
         <source>Save Image File</source>
-        <translation type="vanished">Gravar o Arquivo de Imagem</translation>
+        <translation>Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
         <source>PDF Files (*.pdf)</source>
-        <translation type="vanished">Arquivos PDF (*.pdf)</translation>
+        <translation>Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="107"/>
@@ -2122,27 +2122,27 @@ nononon</source>
     <name>te::layout::ScaleSettingsOutside</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation>Configurações do PDF</translation>
     </message>
     <message>
         <source>Please complete the filename.</source>
-        <translation type="vanished">Por favor, complete o nome do arquivo.</translation>
+        <translation>Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
         <source>Save Image File</source>
-        <translation type="vanished">Gravar o Arquivo de Imagem</translation>
+        <translation>Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
         <source>PDF Files (*.pdf)</source>
-        <translation type="vanished">Arquivos PDF (*.pdf)</translation>
+        <translation>Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
 </context>
 <context>
