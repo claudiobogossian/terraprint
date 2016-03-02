@@ -185,7 +185,7 @@ void te::layout::PageSetupOutside::switchSize()
 
   QVariant wv(w);
   m_ui->lneCustomWidth->setText(wv.toString());
-  QVariant hv(w);
+  QVariant hv(h);
   m_ui->lneCustomHeight->setText(hv.toString());
 }
 
