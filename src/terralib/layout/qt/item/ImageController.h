@@ -57,8 +57,11 @@ namespace te
           \brief Destructor
         */ 
         virtual ~ImageController();
-
-        virtual void update(const Subject* subject);
+        
+        /*!
+        \brief Sets the new values of the given properties
+        */
+        virtual void setProperties(const Properties& properties);
     };
   }
 }
