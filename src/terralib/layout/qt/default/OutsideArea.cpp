@@ -40,7 +40,6 @@
 #include "../inside/MapToolbarInside.h"
 #include "../inside/MapToolbarController.h"
 #include "../inside/ToolbarItemInside.h"
-#include "../item/ImageItem.h"
 
 // STL
 #include <string>
@@ -437,8 +436,7 @@ void te::layout::OutsideArea::closeMainMenu()
 }
 
 void te::layout::OutsideArea::onSelectionChanged()
-{
-  
+{  
   QList<QGraphicsItem*> graphicsItems = m_view->scene()->selectedItems();
   QList<QGraphicsItem*> allItems = m_view->scene()->items();
 
@@ -467,25 +465,6 @@ void te::layout::OutsideArea::onAddItemFinalized(QGraphicsItem* item)
   //Refresh Inspector Object window
   if(m_dockInspector)
     m_dockInspector->getObjectInspectorOutside()->itemsInspector(allItems);
-
-  te::layout::AbstractItem<QGraphicsItem>* abstractItem = dynamic_cast<te::layout::AbstractItem<QGraphicsItem> *> (item);
-  if (abstractItem == NULL)
-  {
-    return;
-  }
-  te::layout::EnumObjectType* enumObj = te::layout::Enums::getInstance().getEnumObjectType();
-  te::layout::EnumType* enumType = abstractItem->getController()->getProperties().getTypeObj();
-  if (enumType == enumObj->getImageItem())
-  {
-    ImageItem* imageItem = dynamic_cast<ImageItem*> (item);
-    if (imageItem->getFileName() != "")
-      return;
-    QList<QGraphicsItem*> imageItemList;
-    imageItemList.append(item);
-    m_view->getMenuBuilder()->setSelectedGraphicsItems(imageItemList);
-    m_view->getMenuBuilder()->setCurrentProperty(std::string("file_name"));
-    m_view->getMenuBuilder()->onShowImageDlg();
-  }
 }
 
 void te::layout::OutsideArea::onSelectionChanged(QList<QGraphicsItem*> selectedItems)
@@ -618,3 +597,4 @@ void te::layout::OutsideArea::addAllItemToolbars()
 
   m_view->addToolbarItemInside(object->getMapItem(), inside);
 }
+

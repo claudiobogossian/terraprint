@@ -116,6 +116,8 @@ namespace te
         */
         virtual void afterBuild(QGraphicsItem* item, bool addUndo = true);
 
+        virtual void showImgDlg(QGraphicsItem* item);
+
       protected:
 
         virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type);
