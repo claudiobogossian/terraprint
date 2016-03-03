@@ -632,7 +632,7 @@ void te::layout::GridSettingsOutside::on_cmbPlanarStyle_currentIndexChanged( con
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
+    variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getProperty(m_planarGridSettings->getStyle(), m_planarType);
     prop.setValue(variant);
     prop.setOptionChoice(variant);
@@ -650,7 +650,7 @@ void te::layout::GridSettingsOutside::on_cmbGridStyle_currentIndexChanged( const
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
+    variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getProperty(m_geodesicGridSettings->getStyle(), m_geodesicType);
     prop.setValue(variant);
     prop.setOptionChoice(variant);
@@ -792,7 +792,7 @@ void te::layout::GridSettingsOutside::on_cmbPlanarLineType_currentIndexChanged( 
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
+    variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getProperty(m_planarGridSettings->getLineStyle(), m_planarType);
     prop.setValue(variant);
     prop.setOptionChoice(variant);
@@ -825,7 +825,7 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
+    variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getProperty(m_planarGridSettings->getLineStyle(), m_planarType);
     prop.setValue(variant);
     prop.setOptionChoice(variant);
