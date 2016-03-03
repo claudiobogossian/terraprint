@@ -29,27 +29,41 @@
 #define __TERRALIB_LAYOUT_INTERNAL_GRID_SETTINGS_CONTROLLER_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideController.h"
-#include "../core/property/Property.h"
-#include "../core/Config.h"
+#include "../../core/pattern/mvc/AbstractOutsideController.h"
+#include "../../core/property/Property.h"
+#include "../../core/Config.h"
+
+// Qt
+#include <QStringList>
 
 namespace te
 {
   namespace layout
   {
     class AbstractOutsideModel;
+    class Scene;
+    class AbstractItemView;
 
     class TELAYOUTEXPORT GridSettingsController : public AbstractOutsideController
     {
       public:
 
-        GridSettingsController(AbstractOutsideModel* o);
+        GridSettingsController(Scene* scene, AbstractOutsideModel* o);
 
         virtual ~GridSettingsController();
-        
-        virtual Property updateProperty(std::string name, Variant variant, EnumType* enumType);
-        
+                
         virtual Property getProperty(std::string name, EnumType* enumType);
+
+        virtual QStringList getItemNames(QStringList list, const EnumType* type);
+                
+        virtual bool containsGrid(EnumType* enumType);
+
+        virtual AbstractItemView* searchGrid(EnumType* enumType);
+
+      protected:
+
+        Scene*                 m_scene;
+
     };
   }
 }

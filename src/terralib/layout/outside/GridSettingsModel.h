@@ -45,18 +45,6 @@ namespace te
       GridSettingsModel();
 
       virtual ~GridSettingsModel();
-
-      virtual void setGridProperties(te::layout::Properties properties);
-            
-      virtual bool containsGrid(EnumType* enumType);
-
-      virtual te::layout::Property containsProperty( std::string name, EnumType* enumType );
-      
-      virtual bool updateProperty(Property prop, EnumType* enumType);
-
-    protected:
-
-      te::layout::Properties m_properties;
     };
   }
 }

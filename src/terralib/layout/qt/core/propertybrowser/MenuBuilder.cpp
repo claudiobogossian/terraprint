@@ -29,7 +29,7 @@
 #include "MenuBuilder.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../outside/GridSettingsModel.h"
-#include "../../../outside/GridSettingsController.h"
+#include "../../outside/GridSettingsController.h"
 #include "../../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../outside/GridSettingsOutside.h"
 #include "../../../core/enum/Enums.h"
@@ -165,59 +165,20 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
 
   m_currentPropertyClicked = findMnuProperty(objectName);
 
+  if (m_currentPropertyClicked.isNull())
+  {
+    return;
+  }
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  if(m_currentPropertyClicked.getType() == dataType->getDataTypeColor())
-  {
-    onShowColorDlg();
-  }
-  else if(m_currentPropertyClicked.getType() == dataType->getDataTypeFont())
-  {
-    onShowFontDlg();
-  }
-  else if(m_currentPropertyClicked.getType() == dataType->getDataTypeGridSettings())
-  {
-    onShowGridSettingsDlg();
-  }
-  else if(m_currentPropertyClicked.getType() == dataType->getDataTypeImage())
-  {
-    onShowImageDlg();
-  }
-  if(m_currentPropertyClicked.getType() == dataType->getDataTypeMapChoice())
-  {
-    onShowMapLayerChoiceDlg();
-  }
-  if(m_currentPropertyClicked.getType() == dataType->getDataTypeLegendChoice())
-  {
-    onShowLegendChoiceDlg();
-  }
-  else if(m_currentPropertyClicked.getType() == dataType->getDataTypeBool())
-  {
-    checkedBool(action->isChecked());
-  }
-  else if(m_currentPropertyClicked.getType() == dataType->getDataTypeTextGridSettings())
-  {
-    onShowTextGridSettingsDlg();
-  }
-  else if(m_currentPropertyClicked.getType() == dataType->getDataTypeSVGView())
-  {
-    onShowViewDlg();
-  }
-  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeMapSettings())
-  {
-    onShowMapSettingsDlg();
-  }
-  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeScaleSettings())
-  {
-    onShowScaleSettingsDlg();
-  }  
-  else if (m_currentPropertyClicked.getType() == dataType->getDataTypeNorthSettings())
-  {
-    onShowNorthSettingsDlg();
-  }
-  else if (m_currentPropertyClicked.getType() == dataType->getDataTypePageSetup())
+  if (m_currentPropertyClicked.getType() == dataType->getDataTypePageSetup())
   {
     onShowPageSetupDlg();
+  }
+  else
+  {
+    menuPropertyClicked(m_currentPropertyClicked);
   }
 }
 

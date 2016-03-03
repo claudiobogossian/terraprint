@@ -97,6 +97,12 @@ namespace te
 
         virtual void onClear(std::vector<std::string> names);
 
+        /*!
+          \brief Click on the context menu for an item, the user choose to open a window.
+          \param prop corresponding property choice
+        */
+        virtual void onMenuPropertyClicked(Property prop);
+
       private slots:
 
         void onChangePropertyValue(Property property);
@@ -117,19 +123,22 @@ namespace te
 
         virtual bool updateTree(QList<QGraphicsItem*> graphicsItems, Properties props );
 
+        virtual void reselect();
+
       protected:
 
-        PropertyBrowser* m_layoutPropertyBrowser;
+        PropertyBrowser*      m_layoutPropertyBrowser;
       
         QList<QGraphicsItem*> m_graphicsItems;
         QList<QGraphicsItem*> m_allItems;
-        QLabel* m_nameLabel;
-        QLineEdit* m_propertyFilterEdit;
-        QToolButton* m_configurePropertyEditor;
-        bool m_updatingValues;
-        SharedProperties* m_sharedProps;
+        QLabel*               m_nameLabel;
+        QLineEdit*            m_propertyFilterEdit;
+        QToolButton*          m_configurePropertyEditor;
+        bool                  m_updatingValues;
+        SharedProperties*     m_sharedProps;
         PropertiesUtils*      m_propUtils;
         Scene*                m_scene;
+        bool                  m_currentActionAssociate;
     };
   }
 }

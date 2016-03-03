@@ -57,7 +57,6 @@ void te::layout::ImageItem::setFileName(const std::string& fileName)
     QString qFileName = ItemUtils::convert2QString(m_fileName);
     if (m_image.load(qFileName) == true)
     {
-      defineSize();
       m_image = m_image.mirrored();
     }
   }
@@ -99,7 +98,7 @@ void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraph
   painter->restore();
 }
 
-void te::layout::ImageItem::defineSize()
+void te::layout::ImageItem::adjustSize()
 {
   double width = m_image.width();
   double height = m_image.height();

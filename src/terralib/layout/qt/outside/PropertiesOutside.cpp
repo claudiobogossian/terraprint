@@ -44,6 +44,7 @@
 #include "../core/Scene.h"
 #include "../core/propertybrowser/PropertiesUtils.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
+#include "../core/propertybrowser/DialogPropertiesBrowser.h"
 
 // Qt
 #include <QGroupBox>
@@ -63,7 +64,8 @@ te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProj
   m_updatingValues(false),
   m_sharedProps(0),
   m_propUtils(0),
-  m_scene(scene)
+  m_scene(scene),
+  m_currentActionAssociate(false)
 {
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   te::gm::Envelope box = abstractModel->getBox();
@@ -174,7 +176,10 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
 {
   if(graphicsItems.empty())
   {
-    clearAll();
+    if (!m_currentActionAssociate)
+    {
+      clearAll();
+    }
     return;
   }  
 
@@ -193,6 +198,10 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
   }
   else
   {
+    if (m_currentActionAssociate)
+    {
+      return;
+    }
     clearAll();
   }
 
@@ -235,6 +244,12 @@ void te::layout::PropertiesOutside::onChangePropertyValue( Property property )
   sendPropertyToItems(property, currentSelectionList);
 
   m_scene->update();
+
+  if (m_currentActionAssociate)
+  {
+    reselect();
+    m_currentActionAssociate = false;
+  }
 }
 
 void te::layout::PropertiesOutside::onChangePropertyValue( std::vector<Property> props )
@@ -309,6 +324,12 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
   // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
   if (property.getName().compare(m_sharedProps->getItemObserver()) != 0)
     return;
+  
+  /* By default when selecting another item or no, 
+  all open windows are closed via property browser.
+  By creating a group of map and grid, defined in grid window, 
+  the window should not be closed */
+  m_currentActionAssociate = true;
 
   //we first removed any association, if exists
   foreach(QGraphicsItem* selectedItem, m_graphicsItems)
@@ -338,21 +359,26 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
           QGraphicsItemGroup* group = oldMapItem->group();
           if (group != 0)
           {
+            m_graphicsItems.removeOne(group);
             m_scene->destroyItemGroup(group);
           }
       }
     }
   }
-
+  
   AbstractItemView* mapItemView = m_scene->getItem(property.getValue().toString());
   if (!mapItemView)
   {
+    //m_currentActionAssociate = false;
     return;
   }
 
   MapItem* mapItem = dynamic_cast<MapItem*>(mapItemView);
   if (!mapItem)
+  {
+    //m_currentActionAssociate = false;
     return;
+  }
 
   QList<QGraphicsItem*> listItemsToConnect;
   bool connectItem = false;
@@ -370,7 +396,6 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
         if (connectItem == true)
         {
           //We must move the selected item to the position of the map in scene coordinate system
-
           selectedItem->setPos(mapItem->scenePos());
           listItemsToConnect.push_back(selectedItem);
         }
@@ -394,8 +419,9 @@ void te::layout::PropertiesOutside::changeMapVisitable(Property property)
     changeZValueOrder(listItemsToConnect); //if need to change the order of the z value 
     EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
     QGraphicsItemGroup* newGroup = m_scene->createItemGroup(listItemsToConnect, objType->getMapCompositionItem());
-    newGroup->setSelected(true);
   }
+  //reselect();
+  //m_currentActionAssociate = false;
 }
 
 void te::layout::PropertiesOutside::changeZValueOrder(QList<QGraphicsItem*> listItemsToConnect)
@@ -431,7 +457,6 @@ void te::layout::PropertiesOutside::refreshOutside()
   if(props.getProperties().empty())
     return;
 
-
   const std::vector<Property>& vecProperties = props.getProperties();
 
   Properties newProperties(props);
@@ -451,7 +476,10 @@ void te::layout::PropertiesOutside::refreshOutside()
 
 void te::layout::PropertiesOutside::onClear( std::vector<std::string> names )
 {
-  clearAll();
+  if (!m_currentActionAssociate)
+  {
+    clearAll();
+  }
 }
 
 void te::layout::PropertiesOutside::updatePropertyBrowser( Properties props )
@@ -471,7 +499,7 @@ void te::layout::PropertiesOutside::clearAll()
 bool te::layout::PropertiesOutside::updateTree( QList<QGraphicsItem*> graphicsItems, Properties props )
 {
   bool result = false;
-
+  
   if(m_graphicsItems == graphicsItems)
   {
     if(m_layoutPropertyBrowser->equalsProperties(props))
@@ -480,12 +508,19 @@ bool te::layout::PropertiesOutside::updateTree( QList<QGraphicsItem*> graphicsIt
       return true;
     }
   }
-
   return false;
 }
 
+void te::layout::PropertiesOutside::reselect()
+{
+  foreach(QGraphicsItem* item, m_graphicsItems)
+  {
+    item->setSelected(true);
+  }
+}
 
-
-
-
+void te::layout::PropertiesOutside::onMenuPropertyClicked(Property prop)
+{
+  m_layoutPropertyBrowser->getDialogPropertiesBrowser()->directlyShowWindow(prop);
+}
 

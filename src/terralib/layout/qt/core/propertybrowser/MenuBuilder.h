@@ -73,6 +73,14 @@ namespace te
 
       virtual void setCurrentProperty(std::string name);
 
+      signals:
+
+        /*!
+          \brief Click on the context menu for an item, the user choose to open a window.
+          \param prop corresponding property choice
+        */
+        void menuPropertyClicked(Property prop);
+
       protected slots:
 
         virtual void onMenuTriggered(QAction* action);
@@ -81,24 +89,24 @@ namespace te
 
         virtual void onShowPageSetupDlg();
                 
-    protected:
+      protected:
             
-      virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "");
+        virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "");
       
-      virtual void changePropertyValue(Property property);
+        virtual void changePropertyValue(Property property);
 
-      virtual Property findMnuProperty(EnumType* dataType);
+        virtual Property findMnuProperty(EnumType* dataType);
 
-      virtual Property findMnuProperty(std::string name);
+        virtual Property findMnuProperty(std::string name);
 
-      virtual void checkedBool(bool checked);
+        virtual void checkedBool(bool checked);
 
-    protected:
+      protected:
 
-      QMenu*                m_menu;
-      QList<QGraphicsItem*> m_graphicsItems;
-      Properties            m_properties;
-      PropertiesUtils*      m_propUtils;
+        QMenu*                m_menu;
+        QList<QGraphicsItem*> m_graphicsItems;
+        Properties            m_properties;
+        PropertiesUtils*      m_propUtils;
     };
   }
 }
