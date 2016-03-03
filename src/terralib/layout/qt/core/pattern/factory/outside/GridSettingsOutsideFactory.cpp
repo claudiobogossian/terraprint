@@ -26,14 +26,16 @@
 // TerraLib
 #include "GridSettingsOutsideFactory.h"
 #include "../../../../../outside/GridSettingsModel.h"
-#include "../../../../../outside/GridSettingsController.h"
+#include "../../../../outside/GridSettingsController.h"
 #include "../../../../outside/GridSettingsOutside.h"
 
 te::layout::AbstractOutsideView* te::layout::GridSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
   GridSettingsModel* model = new GridSettingsModel();
 
-  GridSettingsController* controller = new GridSettingsController(model);
+  Scene* scene = params.getScene();
+
+  GridSettingsController* controller = new GridSettingsController(scene, model);
   GridSettingsOutside* view = new GridSettingsOutside(controller, params.getParent());
   controller->setView(view);
 

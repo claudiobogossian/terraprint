@@ -364,9 +364,7 @@ void te::layout::DialogPropertiesBrowser::onShowGridSettingsDlg()
   {
     return;
   }
-
-  model->setGridProperties(m_allProperties);
-  
+    
   gridSettings->load();
   gridSettings->show(); // modeless dialog
   gridSettings->raise(); // top of the parent widget's stack
@@ -708,11 +706,7 @@ void te::layout::DialogPropertiesBrowser::onShowMapSettingsDlg()
   {
     return;
   }
-
-  std::vector<te::layout::Properties> properties;
-  properties.push_back(m_allProperties);
-  model->setPropertiesMaps(properties);
-
+  
   mapSettings->load();
   mapSettings->show(); // modeless dialog
   mapSettings->raise(); // top of the parent widget's stack
@@ -939,7 +933,7 @@ void te::layout::DialogPropertiesBrowser::updateOutside( const std::vector<Prope
 
 void te::layout::DialogPropertiesBrowser::onDestroyed( QObject* obj )
 {
-  if(m_dialogs.empty())
+  if(m_dialogs.isEmpty())
     return;
 
   foreach(QWidget* widget, m_dialogs)
@@ -967,3 +961,84 @@ void te::layout::DialogPropertiesBrowser::appendDialog( QWidget* widget )
   widget->setAttribute(Qt::WA_DeleteOnClose);
 }
 
+bool te::layout::DialogPropertiesBrowser::hasOpenWindows()
+{
+  bool result = false;
+  if (!m_dialogs.isEmpty())
+  {
+    result = true;
+  }
+  return result;
+}
+
+void te::layout::DialogPropertiesBrowser::directlyShowWindow(Property prop)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  if (!dataType)
+  {
+    return;
+  }
+
+  std::string stdLabel = prop.getLabel();
+  if (stdLabel.compare("") == 0)
+    stdLabel = prop.getName();
+
+  QString label = ItemUtils::convert2QString(stdLabel);
+
+  QtProperty* qprop = findProperty(label);
+  if (!qprop)
+  {
+    return;
+  }
+  
+  m_currentPropertyClicked = prop;
+
+  if (prop.getType() == dataType->getDataTypeNone())
+    return;
+
+  if (prop.getType() == dataType->getDataTypeGridSettings())
+  {
+    onShowGridSettingsDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeImage())
+  {
+    onShowImageDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeTextGridSettings())
+  {
+    onShowTextGridSettingsDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeMapChoice())
+  {
+    onShowMapLayerChoiceDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeLegendChoice())
+  {
+    onShowLegendChoiceDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeSVGView())
+  {
+    onShowViewDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeColor())
+  {
+    onShowColorDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeFont())
+  {
+    onShowFontDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeMapSettings())
+  {
+    onShowMapSettingsDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeScaleSettings())
+  {
+    onShowScaleSettingsDlg();
+  }
+  if (prop.getType() == dataType->getDataTypeNorthSettings())
+  {
+    onShowNorthSettingsDlg();
+  }
+}
