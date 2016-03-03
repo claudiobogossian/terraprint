@@ -1475,7 +1475,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="267"/>
         <source>Gap in units</source>
-        <translation>Lacuna em unidades</translation>
+        <translation>Intervalo em unidades</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="275"/>
@@ -1485,22 +1485,22 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="296"/>
         <source>Scale Gap X In Unit:</source>
-        <translation>Lacuna na horizontal em unidade:</translation>
+        <translation>Intervalo horizontal em unidade:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="324"/>
         <source>Gap in millimeters</source>
-        <translation>Lacuna em milímetros</translation>
+        <translation>Intervalo em milímetros</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="332"/>
         <source>Scale Gap X:</source>
-        <translation>Lacuna na horizontal:</translation>
+        <translation>Intervalo horizontal:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="359"/>
         <source>Scale Gap Y:</source>
-        <translation>Lacuna na vertical:</translation>
+        <translation>Intervalo vertical:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="391"/>
