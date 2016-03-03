@@ -26,27 +26,43 @@
 te::layout::ImageController::ImageController( te::layout::AbstractItemModel* model)
   : AbstractItemController(model)
 {
+
 }
 
 te::layout::ImageController::~ImageController()
 {
+
 }
 
-void te::layout::ImageController::update(const Subject* subject)
+void te::layout::ImageController::setProperties(const Properties& properties)
 {
   ImageItem* imageItem = dynamic_cast<ImageItem*>(this->getView());
-  if(imageItem == 0)
+  if (imageItem == 0)
   {
+    AbstractItemController::setProperties(properties);
     return;
   }
 
-  const Property& pNewFileName = m_model->getProperty("file_name");
+  const Property& pNewFileName = properties.getProperty("file_name");
+  if (pNewFileName.isNull())
+  {
+    AbstractItemController::setProperties(properties);
+    return;
+  }
+
   const std::string& newFileName = pNewFileName.getValue().toString();
-  
   const std::string& currentFileName = imageItem->getFileName();
 
-  if(newFileName != currentFileName)
+  if (newFileName != currentFileName)
   {
     imageItem->setFileName(newFileName);
   }
+
+  if (properties.getProperties().size() == 1)
+  {
+    imageItem->adjustSize();
+  }
+
+  AbstractItemController::setProperties(properties);
 }
+

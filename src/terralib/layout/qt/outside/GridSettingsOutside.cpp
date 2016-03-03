@@ -28,16 +28,17 @@
 // TerraLib
 #include "GridSettingsOutside.h"
 #include "ui_GridSettings.h"
-#include "../../outside/GridSettingsController.h"
 #include "../../core/property/Variant.h"
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
+#include "../../core/property/SharedProperties.h"
 #include "../../core/enum/Enums.h"
 #include "../../outside/GridSettingsModel.h"
 #include "terralib/common/StringUtils.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/Font.h"
 #include "../core/ItemUtils.h"
+#include "GridSettingsController.h"
 
 // STL
 #include <string>
@@ -240,17 +241,16 @@ te::color::RGBAColor te::layout::GridSettingsOutside::configColor( QWidget* widg
 
 void te::layout::GridSettingsOutside::load()
 {
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
-  GridSettingsModel* model = dynamic_cast<GridSettingsModel*>(abstractModel);
-  if(!model)
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (!controller)
     return;
 
-  if (!model->containsGrid(m_planarType))
+  if (!controller->containsGrid(m_planarType))
   {
     m_ui->tabType->setTabEnabled(0, false);
   }
   
-  if(!model->containsGrid(m_geodesicType))
+  if (!controller->containsGrid(m_geodesicType))
   {
     m_ui->tabType->setTabEnabled(1, false);
   }
@@ -261,6 +261,12 @@ void te::layout::GridSettingsOutside::load()
 
   /* Grid */
   
+  SharedProperties sharedProps;
+
+  initCombo(m_ui->cmbPlanarConnectedTo, sharedProps.getItemObserver(), m_planarType);
+
+  initCombo(m_ui->cmbGeodesicConnectedTo, sharedProps.getItemObserver(), m_geodesicType);
+
   initCombo(m_ui->cmbUnit, m_planarGridSettings->getUnit(), m_planarType);
   
   initBool(m_ui->chkShowPlanar, m_planarGridSettings->getVisible(), m_planarType);
@@ -555,7 +561,49 @@ void te::layout::GridSettingsOutside::on_cmbUnit_currentIndexChanged( const QStr
     std::string stdText = ItemUtils::convert2StdString(text);
 
     variant.setValue(stdText, dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_planarGridSettings->getUnit(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getUnit(), m_planarType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
+    emit updateProperty(prop);
+  }
+}
+
+void te::layout::GridSettingsOutside::on_cmbPlanarConnectedTo_currentIndexChanged(const QString & text)
+{
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (controller)
+  {
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    SharedProperties sharedProps;
+
+    variant.setValue(stdText, dataType->getDataTypeItemObserver());
+    Property prop = controller->getProperty(sharedProps.getItemObserver(), m_planarType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
+    emit updateProperty(prop);
+  }
+}
+
+void te::layout::GridSettingsOutside::on_cmbGeodesicConnectedTo_currentIndexChanged(const QString & text)
+{
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (controller)
+  {
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+
+    std::string stdText = ItemUtils::convert2StdString(text);
+
+    SharedProperties sharedProps;
+
+    variant.setValue(stdText, dataType->getDataTypeItemObserver());
+    Property prop = controller->getProperty(sharedProps.getItemObserver(), m_geodesicType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
 }
@@ -568,7 +616,8 @@ void te::layout::GridSettingsOutside::on_chkShowPlanar_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkShowPlanar->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getVisible(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getVisible(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -583,8 +632,10 @@ void te::layout::GridSettingsOutside::on_cmbPlanarStyle_currentIndexChanged( con
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_planarGridSettings->getStyle(), variant, m_planarType);
+    variant.setValue(stdText, dataType->getDataTypeStringList());
+    Property prop = controller->getProperty(m_planarGridSettings->getStyle(), m_planarType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
 }
@@ -599,8 +650,10 @@ void te::layout::GridSettingsOutside::on_cmbGridStyle_currentIndexChanged( const
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getStyle(), variant, m_geodesicType);
+    variant.setValue(stdText, dataType->getDataTypeStringList());
+    Property prop = controller->getProperty(m_geodesicGridSettings->getStyle(), m_geodesicType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
 }
@@ -613,7 +666,8 @@ void te::layout::GridSettingsOutside::on_chkShowGeodesic_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkShowGeodesic->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getVisible(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVisible(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -626,7 +680,8 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarGap_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneHrzPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLneHrzGap(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLneHrzGap(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -639,7 +694,8 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarGap_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneVrtPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLneVrtGap(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLneVrtGap(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -664,7 +720,8 @@ void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
       lneHorizontalGap = DMS2DD(lneHorizontalGap);
     }
     variant.setValue(lneHorizontalGap.toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneHrzGap(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -689,7 +746,8 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
       lneVerticalGap = DMS2DD(lneVerticalGap);
     }
     variant.setValue(lneVerticalGap.toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneVrtGap(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -703,11 +761,10 @@ void te::layout::GridSettingsOutside::on_lneSecPrecision_editingFinished(){
     Variant variant;
     QString secPrecision = m_ui->lneSecPrecision->text();
     variant.setValue(secPrecision.toInt(), dataType->getDataTypeInt());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getSecondsPrecisionText(), variant, m_geodesicType);
-    emit updateProperty(prop);
-        
+    Property prop = controller->getProperty(m_geodesicGridSettings->getSecondsPrecisionText(), m_geodesicType);
+    prop.setValue(variant);
+    emit updateProperty(prop);        
   }
-
 }
 
 void te::layout::GridSettingsOutside::on_pbPlanarLineColor_clicked()
@@ -719,7 +776,8 @@ void te::layout::GridSettingsOutside::on_pbPlanarLineColor_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(color, dataType->getDataTypeColor());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLineColor(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLineColor(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -734,8 +792,10 @@ void te::layout::GridSettingsOutside::on_cmbPlanarLineType_currentIndexChanged( 
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLineStyle(), variant, m_planarType);
+    variant.setValue(stdText, dataType->getDataTypeStringList());
+    Property prop = controller->getProperty(m_planarGridSettings->getLineStyle(), m_planarType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
 }
@@ -749,7 +809,8 @@ void te::layout::GridSettingsOutside::on_m_planarLineWidthDoubleSpinBox_valueCha
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(value, dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLineWidth(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLineWidth(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -764,8 +825,10 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLineStyle(), variant, m_geodesicType);
+    variant.setValue(stdText, dataType->getDataTypeStringList());
+    Property prop = controller->getProperty(m_planarGridSettings->getLineStyle(), m_planarType);
+    prop.setValue(variant);
+    prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
 }
@@ -779,7 +842,8 @@ void te::layout::GridSettingsOutside::on_m_lineWidthDoubleSpinBox_valueChanged(d
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(value, dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLineWidth(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLineWidth(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -793,7 +857,8 @@ void te::layout::GridSettingsOutside::on_pbLineColor_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(color, dataType->getDataTypeColor());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLineColor(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLineColor(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -813,7 +878,8 @@ void te::layout::GridSettingsOutside::on_cmbPlanarTextSize_currentIndexChanged( 
  
       Variant variant;
       variant.setValue(font, dataType->getDataTypeFont());
-      Property prop = controller->updateProperty(m_planarGridSettings->getFont(), variant, m_planarType);
+      Property prop = controller->getProperty(m_planarGridSettings->getFont(), m_planarType);
+      prop.setValue(variant);
       emit updateProperty(prop);
     }
   }
@@ -837,7 +903,8 @@ void te::layout::GridSettingsOutside::on_cmbPlanarFont_currentIndexChanged( cons
 
       Variant variant;
       variant.setValue(font, dataType->getDataTypeFont());
-      Property prop = controller->updateProperty(m_planarGridSettings->getFont(), variant, m_planarType);
+      Property prop = controller->getProperty(m_planarGridSettings->getFont(), m_planarType);
+      prop.setValue(variant);
       emit updateProperty(prop);
     }
   }
@@ -852,7 +919,8 @@ void te::layout::GridSettingsOutside::on_pbGridTextPlanarColor_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(color, dataType->getDataTypeColor());
-    Property prop = controller->updateProperty(m_planarGridSettings->getTextColor(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getTextColor(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -865,7 +933,8 @@ void te::layout::GridSettingsOutside::on_chkSuperscriptPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkSuperscriptPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getSuperscriptText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getSuperscriptText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -877,7 +946,7 @@ void te::layout::GridSettingsOutside::on_cmbGeoFont_currentIndexChanged( const Q
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-    Property prop_font = controller->getProperty(m_planarGridSettings->getFont(), m_geodesicType);
+    Property prop_font = controller->getProperty(m_geodesicGridSettings->getFont(), m_geodesicType);
     if (!prop_font.isNull())
     {
       Font font = prop_font.getValue().toFont();
@@ -888,7 +957,8 @@ void te::layout::GridSettingsOutside::on_cmbGeoFont_currentIndexChanged( const Q
 
       Variant variant;
       variant.setValue(font, dataType->getDataTypeFont());
-      Property prop = controller->updateProperty(m_geodesicGridSettings->getFont(), variant, m_geodesicType);
+      Property prop = controller->getProperty(m_geodesicGridSettings->getFont(), m_geodesicType);
+      prop.setValue(variant);
       emit updateProperty(prop);
     }
   }
@@ -901,7 +971,7 @@ void te::layout::GridSettingsOutside::on_cmbGeoTextSize_currentIndexChanged( con
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-    Property prop_font = controller->getProperty(m_planarGridSettings->getFont(), m_geodesicType);
+    Property prop_font = controller->getProperty(m_geodesicGridSettings->getFont(), m_geodesicType);
     if (!prop_font.isNull())
     {
       Font font = prop_font.getValue().toFont();
@@ -909,7 +979,8 @@ void te::layout::GridSettingsOutside::on_cmbGeoTextSize_currentIndexChanged( con
 
       Variant variant;
       variant.setValue(font, dataType->getDataTypeFont());
-      Property prop = controller->updateProperty(m_geodesicGridSettings->getFont(), variant, m_geodesicType);
+      Property prop = controller->getProperty(m_geodesicGridSettings->getFont(), m_geodesicType);
+      prop.setValue(variant);
       emit updateProperty(prop);
     }
   }
@@ -924,7 +995,8 @@ void te::layout::GridSettingsOutside::on_pbGridTextGeoColor_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(color, dataType->getDataTypeColor());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getTextColor(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getTextColor(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -937,7 +1009,8 @@ void te::layout::GridSettingsOutside::on_chkSuperscriptGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkSuperscriptGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getSuperscriptText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getSuperscriptText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -950,7 +1023,8 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_planar_textField_edit
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->xGridInitialPoint_planar_textField->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getInitialGridPointX(), variant, m_planarType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -971,7 +1045,8 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_edit
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->yGridInitialPoint_planar_textField->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getInitialGridPointY(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getInitialGridPointY(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -996,7 +1071,8 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editing
       xGridInitialPoint_geo_textField = DMS2DD(xGridInitialPoint_geo_textField);
     }
     variant.setValue(xGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getInitialGridPointX(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1014,7 +1090,8 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_geo_textField_editing
       yGridInitialPoint_geo_textField = DMS2DD(yGridInitialPoint_geo_textField);
     }
     variant.setValue(yGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getInitialGridPointY(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1027,7 +1104,8 @@ void te::layout::GridSettingsOutside::on_chkBottomPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkBottomPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getBottomText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getBottomText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1040,7 +1118,8 @@ void te::layout::GridSettingsOutside::on_chkLeftPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLeftPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLeftText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getBottomText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1053,7 +1132,8 @@ void te::layout::GridSettingsOutside::on_chkRightPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkRightPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getRightText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getRightText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1066,7 +1146,8 @@ void te::layout::GridSettingsOutside::on_chkTopPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkTopPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getTopText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getTopText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1079,7 +1160,8 @@ void te::layout::GridSettingsOutside::on_chkBottomGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkBottomGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getBottomText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getBottomText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1092,7 +1174,8 @@ void te::layout::GridSettingsOutside::on_chkLeftGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLeftGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLeftText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLeftText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1105,7 +1188,8 @@ void te::layout::GridSettingsOutside::on_chkRightGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkRightGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getRightText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getRightText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1118,7 +1202,8 @@ void te::layout::GridSettingsOutside::on_chkTopGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkTopGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getTopText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getTopText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1131,7 +1216,8 @@ void te::layout::GridSettingsOutside::on_chkBottomRotatePlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkBottomRotatePlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getBottomRotateText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getBottomRotateText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1144,7 +1230,8 @@ void te::layout::GridSettingsOutside::on_chkLeftRotatePlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLeftRotatePlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLeftRotateText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLeftRotateText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1157,7 +1244,8 @@ void te::layout::GridSettingsOutside::on_chkRightRotatePlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkRightRotatePlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getRightRotateText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getRightRotateText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1170,7 +1258,8 @@ void te::layout::GridSettingsOutside::on_chkTopRotatePlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkTopRotatePlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getTopRotateText(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getTopRotateText(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1183,7 +1272,8 @@ void te::layout::GridSettingsOutside::on_chkBottomRotateGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkBottomRotateGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getBottomRotateText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getBottomRotateText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1196,7 +1286,8 @@ void te::layout::GridSettingsOutside::on_chkLeftRotateGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLeftRotateGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLeftRotateText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLeftRotateText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1209,7 +1300,8 @@ void te::layout::GridSettingsOutside::on_chkRightRotateGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkRightRotateGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getRightRotateText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getRightRotateText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1222,7 +1314,8 @@ void te::layout::GridSettingsOutside::on_chkTopRotateGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkTopRotateGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getTopRotateText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getTopRotateText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1235,7 +1328,8 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarDisplacement_editingFinishe
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneVrtPlanarDisplacement->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLneVrtDisplacement(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLneVrtDisplacement(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1248,7 +1342,8 @@ void te::layout::GridSettingsOutside::on_chkVisibleTextsPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkVisibleTextsPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_planarGridSettings->getVisibleAllTexts(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getVisibleAllTexts(), m_planarType);
+    prop.setValue(variant);
 
     bool opt = m_ui->chkVisibleTextsPlanarText->isChecked();
     m_ui->chkBottomPlanarText->setChecked(opt);
@@ -1268,7 +1363,8 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarDisplacement_editingFinishe
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneHrzPlanarDisplacement->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_planarGridSettings->getLneHrzDisplacement(), variant, m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLneHrzDisplacement(), m_planarType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1281,7 +1377,8 @@ void te::layout::GridSettingsOutside::on_lneVrtGeoDisplacement_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneVrtGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneHrzDisplacement(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtDisplacement(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1294,7 +1391,8 @@ void te::layout::GridSettingsOutside::on_lneHrzGeoDisplacement_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneHrzGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneHrzDisplacement(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzDisplacement(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1307,7 +1405,8 @@ void te::layout::GridSettingsOutside::on_chkDegreesGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkDegreesGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getDegreesText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getDegreesText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
     setGeodesicValues();
   }
@@ -1321,7 +1420,8 @@ void te::layout::GridSettingsOutside::on_chkMinutesGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkMinutesGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getMinutesText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getMinutesText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1334,7 +1434,8 @@ void te::layout::GridSettingsOutside::on_chkSecondsGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkSecondsGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getSecondsText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getSecondsText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1347,7 +1448,8 @@ void te::layout::GridSettingsOutside::on_chkVisibleTextsGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkVisibleTextsGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getVisibleAllTexts(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVisibleAllTexts(), m_geodesicType);
+    prop.setValue(variant);
 
     bool opt = m_ui->chkVisibleTextsGeoText->isChecked();
     m_ui->chkBottomGeoText->setChecked(opt);
@@ -1370,7 +1472,8 @@ void te::layout::GridSettingsOutside::on_cmbCornerGeoFont_currentIndexChanged( c
     std::string stdText = ItemUtils::convert2StdString(text);
 
     variant.setValue(stdText, dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getFontTextCorner(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getFontTextCorner(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1383,7 +1486,8 @@ void te::layout::GridSettingsOutside::on_cmbCornerGeoTextSize_currentIndexChange
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(text.toInt(), dataType->getDataTypeInt());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getPointTextSizeCorner(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getPointTextSizeCorner(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1397,7 +1501,8 @@ void te::layout::GridSettingsOutside::on_pbCornerTextGeoColor_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(color, dataType->getDataTypeColor());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getTextColorCorner(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getTextColorCorner(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1410,7 +1515,8 @@ void te::layout::GridSettingsOutside::on_lneCornerHrzGeoDisplacement_editingFini
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneCornerHrzGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneCornerHrzDisplacement(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneCornerHrzDisplacement(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1423,7 +1529,8 @@ void te::layout::GridSettingsOutside::on_lneCornerVrtGeoDisplacement_editingFini
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneCornerVrtGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneCornerVrtDisplacement(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneCornerVrtDisplacement(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1436,7 +1543,8 @@ void te::layout::GridSettingsOutside::on_chkLowerRightCornerGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLowerRightCornerGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLowerRightCornerText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLowerRightCornerText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1449,7 +1557,8 @@ void te::layout::GridSettingsOutside::on_chkUpperRightCornerGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkUpperRightCornerGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getUpperRightCornerText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getUpperRightCornerText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1462,7 +1571,8 @@ void te::layout::GridSettingsOutside::on_chkLowerLeftCornerGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLowerLeftCornerGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLowerLeftCornerText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLowerLeftCornerText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1475,7 +1585,8 @@ void te::layout::GridSettingsOutside::on_chkUpperLeftCornerGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkUpperLeftCornerGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getUpperLeftCornerText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getUpperLeftCornerText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1488,7 +1599,8 @@ void te::layout::GridSettingsOutside::on_chkVisibleCornerTextsGeoText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkVisibleCornerTextsGeoText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getVisibleCornerTextsText(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVisibleCornerTextsText(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1501,7 +1613,8 @@ void te::layout::GridSettingsOutside::on_ckDefineScale_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->ckDefineScale->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getDefineScale(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getDefineScale(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1514,7 +1627,8 @@ void te::layout::GridSettingsOutside::on_cmbScale_currentIndexChanged( const QSt
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(text.toInt(), dataType->getDataTypeString());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getScale(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getScale(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1527,7 +1641,8 @@ void te::layout::GridSettingsOutside::on_ckbClip_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->ckbClip->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getClip(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getClip(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1540,7 +1655,8 @@ void te::layout::GridSettingsOutside::on_lneX1_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneX1->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneX1(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneX1(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1553,7 +1669,8 @@ void te::layout::GridSettingsOutside::on_lneX2_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneX2->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneX2(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneX2(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1566,7 +1683,8 @@ void te::layout::GridSettingsOutside::on_lneY1_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneY1->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneY1(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneY1(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1579,7 +1697,8 @@ void te::layout::GridSettingsOutside::on_lneY2_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneY2->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneY2(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneY2(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1592,7 +1711,8 @@ void te::layout::GridSettingsOutside::on_lneX3_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneX3->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneX3(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneX3(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1605,7 +1725,8 @@ void te::layout::GridSettingsOutside::on_lneX4_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneX4->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneX4(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneX4(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1618,7 +1739,8 @@ void te::layout::GridSettingsOutside::on_lneY3_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneY3->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneY3(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneY3(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1631,7 +1753,8 @@ void te::layout::GridSettingsOutside::on_lneY4_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->lneY4->text().toDouble(), dataType->getDataTypeDouble());
-    Property prop = controller->updateProperty(m_geodesicGridSettings->getLneY4(), variant, m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLneY4(), m_geodesicType);
+    prop.setValue(variant);
     emit updateProperty(prop);
   }
 }
@@ -1769,6 +1892,8 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
   if(!combo)
     return;
 
+  combo->blockSignals(true);
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   int index = -1;
@@ -1824,6 +1949,19 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
       variant.setValue(qText);
     }
   }
+  else if (prop.getType() == dataType->getDataTypeItemObserver())
+  {
+    EnumObjectType* dataTypeObj = Enums::getInstance().getEnumObjectType();
+    QStringList list;
+    list.append("");
+    list = controller->getItemNames(list, dataTypeObj->getMapItem());
+    
+    combo->addItems(list);
+
+    std::string txt = prop.getValue().toString();
+    QString qText = ItemUtils::convert2QString(txt);
+    variant.setValue(qText);
+  }
 
   //When the value is not a QString
   QString value = variant.toString();
@@ -1842,5 +1980,6 @@ void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string na
   {
     combo->setCurrentIndex(index);
   }
+  combo->blockSignals(false);
 }
 

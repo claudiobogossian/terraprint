@@ -81,6 +81,8 @@ namespace te
         std::map<std::string, Property> getDlgProps();
 
         virtual void closeAllWindows();
+
+        virtual bool hasOpenWindows();
         
         virtual bool changeQtPropertyValue(QtProperty* pproperty, const Property& property);
 
@@ -101,6 +103,13 @@ namespace te
         virtual int getVariantType(EnumType* dataType);
 
         virtual void clearAll();
+
+        /*!
+          \brief Opens a corresponding dialog window to an existing property in the Property Browser. 
+            Example usage: Click on the context menu for an item, the user choose to open a window.
+          \param prop corresponding property choice
+        */
+        virtual void directlyShowWindow(Property prop);
             
       protected slots:
 

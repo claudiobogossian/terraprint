@@ -59,9 +59,29 @@ te::layout::Property te::layout::MapSettingsController::getProperty(std::string 
   if (mapList.size() == 0)
     return prop;
 
+  bool found = false;
+
   QGraphicsItem* item = mapList[0];
   MapItem* mapItem = dynamic_cast<MapItem*>(item);
   if (mapItem)
+  {
+    if (mapItem->isSelected())
+    {
+      found = true;
+    }
+    else
+    {
+      if (mapItem->parentItem())
+      {
+        if (mapItem->isSelected())
+        {
+          found = true;
+        }
+      }
+    }
+  }
+
+  if (found)
   {
     prop = mapItem->getController()->getProperty(name);
   }

@@ -32,6 +32,8 @@
 #include "pattern/command/AddCommand.h"
 #include "Scene.h"
 #include "ItemUtils.h"
+#include "../item/ImageItem.h"
+#include "View.h"
 
 // STL
 #include <sstream>
@@ -124,8 +126,9 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
     abstractItem->getController()->setProperties(m_props);
   }
   
-
   afterBuild(item, addUndo);
+
+  showImgDlg(item);
 
   return item;
 }
@@ -223,5 +226,38 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
 
   Properties pEmpty;
   return ItemFactoryParamsCreate(name, m_id, m_coord, m_width, m_height);
+}
+
+void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
+{
+  te::layout::AbstractItem<QGraphicsItem>* abstractItem = dynamic_cast<te::layout::AbstractItem<QGraphicsItem> *> (item);
+  if (abstractItem == NULL)
+  {
+    return;
+  }
+  te::layout::EnumObjectType* enumObj = te::layout::Enums::getInstance().getEnumObjectType();
+  te::layout::EnumType* enumType = abstractItem->getController()->getProperties().getTypeObj();
+  if (enumType == enumObj->getImageItem())
+  {
+    ImageItem* imageItem = dynamic_cast<ImageItem*> (item);
+    if (imageItem)
+    {
+      Property prop = abstractItem->getController()->getProperty("file_name");
+
+      if (prop.getValue().toString().compare("") != 0)
+        return;
+
+      QList<QGraphicsItem*> imageItemList;
+      imageItemList.append(item);
+
+      View* view = m_scene->getView();
+      if (view)
+      {
+        view->getMenuBuilder()->setSelectedGraphicsItems(imageItemList);
+        view->getMenuBuilder()->setCurrentProperty(std::string("file_name"));
+        view->getMenuBuilder()->onShowImageDlg();
+      }
+    }
+  }
 }
 

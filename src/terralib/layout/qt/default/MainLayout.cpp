@@ -25,14 +25,16 @@
 
 // TerraLib
 #include "MainLayout.h"
-#include "../../../layout/qt/core/Scene.h"
+#include "../core/Scene.h"
 #include "terralib/color/RGBAColor.h"
 #include "terralib/geometry/Envelope.h"
 #include "OutsideArea.h"
 #include "DisplayDock.h"
-#include "../../../layout/core/pattern/singleton/Context.h"
+#include "../../core/pattern/singleton/Context.h"
 #include "../../../qt/plugins/layout/ProxyProject.h"
 #include "terralib/qt/widgets/canvas/Canvas.h"
+#include "../outside/PropertiesOutside.h"
+#include "PropertiesDock.h"
 
 // Qt
 #include <QGraphicsScene>
@@ -121,6 +123,14 @@ void te::layout::MainLayout::postInit()
      m_outsideArea = new OutsideArea(m_proxyProject, m_view, m_statusBar);
  /* TODO: DONE Evento de exit sendo tratado do lado de fora para matar o dock quando mainlayout morrer*/
      m_outsideArea->connect(m_outsideArea, SIGNAL(exit()), this, SLOT(onExit()));
+
+     MenuBuilder* menu = m_view->getMenuBuilder();
+     if (menu)
+     {
+       PropertiesDock* dock = m_outsideArea->getPropertiesDock();
+       PropertiesOutside* propOut = dock->getPropertiesOutside();
+       propOut->connect(menu, SIGNAL(menuPropertyClicked(Property)), propOut, SLOT(onMenuPropertyClicked(Property)));
+     }
    }
 
    m_view->show();

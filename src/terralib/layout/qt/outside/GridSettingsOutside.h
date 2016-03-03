@@ -86,6 +86,10 @@ namespace te
         
         virtual void on_helpPushButton_clicked();
 
+        virtual void on_cmbPlanarConnectedTo_currentIndexChanged(const QString & text);
+
+        virtual void on_cmbGeodesicConnectedTo_currentIndexChanged(const QString & text);
+
         virtual void on_cmbUnit_currentIndexChanged ( const QString & text );
 
         virtual void on_chkShowPlanar_clicked();

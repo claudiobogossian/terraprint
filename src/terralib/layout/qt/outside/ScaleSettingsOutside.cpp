@@ -408,6 +408,8 @@ void te::layout::ScaleSettingsOutside::initCombo(QWidget* widget, std::string na
   if (!combo)
     return;
 
+  combo->blockSignals(true);
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   int index = -1;
@@ -471,6 +473,7 @@ void te::layout::ScaleSettingsOutside::initCombo(QWidget* widget, std::string na
   {
     combo->setCurrentIndex(index);
   }
+  combo->blockSignals(false);
 }
 
 void te::layout::ScaleSettingsOutside::initTextEdit(QWidget* widget, std::string nameComponent)
