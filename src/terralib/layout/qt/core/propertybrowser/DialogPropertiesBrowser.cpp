@@ -980,14 +980,8 @@ void te::layout::DialogPropertiesBrowser::directlyShowWindow(Property prop)
     return;
   }
 
-  std::string stdLabel = prop.getLabel();
-  if (stdLabel.compare("") == 0)
-    stdLabel = prop.getName();
-
-  QString label = ItemUtils::convert2QString(stdLabel);
-
-  QtProperty* qprop = findProperty(label);
-  if (!qprop)
+  std::string name = prop.getName();
+  if (!m_allProperties.contains(name))
   {
     return;
   }
