@@ -45,6 +45,7 @@
 #include <QFileDialog>
 #include <QApplication>
 #include <QMessageBox>
+#include <QPrintDialog>
 
 te::layout::PrintScene::PrintScene( QGraphicsScene* scene ):
   m_scene(scene),
@@ -57,7 +58,7 @@ te::layout::PrintScene::~PrintScene()
 {
 }
 
-void te::layout::PrintScene::printPreview()
+void te::layout::PrintScene::showPrintPreviewDialog()
 {
   if(!m_scene)
     return;
@@ -87,6 +88,53 @@ void te::layout::PrintScene::printPreview()
   {
     delete preview;
     preview = 0;
+
+    Scene* sc = dynamic_cast<Scene*>(m_scene);
+    if(sc)
+    {
+      sc->redrawItems();
+    }
+  }
+
+  sc->setContext(oldContext);
+}
+
+void te::layout::PrintScene::showPrintDialog()
+{
+  if(!m_scene)
+    return;
+
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return;
+
+  ContextObject oldContext = sc->getContext();
+
+  QPrinter* printer = createPrinter();
+  printer->setOutputFormat(QPrinter::NativeFormat);
+
+  QPrintDialog *printDialog = new QPrintDialog(printer, (QWidget*) sc->getView());
+  //connect(preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPaper(QPrinter*)));
+
+
+
+  if(printDialog->exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
+  {
+    if(printer)
+    {
+      delete printer;
+      printer = 0;
+    }
+  }
+  else
+  {
+	  printPaper(printer);
+  }
+
+  if(printDialog)
+  {
+    delete printDialog;
+    printDialog = 0;
 
     Scene* sc = dynamic_cast<Scene*>(m_scene);
     if(sc)

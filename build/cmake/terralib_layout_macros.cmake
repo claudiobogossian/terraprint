@@ -168,13 +168,12 @@ MACRO(GenerateTranslationQt5 translation_dir project_name qm_files)
       ARGS "${_ts_file_name}" -qm "${qm_file}"
       COMMENT "Generating ${project_name} translations"
   )
-  message ("terralib_dir: ${terralib_DIR}")
   list(APPEND ${qm_files} ${qm_file})
 ENDMACRO(GenerateTranslationQt5)
 
 MACRO(GenerateTranslationQt4 translation_dir project_name qm_files)
   set(_ts_file_name ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/${project_name}_pt_br.ts)
-  set(qm_file ${CMAKE_BINARY_DIR}/translations/${project_name}_pt_br.qm)
+  set(qm_file ${CMAKE_BINARY_DIR}/share/terralib/translations/${project_name}_pt_br.qm)
 
   add_custom_command(
     TARGET ${project_name}

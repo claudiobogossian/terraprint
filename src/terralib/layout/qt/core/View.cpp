@@ -886,7 +886,8 @@ void te::layout::View::print()
   disableUpdate();
   
   PrintScene printer(scne);
-  printer.printPreview();
+  //printer.showPrintPreviewDialog();
+  printer.showPrintDialog();
 
   enableUpdate();
 

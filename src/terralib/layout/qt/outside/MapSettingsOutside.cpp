@@ -87,8 +87,8 @@ void te::layout::MapSettingsOutside::init()
 {
   if (m_ui->pBtnOK && m_ui->pBtnCancel)
   {
-    connect(m_ui->pBtnOK, SIGNAL(pressed()), this, SLOT(onOkPushButtonPressed()));
-    connect(m_ui->pBtnCancel, SIGNAL(pressed()), this, SLOT(onCancelPushButtonPressed()));
+    connect(m_ui->pBtnOK, SIGNAL(clicked()), this, SLOT(onOkPushButtonPressed()));
+    connect(m_ui->pBtnCancel, SIGNAL(clicked()), this, SLOT(onCancelPushButtonPressed()));
   }
 
 }
