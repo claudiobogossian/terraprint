@@ -134,6 +134,7 @@ namespace te
         bool                    m_invertedMatrix;
         bool                    m_isEditionMode;
         bool                    m_subSelected;
+        bool                    m_useResizePixmap; //!< use or not pixmap for resizing
     };
   }
 }

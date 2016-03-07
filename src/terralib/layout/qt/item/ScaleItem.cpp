@@ -43,6 +43,7 @@ te::layout::ScaleItem::ScaleItem(AbstractItemController* controller, bool invert
   , m_gapY(0)
   , m_scaleUnitGapX(0)
 {  
+  m_useResizePixmap = false;  // no use pixmap for resizing
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
 }

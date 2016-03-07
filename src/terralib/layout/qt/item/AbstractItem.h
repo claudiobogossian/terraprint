@@ -345,7 +345,7 @@ namespace te
         return;
       }
 
-      if (m_currentAction == te::layout::RESIZE_ACTION)
+      if (m_currentAction == te::layout::RESIZE_ACTION && m_useResizePixmap)
       {
         drawItemResized(painter, option, widget);
         drawFrame(painter);
