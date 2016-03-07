@@ -297,63 +297,66 @@ void te::layout::MapSettingsOutside::on_lneHeight_editingFinished(){
 void te::layout::MapSettingsOutside::loadScaleCombobox(){
 
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
+
   if (controller){
-    Property prop = controller->getProperty("scale");
-    int currentScale = (int) prop.getValue().toDouble();
 
+    Property initialProp = controller->getProperty("scale");
 
-    std::string stringValue =  formatScaleValue(boost::lexical_cast<std::string>(currentScale));
+    int currentScale = (int)initialProp.getValue().toDouble();
+
+    std::string stringValue = formatScaleValue(boost::lexical_cast<std::string>(currentScale));
 
     m_ui->cmbScale->addItem(stringValue.c_str(), QVariant((double)controller->getProperty("scale").getValue().toDouble()));
-  
+
   }
 
-  m_ui->cmbScale->addItem("1 000", QVariant((double)1000));
-  m_ui->cmbScale->addItem("2 000", QVariant((double)2000));
-  m_ui->cmbScale->addItem("2 500", QVariant((double)2500));
-  m_ui->cmbScale->addItem("5 000", QVariant((double)5000));
-  m_ui->cmbScale->addItem("10 000", QVariant((double)10000));
-  m_ui->cmbScale->addItem("20 000", QVariant((double)20000));
-  m_ui->cmbScale->addItem("25 000", QVariant((double)25000));
-  m_ui->cmbScale->addItem("50 000", QVariant((double)50000));
-  m_ui->cmbScale->addItem("100 000", QVariant((double)100000));
-  m_ui->cmbScale->addItem("200 000", QVariant((double)200000));
-  m_ui->cmbScale->addItem("250 000", QVariant((double)250000));
-  m_ui->cmbScale->addItem("500 000", QVariant((double)500000));
-  m_ui->cmbScale->addItem("1 000 000", QVariant((double)1000000));
-  m_ui->cmbScale->addItem("2 000 000", QVariant((double)2000000));
-  m_ui->cmbScale->addItem("2 500 000", QVariant((double)2500000));
-  m_ui->cmbScale->addItem("5 000 000", QVariant((double)5000000));
-  m_ui->cmbScale->addItem("10 000 000", QVariant((double)10000000));
-  m_ui->cmbScale->addItem("20 000 000", QVariant((double)20000000));
-  m_ui->cmbScale->addItem("25 000 000", QVariant((double)25000000));
-  m_ui->cmbScale->addItem("50 000 000", QVariant((double)50000000));
-  m_ui->cmbScale->addItem("100 000 000", QVariant((double)100000000));
+  m_ui->cmbScale->addItem("1.000", QVariant((double)1000));
+  m_ui->cmbScale->addItem("2.000", QVariant((double)2000));
+  m_ui->cmbScale->addItem("2.500", QVariant((double)2500));
+  m_ui->cmbScale->addItem("5.000", QVariant((double)5000));
+  m_ui->cmbScale->addItem("10.000", QVariant((double)10000));
+  m_ui->cmbScale->addItem("20.000", QVariant((double)20000));
+  m_ui->cmbScale->addItem("25.000", QVariant((double)25000));
+  m_ui->cmbScale->addItem("50.000", QVariant((double)50000));
+  m_ui->cmbScale->addItem("100.000", QVariant((double)100000));
+  m_ui->cmbScale->addItem("200.000", QVariant((double)200000));
+  m_ui->cmbScale->addItem("250.000", QVariant((double)250000));
+  m_ui->cmbScale->addItem("500.000", QVariant((double)500000));
+  m_ui->cmbScale->addItem("1.000.000", QVariant((double)1000000));
+  m_ui->cmbScale->addItem("2.000.000", QVariant((double)2000000));
+  m_ui->cmbScale->addItem("2.500.000", QVariant((double)2500000));
+  m_ui->cmbScale->addItem("5.000.000", QVariant((double)5000000));
+  m_ui->cmbScale->addItem("10.000.000", QVariant((double)10000000));
+  m_ui->cmbScale->addItem("20.000.000", QVariant((double)20000000));
+  m_ui->cmbScale->addItem("25.000.000", QVariant((double)25000000));
+  m_ui->cmbScale->addItem("50.000.000", QVariant((double)50000000));
+  m_ui->cmbScale->addItem("100.000.000", QVariant((double)100000000));
 
 }
 
 void te::layout::MapSettingsOutside::on_cmbScale_currentIndexChanged(const QString & text){
 
-
-
   MapSettingsController* controller = dynamic_cast<MapSettingsController*>(m_controller);
 
-  double inputValue = text.toDouble();
+  QString copyText = text;
+  copyText.remove('.');
+  int inputValue = copyText.remove('.').toInt();
 
-  if (inputValue > 0.0){
+  if (inputValue > 0){
     if (controller)
     {
-      string formatedString = formatScaleValue(text.toStdString());
+      std::string currentValue = std::to_string(inputValue);
+      string formatedString = formatScaleValue(currentValue);
 
       m_ui->cmbScale->setItemText(m_ui->cmbScale->currentIndex(), ItemUtils::convert2QString(formatedString));
-      m_ui->cmbScale->setItemData(m_ui->cmbScale->currentIndex(), QVariant((double)inputValue));
+      m_ui->cmbScale->setItemData(m_ui->cmbScale->currentIndex(), QVariant(inputValue));
 
       Property prop = controller->getProperty("scale");
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
       
       Variant variant;
       
-      variant.setValue(inputValue, dataType->getDataTypeDouble());
+      variant.setValue((double)inputValue, dataType->getDataTypeDouble());
       prop.setValue(variant);
 
       emit updateProperty(prop);
@@ -396,16 +399,18 @@ void te::layout::MapSettingsOutside::on_cmbUnit_currentIndexChanged(const QStrin
 
     Property prop = controller->getProperty("size_unit");
     if (selectedUnit != prop.getOptionByCurrentChoice().convertToString()){
-      if (selectedUnit == cm){
+      if (selectedUnit == cm)
+      {
         
         double cmWidth = mm2cm(m_ui->lneWidth->text().toDouble());
         m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(cmWidth).c_str()));
 
         double cmHeight = mm2cm(m_ui->lneHeight->text().toDouble());
         m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(cmHeight).c_str()));
-    }
+      }
       
-      if (selectedUnit == mm){
+      if (selectedUnit == mm)
+      {
 
         double mmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
         m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(mmWidth).c_str()));
@@ -413,7 +418,7 @@ void te::layout::MapSettingsOutside::on_cmbUnit_currentIndexChanged(const QStrin
         double mmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
         m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(mmHeight).c_str()));
 
-    }
+      }
 
     }
 
@@ -488,13 +493,11 @@ std::string  te::layout::MapSettingsOutside::formatScaleValue(std::string inputV
 
     if (((indexSpace % 3) == 0) && i > 0){
 
-      std::string tempBuffer = " ";
+      std::string tempBuffer = ".";
       tempBuffer += formatedValue[i];
       tempBuffer += formatedString;
 
-      formatedString = tempBuffer;
-
-    
+      formatedString = tempBuffer;    
     }
     else{
 
