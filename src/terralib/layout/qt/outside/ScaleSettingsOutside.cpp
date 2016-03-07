@@ -85,8 +85,25 @@ void te::layout::ScaleSettingsOutside::load()
   initInt(m_ui->txtNumberOfBreaks, "number_of_breaks");
   createIntValidator(m_ui->txtNumberOfBreaks);
 
-  initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
-  createIntValidator(m_ui->txtScaleGapXInUnit);
+  initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+
+  ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
+
+  const Property& pNewUnitString = controller->getScaleProperty("Unit");
+
+  std::string unitStr = "(" + pNewUnitString.getOptionByCurrentChoice().toString() + ")";
+  if (!controller)
+    return;
+
+  if (unitStr == "(m)" || unitStr == "m"){
+    createIntValidator(m_ui->txtScaleGapXInUnit);
+
+  }
+  else{
+    createDoubleValidator(m_ui->txtScaleGapXInUnit);
+  }
+
+
 }
 
 void te::layout::ScaleSettingsOutside::setPosition(const double& x, const double& y)
@@ -177,12 +194,20 @@ void te::layout::ScaleSettingsOutside::on_cmbUnit_currentIndexChanged(const QStr
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
+    if (text == "(m)" || text == "m"){
+      createIntValidator(m_ui->txtScaleGapXInUnit);
+
+    }
+    else{
+      createDoubleValidator(m_ui->txtScaleGapXInUnit);
+    }
+
     variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getScaleProperty("Unit");
     prop.setValue(variant);
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
-    initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+    initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   }
 }
 
@@ -205,22 +230,40 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
-    int scaleGapXInUnit = m_ui->txtScaleGapXInUnit->text().toInt();
+    double scaleGapXInUnit = m_ui->txtScaleGapXInUnit->text().toDouble();
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
-    variant.setValue(scaleGapXInUnit, dataType->getDataTypeInt());
+    variant.setValue(scaleGapXInUnit, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_in_unit_width_rect_gap");
+    
+    std::string unitStr = m_ui->cmbUnit->currentText().toLatin1();
 
     if (m_ui->txtScaleGapXInUnit->text().compare("") == 0
-      || scaleGapXInUnit == prop.getValue().toInt())
+      || scaleGapXInUnit == prop.getValue().toDouble())
     {
-      QString qScaleGapXInUnit = QString::number(prop.getValue().toInt());
-      m_ui->txtScaleGapXInUnit->setText(qScaleGapXInUnit);
+
+      if (unitStr == "(m)" || unitStr == "m"){
+        QString qScaleGapXInUnit = QString::number(prop.getValue().toInt());
+        m_ui->txtScaleGapXInUnit->setText(qScaleGapXInUnit);
+      }
+      else{
+        QString qScaleGapXInUnit = QString::number(prop.getValue().toDouble());
+        m_ui->txtScaleGapXInUnit->setText(qScaleGapXInUnit);
+      }
+
       return;
     }
 
-    prop.setValue(variant);
+
+
+    if (unitStr == "(m)" || unitStr == "m"){
+      prop.setValue(variant, true, 0);
+    }
+    else{
+      prop.setValue(variant, true, 1);
+    }
+
     emit updateProperty(prop);
     initDouble(m_ui->txtScaleGapX, "scale_width_rect_gap");
   }
@@ -248,7 +291,7 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapX_editingFinished()
 
     prop.setValue(variant);
     emit updateProperty(prop);
-    initInt(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+    initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   }
 }
 
@@ -631,6 +674,16 @@ void te::layout::ScaleSettingsOutside::createIntValidator(QWidget* widget)
     QRegExp regExp("(^$)|([1-9]\\d{0,12}$)");
     QValidator* validator = new QRegExpValidator(regExp, widget);
     edit->setValidator(validator);
+  }
+}
+
+
+void te::layout::ScaleSettingsOutside::createDoubleValidator(QWidget* widget)
+{
+  QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
+  if (edit)
+  {
+    edit->setValidator(new QDoubleValidator(0.0, 99999999.9, 1, edit));
   }
 }
 

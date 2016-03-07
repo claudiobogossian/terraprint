@@ -127,6 +127,8 @@ namespace te
         QFont font2QFont(Font font);
 
         virtual void createIntValidator(QWidget* widget);
+
+        virtual void createDoubleValidator(QWidget* widget);
         
       private:
 

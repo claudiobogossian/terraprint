@@ -89,7 +89,7 @@ namespace te
         double  m_gapX;
         double  m_gapY;
         Font    m_font;
-        int     m_scaleUnitGapX;
+        double  m_scaleUnitGapX;
     };
   }
 }

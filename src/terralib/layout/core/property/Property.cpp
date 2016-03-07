@@ -356,10 +356,16 @@ void te::layout::Property::clear()
   m_label = "";
 }
 
-void te::layout::Property::setValue( const Variant& variant )
+void te::layout::Property::setValue(const Variant& variant, bool usePrecision, int precisionValue)
 {
   m_value = variant;
-  m_type = variant.getType();
+  if (usePrecision){
+
+    m_value.setPrecision(precisionValue);
+    m_value.usePrecision(usePrecision);
+
+  }
+    m_type = variant.getType();
 }
 
 void te::layout::Property::setLabel( std::string label )
