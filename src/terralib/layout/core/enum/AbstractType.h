@@ -96,8 +96,10 @@ namespace te
       TPLowerLeft,
       TPLowerRight,
       TPCenter,
-      TPCenterRight,
-      TPCenterLeft,
+      TPRight,
+      TPLeft,
+      TPTop,
+      TPLower,
       TPNoneSide
     };
 

@@ -104,31 +104,15 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   if (m_isPrinting == true)
   {
     //then we create the image to be rendered
-    QPaintDevice* device = 0;
-    if (m_useQImage == true)
-    {
-      device = new QImage(sizeInPixels, QImage::Format_ARGB32);
-      ((QImage*)device)->fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
-    }
-    else
-    {
-      device = new QPixmap(sizeInPixels);
-      ((QPixmap*)device)->fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
-    }
+    QPixmap* pixmap = new QPixmap(sizeInPixels);
+    pixmap->fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
 
-    drawMapOnDevice(device);
+    drawMapOnDevice(pixmap);
 
     //and finally we draw the rendered pixmap to the output (screen, pdf or printer)
-    if (m_useQImage == true)
-    {
-      drawImage(this->getAdjustedBoundingRect(painter), painter, *((QImage*)device));
-    }
-    else
-    {
-      drawPixmap(this->getAdjustedBoundingRect(painter), painter, *((QPixmap*)device));
-    }
+    drawPixmap(this->getAdjustedBoundingRect(painter), painter, *pixmap);
 
-    delete device;
+    delete pixmap;
   }
   else
   {

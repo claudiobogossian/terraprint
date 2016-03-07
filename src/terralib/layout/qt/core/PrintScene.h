@@ -72,7 +72,12 @@ namespace te
         /*!
           \brief Shows a preview window before printing(only the area corresponding to the paper).
         */
-        virtual void printPreview();
+        virtual void showPrintPreviewDialog();
+
+        /*!
+          \brief Shows a window to print the scene. Allows to choose and configure the printer.
+        */
+        virtual void showPrintDialog();
 
         /*!
           \brief Print the scene(only the area corresponding to the paper).

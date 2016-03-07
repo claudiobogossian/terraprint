@@ -58,8 +58,8 @@ void te::layout::PDFSettingsOutside::init()
   
   if (m_ui->pBtnOK && m_ui->pBtnCancel && m_ui->pBtnSaveAs)
   {
-    connect(m_ui->pBtnOK, SIGNAL(pressed()), this, SLOT(onOkPushButtonPressed()));
-    connect(m_ui->pBtnCancel, SIGNAL(pressed()), this, SLOT(onCancelPushButtonPressed()));
+    connect(m_ui->pBtnOK, SIGNAL(clicked()), this, SLOT(onOkPushButtonPressed()));
+    connect(m_ui->pBtnCancel, SIGNAL(clicked()), this, SLOT(onCancelPushButtonPressed()));
     connect(m_ui->pBtnSaveAs, SIGNAL(clicked()), this, SLOT(onSaveAsClicked()));
     connect(m_ui->cmbDPI, SIGNAL(currentIndexChanged(const QString)), this, SLOT(onCurrentIndexChanged(const QString)));
   }

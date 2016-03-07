@@ -9,6 +9,7 @@ te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controlle
   , m_invertedMatrix(invertedMatrix)
   , m_isEditionMode(false)
   , m_subSelected(false)
+  , m_useResizePixmap(true)
 {
   
 }
