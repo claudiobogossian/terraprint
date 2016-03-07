@@ -34,6 +34,7 @@
 
 // Qt
 class QMouseEvent;
+class QGraphicsItem;
 
 namespace te
 {
@@ -42,6 +43,7 @@ namespace te
     // Forward declarations
     class View;
     class EnumType;
+    class Scene;
       /*!
         \class CreateLineItemTool
 
@@ -79,6 +81,8 @@ namespace te
           bool mouseMoveEvent(QMouseEvent* e);
 
           bool mouseReleaseEvent(QMouseEvent* e);
+
+          void connectScaleItemWithFirstMapItem(QGraphicsItem* item, Scene* sc);
           
           //@}
         protected:
