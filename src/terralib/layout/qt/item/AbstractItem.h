@@ -638,30 +638,62 @@ namespace te
       QPointF lr = bRect.bottomRight();
       QPointF tl = bRect.topLeft();
       QPointF tr = bRect.topRight();
+      
+      QRectF leftRect(ll.x(), tl.y(), ll.x() + m_marginResizePrecision, tl.y() + bRect.height());
+      QRectF rightRect(tr.x() - m_marginResizePrecision, tl.y(), tr.x() + m_marginResizePrecision, tl.y() + bRect.height());
+      QRectF topRect(ll.x(), lr.y() - m_marginResizePrecision, tr.x(), lr.y());
+      QRectF bottomRect(ll.x(), tr.y(), tr.x(), tl.y() + m_marginResizePrecision);
 
-      if ((x >= (ll.x() - m_marginResizePrecision) && x <= (ll.x() + m_marginResizePrecision))
-        && (y >= (ll.y() - m_marginResizePrecision) && y <= (ll.y() + m_marginResizePrecision)))
+      double w = m_marginResizePrecision;
+      double h = m_marginResizePrecision;
+      double half = m_marginResizePrecision/2.;
+
+      QRectF smallLeftTopRect(bRect.bottomLeft().x(), bRect.bottomLeft().y() - half, w, h); // left-top
+      QRectF smallRightTopRect(bRect.bottomRight().x() - half, bRect.bottomRight().y() - half, w, h); // right-top
+      QRectF smallLeftBottomRect(bRect.topLeft().x(), bRect.topLeft().y(), w, h); // left-bottom
+      QRectF smallRightBottomRect(bRect.topRight().x() - half, bRect.topRight().y(), w, h); // right-bottom
+                 
+      QPointF checkPoint(x, y);
+
+      if (smallLeftTopRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeFDiagCursor);
         m_enumSides = TPTopLeft;
       }
-      else if ((x >= (lr.x() - m_marginResizePrecision) && x <= (lr.x() + m_marginResizePrecision))
-        && (y >= (lr.y() - m_marginResizePrecision) && y <= (lr.y() + m_marginResizePrecision)))
+      else if (smallRightTopRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeBDiagCursor);
         m_enumSides = TPTopRight;
       }
-      else if ((x >= (tl.x() - m_marginResizePrecision) && x <= (tl.x() + m_marginResizePrecision))
-        && (y >= (tl.y() - m_marginResizePrecision) && y <= (tl.y() + m_marginResizePrecision)))
+      else if (smallLeftBottomRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeBDiagCursor);
         m_enumSides = TPLowerLeft;
       }
-      else if ((x >= (tr.x() - m_marginResizePrecision) && x <= (tr.x() + m_marginResizePrecision))
-        && (y >= (tr.y() - m_marginResizePrecision) && y <= (tr.y() + m_marginResizePrecision)))
+      else if (smallRightBottomRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeFDiagCursor);
         m_enumSides = TPLowerRight;
+      }
+      else if (leftRect.contains(checkPoint))
+      {
+        T::setCursor(Qt::SizeHorCursor);
+        m_enumSides = TPLeft;
+      }
+      else if (rightRect.contains(checkPoint))
+      {
+        T::setCursor(Qt::SizeHorCursor);
+        m_enumSides = TPRight;
+      }
+      else if (topRect.contains(checkPoint))
+      {
+        T::setCursor(Qt::SizeVerCursor);
+        m_enumSides = TPTop;
+      }
+      else if (bottomRect.contains(checkPoint))
+      {
+        T::setCursor(Qt::SizeVerCursor);
+        m_enumSides = TPLower;
       }
       else
       {
@@ -768,10 +800,12 @@ namespace te
       double dy = m_finalCoord.y() - m_initialCoord.y();
 
       double correctionX = dx;
+      double correctionY = dy;
 
       if (keepAspect == true)
       {
         correctionX = (dy * factor);
+        correctionY = correctionX;
       }
 
       switch (m_enumSides)
@@ -786,7 +820,6 @@ namespace te
           finalCoord.setX(m_initialCoord.x() - correctionX);
         else
           finalCoord.setX(m_initialCoord.x() + correctionX);
-
         resizeRect.setBottomLeft(finalCoord);
         break;
 
@@ -795,14 +828,28 @@ namespace te
           finalCoord.setX(m_initialCoord.x() - correctionX);
         else
           finalCoord.setX(m_initialCoord.x() + correctionX);
-
         resizeRect.setTopRight(finalCoord);
         break;
 
       case TPLowerLeft:
         finalCoord.setX(m_initialCoord.x() + correctionX);
-
         resizeRect.setTopLeft(finalCoord);
+        break;
+
+      case TPRight:        
+        resizeRect.setRight(m_initialCoord.x() + correctionX);
+        break;
+
+      case TPLeft:
+        resizeRect.setLeft(m_initialCoord.x() + correctionX);
+        break;
+
+      case TPTop:
+        resizeRect.setBottom(m_initialCoord.y() + correctionY);
+        break;
+
+      case TPLower:
+        resizeRect.setTop(m_initialCoord.y() + correctionY);
         break;
 
       default:
