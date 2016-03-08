@@ -237,7 +237,7 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
     variant.setValue(scaleGapXInUnit, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_in_unit_width_rect_gap");
     
-    std::string unitStr = m_ui->cmbUnit->currentText().toLatin1();
+    std::string unitStr = ItemUtils::convert2StdString(m_ui->cmbUnit->currentText());
 
     if (m_ui->txtScaleGapXInUnit->text().compare("") == 0
       || scaleGapXInUnit == prop.getValue().toDouble())

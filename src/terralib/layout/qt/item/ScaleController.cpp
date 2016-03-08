@@ -28,9 +28,7 @@
 
 // STL
 #include <algorithm>
-
-//Qt
-#include<QtMath>
+#include <cmath>
 
 te::layout::ScaleController::ScaleController(te::layout::AbstractItemModel* model)
   : AbstractItemController(model)
@@ -416,7 +414,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
     prop.setValue(value, dataType->getDataTypeDouble(), true, 0);
   }
   else{
-    value = qCeil(valueDouble * 2) / 2.0;
+    value = std::ceil(valueDouble * 2) / 2.0;
     prop.setName("scale_in_unit_width_rect_gap");
     prop.setValue(value, dataType->getDataTypeDouble(), true, 1);
   }
@@ -478,7 +476,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
     prop.setValue(scaleInUnit, dataType->getDataTypeDouble(), true, 0);
   }
   else{
-    scaleInUnit = qCeil(scaleInUnitDouble * 2) / 2.0;
+    scaleInUnit = std::ceil(scaleInUnitDouble * 2) / 2.0;
     prop = pScaleInUnit;
     prop.setValue(scaleInUnit, dataType->getDataTypeDouble(), true, 1);
   }
@@ -544,7 +542,7 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
     value = qRound(valueDouble);
   }
   else{
-    value = qCeil(valueDouble * 2) / 2.0;
+    value = std::ceil(valueDouble * 2) / 2.0;
   }
 
 
