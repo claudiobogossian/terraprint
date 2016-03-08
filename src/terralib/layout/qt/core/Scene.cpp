@@ -430,6 +430,7 @@ QGraphicsItemGroup* te::layout::Scene::createItemGroup(const QList<QGraphicsItem
   }
 
   QList<QGraphicsItem*> listUngroupedItems = getListUngroupedItems(items, groupType);
+  sortByZValue(listUngroupedItems);
 
   //The scene create a new group with important restriction
   BuildGraphicsItem build(this);
@@ -1744,3 +1745,14 @@ void te::layout::Scene::addUndoCommandForResize()
   }
 }
 
+void te::layout::Scene::sortByZValue(QList<QGraphicsItem *> & listItems)
+{
+  // using function as comparison
+  // orders of lower zValue to the higher zValue
+  std::sort(listItems.begin(), listItems.end(), zValueLessThan);
+}
+
+bool te::layout::Scene::zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2)
+{
+  return item1->zValue() < item2->zValue();
+}

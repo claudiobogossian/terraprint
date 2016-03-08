@@ -384,6 +384,8 @@ namespace te
         template <typename T>
         Value<T>* getContextValues(std::string name);
 
+        static bool zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2);
+
       signals:
 
       /*!
@@ -411,7 +413,6 @@ namespace te
           \brief Issued when the scene context changes, like Zoom and DPI
           */
          void contextUpdated();
-
         
       protected:
 
@@ -512,7 +513,14 @@ namespace te
         virtual void addUndoCommandForResize();
 
         virtual QList<QGraphicsItem*> getListUngroupedItems(const QList<QGraphicsItem *> & items, EnumType* groupType);
-        
+
+        /*!
+        \brief Method that orders of lower zValue to the higher zValue.
+
+        \param list of graphic objects
+        */
+        virtual void sortByZValue(QList<QGraphicsItem *> & listItems);
+                
     protected:
 
         QTransform                            m_matrix; //!< transformation matrix of the scene.
