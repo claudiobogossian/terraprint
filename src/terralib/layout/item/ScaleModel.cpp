@@ -48,7 +48,7 @@ te::layout::ScaleModel::ScaleModel()
   double scaleGapY = 5.;
   std::string itemName = "";
   Font font;
-  int scaleUnitGapX = 7;
+  double scaleUnitGapX = 7.0;
   bool onlyFirstAndLastValue = false;
   bool byBreaks = false;
   int numberOfBreaks = 1;
@@ -171,7 +171,7 @@ te::layout::ScaleModel::ScaleModel()
     Property property(0);
     property.setName("scale_in_unit_width_rect_gap");
     property.setLabel(TR_LAYOUT("Scale Gap X In Unit"));
-    property.setValue(scaleUnitGapX, dataType->getDataTypeInt());
+    property.setValue(scaleUnitGapX, dataType->getDataTypeDouble(), true, 1);
     m_properties.addProperty(property);
   }
 

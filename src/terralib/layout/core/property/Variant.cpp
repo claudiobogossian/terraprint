@@ -49,7 +49,9 @@ te::layout::Variant::Variant() :
   m_bValue(false),
   m_type(0),
   m_null(true),
-  m_complex(false)
+  m_complex(false),
+  m_usePrecision(false),
+  m_precision(0)
 {
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
 }
@@ -63,7 +65,9 @@ te::layout::Variant::Variant(te::layout::EnumType* type, const void* valueCopy) 
   m_bValue(false),
   m_type(type),
   m_null(true),
-  m_complex(false)
+  m_complex(false),
+  m_usePrecision(false),
+  m_precision(2)
 {
   if(valueCopy)
   {
@@ -719,3 +723,22 @@ const te::gm::GeometryShrPtr te::layout::Variant::toGeometry() const
 
 
 
+void  te::layout::Variant::setPrecision(int p) {
+  
+  m_precision = p;
+
+}
+
+void  te::layout::Variant::usePrecision(bool usePrecision) {
+
+  m_usePrecision = usePrecision;
+
+}
+
+int te::layout::Variant::getprecision() const{
+  return m_precision;
+}
+
+bool  te::layout::Variant::isUsingPrecision() const{
+  return m_usePrecision;
+}
