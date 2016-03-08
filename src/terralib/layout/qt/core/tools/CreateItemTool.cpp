@@ -23,6 +23,9 @@
 #include "../Scene.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../BuildGraphicsItem.h"
+#include "../../item/MapItem.h"
+#include "../../../core/property/SharedProperties.h"
+#include "../../item/ScaleItem.h"
 
 // Qt
 #include <QtGui/QMouseEvent>
@@ -122,6 +125,8 @@ bool te::layout::CreateItemTool::mouseReleaseEvent(QMouseEvent* e)
   if (!item)
     return false;
 
+  connectScaleItemWithFirstMapItem(item, sc);
+
   m_view->resetDefaultConfig(true);
 
   //sc->update();
@@ -129,6 +134,29 @@ bool te::layout::CreateItemTool::mouseReleaseEvent(QMouseEvent* e)
   return true;
 }
 
-
-
-
+void te::layout::CreateItemTool::connectScaleItemWithFirstMapItem(QGraphicsItem* item, Scene* sc)
+{
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+  if (m_itemType == itemType->getScaleItem())
+  {
+    std::string itemName = "";
+    ItemUtils utils(sc);
+    std::vector<MapItem*> mapList = utils.getMapItemList();
+    if (mapList.size() > 0)
+    {
+      MapItem* mapItem = mapList[0];
+      if (mapItem)
+      {
+        itemName = mapItem->getController()->getProperty("name").getValue().toString();
+      }
+    }
+    SharedProperties sharedProps;
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Property property(0);
+    property.setName(sharedProps.getItemObserver());
+    property.setLabel(TR_LAYOUT("Connection with"));
+    property.setComposeWidget(true);
+    property.setValue(itemName, dataType->getDataTypeItemObserver());
+    ((ScaleItem*)item)->getController()->setProperty(property);
+  }
+}

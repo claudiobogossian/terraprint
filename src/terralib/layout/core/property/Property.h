@@ -98,14 +98,14 @@ namespace te
           \param type data type
         */
         template <typename ValueType>
-        void setValue(ValueType value, EnumType* type);
+        void setValue(ValueType value, EnumType* type, bool usePrecision = false, int precisionValue = 2);
 
         /*!
           \brief Stores a copy of value.
 
           \param te::layout::Variant object
         */
-        void setValue(const Variant& variant);
+        void setValue(const Variant& variant, bool usePrecision = false, int precisionValue = 2);
 
         /*!
           \brief Returns stored value
@@ -324,11 +324,20 @@ namespace te
     };
 
     template <typename ValueType>
-    inline void te::layout::Property::setValue(ValueType value, EnumType* type)
+    inline void te::layout::Property::setValue(ValueType value, EnumType* type, bool usePrecision, int precisionValue)
     {
       //Use the information type?
       Variant v;
       v.setValue(value, type);
+      if (usePrecision){
+        v.usePrecision(usePrecision);
+        v.setPrecision(precisionValue);
+      }
+      /*else{
+        v.usePrecision(false);
+        v.setPrecision(precisionValue);
+      }*/
+
       m_value = v;
       m_type = type;
     }

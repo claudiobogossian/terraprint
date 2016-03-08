@@ -533,6 +533,6 @@ void te::layout::ScaleItem::refreshScaleProperties()
   m_gapX = pScaleGapX.getValue().toDouble();
   m_gapY = pScaleGapY.getValue().toDouble();
   m_font = pTextFont.getValue().toFont();
-  m_scaleUnitGapX = pScaleUnitGapX.getValue().toInt();
+  m_scaleUnitGapX = pScaleUnitGapX.getValue().toDouble();
 }
 

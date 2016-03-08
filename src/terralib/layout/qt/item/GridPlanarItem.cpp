@@ -179,7 +179,50 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     double number = y1 / unitV;
     QString convert = QString::number(number, 'f', 0);
 
-    QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
+    std::string text = convert.toStdString();
+
+    const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+    bool useSuperScript = pSuperscript.getValue().toBool();
+
+    QPainterPath textObject;
+
+    if (useSuperScript){
+
+      std::vector<QString> textVect;
+      std::vector<QFont> fontVect;
+
+      QFont fontSScript2 = ft;
+      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+      fontVect.push_back(fontSScript2);
+      fontVect.push_back(ft);
+
+      int index = (int)text.size() / 2;
+      int indexNegative = (int)(text.size() - 1) / 2;
+
+      std::string txtSubstr1 = text.substr(0, indexNegative + 1).c_str();
+      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+      std::string txtSubstr2 = text.substr(0, index).c_str();
+      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+      std::string txtSubstr3 = text.substr(indexNegative + 1, text.size()).c_str();
+      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+      std::string txtSubstr4 = text.substr(index, text.size()).c_str();
+      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+      QString txtSScript1(text.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+      QString txtSScript2(text.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
+
+      textVect.push_back(txtSScript1);
+      textVect.push_back(txtSScript2);
+
+      textObject = ItemUtils::superscriptTextToVector(textVect, fontVect, QPointF());
+    }
+    else{
+      textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
+    }
 
     QRectF rectF(textObject.boundingRect());
 
@@ -262,7 +305,52 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     double number = x1 / unitH;
     QString convert = QString::number(number, 'f', 0);
 
-    QPainterPath textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
+
+    std::string text = convert.toStdString();
+
+    const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+    bool useSuperScript = pSuperscript.getValue().toBool();
+
+    QPainterPath textObject;
+
+    if (useSuperScript){
+
+      std::vector<QString> textVect;
+      std::vector<QFont> fontVect;
+
+      QFont fontSScript2 = ft;
+      fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+      fontVect.push_back(fontSScript2);
+      fontVect.push_back(ft);
+
+      int index = (int)text.size() / 2;
+      int indexNegative = (int)(text.size() - 1) / 2;
+
+      std::string txtSubstr1 = text.substr(0, indexNegative + 1).c_str();
+      QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+      std::string txtSubstr2 = text.substr(0, index).c_str();
+      QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+      std::string txtSubstr3 = text.substr(indexNegative + 1, text.size()).c_str();
+      QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+      std::string txtSubstr4 = text.substr(index, text.size()).c_str();
+      QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+      QString txtSScript1(text.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+      QString txtSScript2(text.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
+
+      textVect.push_back(txtSScript1);
+      textVect.push_back(txtSScript2);
+
+      textObject = ItemUtils::superscriptTextToVector(textVect, fontVect, QPointF());
+    }
+    else{
+      textObject = ItemUtils::textToVector(convert, ft, QPointF(), 0);
+    }
+
     QRectF rectF(textObject.boundingRect());
     
     calculateTop(line.p2(), rectF, convert, bTopRotate, horizontalDisplacement);

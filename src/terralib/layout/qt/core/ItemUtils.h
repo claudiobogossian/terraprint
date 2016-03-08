@@ -217,6 +217,17 @@ namespace te
         */
         static QPainterPath textToVector(const QString& text, const QFont& font, const QPointF& referencePoint = QPointF(), double rotationAngle = 0.);
 
+        /*!
+        \brief Vectorizes a text by creating a painter path that contains it
+        \param text vector contains super script text
+        \param font vector font used in text vector
+        \param dpi The [optional] current DPI. If DPI is different from 72., than the resulting text point size will be ajusted to the given DPI
+        \param referencePoint The [optional] reference point where the painter path must be traslated
+        \param rotationAngle The [optional] rotation angle
+
+        */
+        static QPainterPath superscriptTextToVector(std::vector<QString> text, std::vector<QFont> font, const QPointF& referencePoint = QPointF(), double rotationAngle = 0.);
+
         void changeViewMode(EnumType* mode);
 
         virtual AbstractItemView* getSelectedItem();

@@ -394,6 +394,9 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   }
   else if(property.getType() == dataType->getDataTypeDouble())
   {
+    if (property.getValue().isUsingPrecision()){
+      vproperty->setAttribute(QLatin1String("decimals"), property.getValue().getprecision());
+    }
     vproperty->setValue(property.getValue().toDouble());
   }
   else if(property.getType() == dataType->getDataTypeInt())

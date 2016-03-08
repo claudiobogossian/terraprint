@@ -326,8 +326,8 @@ file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/transla
 #Copying translated files to build translation folder, to be installed with it 
 file(COPY ${translated_files} DESTINATION "${CMAKE_BINARY_DIR}/share/terralib/translations")
 
-#Unecessary?? Changing to install, cause it need root privileges (sudo make install) 
-#file(COPY ${translated_files} DESTINATION "${terralib_DIR}/../../../share/terralib/translations/")
+#Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
+file(COPY ${translated_files} DESTINATION "${terralib_DIR}/share/terralib/translations/")
 
 #This should be on TerraLib 5 folder, not here. (Need to copy this to layout install folder, but from terralib 5 folder)
 #list(APPEND _qm_files "${terralib_DIR}/../../../share/terralib/translations/qt_property_browser_pt_br.qm")
@@ -335,6 +335,7 @@ file(COPY ${translated_files} DESTINATION "${CMAKE_BINARY_DIR}/share/terralib/tr
 #This should be on TerraLib 5 folder, not here. (Need to copy this to layout install folder, but from terralib 5 folder)
 list(APPEND _qm_files "${CMAKE_BINARY_DIR}/share/terralib/translations/qt_pt_br.qm")
 list(APPEND _qm_files "${CMAKE_BINARY_DIR}/share/terralib/translations/qt_property_browser_pt_br.qm")
+list(APPEND _qm_files "${CMAKE_BINARY_DIR}/share/terralib/translations/terralib_mod_qt_plugins_layout_pt_br.qm")
 
 #This is not this mod responsability
 #list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/terralib_mod_qt_plugins_layout_pt_br.qm")
