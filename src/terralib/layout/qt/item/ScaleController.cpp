@@ -48,10 +48,12 @@ void te::layout::ScaleController::update(const Subject* subject)
 
   if (changeScaleWidthAfterConnection())
   {
+    AbstractItemController::update(subject);
     return;
   }
 
   scaleItem->refreshScaleProperties();
+  AbstractItemController::update(subject);
 }
 
 double te::layout::ScaleController::getCurrentUnit(std::string& strUnit)
