@@ -32,7 +32,7 @@
 #include <QPointF>
 
 te::layout::LineController::LineController(te::layout::AbstractItemModel* model)
-: AbstractItemController(model), lastHalfLineWidth(0)
+  : AbstractItemController(model)
 {
 
 }
@@ -136,18 +136,18 @@ QPolygonF te::layout::LineController::recalculatePolygon()
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
 
-  double halfLineWidth = m_model->getProperty("line_width").getValue().toDouble();
+  if ((width == polygonRect.width()) && (height == polygonRect.height()))
+  {
+    return poly;
+  }
 
-  double xScale = width / (polygonRect.width() + halfLineWidth);
-  double yScale = height / (polygonRect.height() + halfLineWidth);
+  double xScale = width / polygonRect.width();
+  double yScale = height / polygonRect.height();
 
   QTransform transf;
-  transf.scale(xScale, yScale);
-  transf.translate(-lastHalfLineWidth / 2., -lastHalfLineWidth / 2.);
-  transf.translate(halfLineWidth / 2., halfLineWidth / 2.);
+  transf = transf.scale(xScale, yScale);
   QPolygonF transfPoly = transf.map(poly);
-  //poly.translate(halfLineWidth * 2, halfLineWidth * 2);
-  lastHalfLineWidth = halfLineWidth;
+
   return transfPoly;
 }
 
@@ -169,9 +169,7 @@ bool te::layout::LineController::isGeometrySizeChange()
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
 
-  double halfLineWidth = m_model->getProperty("line_width").getValue().toDouble();
-
-  if ((width == polygonRect.width() + halfLineWidth) && (height == polygonRect.height() + halfLineWidth))
+  if ((width == polygonRect.width()) && (height == polygonRect.height()))
   {
     return result;
   }
