@@ -125,7 +125,7 @@ void te::layout::LegendChoiceOutside::onOkPushButtonClicked()
       std::string nameLayer = layer->getTitle();
 
       QString qNameLayer(nameLayer.c_str());
-      nameLayer = qNameLayer.toLatin1().data();
+      nameLayer = ItemUtils::convert2StdString(qNameLayer);
 
       std::string name = (*itString);
       if (nameLayer.compare(name) == 0)
