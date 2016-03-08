@@ -61,6 +61,12 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
     return result;
 
   QGraphicsItem* selectedItem = m_scene->selectedItems().first();
+  QGraphicsItem* childItem = searchForSubselection(selectedItem);
+  if (childItem)
+  {
+    selectedItem = childItem;
+  }
+
   QList<QGraphicsItem *> items = m_scene->items(Qt::AscendingOrder);
 
   qreal maxZValue = selectedItem->zValue();
@@ -71,16 +77,20 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
   {
     if(item)
     {
-      if ((item->zValue() >= zValue))
+      AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
+      if (it)
       {
-        if (item->zValue() > maxZValue)
+        if ((item->zValue() >= zValue))
         {
-          beforeZValue = maxZValue;
-          maxZValue = item->zValue();
-          item->setZValue(beforeZValue);
-          if (oneLevel)
+          if (item->zValue() > maxZValue)
           {
-            break;
+            beforeZValue = maxZValue;
+            maxZValue = item->zValue();
+            item->setZValue(beforeZValue);
+            if (oneLevel)
+            {
+              break;
+            }
           }
         }
       }
@@ -104,6 +114,12 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
     return result;
 
   QGraphicsItem *selectedItem = m_scene->selectedItems().first();
+  QGraphicsItem* childItem = searchForSubselection(selectedItem);
+  if (childItem)
+  {
+    selectedItem = childItem;
+  }
+
   QList<QGraphicsItem *> items = m_scene->items(Qt::DescendingOrder);
 
   qreal minimumZValue = selectedItem->zValue();
@@ -490,3 +506,31 @@ bool te::layout::AlignItems::addToUndoRedoStack(std::map<QGraphicsItem*, QPointF
   return result;
 }
 
+QGraphicsItem* te::layout::AlignItems::searchForSubselection(QGraphicsItem* parentItem)
+{
+  QGraphicsItem* item = 0;
+  if (!parentItem)
+  {
+    return item;
+  }
+
+  QList<QGraphicsItem*> list = parentItem->childItems();
+  if (list.isEmpty())
+  {
+    return item;
+  }
+
+  foreach (QGraphicsItem* childItem, list)
+  {
+    AbstractItemView* it = dynamic_cast<AbstractItemView*>(childItem);
+    if (it)
+    {
+      if (it->isSubSelected())
+      {
+        item = childItem;
+        break;
+      }
+    }
+  }
+  return item;
+}

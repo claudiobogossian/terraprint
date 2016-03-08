@@ -217,7 +217,7 @@ std::vector<std::string> te::layout::DoubleTreeWidgetOutside::getOutputValues()
 
   for(int i = 0; i < count; ++i)
   {
-    vec.push_back(m_ui->m_rightTreeWidget->topLevelItem(i)->text(0).toLatin1().data());
+    vec.push_back(ItemUtils::convert2StdString(m_ui->m_rightTreeWidget->topLevelItem(i)->text(0)));
   }
 
   return vec;

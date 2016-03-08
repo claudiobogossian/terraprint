@@ -334,7 +334,7 @@ void te::layout::MapSettingsOutside::on_cmbScale_currentIndexChanged(const QStri
   {
     if (controller)
     {
-      std::string currentValue = std::to_string(inputValue);
+      std::string currentValue = boost::lexical_cast<std::string>(inputValue);
       string formatedString = formatScaleValue(currentValue);
 
       m_ui->cmbScale->setItemText(m_ui->cmbScale->currentIndex(), ItemUtils::convert2QString(formatedString));
