@@ -50,8 +50,8 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
 
   te::gm::Envelope geographicBox(0, 0, 10000, 10000);
   bool showDegreesText = true;
-  bool showMinutesText = false;
-  bool showSecondsText = false;
+  bool showMinutesText = true;
+  bool showSecondsText = true;
   int secPresicion = 0;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
