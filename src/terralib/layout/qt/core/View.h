@@ -476,6 +476,7 @@ namespace te
         DialogItemToolbar*                   m_dialogItemToolbar;
         EnumType*                            m_currentToolbarInsideType;
         bool                                 m_midButtonClicked;
+        bool                                 m_showContextMenu;
     };
   }
 }

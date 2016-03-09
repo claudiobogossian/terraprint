@@ -57,10 +57,14 @@ bool te::layout::CreateLineItemTool::mousePressEvent(QMouseEvent* e)
 
   //Roll back the default tool cursor
   m_view->viewport()->setCursor(m_cursor);
-
+  
   if (e->button() != Qt::LeftButton)
-    return false;
-
+  {
+    m_coords.clear();
+    m_view->resetDefaultConfig(true);
+    return true;
+  }
+  
   Scene* scne = dynamic_cast<Scene*>(m_view->scene());
 
   if (!scne)
