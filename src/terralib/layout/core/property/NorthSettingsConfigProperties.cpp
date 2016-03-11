@@ -27,43 +27,15 @@
 
 // TerraLib
 #include "NorthSettingsConfigProperties.h"
-//#include "AbstractItemModel.h"
 
 te::layout::NorthSettingsConfigProperties::NorthSettingsConfigProperties():
-m_btnColor("color"),
-m_doubleSpinBoxNorthHeight("height"),
-m_doubleSpinBoxNorthWidth("width"),
-m_cbNorth("northArrow_type")
+  m_btnColor("color"),
+  m_doubleSpinBoxNorthWidth("width"),
+  m_doubleSpinBoxNorthHeight("height"),
+  m_cbNorth("northArrow_type")
 {
   
 }
-  /*m_name("grid_name"),
-  m_visible("grid_visible"),
-  m_lneHrzGap("grid_lneHrzGap"),
-  m_lneVrtGap("grid_lneVrtGap"),
-  m_initialGridPointX("grid_initialGridPointX"),
-  m_initialGridPointY("grid_initialGridPointY"),
-  m_style("grid_style"),
-  m_lineStyle("grid_lineStyle"),
-  m_lineColor("grid_lineColor"),
-  m_lineWidth("grid_lineWidth"),
-  m_font("grid_font"),
-  m_fontCorner("grid_font_corner"),
-  m_textColor("grid_textColor"),
-  m_visibleAllTexts("grid_visibleAllTexts"),
-  m_superscriptText("grid_superscriptText"),
-  m_lneVrtDisplacement("grid_lneVrtDisplacement"),
-  m_lneHrzDisplacement("grid_lneHrzDisplacement"),
-  m_bottomText("grid_bottomText"),
-  m_leftText("grid_leftText"),
-  m_rightText("grid_rightText"),
-  m_topText("grid_topText"),
-  m_bottomRotateText("grid_bottomRotateText"),
-  m_leftRotateText("grid_leftRotateText"),
-  m_rightRotateText("grid_rightRotateText"),
-  m_topRotateText("grid_topRotateText"),
-  m_crossOffset("grid_crossOffset")*/
-
 
 te::layout::NorthSettingsConfigProperties::~NorthSettingsConfigProperties()
 {
@@ -90,119 +62,4 @@ std::string te::layout::NorthSettingsConfigProperties::getCbNorth()
 {
   return m_cbNorth;
 }
-
-//std::string te::layout::GridSettingsConfigProperties::getLneVrtGap()
-//{
-//  return m_lneVrtGap;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getInitialGridPointX()
-//{
-//  return m_initialGridPointX;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getInitialGridPointY()
-//{
-//  return m_initialGridPointY;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getStyle()
-//{
-//  return m_style;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLineStyle()
-//{
-//  return m_lineStyle;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLineColor()
-//{
-//  return m_lineColor;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLineWidth()
-//{
-//  return m_lineWidth;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getFont()
-//{
-//  return m_font;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getFontCorner()
-//{
-//  return m_fontCorner;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getTextColor()
-//{
-//  return m_textColor;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getVisibleAllTexts()
-//{
-//  return m_visibleAllTexts;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getSuperscriptText()
-//{
-//  return m_superscriptText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLneVrtDisplacement()
-//{
-//  return m_lneVrtDisplacement;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLneHrzDisplacement()
-//{
-//  return m_lneHrzDisplacement;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getBottomText()
-//{
-//  return m_bottomText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLeftText()
-//{
-//  return m_leftText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getRightText()
-//{
-//  return m_rightText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getTopText()
-//{
-//  return m_topText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getBottomRotateText()
-//{
-//  return m_bottomRotateText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getLeftRotateText()
-//{
-//  return m_leftRotateText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getRightRotateText()
-//{
-//  return m_rightRotateText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getTopRotateText()
-//{
-//  return m_topRotateText;
-//}
-//
-//std::string te::layout::GridSettingsConfigProperties::getCrossOffset()
-//{
-//  return m_crossOffset;
-//}
 

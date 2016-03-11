@@ -42,18 +42,26 @@ namespace te
     {
       public:
 
-      NorthSettingsConfigProperties();
+        NorthSettingsConfigProperties();
 
-      virtual ~NorthSettingsConfigProperties();
+        virtual ~NorthSettingsConfigProperties();
 
         std::string getBtnColor();
+
         std::string getDoubleSpinBoxNorthWidth();
+
         std::string getDoubleSpinBoxNorthHeight();
+
         std::string getCbNorth();
 
+      protected:
+
         std::string m_btnColor;
+
         std::string m_doubleSpinBoxNorthWidth;
+
         std::string m_doubleSpinBoxNorthHeight;
+
         std::string m_cbNorth;
     };
   }
