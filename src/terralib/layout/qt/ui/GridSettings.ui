@@ -80,7 +80,7 @@
    <item>
     <widget class="QTabWidget" name="tabType">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="tab1">
       <attribute name="title">
@@ -90,7 +90,7 @@
        <item row="0" column="0">
         <widget class="QTabWidget" name="tbwSettings_2">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab2">
           <attribute name="title">
@@ -1370,7 +1370,7 @@
        <item row="0" column="0">
         <widget class="QTabWidget" name="tbwSettings">
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab5">
           <attribute name="title">
@@ -2215,12 +2215,18 @@
                   <property name="text">
                    <string>Minutes</string>
                   </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
                  </widget>
                 </item>
                 <item row="9" column="0">
                  <widget class="QCheckBox" name="chkSecondsGeoText">
                   <property name="text">
                    <string>Seconds</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
                   </property>
                  </widget>
                 </item>

@@ -82,7 +82,7 @@ namespace te
 
           bool mouseReleaseEvent(QMouseEvent* e);
 
-          void connectScaleItemWithFirstMapItem(QGraphicsItem* item, Scene* sc);
+          void connectItemWithLastMapItem(QGraphicsItem* item, Scene* sc);
           
           //@}
         protected:

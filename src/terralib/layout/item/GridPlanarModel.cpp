@@ -78,10 +78,10 @@ te::layout::GridPlanarModel::GridPlanarModel()
     Variant v;
     v.setValue(std::string("km"), dataType->getDataTypeString());
     property.addOption(v);
-    property.setOptionChoice(v);
 
     v.setValue(std::string("m"), dataType->getDataTypeString());
     property.addOption(v);
+    property.setOptionChoice(v);
 
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
