@@ -37,6 +37,7 @@
 #include "../core/Utils.h"
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/SharedProperties.h"
+#include "../core/Utils.h"
 
 #ifdef GEOGRAPHICLIB_ENABLED
   #include <GeographicLib/MagneticModel.hpp>
@@ -55,6 +56,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   int date = 2015;
   std::string itemName = "";
   SharedProperties sharedProps;
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   bool magneticVisible = false;
   bool magneticMenu = false;
@@ -73,6 +75,15 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   {
+    {
+      Property property(0);
+      property.setName("line_width");
+      property.setLabel(TR_LAYOUT("Line Width"));
+      property.setVisible(false);
+      property.setValue(lineWidth, dataType->getDataTypeDouble());
+      this->m_properties.addProperty(property);
+    }
+
     {
       Property property(0);
       property.setName(sharedProps.getItemObserver());

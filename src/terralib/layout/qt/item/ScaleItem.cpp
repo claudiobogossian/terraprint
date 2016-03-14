@@ -138,6 +138,9 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   double displacementBetweenScaleAndText = 2.;
   
   QFont qFont = ItemUtils::convertToQfont(m_font);
@@ -203,7 +206,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
-    QPen penScale(black, 0, Qt::SolidLine);
+    QPen penScale(black, lnew, Qt::SolidLine);
     painter->setPen(penScale);
     painter->setBrush(QBrush(textColor));
     
@@ -282,6 +285,9 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QFont qFont = ItemUtils::convertToQfont(m_font);
 
   ItemUtils::ConfigurePainterForTexts(painter, m_font);
@@ -337,7 +343,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
-    QPen penScale(black, 0, Qt::SolidLine);
+    QPen penScale(black, lnew, Qt::SolidLine);
     painter->setPen(penScale);
     painter->setBrush(QBrush(textColor));
 
@@ -416,6 +422,9 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   double displacementBetweenScaleAndText = 2.;
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QFont qFont = ItemUtils::convertToQfont(m_font);
 
   ItemUtils::ConfigurePainterForTexts(painter, m_font);
@@ -457,7 +466,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
     if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
     {
-      QPen penScale(black, 0, Qt::SolidLine);
+      QPen penScale(black, lnew, Qt::SolidLine);
       penScale.setColor(firstRect);
       painter->setPen(penScale);
       painter->setBrush(Qt::NoBrush);
@@ -480,7 +489,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
 
-    QPen penScale(black, 0, Qt::SolidLine);
+    QPen penScale(black, lnew, Qt::SolidLine);
     painter->setPen(penScale);
     painter->setBrush(QBrush(textColor));
     

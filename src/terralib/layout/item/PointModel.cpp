@@ -32,6 +32,7 @@
 #include "../core/enum/EnumPointType.h"
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
+#include "../core/Utils.h"
 
 te::layout::PointModel::PointModel()
   : AbstractItemModel()
@@ -39,6 +40,7 @@ te::layout::PointModel::PointModel()
   te::color::RGBAColor fillColor(0, 0, 0, 255);
   te::color::RGBAColor contourColor(0, 0, 0, 255);
   te::color::RGBAColor backgroundColor(255, 0, 0, 255);
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getPointItem());
 
@@ -74,6 +76,14 @@ te::layout::PointModel::PointModel()
     this->m_properties.addProperty(property);
   }
 
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setVisible(false);
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
 
   {
     Property property(0);
