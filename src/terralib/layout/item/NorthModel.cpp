@@ -31,12 +31,14 @@
 #include "../core/enum/EnumNorthArrowType.h"
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
+#include "../core/Utils.h"
 
 te::layout::NorthModel::NorthModel()
   : AbstractItemModel()
 {
   te::color::RGBAColor color(0, 0, 0, 255);
   std::string name = TR_LAYOUT("Settings");
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getNorthItem());
 
@@ -71,6 +73,16 @@ te::layout::NorthModel::NorthModel()
 
     this->m_properties.addProperty(property);
   }
+
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setVisible(false);
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
+
   {
     Property property(0);
     property.setName("color");

@@ -140,6 +140,8 @@ namespace te
 
         virtual bool addToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items);
 
+        virtual QGraphicsItem* searchForSubselection(QGraphicsItem* parentItem);
+
         Scene*          m_scene;
         PaperConfig*    m_config;
         int             m_minimunZValue;

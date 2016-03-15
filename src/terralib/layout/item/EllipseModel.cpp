@@ -31,6 +31,7 @@
 #include "../core/property/Properties.h"
 #include "terralib/color/RGBAColor.h"
 #include "terralib/geometry/Envelope.h"
+#include "../core/Utils.h"
 
 te::layout::EllipseModel::EllipseModel()
   : AbstractItemModel()
@@ -39,12 +40,23 @@ te::layout::EllipseModel::EllipseModel()
   te::color::RGBAColor contourColor(0, 0, 0, 255);
   double width = 22.;
   double height = 20.;
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getEllipseItem());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-//adding properties
+  //adding properties
+
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setVisible(false);
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
+
   {
     Property property(0);
     property.setName("fill_color");

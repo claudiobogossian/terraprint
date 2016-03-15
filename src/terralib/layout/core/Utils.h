@@ -322,6 +322,10 @@ namespace te
 
         virtual te::gm::Envelope getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
 
+        static double getLineWidthMinimumValue();
+
+        static void setLineWidthMinimumValue(double minimumValue);
+
       protected:
         
         /*!
@@ -353,6 +357,7 @@ namespace te
         bool                      m_applyZoom; //!<
         Scene*                    m_scene;
         te::qt::widgets::Canvas*  m_canvas;
+        static double             m_lineWidthMinimumValue;
     };
   }
 }

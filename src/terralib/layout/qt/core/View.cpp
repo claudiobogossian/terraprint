@@ -81,7 +81,8 @@ te::layout::View::View( QWidget* widget) :
   m_mouseEvent(false),
   m_dialogItemToolbar(0),
   m_currentToolbarInsideType(0),
-  m_midButtonClicked(false)
+  m_midButtonClicked(false),
+  m_showContextMenu(true)
 {
   setDragMode(RubberBandDrag);
 
@@ -726,6 +727,12 @@ void te::layout::View::onSelectionChanged()
 
 void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
 {
+  if (!m_showContextMenu)
+  {
+    m_showContextMenu = true;
+    return;
+  }
+
   if(event->reason() != QContextMenuEvent::Mouse)
     return;
 
@@ -1035,6 +1042,7 @@ void te::layout::View::setZoom(int newZoom)
 void te::layout::View::createLineItem()
 {
   resetDefaultConfig();
+  m_showContextMenu = false;
 
   EnumToolType* tools = Enums::getInstance().getEnumToolType();
 
@@ -1050,6 +1058,7 @@ void te::layout::View::createLineItem()
 void te::layout::View::createPolygonItem()
 {
   resetDefaultConfig();
+  m_showContextMenu = false;
 
   EnumToolType* tools = Enums::getInstance().getEnumToolType();
 

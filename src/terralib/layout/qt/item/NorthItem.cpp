@@ -68,9 +68,12 @@ void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGrap
 
 void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
 {
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   painter->save();
   QColor cpen = setBrush(painter);
-  QPen pn(cpen, 0, Qt::SolidLine);
+  QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
   QPointF p1 = QPointF(boundingRect().width() / 2.,boundingRect().center().y()+boundingRect().height()/4.);
   QPointF p2 = QPointF(boundingRect().bottomRight().x()-boundingRect().bottomRight().x()/4,boundingRect().top());
@@ -79,7 +82,7 @@ void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
   QPolygonF north;
   north<<p1<<p2<<p3<<p4;
 
-  QPen pen(cpen, 0, Qt::SolidLine);
+  QPen pen(cpen, lnew, Qt::SolidLine);
   pen.setWidth(1);
   QPointF p5 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)+boundingRect().height()/22.);
   QPointF p6 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)-boundingRect().height()/22.);
@@ -97,9 +100,12 @@ void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
 }
 void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
 {
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   painter->save();
   QColor cpen = setBrush(painter);
-  QPen pn(cpen, 0, Qt::SolidLine);
+  QPen pn(cpen, lnew, Qt::SolidLine);
   
   QColor secondPolygon(255, 255, 255, 255);
 
@@ -108,7 +114,7 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
   QPointF p3 = QPointF(boundingRect().width() / 2.,boundingRect().center().y()-boundingRect().height()/4.);
   QPointF p4 = QPointF(boundingRect().bottomLeft().x()+boundingRect().bottomRight().x()/4,boundingRect().top());
 
-  QPen pen(cpen, 0, Qt::SolidLine);
+  QPen pen(cpen, lnew, Qt::SolidLine);
   pen.setWidth(1);
   QPointF p5 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)+boundingRect().height()/22.);
   QPointF p6 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)-boundingRect().height()/22.);
@@ -136,12 +142,15 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
 
 void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
 {
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   painter->save();
   QColor cpen = setBrush(painter);
-  QPen pn(cpen, 0, Qt::SolidLine);
+  QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
 
-  QPen pen(cpen, 0, Qt::SolidLine);
+  QPen pen(cpen, lnew, Qt::SolidLine);
   pen.setWidth(1);
   QPointF p1 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/2.5+boundingRect().height()/2.)+boundingRect().height()/22.);
   QPointF p2 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/2.5+boundingRect().height()/2.)-boundingRect().height()/22.);

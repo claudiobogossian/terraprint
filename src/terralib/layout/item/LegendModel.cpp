@@ -40,6 +40,7 @@
 #include "terralib/geometry/Envelope.h"
 #include "terralib/maptools/GroupingItem.h"
 #include "terralib/maptools/Enums.h"
+#include "../core/Utils.h"
 
 // STL
 #include <string>
@@ -71,6 +72,7 @@ te::layout::LegendModel::LegendModel()
   int rows = 4;
   int columns = 1;
   double offset = 2.;
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   double width = 100.;
   double height = 80.;
@@ -80,6 +82,16 @@ te::layout::LegendModel::LegendModel()
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //adding properties
+
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setVisible(false);
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
+
   {
     Property property(0);
     property.setName("legendChoice");

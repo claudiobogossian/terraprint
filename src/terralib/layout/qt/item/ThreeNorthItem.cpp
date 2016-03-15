@@ -178,9 +178,12 @@ void te::layout::ThreeNorthItem::getAngles(double &angleMN, double &angleMC){
 
 void te::layout::ThreeNorthItem::drawTrueNorth(QPainter * painter)
 {
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   painter->save();
   QColor cpen(0,0,0);
-  QPen pn(cpen, 0, Qt::SolidLine);
+  QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
 
   QString qStrUnit("NQ");
@@ -214,409 +217,417 @@ void te::layout::ThreeNorthItem::drawTrueNorth(QPainter * painter)
 
 void te::layout::ThreeNorthItem::drawMagneticNorth(QPainter * painter, double angleMN)
 {
-    painter->save();
-    QColor cpen(0, 0, 0);
-    QPen pn(cpen, 0, Qt::SolidLine);
-    painter->setPen(pn);
-    double w = boundingRect().width() / 35.;
-    double h = boundingRect().height() / 55.;
-    double x1 = -(h / 2);
-    double x2 = (h / 2);
-    double y = boundingRect().center().y() + boundingRect().height() / 2.9;
-    double ch1 = boundingRect().center().y() + boundingRect().height() / 2.4;
-    double ch2 = boundingRect().center().y() + boundingRect().height() / 2.7;
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
 
-    QPointF p1 = QPointF(0, ch1);
-    QPointF p2 = QPointF(x1 - w, y);
-    QPointF p3 = QPointF(0, ch2);
-    QPointF p4 = QPointF(x2 + w, y);
+  painter->save();
+  QColor cpen(0, 0, 0);
+  QPen pn(cpen, lnew, Qt::SolidLine);
+  painter->setPen(pn);
+  double w = boundingRect().width() / 35.;
+  double h = boundingRect().height() / 55.;
+  double x1 = -(h / 2);
+  double x2 = (h / 2);
+  double y = boundingRect().center().y() + boundingRect().height() / 2.9;
+  double ch1 = boundingRect().center().y() + boundingRect().height() / 2.4;
+  double ch2 = boundingRect().center().y() + boundingRect().height() / 2.7;
 
-    QPolygonF arrow;
-    arrow << p1 << p2 << p3;// << p4;
+  QPointF p1 = QPointF(0, ch1);
+  QPointF p2 = QPointF(x1 - w, y);
+  QPointF p3 = QPointF(0, ch2);
+  QPointF p4 = QPointF(x2 + w, y);
 
-    QPointF p5 = QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.4);
-    QPointF p6 = QPointF(0, boundingRect().center().y() - boundingRect().height() / 2.);
+  QPolygonF arrow;
+  arrow << p1 << p2 << p3;// << p4;
 
-    QPolygonF north;
-    north << p5 << p6;
+  QPointF p5 = QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.4);
+  QPointF p6 = QPointF(0, boundingRect().center().y() - boundingRect().height() / 2.);
 
-    QString qStrUnit("NM");
-    ItemUtils utils(scene());
-    double fontNM = boundingRect().width() / 7.;
-    QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNM),QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
+  QPolygonF north;
+  north << p5 << p6;
 
-    QPainterPath rect_path;
-    rect_path.addPolygon(north);
-    rect_path.addPolygon(arrow);
-    rect_path.addPath(textPath);
+  QString qStrUnit("NM");
+  ItemUtils utils(scene());
+  double fontNM = boundingRect().width() / 7.;
+  QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNM),QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
 
-    QTransform transf;
-    transf.rotate(angleMN);
-    rect_path = transf.map(rect_path);
-    rect_path.translate(boundingRect().width() / 2., 0.);
-    painter->setPen(pn);
-    setBrush(painter);
-    painter->drawPath(rect_path);
-    painter->restore();
+  QPainterPath rect_path;
+  rect_path.addPolygon(north);
+  rect_path.addPolygon(arrow);
+  rect_path.addPath(textPath);
 
+  QTransform transf;
+  transf.rotate(angleMN);
+  rect_path = transf.map(rect_path);
+  rect_path.translate(boundingRect().width() / 2., 0.);
+  painter->setPen(pn);
+  setBrush(painter);
+  painter->drawPath(rect_path);
+  painter->restore();
 }
 
 void te::layout::ThreeNorthItem::drawMeridianConvergence(QPainter * painter, double angleMC)
 {
-    painter->save();
-    QColor cpen(0, 0, 0);
-    QPen pn(cpen, 0, Qt::SolidLine);
-    painter->setPen(pn);
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
 
-    QPolygonF star;
-    double halfW = boundingRect().width() / 54.;
-    double w = boundingRect().width() / 27.;
-    qreal const c = halfW;
-    qreal const d = w;
-    bool inner = true;
+  painter->save();
+  QColor cpen(0, 0, 0);
+  QPen pn(cpen, lnew, Qt::SolidLine);
+  painter->setPen(pn);
 
-    QPointF pUnion;
+  QPolygonF star;
+  double halfW = boundingRect().width() / 54.;
+  double w = boundingRect().width() / 27.;
+  qreal const c = halfW;
+  qreal const d = w;
+  bool inner = true;
 
-    for (qreal i = 0; i < 2 * 3.14; i += 3.14 / 5.0, inner = !inner) {
-      qreal const f = inner ? c : d;
-      star << QPointF(f * std::cos(i), f * std::sin(i));
-      if (i == 0)
-      {
-        pUnion = QPointF(f * std::cos(i), f * std::sin(i));
-      }
+  QPointF pUnion;
+
+  for (qreal i = 0; i < 2 * 3.14; i += 3.14 / 5.0, inner = !inner) {
+    qreal const f = inner ? c : d;
+    star << QPointF(f * std::cos(i), f * std::sin(i));
+    if (i == 0)
+    {
+      pUnion = QPointF(f * std::cos(i), f * std::sin(i));
     }
+  }
 
-    star << pUnion;
+  star << pUnion;
 
-    QMatrix matrix;
-    matrix.rotate(50.);
-    star = matrix.map(star);
-    star.translate(QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.6));
-    QString qStrUnit("NG");
-    ItemUtils utils(scene());
-    double fontNG = boundingRect().width() / 7.;
-    QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNG), QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
+  QMatrix matrix;
+  matrix.rotate(50.);
+  star = matrix.map(star);
+  star.translate(QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.6));
+  QString qStrUnit("NG");
+  ItemUtils utils(scene());
+  double fontNG = boundingRect().width() / 7.;
+  QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNG), QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
 
-    QPainterPath rect_path;
+  QPainterPath rect_path;
 
-    QPointF p5 = QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.4);
-    QPointF p6 = QPointF(0, boundingRect().center().y() - boundingRect().height() / 2.);
+  QPointF p5 = QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.4);
+  QPointF p6 = QPointF(0, boundingRect().center().y() - boundingRect().height() / 2.);
 
-    QPolygonF north;
-    north << p5 << p6;
+  QPolygonF north;
+  north << p5 << p6;
 
-    rect_path.addPolygon(north);
-    rect_path.addPolygon(star);
-    rect_path.addPath(textPath);
-    QTransform transf;
-    transf.rotate(angleMC);
-    rect_path = transf.map(rect_path);
-    rect_path.translate(boundingRect().width() / 2., 0.);
+  rect_path.addPolygon(north);
+  rect_path.addPolygon(star);
+  rect_path.addPath(textPath);
+  QTransform transf;
+  transf.rotate(angleMC);
+  rect_path = transf.map(rect_path);
+  rect_path.translate(boundingRect().width() / 2., 0.);
 
-    painter->setPen(pn);
-    setBrush(painter);
-    painter->drawPath(rect_path);
-    painter->restore();
+  painter->setPen(pn);
+  setBrush(painter);
+  painter->drawPath(rect_path);
+  painter->restore();
 }
 
 void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
 {
-    painter->save();
-    QColor cpen(0, 0, 0);
-    QPen pn(cpen, 0, Qt::SolidLine);
-    painter->setPen(pn);
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
 
-    // Conversion factor: degrees to radians
-    double TeCDR = 0.01745329251994329576;
+  painter->save();
+  QColor cpen(0, 0, 0);
+  QPen pn(cpen, lnew, Qt::SolidLine);
+  painter->setPen(pn);
 
-    //Angles Magnetic North and Meridian Convergence
-    double angleMN = 0;
-    double angleMC = 0;
+  // Conversion factor: degrees to radians
+  double TeCDR = 0.01745329251994329576;
 
-    //Get angles
-    getAngles(angleMN, angleMC);
+  //Angles Magnetic North and Meridian Convergence
+  double angleMN = 0;
+  double angleMC = 0;
 
-    //Calculation for the drawing of the arc
-    double refX = boundingRect().width() / 2.;
-    double refY = 0.;
-    double distance = boundingRect().height() / 2.;
-    double x = boundingRect().width() / 2;
-    double y = boundingRect().height() / 2 + boundingRect().height() / 8;
-    double cosineMagneticNorth = std::cos(TeCDR * (90. + angleMN)) * distance;
-    double sinMagneticNorth = std::sin(TeCDR * (90. + angleMN)) * distance;
-    double x1MagneticNorth = refX + cosineMagneticNorth;
-    double y1MagneticNorth = refY + sinMagneticNorth;
-    double cosineMeridianConvergence = std::cos(TeCDR * (90. + angleMC)) * distance;
-    double sinMeridianConvergence = std::sin(TeCDR * (90. + angleMC)) * distance;
-    double x1MeridianConvergence = refX + cosineMeridianConvergence;
-    double y1MeridianConvergence = refY + sinMeridianConvergence;
+  //Get angles
+  getAngles(angleMN, angleMC);
 
-    //Arc of Declination and Convergence
+  //Calculation for the drawing of the arc
+  double refX = boundingRect().width() / 2.;
+  double refY = 0.;
+  double distance = boundingRect().height() / 2.;
+  double x = boundingRect().width() / 2;
+  double y = boundingRect().height() / 2 + boundingRect().height() / 8;
+  double cosineMagneticNorth = std::cos(TeCDR * (90. + angleMN)) * distance;
+  double sinMagneticNorth = std::sin(TeCDR * (90. + angleMN)) * distance;
+  double x1MagneticNorth = refX + cosineMagneticNorth;
+  double y1MagneticNorth = refY + sinMagneticNorth;
+  double cosineMeridianConvergence = std::cos(TeCDR * (90. + angleMC)) * distance;
+  double sinMeridianConvergence = std::sin(TeCDR * (90. + angleMC)) * distance;
+  double x1MeridianConvergence = refX + cosineMeridianConvergence;
+  double y1MeridianConvergence = refY + sinMeridianConvergence;
 
-    QLineF lne1(x1MagneticNorth, y1MagneticNorth, x1MeridianConvergence, y1MeridianConvergence);
+  //Arc of Declination and Convergence
 
-    //Set text 
+  QLineF lne1(x1MagneticNorth, y1MagneticNorth, x1MeridianConvergence, y1MeridianConvergence);
 
-    double angleMerC = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
-    double angleMagN = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
-    stringstream ssM;
-    ssM << angleMerC;
-    string strangleMerC = ssM.str();
-    QString qangleM = QString::fromStdString(strangleMerC);
-    string font = "Arial";
-    double fontd = boundingRect().width() / 7.;
-    ItemUtils utils(scene());
+  //Set text 
 
-    stringstream ssN;
-    ssN << angleMagN;
-    string strangleMagN = ssN.str();
-    QString qangleN = QString::fromStdString(strangleMagN);
+  double angleMerC = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
+  double angleMagN = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
+  stringstream ssM;
+  ssM << angleMerC;
+  string strangleMerC = ssM.str();
+  QString qangleM = QString::fromStdString(strangleMerC);
+  string font = "Arial";
+  double fontd = boundingRect().width() / 7.;
+  ItemUtils utils(scene());
+
+  stringstream ssN;
+  ssN << angleMagN;
+  string strangleMagN = ssN.str();
+  QString qangleN = QString::fromStdString(strangleMagN);
   
 
-    // Get angles of Model Properties
+  // Get angles of Model Properties
 
-    double angle_magnetic = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
-    double angle_meridian = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
+  double angle_magnetic = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
+  double angle_meridian = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
 
-    //Convert to degree, minute and second
+  //Convert to degree, minute and second
 
-    Utils util = ((Scene*) this->scene())->getUtils(); 
+  Utils util = ((Scene*) this->scene())->getUtils(); 
     
-    std::string dmsAngleMer = util.convertDecimalToDegree(angleMerC, true, true, true, 3);
-    std::string dmsAngleMag = util.convertDecimalToDegree(angleMagN, true, true, true, 3);
+  std::string dmsAngleMer = util.convertDecimalToDegree(angleMerC, true, true, true, 3);
+  std::string dmsAngleMag = util.convertDecimalToDegree(angleMagN, true, true, true, 3);
 
-    QString dmsAngleMerC = utils.convert2QString(dmsAngleMer);
-    QString dmsAngleMagN = utils.convert2QString(dmsAngleMag);
+  QString dmsAngleMerC = utils.convert2QString(dmsAngleMer);
+  QString dmsAngleMagN = utils.convert2QString(dmsAngleMag);
 
-    //Paths Magnetic North and Meridian Convergence
-    QPainterPath anglePathMagN;
-    QPainterPath anglePathMerC;
+  //Paths Magnetic North and Meridian Convergence
+  QPainterPath anglePathMagN;
+  QPainterPath anglePathMerC;
 
-    double dpi = 96.;
-    Scene* myScene = dynamic_cast<Scene*>(this->scene());
-    if (myScene != 0)
+  double dpi = 96.;
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  if (myScene != 0)
+  {
+    dpi = myScene->getContext().getDpiY();
+  }
+
+  if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == true){
+
+    double distance = boundingRect().height() / 2 + boundingRect().height() / 9.4;
+    double cosineMeridianConver = std::cos(TeCDR * (90. + angleMC)) * distance;
+    double sinMeridianConver = std::sin(TeCDR * (90. + angleMC)) * distance;
+    double x1MeridianConvergence = refX + cosineMeridianConver;
+    double y1MeridianConvergence = refY + sinMeridianConver;
+    QLineF lne2(x, y, x1MeridianConvergence, y1MeridianConvergence);
+    
+
+    if (angle_meridian == 0 && angle_magnetic == 0)
     {
-      dpi = myScene->getContext().getDpiY();
+      painter->restore();
+      return;
     }
+    else{
 
-    if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == true){
+      double maxWidth = 0.;
+      double font = boundingRect().width() / 7.;
 
-      double distance = boundingRect().height() / 2 + boundingRect().height() / 9.4;
-      double cosineMeridianConver = std::cos(TeCDR * (90. + angleMC)) * distance;
-      double sinMeridianConver = std::sin(TeCDR * (90. + angleMC)) * distance;
-      double x1MeridianConvergence = refX + cosineMeridianConver;
-      double y1MeridianConvergence = refY + sinMeridianConver;
-      QLineF lne2(x, y, x1MeridianConvergence, y1MeridianConvergence);
-    
+      //Set Text
+      anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
+      anglePathMagN = utils.textToVector(dmsAngleMagN, QFont("Arial", font));
 
-      if (angle_meridian == 0 && angle_magnetic == 0)
-      {
-        painter->restore();
-        return;
+      QRectF mcRect = anglePathMerC.boundingRect();
+      QRectF mnRect = anglePathMagN.boundingRect();
+
+      if (angle_meridian == 0 && angle_magnetic > 0){
+
+        x1MeridianConvergence = refX + cosineMeridianConver;
+        y1MeridianConvergence = refY + sinMeridianConver;
+        x1MagneticNorth = refX + cosineMagneticNorth;
+        y1MagneticNorth = refY + sinMagneticNorth;
+
+        anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
+        anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
       }
-      else{
 
-        double maxWidth = 0.;
-        double font = boundingRect().width() / 7.;
+      else if (angle_magnetic == 0 && angle_meridian > 0){
 
-        //Set Text
-        anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
-        anglePathMagN = utils.textToVector(dmsAngleMagN, QFont("Arial", font));
+        x1MeridianConvergence = refX + cosineMeridianConver;
+        y1MeridianConvergence = refY + sinMeridianConver;
+        x1MagneticNorth = refX + cosineMagneticNorth;
+        y1MagneticNorth = refY + sinMagneticNorth;
 
-        QRectF mcRect = anglePathMerC.boundingRect();
-        QRectF mnRect = anglePathMagN.boundingRect();
+        anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
+        anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+      }
 
-        if (angle_meridian == 0 && angle_magnetic > 0){
+      else if (angle_meridian < 0 && angle_magnetic > 0){
 
-          x1MeridianConvergence = refX + cosineMeridianConver;
-          y1MeridianConvergence = refY + sinMeridianConver;
-          x1MagneticNorth = refX + cosineMagneticNorth;
-          y1MagneticNorth = refY + sinMagneticNorth;
+        x1MeridianConvergence = refX + cosineMeridianConver;
+        y1MeridianConvergence = refY + sinMeridianConver;
+        x1MagneticNorth = refX + cosineMagneticNorth;
+        y1MagneticNorth = refY + sinMagneticNorth;
 
-          anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-          anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+        anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
+        anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+
+
+        // Largura do box
+
+        double leftX = x1MagneticNorth - mnRect.width();
+        double rightX = x1MeridianConvergence + mcRect.width();
+
+        double midX = boundingRect().width() / 2.;
+
+        double leftWidth = midX - leftX;
+        double rightWidth = rightX - midX;
+
+        maxWidth = leftWidth;
+        if (maxWidth < rightWidth)
+        {
+          maxWidth = rightWidth;
         }
 
-        else if (angle_magnetic == 0 && angle_meridian > 0){
+        maxWidth = maxWidth * 2.;
 
-          x1MeridianConvergence = refX + cosineMeridianConver;
-          y1MeridianConvergence = refY + sinMeridianConver;
-          x1MagneticNorth = refX + cosineMagneticNorth;
-          y1MagneticNorth = refY + sinMagneticNorth;
+      }
+
+      else if (angle_meridian > 0 && angle_magnetic < 0){
+
+        x1MeridianConvergence = refX + cosineMeridianConver;
+        y1MeridianConvergence = refY + sinMeridianConver;
+        x1MagneticNorth = refX + cosineMagneticNorth;
+        y1MagneticNorth = refY + sinMagneticNorth;
+
+        anglePathMerC.translate(x1MeridianConvergence - mcRect.width() - boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
+        anglePathMagN.translate(x1MagneticNorth + boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+
+
+      }
+
+      else if (angle_meridian < 0 && angle_magnetic < 0){
+
+        x1MeridianConvergence = refX + cosineMeridianConver;
+        y1MeridianConvergence = refY + sinMeridianConver;
+        x1MagneticNorth = refX + cosineMagneticNorth;
+        y1MagneticNorth = refY + sinMagneticNorth;
+
+        anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
+        anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+
+      }
+
+      else if (angle_meridian > 0 && angle_magnetic > 0){
+
+        if (angle_meridian == angle_magnetic){
+
+          x1MeridianConvergence = refX + cosineMagneticNorth;
+          y1MeridianConvergence = refY + sinMagneticNorth;
+          x1MagneticNorth = refX + cosineMeridianConver;
+          y1MagneticNorth = refY + sinMeridianConver;
 
           anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-          anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+          anglePathMagN.translate(x1MagneticNorth - mnRect.width(), y1MagneticNorth - (mcRect.height() / 2.));
+
         }
 
-        else if (angle_meridian < 0 && angle_magnetic > 0){
+        else if (angle_meridian > angle_magnetic){
 
-          x1MeridianConvergence = refX + cosineMeridianConver;
-          y1MeridianConvergence = refY + sinMeridianConver;
-          x1MagneticNorth = refX + cosineMagneticNorth;
-          y1MagneticNorth = refY + sinMagneticNorth;
+          x1MeridianConvergence = refX + cosineMagneticNorth;
+          y1MeridianConvergence = refY + sinMagneticNorth;
+          x1MagneticNorth = refX + cosineMeridianConver;
+          y1MagneticNorth = refY + sinMeridianConver;
 
           anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-          anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
-
-
-          // Largura do box
-
-          double leftX = x1MagneticNorth - mnRect.width();
-          double rightX = x1MeridianConvergence + mcRect.width();
-
-          double midX = boundingRect().width() / 2.;
-
-          double leftWidth = midX - leftX;
-          double rightWidth = rightX - midX;
-
-          maxWidth = leftWidth;
-          if (maxWidth < rightWidth)
-          {
-            maxWidth = rightWidth;
-          }
-
-          maxWidth = maxWidth * 2.;
+          anglePathMagN.translate(x1MagneticNorth - mnRect.width(), y1MagneticNorth - (mcRect.height() / 2.));
 
         }
 
-        else if (angle_meridian > 0 && angle_magnetic < 0){
+        else if (angle_meridian < angle_magnetic){
 
-          x1MeridianConvergence = refX + cosineMeridianConver;
-          y1MeridianConvergence = refY + sinMeridianConver;
-          x1MagneticNorth = refX + cosineMagneticNorth;
-          y1MagneticNorth = refY + sinMagneticNorth;
+          x1MeridianConvergence = refX + cosineMagneticNorth;
+          y1MeridianConvergence = refY + sinMagneticNorth;
+          x1MagneticNorth = refX + cosineMeridianConver;
+          y1MagneticNorth = refY + sinMeridianConver;
 
           anglePathMerC.translate(x1MeridianConvergence - mcRect.width() - boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-          anglePathMagN.translate(x1MagneticNorth + boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
-
-
-        }
-
-        else if (angle_meridian < 0 && angle_magnetic < 0){
-
-          x1MeridianConvergence = refX + cosineMeridianConver;
-          y1MeridianConvergence = refY + sinMeridianConver;
-          x1MagneticNorth = refX + cosineMagneticNorth;
-          y1MagneticNorth = refY + sinMagneticNorth;
-
-          anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-          anglePathMagN.translate(x1MagneticNorth - mnRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mnRect.height() / 2.));
+          anglePathMagN.translate(x1MagneticNorth + boundingRect().width() / 80., y1MagneticNorth - (mcRect.height() / 2.));
 
         }
-
-        else if (angle_meridian > 0 && angle_magnetic > 0){
-
-          if (angle_meridian == angle_magnetic){
-
-            x1MeridianConvergence = refX + cosineMagneticNorth;
-            y1MeridianConvergence = refY + sinMagneticNorth;
-            x1MagneticNorth = refX + cosineMeridianConver;
-            y1MagneticNorth = refY + sinMeridianConver;
-
-            anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-            anglePathMagN.translate(x1MagneticNorth - mnRect.width(), y1MagneticNorth - (mcRect.height() / 2.));
-
-          }
-
-          else if (angle_meridian > angle_magnetic){
-
-            x1MeridianConvergence = refX + cosineMagneticNorth;
-            y1MeridianConvergence = refY + sinMagneticNorth;
-            x1MagneticNorth = refX + cosineMeridianConver;
-            y1MagneticNorth = refY + sinMeridianConver;
-
-            anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-            anglePathMagN.translate(x1MagneticNorth - mnRect.width(), y1MagneticNorth - (mcRect.height() / 2.));
-
-          }
-
-          else if (angle_meridian < angle_magnetic){
-
-            x1MeridianConvergence = refX + cosineMagneticNorth;
-            y1MeridianConvergence = refY + sinMagneticNorth;
-            x1MagneticNorth = refX + cosineMeridianConver;
-            y1MagneticNorth = refY + sinMeridianConver;
-
-            anglePathMerC.translate(x1MeridianConvergence - mcRect.width() - boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-            anglePathMagN.translate(x1MagneticNorth + boundingRect().width() / 80., y1MagneticNorth - (mcRect.height() / 2.));
-
-          }
-
-        }
-
 
       }
-      painter->setPen(pn);
-      setBrush(painter);
-      painter->drawLine(lne1);
-      painter->drawLine(lne2);
-      painter->drawPath(anglePathMerC);
-      painter->drawPath(anglePathMagN);
+
+
     }
+    painter->setPen(pn);
+    setBrush(painter);
+    painter->drawLine(lne1);
+    painter->drawLine(lne2);
+    painter->drawPath(anglePathMerC);
+    painter->drawPath(anglePathMagN);
+  }
 
-    else if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == false){
+  else if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == false){
 
-      angle_magnetic = 0;
-      double distance = boundingRect().height() / 2 + boundingRect().height() / 9.4;
-      double cosineMeridianConver = std::cos(TeCDR * (90. + angleMC)) * distance;
-      double sinMeridianConver = std::sin(TeCDR * (90. + angleMC)) * distance;
-      double x1MeridianConvergence = refX + cosineMeridianConver;
-      double y1MeridianConvergence = refY + sinMeridianConver;
-      QLineF lne2(x, y, x1MeridianConvergence, y1MeridianConvergence);
+    angle_magnetic = 0;
+    double distance = boundingRect().height() / 2 + boundingRect().height() / 9.4;
+    double cosineMeridianConver = std::cos(TeCDR * (90. + angleMC)) * distance;
+    double sinMeridianConver = std::sin(TeCDR * (90. + angleMC)) * distance;
+    double x1MeridianConvergence = refX + cosineMeridianConver;
+    double y1MeridianConvergence = refY + sinMeridianConver;
+    QLineF lne2(x, y, x1MeridianConvergence, y1MeridianConvergence);
       
 
-      if (angle_meridian == 0 && angle_magnetic == 0) {
+    if (angle_meridian == 0 && angle_magnetic == 0) {
+      painter->restore();
+      return;
+    }
+    else{
+
+      double maxWidth = 0.;
+      double font = boundingRect().width() / 7.;
+
+      QRectF mcRect = anglePathMerC.boundingRect();
+      QRectF mnRect = anglePathMagN.boundingRect();
+
+      anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
+
+      //Convergencia Magnetica
+
+      if (angle_meridian == 0) {
         painter->restore();
         return;
       }
       else{
-
         double maxWidth = 0.;
         double font = boundingRect().width() / 7.;
-
-        QRectF mcRect = anglePathMerC.boundingRect();
-        QRectF mnRect = anglePathMagN.boundingRect();
-
         anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
 
-        //Convergencia Magnetica
+        QRectF mcRect = anglePathMerC.boundingRect();
 
-        if (angle_meridian == 0) {
-          painter->restore();
-         return;
+        if (angle_meridian > 0 && angle_magnetic == 0){
+
+          x1MagneticNorth = refX + cosineMeridianConver;
+          y1MagneticNorth = refY + sinMeridianConver;
+
+          anglePathMerC.translate(x1MagneticNorth - mcRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mcRect.height() / 2.));
+
         }
-        else{
-          double maxWidth = 0.;
-          double font = boundingRect().width() / 7.;
-          anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
 
-          QRectF mcRect = anglePathMerC.boundingRect();
+        else if (angle_meridian < 0 && angle_magnetic == 0){
 
-          if (angle_meridian > 0 && angle_magnetic == 0){
+          x1MeridianConvergence = refX + cosineMeridianConver;
+          y1MeridianConvergence = refY + sinMeridianConver;
 
-            x1MagneticNorth = refX + cosineMeridianConver;
-            y1MagneticNorth = refY + sinMeridianConver;
+          anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
 
-            anglePathMerC.translate(x1MagneticNorth - mcRect.width() - boundingRect().width() / 80., y1MagneticNorth - (mcRect.height() / 2.));
-
-          }
-
-          else if (angle_meridian < 0 && angle_magnetic == 0){
-
-            x1MeridianConvergence = refX + cosineMeridianConver;
-            y1MeridianConvergence = refY + sinMeridianConver;
-
-            anglePathMerC.translate(x1MeridianConvergence + boundingRect().width() / 80., y1MeridianConvergence - (mcRect.height() / 2.));
-
-          }
         }
       }
-      painter->setPen(pn);
-      setBrush(painter);
-      painter->drawLine(lne2);
-      painter->drawPath(anglePathMerC);
     }
-    painter->restore();
+    painter->setPen(pn);
+    setBrush(painter);
+    painter->drawLine(lne2);
+    painter->drawPath(anglePathMerC);
+  }
+  painter->restore();
 }
 
 void te::layout::ThreeNorthItem::setBrush(QPainter* painter)

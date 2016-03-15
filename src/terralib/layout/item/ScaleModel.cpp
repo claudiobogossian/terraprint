@@ -34,6 +34,7 @@
 #include "../core/property/SharedProperties.h"
 #include "../core/pattern/mvc/AbstractItemView.h"
 #include "../core/Font.h"
+#include "../core/Utils.h"
 
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
@@ -53,6 +54,7 @@ te::layout::ScaleModel::ScaleModel()
   bool byBreaks = false;
   int numberOfBreaks = 1;
   te::color::RGBAColor fontColor(0, 0, 0, 255);
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -131,6 +133,15 @@ te::layout::ScaleModel::ScaleModel()
     }
 
     m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setVisible(false);
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
   }
 
   {

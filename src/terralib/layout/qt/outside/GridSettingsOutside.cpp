@@ -124,6 +124,10 @@ void te::layout::GridSettingsOutside::init()
   m_ui->fraGridTextPlanarColor->setAutoFillBackground(true);
   m_ui->fraPlanarLineColor->setAutoFillBackground(true);  
 
+  double minimumValue = Utils::getLineWidthMinimumValue();
+  m_ui->m_planarLineWidthDoubleSpinBox->setMinimum(minimumValue);
+  m_ui->m_lineWidthDoubleSpinBox->setMinimum(minimumValue);
+  
   m_ui->m_planarLineWidthDoubleSpinBox->setKeyboardTracking(false);
   m_ui->m_lineWidthDoubleSpinBox->setKeyboardTracking(false);
 }

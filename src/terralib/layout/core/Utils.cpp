@@ -54,6 +54,8 @@
 #include <sstream> 
 #include <exception>
 
+double te::layout::Utils::m_lineWidthMinimumValue = 0.3;
+
 te::layout::Utils::Utils(te::layout::Scene* scene, te::qt::widgets::Canvas* canvas) :
   m_applyZoom(true),
   m_scene(scene),
@@ -766,3 +768,14 @@ te::gm::Envelope te::layout::Utils::getWorldBoxInGeographic(const te::gm::Envelo
 
   return worldBoxGeographic;
 }
+
+double te::layout::Utils::getLineWidthMinimumValue()
+{
+  return m_lineWidthMinimumValue;
+}
+
+void te::layout::Utils::setLineWidthMinimumValue(double minimumValue)
+{
+  m_lineWidthMinimumValue = minimumValue;
+}
+

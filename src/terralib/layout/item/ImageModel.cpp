@@ -33,18 +33,30 @@
 #include "../core/property/Property.h"
 #include "../core/property/Properties.h"
 #include "../core/enum/Enums.h"
+#include "../core/Utils.h"
 
 te::layout::ImageModel::ImageModel()
   : AbstractItemModel()
 {
   std::string fileName("");
   te::gm::Envelope box(0., 0., 90., 90.);
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getImageItem());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //adding properties
+
+  {
+    Property property(0);
+    property.setName("line_width");
+    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setVisible(false);
+    property.setValue(lineWidth, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
+
   {
     Property property(0);
     property.setName("file_name");

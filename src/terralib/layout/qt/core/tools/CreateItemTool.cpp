@@ -23,9 +23,8 @@
 #include "../Scene.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../BuildGraphicsItem.h"
-#include "../../item/MapItem.h"
 #include "../../../core/property/SharedProperties.h"
-#include "../../item/ScaleItem.h"
+#include "../../item/MapItem.h"
 
 // Qt
 #include <QtGui/QMouseEvent>
@@ -125,7 +124,7 @@ bool te::layout::CreateItemTool::mouseReleaseEvent(QMouseEvent* e)
   if (!item)
     return false;
 
-  connectScaleItemWithFirstMapItem(item, sc);
+  connectItemWithLastMapItem(item, sc);
 
   m_view->resetDefaultConfig(true);
 
@@ -134,29 +133,55 @@ bool te::layout::CreateItemTool::mouseReleaseEvent(QMouseEvent* e)
   return true;
 }
 
-void te::layout::CreateItemTool::connectScaleItemWithFirstMapItem(QGraphicsItem* item, Scene* sc)
+void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item, Scene* sc)
 {
-  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
-  if (m_itemType == itemType->getScaleItem())
+  SharedProperties sharedProps;
+  AbstractItemView* itemView = dynamic_cast<AbstractItemView*> (item);
+  Property itemObserverProperty = itemView->getController()->getProperty(sharedProps.getItemObserver());
+  if (itemObserverProperty.isNull())
   {
-    std::string itemName = "";
-    ItemUtils utils(sc);
-    std::vector<MapItem*> mapList = utils.getMapItemList();
-    if (mapList.size() > 0)
-    {
-      MapItem* mapItem = mapList[0];
-      if (mapItem)
-      {
-        itemName = mapItem->getController()->getProperty("name").getValue().toString();
-      }
-    }
-    SharedProperties sharedProps;
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property property(0);
-    property.setName(sharedProps.getItemObserver());
-    property.setLabel(TR_LAYOUT("Connection with"));
-    property.setComposeWidget(true);
-    property.setValue(itemName, dataType->getDataTypeItemObserver());
-    ((ScaleItem*)item)->getController()->setProperty(property);
+    return;
   }
+
+  std::string itemName = "";
+  ItemUtils utils(sc);
+  std::vector<MapItem*> mapList = utils.getMapItemList();
+  MapItem* mapItem = NULL;
+  if (mapList.size() > 0)
+  {
+    mapItem = mapList[0];
+    if (mapItem)
+    {
+      itemName = mapItem->getController()->getProperty("name").getValue().toString();
+    }
+  }
+
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+  if (m_itemType == itemType->getGridPlanarItem() || m_itemType == itemType->getGridGeodesicItem())
+  {
+    if (mapItem != NULL)
+    {
+      item->setPos(mapItem->scenePos());
+      EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
+      QList<QGraphicsItem*> listItemsToConnect;
+      listItemsToConnect.push_back(item);
+      //checks if the map item is already in a group
+      QGraphicsItemGroup* group = mapItem->group();
+      if (group != 0)
+      {
+        listItemsToConnect.push_front(group);
+      }
+      else
+      {
+        listItemsToConnect.push_front(mapItem);
+      }
+      QGraphicsItemGroup* newGroup = sc->createItemGroup(listItemsToConnect, objType->getMapCompositionItem());
+    }
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  Property property(0);
+  property.setName(sharedProps.getItemObserver());
+  property.setValue(itemName, dataType->getDataTypeItemObserver());
+  itemView->getController()->setProperty(property);
 }
