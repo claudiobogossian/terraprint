@@ -1844,7 +1844,8 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
 
   //QString currentValue = ItemUtils::DMS2DD(m_ui->lneHorizontalGap->text());
   QString currentValue = ItemUtils::convert2QString(boost::lexical_cast<std::string>(prop.getValue().toDouble()));
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), 0, 180, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog = InputCoordDialog(stdCurrentValue, 0, 180, this);
 
   if (degreeDialog.exec() == 1){
 

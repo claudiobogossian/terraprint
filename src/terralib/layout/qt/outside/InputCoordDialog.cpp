@@ -28,13 +28,17 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include <boost/lexical_cast.hpp>
 
 te::layout::InputCoordDialog::InputCoordDialog(std::string& coord, int bottom, int top, QWidget* parent) :
-  QDialog(parent), m_ui(new Ui::InputCoordWidgetForm), m_inputValue(coord), m_degreeBottom(bottom), m_degreeTop(top),
+  QDialog(parent), 
+  m_ui(new Ui::InputCoordWidgetForm), 
   m_degree(0),
   m_min(0),
   m_sec(0.),
   m_decimalD(0.),
   m_outPutValueDMS(""),
-  m_outPutValueDD("")
+  m_outPutValueDD(""),
+  m_inputValue(coord), 
+  m_degreeBottom(bottom), 
+  m_degreeTop(top)
 {
   m_ui->setupUi(this);
   init();
