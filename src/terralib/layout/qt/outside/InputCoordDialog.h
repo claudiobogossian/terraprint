@@ -23,11 +23,10 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 #include "../../core/Config.h"
 
+#include <memory>
 
 //Qt
 #include <QDialog>
-
-
 
 namespace Ui { class InputCoordWidgetForm; }
 
@@ -87,9 +86,8 @@ namespace te
 
         virtual void on_pbCancel_clicked();
 
-
-
     private:
+
       std::auto_ptr<Ui::InputCoordWidgetForm> m_ui;
       int degree = 0;
       int min = 0;
