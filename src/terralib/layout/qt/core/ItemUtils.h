@@ -272,6 +272,10 @@ namespace te
         static te::gm::Envelope calculateZoom(const te::gm::Envelope& envelope, double factor, bool zoomIn, const te::gm::Point& pointToCenter = te::gm::Point());
 
         static te::gm::Envelope calculatePan(const te::gm::Envelope& envelope, double dx, double dy);
+
+        static QString DD2DMS(QString dd);
+
+        static QString DMS2DD(const QString dms);
         
       protected:
 
