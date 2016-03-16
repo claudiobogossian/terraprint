@@ -1845,7 +1845,7 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
   //QString currentValue = ItemUtils::DMS2DD(m_ui->lneHorizontalGap->text());
   QString currentValue = ItemUtils::convert2QString(boost::lexical_cast<std::string>(prop.getValue().toDouble()));
   std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
-  InputCoordDialog degreeDialog = InputCoordDialog(stdCurrentValue, 0, 180, this);
+  InputCoordDialog degreeDialog(stdCurrentValue, 0, 180, this);
 
   if (degreeDialog.exec() == 1){
 
@@ -1880,7 +1880,8 @@ void te::layout::GridSettingsOutside::on_btnVerticalGap_clicked()
   QString lneVerticalGap;
 
   QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), 0, 90, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, 0, 90, this);
   if (degreeDialog.exec() == 1){
    
     lneVerticalGap = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
@@ -1914,7 +1915,8 @@ void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
   QString lneIntialPointX;
 
   QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), -179, 179, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, -179, 179, this);
   if (degreeDialog.exec() == 1){
 
     lneIntialPointX = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
@@ -1946,7 +1948,8 @@ void te::layout::GridSettingsOutside::on_btnInitialPointY_clicked()
   QString lneIntialPointY;
 
   QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), -89, 89, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, -89, 89, this);
   if (degreeDialog.exec() == 1){
 
     lneIntialPointY = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
