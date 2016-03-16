@@ -38,7 +38,7 @@
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/Font.h"
 #include "../core/ItemUtils.h"
-#include "../core/InputCoordDialog.h"
+#include "../outside/InputCoordDialog.h"
 #include "GridSettingsController.h"
 
 // STL

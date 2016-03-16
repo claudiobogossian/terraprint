@@ -22,7 +22,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "InputCoordDialog.h" 
 #include "LayoutDoubleValidator.h"
 #include "ui_InputCoordWidgetForm.h"
-#include "ItemUtils.h"
+#include "../core/ItemUtils.h"
 
 //boost
 #include <boost/lexical_cast.hpp>

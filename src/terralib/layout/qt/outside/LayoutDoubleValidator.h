@@ -24,8 +24,6 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 #include <QValidator>
 
-
-
 namespace te
 {
   namespace layout
@@ -39,9 +37,6 @@ namespace te
     */
     class TELAYOUTEXPORT LayoutDoubleValidator : public QDoubleValidator
     {
-      
-      Q_OBJECT
-
       public:
         /*!
         \brief Constructor
