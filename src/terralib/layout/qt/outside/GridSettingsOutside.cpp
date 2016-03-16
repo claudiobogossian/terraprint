@@ -695,7 +695,7 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     QString lneVerticalGap = m_ui->lneVerticalGap->text();
-    std::string gapValue = lneVerticalGap.toLatin1();
+    std::string gapValue = ItemUtils::convert2StdString(lneVerticalGap);
     if (m_ui->chkDegreesGeoText->isChecked())
     {
       lneVerticalGap = ItemUtils::DMS2DD(lneVerticalGap);
