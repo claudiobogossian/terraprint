@@ -116,8 +116,6 @@ void te::layout::PrintScene::showPrintDialog()
   QPrintDialog *printDialog = new QPrintDialog(printer, (QWidget*) sc->getView());
   //connect(preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPaper(QPrinter*)));
 
-
-
   if(printDialog->exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
   {
     if(printer)
@@ -128,13 +126,16 @@ void te::layout::PrintScene::showPrintDialog()
   }
   else
   {
-	  printPaper(printer);
+    printPaper(printer);
   }
 
   if(printDialog)
   {
     delete printDialog;
     printDialog = 0;
+
+    delete printer;
+    printer = 0;
 
     Scene* sc = dynamic_cast<Scene*>(m_scene);
     if(sc)

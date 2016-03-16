@@ -17,9 +17,7 @@ along with TerraLib. See COPYING. If not, write to
 TerraLib Team at <terralib-team@terralib.org>.
 */
 
-#include "layoutDoubleValidator.h"
-
-
+#include "LayoutDoubleValidator.h"
 
 te::layout::LayoutDoubleValidator::LayoutDoubleValidator(double bottom, double top, int decimals, QObject * parent) : 
 QDoubleValidator(bottom, top, decimals, parent)
@@ -47,8 +45,7 @@ QValidator::State te::layout::LayoutDoubleValidator::validate(QString &s, int &i
       return QValidator::Intermediate;
     }
 
-  }
-  
+  }  
 
   QLocale locale;
 

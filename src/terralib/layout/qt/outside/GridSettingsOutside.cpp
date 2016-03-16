@@ -38,7 +38,7 @@
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/Font.h"
 #include "../core/ItemUtils.h"
-#include "../core/InputCoordDialog.h"
+#include "../outside/InputCoordDialog.h"
 #include "GridSettingsController.h"
 
 // STL
@@ -695,7 +695,7 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     QString lneVerticalGap = m_ui->lneVerticalGap->text();
-    std::string gapValue = lneVerticalGap.toLatin1();
+    std::string gapValue = ItemUtils::convert2StdString(lneVerticalGap);
     if (m_ui->chkDegreesGeoText->isChecked())
     {
       lneVerticalGap = ItemUtils::DMS2DD(lneVerticalGap);
@@ -1844,7 +1844,8 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
 
   //QString currentValue = ItemUtils::DMS2DD(m_ui->lneHorizontalGap->text());
   QString currentValue = ItemUtils::convert2QString(boost::lexical_cast<std::string>(prop.getValue().toDouble()));
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), 0, 180, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, 0, 180, this);
 
   if (degreeDialog.exec() == 1){
 
@@ -1879,7 +1880,8 @@ void te::layout::GridSettingsOutside::on_btnVerticalGap_clicked()
   QString lneVerticalGap;
 
   QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), 0, 90, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, 0, 90, this);
   if (degreeDialog.exec() == 1){
    
     lneVerticalGap = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
@@ -1913,7 +1915,8 @@ void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
   QString lneIntialPointX;
 
   QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), -179, 179, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, -179, 179, this);
   if (degreeDialog.exec() == 1){
 
     lneIntialPointX = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
@@ -1945,7 +1948,8 @@ void te::layout::GridSettingsOutside::on_btnInitialPointY_clicked()
   QString lneIntialPointY;
 
   QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
-  InputCoordDialog degreeDialog = InputCoordDialog(ItemUtils::convert2StdString(currentValue), -89, 89, this);
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, -89, 89, this);
   if (degreeDialog.exec() == 1){
 
     lneIntialPointY = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
