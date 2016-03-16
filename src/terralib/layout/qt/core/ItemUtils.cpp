@@ -939,19 +939,17 @@ QString te::layout::ItemUtils::DD2DMS(QString dd)
 
 QString te::layout::ItemUtils::DMS2DD(const QString dms)
 {
-
   int pos = 0;
   if (dms.startsWith('+') || dms.startsWith('-'))
   {
     pos = 1;
   }
 
-  std::string str = dms.toLatin1();
+  std::string str = convert2StdString(dms);
 
   QChar degreeSymbol('°');
   QChar minuteSymbol('\'');
   QChar secondsSymbol('\'');
-
 
   int a = dms.indexOf(degreeSymbol);
   int b = dms.indexOf(minuteSymbol);
