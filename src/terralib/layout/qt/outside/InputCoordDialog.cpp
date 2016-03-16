@@ -27,9 +27,14 @@ TerraLib Team at <terralib-team@terralib.org>.
 //boost
 #include <boost/lexical_cast.hpp>
 
-
 te::layout::InputCoordDialog::InputCoordDialog(std::string& coord, int bottom, int top, QWidget* parent) :
-QDialog(parent), m_ui(new Ui::InputCoordWidgetForm), inputValue(coord), degreeBottom(bottom), degreeTop(top)
+  QDialog(parent), m_ui(new Ui::InputCoordWidgetForm), m_inputValue(coord), m_degreeBottom(bottom), m_degreeTop(top),
+  m_degree(0),
+  m_min(0),
+  m_sec(0.),
+  m_decimalD(0.),
+  m_outPutValueDMS(""),
+  m_outPutValueDD("")
 {
   m_ui->setupUi(this);
   init();
@@ -41,8 +46,7 @@ te::layout::InputCoordDialog::~InputCoordDialog(){
 
 void te::layout::InputCoordDialog::init()
 {
-
-  m_ui->lneDegree->setValidator(new QIntValidator(degreeBottom, degreeTop, m_ui->lneDegree));
+  m_ui->lneDegree->setValidator(new QIntValidator(m_degreeBottom, m_degreeTop, m_ui->lneDegree));
   
   m_ui->lneMinute->setValidator(new QIntValidator(0, 59, m_ui->lneMinute));
   LayoutDoubleValidator* validatorDouble = new LayoutDoubleValidator(0.0, 59.999, 3, m_ui->lneSecond);
@@ -50,14 +54,13 @@ void te::layout::InputCoordDialog::init()
   validatorDouble->setNotation(QDoubleValidator::StandardNotation);
   m_ui->lneSecond->setValidator(validatorDouble);
 
-  double doubleBottom = (double) degreeBottom;
+  double doubleBottom = (double) m_degreeBottom;
   if (doubleBottom < 0.0)
   {
     doubleBottom = doubleBottom - 0.999999;
   }
 
-  double doubleTop = degreeTop + 0.999999;
-
+  double doubleTop = m_degreeTop + 0.999999;
 
   m_ui->lneDecimalDegree->setValidator(new QDoubleValidator(doubleBottom, doubleTop, 12, m_ui->lneDecimalDegree));
 
@@ -76,10 +79,9 @@ void te::layout::InputCoordDialog::init()
     m_ui->lneDegree->setReadOnly(true);
     m_ui->lneMinute->setReadOnly(true);
     m_ui->lneSecond->setReadOnly(true);
-
   }
 
-  QString convertedValue = ItemUtils::convert2QString(inputValue);
+  QString convertedValue = ItemUtils::convert2QString(m_inputValue);
 
   if (convertedValue.toDouble() > 360.0)
   {
@@ -87,43 +89,41 @@ void te::layout::InputCoordDialog::init()
   }
   else
   {
-    QString formatting = QString::number(ItemUtils::convert2QString(inputValue).toDouble(), 'f', 12);
+    QString formatting = QString::number(ItemUtils::convert2QString(m_inputValue).toDouble(), 'f', 12);
     m_ui->lneDecimalDegree->setText(formatting);
   }
 
-  QString dms = ItemUtils::DD2DMS(ItemUtils::convert2QString(inputValue));
+  QString dms = ItemUtils::DD2DMS(ItemUtils::convert2QString(m_inputValue));
 
   QChar degreeSymbol('°');
   QChar minuteSymbol('\'');
   QChar secondsSymbol('\'');
-
 
   int a = dms.indexOf(degreeSymbol);
   int b = dms.indexOf(minuteSymbol);
   int c = dms.indexOf(secondsSymbol, b + 1);
   double deg = dms.mid(0, a - 0).replace(QString(" "), QString("")).toDouble();
   double mins = dms.mid(a + 1, b - a - 1).replace(QString(" "), QString("")).toDouble();
-  double secs = dms.mid(b + 1, c - b - 1).replace(QString(" "), QString("")).toDouble();
-    
+  double secs = dms.mid(b + 1, c - b - 1).replace(QString(" "), QString("")).toDouble();    
 
-  if (deg > 360){
+  if (deg > 360)
+  {
     deg = 0;
   }
   m_ui->lneDegree->setText(ItemUtils::convert2QString(boost::lexical_cast<std::string>(deg)));
-  degree = (int)deg;
+  m_degree = (int)deg;
   m_ui->lneMinute->setText(ItemUtils::convert2QString(boost::lexical_cast<std::string>(mins)));
-  min = (int)mins;
+  m_min = (int)mins;
   
   QString formatting = QString::number(secs, 'f', 3);
 
-  if (formatting.toDouble() >= 60.0 ){
+  if (formatting.toDouble() >= 60.0 )
+  {
     formatting = "59.999";
   }
 
   m_ui->lneSecond->setText(formatting);
-  sec = secs;
-
-
+  m_sec = secs;
 }
 
 void te::layout::InputCoordDialog::on_lneDegree_editingFinished()
@@ -134,16 +134,15 @@ void te::layout::InputCoordDialog::on_lneDegree_editingFinished()
   }
   else
   {
-    degree = m_ui->lneDegree->text().toInt();
+    m_degree = m_ui->lneDegree->text().toInt();
   }
 
   std::string degreeSymbol = "°";
   std::string minuteSymbol = "\'";
   std::string secondsSymbol = "\'";
 
-  QString dms = ItemUtils::DMS2DD(ItemUtils::convert2QString(boost::lexical_cast<std::string>(degree)+degreeSymbol + boost::lexical_cast<std::string>(min)+minuteSymbol + boost::lexical_cast<std::string>(sec)+secondsSymbol));
+  QString dms = ItemUtils::DMS2DD(ItemUtils::convert2QString(boost::lexical_cast<std::string>(m_degree)+degreeSymbol + boost::lexical_cast<std::string>(m_min)+minuteSymbol + boost::lexical_cast<std::string>(m_sec)+secondsSymbol));
   m_ui->lneDecimalDegree->setText(dms);
-
 }
 
 void te::layout::InputCoordDialog::on_lneMinute_editingFinished()
@@ -154,16 +153,15 @@ void te::layout::InputCoordDialog::on_lneMinute_editingFinished()
   }
   else
   {
-    min = m_ui->lneMinute->text().toInt();
+    m_min = m_ui->lneMinute->text().toInt();
   }
 
   std::string degreeSymbol = "°";
   std::string minuteSymbol = "\'";
   std::string secondsSymbol = "\'";
 
-  QString dms = ItemUtils::DMS2DD(ItemUtils::convert2QString(boost::lexical_cast<std::string>(degree)+degreeSymbol + boost::lexical_cast<std::string>(min)+minuteSymbol + boost::lexical_cast<std::string>(sec)+secondsSymbol)); 
-  m_ui->lneDecimalDegree->setText(dms);
-  
+  QString dms = ItemUtils::DMS2DD(ItemUtils::convert2QString(boost::lexical_cast<std::string>(m_degree)+degreeSymbol + boost::lexical_cast<std::string>(m_min)+minuteSymbol + boost::lexical_cast<std::string>(m_sec)+secondsSymbol)); 
+  m_ui->lneDecimalDegree->setText(dms);  
 }
 
 void te::layout::InputCoordDialog::on_lneSecond_editingFinished()
@@ -174,16 +172,15 @@ void te::layout::InputCoordDialog::on_lneSecond_editingFinished()
   }
   else
   {
-    sec = m_ui->lneSecond->text().toDouble();
+    m_sec = m_ui->lneSecond->text().toDouble();
   }
 
   std::string degreeSymbol = "°";
   std::string minuteSymbol = "\'" ;
   std::string secondsSymbol = "\'";
 
-  QString dms = ItemUtils::DMS2DD(ItemUtils::convert2QString(boost::lexical_cast<std::string>(degree)+degreeSymbol + boost::lexical_cast<std::string>(min)+minuteSymbol + boost::lexical_cast<std::string>(sec)+secondsSymbol));
+  QString dms = ItemUtils::DMS2DD(ItemUtils::convert2QString(boost::lexical_cast<std::string>(m_degree)+degreeSymbol + boost::lexical_cast<std::string>(m_min)+minuteSymbol + boost::lexical_cast<std::string>(m_sec)+secondsSymbol));
   m_ui->lneDecimalDegree->setText(dms);
-
 }
 
 void te::layout::InputCoordDialog::on_lneDecimalDegree_editingFinished()
@@ -194,53 +191,51 @@ void te::layout::InputCoordDialog::on_lneDecimalDegree_editingFinished()
   }
   else
   {
-    decimalD = m_ui->lneDecimalDegree->text().toDouble();
+    m_decimalD = m_ui->lneDecimalDegree->text().toDouble();
   }
 
 }
 
 void te::layout::InputCoordDialog::on_pbOK_clicked()
 {
-  decimalD = m_ui->lneDecimalDegree->text().toDouble();
-  QString formatting = QString::number(sec, 'f', 3);
-  outPutValueDMS = boost::lexical_cast<std::string>(degree)+"°" + boost::lexical_cast<std::string>(min)+"'" + formatting.toLatin1().toStdString() + "''";
-  outPutValueDD = boost::lexical_cast<std::string>(decimalD);
+  m_decimalD = m_ui->lneDecimalDegree->text().toDouble();
+  QString formatting = QString::number(m_sec, 'f', 3);
+  std::string stdFormatting = ItemUtils::convert2StdString(formatting);
+  m_outPutValueDMS = boost::lexical_cast<std::string>(m_degree)+"°" + boost::lexical_cast<std::string>(m_min)+"'" + stdFormatting + "''";
+  m_outPutValueDD = boost::lexical_cast<std::string>(m_decimalD);
 
   this->accept();
 }
 
-std::string te::layout::InputCoordDialog::getCoordvalueDMS(){
-  return outPutValueDMS;
+std::string te::layout::InputCoordDialog::getCoordvalueDMS()
+{
+  return m_outPutValueDMS;
 }
 
-std::string te::layout::InputCoordDialog::getCoordvalueDD(){
-  return outPutValueDD;
+std::string te::layout::InputCoordDialog::getCoordvalueDD()
+{
+  return m_outPutValueDD;
 }
-
 
 void te::layout::InputCoordDialog::on_rdoDD_clicked()
 {
-
-
   m_ui->lneDecimalDegree->setReadOnly(false);
 
   m_ui->lneDegree->setReadOnly(true);
   m_ui->lneMinute->setReadOnly(true);
   m_ui->lneSecond->setReadOnly(true);
-
 }
 
 void te::layout::InputCoordDialog::on_rdoDMS_clicked()
 {
-
   m_ui->lneDecimalDegree->setReadOnly(true);
 
   m_ui->lneDegree->setReadOnly(false);
   m_ui->lneMinute->setReadOnly(false);
   m_ui->lneSecond->setReadOnly(false);
-
 }
 
-void te::layout::InputCoordDialog::on_pbCancel_clicked(){
+void te::layout::InputCoordDialog::on_pbCancel_clicked()
+{
   this->reject();
 }
