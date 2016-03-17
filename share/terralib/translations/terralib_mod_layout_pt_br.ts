@@ -1387,67 +1387,72 @@ nononon</source>
 <context>
     <name>PrintSettings</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="26"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="32"/>
         <source>Print Settings</source>
         <translation>Configurações de impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="85"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="91"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="99"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="105"/>
         <source>Print settings</source>
         <translation>Configurações de impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="112"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="118"/>
         <source>Print Quality</source>
         <translation>Qualidade de impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="129"/>
+        <source>Super Draft</source>
+        <translation>Super Rascunho</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="136"/>
         <source>Draft</source>
         <translation>Rascunho</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="130"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="143"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="137"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="150"/>
         <source>Fine/Detail</source>
         <translation>Fino/Detalhe</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="159"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="172"/>
         <source>DPI:</source>
         <translation>Resolução (DPI):</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="166"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="179"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="182"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="195"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="185"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="198"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="192"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="205"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="212"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="225"/>
         <source>OK</source>
         <translation></translation>
     </message>
