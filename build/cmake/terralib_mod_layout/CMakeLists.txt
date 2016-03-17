@@ -329,7 +329,9 @@ file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/transla
 file(COPY ${translated_files} DESTINATION "${CMAKE_BINARY_DIR}/share/terralib/translations")
 
 #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
-file(COPY ${translated_files} DESTINATION "${terralib_DIR}/share/terralib/translations/")
+if (WIN32)
+  file(COPY ${translated_files} DESTINATION "${terralib_DIR}/share/terralib/translations/")
+endif()
 
 #This should be on TerraLib 5 folder, not here. (Need to copy this to layout install folder, but from terralib 5 folder)
 #list(APPEND _qm_files "${terralib_DIR}/../../../share/terralib/translations/qt_property_browser_pt_br.qm")
