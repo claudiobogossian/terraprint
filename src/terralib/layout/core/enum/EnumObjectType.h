@@ -395,6 +395,13 @@ namespace te
 
         virtual EnumType* getNorthSettings() const;
 
+        /*!
+        \brief Returns value that represents Print Settings type belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getPrintSettingsDialog() const;
+
       protected:
 
         /*!
@@ -451,6 +458,7 @@ namespace te
         EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
         EnumType* m_mapSettingsDialog; //!< value that represents map settings type belonging to enumeration
         EnumType* m_scaleSettingsDialog; //!< value that represents scale settings type belonging to enumeration
+        EnumType* m_printSettingsDialog; //!< value that represents scale settings type belonging to enumeration
     };
   }
 }
