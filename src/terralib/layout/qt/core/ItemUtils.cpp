@@ -909,6 +909,42 @@ te::gm::Envelope te::layout::ItemUtils::calculatePan(const te::gm::Envelope& env
 }
 
 
+void te::layout::ItemUtils::DD2DMS(QString dd, QString& degreeString, QString& minuteString, QString& secondString)
+{
+  int degree;
+  int minute;
+  double second;
+  double ll;
+
+  double value = dd.replace(QString(" "), QString("")).toDouble();
+
+  degree = (int)value;
+  ll = value - degree;
+  minute = (int)(ll * 60.);
+  ll = (ll * 60.) - minute;
+  second = ll * 60.;
+
+  degreeString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(degree));
+  minuteString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(minute));
+  secondString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(second));
+
+
+}
+
+void te::layout::ItemUtils::DMS2DD(QString degree, QString minute, QString second, QString &dd)
+{
+
+  double deg = degree.toDouble();
+  double min = minute.toDouble();
+  double sec = second.toDouble(); 
+  double coord = deg + (min / 60.0) + (sec / 3600.0);
+
+  dd = ItemUtils::convert2QString(boost::lexical_cast<std::string>(coord));
+
+}
+
+
+
 QString te::layout::ItemUtils::DD2DMS(QString dd)
 {
   int degree;
