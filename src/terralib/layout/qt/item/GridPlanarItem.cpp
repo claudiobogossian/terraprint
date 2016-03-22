@@ -80,7 +80,7 @@ void te::layout::GridPlanarItem::drawGrid(QPainter* painter)
   }
   else if(currentStyle == gridStyle->getStyleCross())
   {
-    drawCrossLines(painter);
+    //calculateCrossLines(/*painter*/);
   }
 }
 
@@ -108,6 +108,32 @@ void te::layout::GridPlanarItem::calculateGrid()
   
   calculateVertical(planarBox, referenceBoxMM);
   calculateHorizontal(planarBox, referenceBoxMM);
+
+  const Property& pStyle = pGridSettings.containsSubProperty(settingsConfig.getStyle());
+
+  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
+  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
+  if (currentStyle != 0)
+  {
+    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
+  }
+
+  EnumGridStyleType gridStyleType;
+
+  if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
+  {
+    m_gridLines = QPainterPath();
+    calculateCrossLines();
+  }
+
+  if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
+  {
+    m_gridCrosses = QPainterPath();
+    addGridLinesToPath();
+  }
+  //generateGrid();
+  //se for cruzeta, calula as interseccoes
+    //se naio for, adiciona as linhas no objeto m_gridLines;
 
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 
@@ -157,6 +183,9 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
 
   QFont ft = ItemUtils::convertToQfont(txtFont);
   
+
+
+
   for( ; y1 <= geoBox.getUpperRightY() ; y1 += verticalGap)
   {
     if(y1 < geoBox.getLowerLeftY())
@@ -170,11 +199,14 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     
     QLineF line(llx, y, urx, y);
 
+
     te::gm::LineString lineString(2, te::gm::LineStringType);
     lineString.setPoint(0, llx, y);
     lineString.setPoint(1, urx, y);
 
     m_horizontalLines.push_back(lineString);
+
+    m_gridLines.addPath(ItemUtils::lineToQPath(lineString));
 
     double number = y1 / unitV;
     QString convert = QString::number(number, 'f', 0);
@@ -230,6 +262,11 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     calculateRight(line.p2(), rectF, convert, bRightRotate, verticalDisplacement);
   }
 }
+
+void te::layout::GridPlanarItem::generateGridCrossStyle(){
+
+}
+
 
 void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM )
 {
@@ -297,10 +334,17 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
     QLineF line(x, lly, x, ury);
 
+    //m_gridLines.moveTo(x, lly);
+    //m_gridLines.lineTo(x, ury);
+
     te::gm::LineString lineString(2, te::gm::LineStringType);
     lineString.setPoint(0, x, lly);
     lineString.setPoint(1, x, ury);
     m_verticalLines.push_back(lineString);
+
+    m_gridLines.addPath(ItemUtils::lineToQPath(lineString));
+
+
 
     double number = x1 / unitH;
     QString convert = QString::number(number, 'f', 0);

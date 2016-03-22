@@ -90,7 +90,7 @@ void te::layout::GridGeodesicItem::drawGrid(QPainter* painter)
   }
   else if(currentStyle == gridStyle->getStyleCross())
   {
-    drawCrossLines(painter);
+    //calculateCrossLines(painter);
   }
 }
 

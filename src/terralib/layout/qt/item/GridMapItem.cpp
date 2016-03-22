@@ -51,8 +51,48 @@ te::layout::GridMapItem::~GridMapItem()
 
 }
 
+void te::layout::GridMapItem::addGridLinesToPath()
+{
+  for (int i = 0; i < m_horizontalLines.size(); i++)
+  {
+    m_gridLines.addPath(ItemUtils::lineToQPath(m_horizontalLines.at(i)));
+  }
+
+  for (int i = 0; i < m_verticalLines.size(); i++)
+  {
+    m_gridLines.addPath(ItemUtils::lineToQPath(m_verticalLines.at(i)));
+  }
+}
+
+
 void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
+
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
+  GridSettingsConfigProperties settingsConfig;
+
+  const Property& pVisible = pGridSettings.containsSubProperty(settingsConfig.getVisible());
+  bool visible = pVisible.getValue().toBool();
+
+  if (visible == false)
+  {
+    return;
+  }
+
+  painter->save();
+
+  configPainter(painter);
+
+  painter->drawPath(m_gridLines);
+
+  painter->drawPath(m_gridCrosses);
+
+  painter->restore();
+
+  /*
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
@@ -65,7 +105,7 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
   if(visible)
   {
     drawGrid(painter);
-  }
+  }*/
 }
 
 void te::layout::GridMapItem::drawGrid( QPainter* painter )
@@ -158,6 +198,11 @@ void te::layout::GridMapItem::clear()
   m_rightTexts.clear();
   m_leftTexts.clear();
 
+  m_verticalLines.clear();
+
+  m_gridLines = QPainterPath();
+  m_gridCrosses = QPainterPath();
+  
   m_boundingBox = te::gm::Envelope();
 }
 
@@ -452,15 +497,15 @@ QRectF te::layout::GridMapItem::boundingRect() const
   return AbstractItem<QGraphicsItem>::boundingRect();
 }
 
-void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
+void te::layout::GridMapItem::calculateCrossLines(/*QPainter* painter*/)
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
 
-  painter->save();
+  //painter->save();
 
-  configPainter(painter);
+  //configPainter(painter);
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -506,24 +551,30 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
       QLineF lneHrz(interPoint->getX() - crossOffSet, interPoint->getY(), interPoint->getX() + crossOffSet, interPoint->getY());
       QLineF lneVrt(interPoint->getX(), interPoint->getY() - crossOffSet, interPoint->getX(), interPoint->getY() + crossOffSet);
         
-      if(drawCrossIntersectMapBorder(lneVrt, lneHrz, painter) == true)
+      if(drawCrossIntersectMapBorder(lneVrt, lneHrz/*, painter*/) == true)
       {
         continue;
       }
 
-      painter->drawLine(lneHrz);
-      painter->drawLine(lneVrt);
+      m_gridCrosses.moveTo(lneHrz.p1().x(), lneHrz.p1().y());
+      m_gridCrosses.lineTo(lneHrz.p2().x(), lneHrz.p2().y());
+
+      m_gridCrosses.moveTo(lneVrt.p1().x(), lneVrt.p1().y());
+      m_gridCrosses.lineTo(lneVrt.p2().x(), lneVrt.p2().y());
+      
+      //painter->drawLine(lneHrz);
+      //painter->drawLine(lneVrt);
     }
   }
 
-  configPainter(painter);
+  //configPainter(painter);
   
-  drawTexts(painter);
+  //drawTexts(painter);
 
-  painter->restore();
+  //painter->restore();
 }
 
-bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hrz, QPainter* painter )
+bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hrz/*, QPainter* painter*/ )
 {
   bool result = false;
 
@@ -557,28 +608,41 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x(), intersectionPoint.y() + crossOffSet);
     intersects = true;
 
-    painter->drawLine(borderLine);
+    m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
+    m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
+    
+    //painter->drawLine(borderLine);
   }
   if (topLine.intersect(vrt, &intersectionPoint) == QLineF::BoundedIntersection)
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x(), intersectionPoint.y() - crossOffSet);
     intersects = true;
 
-    painter->drawLine(borderLine);
+    m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
+    m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
+    
+    //painter->drawLine(borderLine);
   }
   if (leftLine.intersect(hrz, &intersectionPoint) == QLineF::BoundedIntersection)
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x() + crossOffSet, intersectionPoint.y());
     intersects = true;
 
-    painter->drawLine(borderLine);
+    m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
+    m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
+    
+    //painter->drawLine(borderLine);
   }
   if (rightLine.intersect(hrz, &intersectionPoint) == QLineF::BoundedIntersection)
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x() - crossOffSet, intersectionPoint.y());
     intersects = true;
 
-    painter->drawLine(borderLine);
+    m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
+    m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
+    
+
+    //painter->drawLine(borderLine);
   }
 
   return intersects;

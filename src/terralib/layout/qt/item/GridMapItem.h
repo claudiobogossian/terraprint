@@ -113,9 +113,9 @@ namespace te
 
         virtual void drawRightTexts(QPainter* painter);
 
-        virtual void drawCrossLines(QPainter* painter);
+        virtual void calculateCrossLines(/*QPainter* painter*/);
 
-        virtual bool drawCrossIntersectMapBorder(QLineF vrt, QLineF hrz, QPainter* painter);
+        virtual bool drawCrossIntersectMapBorder(QLineF vrt, QLineF hrz/*, QPainter* painter*/);
 
         virtual void debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, QFont font, int rotate = 0);
 
@@ -126,6 +126,9 @@ namespace te
         virtual te::gm::Envelope calculateRight(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
 
         virtual te::gm::Envelope calculateLeft(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
+        
+        virtual void addGridLinesToPath();
+
 
       protected:
 
@@ -145,6 +148,9 @@ namespace te
         int                             m_defaultRotate;
 
         bool                            m_showDebugDrawings;
+
+        QPainterPath                    m_gridLines;
+        QPainterPath                    m_gridCrosses;
     };
   }
 }

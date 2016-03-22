@@ -84,6 +84,11 @@ namespace te
         virtual double initHorizontalLines(const te::gm::Envelope& geoBox);
 
         virtual double getUnit(std::string strUnit);
+
+        virtual void generateGridCrossStyle();
+
+
+
     };
   }
 }
