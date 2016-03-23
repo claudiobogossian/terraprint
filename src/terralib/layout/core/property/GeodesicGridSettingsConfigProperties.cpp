@@ -97,6 +97,8 @@ std::string te::layout::GeodesicGridSettingsConfigProperties::getSecondsText()
   return m_secondsText;
 }
 
+
+
 std::string te::layout::GeodesicGridSettingsConfigProperties::getLneCornerHrzDisplacement()
 {
   return m_lneCornerHrzDisplacement;

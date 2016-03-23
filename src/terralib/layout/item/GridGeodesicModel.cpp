@@ -52,6 +52,7 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
   bool showDegreesText = true;
   bool showMinutesText = true;
   bool showSecondsText = true;
+
   int secPresicion = 0;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();

@@ -73,6 +73,8 @@ te::layout::GridMapModel::GridMapModel()
   bool rightRotateText = false;
   bool topRotateText = false;
 
+  bool showBouderIntersections = true;
+
   double crossOffSet = 2.;
 
   std::string itemName = "";
@@ -135,6 +137,13 @@ te::layout::GridMapModel::GridMapModel()
     prop_gridsettings.addSubProperty(property);
   }
 
+  {
+    Property property(0);
+    property.setName(settingsConfig.getBouderIntersections());
+    property.setLabel(TR_LAYOUT("Show Bouder Intersection"));
+    property.setValue(showBouderIntersections, dataType->getDataTypeBool());
+    prop_gridsettings.addSubProperty(property);
+  }
   //Just one is visible
   {
     EnumGridStyleType gridStyleType;

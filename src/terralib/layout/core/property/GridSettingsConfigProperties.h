@@ -72,6 +72,7 @@ namespace te
         std::string getRightRotateText();
         std::string getTopRotateText();
         std::string getCrossOffset();
+        std::string getBouderIntersections();
               
       protected:
 
@@ -112,6 +113,8 @@ namespace te
         std::string m_rightRotateText;
         std::string m_topRotateText;
         std::string m_crossOffset;
+
+        std::string m_bouderIntersection;
     };
   }
 }

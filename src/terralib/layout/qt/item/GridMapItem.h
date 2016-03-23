@@ -117,6 +117,8 @@ namespace te
 
         virtual bool drawCrossIntersectMapBorder(QLineF vrt, QLineF hrz/*, QPainter* painter*/);
 
+        virtual void drawBoldersSegments(/*QPainter* painter,*/ double crossOffSe);
+
         virtual void debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, QFont font, int rotate = 0);
 
         virtual te::gm::Envelope calculateTop(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement);
@@ -126,15 +128,15 @@ namespace te
         virtual te::gm::Envelope calculateRight(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
 
         virtual te::gm::Envelope calculateLeft(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
-        
+
+        virtual bool checkBolderIntersection(const te::gm::LineString& bolderLine, const te::gm::LineString& gridLine, te::gm::Point& intersectionPoint);
         virtual void addGridLinesToPath();
 
-        virtual void drawSuperScriptText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate);
-
-        virtual void drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate);
-
-
-      protected:
+        virtual bool isNearEdge(const te::gm::Point& p, const te::gm::LineString& line, const double& offSet);virtual void drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate);
+        virtual void drawSuperScriptText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate);      
+    
+    
+    protected:
 
         double                          m_maxWidthTextMM;
         double                          m_maxHeigthTextMM;

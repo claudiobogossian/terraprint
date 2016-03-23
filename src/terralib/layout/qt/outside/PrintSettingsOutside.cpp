@@ -55,6 +55,7 @@ te::layout::PrintSettingsOutside::PrintSettingsOutside(Scene* scene, AbstractOut
   m_dpiList.append("150");
   m_dpiList.append("300");
   m_dpiList.append("600");
+  m_dpiList.append("1200");
 
   init();
 }
@@ -70,7 +71,7 @@ void te::layout::PrintSettingsOutside::init()
   m_ui->rdoNormal->setChecked(true);
   m_ui->rdoFineDetail->setChecked(false);
 
-  QString dpi = m_dpiList[1];
+  QString dpi = m_dpiList[2];
 
   m_ui->lblNumberDPI->clear();
   m_ui->lblNumberDPI->setText(dpi);
@@ -135,9 +136,10 @@ void te::layout::PrintSettingsOutside::on_lstPrinter_currentItemChanged(QListWid
   }
 }
 
-void te::layout::PrintSettingsOutside::on_rdoDraft_clicked()
+void te::layout::PrintSettingsOutside::on_rdoSuperDraft_clicked()
 {
-  m_ui->rdoDraft->setChecked(true);
+  m_ui->rdoSuperDraft->setChecked(true);
+  m_ui->rdoDraft->setChecked(false);
   m_ui->rdoNormal->setChecked(false);
   m_ui->rdoFineDetail->setChecked(false);
 
@@ -148,10 +150,11 @@ void te::layout::PrintSettingsOutside::on_rdoDraft_clicked()
   m_printer->setResolution(dpiNumber);
 }
 
-void te::layout::PrintSettingsOutside::on_rdoNormal_clicked()
+void te::layout::PrintSettingsOutside::on_rdoDraft_clicked()
 {
-  m_ui->rdoDraft->setChecked(false);
-  m_ui->rdoNormal->setChecked(true);
+  m_ui->rdoSuperDraft->setChecked(false);
+  m_ui->rdoDraft->setChecked(true);
+  m_ui->rdoNormal->setChecked(false);
   m_ui->rdoFineDetail->setChecked(false);
 
   QString dpi = m_dpiList[1];
@@ -161,11 +164,12 @@ void te::layout::PrintSettingsOutside::on_rdoNormal_clicked()
   m_printer->setResolution(dpiNumber);
 }
 
-void te::layout::PrintSettingsOutside::on_rdoFineDetail_clicked()
+void te::layout::PrintSettingsOutside::on_rdoNormal_clicked()
 {
+  m_ui->rdoSuperDraft->setChecked(false);
   m_ui->rdoDraft->setChecked(false);
-  m_ui->rdoNormal->setChecked(false);
-  m_ui->rdoFineDetail->setChecked(true);
+  m_ui->rdoNormal->setChecked(true);
+  m_ui->rdoFineDetail->setChecked(false);
 
   QString dpi = m_dpiList[2];
   m_ui->lblNumberDPI->setText(dpi);
@@ -174,9 +178,24 @@ void te::layout::PrintSettingsOutside::on_rdoFineDetail_clicked()
   m_printer->setResolution(dpiNumber);
 }
 
+void te::layout::PrintSettingsOutside::on_rdoFineDetail_clicked()
+{
+  m_ui->rdoSuperDraft->setChecked(false);
+  m_ui->rdoDraft->setChecked(false);
+  m_ui->rdoNormal->setChecked(false);
+  m_ui->rdoFineDetail->setChecked(true);
+
+  QString dpi = m_dpiList[3];
+  m_ui->lblNumberDPI->setText(dpi);
+
+  int dpiNumber = dpi.toInt();
+  m_printer->setResolution(dpiNumber);
+}
+
 QString te::layout::PrintSettingsOutside::getPrinterName()
 {
-  QString name;// = m_ui->txtPrinterName->text();
+  QListWidgetItem* item = m_ui->lstPrinter->currentItem();
+  QString name = item->text();
   return name;
 }
 

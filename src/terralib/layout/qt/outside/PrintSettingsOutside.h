@@ -84,6 +84,8 @@ namespace te
 
         virtual void on_lstPrinter_currentItemChanged(QListWidgetItem * current, QListWidgetItem * previous);
 
+        virtual void on_rdoSuperDraft_clicked();
+
         virtual void on_rdoDraft_clicked();
 
         virtual void on_rdoNormal_clicked();

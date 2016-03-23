@@ -276,6 +276,10 @@ namespace te
         static QString DD2DMS(QString dd);
 
         static QString DMS2DD(const QString dms);
+
+        static void DD2DMS(QString dd, QString& degreeString, QString& minuteString, QString& secondString);
+
+        static void DMS2DD(QString degree, QString minute, QString second, QString &dd);
         
       protected:
 
