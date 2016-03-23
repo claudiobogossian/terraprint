@@ -129,6 +129,10 @@ namespace te
         
         virtual void addGridLinesToPath();
 
+        virtual void drawSuperScriptText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate);
+
+        virtual void drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate);
+
 
       protected:
 
@@ -151,6 +155,7 @@ namespace te
 
         QPainterPath                    m_gridLines;
         QPainterPath                    m_gridCrosses;
+        QPainterPath                    m_gridText;
     };
   }
 }
