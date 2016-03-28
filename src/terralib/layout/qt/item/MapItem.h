@@ -111,9 +111,14 @@ namespace te
 
 
         /*!
-        \brief Draws the map in the current device
+        \brief Draws the map in the given device
         */
         virtual void drawMapOnDevice(QPaintDevice* device);
+
+        /*!
+        \brief Draws the map in the given painter
+        */
+        virtual void drawMapOnPainter(QPainter* painter);
 
         /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
