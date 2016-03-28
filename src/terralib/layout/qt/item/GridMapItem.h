@@ -117,6 +117,8 @@ namespace te
 
         virtual bool drawCrossIntersectMapBorder(QLineF vrt, QLineF hrz, QPainter* painter);
 
+        virtual void drawBoldersSegments(QPainter* painter, double crossOffSe);
+
         virtual void debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, QFont font, int rotate = 0);
 
         virtual te::gm::Envelope calculateTop(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double horizontalDisplacement);
@@ -126,6 +128,11 @@ namespace te
         virtual te::gm::Envelope calculateRight(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
 
         virtual te::gm::Envelope calculateLeft(QPointF referencePoint, QRectF textBoundingRect, QString text, bool rotate, double verticalDisplacement);
+        
+        virtual bool checkBolderIntersection(const te::gm::LineString& bolderLine, const te::gm::LineString& gridLine, te::gm::Point& intersectionPoint);
+
+        virtual bool isNearEdge(const te::gm::Point& p, const te::gm::LineString& line, const double& offSet);
+
 
       protected:
 

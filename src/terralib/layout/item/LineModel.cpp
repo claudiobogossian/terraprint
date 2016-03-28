@@ -32,6 +32,7 @@
 #include "../core/property/Properties.h"
 #include "../core/enum/EnumLineStyleType.h"
 #include "../core/enum/EnumType.h"
+#include "../core/Utils.h"
 
 te::layout::LineModel::LineModel() 
   : AbstractItemModel()
@@ -39,7 +40,7 @@ te::layout::LineModel::LineModel()
   te::color::RGBAColor color(0, 0, 0, 255);
   te::gm::LineString* lineString = new te::gm::LineString(0, te::gm::LineStringType);
   te::gm::GeometryShrPtr line(lineString);
-  double lineWidth = 0;
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getLineItem());
 
@@ -73,7 +74,7 @@ te::layout::LineModel::LineModel()
     }
     this->m_properties.addProperty(property);
   }
-
+  
   {
     Property property(0);
     property.setName("line_width");

@@ -38,6 +38,7 @@
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/Font.h"
 #include "../core/ItemUtils.h"
+#include "../outside/InputCoordDialog.h"
 #include "GridSettingsController.h"
 
 // STL
@@ -53,6 +54,9 @@
 #include <QCheckBox> 
 #include <QMessageBox>
 #include <QObjectList>
+
+//boost
+#include <boost/lexical_cast.hpp>
 
 te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* controller, QWidget* parent) :
   QDialog(parent),
@@ -120,6 +124,10 @@ void te::layout::GridSettingsOutside::init()
   m_ui->fraGridTextPlanarColor->setAutoFillBackground(true);
   m_ui->fraPlanarLineColor->setAutoFillBackground(true);  
 
+  double minimumValue = Utils::getLineWidthMinimumValue();
+  m_ui->m_planarLineWidthDoubleSpinBox->setMinimum(minimumValue);
+  m_ui->m_lineWidthDoubleSpinBox->setMinimum(minimumValue);
+  
   m_ui->m_planarLineWidthDoubleSpinBox->setKeyboardTracking(false);
   m_ui->m_lineWidthDoubleSpinBox->setKeyboardTracking(false);
 }
@@ -442,14 +450,14 @@ void te::layout::GridSettingsOutside::setGeodesicValues2GMS()
   QString y = m_ui->yGridInitialPoint_geo_textField->text();
   QString x = m_ui->xGridInitialPoint_geo_textField->text();
   setMask(m_ui->yGridInitialPoint_geo_textField, m_ui->xGridInitialPoint_geo_textField);
-  m_ui->yGridInitialPoint_geo_textField->setText(DD2DMS(y));
-  m_ui->xGridInitialPoint_geo_textField->setText(DD2DMS(x));
+  m_ui->yGridInitialPoint_geo_textField->setText(ItemUtils::DD2DMS(y));
+  m_ui->xGridInitialPoint_geo_textField->setText(ItemUtils::DD2DMS(x));
 
   y = m_ui->lneVerticalGap->text();
   x = m_ui->lneHorizontalGap->text();
   setMask(m_ui->lneVerticalGap, m_ui->lneHorizontalGap);
-  m_ui->lneVerticalGap->setText(DD2DMS(y));
-  m_ui->lneHorizontalGap->setText(DD2DMS(x));
+  m_ui->lneVerticalGap->setText(ItemUtils::DD2DMS(y));
+  m_ui->lneHorizontalGap->setText(ItemUtils::DD2DMS(x));
 }
 
 void te::layout::GridSettingsOutside::setGeodesicValues2Degrees()
@@ -457,69 +465,15 @@ void te::layout::GridSettingsOutside::setGeodesicValues2Degrees()
   QString y = m_ui->yGridInitialPoint_geo_textField->text();
   QString x = m_ui->xGridInitialPoint_geo_textField->text();
   setMask(m_ui->yGridInitialPoint_geo_textField, m_ui->xGridInitialPoint_geo_textField);
-  m_ui->yGridInitialPoint_geo_textField->setText(DMS2DD(y));
-  m_ui->xGridInitialPoint_geo_textField->setText(DMS2DD(x));
+  m_ui->yGridInitialPoint_geo_textField->setText(ItemUtils::DMS2DD(y));
+  m_ui->xGridInitialPoint_geo_textField->setText(ItemUtils::DMS2DD(x));
 
   y = m_ui->lneVerticalGap->text();
   x = m_ui->lneHorizontalGap->text();
   setMask(m_ui->lneVerticalGap, m_ui->lneHorizontalGap);
-  m_ui->lneVerticalGap->setText(DMS2DD(y));
-  m_ui->lneHorizontalGap->setText(DMS2DD(x));
+  m_ui->lneVerticalGap->setText(ItemUtils::DMS2DD(y));
+  m_ui->lneHorizontalGap->setText(ItemUtils::DMS2DD(x));
 }
-
-QString te::layout::GridSettingsOutside::DD2DMS(QString dd)
-{
-  int degree;
-  int minute;
-  double second;
-  double ll;
-
-  double value = dd.replace(QString(" "), QString("")).toDouble();
-
-  degree = (int) value;
-  ll = value - degree;
-  minute = (int) (ll * 60.);
-  ll = (ll * 60.) - minute;
-  second = ll * 60.;
-
-  QString output;
-  if(degree < 0)
-  {
-    output = QString::fromStdString(("-" + te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
-  }
-  else
-  {
-    output = QString::fromStdString((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute))+ "'" + te::common::Convert2String(fabs(second), 2) + "''").c_str());
-  }
-
-  return output;
-}
-
-QString te::layout::GridSettingsOutside::DMS2DD(const QString dms)
-{
-  int pos = 0;
-  if (dms.startsWith('+') || dms.startsWith('-'))
-  {
-    pos = 1;
-  }
-  int a = dms.indexOf('°');
-  int b = dms.indexOf('\'');
-  int c = dms.indexOf('\'', b + 1);
-  double deg = dms.mid(pos, a - pos).replace(QString(" "), QString("")).toDouble();
-  double min = dms.mid(a + 1, b - a - 1).replace(QString(" "), QString("")).toDouble();
-  double sec = dms.mid(b + 1, c - b - 1).replace(QString(" "), QString("")).toDouble();
-  double coord = deg + (min / 60.0) + (sec / 3600.0);
-  if (dms.mid(0, a).toDouble() < 0)
-  {
-    coord *= -1;
-  }
-
-  std::string output = te::common::Convert2String(coord, 4);
-  QString qValue = ItemUtils::convert2QString(output);
-
-  return qValue;
-}
-
 
 void te::layout::GridSettingsOutside::setMask(QLineEdit *lat, QLineEdit *lon)
 {
@@ -717,7 +671,7 @@ void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
     QString lneHorizontalGap = m_ui->lneHorizontalGap->text();
     if (m_ui->chkDegreesGeoText->isChecked())
     {
-      lneHorizontalGap = DMS2DD(lneHorizontalGap);
+      lneHorizontalGap = ItemUtils::DMS2DD(lneHorizontalGap);
     }
     variant.setValue(lneHorizontalGap.toDouble(), dataType->getDataTypeDouble());
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
@@ -741,9 +695,10 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     QString lneVerticalGap = m_ui->lneVerticalGap->text();
+    std::string gapValue = ItemUtils::convert2StdString(lneVerticalGap);
     if (m_ui->chkDegreesGeoText->isChecked())
     {
-      lneVerticalGap = DMS2DD(lneVerticalGap);
+      lneVerticalGap = ItemUtils::DMS2DD(lneVerticalGap);
     }
     variant.setValue(lneVerticalGap.toDouble(), dataType->getDataTypeDouble());
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
@@ -1068,7 +1023,7 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editing
     QString xGridInitialPoint_geo_textField = m_ui->xGridInitialPoint_geo_textField->text();
     if (m_ui->chkDegreesGeoText->isChecked())
     {
-      xGridInitialPoint_geo_textField = DMS2DD(xGridInitialPoint_geo_textField);
+      xGridInitialPoint_geo_textField = ItemUtils::DMS2DD(xGridInitialPoint_geo_textField);
     }
     variant.setValue(xGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
     Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
@@ -1087,7 +1042,7 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_geo_textField_editing
     QString yGridInitialPoint_geo_textField = m_ui->yGridInitialPoint_geo_textField->text();
     if (m_ui->chkDegreesGeoText->isChecked())
     {
-      yGridInitialPoint_geo_textField = DMS2DD(yGridInitialPoint_geo_textField);
+      yGridInitialPoint_geo_textField = ItemUtils::DMS2DD(yGridInitialPoint_geo_textField);
     }
     variant.setValue(yGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
     Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
@@ -1877,6 +1832,141 @@ void te::layout::GridSettingsOutside::addComboOptions(QComboBox* combo, std::vec
     list.append(qValue);
   }
   combo->addItems(list);
+}
+
+void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
+{
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (!controller)
+    return;
+
+  Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+
+  //QString currentValue = ItemUtils::DMS2DD(m_ui->lneHorizontalGap->text());
+  QString currentValue = ItemUtils::convert2QString(boost::lexical_cast<std::string>(prop.getValue().toDouble()));
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, 0, 180, this);
+
+  if (degreeDialog.exec() == 1){
+
+    QString lneHorizontalGap;
+    lneHorizontalGap = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
+    if (ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble() > 0.0)
+    {
+      m_ui->lneHorizontalGap->setText(lneHorizontalGap);
+
+      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+      Variant variant;
+
+      variant.setValue(ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble(), dataType->getDataTypeDouble());
+      if (variant.toDouble() > 0.0)
+      {
+        Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+        prop.setValue(variant);
+        emit updateProperty(prop);
+      }
+    }
+  }
+}
+
+void te::layout::GridSettingsOutside::on_btnVerticalGap_clicked()
+{
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (!controller)
+    return;
+
+  Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+
+  QString lneVerticalGap;
+
+  QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, 0, 90, this);
+  if (degreeDialog.exec() == 1){
+   
+    lneVerticalGap = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
+
+    if (ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble() > 0.0){
+
+      m_ui->lneVerticalGap->setText(lneVerticalGap);
+
+      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+      Variant variant;
+
+      variant.setValue(ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble(), dataType->getDataTypeDouble());
+
+       Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+       prop.setValue(variant);
+       emit updateProperty(prop);
+
+    }
+  }
+}
+
+
+void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
+{
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (!controller)
+    return;
+
+  Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+
+  QString lneIntialPointX;
+
+  QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, -179, 179, this);
+  if (degreeDialog.exec() == 1){
+
+    lneIntialPointX = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
+
+    m_ui->xGridInitialPoint_geo_textField->setText(lneIntialPointX);
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+
+    variant.setValue(ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble(), dataType->getDataTypeDouble());
+
+    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+    prop.setValue(variant);
+
+    emit updateProperty(prop);
+
+  }
+}
+
+
+void te::layout::GridSettingsOutside::on_btnInitialPointY_clicked()
+{
+  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
+  if (!controller)
+    return;
+
+  Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+
+  QString lneIntialPointY;
+
+  QString currentValue = ItemUtils::convert2QString(prop.getValue().convertToString());
+  std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
+  InputCoordDialog degreeDialog(stdCurrentValue, -89, 89, this);
+  if (degreeDialog.exec() == 1){
+
+    lneIntialPointY = ItemUtils::convert2QString(degreeDialog.getCoordvalueDMS());
+
+    m_ui->yGridInitialPoint_geo_textField->setText(lneIntialPointY);
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Variant variant;
+
+    variant.setValue(ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble(), dataType->getDataTypeDouble());
+
+    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+    prop.setValue(variant);
+
+    emit updateProperty(prop);
+
+  }
 }
 
 void te::layout::GridSettingsOutside::initCombo( QWidget* widget, std::string nameComponent, EnumType* gridType )

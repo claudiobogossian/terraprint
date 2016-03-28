@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file NorthSettingsConfigProperties.cpp
+  \file PrintSettingsModel.cpp
    
   \brief 
 
@@ -26,40 +26,38 @@
 */
 
 // TerraLib
-#include "NorthSettingsConfigProperties.h"
+#include "PrintSettingsModel.h"
+#include "../core/property/Property.h"
+#include "../core/property/Properties.h"
+#include "../core/enum/Enums.h"
 
-te::layout::NorthSettingsConfigProperties::NorthSettingsConfigProperties():
-  m_btnColor("color"),
-  m_doubleSpinBoxNorthWidth("width"),
-  m_doubleSpinBoxNorthHeight("height"),
-  m_cbNorth("northArrow_type")
+te::layout::PrintSettingsModel::PrintSettingsModel() :
+  AbstractOutsideModel()
 {
-  
+  m_type = Enums::getInstance().getEnumObjectType()->getPrintSettingsDialog();
+  m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
-te::layout::NorthSettingsConfigProperties::~NorthSettingsConfigProperties()
+te::layout::PrintSettingsModel::~PrintSettingsModel()
 {
 
 }
 
-std::string te::layout::NorthSettingsConfigProperties::getBtnColor()
+te::layout::Properties* te::layout::PrintSettingsModel::getProperties() const
 {
-  return m_btnColor;
+  m_properties->clear();
+
+  Property pro_name(m_hashCode);
+  pro_name.setName(m_name);
+
+  m_properties->addProperty(pro_name);
+
+  m_properties->setTypeObj(m_type);
+  return m_properties;
 }
 
-
-std::string te::layout::NorthSettingsConfigProperties::getDoubleSpinBoxNorthHeight()
+void te::layout::PrintSettingsModel::updateProperties(te::layout::Properties* properties, bool notify)
 {
-  return m_doubleSpinBoxNorthHeight;
-}
 
-std::string te::layout::NorthSettingsConfigProperties::getDoubleSpinBoxNorthWidth()
-{
-  return m_doubleSpinBoxNorthWidth;
-}
-
-std::string te::layout::NorthSettingsConfigProperties::getCbNorth()
-{
-  return m_cbNorth;
 }
 

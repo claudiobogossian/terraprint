@@ -110,8 +110,11 @@ void te::layout::PointItem::drawStar1( QPainter * painter )
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -158,8 +161,11 @@ void te::layout::PointItem::drawStar2(QPainter * painter)
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -200,8 +206,11 @@ void te::layout::PointItem::drawStar3(QPainter * painter)
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -236,8 +245,11 @@ void te::layout::PointItem::drawStar4(QPainter * painter)
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -273,8 +285,11 @@ void te::layout::PointItem::drawCircle( QPainter * painter )
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -310,8 +325,11 @@ void te::layout::PointItem::drawX( QPainter * painter )
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -348,8 +366,11 @@ void te::layout::PointItem::drawSquare( QPainter * painter )
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -386,8 +407,11 @@ void te::layout::PointItem::drawRhombus( QPainter * painter )
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);
@@ -427,8 +451,11 @@ void te::layout::PointItem::drawCross( QPainter * painter )
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);

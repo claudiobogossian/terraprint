@@ -125,6 +125,15 @@ namespace te
 
         virtual void on_pbLineColor_clicked();
 
+        virtual void on_btnHorizontalGap_clicked();
+
+        virtual void on_btnVerticalGap_clicked();
+
+        virtual void on_btnInitialPointX_clicked();
+
+        virtual void on_btnInitialPointY_clicked();
+
+
         ///*Text: Basic Configuration*/
 
         virtual void on_cmbPlanarTextSize_currentIndexChanged ( const QString & text );
@@ -280,10 +289,6 @@ namespace te
         void setGeodesicValues2Degrees();
 
         void setMask(QLineEdit *lat, QLineEdit *lon);
-
-        QString DD2DMS(QString dd);
-
-        QString DMS2DD(const QString dms);
         
       protected:
 

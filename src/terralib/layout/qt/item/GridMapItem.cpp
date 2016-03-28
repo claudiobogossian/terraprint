@@ -29,6 +29,7 @@
 #include "GridMapItem.h"
 
 #include "../../core/property/GridSettingsConfigProperties.h"
+#include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
 
@@ -467,6 +468,11 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
   const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
   double crossOffSet = pCrossOffset.getValue().toDouble();
 
+  GeodesicGridSettingsConfigProperties settingsGeodesicConfig;
+
+  const Property& pUseBouderIntersection = pGridSettings.containsSubProperty(settingsGeodesicConfig.getBouderIntersections());
+  bool useBouderItersection = pUseBouderIntersection.getValue().toBool();
+
   QList<te::gm::LineString>::iterator itv = m_verticalLines.begin();
   for( ; itv != m_verticalLines.end() ; ++itv )
   {
@@ -516,6 +522,11 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
     }
   }
 
+  if (useBouderItersection)
+  {
+    drawBoldersSegments(painter, crossOffSet);
+  }
+
   configPainter(painter);
   
   drawTexts(painter);
@@ -523,6 +534,187 @@ void te::layout::GridMapItem::drawCrossLines(QPainter* painter)
   painter->restore();
 }
 
+
+void te::layout::GridMapItem::drawBoldersSegments(QPainter* painter, double crossOffSet){
+
+  const Property& pWidth = m_controller->getProperty("width");
+  const Property& pHeight = m_controller->getProperty("height");
+
+  double width = pWidth.getValue().toDouble();
+  double height = pHeight.getValue().toDouble();
+
+  te::gm::Envelope boxMM(0, 0, width, height);
+
+  te::gm::LineString topBorderLine(2, te::gm::LineStringType);
+  topBorderLine.setPoint(0, boxMM.getLowerLeftX(), boxMM.getUpperRightY());
+  topBorderLine.setPoint(1, boxMM.getUpperRightX(), boxMM.getUpperRightY());
+
+  te::gm::LineString bottomBorderLine(2, te::gm::LineStringType);
+  bottomBorderLine.setPoint(0, boxMM.getLowerLeftX(), boxMM.getLowerLeftY());
+  bottomBorderLine.setPoint(1, boxMM.getUpperRightX(), boxMM.getLowerLeftY());
+
+  te::gm::LineString leftBorderLine(2, te::gm::LineStringType);
+  leftBorderLine.setPoint(0, boxMM.getLowerLeftX(), boxMM.getLowerLeftY());
+  leftBorderLine.setPoint(1, boxMM.getLowerLeftX(), boxMM.getUpperRightY());
+
+  te::gm::LineString rightBorderLine(2, te::gm::LineStringType);
+  rightBorderLine.setPoint(0, boxMM.getUpperRightX(), boxMM.getLowerLeftY());
+  rightBorderLine.setPoint(1, boxMM.getUpperRightX(), boxMM.getUpperRightY());
+
+
+  QList<te::gm::LineString>::iterator ith = m_horizontalLines.begin();
+
+  for (; ith != m_horizontalLines.end(); ++ith)
+  {
+    const te::gm::LineString& horizontalLine = (*ith);
+
+    te::gm::Point p;
+    if (checkBolderIntersection(leftBorderLine, horizontalLine, p) == false)
+    {
+      continue;
+    }
+    
+    
+    bool nearToEdge = isNearEdge(p, leftBorderLine, crossOffSet);
+
+    if (!nearToEdge)
+    {
+      QLineF lneHrzIntersection(p.getX(), p.getY(), p.getX() + crossOffSet, p.getY());
+      painter->drawLine(lneHrzIntersection);
+    }
+
+  }
+
+  ith = m_horizontalLines.begin();
+  for (; ith != m_horizontalLines.end(); ++ith)
+  {
+    const te::gm::LineString& horizontalLine = (*ith);
+
+    te::gm::Point p;
+
+    if (checkBolderIntersection(rightBorderLine, horizontalLine, p) == false)
+    {
+      continue;
+    }
+
+    bool nearToEdge = isNearEdge(p, rightBorderLine, crossOffSet);
+
+    if (!nearToEdge)
+    {
+      QLineF lneHrzIntersection(p.getX(), p.getY(), p.getX() - crossOffSet, p.getY());
+
+      painter->drawLine(lneHrzIntersection);
+    }
+
+    
+
+  }
+
+  QList<te::gm::LineString>::iterator itv = m_verticalLines.begin();
+
+  for (; itv != m_verticalLines.end(); ++itv)
+  {
+    const te::gm::LineString& verticalLine = (*itv);
+
+    te::gm::Point p;
+    if (checkBolderIntersection(topBorderLine, verticalLine, p) == false)
+    {
+      continue;
+    }
+
+   
+    bool nearToEdge = isNearEdge(p, topBorderLine, crossOffSet);
+
+    if (!nearToEdge)
+    {
+      QLineF lneVrtIntersection(p.getX(), p.getY(), p.getX(), p.getY() - crossOffSet);
+      painter->drawLine(lneVrtIntersection);
+    }
+
+      
+}
+
+  itv = m_verticalLines.begin();
+
+  for (; itv != m_verticalLines.end(); ++itv)
+  {
+    const te::gm::LineString& verticalLine = (*itv);
+
+    te::gm::Point p;
+    if (checkBolderIntersection(bottomBorderLine, verticalLine, p) == false)
+    {
+      continue;
+    }
+
+    QLineF lneVrtIntersection(p.getX(), p.getY(), p.getX(), p.getY() + crossOffSet);
+
+
+    bool nearToEdge = isNearEdge(p, bottomBorderLine, crossOffSet);
+
+    if (!nearToEdge)
+    {
+      painter->drawLine(lneVrtIntersection);
+    }
+
+  }
+
+}
+
+bool te::layout::GridMapItem::isNearEdge(const te::gm::Point& p, const te::gm::LineString& line, const double& offSet){
+
+
+  te::gm::Point bottonPoint(line.getPointN(0)->getX(), line.getPointN(0)->getY());
+  te::gm::Point upperPoint(line.getPointN(1)->getX(), line.getPointN(1)->getY());
+  double distance1 = p.distance(&bottonPoint);
+  double distance2 = p.distance(&upperPoint);
+
+  if (distance1 <= offSet)
+  {
+    return true;
+  }
+  if (distance2 <= offSet)
+  {
+    return true;
+  }
+
+  return false;
+
+}
+
+
+
+bool te::layout::GridMapItem::checkBolderIntersection(const te::gm::LineString& bolderLine, const te::gm::LineString& gridLine, te::gm::Point& intersectionPoint)
+{
+
+  std::auto_ptr<te::gm::Geometry> interGeometry;
+  te::gm::Point* interPoint = 0;
+  try
+  {
+    interGeometry.reset(bolderLine.intersection(&gridLine));
+  }
+  catch (...)
+  {
+    return false;
+  }
+
+  if (interGeometry.get() == 0 || interGeometry->isValid() == false)
+  {
+    return false;
+  }
+
+  if (interGeometry->getGeomTypeId() != te::gm::PointType)
+  {
+    return false;
+  }
+
+  interPoint = dynamic_cast<te::gm::Point*>(interGeometry.get());
+
+  intersectionPoint.setX(interPoint->getX());
+  intersectionPoint.setY(interPoint->getY());
+
+  return true;
+
+}
 bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hrz, QPainter* painter )
 {
   bool result = false;
@@ -556,29 +748,23 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x(), intersectionPoint.y() + crossOffSet);
     intersects = true;
-
-    painter->drawLine(borderLine);
   }
   if (topLine.intersect(vrt, &intersectionPoint) == QLineF::BoundedIntersection)
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x(), intersectionPoint.y() - crossOffSet);
     intersects = true;
-
-    painter->drawLine(borderLine);
   }
   if (leftLine.intersect(hrz, &intersectionPoint) == QLineF::BoundedIntersection)
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x() + crossOffSet, intersectionPoint.y());
     intersects = true;
 
-    painter->drawLine(borderLine);
   }
   if (rightLine.intersect(hrz, &intersectionPoint) == QLineF::BoundedIntersection)
   {
     QLineF borderLine(intersectionPoint.x(), intersectionPoint.y(), intersectionPoint.x() - crossOffSet, intersectionPoint.y());
     intersects = true;
 
-    painter->drawLine(borderLine);
   }
 
   return intersects;

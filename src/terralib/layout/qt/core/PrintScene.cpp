@@ -33,6 +33,7 @@
 #include "../outside/PDFSettingsOutside.h"
 #include "Scene.h"
 #include "PrintPreviewDialog.h"
+#include "../outside/PrintSettingsOutside.h"
 
 // STL
 #include <sstream>
@@ -113,10 +114,11 @@ void te::layout::PrintScene::showPrintDialog()
   QPrinter* printer = createPrinter();
   printer->setOutputFormat(QPrinter::NativeFormat);
 
-  QPrintDialog *printDialog = new QPrintDialog(printer, (QWidget*) sc->getView());
-  //connect(preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPaper(QPrinter*)));
-
-
+  BuildGraphicsOutside build;
+  EnumObjectType* type = Enums::getInstance().getEnumObjectType();
+  QWidget* outside = build.createOutside(type->getPrintSettingsDialog(), sc, (QWidget*)sc->getView());
+  PrintSettingsOutside* printDialog = dynamic_cast<PrintSettingsOutside*>(outside);
+  printDialog->setPrinter(printer);
 
   if(printDialog->exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
   {
@@ -128,13 +130,16 @@ void te::layout::PrintScene::showPrintDialog()
   }
   else
   {
-	  printPaper(printer);
+    printPaper(printer);
   }
 
   if(printDialog)
   {
     delete printDialog;
     printDialog = 0;
+
+    delete printer;
+    printer = 0;
 
     Scene* sc = dynamic_cast<Scene*>(m_scene);
     if(sc)

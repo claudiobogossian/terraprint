@@ -31,6 +31,7 @@
 #include "../core/property/GridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
 #include "../core/pattern/mvc/AbstractItemView.h"
+#include "../core/Utils.h"
 
 te::layout::GridMapModel::GridMapModel() 
   : AbstractItemModel()
@@ -50,7 +51,7 @@ te::layout::GridMapModel::GridMapModel()
 
   // Line
   te::color::RGBAColor lineColor(0, 0, 0, 255);
-  double lineWidth = 0.;
+  double lineWidth = Utils::getLineWidthMinimumValue();
 
   // Text: Basic Configuration
   int pointTextSize = 6;

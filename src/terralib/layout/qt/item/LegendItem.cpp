@@ -120,7 +120,10 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
 
   painter->save();
 
-  QPen pen(m_qFontTitleColor);
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
+  QPen pen(m_qFontTitleColor, lnew, Qt::SolidLine);
   painter->setPen(pen);
 
   painter->setFont(m_qFontTitle);
@@ -293,7 +296,10 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont f
 
   painter->save();
 
-  QPen pen(fontColor);
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
+  QPen pen(fontColor, lnew, Qt::SolidLine);
   painter->setPen(pen);
 
   painter->setFont(font);

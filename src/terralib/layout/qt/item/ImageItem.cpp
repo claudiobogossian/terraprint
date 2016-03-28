@@ -68,7 +68,10 @@ void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraph
   const te::color::RGBAColor& framwColor = pFrameColor.getValue().toColor();
   QColor qContourColor(framwColor.getRed(), framwColor.getGreen(), framwColor.getBlue(), framwColor.getAlpha());
 
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   QRectF boundRect = boundingRect();
 

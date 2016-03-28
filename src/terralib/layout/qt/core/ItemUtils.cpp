@@ -53,6 +53,7 @@
 #include "../item/GridMapItem.h"
 #include "View.h"
 #include "../item/PaperItem.h"
+#include "terralib/common/StringUtils.h"
 
 // STL
 #include <stddef.h>  // defines NULL
@@ -906,3 +907,101 @@ te::gm::Envelope te::layout::ItemUtils::calculatePan(const te::gm::Envelope& env
   te::gm::Envelope extent(x - halfWidth, y - halfHeight, x + halfWidth, y + halfHeight);
   return extent;
 }
+
+
+void te::layout::ItemUtils::DD2DMS(QString dd, QString& degreeString, QString& minuteString, QString& secondString)
+{
+  int degree;
+  int minute;
+  double second;
+  double ll;
+
+  double value = dd.replace(QString(" "), QString("")).toDouble();
+
+  degree = (int)value;
+  ll = value - degree;
+  minute = (int)(ll * 60.);
+  ll = (ll * 60.) - minute;
+  second = ll * 60.;
+
+  degreeString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(degree));
+  minuteString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(minute));
+  secondString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(second));
+
+
+}
+
+void te::layout::ItemUtils::DMS2DD(QString degree, QString minute, QString second, QString &dd)
+{
+
+  double deg = degree.toDouble();
+  double min = minute.toDouble();
+  double sec = second.toDouble(); 
+  double coord = deg + (min / 60.0) + (sec / 3600.0);
+
+  dd = ItemUtils::convert2QString(boost::lexical_cast<std::string>(coord));
+
+}
+
+
+
+QString te::layout::ItemUtils::DD2DMS(QString dd)
+{
+  int degree;
+  int minute;
+  double second;
+  double ll;
+
+  double value = dd.replace(QString(" "), QString("")).toDouble();
+
+  degree = (int)value;
+  ll = value - degree;
+  minute = (int)(ll * 60.);
+  ll = (ll * 60.) - minute;
+  second = ll * 60.;
+
+  QString output;
+  if (degree < 0)
+  {
+    output = convert2QString(("-" + te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute)) + "'" + te::common::Convert2String(fabs(second), 3) + "''").c_str());
+  }
+  else
+  {
+    output = convert2QString((te::common::Convert2String(abs(degree)) + "°" + te::common::Convert2String(abs(minute)) + "'" + te::common::Convert2String(fabs(second), 3) + "''").c_str());
+  }
+
+  return output;
+}
+
+QString te::layout::ItemUtils::DMS2DD(const QString dms)
+{
+  int pos = 0;
+  if (dms.startsWith('+') || dms.startsWith('-'))
+  {
+    pos = 1;
+  }
+
+  std::string str = convert2StdString(dms);
+
+  QChar degreeSymbol('°');
+  QChar minuteSymbol('\'');
+  QChar secondsSymbol('\'');
+
+  int a = dms.indexOf(degreeSymbol);
+  int b = dms.indexOf(minuteSymbol);
+  int c = dms.indexOf(secondsSymbol, b + 1);
+  double deg = dms.mid(pos, a - pos).replace(QString(" "), QString("")).toDouble();
+  double min = dms.mid(a + 1, b - a - 1).replace(QString(" "), QString("")).toDouble();
+  double sec = dms.mid(b + 1, c - b - 1).replace(QString(" "), QString("")).toDouble();
+  double coord = deg + (min / 60.0) + (sec / 3600.0);
+  if (dms.mid(0, a).toDouble() < 0)
+  {
+    coord *= -1;
+  }
+
+  std::string output = te::common::Convert2String(coord, 12);
+  QString qValue = convert2QString(output);
+
+  return qValue;
+}
+

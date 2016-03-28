@@ -52,8 +52,11 @@ void te::layout::EllipseItem::drawItem( QPainter * painter, const QStyleOptionGr
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
+  const Property& lineWidth = m_controller->getProperty("line_width");
+  double lnew = lineWidth.getValue().toDouble();
+
   QBrush brush(qFillColor);
-  QPen pen(qContourColor, 0, Qt::SolidLine);
+  QPen pen(qContourColor, lnew, Qt::SolidLine);
 
   painter->setPen(pen);
   painter->setBrush(brush);

@@ -18,48 +18,39 @@
  */
 
 /*!
-  \file NorthSettingsConfigProperties.cpp
+  \file PrintSettingsModel.h
    
   \brief 
 
   \ingroup layout
 */
 
+#ifndef __TERRALIB_LAYOUT_INTERNAL_PRINT_SETTINGS_MODEL_H 
+#define __TERRALIB_LAYOUT_INTERNAL_PRINT_SETTINGS_MODEL_H
+
 // TerraLib
-#include "NorthSettingsConfigProperties.h"
+#include "../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../core/Config.h"
 
-te::layout::NorthSettingsConfigProperties::NorthSettingsConfigProperties():
-  m_btnColor("color"),
-  m_doubleSpinBoxNorthWidth("width"),
-  m_doubleSpinBoxNorthHeight("height"),
-  m_cbNorth("northArrow_type")
+namespace te
 {
-  
+  namespace layout
+  {
+    class Properties;
+
+    class TELAYOUTEXPORT PrintSettingsModel : public AbstractOutsideModel
+    {
+    public:
+
+      PrintSettingsModel();
+
+      virtual ~PrintSettingsModel();
+
+      virtual void updateProperties(te::layout::Properties* properties, bool notify = true);
+
+      virtual Properties* getProperties() const;
+    };
+  }
 }
 
-te::layout::NorthSettingsConfigProperties::~NorthSettingsConfigProperties()
-{
-
-}
-
-std::string te::layout::NorthSettingsConfigProperties::getBtnColor()
-{
-  return m_btnColor;
-}
-
-
-std::string te::layout::NorthSettingsConfigProperties::getDoubleSpinBoxNorthHeight()
-{
-  return m_doubleSpinBoxNorthHeight;
-}
-
-std::string te::layout::NorthSettingsConfigProperties::getDoubleSpinBoxNorthWidth()
-{
-  return m_doubleSpinBoxNorthWidth;
-}
-
-std::string te::layout::NorthSettingsConfigProperties::getCbNorth()
-{
-  return m_cbNorth;
-}
-
+#endif
