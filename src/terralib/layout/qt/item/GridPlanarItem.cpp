@@ -46,43 +46,6 @@ te::layout::GridPlanarItem::~GridPlanarItem()
 
 }
 
-void te::layout::GridPlanarItem::drawGrid(QPainter* painter)
-{
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
-
-  PlanarGridSettingsConfigProperties settingsConfig;
-
-  const Property& pStyle = pGridSettings.containsSubProperty(settingsConfig.getStyle());
-  
-  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
-  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
-  if (currentStyle != 0)
-  {
-    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
-  }
-  
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
-  Font txtFont = pTextFontFamily.getValue().toFont();  
-
-  ItemUtils::ConfigurePainterForTexts(painter, txtFont);
-  
-  EnumGridStyleType* gridStyle = Enums::getInstance().getEnumGridStyleType();
-  if(!gridStyle)
-  {
-    return;
-  }
-  
-  if(currentStyle == gridStyle->getStyleContinuous())
-  {
-    drawContinuousLines(painter);
-  }
-  else if(currentStyle == gridStyle->getStyleCross())
-  {
-    //calculateCrossLines(/*painter*/);
-  }
-}
 
 void te::layout::GridPlanarItem::calculateGrid()
 {
@@ -122,13 +85,13 @@ void te::layout::GridPlanarItem::calculateGrid()
 
   if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
   {
-    m_gridLines = QPainterPath();
+    clearLines();
     calculateCrossLines();
   }
 
   if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
   {
-    m_gridCrosses = QPainterPath();
+    clearLines();
     addGridLinesToPath();
   }
   //generateGrid();

@@ -63,6 +63,7 @@ void te::layout::GridMapItem::addGridLinesToPath()
   {
     m_gridLines.addPath(ItemUtils::lineToQPath(m_verticalLines.at(i)));
   }
+  calculateTexts();
 }
 
 
@@ -91,24 +92,21 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
 
   painter->drawPath(m_gridCrosses);
 
-  painter->drawPath(m_gridText);
+  configTextPainter(painter);
+
+
+  QPen pen = painter->pen();
+  pen.setWidthF(0);
+
+  QBrush brush = painter->brush();
+  brush.setStyle(Qt::SolidPattern);
+
+  painter->setPen(pen);
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->fillPath(m_gridText, brush);
 
   painter->restore();
 
-  /*
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
-
-  GridSettingsConfigProperties settingsConfig;
-
-  const Property& pVisible = pGridSettings.containsSubProperty(settingsConfig.getVisible());
-  bool visible = pVisible.getValue().toBool();
-
-  if(visible)
-  {
-    drawGrid(painter);
-  }*/
 }
 
 void te::layout::GridMapItem::drawGrid( QPainter* painter )
@@ -205,51 +203,21 @@ void te::layout::GridMapItem::clear()
 
   m_gridLines = QPainterPath();
   m_gridCrosses = QPainterPath();
+
   m_gridText = QPainterPath();
   
   m_boundingBox = te::gm::Envelope();
 }
 
-void te::layout::GridMapItem::drawContinuousLines( QPainter* painter )
+void te::layout::GridMapItem::clearLines()
 {
-  painter->save();
-
-  configPainter(painter);
-
-  drawVerticalLines(painter);
-
-  drawHorizontalLines(painter);
-
-  this->drawTexts(painter);
-
-  painter->restore();
+  m_gridLines = QPainterPath();
+  m_gridCrosses = QPainterPath();
 }
 
-void te::layout::GridMapItem::drawVerticalLines( QPainter* painter )
-{
-  QList<te::gm::LineString>::const_iterator it = m_verticalLines.begin();
-  for( ; it != m_verticalLines.end() ; ++it )
-  {
-    const te::gm::LineString& line = *it;
 
-    QPainterPath path = ItemUtils::lineToQPath(line);
-    painter->drawPath(path);
-  }
-}
 
-void te::layout::GridMapItem::drawHorizontalLines( QPainter* painter )
-{
-  QList<te::gm::LineString>::const_iterator it = m_horizontalLines.begin();
-  for (; it != m_horizontalLines.end(); ++it)
-  {
-    const te::gm::LineString& line = *it;
-
-    QPainterPath path = ItemUtils::lineToQPath(line);
-    painter->drawPath(path);
-  }
-}
-
-void te::layout::GridMapItem::drawTexts( QPainter* painter )
+void te::layout::GridMapItem::calculateTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
@@ -273,35 +241,30 @@ void te::layout::GridMapItem::drawTexts( QPainter* painter )
   {
     return;
   }
-
-  painter->save();
-
-  configTextPainter(painter);
   
   if(leftText == true)
   {
-    drawLeftTexts(painter);
+    calculateLeftTexts();
   }
 
   if(rightText == true)
   {
-    drawRightTexts(painter);
+    calculateRightTexts();
   }
   
   if(bottomText == true)
   {
-    drawBottomTexts(painter);
+    calculateBottomTexts();
   }
 
   if(topText == true)
   {
-    drawTopTexts(painter);
+    calculateTopTexts();
   }
 
-  painter->restore();  
 }
 
-void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
+void te::layout::GridMapItem::calculateTopTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
@@ -335,49 +298,28 @@ void te::layout::GridMapItem::drawTopTexts( QPainter* painter )
 
 
     if (useSuperScript == true && txt.size() > 2){
-      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
+      calculateSuperScriptText(pt, qFont, txt, iRotate);
     }
     else{
-      drawText(pt, painter, qFont, txt, iRotate);
+      calculateText(pt, qFont, txt, iRotate);
     }
 
 
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
+    //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
 }
 
-void te::layout::GridMapItem::drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate)
+void te::layout::GridMapItem::calculateText(const QPointF& point, const QFont& font, const std::string& text, int rotate)
 {
-  ItemUtils itemUtils = this->getScene()->getItemUtils();
-
   QString qText = ItemUtils::convert2QString(text);
 
-  //QPainterPath textObject = itemUtils.textToVector(qText, font, point, rotate);
+  m_gridText.addPath(ItemUtils::textToVector(qText, font, point, rotate));
 
-  m_gridText.addPath(itemUtils.textToVector(qText, font, point, rotate));
-
-
- /* int fontSize = painter->font().pointSize();
-
-  QPen pen = painter->pen();
-  pen.setWidthF(0);
-
-  QBrush brush = painter->brush();
-  brush.setStyle(Qt::SolidPattern);
-
-
-  painter->save();
-
-  painter->setPen(pen);
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  painter->fillPath(textObject, brush);
-
-  painter->restore();*/
 }
 
-void te::layout::GridMapItem::drawSuperScriptText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate)
+void te::layout::GridMapItem::calculateSuperScriptText(const QPointF& point, const QFont& font, const std::string& text, int rotate)
 {
   ItemUtils itemUtils = this->getScene()->getItemUtils();
 
@@ -412,29 +354,12 @@ void te::layout::GridMapItem::drawSuperScriptText(const QPointF& point, QPainter
 
   textVect.push_back(txtSScript2);
 
-
-  //QPainterPath textObject = itemUtils.superscriptTextToVector(textVect, fontVect, point, rotate);
-
   m_gridText.addPath(itemUtils.superscriptTextToVector(textVect, fontVect, point, rotate));
 
-  /*QPen pen = painter->pen();
-  pen.setWidthF(0);
-
-  QBrush brush = painter->brush();
-  brush.setStyle(Qt::SolidPattern);
-
-
-  painter->save();
-
-  painter->setPen(pen);
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  painter->fillPath(textObject, brush);
-
-  painter->restore();*/
 }
 
 
-void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
+void te::layout::GridMapItem::calculateBottomTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
@@ -468,19 +393,19 @@ void te::layout::GridMapItem::drawBottomTexts( QPainter* painter )
 
 
     if (useSuperScript == true && txt.size() > 2){
-      this->drawSuperScriptText(pt, painter, qFont, txt, iRotate);
+      this->calculateSuperScriptText(pt, qFont, txt, iRotate);
     }
     else{
-      this->drawText(pt, painter, qFont, txt, iRotate);
+      this->calculateText(pt, qFont, txt, iRotate);
     }
 
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
+    //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
 }
 
-void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
+void te::layout::GridMapItem::calculateLeftTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
@@ -517,21 +442,21 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
 
     if (useSuperScript == true && txt.size() > 2)
     {
-      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
+      calculateSuperScriptText(pt, qFont, txt, iRotate);
     }
     else
     {
-      this->drawText(pt, painter, qFont, txt, iRotate);
+      this->calculateText(pt, qFont, txt, iRotate);
     }
 
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
+    //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
 
   }
 }
 
-void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
+void te::layout::GridMapItem::calculateRightTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
@@ -561,16 +486,16 @@ void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
     std::string txt = it->first;
     QPointF pt = it->second;  
 
-    if (useSuperScript == true && txt.size() > 2){
-      drawSuperScriptText(pt, painter, qFont, txt, iRotate);
-      }
-    else{
-
-      this->drawText(pt, painter, qFont, txt, iRotate);
-
+    if (useSuperScript == true && txt.size() > 2)
+    {
+      calculateSuperScriptText(pt, qFont, txt, iRotate);
+    }
+    else
+    {
+      this->calculateText(pt, qFont, txt, iRotate);
     }
 #ifdef _DEBUG
-    debugDrawTextRect(painter, pt, txt, qFont, iRotate);
+    //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
 }
@@ -589,15 +514,11 @@ QRectF te::layout::GridMapItem::boundingRect() const
   return AbstractItem<QGraphicsItem>::boundingRect();
 }
 
-void te::layout::GridMapItem::calculateCrossLines(/*QPainter* painter*/)
+void te::layout::GridMapItem::calculateCrossLines()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
-
-  //painter->save();
-
-  //configPainter(painter);
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -647,7 +568,7 @@ void te::layout::GridMapItem::calculateCrossLines(/*QPainter* painter*/)
       QLineF lneHrz(interPoint->getX() - crossOffSet, interPoint->getY(), interPoint->getX() + crossOffSet, interPoint->getY());
       QLineF lneVrt(interPoint->getX(), interPoint->getY() - crossOffSet, interPoint->getX(), interPoint->getY() + crossOffSet);
         
-      if(drawCrossIntersectMapBorder(lneVrt, lneHrz/*, painter*/) == true)
+      if (calculateCrossIntersectMapBorder(lneVrt, lneHrz) == true)
       {
         continue;
       }
@@ -658,25 +579,20 @@ void te::layout::GridMapItem::calculateCrossLines(/*QPainter* painter*/)
       m_gridCrosses.moveTo(lneVrt.p1().x(), lneVrt.p1().y());
       m_gridCrosses.lineTo(lneVrt.p2().x(), lneVrt.p2().y());
       
-      //painter->drawLine(lneHrz);
-      //painter->drawLine(lneVrt);
     }
   }
 
   if (useBouderItersection)
   {
-    drawBoldersSegments(/*painter,*/ crossOffSet);
+    calculateBoldersSegments(crossOffSet);
   }
-
-  //configPainter(painter);
   
-  //drawTexts(painter);
+  calculateTexts();
 
-  //painter->restore();
 }
 
 
-void te::layout::GridMapItem::drawBoldersSegments(/*QPainter* painter, */double crossOffSet){
+void te::layout::GridMapItem::calculateBoldersSegments(double crossOffSet){
 
   const Property& pWidth = m_controller->getProperty("width");
   const Property& pHeight = m_controller->getProperty("height");
@@ -724,8 +640,6 @@ void te::layout::GridMapItem::drawBoldersSegments(/*QPainter* painter, */double 
       
       m_gridCrosses.moveTo(lneHrzIntersection.p1().x(), lneHrzIntersection.p1().y());
       m_gridCrosses.lineTo(lneHrzIntersection.p2().x(), lneHrzIntersection.p2().y());
-
-      //painter->drawLine(lneHrzIntersection);
     }
 
   }
@@ -751,7 +665,6 @@ void te::layout::GridMapItem::drawBoldersSegments(/*QPainter* painter, */double 
       m_gridCrosses.moveTo(lneHrzIntersection.p1().x(), lneHrzIntersection.p1().y());
       m_gridCrosses.lineTo(lneHrzIntersection.p2().x(), lneHrzIntersection.p2().y());
 
-      //painter->drawLine(lneHrzIntersection);
     }
 
     
@@ -779,7 +692,6 @@ void te::layout::GridMapItem::drawBoldersSegments(/*QPainter* painter, */double 
       m_gridCrosses.moveTo(lneVrtIntersection.p1().x(), lneVrtIntersection.p1().y());
       m_gridCrosses.lineTo(lneVrtIntersection.p2().x(), lneVrtIntersection.p2().y());
       
-      //painter->drawLine(lneVrtIntersection);
     }
 
       
@@ -806,7 +718,7 @@ void te::layout::GridMapItem::drawBoldersSegments(/*QPainter* painter, */double 
     {
       m_gridCrosses.moveTo(lneVrtIntersection.p1().x(), lneVrtIntersection.p1().y());
       m_gridCrosses.lineTo(lneVrtIntersection.p2().x(), lneVrtIntersection.p2().y());
-      //painter->drawLine(lneVrtIntersection);
+
     }
 
   }
@@ -868,7 +780,7 @@ bool te::layout::GridMapItem::checkBolderIntersection(const te::gm::LineString& 
   return true;
 
 }
-bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hrz/*, QPainter* painter*/ )
+bool te::layout::GridMapItem::calculateCrossIntersectMapBorder( QLineF vrt, QLineF hrz)
 {
   bool result = false;
 
@@ -904,8 +816,7 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
 
     m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
     m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
-    
-    //painter->drawLine(borderLine);
+
   }
   if (topLine.intersect(vrt, &intersectionPoint) == QLineF::BoundedIntersection)
   {
@@ -914,8 +825,7 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
 
     m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
     m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
-    
-    //painter->drawLine(borderLine);
+
   }
   if (leftLine.intersect(hrz, &intersectionPoint) == QLineF::BoundedIntersection)
   {
@@ -924,8 +834,7 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
 
     m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
     m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
-    
-    //painter->drawLine(borderLine);
+
   }
   if (rightLine.intersect(hrz, &intersectionPoint) == QLineF::BoundedIntersection)
   {
@@ -934,9 +843,7 @@ bool te::layout::GridMapItem::drawCrossIntersectMapBorder( QLineF vrt, QLineF hr
 
     m_gridCrosses.moveTo(borderLine.p1().x(), borderLine.p1().y());
     m_gridCrosses.lineTo(borderLine.p2().x(), borderLine.p2().y());
-    
 
-    //painter->drawLine(borderLine);
   }
 
   return intersects;
@@ -966,10 +873,10 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
 
   QString qText = ItemUtils::convert2QString(text);
 
- //creates the rect
+  //creates the rect
   QPainterPath textObject = ItemUtils::textToVector(qText, font, point, rotate);
 
-//draws the rect
+  //draws the rect
   painter->save();
 
   QPen pen;
