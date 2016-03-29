@@ -213,6 +213,7 @@ void te::layout::GridMapItem::clearLines()
 {
   m_gridLines = QPainterPath();
   m_gridCrosses = QPainterPath();
+  m_gridText = QPainterPath();
 }
 
 

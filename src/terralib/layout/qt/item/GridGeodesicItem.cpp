@@ -65,7 +65,7 @@ void te::layout::GridGeodesicItem::calculateGrid()
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
-  const std::string& style = pStyle.getOptionByCurrentChoice().toString();//pStyle.getValue().toString();
+  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
   double frameThickness = pFrameThickness.getValue().toDouble();
 
 
@@ -104,15 +104,13 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
   {
-    m_gridLines = QPainterPath();
-    m_gridText = QPainterPath();
+    clearLines();
     calculateCrossLines();
   }
 
   if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
   {
-    m_gridCrosses = QPainterPath();
-    m_gridText = QPainterPath();
+    clearLines();
     addGridLinesToPath();
 
   }
@@ -212,8 +210,6 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
   const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
-//  std::string fontFamily = pFontFamily.getValue().toString();
-//  int textPointSize = pTextPointSize.getValue().toInt();
   double verticalGap = pVerticalGap.getValue().toDouble();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();
@@ -360,8 +356,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
   Font txtFont = pTextFontFamily.getValue().toFont();
-//  std::string fontFamily = pFontFamily.getValue().toString();
-//  int textPointSize = pTextPointSize.getValue().toInt();
+
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double verticalGap = pVerticalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();

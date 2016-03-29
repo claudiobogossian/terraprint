@@ -94,9 +94,6 @@ void te::layout::GridPlanarItem::calculateGrid()
     clearLines();
     addGridLinesToPath();
   }
-  //generateGrid();
-  //se for cruzeta, calula as interseccoes
-    //se naio for, adiciona as linhas no objeto m_gridLines;
 
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 
@@ -297,8 +294,6 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
     QLineF line(x, lly, x, ury);
 
-    //m_gridLines.moveTo(x, lly);
-    //m_gridLines.lineTo(x, ury);
 
     te::gm::LineString lineString(2, te::gm::LineStringType);
     lineString.setPoint(0, x, lly);
@@ -307,11 +302,8 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
     m_gridLines.addPath(ItemUtils::lineToQPath(lineString));
 
-
-
     double number = x1 / unitH;
     QString convert = QString::number(number, 'f', 0);
-
 
     std::string text = convert.toStdString();
 

@@ -57,6 +57,7 @@
 
 // STL
 #include <stddef.h>  // defines NULL
+#include <memory>
 
 // Qt
 #include <QObject>
