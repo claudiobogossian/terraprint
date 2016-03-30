@@ -202,6 +202,24 @@ void te::layout::InputCoordDialog::on_lneDecimalDegree_editingFinished()
   else
   {
     m_decimalD = m_ui->lneDecimalDegree->text().toDouble();
+    
+    QString degree;
+    QString min;
+    QString sec;
+
+    ItemUtils::DD2DMS(m_ui->lneDecimalDegree->text(), degree, min, sec);
+
+    m_ui->lneDegree->setText(degree);
+    m_degree = degree.toInt();
+   
+    m_ui->lneMinute->setText(min);
+    m_min = min.toInt();
+    
+    m_ui->lneSecond->setText(sec);
+    m_sec = sec.toDouble();
+
+    m_outPutValueDMS = ItemUtils::convert2StdString(ItemUtils::DD2DMS(m_ui->lneDecimalDegree->text()));
+
   }
 
 }
