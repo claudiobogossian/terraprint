@@ -87,6 +87,8 @@ namespace te
 
         virtual void itemsSelected(QList<QGraphicsItem*> graphicsItems, QList<QGraphicsItem*> allItems);
 
+        virtual void propertiesChanged(QList<QGraphicsItem*> graphicsItems, QList<QGraphicsItem*> allItems);
+
         virtual void refreshOutside();
 
         virtual void updatePropertyBrowser(Properties props);

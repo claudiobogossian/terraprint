@@ -35,6 +35,7 @@
 #include "terralib/qt/widgets/canvas/Canvas.h"
 #include "../outside/PropertiesOutside.h"
 #include "PropertiesDock.h"
+#include "MenuPrincipal.h"
 
 // Qt
 #include <QGraphicsScene>
@@ -134,7 +135,11 @@ void te::layout::MainLayout::postInit()
    }
 
    m_view->show();
-   m_outsideArea->openMainMenu();
+   MenuPrincipal* menuPrincipal = m_outsideArea->getMenuPrincipal(0);
+   if (menuPrincipal)
+   {
+     menuPrincipal->openMainMenu();
+   }
 }
 
 void te::layout::MainLayout::createLayoutContext(int width, int height)
@@ -199,5 +204,6 @@ te::layout::EditTemplateDock* te::layout::MainLayout::getEditTemplate()
 
 QMenu* te::layout::MainLayout::getMenu(QMenu* parentMenu)
 {
-  return m_outsideArea->getMenu(parentMenu);
+  MenuPrincipal* menu = m_outsideArea->getMenuPrincipal(parentMenu);
+  return menu->getMenu();
 }

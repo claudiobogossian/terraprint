@@ -292,7 +292,10 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
 
   if (!sc->isEditionMode()) // If scene in edition mode the reload will happen in double click event
   {
-    reload();
+    if (m_updateItemPos && !m_selectionChange)
+      reload();
+    else
+      load();
   }
 }
 
@@ -721,7 +724,7 @@ void te::layout::View::onSelectionChanged()
   Otherwise, the reload will happen in double click event or in mouse release */
   if (!sc->isEditionMode() && !m_mouseEvent)
   {
-    reload();
+    load();
   }
 }
 
@@ -809,6 +812,12 @@ void te::layout::View::reload()
 {
   m_selectionChange = false;
   emit reloadProperties();
+}
+
+void te::layout::View::load()
+{
+  m_selectionChange = false;
+  emit loadProperties();
 }
 
 void te::layout::View::resetView()
@@ -1251,7 +1260,7 @@ void te::layout::View::onSelectionItem(std::string name)
 
   if (!scne->isEditionMode()) // If scene in edition mode the reload will happen in double click event
   {
-    reload();
+    load();
   }
 }
 

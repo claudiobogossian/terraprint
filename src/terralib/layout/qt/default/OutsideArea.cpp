@@ -40,6 +40,7 @@
 #include "../inside/MapToolbarInside.h"
 #include "../inside/MapToolbarController.h"
 #include "../inside/ToolbarItemInside.h"
+#include "MenuPrincipal.h"
 
 // STL
 #include <string>
@@ -57,7 +58,7 @@ te::layout::OutsideArea::OutsideArea(AbstractProxyProject* proxyProject, te::lay
   m_view(view),
   m_toolbar(0),
   m_statusBar(status),
-  m_layoutMenu(0),
+  m_menuPrincipal(0),
   m_optionNew("mnu_main_new"),
   m_optionUpdate("mnu_main_update"),
   m_optionImportXml("mnu_main_import_xml"),
@@ -75,52 +76,52 @@ te::layout::OutsideArea::OutsideArea(AbstractProxyProject* proxyProject, te::lay
 
 te::layout::OutsideArea::~OutsideArea()
 {
-    if(m_dockProperties)
-    {
+  if(m_dockProperties)
+  {
 
-      m_dockProperties->close();
-      m_dockProperties->setParent(0);
-      delete m_dockProperties;
-      m_dockProperties = 0;
-    }
+    m_dockProperties->close();
+    m_dockProperties->setParent(0);
+    delete m_dockProperties;
+    m_dockProperties = 0;
+  }
 
-    if(m_dockInspector)
-    {
+  if(m_dockInspector)
+  {
 
-      m_dockInspector->close();
-      m_dockInspector->setParent(0);
-      delete m_dockInspector;
-      m_dockInspector = 0;
-    }
+    m_dockInspector->close();
+    m_dockInspector->setParent(0);
+    delete m_dockInspector;
+    m_dockInspector = 0;
+  }
 
-    if(m_toolbar)
-    {
+  if(m_toolbar)
+  {
 
-      m_toolbar->close();
-      m_toolbar->setParent(0);
-      delete m_toolbar;
-      m_toolbar = 0;
-    }
+    m_toolbar->close();
+    m_toolbar->setParent(0);
+    delete m_toolbar;
+    m_toolbar = 0;
+  }
 
-    if(m_dockEditTemplate)
-    {
+  if(m_dockEditTemplate)
+  {
 
-      m_dockEditTemplate->close();
-      m_dockEditTemplate->setParent(0);
-      delete m_dockEditTemplate;
-      m_dockEditTemplate = 0;
-    }
+    m_dockEditTemplate->close();
+    m_dockEditTemplate->setParent(0);
+    delete m_dockEditTemplate;
+    m_dockEditTemplate = 0;
+  }
 }
 
 void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
 {
   if(m_view)
   {
-    connect(m_view, SIGNAL(reloadProperties()), this, SLOT(onSelectionChanged()));
+    connect(m_view, SIGNAL(loadProperties()), this, SLOT(onSelectionChanged()));
+    connect(m_view, SIGNAL(reloadProperties()), this, SLOT(onPropertiesChanged()));
     connect(m_view->scene(), SIGNAL(addItemFinalized(QGraphicsItem*)), this, SLOT(onAddItemFinalized(QGraphicsItem*)));
     connect(m_view, SIGNAL(closeView()), this, SLOT(onCloseView()));
     connect(m_view, SIGNAL(showView()), this, SLOT(onShowView()));
-    connect(this, SIGNAL(changeMenuMode(te::layout::EnumType*)), m_view, SLOT(onMainMenuChangeMode(te::layout::EnumType*)));
     connect(m_view, SIGNAL(changeContext()), this, SLOT(onRefreshStatusBar()));
     connect(m_view->scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
     connect(m_view->scene(), SIGNAL(editionInitialized()), this, SLOT(onEditionInitialized()));
@@ -190,11 +191,6 @@ void te::layout::OutsideArea::createToolbar()
   }
 
   m_toolbar = dynamic_cast<te::layout::ToolbarOutside*>(widget);
-
-
-  /*
-   * TODO: Done on plugin
-   * win->addToolBar(m_toolbar);*/
 }
 
 void te::layout::OutsideArea::createEditTemplateDock()
@@ -202,135 +198,6 @@ void te::layout::OutsideArea::createEditTemplateDock()
   m_dockEditTemplate = new EditTemplateDock(m_view->getScene());
   m_dockEditTemplate->setFeatures(QDockWidget::NoDockWidgetFeatures);
   m_dockEditTemplate->setVisible(false);
-}
-
-void te::layout::OutsideArea::createMainMenu()
-{
-  if(!m_layoutMenu)
-  {
-    m_layoutMenu= new QMenu(tr("Print Model"));
-  }
-
-   connect(m_layoutMenu, SIGNAL(triggered(QAction*)), this, SLOT(onMainMenuTriggered(QAction*)));
-
-   QAction* actionNew = createAction(tr("New"), m_optionNew, "layout-new");
-   m_layoutMenu->addAction(actionNew);
-
-   QAction* actionSave = createAction(tr("Update Map"), m_optionUpdate, "layout-save");
-   m_layoutMenu->addAction(actionSave);
-
-   m_layoutMenu->addSeparator();
-
-   QMenu* mnuImport = m_layoutMenu->addMenu(tr("Import Map"));
-   QMenu* mnuExport = m_layoutMenu->addMenu(tr("Export Map"));
-
-   QAction* actionImportJSON = createAction(tr("Import Xml Map"), m_optionImportXml, "layout-import");
-   mnuImport->addAction(actionImportJSON);
-
-   QAction* actionExportJSON = createAction(tr("Export XML Map"), m_optionExportXml, "layout-export");
-   mnuExport->addAction(actionExportJSON);
-
-   m_layoutMenu->addSeparator();
-
-   QAction* actionDockInspector = createAction(tr("Dock Inspector"), m_optionDockInspector, "");
-   actionDockInspector->setCheckable(true);
-   actionDockInspector->setChecked(true);
-   m_layoutMenu->addAction(actionDockInspector);
-
-   QAction* actionDockProperties = createAction(tr("Dock Properties"), m_optionDockProperties, "");
-   actionDockProperties->setCheckable(true);
-   actionDockProperties->setChecked(true);
-   m_layoutMenu->addAction(actionDockProperties);
-
-   m_layoutMenu->addSeparator();
-
-   QAction* actionPageConfig = createAction(tr("Page Config..."), m_optionPageConfig, "layout-page-setup");
-   m_layoutMenu->addAction(actionPageConfig);
-
-   QAction* actionPrint = createAction(tr("Print..."), m_optionPrint, "layout-printer");
-   m_layoutMenu->addAction(actionPrint);
-
-   m_layoutMenu->addSeparator();
-
-}
-
-void te::layout::OutsideArea::onMainMenuTriggered( QAction* action )
-{
-  if(action->objectName().compare(m_optionNew) == 0)
-  {
-    m_view->newTemplate();
-  }
-  else if(action->objectName().compare(m_optionUpdate) == 0)
-  {
-    //changeAction wiil be TypeSaveCurrentTemplate
-  }
-  else if(action->objectName().compare(m_optionImportXml) == 0)
-  {
-    te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->importTemplate(enumTemplate->getXmlType());
-  }
-  else if(action->objectName().compare(m_optionExportXml) == 0)
-  {
-    te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->exportProperties(enumTemplate->getXmlType());
-  }
-  else if(action->objectName().compare(m_optionPageConfig) == 0)
-  {    
-    m_view->showPageSetup();
-  }
-  else if(action->objectName().compare(m_optionPrint) == 0)
-  {
-    m_view->print();
-  }
-  else if(action->objectName().compare(m_optionExit) == 0)
-  {
-    m_view->close();
-    emit exit();
-  }
-  else if(action->objectName().compare(m_optionDockInspector) == 0)
-  {
-    if(m_dockInspector->isVisible())
-    {
-      m_dockInspector->setVisible(false);
-    }
-    else
-    {
-      m_dockInspector->setVisible(true);
-    }
-  }
-  else if(action->objectName().compare(m_optionDockProperties) == 0)
-  {
-    if(m_dockProperties->isVisible())
-    {
-      m_dockProperties->setVisible(false);
-    }
-    else
-    {
-      m_dockProperties->setVisible(true);
-    }
-  }
-  else if(action->objectName().compare(m_optionDockEditTemplate) == 0)
-  {
-    if(m_dockEditTemplate->isVisible())
-    {
-      m_dockEditTemplate->setVisible(false);
-    }
-    else
-    {
-      m_dockEditTemplate->setVisible(true);
-    }
-  }
-}
-
-QAction* te::layout::OutsideArea::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip)
-{
-  QAction *actionMenu = new QAction(text, m_layoutMenu);
-  actionMenu->setObjectName(objName);
-
-  actionMenu->setIcon(QIcon::fromTheme(icon));
-  actionMenu->setToolTip(tooltip);
-
-  return actionMenu;
 }
 
 te::layout::PropertiesDock* te::layout::OutsideArea::getPropertiesDock()
@@ -355,23 +222,23 @@ te::layout::EditTemplateDock* te::layout::OutsideArea::getEditTemplate()
 
 void te::layout::OutsideArea::openAllDocks()
 {
-    if(m_dockProperties)
-    {
-      m_dockProperties->setVisible(true);
-    }
-    if(m_dockInspector)
-    {
-      m_dockInspector->setVisible(true);
-    }
-    if(m_toolbar)
-    {
-      m_toolbar->setVisible(true);
-    }
-    if(m_dockEditTemplate)
-    {
-      bool visible = m_dockEditTemplate->isVisible();
-      m_dockEditTemplate->setVisible(visible);
-    }
+  if(m_dockProperties)
+  {
+    m_dockProperties->setVisible(true);
+  }
+  if(m_dockInspector)
+  {
+    m_dockInspector->setVisible(true);
+  }
+  if(m_toolbar)
+  {
+    m_toolbar->setVisible(true);
+  }
+  if(m_dockEditTemplate)
+  {
+    bool visible = m_dockEditTemplate->isVisible();
+    m_dockEditTemplate->setVisible(visible);
+  }
 }
 
 void te::layout::OutsideArea::closeAllDocks()
@@ -392,47 +259,6 @@ void te::layout::OutsideArea::closeAllDocks()
    {
        m_dockEditTemplate->close();
    }
-}
-
-void te::layout::OutsideArea::openMainMenu()
-{
-  if(!m_layoutMenu)
-    return;
-  
-  QList<QAction*> acts = m_layoutMenu->actions();
- 
-  foreach(QAction* act, acts)
-  {
-    act->setVisible(true);
-  }
-
-  if(!acts.empty())
-  {
-    //m_parentMenu: The first QAction of the QMenu is to open the layout
-    QAction* firstOption = acts.first();
-    firstOption->setVisible(false);
-  }
-}
-
-void te::layout::OutsideArea::closeMainMenu()
-{
-   if(!m_layoutMenu)
-    return;
-
-  QList<QAction*> acts = m_layoutMenu->actions();
-  foreach(QAction* act, acts)
-  {
-    act->setVisible(false);
-  }
-
-  if(!acts.empty())
-  {
-    //m_parentMenu: The first QAction of the QMenu is to open the layout
-    QAction* firstOption = acts.first();
-    firstOption->setVisible(true);
-  }
-
-  m_view->closeOutsideWindows();
 }
 
 void te::layout::OutsideArea::onSelectionChanged()
@@ -456,6 +282,30 @@ void te::layout::OutsideArea::onSelectionChanged()
     m_dockProperties->getPropertiesOutside()->itemsSelected(graphicsItems, allItems);
 
   if(m_dockInspector)
+    m_dockInspector->getObjectInspectorOutside()->selectItems(graphicsItems);
+}
+
+void te::layout::OutsideArea::onPropertiesChanged()
+{
+  QList<QGraphicsItem*> graphicsItems = m_view->scene()->selectedItems();
+  QList<QGraphicsItem*> allItems = m_view->scene()->items();
+
+  Scene* myScene = dynamic_cast<Scene*>(m_view->scene());
+  if (myScene != 0)
+  {
+    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
+    if (subSelectedItem != 0)
+    {
+      graphicsItems.clear();
+      graphicsItems.append(subSelectedItem);
+    }
+  }
+
+  //Refresh Property window   
+  if (m_dockProperties)
+    m_dockProperties->getPropertiesOutside()->propertiesChanged(graphicsItems, allItems);
+
+  if (m_dockInspector)
     m_dockInspector->getObjectInspectorOutside()->selectItems(graphicsItems);
 }
 
@@ -491,15 +341,20 @@ void te::layout::OutsideArea::onSelectionChanged(QList<QGraphicsItem*> selectedI
 void te::layout::OutsideArea::onShowView()
 {
   openAllDocks();
-  openMainMenu();
+  if (m_menuPrincipal)
+  {
+    m_menuPrincipal->openMainMenu();
+  }
 }
 
 void te::layout::OutsideArea::onCloseView()
 {
   closeAllDocks();
-  closeMainMenu();
+  if (m_menuPrincipal)
+  {
+    m_menuPrincipal->closeMainMenu();
+  }
   m_view->closeOutsideWindows();
-  //emit exit();
 }
 
 void te::layout::OutsideArea::onRefreshStatusBar()
@@ -550,18 +405,18 @@ void te::layout::OutsideArea::onDeleteFinalized(std::vector<std::string>)
     m_dockInspector->getObjectInspectorOutside()->itemsInspector(allItems);
 }
 
-
-QMenu* te::layout::OutsideArea::getMenu(QMenu* parentMenu)
+te::layout::MenuPrincipal* te::layout::OutsideArea::getMenuPrincipal(QMenu* parentMenu)
 {
-  if(!m_layoutMenu)
+  if (!m_menuPrincipal && parentMenu)
   {
-    if(parentMenu)
-    {
-      m_layoutMenu = parentMenu;
-    }
-    createMainMenu();
+    m_menuPrincipal = new MenuPrincipal(m_view, parentMenu);
+    m_menuPrincipal->setDockProperties(m_dockProperties);
+    m_menuPrincipal->setDockInspector(m_dockInspector);
+    m_menuPrincipal->setDockEditTemplate(m_dockEditTemplate);
+    //exit
+    connect(m_menuPrincipal, SIGNAL(exit()), this, SLOT(onExit()));
   }
-  return m_layoutMenu;
+  return m_menuPrincipal;
 }
 
 void te::layout::OutsideArea::onEditionFinalized()
@@ -596,5 +451,10 @@ void te::layout::OutsideArea::addAllItemToolbars()
   MapToolbarInside* inside = new MapToolbarInside(controller);
 
   m_view->addToolbarItemInside(object->getMapItem(), inside);
+}
+
+void te::layout::OutsideArea::onExit()
+{
+  emit exit();
 }
 

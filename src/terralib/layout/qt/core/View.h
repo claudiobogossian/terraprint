@@ -340,10 +340,15 @@ namespace te
         */
         void hideView();
     
-    /*!
-          \brief This signal is emitted when selection change, mouse release or property refresh requested.
+        /*!
+          \brief This signal is emitted when mouse release or property refresh requested.
         */
         void reloadProperties(); 
+
+        /*!
+        \brief This signal is emitted when selection change.
+        */
+        void loadProperties();
 
     /*!
           \brief This signal is emitted when View object changes the zoom factor internally.
@@ -437,9 +442,14 @@ namespace te
         virtual QCursor createCursor(std::string pathIcon);
 
         /*!
-          \brief Reload properties because selection change
+          \brief Reload properties because mouse release or property refresh requested.
         */
         virtual void reload();
+
+        /*!
+        \brief Load properties because selection change
+        */
+        virtual void load();
 
         /*!
         \brief Apply the zoom in the QGraphicsView to the given value

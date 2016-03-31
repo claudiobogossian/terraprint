@@ -192,18 +192,11 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
   if(props.getProperties().empty())
     return;
 
-  if(updateTree(graphicsItems, props))
+  if (m_currentActionAssociate)
   {
     return;
   }
-  else
-  {
-    if (m_currentActionAssociate)
-    {
-      return;
-    }
-    clearAll();
-  }
+  clearAll();
 
   m_graphicsItems = graphicsItems;
 
@@ -228,6 +221,29 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
   m_layoutPropertyBrowser->addProperties(newProperties);
    
   update();
+}
+
+void te::layout::PropertiesOutside::propertiesChanged(QList<QGraphicsItem*> graphicsItems, QList<QGraphicsItem*> allItems)
+{
+  if (graphicsItems.empty())
+  {
+    if (!m_currentActionAssociate)
+    {
+      clearAll();
+    }
+    return;
+  }
+
+  m_updatingValues = false;
+  bool window = false;
+
+  Properties props = m_propUtils->intersection(graphicsItems, window);
+  m_layoutPropertyBrowser->setHasWindows(window);
+
+  if (props.getProperties().empty())
+    return;
+
+  updateTree(graphicsItems, props);
 }
 
 void te::layout::PropertiesOutside::onChangePropertyValue( Property property )

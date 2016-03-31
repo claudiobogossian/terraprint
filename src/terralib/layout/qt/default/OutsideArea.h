@@ -54,6 +54,7 @@ namespace te
     class EditTemplateDock;
     class EnumType;
     class AbstractProxyProject;
+    class MenuPrincipal;
 
     class OutsideArea : public QObject
     {
@@ -73,20 +74,14 @@ namespace te
 
       te::layout::EditTemplateDock* getEditTemplate();
 
-      QMenu* getMenu(QMenu* parentMenu);
+      MenuPrincipal* getMenuPrincipal(QMenu* parentMenu);
 
       virtual void openAllDocks();
 
       virtual void closeAllDocks();
-
-      virtual void openMainMenu();
-
-      virtual void closeMainMenu();
-
+      
     public slots:
-
-      virtual void onMainMenuTriggered(QAction* action);
-
+    
       virtual void onAddItemFinalized(QGraphicsItem* item);
 
       virtual void onShowView();
@@ -103,14 +98,16 @@ namespace te
 
       virtual void onSelectionChanged();
 
+      virtual void onPropertiesChanged();
+
       virtual void onEditionFinalized();
 
       virtual void onEditionInitialized();
 
+      virtual void onExit();
+
     signals:
-
-      void changeMenuMode(te::layout::EnumType* newMode);
-
+      
       void exit();
 
     protected:
@@ -122,24 +119,20 @@ namespace te
       virtual void createInspectorDock();
 
       virtual void createToolbar();
-
-      virtual void createMainMenu();
-
+      
       virtual void createEditTemplateDock();
-
-      virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "");
-
+      
       virtual void addAllItemToolbars();
 
     protected:
 
-      PropertiesDock* m_dockProperties;
-      ObjectInspectorDock* m_dockInspector;
-      EditTemplateDock* m_dockEditTemplate;
-      te::layout::View* m_view;
-      te::layout::ToolbarOutside* m_toolbar;
-      QStatusBar* m_statusBar;
-      QMenu* m_layoutMenu;
+      PropertiesDock*              m_dockProperties;
+      ObjectInspectorDock*         m_dockInspector;
+      EditTemplateDock*            m_dockEditTemplate;
+      te::layout::View*            m_view;
+      te::layout::ToolbarOutside*  m_toolbar;
+      QStatusBar*                  m_statusBar;
+      MenuPrincipal*               m_menuPrincipal;
 
       /* Menu options */
 
