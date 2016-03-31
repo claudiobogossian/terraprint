@@ -73,7 +73,6 @@ namespace te
         
       protected:
 
-        virtual void drawGrid(QPainter* painter);
 
         virtual void calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM);
 
@@ -84,6 +83,11 @@ namespace te
         virtual double initHorizontalLines(const te::gm::Envelope& geoBox);
 
         virtual double getUnit(std::string strUnit);
+
+        virtual void generateGridCrossStyle();
+
+
+
     };
   }
 }

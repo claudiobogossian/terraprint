@@ -68,8 +68,7 @@ namespace te
 
       protected:
         
-        virtual void drawGrid(QPainter* painter);
-
+        
         virtual void calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM);
 
         virtual void calculateHorizontal(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM);

@@ -48,52 +48,6 @@ te::layout::GridGeodesicItem::~GridGeodesicItem()
 
 }
 
-void te::layout::GridGeodesicItem::drawGrid(QPainter* painter)
-{
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
-
-  GeodesicGridSettingsConfigProperties settingsConfig;
-
-  const Property& pGeographicBox = m_controller->getProperty("geographic_box");
-  const Property& pStyle = pGridSettings.containsSubProperty(settingsConfig.getStyle());
-
-  const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
-
-  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
-
-  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
-  if(currentStyle != 0)
-  {
-    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
-  }
-
-  // Box necessario para desenhar a curvatura
-  te::gm::Envelope planarBox = geographicBox;
-  int zone = te::map::CalculatePlanarZone(geographicBox);
-  if(zone < 0 || zone > 60)
-  {
-    painter->drawRect(boundingRect());
-    return;
-  }
-  
-  EnumGridStyleType* gridStyle = Enums::getInstance().getEnumGridStyleType();
-  if(!gridStyle)
-  {
-    return;
-  }
-
-  if(currentStyle == gridStyle->getStyleContinuous())
-  {
-    drawContinuousLines(painter);
-  }
-  else if(currentStyle == gridStyle->getStyleCross())
-  {
-    drawCrossLines(painter);
-  }
-}
-
 void te::layout::GridGeodesicItem::calculateGrid()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
@@ -111,14 +65,10 @@ void te::layout::GridGeodesicItem::calculateGrid()
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
-  const std::string& style = pStyle.getValue().toString();
+  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
   double frameThickness = pFrameThickness.getValue().toDouble();
 
-  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
-  if (currentStyle != 0)
-  {
-    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
-  }
+
 
   te::gm::Envelope newBoxMM(0, 0, width, height);
 
@@ -144,9 +94,34 @@ void te::layout::GridGeodesicItem::calculateGrid()
   calculateVertical(geographicBox, planarBox, newBoxMM);
   calculateHorizontal(geographicBox, planarBox, newBoxMM);
 
+  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
+  if (currentStyle != 0)
+  {
+    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
+  }
+
+  EnumGridStyleType gridStyleType;
+
+  if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
+  {
+    clearLines();
+    calculateCrossLines();
+  }
+
+  if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
+  {
+    clearLines();
+    addGridLinesToPath();
+
+  }
+
+
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 
   prepareGeometryChange();
+
+
+
 }
 
 double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& geoBox )
@@ -235,8 +210,6 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
   const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
-//  std::string fontFamily = pFontFamily.getValue().toString();
-//  int textPointSize = pTextPointSize.getValue().toInt();
   double verticalGap = pVerticalGap.getValue().toDouble();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();
@@ -383,8 +356,7 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
   Font txtFont = pTextFontFamily.getValue().toFont();
-//  std::string fontFamily = pFontFamily.getValue().toString();
-//  int textPointSize = pTextPointSize.getValue().toInt();
+
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double verticalGap = pVerticalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();

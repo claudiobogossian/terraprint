@@ -52,7 +52,6 @@ namespace te
         std::string getDegreesText();
         std::string getMinutesText();
         std::string getSecondsText();
-        std::string getBouderIntersections();
         std::string getLneCornerHrzDisplacement();
         std::string getLneCornerVrtDisplacement();
         std::string getLowerRightCornerText();
@@ -86,7 +85,6 @@ namespace te
         std::string m_degreesText;
         std::string m_minutesText;
         std::string m_secondsText;
-        std::string m_bouderIntersection;
         std::string m_lneCornerHrzDisplacement;
         std::string m_lneCornerVrtDisplacement;
         std::string m_lowerRightCornerText;

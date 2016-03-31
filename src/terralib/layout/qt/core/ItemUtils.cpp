@@ -57,6 +57,7 @@
 
 // STL
 #include <stddef.h>  // defines NULL
+#include <memory>
 
 // Qt
 #include <QObject>
@@ -716,13 +717,16 @@ te::color::RGBAColor** te::layout::ItemUtils::changePointMarkSize(te::se::PointS
 QPainterPath te::layout::ItemUtils::lineToQPath(const te::gm::LineString& line)
 {
   QPainterPath path;
+  
+  std::auto_ptr<te::gm::Point> point(line.getPointN(0));
+  path.moveTo(point->getX(), point->getY());
 
   size_t numCoords = line.size();
-  for (size_t i = 0; i < numCoords; ++i)
-  {
-    te::gm::Point* point = line.getPointN(i);
-    path.lineTo(point->getX(), point->getY());
-  }
+    for (size_t j = 1; j < numCoords; ++j)
+    {
+      std::auto_ptr<te::gm::Point> point(line.getPointN(j));
+      path.lineTo(point->getX(), point->getY());
+    }
 
   return path;
 }

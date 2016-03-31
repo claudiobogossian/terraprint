@@ -28,33 +28,34 @@
 // TerraLib
 #include "GridSettingsConfigProperties.h"
 
-te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties():
-  m_name("grid_name"),
-  m_visible("grid_visible"),
-  m_lneHrzGap("grid_lneHrzGap"),
-  m_lneVrtGap("grid_lneVrtGap"),
-  m_initialGridPointX("grid_initialGridPointX"),
-  m_initialGridPointY("grid_initialGridPointY"),
-  m_style("grid_style"),
-  m_lineStyle("grid_lineStyle"),
-  m_lineColor("grid_lineColor"),
-  m_lineWidth("grid_lineWidth"),
-  m_font("grid_font"),
-  m_fontCorner("grid_font_corner"),
-  m_textColor("grid_textColor"),
-  m_visibleAllTexts("grid_visibleAllTexts"),
-  m_superscriptText("grid_superscriptText"),
-  m_lneVrtDisplacement("grid_lneVrtDisplacement"),
-  m_lneHrzDisplacement("grid_lneHrzDisplacement"),
-  m_bottomText("grid_bottomText"),
-  m_leftText("grid_leftText"),
-  m_rightText("grid_rightText"),
-  m_topText("grid_topText"),
-  m_bottomRotateText("grid_bottomRotateText"),
-  m_leftRotateText("grid_leftRotateText"),
-  m_rightRotateText("grid_rightRotateText"),
-  m_topRotateText("grid_topRotateText"),
-  m_crossOffset("grid_crossOffset")
+te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties() :
+m_name("grid_name"),
+m_visible("grid_visible"),
+m_lneHrzGap("grid_lneHrzGap"),
+m_lneVrtGap("grid_lneVrtGap"),
+m_initialGridPointX("grid_initialGridPointX"),
+m_initialGridPointY("grid_initialGridPointY"),
+m_style("grid_style"),
+m_lineStyle("grid_lineStyle"),
+m_lineColor("grid_lineColor"),
+m_lineWidth("grid_lineWidth"),
+m_font("grid_font"),
+m_fontCorner("grid_font_corner"),
+m_textColor("grid_textColor"),
+m_visibleAllTexts("grid_visibleAllTexts"),
+m_superscriptText("grid_superscriptText"),
+m_lneVrtDisplacement("grid_lneVrtDisplacement"),
+m_lneHrzDisplacement("grid_lneHrzDisplacement"),
+m_bottomText("grid_bottomText"),
+m_leftText("grid_leftText"),
+m_rightText("grid_rightText"),
+m_topText("grid_topText"),
+m_bottomRotateText("grid_bottomRotateText"),
+m_leftRotateText("grid_leftRotateText"),
+m_rightRotateText("grid_rightRotateText"),
+m_topRotateText("grid_topRotateText"),
+m_crossOffset("grid_crossOffset"),
+m_bouderIntersection("grid_bouderIntersections_geodesic")
 {
 
 }
@@ -194,3 +195,7 @@ std::string te::layout::GridSettingsConfigProperties::getCrossOffset()
   return m_crossOffset;
 }
 
+std::string te::layout::GridSettingsConfigProperties::getBouderIntersections()
+{
+  return m_bouderIntersection;
+}

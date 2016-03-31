@@ -781,7 +781,7 @@ void te::layout::GridSettingsOutside::on_cmbLineType_currentIndexChanged( const 
     std::string stdText = ItemUtils::convert2StdString(text);
 
     variant.setValue(stdText, dataType->getDataTypeStringList());
-    Property prop = controller->getProperty(m_planarGridSettings->getLineStyle(), m_planarType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getLineStyle(), m_geodesicType);
     prop.setValue(variant);
     prop.setOptionChoice(variant);
     emit updateProperty(prop);

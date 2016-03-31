@@ -33,9 +33,10 @@
 #include "../../core/WorldTransformer.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../qt/core/Scene.h"
-#include "terralib/qt/widgets/layer/explorer/TreeItem.h"
-#include "terralib/qt/widgets/layer/explorer/LayerItem.h"
-#include "terralib/maptools/Utils.h"
+#include <terralib/qt/widgets/layer/explorer/TreeItem.h>
+#include <terralib/qt/widgets/layer/explorer/LayerItem.h>
+#include <terralib/maptools/Utils.h>
+#include <terralib/qt/widgets/canvas/Canvas.h>
 
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneDragDropEvent>
@@ -99,34 +100,14 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
   boxViewport = utils.viewportBox(boxViewport);
 
-  QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
-
   if (m_isPrinting == true)
   {
-    //then we create the image to be rendered
-    try
-    {
-      QPixmap pixmap(sizeInPixels);
-      if (pixmap.isNull() == true || pixmap.paintEngine() == 0)
-      {
-        return;
-      }
-
-      pixmap.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
-
-      drawMapOnDevice(&pixmap);
-
-      //and finally we draw the rendered pixmap to the output (screen, pdf or printer)
-      drawPixmap(this->getAdjustedBoundingRect(painter), painter, pixmap);
-    }
-    catch (const std::bad_alloc&)
-    {
-      return;
-    }
+    drawMapOnPainter(painter);
   }
   else
   {
     //if for any reason the size has been changed, we recreate the screen pixmap
+    QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
     if (m_screenCache.size() != sizeInPixels)
     {
       m_screenCache = QPixmap(sizeInPixels);
@@ -134,7 +115,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
 
       drawMapOnDevice(&m_screenCache);
     }
-
+    
     drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
     if (m_screenDraft.isNull() == false)
     {
@@ -169,6 +150,48 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   {
     it->get()->draw(&canvas, envelope, srid, scale);
   }
+}
+
+void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
+{
+  const Property& pSrid = m_controller->getProperty("srid");
+  const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pScale = m_controller->getProperty("scale");
+  const Property& property = m_controller->getProperty("background_color");
+
+  int srid = pSrid.getValue().toInt();;
+  const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
+  double scale = pScale.getValue().toDouble();
+  const te::color::RGBAColor& color = property.getValue().toColor();
+
+  //here we render the layers on the given device
+  painter->save();
+  painter->setClipRect(this->getAdjustedBoundingRect(painter));
+
+  //as canvas will transform from World CS to Device CS, we must add a transform in order to make the painter expect drawings in Device CS
+  double xScale = boundingRect().width() / painter->device()->width();
+  double yScale = boundingRect().height() / painter->device()->height();
+
+  QTransform transform;
+  transform.translate(0, boundingRect().height());
+  transform.scale(xScale, -yScale);
+
+  painter->setTransform(transform, true);
+
+  //then we create the canvas and initialize it
+  te::qt::widgets::Canvas canvas(painter);
+  canvas.setBackgroundColor(color);
+  canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
+
+  const Property& pLayerList = m_controller->getProperty("layers");
+  const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
+
+  std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
+  for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
+  {
+    it->get()->draw(&canvas, envelope, srid, scale);
+  }
+  painter->restore();
 }
 
 QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )

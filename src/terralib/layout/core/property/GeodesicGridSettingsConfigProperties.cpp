@@ -35,7 +35,6 @@ te::layout::GeodesicGridSettingsConfigProperties::GeodesicGridSettingsConfigProp
   m_degreesText("grid_degreesText_geodesic"),
   m_minutesText("grid_minutesText_geodesic"),
   m_secondsText("grid_secondsText_geodesic"),
-  m_bouderIntersection("grid_bouderIntersections_geodesic"),
   m_lneCornerHrzDisplacement("grid_lneCornerHrzDisplacement_geodesic"),
   m_lneCornerVrtDisplacement("grid_lneCornerVrtDisplacement_geodesic"),
   m_lowerRightCornerText("grid_lowerRightCornerText_geodesic"),
@@ -98,10 +97,7 @@ std::string te::layout::GeodesicGridSettingsConfigProperties::getSecondsText()
   return m_secondsText;
 }
 
-std::string te::layout::GeodesicGridSettingsConfigProperties::getBouderIntersections()
-{
-  return m_bouderIntersection;
-}
+
 
 std::string te::layout::GeodesicGridSettingsConfigProperties::getLneCornerHrzDisplacement()
 {
