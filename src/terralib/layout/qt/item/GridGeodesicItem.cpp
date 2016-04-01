@@ -141,9 +141,23 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   utils.remapToPlanar(&planarBox, zone);
 
-  calculateVertical(geographicBox, planarBox, newBoxMM);
-  calculateHorizontal(geographicBox, planarBox, newBoxMM);
+  const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+  double verticalGap = pVerticalGap.getValue().toDouble();
 
+  if (validateVrtGap(geographicBox, verticalGap))
+  {
+    calculateVertical(geographicBox, planarBox, newBoxMM);
+  }
+
+  const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+  double horizontalGap = pHorizontalGap.getValue().toDouble();
+
+  if (validateHrzGap(geographicBox, horizontalGap))
+  {
+    calculateHorizontal(geographicBox, planarBox, newBoxMM);
+  }
+
+  
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 
   prepareGeometryChange();
