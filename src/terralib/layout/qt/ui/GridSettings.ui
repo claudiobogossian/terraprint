@@ -795,7 +795,7 @@
                        <item>
                         <widget class="QPushButton" name="pbPlanarLineColor">
                          <property name="text">
-                          <string>Line Color...</string>
+                          <string>Line Color</string>
                          </property>
                          <property name="autoDefault">
                           <bool>false</bool>
@@ -1991,7 +1991,7 @@
                        <item>
                         <widget class="QPushButton" name="pbLineColor">
                          <property name="text">
-                          <string>Line Color...</string>
+                          <string>Line Color</string>
                          </property>
                         </widget>
                        </item>
