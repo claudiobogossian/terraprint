@@ -46,6 +46,7 @@
 te::layout::GridPlanarModel::GridPlanarModel()
   : GridMapModel()
   , Observer()
+  , m_gridPropertiesInitialized(false)
 {
   LayoutUnit unit(StyleKilometer);
   te::gm::Envelope planarBox(0, 0, 10000, 10000);
@@ -111,6 +112,33 @@ te::layout::GridPlanarModel::GridPlanarModel()
 te::layout::GridPlanarModel::~GridPlanarModel()
 {
 }
+
+double te::layout::GridPlanarModel::getInitialCoord(double initialCoord, double distance, double& gap)
+{
+  if (distance <= 0)
+  {
+    gap = 0;
+    return 0;
+  }
+  unsigned const int size = 25;
+  int gaps[size] = { 1000, 1500, 2000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 50000, 100000, 125000, 150000, 175000, 200000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 1750000, 2000000 };
+  int numberOfIntervals = 5;
+  gap = (int)(distance / numberOfIntervals);
+  for (unsigned int i = 0; i < size; i++)
+  {
+    if (gap <= gaps[i])
+    {
+      if (i > 0)
+      {
+        gap = gaps[i - 1];
+      }
+      break;
+    }
+  }
+  int interval = (int)(initialCoord / gap);
+  return interval * gap;
+}
+
 
 void te::layout::GridPlanarModel::update(const Subject* subject)
 {
@@ -202,6 +230,57 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
       property.setValue(newSrid, dataType->getDataTypeInt());
       properties.addProperty(property);
     }
+
+    double gapX = 0.;
+    double gapY = 0.;
+
+    if (m_gridPropertiesInitialized == false && newPlanarBox.isValid() == true)
+    {
+      double distance = newPlanarBox.getWidth();
+      double initialX = this->getInitialCoord(newPlanarBox.getLowerLeftX(), distance, gapX);
+      {
+        Property property(0);
+        property.setName(settingsConfig.getInitialGridPointX());
+        property.setValue(initialX, dataType->getDataTypeDouble());
+        properties.addProperty(property);
+      }
+
+      distance = newPlanarBox.getHeight();
+      double initialY = this->getInitialCoord(newPlanarBox.getLowerLeftY(), distance, gapY);
+      {
+        Property property(0);
+        property.setName(settingsConfig.getInitialGridPointY());
+        property.setValue(initialY, dataType->getDataTypeDouble());
+        properties.addProperty(property);
+      }
+      {
+        Property property(0);
+        property.setName(settingsConfig.getLneHrzGap());
+        property.setValue(gapX, dataType->getDataTypeDouble());
+        properties.addProperty(property);
+      }
+      {
+        Property property(0);
+        property.setName(settingsConfig.getLneVrtGap());
+        property.setValue(gapY, dataType->getDataTypeDouble());
+        properties.addProperty(property);
+      }
+      m_gridPropertiesInitialized = true;
+    }
+    else if (newPlanarBox.isValid() == false)
+    {
+      m_gridPropertiesInitialized = false;
+
+      te::gm::Envelope defaultPlanarBox(0, 0, 10000, 10000);
+      newPlanarBox = defaultPlanarBox;
+      {
+        Property property(0);
+        property.setName("planar_box");
+        property.setValue(newPlanarBox, dataType->getDataTypeEnvelope());
+        properties.updateProperty(property);
+      }
+    }
+
 
     te::gm::Envelope defaultPlanarBox(0, 0, 10000, 10000);
     if(newPlanarBox.equals(defaultPlanarBox) == false)

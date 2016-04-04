@@ -48,6 +48,10 @@ namespace te
         virtual void update(const Subject* subject);
 
         double getInitialCoord(double intialCoord, double distance, double& gap);
+
+      private:
+
+        bool m_gridPropertiesInitialized;
     };
   }
 }

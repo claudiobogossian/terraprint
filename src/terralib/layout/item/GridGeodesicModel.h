@@ -48,6 +48,9 @@ namespace te
         virtual void update(const Subject* subject);
 
         virtual te::gm::Envelope getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
+
+      private:
+        bool m_gridPropertiesInitialized;
     };
   }
 }
