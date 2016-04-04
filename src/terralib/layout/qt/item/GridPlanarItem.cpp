@@ -106,8 +106,25 @@ void te::layout::GridPlanarItem::calculateGrid()
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
   
-  calculateVertical(planarBox, referenceBoxMM);
-  calculateHorizontal(planarBox, referenceBoxMM);
+  const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+
+  double verticalGap = pVerticalGap.getValue().toDouble();
+
+  if (validateVrtGap(planarBox, verticalGap))
+  {
+    calculateVertical(planarBox, referenceBoxMM);
+  }
+
+
+  const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+
+  double horizontalGap = pHorizontalGap.getValue().toDouble();
+
+
+  if (validateHrzGap(planarBox, horizontalGap))
+  {
+    calculateHorizontal(planarBox, referenceBoxMM);
+  }
 
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 
@@ -248,7 +265,6 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
   Font txtFont = pTextFontFamily.getValue().toFont();
  
-
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
 

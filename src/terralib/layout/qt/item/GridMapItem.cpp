@@ -395,6 +395,8 @@ void te::layout::GridMapItem::drawLeftTexts( QPainter* painter )
   }
 }
 
+
+
 void te::layout::GridMapItem::drawRightTexts( QPainter* painter )
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
@@ -936,4 +938,29 @@ te::gm::Envelope te::layout::GridMapItem::calculateLeft(QPointF referencePoint, 
   m_boundingBox.Union(leftTextBox);
 
   return leftTextBox;
+}
+
+bool te::layout::GridMapItem::validateHrzGap(const te::gm::Envelope& geoBox, double gap){
+
+  double result = geoBox.getWidth()/gap;
+
+  if (result > 30.0)
+  {
+    return false;
+  }
+  
+  return true;
+}
+
+bool te::layout::GridMapItem::validateVrtGap(const te::gm::Envelope& geoBox, double gap){
+  
+  double result = geoBox.getHeight() / gap;
+
+  if (result > 30.0)
+  {
+    return false;
+  }
+
+  return true;
+
 }

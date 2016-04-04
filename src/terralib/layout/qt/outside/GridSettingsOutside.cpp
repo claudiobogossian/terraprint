@@ -1083,7 +1083,7 @@ void te::layout::GridSettingsOutside::on_chkLeftPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLeftPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->getProperty(m_planarGridSettings->getBottomText(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLeftText(), m_planarType);
     prop.setValue(variant);
     emit updateProperty(prop);
   }

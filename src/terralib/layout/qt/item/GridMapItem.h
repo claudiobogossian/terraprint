@@ -133,6 +133,10 @@ namespace te
 
         virtual bool isNearEdge(const te::gm::Point& p, const te::gm::LineString& line, const double& offSet);
 
+        virtual bool validateHrzGap(const te::gm::Envelope& geoBox, double gap);
+
+        virtual bool validateVrtGap(const te::gm::Envelope& geoBox, double gap);
+
 
       protected:
 
