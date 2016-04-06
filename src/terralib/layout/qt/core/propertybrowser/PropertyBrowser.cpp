@@ -63,7 +63,8 @@ te::layout::PropertyBrowser::PropertyBrowser(Scene* scene, AbstractProxyProject*
   m_dialogPropertiesBrowser(0),
   m_scene(scene),
   m_hasWindows(false),
-  m_changeQtPropertyVariantValue(false)
+  m_changeQtPropertyVariantValue(false),
+  m_ignoreExternalUpdates(false)
 {
   createManager(scene, proxyProject);
 }
@@ -104,21 +105,21 @@ void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProj
   // Dialog properties
   m_dialogPropertiesBrowser = new DialogPropertiesBrowser(scene, proxyProject, this->parent());
   connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeDlgProperty(Property)));
-  connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(std::vector<Property>)), this, SLOT(onChangeDlgProperty(std::vector<Property>)));
 
   // Item Observer properties
   m_itemObserverManager = new ItemObserverManager(scene);
+  /*
   connect(m_itemObserverManager, SIGNAL(valueChanged(QtProperty*, const QVariant &)),
     this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
+  */
   ItemObserverFactory* itemObserverFactory = new ItemObserverFactory;
+  
   
   m_propertyEditor->setFactoryForManager(m_dialogPropertiesBrowser->getStringPropertyManager(), m_dialogPropertiesBrowser->getDlgEditorFactory());
   m_propertyEditor->setFactoryForManager(m_variantPropertiesBrowser->getVariantPropertyManager(), m_variantPropertiesBrowser->getVariantEditorFactory());
   m_propertyEditor->setFactoryForManager(m_itemObserverManager, itemObserverFactory);
   m_propertyEditor->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
   m_propertyEditor->setResizeMode(QtTreePropertyBrowser::ResizeToContents);
-
-  connect(m_propertyEditor, SIGNAL(currentItemChanged(QtBrowserItem*)), this, SLOT(onCurrentItemChanged(QtBrowserItem*)));
 }
 
 void te::layout::PropertyBrowser::propertyEditorValueChanged( QtProperty *property, const QVariant &value )
@@ -128,22 +129,35 @@ void te::layout::PropertyBrowser::propertyEditorValueChanged( QtProperty *proper
     return;  
   }
 
-  QList<QtBrowserItem *> list = m_propertyEditor->items(property);
-  emit changePropertyValue(property, list);
+  QString qPropertyName = property->propertyName();
+  std::string propertyName = qPropertyName.toStdString();
 
-  Property prop = m_variantPropertiesBrowser->getProperty(property->propertyName());
+  QString qCurrentValue = property->valueText();
+  std::string cCurrentValue = qCurrentValue.toStdString();
+
+  QString qNewValue = value.toString();
+  std::string cNewValue = qNewValue.toStdString();
+
+  if (m_qtpropertyToProperty.find(property) == m_qtpropertyToProperty.end())
+  {
+    return; 
+  }
+
+  Property prop = m_variantPropertiesBrowser->getProperty(property);
 
   if(prop.isNull())
   {
-    prop = m_dialogPropertiesBrowser->getProperty(property->propertyName());
+    prop = m_dialogPropertiesBrowser->getProperty(property);
   }
 
   if (prop.isNull())
   {
-    prop = m_itemObserverManager->getProperty(property->propertyName());
+    prop = m_itemObserverManager->getProperty(property);
   }
-
+  
+  m_ignoreExternalUpdates = true;
   emit changePropertyValue(prop);
+  m_ignoreExternalUpdates = false;
 }
 
 void te::layout::PropertyBrowser::onChangeDlgProperty( Property property )
@@ -155,64 +169,23 @@ void te::layout::PropertyBrowser::onChangeDlgProperty( Property property )
   emit changePropertyValue(property);
 }
 
-void te::layout::PropertyBrowser::onChangeDlgProperty( std::vector<Property> props )
-{
-  emit changePropertyValue(props);
-}
-
-void te::layout::PropertyBrowser::onCurrentItemChanged(QtBrowserItem* item)
-{
-  if(item == 0)
-  {
-    return;
-  }
-  emit currentItemChanged(item);
-}
-
-void te::layout::PropertyBrowser::updateExpandState()
-{
-  QList<QtBrowserItem *> list = m_propertyEditor->topLevelItems();
-  QListIterator<QtBrowserItem *> it(list);
-  while (it.hasNext()) {
-    QtBrowserItem *item = it.next();
-    QtProperty *prop = item->property();
-    m_idToExpanded[m_propertyToId[prop]] = m_propertyEditor->isExpanded(item);
-  }
-}
-
 void te::layout::PropertyBrowser::clearAll()
 {
-  updateExpandState();
-
-  QMap<QtProperty *, QString>::ConstIterator itProp = m_propertyToId.constBegin();
-  while (itProp != m_propertyToId.constEnd()) {
+  QMap<QtProperty *, Property>::ConstIterator itProp = m_qtpropertyToProperty.constBegin();
+  while (itProp != m_qtpropertyToProperty.constEnd()) {
     delete itProp.key();
     itProp++;
   }
 
-  m_propertyToId.clear();
-  m_idToProperty.clear();
-  
+  m_qtpropertyToProperty.clear();
+
   m_variantPropertiesBrowser->clearAll();
   m_dialogPropertiesBrowser->clearAll();
 }
 
 void te::layout::PropertyBrowser::addPropertyItem(QtProperty *property, const QString &id, const QString &label)
 {
-  m_propertyToId[property] = id;
-  m_idToProperty[id] = property; 
-
-  // If there is no label, then the name will be the label
-  QString labelString = label;
-  if (labelString.compare("") == 0)
-  {
-    labelString = id;
-  }
-  m_nameToLabel[id] = labelString;
-
   QtBrowserItem *item = m_propertyEditor->addProperty(property);
-  if (m_idToExpanded.contains(id))
-    m_propertyEditor->setExpanded(item, m_idToExpanded[id]);
 }
 
 void te::layout::PropertyBrowser::onChangeFilter( const QString& filter )
@@ -300,11 +273,13 @@ QtProperty* te::layout::PropertyBrowser::addProperty( const Property& property )
     }
   }
 
+  associateProperty(pproperty, property);
+
   m_changeQtPropertyVariantValue = false;
   return pproperty;
 }
 
-QMap<QString, QtProperty*> te::layout::PropertyBrowser::addProperties(const Properties& properties)
+void te::layout::PropertyBrowser::addProperties(const Properties& properties)
 {
   std::vector<Property> vecProperties = properties.getProperties();
   foreach(Property prop, vecProperties)
@@ -315,12 +290,8 @@ QMap<QString, QtProperty*> te::layout::PropertyBrowser::addProperties(const Prop
     addProperty(prop);
   }
 
-  Properties props = properties;
-
-  m_variantPropertiesBrowser->setAllProperties(props);
-  m_dialogPropertiesBrowser->setAllProperties(props);
-
-  return m_idToProperty;
+  m_variantPropertiesBrowser->setAllProperties(properties);
+  m_dialogPropertiesBrowser->setAllProperties(properties);
 }
 
 QtProperty* te::layout::PropertyBrowser::addVariantProperty(const Property& property)
@@ -354,6 +325,7 @@ QtProperty* te::layout::PropertyBrowser::addDialogProperty(const Property& prope
   QtProperty* pproperty = 0;
 
   pproperty = m_dialogPropertiesBrowser->addProperty(property);
+
   if (pproperty)
   {
     std::string label = property.getLabel();
@@ -363,6 +335,12 @@ QtProperty* te::layout::PropertyBrowser::addDialogProperty(const Property& prope
     QString qName = ItemUtils::convert2QString(name);
 
     addPropertyItem(pproperty, qName, qLabel);
+
+    QtVariantProperty* variantItem = dynamic_cast<QtVariantProperty*>(pproperty);
+    if (variantItem != 0)
+    {
+      variantItem->setAttribute("parentClass", ItemUtils::convert2QString(property.getParent()));
+    }
   }
 
   return pproperty;
@@ -414,55 +392,10 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
 
   m_itemObserverManager->setValue(pproperty, val);
   m_itemObserverManager->setTypeForSearch(pproperty, objType->getMapItem());
-  m_itemObserverManager->setPropertyLabel(pproperty, qName, qLabel); // add label
+  m_itemObserverManager->setPropertyLabel(pproperty, qName, qLabel, property); // add label
   addPropertyItem(pproperty, qName, qLabel);
 
   return pproperty;
-}
-
-bool te::layout::PropertyBrowser::removeProperty( Property property )
-{
-  std::string stdLabel = property.getLabel();
-  if (stdLabel.compare("") == 0)
-    stdLabel = property.getName();
-
-  QString label = ItemUtils::convert2QString(stdLabel);
-
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
-  {
-    return false;
-  }
-
-  QtProperty* removeProp = 0;
-  QList<QtProperty*> list = m_propertyEditor->properties();
-  foreach( QtProperty* prop, list) 
-  {
-    std::string stdName = ItemUtils::convert2StdString(name);
-    if (property.getName().compare(stdName) == 0)
-    {
-      removeProp = prop;
-    }
-  }
-  
-  if(!removeProp)
-    return false;
-
-  m_propertyToId.remove(removeProp);
-  m_idToProperty.remove(removeProp->propertyName());
-
-  m_variantPropertiesBrowser->removeProperty(removeProp);
-  m_dialogPropertiesBrowser->removeProperty(removeProp);
-
-  m_propertyEditor->removeProperty(removeProp);
-
-  if(removeProp)
-  {
-    delete removeProp;
-    removeProp = 0;
-  }
-
-  return true;
 }
 
 void te::layout::PropertyBrowser::gatherProperties(QtProperty* qproperty, Property property)
@@ -549,6 +482,11 @@ void te::layout::PropertyBrowser::selectProperty(std::string label)
 
 bool te::layout::PropertyBrowser::updateProperty( Property property )
 {
+  if (m_ignoreExternalUpdates == true)
+  {
+    return false;
+  }
+
   m_changeQtPropertyVariantValue = true;
   
   bool result = m_variantPropertiesBrowser->updateProperty(property);
@@ -565,6 +503,11 @@ bool te::layout::PropertyBrowser::updateProperty( Property property )
 
 void te::layout::PropertyBrowser::updateProperties( Properties props )
 {
+  if (m_ignoreExternalUpdates == true)
+  {
+    return;
+  }
+
   foreach( Property prop, props.getProperties()) 
   {
     updateProperty(prop);
@@ -600,16 +543,16 @@ te::layout::Properties te::layout::PropertyBrowser::getProperties()
   QList<QtProperty*> props = m_propertyEditor->properties();
   foreach( QtProperty* prop, props) 
   {
-    Property property = m_variantPropertiesBrowser->getProperty(prop->propertyName());
+    Property property = m_variantPropertiesBrowser->getProperty(prop);
 
     if(property.isNull())
     {
-      property = m_dialogPropertiesBrowser->getProperty(prop->propertyName());
+      property = m_dialogPropertiesBrowser->getProperty(prop);
     }
 
     if (property.isNull())
     {
-      property = m_itemObserverManager->getProperty(prop->propertyName());
+      property = m_itemObserverManager->getProperty(prop);
     }
 
     properties.addProperty(property);
@@ -618,20 +561,20 @@ te::layout::Properties te::layout::PropertyBrowser::getProperties()
   return properties;
 }
 
-QtProperty* te::layout::PropertyBrowser::findProperty(QString label)
+QtProperty* te::layout::PropertyBrowser::findProperty(const std::string& propertyName, const std::string& parentClass)
 {
   QtProperty* prop = 0;
 
-  prop = m_variantPropertiesBrowser->findProperty(label);
+  prop = m_variantPropertiesBrowser->findProperty(propertyName, parentClass);
   
   if(!prop)
   {
-    prop = m_dialogPropertiesBrowser->findProperty(label);
+    prop = m_dialogPropertiesBrowser->findProperty(propertyName, parentClass);
   }
   
   if (!prop)
   {
-    prop = m_itemObserverManager->findProperty(label);
+    prop = m_itemObserverManager->findProperty(propertyName, parentClass);
   }
 
   return prop;
@@ -670,13 +613,7 @@ bool te::layout::PropertyBrowser::equalsProperties( Properties props )
   {
     if(prop.isVisible())
     {
-      std::string stdLabel = prop.getLabel();
-      if (stdLabel.compare("") == 0)
-        stdLabel = prop.getName();
-
-      QString label = ItemUtils::convert2QString(stdLabel);
-
-      QtProperty* qtprop = findProperty(label);
+      QtProperty* qtprop = findProperty(prop.getName(), prop.getParent());
       if(!qtprop)
       {
         result = false;
@@ -687,30 +624,15 @@ bool te::layout::PropertyBrowser::equalsProperties( Properties props )
   return result;
 }
 
-QString te::layout::PropertyBrowser::nameProperty(const QString& label)
+void te::layout::PropertyBrowser::associateProperty(QtProperty* qtProperty, const te::layout::Property& property)
 {
-  QList<QString> labelList = m_nameToLabel.values();
-
-  if (!labelList.contains(label))
+  if (qtProperty == 0)
   {
-    return QString();
+    return;
   }
-
-  int index = labelList.indexOf(label);
-  QString value = labelList.value(index);
-  QString name = m_nameToLabel.key(value);
-
-  return name;
-}
-
-QString te::layout::PropertyBrowser::labelProperty(const QString& name)
-{
-  if (!m_nameToLabel.contains(name))
+  if (property.isNull() == true)
   {
-    return QString();
+    return;
   }
-
-  QString foundLabel = m_nameToLabel[name];
-  return foundLabel;
+  m_qtpropertyToProperty.insert(qtProperty, property);
 }
-

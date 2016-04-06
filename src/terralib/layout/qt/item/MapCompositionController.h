@@ -30,6 +30,7 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "ItemGroupController.h"
+#include "../../core/property/Properties.h"
 
 namespace te
 {
@@ -59,6 +60,18 @@ namespace te
           \brief Destructor
         */ 
         virtual ~MapCompositionController();
+
+        virtual const Properties& getProperties() const;
+
+        virtual void setProperties(const Properties& properties);
+
+        virtual std::map<std::string, te::layout::Properties> groupPropertiesByParent(const Properties& properties);
+
+        virtual void hideProperties(Property& property) const;
+
+    protected: 
+
+      mutable te::layout::Properties m_propertiesFullReference;
     };
   }
 }

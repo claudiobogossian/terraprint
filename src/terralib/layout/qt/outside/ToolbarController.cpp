@@ -65,7 +65,7 @@ void te::layout::ToolbarController::onMapTriggered(QAction* action)
 
   if (action->objectName().compare(toolbar->getActionMapDefault()) == 0)
   {
-    viewport->createItem(itemType->getMapItem());
+    viewport->createItem(itemType->getMapCompositionItem());
   }
   else if (action->objectName().compare(toolbar->getActionGridPlanar()) == 0)
   {

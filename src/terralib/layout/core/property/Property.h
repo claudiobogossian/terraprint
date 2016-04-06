@@ -75,7 +75,7 @@ namespace te
 
           \param name of this property
         */
-        void setName(std::string name); 
+        void setName(const std::string& name); 
         
         /*!
           \brief Returns the type of this property 
@@ -302,6 +302,9 @@ namespace te
       
         bool operator ==(const Property& other) const;
 
+        const std::string& getParent() const;
+        void setParent(const std::string& parentClass);
+
     protected:
 
       int                                 m_parentItemHashCode; //!< hashcode of the object that owns this property
@@ -321,6 +324,7 @@ namespace te
       bool                                m_public; //!< public property, used by another component
       mutable Property::Ptr               m_nullProperty; //!< Represents a null property
       bool                                m_serializable; //!< if true the property can be serialized in file or database
+      std::string                         m_parentClass;
     };
 
     template <typename ValueType>

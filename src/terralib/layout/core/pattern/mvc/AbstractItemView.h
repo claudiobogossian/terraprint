@@ -106,7 +106,7 @@ namespace te
 
         virtual void setEditionMode(bool editionMode);
 
-        bool isEditionMode();
+        virtual bool isEditionMode();
 
         virtual void setSubSelection(bool selected);
 

@@ -27,20 +27,97 @@
 
 // TerraLib
 #include "MapCompositionItem.h"
+#include "MapItem.h"
 #include "../../core/property/SharedProperties.h"
+#include "../core/pattern/factory/item/ItemFactory.h"
+
+
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
 
-te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* controller, bool invertedMatrix)
-  : ItemGroup(controller, invertedMatrix)
+te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* controller)
+  : ItemGroup(controller)
+  , m_mapItem(0)
+  , m_planarGridItem(0)
+  , m_geodesicGridItem(0)
 {
   m_stacksBehindParent = true;
+  m_isSubSelectionAllowed = false;
+  this->setHandlesChildEvents(false);
+
+  {
+    ItemFactoryParamsCreate params("MapCompositionItem_Map");// = createParams(itemType);
+    std::string name = "MAP_ITEM";
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      this->addToGroup(item);
+    }
+
+    m_mapItem = abstractItem;
+  }
+  {
+    ItemFactoryParamsCreate params("MapCompositionItem_PlanarGrid");// = createParams(itemType);
+    std::string name = "GRID_PLANAR_ITEM";
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      this->addToGroup(item);
+    }
+
+    m_planarGridItem = abstractItem;
+  }
+    {
+      ItemFactoryParamsCreate params("MapCompositionItem_GeodesicGrid");// = createParams(itemType);
+      std::string name = "GRID_GEODESIC_ITEM";
+
+      AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
+      QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+      if (item != 0)
+      {
+        this->addToGroup(item);
+      }
+
+      m_geodesicGridItem = abstractItem;
+    }
 }
 
 te::layout::MapCompositionItem::~MapCompositionItem()
 {
 
+}
+
+te::layout::AbstractItemView* te::layout::MapCompositionItem::getMapItem()
+{
+  return m_mapItem;
+}
+
+te::layout::AbstractItemView* te::layout::MapCompositionItem::getPlanarGridItem()
+{
+  return m_planarGridItem;
+}
+
+te::layout::AbstractItemView* te::layout::MapCompositionItem::getGeodesicGridItem()
+{
+  return m_geodesicGridItem;
+}
+
+void te::layout::MapCompositionItem::setEditionMode(bool editionMode)
+{
+  m_mapItem->setEditionMode(editionMode);
+}
+
+bool te::layout::MapCompositionItem::isEditionMode()
+{
+  return m_mapItem->isEditionMode();
 }
 
 QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
@@ -92,6 +169,19 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
         }
       }
     }
+  }
+  else if (change == QGraphicsItem::ItemSceneHasChanged)
+  {
+    SharedProperties sharedProps;
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    std::string mapName = "MapCompositionItem_Map";
+
+    te::layout::Property pAssociate;
+    pAssociate.setName(sharedProps.getItemObserver());
+    pAssociate.setValue(mapName, dataType->getDataTypeItemObserver());
+    m_planarGridItem->getController()->setProperty(pAssociate);
+    m_geodesicGridItem->getController()->setProperty(pAssociate);
   }
   return ItemGroup::itemChange(change, value);
 }

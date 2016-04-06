@@ -31,18 +31,24 @@
 te::layout::MapCompositionModel::MapCompositionModel()
   : ItemGroupModel()
 {
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getMapCompositionItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //updating properties
   {
     Property property(0);
     property.setName("resizable");
-    property.setLabel(TR_LAYOUT("Resizable"));
     property.setValue(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
+
+  {
+    Property property(0);
+    property.setName("editable");
+    property.setValue(true, dataType->getDataTypeBool());
+    m_properties.updateProperty(property);
+  }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getMapCompositionItem());
 }
 
 te::layout::MapCompositionModel::~MapCompositionModel()

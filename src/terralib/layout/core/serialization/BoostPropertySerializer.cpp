@@ -395,12 +395,14 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const st
     const std::string& type = property.getType()->getName();
     const std::string& value = property.getValue().convertToString();
     const std::string& currentChoice = property.getOptionByCurrentChoice().convertToString();
+    const std::string& parentClass = property.getParent();
 
     boost::property_tree::ptree propertyNode;
     propertyNode.add("name", name);
     propertyNode.add("type", type);
     propertyNode.add("value", toUTF8(value));
     propertyNode.add("currentChoice", toUTF8(currentChoice));
+    propertyNode.add("parentClass", parentClass);
 
     const std::vector<te::layout::Property>& vecSubProperty = property.getSubProperty();
     if (vecSubProperty.empty() == false)
@@ -459,12 +461,14 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
   std::string type = propertyNode.get<std::string>("type");
   std::string value = fromUTF8(propertyNode.get<std::string>("value"));
   std::string currentChoice = fromUTF8(propertyNode.get<std::string>("currentChoice"));
+  std::string parentClass = propertyNode.get<std::string>("parentClass");
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   EnumType* valueType = dataType->getEnum(type);
 
   Property property;
   property.setName(name);
+  property.setParent(parentClass);
 
   const boost::property_tree::ptree& bValueNode = propertyNode.get_child("value");
   std::string cValue = fromUTF8(bValueNode.get_value<std::string>());

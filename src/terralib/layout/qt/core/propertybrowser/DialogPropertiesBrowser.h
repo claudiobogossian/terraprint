@@ -78,29 +78,15 @@ namespace te
 
         QtDlgEditorFactory* getDlgEditorFactory();
 
-        std::map<std::string, Property> getDlgProps();
-
         virtual void closeAllWindows();
 
         virtual bool hasOpenWindows();
         
-        virtual bool changeQtPropertyValue(QtProperty* pproperty, const Property& property);
-
         virtual QtProperty* addProperty(const Property& property);
 
         virtual bool updateProperty(const Property& property);
-
-        virtual bool checkDlgType(const Property& prop);
-
-        virtual Property findDlgProperty(const QString& label);
-
-        virtual Property findDlgProperty(EnumType* dataType);
-        
-        virtual Property getProperty(const QString& label);
-
-        virtual EnumType* getLayoutType(QVariant::Type type, const QString& label = "");
-
-        virtual int getVariantType(EnumType* dataType);
+      
+        virtual Property getProperty(QtProperty* qtProperty);
 
         virtual void clearAll();
 
@@ -126,8 +112,6 @@ namespace te
         virtual void onSetDlg(QWidget *parent, QtProperty * prop);
 
         virtual void updateOutside(const Property& prop);
-
-        virtual void updateOutside(const std::vector<Property>& props);
 
         virtual void onShowGridSettingsDlg();
 
@@ -157,8 +141,6 @@ namespace te
 
         void changeDlgProperty(Property property);
 
-        void changeDlgProperty(std::vector<Property> props);
-
       protected:
 
         virtual void createManager();
@@ -173,11 +155,9 @@ namespace te
 
         QtStringPropertyManager*        m_strDlgManager;
         QtDlgEditorFactory*             m_dlgEditorFactory;
-        std::map<std::string, Property> m_dlgProps;
         Property                        m_currentPropertyClicked;
         QList<QWidget*>                 m_dialogs;
         AbstractProxyProject*           m_proxyProject;
-
     };
   }
 }

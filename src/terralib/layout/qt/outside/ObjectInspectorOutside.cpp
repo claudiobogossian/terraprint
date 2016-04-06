@@ -121,6 +121,8 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
   if(m_graphicsItems.empty())
     return;
+
+  te::layout::EnumObjectType* groupType = Enums::getInstance().getEnumObjectType();
   
   foreach(QGraphicsItem* parentItem, graphicsItems) 
   {
@@ -149,29 +151,34 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
     QTreeWidgetItem* parentTreeItem = new QTreeWidgetItem(parentList);
 
-    foreach(QGraphicsItem *childItem, parentItem->childItems()) 
+    //we just look into the children if the parent is a GroupItem
+    if (parentTypeName == groupType->getItemGroup()->getName())
     {
-      if (!isValidItem(childItem))
+      foreach(QGraphicsItem *childItem, parentItem->childItems())
       {
-        continue;
+        if (!isValidItem(childItem))
+        {
+          continue;
+        }
+
+        AbstractItemView* absChildItem = dynamic_cast<AbstractItemView*>(childItem);
+
+        const Property& pChildName = absChildItem->getController()->getProperty("name");
+        const std::string& childName = pChildName.getValue().toString();
+        std::string childTypeName = absChildItem->getController()->getProperties().getTypeObj()->getName();
+
+        QString qChildName = ItemUtils::convert2QString(childName);
+        QString qChildTypeName = ItemUtils::convert2QString(childTypeName);
+
+        QStringList childList;
+        childList.append(qChildName);
+        childList.append(qChildTypeName);
+
+        QTreeWidgetItem* childTreeItem = new QTreeWidgetItem(childList);
+        parentTreeItem->addChild(childTreeItem);
       }
-
-      AbstractItemView* absChildItem = dynamic_cast<AbstractItemView*>(childItem);
-
-      const Property& pChildName = absChildItem->getController()->getProperty("name");
-      const std::string& childName = pChildName.getValue().toString();
-      std::string childTypeName = absChildItem->getController()->getProperties().getTypeObj()->getName();
-
-      QString qChildName = ItemUtils::convert2QString(childName);
-      QString qChildTypeName = ItemUtils::convert2QString(childTypeName);
-
-      QStringList childList;
-      childList.append(qChildName);
-      childList.append(qChildTypeName);
-
-      QTreeWidgetItem* childTreeItem = new QTreeWidgetItem(childList);
-      parentTreeItem->addChild(childTreeItem);
     }
+
     m_treeWidget->addTopLevelItem(parentTreeItem);
   }
 

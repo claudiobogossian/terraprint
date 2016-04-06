@@ -200,6 +200,8 @@ namespace te
         */
         virtual void setHashCode(int hashCode);
 
+        virtual void reparentProperties(const std::string& parentClass);
+
       protected:
 
         std::vector<Property> m_properties; //!< set of properties for this object
@@ -455,6 +457,14 @@ namespace te
     inline void te::layout::Properties::setHashCode( int hashCode )
     {
       m_hashcode = hashCode;
+    }
+
+    inline void te::layout::Properties::reparentProperties(const std::string& parentClass)
+    {
+      for (std::vector<Property>::iterator it = m_properties.begin(); it != m_properties.end(); ++it)
+      {
+        it->setParent(parentClass);
+      }
     }
   }
 }

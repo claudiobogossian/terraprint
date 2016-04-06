@@ -51,8 +51,6 @@ te::layout::GridPlanarModel::GridPlanarModel()
   LayoutUnit unit(StyleKilometer);
   te::gm::Envelope planarBox(0, 0, 10000, 10000);
 
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getGridPlanarItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   PlanarGridSettingsConfigProperties settingsConfig;
@@ -105,8 +103,9 @@ te::layout::GridPlanarModel::GridPlanarModel()
     property.setVisible(true); 
     property.setValue(superscript, dataType->getDataTypeBool());
     m_properties.completelyUpdateProperty(property);
-
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getGridPlanarItem());
 }
 
 te::layout::GridPlanarModel::~GridPlanarModel()

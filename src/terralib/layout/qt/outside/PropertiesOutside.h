@@ -109,8 +109,6 @@ namespace te
 
         void onChangePropertyValue(Property property);
 
-        void onChangePropertyValue(std::vector<Property> props);
-
       protected:
 
         virtual void  closeEvent ( QCloseEvent * event );

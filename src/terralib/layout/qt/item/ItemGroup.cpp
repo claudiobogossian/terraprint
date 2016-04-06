@@ -35,9 +35,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ItemGroup::ItemGroup(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItemGroup>(controller, invertedMatrix),
-  m_stacksBehindParent(false)
+te::layout::ItemGroup::ItemGroup(AbstractItemController* controller)
+  : AbstractItem<QGraphicsItemGroup>(controller, false)
+  , m_stacksBehindParent(false)
+  , m_isSubSelectionAllowed(true)
 {
   this->setHandlesChildEvents(true);
 }
@@ -179,7 +180,11 @@ void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
           AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
           if (item != 0)
           {
-            item->setSubSelection(true);
+            if(m_isSubSelectionAllowed == true)
+            {
+              item->setSubSelection(true);
+            }
+
             setHandlesChildEvents(false);
             (*it)->setFlag(QGraphicsItem::ItemStacksBehindParent, m_stacksBehindParent);
             break;

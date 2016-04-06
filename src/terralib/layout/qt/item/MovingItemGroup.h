@@ -56,7 +56,7 @@ namespace te
     {
     public:
 
-      MovingItemGroup(AbstractItemController* controller, bool invertedMatrix = false);
+      MovingItemGroup(AbstractItemController* controller);
 
       virtual ~MovingItemGroup();
       

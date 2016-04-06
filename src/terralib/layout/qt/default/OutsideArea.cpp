@@ -340,7 +340,7 @@ void te::layout::OutsideArea::addAllItemToolbars()
   MapToolbarController* controller = new MapToolbarController;
   MapToolbarInside* inside = new MapToolbarInside(controller);
 
-  m_view->addToolbarItemInside(object->getMapItem(), inside);
+  m_view->addToolbarItemInside(object->getMapCompositionItem(), inside);
 }
 
 void te::layout::OutsideArea::onExit()

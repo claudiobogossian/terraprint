@@ -82,9 +82,7 @@ te::layout::GridMapModel::GridMapModel()
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   GridSettingsConfigProperties settingsConfig;
-  SharedProperties sharedProps;
-
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getGridMapItem());
+  SharedProperties sharedProps;  
 
   // Grid settings
   std::string gridValue = TR_LAYOUT("Settings");
@@ -374,6 +372,8 @@ te::layout::GridMapModel::GridMapModel()
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getGridMapItem());
 }
 
 te::layout::GridMapModel::~GridMapModel()

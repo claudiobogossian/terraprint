@@ -57,106 +57,54 @@ te::layout::AbstractPropertiesBrowser::~AbstractPropertiesBrowser()
  
 }
 
-void te::layout::AbstractPropertiesBrowser::addPropertyItem(QtProperty *property, const QString &id, const QString &label)
+void te::layout::AbstractPropertiesBrowser::addPropertyItem(QtProperty *qtProperty, const QString &id, const QString &label, const te::layout::Property& layoutProperty)
 {
-  m_propertyToId[property] = id;
-  m_idToProperty[id] = property;
-
-  // If there is no label, then the name will be the label
-  QString labelString = label;
-  if (labelString.compare("") == 0)
-  {
-    labelString = id;
-  }
-  m_nameToLabel[id] = labelString;
+  m_mapProperty[qtProperty] = layoutProperty;
 }
 
 void te::layout::AbstractPropertiesBrowser::clearAll()
 {
-  m_propertyToId.clear();
-  m_idToProperty.clear();
   m_allProperties.clear();
-  m_nameToLabel.clear();
+  m_mapProperty.clear();
 }
 
-QString te::layout::AbstractPropertiesBrowser::nameProperty(const QString& label)
-{
-  QList<QString> labelList = m_nameToLabel.values();
-
-  if (!labelList.contains(label))
-  {
-    return QString();
-  }
-
-  int index = labelList.indexOf(label);
-  QString value = labelList.value(index);
-  QString name = m_nameToLabel.key(value);
-
-  return name;
-}
-
-QString te::layout::AbstractPropertiesBrowser::labelProperty(const QString& name)
-{
-  if (!m_nameToLabel.contains(name))
-  {
-    return QString();
-  }
-
-  QString foundLabel = m_nameToLabel[name];
-  return foundLabel;
-}
-
-QVariant te::layout::AbstractPropertiesBrowser::findPropertyValue(const QString& label)
+QVariant te::layout::AbstractPropertiesBrowser::getPropertyValue(QtProperty* qtproperty)
 {
   QVariant variant;
 
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
+  if (qtproperty == 0)
   {
     return variant;
   }
 
-  if (!m_idToProperty.contains(name))
+  QtVariantProperty* vproperty = dynamic_cast<QtVariantProperty*>(qtproperty);
+  if(vproperty)
   {
-    return variant;
+    variant = checkComplexType(vproperty);
   }
-
-  QtVariantProperty* vproperty = 0;
-  QtProperty* prop = m_idToProperty[name];
-
-  if(prop)
+  else
   {
-    vproperty = dynamic_cast<QtVariantProperty*>(prop);
-    if(vproperty)
-    {
-      variant = checkComplexType(vproperty);
-    }
-    else
-    {
-      variant.setValue(prop->valueText());
-    }
+    variant.setValue(qtproperty->valueText());
   }
-
+  
   return variant;
 }
 
-QtProperty* te::layout::AbstractPropertiesBrowser::findProperty(const QString& label)
+QtProperty* te::layout::AbstractPropertiesBrowser::findProperty(const std::string& propertyName, const std::string& parentClass)
 {
-  QtProperty* prop = 0;
-
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
+  QMap<QtProperty*, Property>::const_iterator it = m_mapProperty.begin();
+  while (it != m_mapProperty.end())
   {
-    return prop;
+    const Property& property = it.value();
+    if (property.getName() == propertyName && property.getParent() == parentClass)
+    {
+      return it.key();
+    }
+
+    ++it;
   }
 
-  if (!m_idToProperty.contains(name))
-  {
-    return prop;  
-  }
-
-  prop = m_idToProperty[name];
-  return prop;
+  return 0;
 }
 
 QVariant te::layout::AbstractPropertiesBrowser::checkComplexType( QtVariantProperty* property )
@@ -178,38 +126,8 @@ QVariant te::layout::AbstractPropertiesBrowser::checkComplexType( QtVariantPrope
   return variant;
 }
 
-bool te::layout::AbstractPropertiesBrowser::removeProperty( QtProperty* prop )
-{
-  if(!prop)
-  {
-    return false;
-  }
-  
-  QString name = nameProperty(prop->propertyName());
-  if (name.compare("") == 0)
-  {
-    return prop;
-  }
-
-  if (!m_idToProperty.contains(name))
-  {
-    return false;  
-  }
-
-  m_propertyToId.remove(prop);
-  m_idToProperty.remove(name);
-
-  return true;
-}
-
-void te::layout::AbstractPropertiesBrowser::setAllProperties(Properties properties)
+void te::layout::AbstractPropertiesBrowser::setAllProperties(const Properties& properties)
 {
   m_allProperties = properties;
 }
-
-
-
-
-
-
 

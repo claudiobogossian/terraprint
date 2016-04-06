@@ -60,7 +60,7 @@ const std::string& te::layout::Property::getName() const
   return m_name;
 }
 
-void te::layout::Property::setName( std::string name )
+void te::layout::Property::setName( const std::string& name )
 {
   m_name = name;
 }
@@ -471,3 +471,18 @@ void te::layout::Property::setSerializable(bool serializable)
   m_serializable = serializable;
 }
 
+
+const std::string& te::layout::Property::getParent() const
+{
+  return m_parentClass;
+}
+
+void te::layout::Property::setParent(const std::string& parentClass)
+{
+  m_parentClass = parentClass;
+
+  for (std::vector<Property>::iterator it = this->m_subProperty.begin(); it != this->m_subProperty.end(); ++it)
+  {
+    it->setParent(parentClass);
+  }
+}

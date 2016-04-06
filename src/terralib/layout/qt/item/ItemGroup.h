@@ -57,7 +57,7 @@ namespace te
     {
       public:
 
-        ItemGroup(AbstractItemController* controller, bool invertedMatrix = false);
+        ItemGroup(AbstractItemController* controller);
 
         virtual ~ItemGroup();
 
@@ -90,6 +90,7 @@ namespace te
       protected:
 
         bool m_stacksBehindParent;
+        bool m_isSubSelectionAllowed;
     };
   }
 }

@@ -101,8 +101,6 @@ te::layout::DialogPropertiesBrowser::~DialogPropertiesBrowser()
 {
   closeAllWindows();
 
-  m_dlgProps.clear();
-
   if(m_strDlgManager)
   {
     delete m_strDlgManager;
@@ -135,56 +133,60 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
     return;
   }
 
-  QString name = prop->propertyName();
+  QMap<QtProperty*, Property>::const_iterator itType = m_mapProperty.find(prop);
+  if (itType == m_mapProperty.end())
+  {
+	  return;
+  }
 
-  Property propt = findDlgProperty(name);
+  m_currentPropertyClicked = itType.value();
 
-  m_currentPropertyClicked = propt;
+  te::layout::EnumType* currentType = m_currentPropertyClicked.getType();
 
-  if(propt.getType() == dataType->getDataTypeNone())
+  if(currentType == dataType->getDataTypeNone())
     return;
 
-  if(propt.getType() == dataType->getDataTypeGridSettings())
+  if(currentType == dataType->getDataTypeGridSettings())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowGridSettingsDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeImage())
+  if(currentType == dataType->getDataTypeImage())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowImageDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeTextGridSettings())
+  if(currentType == dataType->getDataTypeTextGridSettings())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowTextGridSettingsDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeMapChoice())
+  if(currentType == dataType->getDataTypeMapChoice())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapLayerChoiceDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeLegendChoice())
+  if(currentType == dataType->getDataTypeLegendChoice())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowLegendChoiceDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeSVGView())
+  if(currentType == dataType->getDataTypeSVGView())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowViewDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeColor())
+  if(currentType == dataType->getDataTypeColor())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowColorDlg()));
   }
-  if(propt.getType() == dataType->getDataTypeFont())
+  if(currentType == dataType->getDataTypeFont())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowFontDlg()));
   }
-  if (propt.getType() == dataType->getDataTypeMapSettings())
+  if (currentType == dataType->getDataTypeMapSettings())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapSettingsDlg()));
   }
-  if (propt.getType() == dataType->getDataTypeScaleSettings())
+  if (currentType == dataType->getDataTypeScaleSettings())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowScaleSettingsDlg()));
   }
-  if (propt.getType() == dataType->getDataTypeNorthSettings())
+  if (currentType == dataType->getDataTypeNorthSettings())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowNorthSettingsDlg()));
   }
@@ -200,31 +202,11 @@ QtDlgEditorFactory* te::layout::DialogPropertiesBrowser::getDlgEditorFactory()
   return m_dlgEditorFactory;
 }
 
-bool te::layout::DialogPropertiesBrowser::changeQtPropertyValue(QtProperty* pproperty, const Property& property)
-{
-  m_changeProperty = true;
-
-  if(!pproperty)
-  {
-    return false;
-  }
-    
-  m_changeProperty = false;
-
-  return true;
-}
-
 QtProperty* te::layout::DialogPropertiesBrowser::addProperty( const Property& property )
 {
   QtProperty* qproperty = 0;
 
   if(!property.isVisible())
-  {
-    return qproperty;
-  }
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  if(!dataType)
   {
     return qproperty;
   }
@@ -240,82 +222,19 @@ QtProperty* te::layout::DialogPropertiesBrowser::addProperty( const Property& pr
 
   QString label = ItemUtils::convert2QString(stdLabel);
 
-  stdLabel = property.getValue().toString();
-  QString value = ItemUtils::convert2QString(stdLabel);
+  std::string stdValue = property.getValue().toString();
+  QString value = ItemUtils::convert2QString(stdValue);
 
   std::string name = property.getName();
   QString qName = ItemUtils::convert2QString(name);
   
   qproperty = m_strDlgManager->addProperty(label);
   m_strDlgManager->setValue(qproperty, value);
-  addPropertyItem(qproperty, qName, label);
+  addPropertyItem(qproperty, qName, label, property);
   /*The sub properties should not appear in this case, 
     because will be previewed in the dialog window will be opened.*/
-  m_dlgProps.insert(std::pair<std::string, Property>(property.getName(),property));
 
   return qproperty;
-}
-
-bool te::layout::DialogPropertiesBrowser::checkDlgType( const Property& prop )
-{
-  bool result = false;
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  if(prop.getType() == dataType->getDataTypeGridSettings()
-    || prop.getType() == dataType->getDataTypeImage()
-    || prop.getType() == dataType->getDataTypeTextGridSettings()
-    || prop.getType() == dataType->getDataTypeNorthSettings())
-  {
-    result = true;
-  }
-
-  return result;
-}
-
-te::layout::Property te::layout::DialogPropertiesBrowser::findDlgProperty(const QString& label)
-{
-  Property prop;
-
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
-  {
-    return prop;
-  }
-
-  std::string propName;
-  std::map<std::string, Property>::iterator it;
-
-  for (it = m_dlgProps.begin(); it != m_dlgProps.end(); ++it) {
-    propName = it->first;
-    QString qName = ItemUtils::convert2QString(propName);
-    if (name.compare(qName) == 0)
-    {
-      prop = it->second;
-      break;
-    }
-  }
-
-  return prop;
-}
-
-te::layout::Property te::layout::DialogPropertiesBrowser::findDlgProperty( EnumType* dataType )
-{
-  Property prop;
-
-  Property pro;
-  std::map<std::string, Property>::iterator it;
-
-  for (it = m_dlgProps.begin(); it != m_dlgProps.end(); ++it) {
-    pro = it->second;
-    if(pro.getType() == dataType)
-    {
-      prop = pro;
-      break;
-    }
-  }
-
-  return prop;
 }
 
 void te::layout::DialogPropertiesBrowser::changeValueQtPropertyDlg(const QString& label, const QVariant& variant)
@@ -746,18 +665,9 @@ void te::layout::DialogPropertiesBrowser::onShowScaleSettingsDlg()
   scaleSettings->raise(); // top of the parent widget's stack
 }
 
-te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(const QString& label)
+te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(QtProperty* qtProperty)
 {
   Property prop;
-
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
-  {
-    return prop;
-  }
-
-  std::string stdName = ItemUtils::convert2StdString(name);
-  prop.setName(stdName);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -765,8 +675,16 @@ te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(const QStr
   {
     return prop;
   }
+
+  QMap<QtProperty*, Property>::const_iterator itProperty = m_mapProperty.find(qtProperty);
+  if (itProperty == m_mapProperty.end())
+  {
+    return prop;
+  }
+
+  prop = itProperty.value();
   
-  QVariant variant = findPropertyValue(label);
+  QVariant variant = getPropertyValue(qtProperty);
 
   if(variant.isNull() || !variant.isValid())
   {
@@ -792,103 +710,15 @@ te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(const QStr
   return prop;
 }
 
-te::layout::EnumType* te::layout::DialogPropertiesBrowser::getLayoutType(QVariant::Type type, const QString& label /*= ""*/)
-{
-  Property prop;
-  EnumDataType* dtType = Enums::getInstance().getEnumDataType();
-  EnumType* dataType = 0;
-
-  if(!dtType)
-  {
-    return 0;
-  }
-  
-  switch(type)
-  {
-  case QVariant::String:
-    {
-      dataType = dtType->getDataTypeString();
-
-      //Custom types: Dialog Window Type
-      if(label.compare("") != 0)
-      {
-        prop = findDlgProperty(label);
-        if(!prop.getValue().isNull())
-        {
-          if(prop.getType() == dtType->getDataTypeGridSettings())
-          {
-            dataType = dtType->getDataTypeGridSettings();
-          }
-          if(prop.getType() == dtType->getDataTypeImage())
-          {
-            dataType = dtType->getDataTypeImage();
-          }
-          if (prop.getType() == dtType->getDataTypeNorthSettings())
-          {
-            dataType = dtType->getDataTypeNorthSettings();
-          }
-        }
-      }
-    }
-    break;
-  default:
-    prop.setValue(0, dtType->getDataTypeNone());
-  }
-
-  return dataType;
-}
-
-int te::layout::DialogPropertiesBrowser::getVariantType( EnumType* dataType )
-{
-  int type = QVariant::Invalid;
-
-  EnumDataType* dtType = Enums::getInstance().getEnumDataType();
-
-  if(!dtType)
-  {
-    return type;
-  }
-  
-  if(dataType == dtType->getDataTypeGridSettings())
-  {
-    type = QVariant::String;
-  }
-  else if(dataType == dtType->getDataTypeImage())
-  {
-    type = QVariant::String;
-  }
-  else if (dataType == dtType->getDataTypeNorthSettings())
-  {
-    type = QVariant::String;
-  }
-  else
-  {
-    type = QVariant::Invalid;
-  }
-
-  return type;
-}
-
 bool te::layout::DialogPropertiesBrowser::updateProperty( const Property& property )
 {
-  std::string stdLabel = property.getLabel();
-  if (stdLabel.compare("") == 0)
-    stdLabel = property.getName();
-
-  QString label = ItemUtils::convert2QString(stdLabel);
-
-  QtProperty* qprop = findProperty(label);
+  QtProperty* qprop = findProperty(property.getName(), property.getName());
   if(!qprop)
   {
     return false;
-  }  
+  }
 
-  return changeQtPropertyValue(qprop, property);
-}
-
-std::map<std::string, te::layout::Property> te::layout::DialogPropertiesBrowser::getDlgProps()
-{
-  return m_dlgProps;
+  return true;
 }
 
 void te::layout::DialogPropertiesBrowser::closeAllWindows()
@@ -924,11 +754,6 @@ QWidget* te::layout::DialogPropertiesBrowser::createOutside( EnumType* enumType 
 void te::layout::DialogPropertiesBrowser::updateOutside( const Property& prop )
 {
   emit changeDlgProperty(prop);
-}
-
-void te::layout::DialogPropertiesBrowser::updateOutside( const std::vector<Property>& props )
-{
-  emit changeDlgProperty(props);
 }
 
 void te::layout::DialogPropertiesBrowser::onDestroyed( QObject* obj )

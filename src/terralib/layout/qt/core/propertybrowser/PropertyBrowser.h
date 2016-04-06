@@ -89,10 +89,8 @@ namespace te
 
         virtual void closeAllWindows();
 
-        virtual QMap<QString, QtProperty*> addProperties(const Properties& properties);
+        virtual void addProperties(const Properties& properties);
       
-        virtual bool removeProperty(Property property);
-
         virtual bool updateProperty(Property property);
 
         virtual void updateProperties(Properties props);
@@ -103,7 +101,7 @@ namespace te
 
         virtual void selectProperty(std::string label);
 
-        virtual QtProperty* findProperty(QString label);
+        virtual QtProperty* findProperty(const std::string& propertyName, const std::string& parentClass);
 
         virtual bool addSubProperty(QtProperty* prop, QtProperty* subProp);
 
@@ -114,10 +112,8 @@ namespace te
         */
         virtual bool equalsProperties(Properties props);
 
-        QString nameProperty(const QString& label);
+        void te::layout::PropertyBrowser::associateProperty(QtProperty* qtProperty, const te::layout::Property& property);
 
-        QString labelProperty(const QString& name);
-                    
       protected slots:
 
         void propertyEditorValueChanged(QtProperty *property, const QVariant &value);
@@ -126,27 +122,15 @@ namespace te
 
         virtual void onChangeDlgProperty(Property property);
 
-        virtual void onChangeDlgProperty(std::vector<Property> props);
-
-        virtual void onCurrentItemChanged(QtBrowserItem* item);
-
       signals:
 
-        void changePropertyValue(QtProperty *property, QList<QtBrowserItem*> items);
-
         void changePropertyValue(Property property);
-
-        void changePropertyValue(std::vector<Property> props);
-
-        void currentItemChanged(QtBrowserItem* item);
 
       protected:
 
         virtual QtProperty* addProperty(const Property& property);
       
         virtual void addPropertyItem(QtProperty *property, const QString &id, const QString &label);
-
-        virtual void updateExpandState();
 
         virtual void createManager(Scene* scene, AbstractProxyProject* proxyProject);
 
@@ -170,15 +154,13 @@ namespace te
         VariantPropertiesBrowser*   m_variantPropertiesBrowser;
         DialogPropertiesBrowser*    m_dialogPropertiesBrowser;
         ItemObserverManager*        m_itemObserverManager;
-        QMap<QtProperty*, QString>  m_propertyToId;
-        QMap<QString, QtProperty*>  m_idToProperty;
-        QMap<QString, QString>      m_nameToLabel;
-        QMap<QString, bool>         m_idToExpanded;
         Scene*                      m_scene;
+        QMap<QtProperty*, Property> m_qtpropertyToProperty;
 
         /* Custom Types: Dialog Window Type */
         bool                 m_hasWindows;
         bool                 m_changeQtPropertyVariantValue; // true if the change of QtPropertyVariant came from a Property and not of user interaction via Property Browser
+        bool                 m_ignoreExternalUpdates;
     };
   }
 }

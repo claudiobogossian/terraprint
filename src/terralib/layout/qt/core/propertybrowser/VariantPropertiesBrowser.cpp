@@ -108,7 +108,7 @@ QtProperty* te::layout::VariantPropertiesBrowser::addProperty( const Property& p
   std::string name = property.getName();
   QString qName = ItemUtils::convert2QString(name);
 
-  addPropertyItem(vproperty, qName, qLabel);
+  addPropertyItem(vproperty, qName, qLabel, property);
 
   return vproperty;
 }
@@ -130,33 +130,31 @@ void te::layout::VariantPropertiesBrowser::addAttribute( QtVariantProperty* vpro
   vproperty->setAttribute("enumNames", strList);
 }
 
-te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(const QString& label)
+te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(QtProperty* qtProperty)
 {
   Property prop;
-
-  QString name = nameProperty(label);
-  if (name.compare("") == 0)
-  {
-    return prop;
-  }
-
-  std::string stdName = ItemUtils::convert2StdString(name);
-  prop.setName(stdName);
-  
-  QVariant variant = findPropertyValue(label);
+ 
+  QVariant variant = getPropertyValue(qtProperty);
 
   if(variant.isNull() || !variant.isValid())
   {
     return prop;
   }
 
-  QtProperty* property = findProperty(label);
-  EnumType* type = getLayoutType(variant.type(), label);
+  QMap<QtProperty*, Property>::const_iterator itProperty = m_mapProperty.find(qtProperty);
+  if (itProperty == m_mapProperty.end())
+  {
+    return prop;
+  }
+
+  prop = itProperty.value();
+
+  EnumType* type = getLayoutType(variant.type(), qtProperty);
   
   QtVariantProperty* vproperty = 0;
-  if(property)
+  if(qtProperty)
   {
-    vproperty = dynamic_cast<QtVariantProperty*>(property);
+    vproperty = dynamic_cast<QtVariantProperty*>(qtProperty);
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -239,14 +237,13 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(const QSt
   return prop;
 }
 
-te::layout::EnumType* te::layout::VariantPropertiesBrowser::getLayoutType(QVariant::Type type, const QString& label)
+te::layout::EnumType* te::layout::VariantPropertiesBrowser::getLayoutType(QVariant::Type type, QtProperty* qtProperty)
 {
   EnumDataType* dtType = Enums::getInstance().getEnumDataType();
 
   EnumType* dataType = dtType->getDataTypeNone();
   QVariant variant;
   QtVariantProperty* vproperty = 0;
-  QtProperty* prop = 0;
 
   switch(type)
   {
@@ -256,8 +253,7 @@ te::layout::EnumType* te::layout::VariantPropertiesBrowser::getLayoutType(QVaria
       }
       break;
     case QVariant::StringList:
-      prop = findProperty(label);
-      vproperty = dynamic_cast<QtVariantProperty*>(prop);
+      vproperty = dynamic_cast<QtVariantProperty*>(qtProperty);
       if(vproperty)
       {
         if(QtVariantPropertyManager::enumTypeId() == vproperty->propertyType())
@@ -466,7 +462,7 @@ bool te::layout::VariantPropertiesBrowser::updateProperty( const Property& prope
   const std::string& stdLabel = property.getLabel();
   QString label = ItemUtils::convert2QString(stdLabel);
 
-  QtProperty* qprop = findProperty(label);
+  QtProperty* qprop = findProperty(property.getName(), property.getParent());
   if (!qprop)
     return false;
 

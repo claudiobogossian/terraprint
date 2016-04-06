@@ -103,6 +103,8 @@ namespace te
         */
         virtual bool contains(const te::gm::Coord2D &coord) const;
 
+        virtual void reparentProperties(te::layout::EnumType* parentEnumType);
+
       protected:
 
         Properties            m_properties; //!< The properties of the item

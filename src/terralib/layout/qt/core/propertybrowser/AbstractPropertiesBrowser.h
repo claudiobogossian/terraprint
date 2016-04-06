@@ -77,38 +77,26 @@ namespace te
 
         virtual void clearAll();
         
-        virtual Property getProperty(const QString& label) = 0;
+        virtual Property getProperty(QtProperty* qtProperty) = 0;
 
-        virtual EnumType* getLayoutType(QVariant::Type type, const QString& name = "") = 0;
+        virtual QVariant getPropertyValue(QtProperty* qtproperty);
 
-        virtual int getVariantType(EnumType* dataType) = 0;
-        
-        virtual QVariant findPropertyValue(const QString& label);
+        virtual QtProperty* findProperty(const std::string& propertyName, const std::string& parentClass);
 
-        virtual QtProperty* findProperty(const QString& label);
+        virtual void setAllProperties(const Properties& properties);
 
-        virtual bool removeProperty(QtProperty* prop);
-
-        virtual void setAllProperties(Properties properties);
-
-        QString nameProperty(const QString& label);
-
-        QString labelProperty(const QString& name);
-                          
       protected:
 
         virtual void createManager() = 0;
 
-        virtual void addPropertyItem(QtProperty *property, const QString &id, const QString &label);
+        virtual void addPropertyItem(QtProperty *qtProperty, const QString &id, const QString &label, const te::layout::Property& layoutProperty);
 
         virtual QVariant checkComplexType(QtVariantProperty* property);
 
         bool                        m_changeProperty;
-        QMap<QtProperty*, QString>  m_propertyToId;
-        QMap<QString, QtProperty*>  m_idToProperty;
-        QMap<QString, QString>      m_nameToLabel;
         Properties                  m_allProperties;
-        Scene*                          m_scene;
+        Scene*                      m_scene;
+        QMap<QtProperty*, Property> m_mapProperty;
     };
   }
 }

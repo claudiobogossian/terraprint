@@ -47,8 +47,6 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
   , Observer()
   , m_gridPropertiesInitialized(false)
 {
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getGridGeodesicItem());
-
   te::gm::Envelope geographicBox(0, 0, 10000, 10000);
   bool showDegreesText = true;
   bool showMinutesText = true;
@@ -130,6 +128,8 @@ te::layout::GridGeodesicModel::GridGeodesicModel()
 
     m_properties.addSubProperty(prop_gridsettings, property); // update gridsettings property
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getGridGeodesicItem());
 }
 
 te::layout::GridGeodesicModel::~GridGeodesicModel()

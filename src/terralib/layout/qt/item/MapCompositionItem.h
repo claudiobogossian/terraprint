@@ -60,9 +60,19 @@ namespace te
     {
       public:
 
-        MapCompositionItem(AbstractItemController* controller, bool invertedMatrix = false);
+        MapCompositionItem(AbstractItemController* controller);
 
         virtual ~MapCompositionItem();
+
+        te::layout::AbstractItemView* getMapItem();
+
+        te::layout::AbstractItemView* getPlanarGridItem();
+
+        te::layout::AbstractItemView* getGeodesicGridItem();
+
+        virtual void setEditionMode(bool editionMode);
+
+        virtual bool isEditionMode();
         
         /*!
         \brief Reimplemented from QGraphicsItem to capture changes in the item
@@ -76,6 +86,12 @@ namespace te
         virtual void resized();
 
         virtual void beginResize();
+
+      protected:
+    
+        te::layout::AbstractItemView* m_mapItem;
+        te::layout::AbstractItemView* m_planarGridItem;
+        te::layout::AbstractItemView* m_geodesicGridItem;
     };
   }
 }

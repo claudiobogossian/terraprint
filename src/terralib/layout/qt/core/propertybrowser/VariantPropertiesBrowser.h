@@ -69,9 +69,9 @@ namespace te
 
         virtual bool updateProperty(const Property& property);
 
-        virtual Property getProperty(const QString& label);
+        virtual Property getProperty(QtProperty* qtProperty);
 
-        virtual EnumType* getLayoutType(QVariant::Type type, const QString& label = "");
+        virtual EnumType* getLayoutType(QVariant::Type type, QtProperty* qtProperty);
 
         virtual int getVariantType(EnumType* dataType);
 

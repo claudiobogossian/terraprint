@@ -27,8 +27,8 @@
 
 #include "MovingItemGroup.h"
 
-te::layout::MovingItemGroup::MovingItemGroup(AbstractItemController* controller, bool invertedMatrix)
-  : ItemGroup(controller, invertedMatrix)
+te::layout::MovingItemGroup::MovingItemGroup(AbstractItemController* controller)
+  : ItemGroup(controller)
 {
 
 }

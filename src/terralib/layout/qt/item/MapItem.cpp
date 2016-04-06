@@ -167,6 +167,9 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   //here we render the layers on the given device
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
+  
+  QColor qFillColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+  painter->fillRect(this->getAdjustedBoundingRect(painter), qFillColor);
 
   //as canvas will transform from World CS to Device CS, we must add a transform in order to make the painter expect drawings in Device CS
   double xScale = boundingRect().width() / painter->device()->width();

@@ -84,9 +84,6 @@ te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProj
   connect(m_layoutPropertyBrowser,SIGNAL(changePropertyValue(Property)),
     this,SLOT(onChangePropertyValue(Property))); 
 
-  connect(m_layoutPropertyBrowser,SIGNAL(changePropertyValue(std::vector<Property>)),
-    this,SLOT(onChangePropertyValue(std::vector<Property>))); 
-
   createLayout();
 
   m_sharedProps = new SharedProperties;
@@ -219,7 +216,7 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
   }
 
   m_layoutPropertyBrowser->addProperties(newProperties);
-   
+
   update();
 }
 
@@ -265,16 +262,6 @@ void te::layout::PropertiesOutside::onChangePropertyValue( Property property )
   {
     reselect();
     m_currentActionAssociate = false;
-  }
-}
-
-void te::layout::PropertiesOutside::onChangePropertyValue( std::vector<Property> props )
-{
-  std::vector<Property>::const_iterator it = props.begin();
-  for( ; it != props.end() ; ++it)
-  {
-    Property prop = (*it);
-    onChangePropertyValue(prop);
   }
 }
 

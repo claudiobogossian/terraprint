@@ -13,8 +13,6 @@ te::layout::AbstractItemModel::AbstractItemModel()
   int zValue = 0;
   double frameThickness = 0.5; //in mm
 
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getObjectUnknown());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   {
     Property property(0);
@@ -166,6 +164,8 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setValue(false, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getObjectUnknown());
 }
 
 te::layout::AbstractItemModel::~AbstractItemModel()
@@ -271,3 +271,11 @@ bool te::layout::AbstractItemModel::contains(const te::gm::Coord2D &coord) const
   return false;
 }
 
+void te::layout::AbstractItemModel::reparentProperties(te::layout::EnumType* parentEnumType)
+{
+  m_properties.setTypeObj(parentEnumType);
+
+  std::string parentName = parentEnumType->getName();
+
+  m_properties.reparentProperties(parentName);
+}
