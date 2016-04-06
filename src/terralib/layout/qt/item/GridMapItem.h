@@ -138,6 +138,10 @@ namespace te
     
     protected:
 
+        virtual bool validateHrzGap(const te::gm::Envelope& geoBox, double gap);
+
+        virtual bool validateVrtGap(const te::gm::Envelope& geoBox, double gap);
+
         double                          m_maxWidthTextMM;
         double                          m_maxHeigthTextMM;
         bool                            m_changeSize;

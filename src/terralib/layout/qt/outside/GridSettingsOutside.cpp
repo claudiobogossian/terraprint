@@ -96,6 +96,16 @@ te::layout::GridSettingsOutside::~GridSettingsOutside()
 
 void te::layout::GridSettingsOutside::init()
 {
+
+  m_ui->groupBox6_2_2->setVisible(false);
+  m_ui->textLabel9_2_2->setVisible(false);
+  m_ui->cmbCornerGeoFont->setVisible(false);
+  m_ui->textLabel10_2_2->setVisible(false);
+  m_ui->cmbCornerGeoTextSize->setVisible(false);
+  m_ui->fraCornerTextGeoColor->setVisible(false);
+  m_ui->pbCornerTextGeoColor->setVisible(false);
+
+
   m_ui->lneVrtPlanarDisplacement->setValidator(new  QDoubleValidator(this));
   m_ui->lneHrzPlanarDisplacement->setValidator(new  QDoubleValidator(this));
 
@@ -1073,7 +1083,7 @@ void te::layout::GridSettingsOutside::on_chkLeftPlanarText_clicked()
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Variant variant;
     variant.setValue(m_ui->chkLeftPlanarText->isChecked(), dataType->getDataTypeBool());
-    Property prop = controller->getProperty(m_planarGridSettings->getBottomText(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getLeftText(), m_planarType);
     prop.setValue(variant);
     emit updateProperty(prop);
   }

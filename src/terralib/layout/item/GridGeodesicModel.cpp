@@ -45,6 +45,7 @@
 te::layout::GridGeodesicModel::GridGeodesicModel() 
   : GridMapModel()
   , Observer()
+  , m_gridPropertiesInitialized(false)
 {
   m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getGridGeodesicItem());
 
@@ -135,6 +136,7 @@ te::layout::GridGeodesicModel::~GridGeodesicModel()
 {
 }
 
+
 void te::layout::GridGeodesicModel::update(const Subject* subject)
 {
   const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
@@ -144,6 +146,7 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   }
 
   SharedProperties sharedPropertiesName;
+  GridSettingsConfigProperties settingsGridConfig;
 
   //new properties
   const Property& pNewWidth = subjectModel->getProperty("width");
@@ -152,11 +155,17 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   const Property& pNewSrid = subjectModel->getProperty("srid");
   const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
 
+  const Property& pNewVerticalGap = subjectModel->getProperty(settingsGridConfig.getLneVrtGap());
+  const Property& pNewHorizontalGap = subjectModel->getProperty(settingsGridConfig.getLneHrzGap());
+
   //current properties
   const Property& pCurrentWidth = this->getProperty("width");
   const Property& pCurrentHeight = this->getProperty("height");
   const Property& pCurrentGeographicBox = this->getProperty("geographic_box");
   const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
+
+  const Property& pCurrentVerticalGap = this->getProperty(settingsGridConfig.getLneVrtGap());
+  const Property& pCurrentHorizontalGap = this->getProperty(settingsGridConfig.getLneHrzGap());
 
   //new values
   double newWidth = pNewWidth.getValue().toDouble();
@@ -165,6 +174,7 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
   te::gm::Envelope newGeographicBox = getWorldBoxInGeographic(newWorldBox, newSrid);
   std::string newItemObservable = pNewItemObserver.getValue().toString();
+ 
 
   //current values
   double currentWidth = pCurrentWidth.getValue().toDouble();
@@ -228,32 +238,54 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
           properties.updateProperty(property);
         }
       }
+
+      if (m_gridPropertiesInitialized == false && newGeographicBox.isValid() == true)
       {
-        Property property(0);
-        property.setName(settingsConfig.getInitialGridPointX());
-        property.setValue(newGeographicBox.getLowerLeftX(), dataType->getDataTypeDouble());
-        properties.addProperty(property);
+        {
+          double horizontalGap = newGeographicBox.getWidth() / 4.;
+          Property property(0);
+          property.setName(settingsConfig.getLneHrzGap());
+          property.setValue(horizontalGap, dataType->getDataTypeDouble());
+          properties.addProperty(property);
+        }
+        {
+          double verticalGap = newGeographicBox.getHeight() / 4.;
+          Property property(0);
+          property.setName(settingsConfig.getLneVrtGap());
+          property.setValue(verticalGap, dataType->getDataTypeDouble());
+          properties.addProperty(property);
+        }
+        {
+          Property property(0);
+          property.setName(settingsConfig.getInitialGridPointX());
+          property.setValue(newGeographicBox.getLowerLeftX(), dataType->getDataTypeDouble());
+          properties.addProperty(property);
+        }
+        {
+          Property property(0);
+          property.setName(settingsConfig.getInitialGridPointY());
+          property.setValue(newGeographicBox.getLowerLeftY(), dataType->getDataTypeDouble());
+          properties.addProperty(property);
+        }
+
+        m_gridPropertiesInitialized = true;
       }
+      //te::gm::Envelope defaultPlanarBox(0, 0, 10000, 10000);
+      if (newGeographicBox.equals(defaultGeographicBox) == false)
       {
-        Property property(0);
-        property.setName(settingsConfig.getInitialGridPointY());
-        property.setValue(newGeographicBox.getLowerLeftY(), dataType->getDataTypeDouble());
-        properties.addProperty(property);
+        if (!newGeographicBox.isValid())
+        {
+          newGeographicBox = defaultGeographicBox;
+          {
+            Property property(0);
+            property.setName("planar_box");
+            property.setValue(newGeographicBox, dataType->getDataTypeEnvelope());
+            properties.updateProperty(property);
+          }
+        }
       }
-      {
-        double horizontalGap = newGeographicBox.getWidth() / 4.;
-        Property property(0);
-        property.setName(settingsConfig.getLneHrzGap());
-        property.setValue(horizontalGap, dataType->getDataTypeDouble());
-        properties.addProperty(property);
-      }
-      {
-        double verticalGap = newGeographicBox.getHeight() / 4.;
-        Property property(0);
-        property.setName(settingsConfig.getLneVrtGap());
-        property.setValue(verticalGap, dataType->getDataTypeDouble());
-        properties.addProperty(property);
-      }
+
+
     }
 
     setProperties(properties);

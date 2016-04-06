@@ -65,10 +65,14 @@ void te::layout::GridGeodesicItem::calculateGrid()
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
-  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
+  const std::string& style = pStyle.getValue().toString();
   double frameThickness = pFrameThickness.getValue().toDouble();
 
-
+  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
+  if (currentStyle != 0)
+  {
+    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
+  }
 
   te::gm::Envelope newBoxMM(0, 0, width, height);
 
@@ -91,14 +95,22 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   utils.remapToPlanar(&planarBox, zone);
 
-  calculateVertical(geographicBox, planarBox, newBoxMM);
-  calculateHorizontal(geographicBox, planarBox, newBoxMM);
+  const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+  double verticalGap = pVerticalGap.getValue().toDouble();
 
-  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
-  if (currentStyle != 0)
+  if (validateVrtGap(geographicBox, verticalGap))
   {
-    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
+    calculateVertical(geographicBox, planarBox, newBoxMM);
   }
+
+  const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+  double horizontalGap = pHorizontalGap.getValue().toDouble();
+
+  if (validateHrzGap(geographicBox, horizontalGap))
+  {
+    calculateHorizontal(geographicBox, planarBox, newBoxMM);
+  }
+
 
   EnumGridStyleType gridStyleType;
 
@@ -115,13 +127,9 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   }
 
-
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 
   prepareGeometryChange();
-
-
-
 }
 
 double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& geoBox )
@@ -210,6 +218,8 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
   const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
+//  std::string fontFamily = pFontFamily.getValue().toString();
+//  int textPointSize = pTextPointSize.getValue().toInt();
   double verticalGap = pVerticalGap.getValue().toDouble();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();
@@ -356,7 +366,8 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   const Property& pSecPrecisionText = pGridSettings.containsSubProperty(settingsConfig.getSecondsPrecisionText());
   
   Font txtFont = pTextFontFamily.getValue().toFont();
-
+//  std::string fontFamily = pFontFamily.getValue().toString();
+//  int textPointSize = pTextPointSize.getValue().toInt();
   double horizontalGap = pHorizontalGap.getValue().toDouble();
   double verticalGap = pVerticalGap.getValue().toDouble();
   bool showDegreesText = pShowDegreesText.getValue().toBool();
