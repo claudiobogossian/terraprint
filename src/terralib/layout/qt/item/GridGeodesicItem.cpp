@@ -65,7 +65,7 @@ void te::layout::GridGeodesicItem::calculateGrid()
   const te::gm::Envelope& geographicBox = pGeographicBox.getValue().toEnvelope();
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
-  const std::string& style = pStyle.getValue().toString();
+  const std::string& style = pStyle.getOptionByCurrentChoice().toString();
   double frameThickness = pFrameThickness.getValue().toDouble();
 
   EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
