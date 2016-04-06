@@ -55,6 +55,7 @@ namespace te
     class EnumType;
     class AbstractProxyProject;
     class MenuPrincipal;
+    class PropertiesCentralController;
 
     class OutsideArea : public QObject
     {
@@ -76,29 +77,19 @@ namespace te
 
       MenuPrincipal* getMenuPrincipal(QMenu* parentMenu);
 
+      PropertiesCentralController* getPropertiesCentralController();
+
       virtual void openAllDocks();
 
       virtual void closeAllDocks();
       
     public slots:
-    
-      virtual void onAddItemFinalized(QGraphicsItem* item);
 
       virtual void onShowView();
 
       virtual void onCloseView();
 
       virtual void onRefreshStatusBar();
-
-      virtual void onAddChildFinalized(QGraphicsItem* parent, QGraphicsItem* child);
-
-      virtual void onDeleteFinalized(std::vector<std::string>);
-
-      virtual void onSelectionChanged(QList<QGraphicsItem*> selectedItems);
-
-      virtual void onSelectionChanged();
-
-      virtual void onPropertiesChanged();
 
       virtual void onEditionFinalized();
 
@@ -133,20 +124,7 @@ namespace te
       te::layout::ToolbarOutside*  m_toolbar;
       QStatusBar*                  m_statusBar;
       MenuPrincipal*               m_menuPrincipal;
-
-      /* Menu options */
-
-      QString m_optionNew;
-      QString m_optionUpdate;
-      QString m_optionImportXml;
-      QString m_optionExportXml;
-      QString m_optionPageConfig;
-      QString m_optionPrint;
-      QString m_optionExit;
-      QString m_optionDockInspector;
-      QString m_optionDockProperties;
-      QString m_optionDockToolbar;
-      QString m_optionDockEditTemplate;
+      PropertiesCentralController* m_propertiesCentral;
     };
   }
 }

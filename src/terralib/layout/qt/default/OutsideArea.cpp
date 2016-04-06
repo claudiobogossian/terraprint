@@ -41,6 +41,7 @@
 #include "../inside/MapToolbarController.h"
 #include "../inside/ToolbarItemInside.h"
 #include "MenuPrincipal.h"
+#include "PropertiesCentralController.h"
 
 // STL
 #include <string>
@@ -59,17 +60,7 @@ te::layout::OutsideArea::OutsideArea(AbstractProxyProject* proxyProject, te::lay
   m_toolbar(0),
   m_statusBar(status),
   m_menuPrincipal(0),
-  m_optionNew("mnu_main_new"),
-  m_optionUpdate("mnu_main_update"),
-  m_optionImportXml("mnu_main_import_xml"),
-  m_optionExportXml("mnu_main_export_xml"),
-  m_optionPageConfig("mnu_main_page_config"),
-  m_optionPrint("mnu_main_print"),
-  m_optionExit("mnu_main_exit"),
-  m_optionDockInspector("mnu_dock_inspector"),
-  m_optionDockProperties("mnu_dock_properties"),
-  m_optionDockToolbar("mnu_dock_toolbar"),
-  m_optionDockEditTemplate("mnu_dock_edit_template")
+  m_propertiesCentral(0)
 {
   init(proxyProject);
 }
@@ -117,9 +108,6 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
 {
   if(m_view)
   {
-    connect(m_view, SIGNAL(loadProperties()), this, SLOT(onSelectionChanged()));
-    connect(m_view, SIGNAL(reloadProperties()), this, SLOT(onPropertiesChanged()));
-    connect(m_view->scene(), SIGNAL(addItemFinalized(QGraphicsItem*)), this, SLOT(onAddItemFinalized(QGraphicsItem*)));
     connect(m_view, SIGNAL(closeView()), this, SLOT(onCloseView()));
     connect(m_view, SIGNAL(showView()), this, SLOT(onShowView()));
     connect(m_view, SIGNAL(changeContext()), this, SLOT(onRefreshStatusBar()));
@@ -146,18 +134,9 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
     connect(m_view, SIGNAL(zoomChanged(int)), controller, SLOT(onZoomChanged(int)));
   }
 
-  if(m_dockInspector)
-  {
-    connect(m_view->scene(), SIGNAL(deleteFinalized(std::vector<std::string>)), this, SLOT(onDeleteFinalized(std::vector<std::string>)));
-
-    connect(m_dockInspector->getObjectInspectorOutside(), SIGNAL(selectionChanged(QList<QGraphicsItem*>)), this, SLOT(onSelectionChanged(QList<QGraphicsItem*>)));
-  }
-
-  if(m_dockProperties)
-  {
-    connect(m_view->scene(), SIGNAL(deleteFinalized(std::vector<std::string>)), 
-      m_dockProperties->getPropertiesOutside(), SLOT(onClear(std::vector<std::string>)));
-  }
+  m_propertiesCentral = new PropertiesCentralController(m_view, this);
+  m_propertiesCentral->setPropertiesOutside(m_dockProperties->getPropertiesOutside());
+  m_propertiesCentral->setObjectInspector(m_dockInspector->getObjectInspectorOutside());
 }
 
 void te::layout::OutsideArea::createPropertiesDock(AbstractProxyProject* proxyProject)
@@ -261,83 +240,6 @@ void te::layout::OutsideArea::closeAllDocks()
    }
 }
 
-void te::layout::OutsideArea::onSelectionChanged()
-{  
-  QList<QGraphicsItem*> graphicsItems = m_view->scene()->selectedItems();
-  QList<QGraphicsItem*> allItems = m_view->scene()->items();
-
-  Scene* myScene = dynamic_cast<Scene*>(m_view->scene());
-  if (myScene != 0)
-  {
-    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
-    if (subSelectedItem != 0)
-    {
-      graphicsItems.clear();
-      graphicsItems.append(subSelectedItem);
-    }
-  }
-
-  //Refresh Property window   
-  if(m_dockProperties)
-    m_dockProperties->getPropertiesOutside()->itemsSelected(graphicsItems, allItems);
-
-  if(m_dockInspector)
-    m_dockInspector->getObjectInspectorOutside()->selectItems(graphicsItems);
-}
-
-void te::layout::OutsideArea::onPropertiesChanged()
-{
-  QList<QGraphicsItem*> graphicsItems = m_view->scene()->selectedItems();
-  QList<QGraphicsItem*> allItems = m_view->scene()->items();
-
-  Scene* myScene = dynamic_cast<Scene*>(m_view->scene());
-  if (myScene != 0)
-  {
-    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
-    if (subSelectedItem != 0)
-    {
-      graphicsItems.clear();
-      graphicsItems.append(subSelectedItem);
-    }
-  }
-
-  //Refresh Property window   
-  if (m_dockProperties)
-    m_dockProperties->getPropertiesOutside()->propertiesChanged(graphicsItems, allItems);
-
-  if (m_dockInspector)
-    m_dockInspector->getObjectInspectorOutside()->selectItems(graphicsItems);
-}
-
-void te::layout::OutsideArea::onAddItemFinalized(QGraphicsItem* item)
-{
-  QList<QGraphicsItem*> allItems = m_view->scene()->items();
-  //Refresh Inspector Object window
-  if(m_dockInspector)
-    m_dockInspector->getObjectInspectorOutside()->itemsInspector(allItems);
-}
-
-void te::layout::OutsideArea::onSelectionChanged(QList<QGraphicsItem*> selectedItems)
-{
-  m_view->scene()->clearSelection();
-  foreach(QGraphicsItem* item, selectedItems) 
-  {
-    item->setSelected(true);
-    if (item->parentItem() != 0)
-    {
-      AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
-      if (absItem != 0)
-      {
-        absItem->setSubSelection(true);
-      }
-    }
-  }
-
-  QList<QGraphicsItem*> allItems = m_view->scene()->items();
-  if(m_dockProperties)
-    m_dockProperties->getPropertiesOutside()->itemsSelected(selectedItems, allItems);
-}
-
 void te::layout::OutsideArea::onShowView()
 {
   openAllDocks();
@@ -353,6 +255,10 @@ void te::layout::OutsideArea::onCloseView()
   if (m_menuPrincipal)
   {
     m_menuPrincipal->closeMainMenu();
+  }
+  if (m_propertiesCentral)
+  {
+    m_propertiesCentral->closeAllWindows();
   }
   m_view->closeOutsideWindows();
 }
@@ -387,22 +293,6 @@ void te::layout::OutsideArea::onRefreshStatusBar()
 
   msg += qMode;
   m_statusBar->showMessage(msg);
-}
-
-void te::layout::OutsideArea::onAddChildFinalized( QGraphicsItem* parent, QGraphicsItem* child )
-{
-  QList<QGraphicsItem*> allItems = m_view->scene()->items();
-  //Refresh Inspector Object window
-  if(m_dockInspector)
-    m_dockInspector->getObjectInspectorOutside()->itemsInspector(allItems);
-}
-
-void te::layout::OutsideArea::onDeleteFinalized(std::vector<std::string>)
-{
-  QList<QGraphicsItem*> allItems = m_view->scene()->items();
-  //Refresh Inspector Object window
-  if(m_dockInspector)
-    m_dockInspector->getObjectInspectorOutside()->itemsInspector(allItems);
 }
 
 te::layout::MenuPrincipal* te::layout::OutsideArea::getMenuPrincipal(QMenu* parentMenu)
@@ -456,5 +346,10 @@ void te::layout::OutsideArea::addAllItemToolbars()
 void te::layout::OutsideArea::onExit()
 {
   emit exit();
+}
+
+te::layout::PropertiesCentralController* te::layout::OutsideArea::getPropertiesCentralController()
+{
+  return m_propertiesCentral;
 }
 

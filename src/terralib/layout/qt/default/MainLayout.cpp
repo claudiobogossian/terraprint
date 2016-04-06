@@ -34,8 +34,10 @@
 #include "../../../qt/plugins/layout/ProxyProject.h"
 #include "terralib/qt/widgets/canvas/Canvas.h"
 #include "../outside/PropertiesOutside.h"
+#include "../core/propertybrowser/MenuBuilder.h"
 #include "PropertiesDock.h"
 #include "MenuPrincipal.h"
+#include "PropertiesCentralController.h"
 
 // Qt
 #include <QGraphicsScene>
@@ -94,9 +96,6 @@ void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
     te::layout::Scene* myScene = new te::layout::Scene(m_view);
     myScene->setProxyProject(m_proxyProject);
     m_view->setScene(myScene);
-
-    te::layout::MenuBuilder* menuBuilder = new te::layout::MenuBuilder(myScene, m_proxyProject, m_view);
-    m_view->setMenuBuilder(menuBuilder);
   }
 
   //Resize the dialog and put it in the screen center  
@@ -125,9 +124,11 @@ void te::layout::MainLayout::postInit()
  /* TODO: DONE Evento de exit sendo tratado do lado de fora para matar o dock quando mainlayout morrer*/
      m_outsideArea->connect(m_outsideArea, SIGNAL(exit()), this, SLOT(onExit()));
 
-     MenuBuilder* menu = m_view->getMenuBuilder();
-     if (menu)
+     Scene* scene = dynamic_cast<Scene*>(m_view->scene());
+     if (scene)
      {
+       te::layout::MenuBuilder* menu = new te::layout::MenuBuilder(scene, m_proxyProject, m_view);
+       m_outsideArea->getPropertiesCentralController()->setMenuBuilder(menu);
        PropertiesDock* dock = m_outsideArea->getPropertiesDock();
        PropertiesOutside* propOut = dock->getPropertiesOutside();
        propOut->connect(menu, SIGNAL(menuPropertyClicked(Property)), propOut, SLOT(onMenuPropertyClicked(Property)));

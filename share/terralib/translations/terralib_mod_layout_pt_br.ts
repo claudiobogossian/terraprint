@@ -933,7 +933,7 @@
         <translation type="unfinished">Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="200"/>
+        <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="203"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1387,67 +1387,72 @@ nononon</source>
 <context>
     <name>PrintSettings</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="26"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="32"/>
         <source>Print Settings</source>
         <translation>Configurações de impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="85"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="91"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="99"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="105"/>
         <source>Print settings</source>
         <translation>Configurações de impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="112"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="118"/>
         <source>Print Quality</source>
         <translation>Qualidade de impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="129"/>
+        <source>Super Draft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="136"/>
         <source>Draft</source>
         <translation>Rascunho</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="130"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="143"/>
         <source>Normal</source>
         <translation>Normal</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="137"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="150"/>
         <source>Fine/Detail</source>
         <translation>Fino/Detalhe</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="159"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="172"/>
         <source>DPI:</source>
         <translation>Resolução (DPI):</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="166"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="179"/>
         <source>TextLabel</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="182"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="195"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="185"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="198"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="192"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="205"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="212"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="225"/>
         <source>OK</source>
         <translation></translation>
     </message>
@@ -1959,7 +1964,7 @@ nononon</source>
 <context>
     <name>te::layout::MainLayout</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MainLayout.cpp" line="117"/>
+        <location filename="../../../src/terralib/layout/qt/default/MainLayout.cpp" line="116"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
@@ -2209,12 +2214,12 @@ nononon</source>
         <translation type="vanished">Imprimir...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="373"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="279"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="378"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="284"/>
         <source>TerraPrint - TerraLib 5 | Context: </source>
         <translation>TerraPrint - TerraLib 5 | Contexto:</translation>
     </message>
@@ -2621,43 +2626,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1157"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1101"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1158"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1203"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1102"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1147"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1179"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1123"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1184"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1128"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1202"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1146"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1231"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1175"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1238"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1182"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1249"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1193"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

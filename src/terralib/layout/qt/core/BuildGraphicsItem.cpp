@@ -43,10 +43,15 @@
 #include <QGraphicsItem>
 #include <QUndoCommand> 
 
-te::layout::BuildGraphicsItem::BuildGraphicsItem(Scene* scene) :
+te::layout::BuildGraphicsItem::BuildGraphicsItem(Scene* scene, QObject* parent) :
+  QObject(parent),
   m_scene(scene)
 {
- 
+  if (m_scene)
+  {
+    View* view = m_scene->getView();
+    view->connect(this, SIGNAL(showDialogWindow(EnumType*, QList<QGraphicsItem*>)), view, SLOT(onShowDialogWindow(EnumType*, QList<QGraphicsItem*>)));
+  }
 }
 
 te::layout::BuildGraphicsItem::~BuildGraphicsItem()
@@ -235,6 +240,7 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   {
     return;
   }
+  EnumDataType* enumData = Enums::getInstance().getEnumDataType();
   te::layout::EnumObjectType* enumObj = te::layout::Enums::getInstance().getEnumObjectType();
   te::layout::EnumType* enumType = abstractItem->getController()->getProperties().getTypeObj();
   if (enumType == enumObj->getImageItem())
@@ -253,9 +259,8 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
       View* view = m_scene->getView();
       if (view)
       {
-        view->getMenuBuilder()->setSelectedGraphicsItems(imageItemList);
-        view->getMenuBuilder()->setCurrentProperty(std::string("file_name"));
-        view->getMenuBuilder()->onShowImageDlg();
+        // call file dialog window
+        emit showDialogWindow(enumData->getDataTypeImage(), imageItemList);
       }
     }
   }

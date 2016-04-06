@@ -36,6 +36,8 @@
 #include "../../core/Config.h"
 #include "pattern/factory/item/ItemFactoryParamsCreate.h"
 
+#include <QObject>
+
 class QGraphicsItem;
 
 namespace te
@@ -52,13 +54,15 @@ namespace te
 
     \sa te::layout::AbstractBuildGraphicsItem
   */
-    class TELAYOUTEXPORT BuildGraphicsItem : public AbstractBuildGraphicsItem
+    class TELAYOUTEXPORT BuildGraphicsItem : public QObject, public AbstractBuildGraphicsItem
     {
+      Q_OBJECT //for slots/signals
+
       public:
     /*!
           \brief Constructor
         */
-        BuildGraphicsItem(Scene* scene);
+        BuildGraphicsItem(Scene* scene, QObject* parent = 0);
 
     /*!
           \brief Destructor
@@ -95,6 +99,10 @@ namespace te
           \return item value
         */
         QGraphicsItem* createItem(te::layout::EnumType* itemType, bool addUndo = true);
+
+      signals:
+
+        void showDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList);
                 
       protected:
     

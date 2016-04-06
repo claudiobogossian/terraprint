@@ -41,7 +41,6 @@
 #include "../outside/PageSetupOutside.h"
 #include "../outside/SystematicScaleOutside.h"
 #include "../item/MovingItemGroup.h"
-#include "propertybrowser/MenuBuilder.h"
 #include "../../core/property/Property.h"
 
 // STL
@@ -231,10 +230,6 @@ namespace te
 
         virtual Scene* getScene();
 
-        virtual void setMenuBuilder(MenuBuilder* menuBuilder);
-
-        virtual MenuBuilder* getMenuBuilder();
-
         /*!
         \brief Method that adds ToolbarItemInside with a toolbar to be displayed when editing an item, which is identified by name.
         By adding the toolbar, the owner becomes the View.
@@ -267,8 +262,6 @@ namespace te
         */
         virtual void closeToolbar();
 
-        virtual QList<QGraphicsItem*> getSelectedGraphicsItems();
-
       public slots:
     
     /*!
@@ -287,14 +280,7 @@ namespace te
         virtual void onChangeConfig();
 
         virtual void onSystematicApply(double scale, SystematicScaleType type);
-
-    /*!
-          \brief Notifies View object that the selection of objects in the scene changed.
-        */
-        virtual void onSelectionChanged();
-        
-        virtual void onSelectionItem(std::string name);
-
+                
          /*!
           \brief Sets the zoom of the QGraphicsView to fit the given rect
         */
@@ -311,10 +297,10 @@ namespace te
         virtual void onEditionFinalized();
 
       protected slots:
-
-        virtual void onChangeMenuProperty(Property property);
-
+      
         virtual void onScrollBarValueChanged(int value);
+
+        virtual void onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList);
 
       signals:
 
@@ -374,6 +360,10 @@ namespace te
         \brief This signal is emitted when the view just ended performing the IO operation.
         */
         void endedPerformingIO();
+
+        void showContextMenu(QPointF scenePoint, QPointF globalPoint);
+
+        void showDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList);
 
       protected:
 
@@ -469,7 +459,6 @@ namespace te
         SystematicScaleOutside*              m_systematicOutside;
         te::gm::Coord2D                      m_coordSystematic;
         bool                                 m_selectionChange;
-        MenuBuilder*                         m_menuBuilder;
         HorizontalRuler*                     m_horizontalRuler;
         VerticalRuler*                       m_verticalRuler;
         double                               m_width;

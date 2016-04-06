@@ -72,7 +72,6 @@ te::layout::View::View( QWidget* widget) :
   m_pageSetupOutside(0),
   m_systematicOutside(0),
   m_selectionChange(false),
-  m_menuBuilder(0),
   m_width(-1),
   m_height(-1),
   m_isMoving(false),
@@ -456,7 +455,6 @@ void te::layout::View::config()
     }
   }
     
-  connect(scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
   connect(scene(), SIGNAL(editionFinalized()), this, SLOT(onEditionFinalized()));
 
   //scrollbars
@@ -599,22 +597,12 @@ void te::layout::View::changeMode( EnumType* newMode )
 
 void te::layout::View::hideEvent( QHideEvent * event )
 {
-  if(m_menuBuilder)
-  {
-    m_menuBuilder->closeAllWindows();
-  }
-
   QGraphicsView::hideEvent(event);
   emit hideView();
 }
 
 void te::layout::View::closeEvent( QCloseEvent * event )
 {
-  if(m_menuBuilder)
-  {
-    m_menuBuilder->closeAllWindows();
-  }
-
   closeToolbar();
 
   QGraphicsView::closeEvent(event);
@@ -706,28 +694,6 @@ void te::layout::View::onSystematicApply(double scale, SystematicScaleType type)
  
 }
 
-void te::layout::View::onSelectionChanged()
-{
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  if (!sc)
-    return;
-
-  m_selectionChange = true;
-
-  if(m_menuBuilder)
-  {
-    m_menuBuilder->closeAllWindows();
-  }
-
-  /* Scene isn't in edition mode and
-  mouse release yet happened, will happen the reload of the properties.
-  Otherwise, the reload will happen in double click event or in mouse release */
-  if (!sc->isEditionMode() && !m_mouseEvent)
-  {
-    load();
-  }
-}
-
 void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
 {
   if (!m_showContextMenu)
@@ -740,30 +706,8 @@ void te::layout::View::contextMenuEvent( QContextMenuEvent * event )
     return;
 
   QPointF pt = mapToScene(event->pos());
-
-  ItemUtils iUtils = ((Scene*) scene())->getItemUtils();
-
-  QGraphicsItem* hasItem = iUtils.intersectionSelectionItem(pt.x(), pt.y());
-  QList<QGraphicsItem*> graphicsItems = getSelectedGraphicsItems();
-  if (!hasItem)
-  {
-    hasItem = iUtils.intersectionOnlyPaperItem(pt.x(), pt.y());
-    graphicsItems.clear();
-    graphicsItems.append(hasItem);
-    if (!hasItem)
-    {
-      return;
-    }
-  }
-
-  if(!m_menuBuilder)
-  {
-    m_menuBuilder = new MenuBuilder((Scene*)scene(), 0, this);
-    connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
-  }
-
-  m_menuBuilder->createMenu(graphicsItems);
-  m_menuBuilder->menuExec(event->globalX(), event->globalY());
+  QPointF ptGlobal = event->globalPos();
+  emit showContextMenu(pt, ptGlobal);
 }
 
 QImage te::layout::View::createImage()
@@ -1250,20 +1194,6 @@ void te::layout::View::exportItemsToImage()
   msgBox.exec();
 }
 
-void te::layout::View::onSelectionItem(std::string name)
-{
-  Scene* scne = dynamic_cast<Scene*>(scene());
-  if(!scne)
-    return;
-
-  scne->selectItem(name);
-
-  if (!scne->isEditionMode()) // If scene in edition mode the reload will happen in double click event
-  {
-    load();
-  }
-}
-
 void te::layout::View::refreshAllProperties()
 {
   reload();
@@ -1303,21 +1233,6 @@ void te::layout::View::onEditionFinalized()
 te::layout::Scene* te::layout::View::getScene()
 {
   return dynamic_cast<te::layout::Scene*> (this->scene());
-}
-
-void te::layout::View::setMenuBuilder(te::layout::MenuBuilder* menuBuilder)
-{
-  m_menuBuilder = menuBuilder;
-  if (!m_menuBuilder)
-  {
-    return;
-  }
-  
-  connect(m_menuBuilder, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeMenuProperty(Property)));
-  if (m_menuBuilder->parent() != this)
-  {
-    m_menuBuilder->setParent(this);
-  }
 }
 
 bool te::layout::View::addToolbarItemInside(EnumType* itemType, ToolbarItemInside* toolbarInside)
@@ -1445,11 +1360,6 @@ void te::layout::View::positioningToolbarOnTheScreen(AbstractItemView* item)
   }
 }
 
-void te::layout::View::onChangeMenuProperty(Property property)
-{
-  reload(); // reload the principal property browser
-}
-
 void te::layout::View::onScrollBarValueChanged(int value)
 {
   // moved scrollbar so update foreground
@@ -1457,24 +1367,8 @@ void te::layout::View::onScrollBarValueChanged(int value)
   viewport()->update();
 }
 
-te::layout::MenuBuilder* te::layout::View::getMenuBuilder()
+void te::layout::View::onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList)
 {
-  return m_menuBuilder;
+  emit showDialogWindow(type, itemList);
 }
 
-QList<QGraphicsItem*> te::layout::View::getSelectedGraphicsItems()
-{
-  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
-
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  if (myScene != 0)
-  {
-    QGraphicsItem* subSelectedItem = myScene->getSubSelectedItem();
-    if (subSelectedItem != 0)
-    {
-      graphicsItems.clear();
-      graphicsItems.append(subSelectedItem);
-    }
-  }
-  return graphicsItems;
-}
