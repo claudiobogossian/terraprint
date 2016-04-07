@@ -220,10 +220,6 @@ namespace te
 
       QString getActionMapCreateLegendChildAsObject();
       
-      QString getActionGridPlanar();
-
-      QString getActionGridGeodesic();
-
       QString getActionNorth();
 
       QString getActionThreeNorth();
@@ -392,8 +388,6 @@ namespace te
       QString m_actionMapCreateTextGrid;
       QString m_actionMapCreateMapText;
       QString m_actionMapCreateLegendChildAsObject;
-      QString m_actionGridPlanar;
-      QString m_actionGridGeodesic;
       QString m_actionNorth;
       QString m_actionThreeNorth;
       QString m_actionMapLocation;

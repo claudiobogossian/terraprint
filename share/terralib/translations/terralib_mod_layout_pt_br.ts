@@ -2310,305 +2310,303 @@ nononon</source>
 <context>
     <name>te::layout::ToolbarOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="156"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="154"/>
         <source>Layout - Toolbar</source>
         <translation>Barra de Ferramentas do Editor de Cartas</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="246"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="244"/>
         <source>Map</source>
         <translation>Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="246"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="244"/>
         <source>Map Objects</source>
         <translation>Objetos de Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="250"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="248"/>
         <source>Default Map Object</source>
         <translation>Objeto Mapa Padrão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="253"/>
         <source>Grid Planar</source>
-        <translation>Grade Planar</translation>
+        <translation type="vanished">Grade Planar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="256"/>
         <source>Grid Geodesic</source>
-        <translation>Grade Geodésica</translation>
+        <translation type="vanished">Grade Geodésica</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="259"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="251"/>
         <source>Default Legend</source>
         <translation>Legenda Padrão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="262"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="254"/>
         <source>Scale Object</source>
         <translation>Objeto Escala</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="265"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="257"/>
         <source>North Object</source>
         <translation>Objeto Norte</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="268"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="260"/>
         <source>Three North Object</source>
         <translation>Objeto 3-Nortes</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="271"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="263"/>
         <source>Map Location Object</source>
         <translation>Objeto Mapa de Localização</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="289"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="281"/>
         <source>Map Tools</source>
         <translation>Ferramentas de Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="293"/>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="373"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="285"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="365"/>
         <source>Pan Tool</source>
         <translation>Ferramenta de Voo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="296"/>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="376"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="288"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="368"/>
         <source>Zoom In</source>
         <translation>Zoom Mais</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="299"/>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="379"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="291"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="371"/>
         <source>Zoom Out</source>
         <translation>Zoom Menos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="302"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="294"/>
         <source>Systematic Scale</source>
         <translation>Escala Sistemática</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="305"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="297"/>
         <source>Text Grid as Object</source>
         <translation>Texto da Grade como Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="308"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="300"/>
         <source>Text Map as Object</source>
         <translation>Texto do Mapa como Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="311"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="303"/>
         <source>Legend as Object</source>
         <translation>Legenda como Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="329"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="321"/>
         <source>Geometry Tools</source>
         <translation>Ferramentas de Geometria</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="329"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="321"/>
         <source>Geometries Objects</source>
         <translation>Ferramentas de Geometrias</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="333"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="325"/>
         <source>Rectangle Object</source>
         <translation>Objeto Retângulo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="336"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="328"/>
         <source>Arrow Object</source>
         <translation>Objeto Seta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="339"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="331"/>
         <source>Ellipse Object</source>
         <translation>Objeto Elipse</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="342"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="334"/>
         <source>Point Object</source>
         <translation>Objeto Ponto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="345"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="337"/>
         <source>Line Object</source>
         <translation>Objeto Linha</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="348"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="340"/>
         <source>Polygon Object</source>
         <translation>Objeto Polígono</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="684"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="676"/>
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="369"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="361"/>
         <source>Paper Tools</source>
         <translation>Ferramentas de Papel</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="397"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="389"/>
         <source>Arrow Cursor</source>
         <translation>Ferramenta de Seleção</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="412"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="404"/>
         <source>Item Tools</source>
         <translation>Ferramentas de Ítens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="416"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="408"/>
         <source>Group</source>
         <translation>Agrupar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="419"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="411"/>
         <source>Ungroup</source>
         <translation>Desagrupar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="467"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="459"/>
         <source>Bring to front</source>
         <translation>Trazer para frente</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="482"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="474"/>
         <source>Send to back</source>
         <translation>Enviar para trás</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="497"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="489"/>
         <source>Bring Forward</source>
         <translation>Avançar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="512"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="504"/>
         <source>Send Backward</source>
         <translation>Recuar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="527"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="519"/>
         <source>Recompose</source>
         <translation>Recompor</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="542"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="534"/>
         <source>Text Tools</source>
         <translation>Ferramentas de Textos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="546"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="538"/>
         <source>Default Text Object</source>
         <translation>Objeto Texto Padrão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="549"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="541"/>
         <source>Title Object</source>
         <translation>Objeto Título</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="555"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="547"/>
         <source>Image Object</source>
         <translation>Objeto Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="579"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="571"/>
         <source>Align Left</source>
         <translation>Alinhar à Esquerda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="594"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="586"/>
         <source>Align Right</source>
         <translation>Alinhar à Direita</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="609"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="601"/>
         <source>Align Top</source>
         <translation>Alinhar Parte Superior</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="624"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="616"/>
         <source>Align Bottom</source>
         <translation>Alinhar Parte Inferior</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="639"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="631"/>
         <source>Align Center Horizontal</source>
         <translation>Alinhar Horizontalmente no Centro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="654"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="646"/>
         <source>Align Center Vertical</source>
         <translation>Alinhar Verticalmente no Centro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="669"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="661"/>
         <source>Remove Object</source>
         <translation>Remover Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="693"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="685"/>
         <source>&amp;Undo</source>
         <translation>&amp;Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="697"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="689"/>
         <source>Undo Action</source>
         <translation>Ação de Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="709"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="701"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="718"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="710"/>
         <source>&amp;Redo</source>
         <translation>&amp;Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="722"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="714"/>
         <source>Redo Action</source>
         <translation>Ação de Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="734"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="726"/>
         <source>Redraw Selection Map</source>
         <translation>Redesenhar Mapa Selecionado</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="749"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="741"/>
         <source>Object To Image</source>
         <translation>Gravar Objeto como Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="749"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="741"/>
         <source>Export all selected objects to image</source>
         <translation>Exporta todos os objetos selecionados como imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="764"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="756"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="779"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="771"/>
         <source>Export To PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="779"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="771"/>
         <source>Export to PDF</source>
         <translation>Exportar para PDF</translation>
     </message>

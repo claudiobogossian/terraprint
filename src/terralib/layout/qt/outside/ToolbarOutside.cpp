@@ -66,8 +66,6 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_actionMapCreateTextGrid("map_text_grid"),
   m_actionMapCreateMapText("map_text_map"),
   m_actionMapCreateLegendChildAsObject("legend_child"),
-  m_actionGridPlanar("map_grid_planar"),
-  m_actionGridGeodesic("map_grid_geodesic"),
   m_actionNorth("map_north"),
   m_actionThreeNorth("map_three_north"),
   m_actionMapLocation("map_location"),
@@ -250,12 +248,6 @@ QToolButton* te::layout::ToolbarOutside::createMapToolButton()
   QAction* actionDefaultMenu = createAction(tr("Default Map Object"), m_actionMapDefault, "layout-default-map", "", menu);
   menu->addAction(actionDefaultMenu);
   
-  QAction* actionGridPlanar = createAction(tr("Grid Planar"), m_actionGridPlanar, "layout-grid", "", menu);
-  menu->addAction(actionGridPlanar);
-
-  QAction* actionGridGeodesic = createAction(tr("Grid Geodesic"), m_actionGridGeodesic, "layout-grid", "", menu);
-  menu->addAction(actionGridGeodesic);
-
   QAction* actionLegend = createAction(tr("Default Legend"), m_actionLegendDefault, "layout-default-legend", "", menu);
   menu->addAction(actionLegend);
 
@@ -1016,16 +1008,6 @@ QString te::layout::ToolbarOutside::getActionMapCreateMapText()
 QString te::layout::ToolbarOutside::getActionMapCreateLegendChildAsObject()
 {
   return m_actionMapCreateLegendChildAsObject;
-}
-
-QString te::layout::ToolbarOutside::getActionGridPlanar()
-{
-  return m_actionGridPlanar;
-}
-
-QString te::layout::ToolbarOutside::getActionGridGeodesic()
-{
-  return m_actionGridGeodesic;
 }
 
 QString te::layout::ToolbarOutside::getActionNorth()

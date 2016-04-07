@@ -67,14 +67,6 @@ void te::layout::ToolbarController::onMapTriggered(QAction* action)
   {
     viewport->createItem(itemType->getMapCompositionItem());
   }
-  else if (action->objectName().compare(toolbar->getActionGridPlanar()) == 0)
-  {
-    viewport->createItem(itemType->getGridPlanarItem());
-  }
-  else if (action->objectName().compare(toolbar->getActionGridGeodesic()) == 0)
-  {
-    viewport->createItem(itemType->getGridGeodesicItem());
-  }
   else if (action->objectName().compare(toolbar->getActionLegendDefault()) == 0)
   {
     viewport->createItem(itemType->getLegendItem());
