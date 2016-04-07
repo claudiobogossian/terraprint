@@ -64,8 +64,7 @@ te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProj
   m_updatingValues(false),
   m_sharedProps(0),
   m_propUtils(0),
-  m_scene(scene),
-  m_currentActionAssociate(false)
+  m_scene(scene)
 {
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   te::gm::Envelope box = abstractModel->getBox();
@@ -173,10 +172,7 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
 {
   if(graphicsItems.empty())
   {
-    if (!m_currentActionAssociate)
-    {
-      clearAll();
-    }
+    clearAll();
     return;
   }  
 
@@ -189,10 +185,6 @@ void te::layout::PropertiesOutside::itemsSelected(QList<QGraphicsItem*> graphics
   if(props.getProperties().empty())
     return;
 
-  if (m_currentActionAssociate)
-  {
-    return;
-  }
   clearAll();
 
   m_graphicsItems = graphicsItems;
@@ -224,10 +216,7 @@ void te::layout::PropertiesOutside::propertiesChanged(QList<QGraphicsItem*> grap
 {
   if (graphicsItems.empty())
   {
-    if (!m_currentActionAssociate)
-    {
-      clearAll();
-    }
+    clearAll();
     return;
   }
 
@@ -251,18 +240,10 @@ void te::layout::PropertiesOutside::onChangePropertyValue( Property property )
     return;
 
   QList<QGraphicsItem*> currentSelectionList = m_graphicsItems;
-
-  changeMapVisitable(property);
-
+  
   sendPropertyToItems(property, currentSelectionList);
 
   m_scene->update();
-
-  if (m_currentActionAssociate)
-  {
-    reselect();
-    m_currentActionAssociate = false;
-  }
 }
 
 bool te::layout::PropertiesOutside::sendPropertyToItems(const Property& property, const QList<QGraphicsItem*>& items)
@@ -319,114 +300,6 @@ void te::layout::PropertiesOutside::closeEvent( QCloseEvent * event )
   m_layoutPropertyBrowser->closeAllWindows();
 }
 
-void te::layout::PropertiesOutside::changeMapVisitable(Property property)
-{
-  if (!m_scene)
-    return;
-
-  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-  if (property.getName().compare(m_sharedProps->getItemObserver()) != 0)
-    return;
-  
-  /* By default when selecting another item or no, 
-  all open windows are closed via property browser.
-  By creating a group of map and grid, defined in grid window, 
-  the window should not be closed */
-  m_currentActionAssociate = true;
-
-  //we first removed any association, if exists
-  foreach(QGraphicsItem* selectedItem, m_graphicsItems)
-  {
-    if (selectedItem)
-    {
-      AbstractItemView* selectedAbsView = dynamic_cast<AbstractItemView*>(selectedItem);
-      if (selectedAbsView != 0)
-      {
-        const Property& pOldMapItem = selectedAbsView->getController()->getProperty(m_sharedProps->getItemObserver());
-        if (pOldMapItem.isNull() == true)
-        {
-          continue;
-        }
-
-        AbstractItemView* oldMapItemView = m_scene->getItem(pOldMapItem.getValue().toString());
-        if (!oldMapItemView)
-        {
-          continue;
-        }
-
-        MapItem* oldMapItem = dynamic_cast<MapItem*>(oldMapItemView);
-        if (!oldMapItem)
-          return;
-
-          //checks if the map item is already in a group
-          QGraphicsItemGroup* group = oldMapItem->group();
-          if (group != 0)
-          {
-            m_graphicsItems.removeOne(group);
-            m_scene->destroyItemGroup(group);
-          }
-      }
-    }
-  }
-  
-  AbstractItemView* mapItemView = m_scene->getItem(property.getValue().toString());
-  if (!mapItemView)
-  {
-    //m_currentActionAssociate = false;
-    return;
-  }
-
-  MapItem* mapItem = dynamic_cast<MapItem*>(mapItemView);
-  if (!mapItem)
-  {
-    //m_currentActionAssociate = false;
-    return;
-  }
-
-  QList<QGraphicsItem*> listItemsToConnect;
-  bool connectItem = false;
-
-  //the selected item will now be the observer and the mapItem will be the subject
-  foreach(QGraphicsItem* selectedItem, m_graphicsItems)
-  {
-    if (selectedItem)
-    {
-      AbstractItemView* selectedAbsView = dynamic_cast<AbstractItemView*>(selectedItem);
-      if (selectedAbsView != 0)
-      {
-        const Property& pConnectItemPos = selectedAbsView->getController()->getProperty("connect_item_position");
-        connectItem = pConnectItemPos.getValue().toBool();
-        if (connectItem == true)
-        {
-          //We must move the selected item to the position of the map in scene coordinate system
-          selectedItem->setPos(mapItem->scenePos());
-          listItemsToConnect.push_back(selectedItem);
-        }
-      }
-    }
-  }
-
-  if (listItemsToConnect.empty() == false)
-  {
-    //checks if the map item is already in a group
-    QGraphicsItemGroup* group = mapItem->group();
-    if (group != 0)
-    {
-      listItemsToConnect.push_front(group);
-    }
-    else
-    {
-      listItemsToConnect.push_front(mapItem);
-    }
-
-    changeZValueOrder(listItemsToConnect); //if need to change the order of the z value 
-    EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
-    QGraphicsItemGroup* newGroup = m_scene->createItemGroup(listItemsToConnect, objType->getMapCompositionItem());
-  }
-  //reselect();
-  //m_currentActionAssociate = false;
-}
-
 void te::layout::PropertiesOutside::changeZValueOrder(QList<QGraphicsItem*> listItemsToConnect)
 {
   if (listItemsToConnect.empty())
@@ -479,10 +352,7 @@ void te::layout::PropertiesOutside::refreshOutside()
 
 void te::layout::PropertiesOutside::onClear( std::vector<std::string> names )
 {
-  if (!m_currentActionAssociate)
-  {
-    clearAll();
-  }
+  clearAll();
 }
 
 void te::layout::PropertiesOutside::updatePropertyBrowser( Properties props )
@@ -512,14 +382,6 @@ bool te::layout::PropertiesOutside::updateTree( QList<QGraphicsItem*> graphicsIt
     }
   }
   return false;
-}
-
-void te::layout::PropertiesOutside::reselect()
-{
-  foreach(QGraphicsItem* item, m_graphicsItems)
-  {
-    item->setSelected(true);
-  }
 }
 
 void te::layout::PropertiesOutside::onMenuPropertyClicked(Property prop)

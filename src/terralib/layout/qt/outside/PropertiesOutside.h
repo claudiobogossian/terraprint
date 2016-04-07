@@ -114,17 +114,13 @@ namespace te
         virtual void  closeEvent ( QCloseEvent * event );
 
         virtual void createLayout();
-
-        virtual void changeMapVisitable(Property property);
-
+        
         virtual void changeZValueOrder(QList<QGraphicsItem*> listItemsToConnect);
 
         virtual bool sendPropertyToItems(const Property& property, const QList<QGraphicsItem*>& items);
 
         virtual bool updateTree(QList<QGraphicsItem*> graphicsItems, Properties props );
-
-        virtual void reselect();
-
+        
       protected:
 
         PropertyBrowser*      m_layoutPropertyBrowser;
@@ -138,7 +134,6 @@ namespace te
         SharedProperties*     m_sharedProps;
         PropertiesUtils*      m_propUtils;
         Scene*                m_scene;
-        bool                  m_currentActionAssociate;
     };
   }
 }

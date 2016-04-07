@@ -2258,24 +2258,24 @@ nononon</source>
 <context>
     <name>te::layout::PropertiesOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="74"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="73"/>
         <source>Properties</source>
         <translation>Editor de Propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="122"/>
         <source>Config</source>
         <translation>Configurar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="128"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="127"/>
         <source>String or regular expression to filter property list with</source>
         <translation>Utilize texto ou expressão regular para filtrar a lista de propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="137"/>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="205"/>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="496"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="136"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="197"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="366"/>
         <source>Component::</source>
         <translation>Componente::</translation>
     </message>
