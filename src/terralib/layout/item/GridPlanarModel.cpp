@@ -233,6 +233,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     double gapX = 0.;
     double gapY = 0.;
 
+
     if (m_gridPropertiesInitialized == false && newPlanarBox.isValid() == true)
     {
       double distance = newPlanarBox.getWidth();
@@ -268,6 +269,7 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     }
     else if (newPlanarBox.isValid() == false)
     {
+
       m_gridPropertiesInitialized = false;
 
       te::gm::Envelope defaultPlanarBox(0, 0, 10000, 10000);
@@ -278,6 +280,43 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
         property.setValue(newPlanarBox, dataType->getDataTypeEnvelope());
         properties.updateProperty(property);
       }
+
+    }
+    else{
+
+      const Property& pGridSettings = this->getProperty("GridSettings");
+      const Property& pGapVrt = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+      const Property& pGapHrz = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+
+      const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
+      const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
+
+      double gapVrt = pGapVrt.getValue().toDouble();
+      double gapHrz = pGapHrz.getValue().toDouble();
+
+      double initialX = pInitialX.getValue().toDouble();
+      double initialY = pInitialY.getValue().toDouble();
+
+      double distance = newPlanarBox.getWidth();
+      
+      initialX = adjustInitialX(newPlanarBox, initialX, gapVrt);
+      {
+        Property property(0);
+        property.setName(settingsConfig.getInitialGridPointX());
+        property.setValue(initialX, dataType->getDataTypeDouble());
+        properties.addProperty(property);
+      }
+
+      distance = newPlanarBox.getHeight();
+      
+      initialY = adjustInitialY(newPlanarBox, initialY, gapHrz);
+      {
+        Property property(0);
+        property.setName(settingsConfig.getInitialGridPointY());
+        property.setValue(initialY, dataType->getDataTypeDouble());
+        properties.addProperty(property);
+      }
+
     }
 
 
@@ -299,3 +338,5 @@ void te::layout::GridPlanarModel::update(const Subject* subject)
     setProperties(properties);
   }
 }
+
+

@@ -172,6 +172,16 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
   double newHeight = pNewHeight.getValue().toDouble();
   int newSrid = pNewSrid.getValue().toInt();
   const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
+  if (newWorldBox.isValid() == false)
+  {
+    Properties properties("");
+    properties.addProperty(pNewWidth);
+    properties.addProperty(pNewHeight);
+    setProperties(properties);
+
+    return;
+  }
+
   te::gm::Envelope newGeographicBox = getWorldBoxInGeographic(newWorldBox, newSrid);
   std::string newItemObservable = pNewItemObserver.getValue().toString();
  
@@ -270,6 +280,42 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
 
         m_gridPropertiesInitialized = true;
       }
+      else{
+
+        const Property& pGridSettings = this->getProperty("GridSettings");
+        const Property& pGapVrt = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
+        const Property& pGapHrz = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+
+        const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
+        const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
+
+        double gapVrt = pGapVrt.getValue().toDouble();
+        double gapHrz = pGapHrz.getValue().toDouble();
+
+        double initialX = pInitialX.getValue().toDouble();
+        double initialY = pInitialY.getValue().toDouble();
+
+        double distance = newGeographicBox.getWidth();
+        
+        initialX = adjustInitialX(newGeographicBox, initialX, gapVrt);
+        {
+          Property property(0);
+          property.setName(settingsConfig.getInitialGridPointX());
+          property.setValue(initialX, dataType->getDataTypeDouble());
+          properties.addProperty(property);
+        }
+
+        distance = newGeographicBox.getHeight();
+        
+        initialY = adjustInitialY(newGeographicBox, initialY, gapHrz);
+        {
+          Property property(0);
+          property.setName(settingsConfig.getInitialGridPointY());
+          property.setValue(initialY, dataType->getDataTypeDouble());
+          properties.addProperty(property);
+        }
+
+      }
       //te::gm::Envelope defaultPlanarBox(0, 0, 10000, 10000);
       if (newGeographicBox.equals(defaultGeographicBox) == false)
       {
@@ -284,8 +330,6 @@ void te::layout::GridGeodesicModel::update(const Subject* subject)
           }
         }
       }
-
-
     }
 
     setProperties(properties);
