@@ -38,8 +38,6 @@
 te::layout::MapModel::MapModel()
   : AbstractItemModel()
 {
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getMapItem());
-
   te::color::RGBAColor backgroundColor(255, 255, 255, 255);
   bool enableChildren = true;
   te::gm::Envelope worldBox;
@@ -185,6 +183,7 @@ te::layout::MapModel::MapModel()
     property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getMapItem());
 }
 
 te::layout::MapModel::~MapModel()
