@@ -65,16 +65,13 @@ te::layout::MapModel::MapModel()
     m_properties.addProperty(property);
   }
 
-  {
-    std::string value = TR_LAYOUT("Settings");
-    Property property(0);
-    property.setName("mapSettings");
-    property.setLabel(TR_LAYOUT("Map Settings"));
-    property.setValue(value, dataType->getDataTypeMapSettings());
-    property.setSerializable(false);
-    property.setMenu(true);
-    m_properties.addProperty(property);
-  }
+  std::string value = TR_LAYOUT("Settings");
+  Property pro_mapSettings(0);
+  pro_mapSettings.setName("mapSettings");
+  pro_mapSettings.setLabel(TR_LAYOUT("Map Settings"));
+  pro_mapSettings.setValue(value, dataType->getDataTypeMapSettings());
+  pro_mapSettings.setSerializable(false);
+  pro_mapSettings.setMenu(true);
 
   {
     Property property;
@@ -102,15 +99,16 @@ te::layout::MapModel::MapModel()
     property.setName("world_box");
     property.setLabel(TR_LAYOUT("World Box"));
     property.setValue(worldBox, dataType->getDataTypeEnvelope());
-    m_properties.addProperty(property);
+    pro_mapSettings.addSubProperty(property);
   }
 
   {
     Property property(0);
     property.setName("srid");
+    property.setEditable(false);
     property.setLabel(TR_LAYOUT("SRID"));
     property.setValue(srid, dataType->getDataTypeInt());
-    m_properties.addProperty(property);
+    pro_mapSettings.addSubProperty(property);
   }
 
   {
@@ -118,7 +116,7 @@ te::layout::MapModel::MapModel()
     property.setName("scale");
     property.setLabel(TR_LAYOUT("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
-    m_properties.addProperty(property);
+    pro_mapSettings.addSubProperty(property);
   }
 
   {
@@ -141,14 +139,15 @@ te::layout::MapModel::MapModel()
     m_properties.addProperty(property);
   }
 
-
   {
     Property property(0);
     property.setName("fixed_scale");
     property.setLabel(TR_LAYOUT("Fixed Scale"));
     property.setValue(fixedScale, dataType->getDataTypeBool());
-    m_properties.addProperty(property);
+    pro_mapSettings.addSubProperty(property);
   }
+
+  m_properties.addProperty(pro_mapSettings);
 
 //updating properties
   {
