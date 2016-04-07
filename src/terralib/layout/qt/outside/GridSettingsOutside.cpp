@@ -280,11 +280,7 @@ void te::layout::GridSettingsOutside::load()
   /* Grid */
   
   SharedProperties sharedProps;
-
-  initCombo(m_ui->cmbPlanarConnectedTo, sharedProps.getItemObserver(), m_planarType);
-
-  initCombo(m_ui->cmbGeodesicConnectedTo, sharedProps.getItemObserver(), m_geodesicType);
-
+  
   initCombo(m_ui->cmbUnit, m_planarGridSettings->getUnit(), m_planarType);
   
   initBool(m_ui->chkShowPlanar, m_planarGridSettings->getVisible(), m_planarType);
@@ -526,46 +522,6 @@ void te::layout::GridSettingsOutside::on_cmbUnit_currentIndexChanged( const QStr
 
     variant.setValue(stdText, dataType->getDataTypeString());
     Property prop = controller->getProperty(m_planarGridSettings->getUnit(), m_planarType);
-    prop.setValue(variant);
-    prop.setOptionChoice(variant);
-    emit updateProperty(prop);
-  }
-}
-
-void te::layout::GridSettingsOutside::on_cmbPlanarConnectedTo_currentIndexChanged(const QString & text)
-{
-  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
-  if (controller)
-  {
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-
-    std::string stdText = ItemUtils::convert2StdString(text);
-
-    SharedProperties sharedProps;
-
-    variant.setValue(stdText, dataType->getDataTypeItemObserver());
-    Property prop = controller->getProperty(sharedProps.getItemObserver(), m_planarType);
-    prop.setValue(variant);
-    prop.setOptionChoice(variant);
-    emit updateProperty(prop);
-  }
-}
-
-void te::layout::GridSettingsOutside::on_cmbGeodesicConnectedTo_currentIndexChanged(const QString & text)
-{
-  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
-  if (controller)
-  {
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-
-    std::string stdText = ItemUtils::convert2StdString(text);
-
-    SharedProperties sharedProps;
-
-    variant.setValue(stdText, dataType->getDataTypeItemObserver());
-    Property prop = controller->getProperty(sharedProps.getItemObserver(), m_geodesicType);
     prop.setValue(variant);
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
