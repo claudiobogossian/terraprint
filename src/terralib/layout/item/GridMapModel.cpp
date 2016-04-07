@@ -371,3 +371,25 @@ te::layout::GridMapModel::~GridMapModel()
 {
 
 }
+
+double te::layout::GridMapModel::adjustInitialX(const te::gm::Envelope& planarBox, const double initialX, const double& gapX)
+{
+  double lowerLeftX = planarBox.getLowerLeftX();
+  double distance = initialX - planarBox.getLowerLeftX();
+  double gapCount = floor(distance / gapX);
+  double newInitialX = initialX - (gapCount * gapX);
+
+  return newInitialX;
+  
+}
+
+double te::layout::GridMapModel::adjustInitialY(const te::gm::Envelope& planarBox, const double initialY, const double& gapY)
+{
+
+  double loweLeftY = planarBox.getLowerLeftY();
+  double distance = initialY - planarBox.getLowerLeftY();
+  double gapCount = floor(distance / gapY);
+  double newInitialY = initialY - (gapCount * gapY);
+
+  return newInitialY;
+}
