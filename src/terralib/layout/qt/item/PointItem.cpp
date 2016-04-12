@@ -37,6 +37,8 @@
 #include <QPolygonF>
 #include <QPainterPath>
 
+# define M_PI		3.14159265358979323846
+
 te::layout::PointItem::PointItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
 {
