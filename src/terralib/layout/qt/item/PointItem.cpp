@@ -36,7 +36,6 @@
 #include <QPen>
 #include <QPolygonF>
 #include <QPainterPath>
-#include "geos/platform.h"
 
 te::layout::PointItem::PointItem(AbstractItemController* controller, bool invertedMatrix)
   : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
