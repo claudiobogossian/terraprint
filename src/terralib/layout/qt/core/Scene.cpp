@@ -626,6 +626,8 @@ bool te::layout::Scene::importTemplateToProperties(EnumType* type, std::string f
 
 bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups)
 {
+  EnumObjectType* objectType = Enums::getInstance().getEnumObjectType();
+
   QList<QGraphicsItem*> graphicsItems = items();
   graphicsItems = sortItemsByDependency(graphicsItems);
 
@@ -648,22 +650,29 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
         continue;
       }
 
-      const std::string& absParentName = absParentItem->getController()->getProperty("name").getValue().toString();
-      mapGroups[absParentName].push_back(absItemName);
+      //we need to check if the parent is a group. If it is not, we dont register anything in the map
+      std::string objectTypeName = absParentItem->getController()->getProperties().getTypeObj()->getName();
+      if (objectTypeName == objectType->getItemGroup()->getName())
+      {
+        const std::string& absParentName = absParentItem->getController()->getProperty("name").getValue().toString();
+        mapGroups[absParentName].push_back(absItemName);
+      }
+      else
+      {
+        //we must not export items that are inside parent items that arent groups. These items must handle themselves
+        continue;
+      }
     }
 
-    //I am not a group
-    //if (qItem->childItems().empty() == true)
+    //Adds the properties of the item to the vector
+    AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(qItem);
+    if(lItem)
     {
-      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(qItem);
-      if(lItem)
-      {
-        const Property& pIsPrintable = lItem->getController()->getProperty("printable");
-        if(pIsPrintable.getValue().toBool() == false)
-          continue;
+      const Property& pIsPrintable = lItem->getController()->getProperty("printable");
+      if(pIsPrintable.getValue().toBool() == false)
+        continue;
         
-        properties.push_back(lItem->getController()->getProperties());
-      }
+      properties.push_back(lItem->getController()->getProperties());
     }
   }
 
@@ -788,7 +797,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
     if(proper.getProperties().empty())
       continue;
 
-    if (proper.getTypeObj() == groupType || proper.getTypeObj() == mapCompositionType)
+    if (proper.getTypeObj() == groupType)
     {
       mapProperties[proper.getProperty("name").getValue().toString()] = proper;
       continue;

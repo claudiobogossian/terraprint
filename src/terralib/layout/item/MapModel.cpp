@@ -70,7 +70,6 @@ te::layout::MapModel::MapModel()
   pro_mapSettings.setName("mapSettings");
   pro_mapSettings.setLabel(TR_LAYOUT("Map Settings"));
   pro_mapSettings.setValue(value, dataType->getDataTypeMapSettings());
-  pro_mapSettings.setSerializable(false);
   pro_mapSettings.setMenu(true);
 
   {
@@ -81,7 +80,7 @@ te::layout::MapModel::MapModel()
     property.setEditable(false);
     property.setVisible(false);
     property.setSerializable(false);
-    m_properties.addProperty(property);
+    pro_mapSettings.addSubProperty(property);
   }
 
   {
@@ -91,7 +90,7 @@ te::layout::MapModel::MapModel()
     property.setValue(vString, dataType->getDataTypeStringVector());
     property.setEditable(false);
     property.setVisible(false);
-    m_properties.addProperty(property);
+    pro_mapSettings.addSubProperty(property);
   }
 
   {
