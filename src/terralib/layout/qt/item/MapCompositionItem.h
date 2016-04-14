@@ -70,6 +70,8 @@ namespace te
 
         te::layout::AbstractItemView* getGeodesicGridItem();
 
+        virtual void initItems();
+
         virtual void setEditionMode(bool editionMode);
 
         virtual bool isEditionMode();

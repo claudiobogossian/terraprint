@@ -48,16 +48,25 @@ te::layout::Property te::layout::MapLayerChoiceController::getProperty(std::stri
   Property prop;
 
   ItemUtils utils(m_scene);
-  std::vector<MapItem*> mapList = utils.getMapItemList();
+  std::vector<MapItem*> vecMap = utils.getMapItemList();
 
-  if (mapList.size() == 0)
+  if (vecMap.empty() == true)
     return prop;
 
-  QGraphicsItem* item = mapList[0];
-  MapItem* mapItem = dynamic_cast<MapItem*>(item);
-  if (mapItem)
+  //seraches for the selected MapItem
+  for (size_t i = 0; i < vecMap.size(); ++i)
   {
-    prop = mapItem->getController()->getProperty(name);
+    MapItem* mapItem = vecMap[i];
+    if (mapItem->isSelected() == true)
+    {
+      prop = mapItem->getController()->getProperty(name);
+      break;
+    }
+    else if(mapItem->parentItem() != 0 && mapItem->parentItem()->isSelected())
+    {
+      prop = mapItem->getController()->getProperty(name);
+      break;
+    }
   }
 
   return prop;
