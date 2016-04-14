@@ -104,7 +104,6 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
   if (it != mapProperties.end())
   {
     ItemGroupController::setProperties(it->second);
-    return;
   }
 
   std::vector<AbstractItemView*> vecAvailableViews;
