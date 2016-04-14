@@ -829,6 +829,17 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
   return true;
 }
 
+
+void te::layout::Scene::buildItem(te::layout::Properties props,std::string &name, int &id, bool isCopy)
+{
+  BuildGraphicsItem build(this);
+
+  build.buildItem(props, false, isCopy);
+  id = build.getNewId();
+  name = build.getNewName();
+
+}
+
 void te::layout::Scene::redrawSelectionMap()
 {
   QList<QGraphicsItem*> selected = selectedItems();

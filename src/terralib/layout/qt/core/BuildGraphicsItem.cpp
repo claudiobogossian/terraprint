@@ -45,7 +45,8 @@
 
 te::layout::BuildGraphicsItem::BuildGraphicsItem(Scene* scene, QObject* parent) :
   QObject(parent),
-  m_scene(scene)
+  m_scene(scene),
+  m_newId(-1)
 {
   if (m_scene)
   {
@@ -59,7 +60,7 @@ te::layout::BuildGraphicsItem::~BuildGraphicsItem()
  
 }
 
-QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties props, bool addUndo)
+QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties props, bool addUndo, bool isCopy)
 {
   QGraphicsItem* item = 0;
 
@@ -75,7 +76,7 @@ QGraphicsItem* te::layout::BuildGraphicsItem::buildItem(te::layout::Properties p
   
   EnumType* type = props.getTypeObj();
 
-  item = createItem(type, addUndo);
+  item = createItem(type, addUndo, isCopy);
 
   clear();
   
@@ -100,7 +101,7 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
   return item;
 }
 
-QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* itemType, bool addUndo)
+QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* itemType, bool addUndo, bool isCopy)
 {
   QGraphicsItem* item = 0;
 
@@ -108,10 +109,27 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
   {
     return item;
   }
-  
-  ItemFactoryParamsCreate params = createParams(itemType);
+
+  ItemFactoryParamsCreate params = createParams(itemType, isCopy);
 
   std::string name = itemType->getName();
+
+  if (isCopy == true)
+  {
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    Property idProp = m_props.getProperty("id");
+
+    idProp.setValue(m_id, dataType->getDataTypeInt());
+    m_props.updateProperty(idProp);
+
+    Property nameProp = m_props.getProperty("name");
+    nameProp.setValue(nameItem(itemType), dataType->getDataTypeString());
+    m_props.updateProperty(nameProp);
+
+    m_newId = m_id;
+
+  }
 
   AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
   item = dynamic_cast<QGraphicsItem*>(abstractItem);
@@ -213,23 +231,32 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
   }
 }
 
-te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type)
+te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type, bool isCopy)
 {
   std::string strName = nameItem(type);
 
+  if (isCopy == true)
+  {
+    m_name = strName;
+    return ItemFactoryParamsCreate(strName, m_id, m_coord, m_width, m_height);
+  }
+
   if (m_props.getProperties().empty())
   {
+    m_name = strName;
     return ItemFactoryParamsCreate(strName, m_id, m_coord, m_width, m_height);
   }
 
   std::string name = findName(m_props);
   if (name.empty())
   {
+    m_name = strName;
     Properties pEmpty;
     return ItemFactoryParamsCreate(strName, m_coord, pEmpty);
   }  
 
   Properties pEmpty;
+  m_name = name;
   return ItemFactoryParamsCreate(name, m_id, m_coord, m_width, m_height);
 }
 
@@ -266,3 +293,12 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   }
 }
 
+int te::layout::BuildGraphicsItem::getNewId()
+{
+  return m_newId;
+}
+
+std::string te::layout::BuildGraphicsItem::getNewName()
+{
+  return m_name;
+}

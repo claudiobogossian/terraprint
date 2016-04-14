@@ -65,6 +65,10 @@
 #include <QScrollBar>
 #include <QLayout>
 
+#include <memory>
+
+
+
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
   m_visualizationArea(0),
@@ -81,8 +85,10 @@ te::layout::View::View( QWidget* widget) :
   m_dialogItemToolbar(0),
   m_currentToolbarInsideType(0),
   m_midButtonClicked(false),
-  m_showContextMenu(true)
+  m_showContextMenu(true),
+  m_clipboard(QApplication::clipboard())
 {
+
   setDragMode(RubberBandDrag);
 
   m_horizontalRuler = new HorizontalRuler;
@@ -147,7 +153,12 @@ te::layout::View::~View()
     delete m_horizontalRuler;
     m_horizontalRuler = 0;
   }
+  
+  m_clipboard->clear();
 }
+
+
+
 
 void te::layout::View::mousePressEvent( QMouseEvent * event )
 {
@@ -406,7 +417,115 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
       m_currentTool->keyPressEvent(keyEvent);
     }
   }
+  else if ((keyEvent->modifiers() == Qt::ControlModifier) & (keyEvent->key() == Qt::Key_C))
+  {
+    copyToClipboard();
+  }
+  else if ((keyEvent->modifiers() == Qt::ControlModifier) & (keyEvent->key() == Qt::Key_V))
+  {
+    paste();
+  }
   QGraphicsView::keyPressEvent(keyEvent);
+}
+
+void te::layout::View::copyToClipboard()
+{
+  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
+  std::vector<Properties> propertiesList;
+ 
+
+  foreach(QGraphicsItem* item, graphicsItems)
+  {
+    AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+    Properties itemProperties = view->getController()->getProperties();
+    propertiesList.push_back(itemProperties);
+
+  }
+
+  QMimeData* data = convert2MimeData(propertiesList);
+
+  m_clipboard->setMimeData(data);
+ 
+}
+
+void te::layout::View::paste()
+{
+  const QMimeData *clipboardData = m_clipboard->mimeData();
+
+  if (!clipboardData->hasFormat("application/layout-item"))
+  {
+    return;
+  }
+
+  QByteArray arrayData = clipboardData->data("application/layout-item");
+
+  qulonglong dataValue = arrayData.toULongLong();
+
+  Scene* nscene = dynamic_cast<Scene*>(scene());
+
+  if (!nscene)
+    return;
+
+  std::auto_ptr< std::vector<Properties>> changed(reinterpret_cast< std::vector<Properties>*>(dataValue));
+
+  std::map<std::string, std::string> newNames;
+  std::map<int, int> newIds;
+
+  std::vector<Properties> p = *changed.get();
+
+  for (int i = 0; i < p.size(); i++){
+    Properties prop;
+    prop = p.at(i);
+    Property pro_name = prop.getProperty("name");
+    Property pro_id = prop.getProperty("id");
+
+    std::string oldName;
+    int oldId;
+
+    oldName = pro_name.getValue().toString();
+    oldId = pro_id.getValue().toInt();
+
+    Variant var;
+    pro_name.setValue(var);
+    prop.updateProperty(pro_name);
+    std::string newName;
+    int newId;
+    
+    nscene->buildItem(prop, newName, newId, true);
+
+    newNames[oldName] = newName;
+    newIds[oldId] = newId;
+
+
+  }
+
+
+ // Properties *p = changed->at(0);
+  
+  //int size = structData->properties.size();
+}
+
+QMimeData* te::layout::View::convert2MimeData(const  std::vector<Properties>& properties)
+{
+  QMimeData *mimeData = new QMimeData();
+  std::vector<Properties>* aux = new std::vector<Properties>();
+
+  foreach(Properties prop, properties)
+  {
+    aux->push_back(prop);
+  }
+
+  qulonglong longValue = (qulonglong)aux;
+
+  QString s;
+  s.setNum((qulonglong)aux);
+
+  QByteArray encodedData(s.toStdString().c_str());
+
+  mimeData->setData("application/layout-item", encodedData);
+
+  return mimeData;
+
 }
 
 void te::layout::View::config()
