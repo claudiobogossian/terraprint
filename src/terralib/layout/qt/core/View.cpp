@@ -46,6 +46,7 @@
 #include "BuildGraphicsOutside.h"
 #include "../inside/ToolbarItemInside.h"
 #include "../inside/DialogItemToolbar.h"
+#include "../../core/property/SharedProperties.h"
 
 // Qt
 #include <QMouseEvent>
@@ -478,6 +479,10 @@ void te::layout::View::paste()
     prop = p.at(i);
     Property pro_name = prop.getProperty("name");
     Property pro_id = prop.getProperty("id");
+
+
+    SharedProperties sharedProps;
+    Property pro_connect = prop.getProperty(sharedProps.getItemObserver());
 
     std::string oldName;
     int oldId;
