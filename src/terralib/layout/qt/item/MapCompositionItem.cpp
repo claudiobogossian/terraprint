@@ -45,49 +45,6 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
   m_stacksBehindParent = true;
   m_isSubSelectionAllowed = false;
   this->setHandlesChildEvents(false);
-
-  {
-    ItemFactoryParamsCreate params("MapCompositionItem_Map");// = createParams(itemType);
-    std::string name = "MAP_ITEM";
-
-    AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
-    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-    if (item != 0)
-    {
-      this->addToGroup(item);
-    }
-
-    m_mapItem = abstractItem;
-  }
-  {
-    ItemFactoryParamsCreate params("MapCompositionItem_PlanarGrid");// = createParams(itemType);
-    std::string name = "GRID_PLANAR_ITEM";
-
-    AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
-    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-    if (item != 0)
-    {
-      this->addToGroup(item);
-    }
-
-    m_planarGridItem = abstractItem;
-  }
-    {
-      ItemFactoryParamsCreate params("MapCompositionItem_GeodesicGrid");// = createParams(itemType);
-      std::string name = "GRID_GEODESIC_ITEM";
-
-      AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
-      QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-      if (item != 0)
-      {
-        this->addToGroup(item);
-      }
-
-      m_geodesicGridItem = abstractItem;
-    }
 }
 
 te::layout::MapCompositionItem::~MapCompositionItem()
@@ -108,6 +65,65 @@ te::layout::AbstractItemView* te::layout::MapCompositionItem::getPlanarGridItem(
 te::layout::AbstractItemView* te::layout::MapCompositionItem::getGeodesicGridItem()
 {
   return m_geodesicGridItem;
+}
+
+void te::layout::MapCompositionItem::initItems()
+{
+  const Property& pName = this->getController()->getProperty("name");
+  const std::string& parentName = pName.getValue().toString();
+
+  std::string mapName = parentName + "_Map";
+  {
+    ItemFactoryParamsCreate params(mapName);// = createParams(itemType);
+    std::string type = "MAP_ITEM";
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      this->addToGroup(item);
+    }
+
+    m_mapItem = abstractItem;
+  }
+  {
+    ItemFactoryParamsCreate params(parentName + "_PlanarGrid");// = createParams(itemType);
+    std::string type = "GRID_PLANAR_ITEM";
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      this->addToGroup(item);
+    }
+
+    m_planarGridItem = abstractItem;
+  }
+  {
+    ItemFactoryParamsCreate params(parentName + "_GeodesicGrid");// = createParams(itemType);
+    std::string type = "GRID_GEODESIC_ITEM";
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      this->addToGroup(item);
+    }
+
+    m_geodesicGridItem = abstractItem;
+  }
+
+  SharedProperties sharedProps;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  te::layout::Property pAssociate;
+  pAssociate.setName(sharedProps.getItemObserver());
+  pAssociate.setValue(mapName, dataType->getDataTypeItemObserver());
+  m_planarGridItem->getController()->setProperty(pAssociate);
+  m_geodesicGridItem->getController()->setProperty(pAssociate);
 }
 
 void te::layout::MapCompositionItem::setEditionMode(bool editionMode)
@@ -172,16 +188,7 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   }
   else if (change == QGraphicsItem::ItemSceneHasChanged)
   {
-    SharedProperties sharedProps;
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-    std::string mapName = "MapCompositionItem_Map";
-
-    te::layout::Property pAssociate;
-    pAssociate.setName(sharedProps.getItemObserver());
-    pAssociate.setValue(mapName, dataType->getDataTypeItemObserver());
-    m_planarGridItem->getController()->setProperty(pAssociate);
-    m_geodesicGridItem->getController()->setProperty(pAssociate);
+    initItems();
   }
   return ItemGroup::itemChange(change, value);
 }
