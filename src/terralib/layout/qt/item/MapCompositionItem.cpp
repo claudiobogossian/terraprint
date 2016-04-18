@@ -188,10 +188,17 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
 
 void te::layout::MapCompositionItem::updateChildSize(AbstractItemView* item)
 {
-  if (!m_spaceBetweenParentChild.contains(item))
+  if (!m_spaceBetweenParentChild.contains(item) || !m_mapItem)
   {
     return;
   }
+
+  MapItem* map = dynamic_cast<MapItem*>(item);
+  if (!map)
+    return;
+
+  if (map != m_mapItem)
+    return;
 
   QSize childSpace = m_spaceBetweenParentChild[item];
 

@@ -37,6 +37,7 @@
 
 // Qt
 #include <QString>
+#include <QPainterPath>
 
 namespace te
 {

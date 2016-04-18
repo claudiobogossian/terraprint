@@ -30,6 +30,7 @@
 
 // TerraLib
 #include "../../Config.h"
+#include "../../enum/AbstractType.h"
 #include "../observer/Observer.h"
 #include "terralib/geometry/Coord2D.h"
 
@@ -37,7 +38,8 @@
 #include <string>
 
 // Qt
-#include <QGraphicsItem>
+#include <QPointF>
+#include <QRectF>
 
 class QVariant;
 
@@ -122,6 +124,10 @@ namespace te
 
         virtual void itemZValueChanged(int index);
 
+        virtual QRectF resize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
+
+        double getMarginResizePrecision();
+
       protected:
 
         /*!
@@ -145,9 +151,16 @@ namespace te
           \brief Sync properties related to the item association
         */
         virtual bool syncItemAssociation(Properties& properties);
+
+        virtual QRectF calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
+
+        virtual bool isLimitExceeded(QRectF resizeRect);
+
+        virtual void updateBoundingRect(QRectF rect);
         
         AbstractItemModel*    m_model; //!< The model of the view
         AbstractItemView*     m_view; //!< The view
+        double                m_marginResizePrecision; //precision
     };
   }
 }

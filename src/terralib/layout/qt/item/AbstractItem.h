@@ -44,6 +44,7 @@
 #include "../../core/enum/AbstractType.h"
 
 //Qt
+#include <QGraphicsItem>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QRectF>
@@ -819,16 +820,20 @@ namespace te
       if (m_currentAction == te::layout::RESIZE_ACTION)
       {
         m_finalCoord = event->pos();
-        calculateResize();
-        QPointF newPos(m_rect.x(), m_rect.y());
-        newPos = T::mapToParent(newPos);
-        
-        T::setPos(newPos);
+        /*calculateResize();
+          QPointF newPos(m_rect.x(), m_rect.y());
+          newPos = T::mapToParent(newPos);
+
+          T::setPos(newPos);*/
+
+        m_rect = m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
+
         m_rect.moveTo(0, 0);
         T::setOpacity(1.);
-        m_controller->resized(m_rect.width(), m_rect.height());
+
+        /*m_controller->resized(m_rect.width(), m_rect.height());
         endResize();
-        resized();
+        resized();*/
       }
       else if (m_currentAction == te::layout::MOVE_ACTION)
       {

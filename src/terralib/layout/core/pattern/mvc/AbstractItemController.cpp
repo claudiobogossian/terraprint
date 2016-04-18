@@ -28,10 +28,14 @@
 #include "../../property/GenericVariant.h"
 #include "../../AbstractScene.h"
 
+// Qt
+#include <QGraphicsItem>
+
 te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model)
   : Observer()
   , m_model(model)
   , m_view(0)
+  , m_marginResizePrecision(2.)
 {
   if(m_model != 0)
   {
@@ -340,5 +344,155 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
   }
 
   return true;
+}
+
+QRectF te::layout::AbstractItemController::resize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)
+{
+  QRectF newRectSize = calculateResize(grabbedPoint, initialCoord, finalCoord);
+  updateBoundingRect(newRectSize);
+  
+  //endResize();
+  //resized();
+  return newRectSize;
+}
+
+QRectF te::layout::AbstractItemController::calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)
+{
+  te::gm::Envelope box = m_model->getBoundingRect();
+
+  QRectF oldRect(0, 0, box.getWidth(), box.getHeight());
+  QRectF resizeRect = oldRect;
+
+  double width = getProperty("width").getValue().toDouble();
+  double height = getProperty("height").getValue().toDouble();
+  bool keepAspect = getProperty("keep_aspect").getValue().toBool();
+  double factor = width / height;
+  
+  double dx = finalCoord.x() - initialCoord.x();
+  double dy = finalCoord.y() - initialCoord.y();
+
+  double correctionX = dx;
+  double correctionY = dy;
+
+  if (keepAspect == true)
+  {
+    correctionX = (dy * factor);
+    correctionY = correctionX;
+  }
+
+  switch (grabbedPoint)
+  {
+  case TPTopRight:
+    finalCoord.setX(initialCoord.x() + correctionX);
+    resizeRect.setBottomRight(finalCoord);
+    break;
+
+  case TPTopLeft:
+    if (keepAspect == true)
+      finalCoord.setX(initialCoord.x() - correctionX);
+    else
+      finalCoord.setX(initialCoord.x() + correctionX);
+    resizeRect.setBottomLeft(finalCoord);
+    break;
+
+  case TPLowerRight:
+    if (keepAspect == true)
+      finalCoord.setX(initialCoord.x() - correctionX);
+    else
+      finalCoord.setX(initialCoord.x() + correctionX);
+    resizeRect.setTopRight(finalCoord);
+    break;
+
+  case TPLowerLeft:
+    finalCoord.setX(initialCoord.x() + correctionX);
+    resizeRect.setTopLeft(finalCoord);
+    break;
+
+  case TPRight:
+    resizeRect.setRight(initialCoord.x() + correctionX);
+    break;
+
+  case TPLeft:
+    resizeRect.setLeft(initialCoord.x() + correctionX);
+    break;
+
+  case TPTop:
+    resizeRect.setBottom(initialCoord.y() + correctionY);
+    break;
+
+  case TPLower:
+    resizeRect.setTop(initialCoord.y() + correctionY);
+    break;
+
+  default:
+    break;
+  }
+
+  if (isLimitExceeded(resizeRect) == false)
+  {    
+    return resizeRect;
+  }
+
+  return oldRect;
+}
+
+bool te::layout::AbstractItemController::isLimitExceeded(QRectF resizeRect)
+{
+  bool result = false;
+
+  if ((resizeRect.width() - m_marginResizePrecision) <= 0
+    || (resizeRect.height() - m_marginResizePrecision) <= 0)
+  {
+    result = true;
+  }
+
+  return result;
+}
+
+double te::layout::AbstractItemController::getMarginResizePrecision()
+{
+  return m_marginResizePrecision;
+}
+
+void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = rect.x();
+  double y = rect.y();
+
+  AbstractItemView* abstractView = getView();
+  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractView);
+  if (item)
+  {
+    QPointF newPos(x, y);
+    // Convert coordinated item for coordinated scene or parent
+    newPos = item->mapToParent(newPos);
+    x = newPos.x();
+    y = newPos.y();
+  }
+
+  double width = rect.width();
+  double height = rect.height();
+
+  Property prop_x = getProperty("x");
+  prop_x.setValue(x, dataType->getDataTypeDouble());
+
+  Property prop_y = getProperty("y");
+  prop_y.setValue(y, dataType->getDataTypeDouble());
+
+  Property prop_width = getProperty("width");
+  prop_width.setValue(width, dataType->getDataTypeDouble());
+
+  Property prop_height = getProperty("height");
+  prop_height.setValue(height, dataType->getDataTypeDouble());
+
+  Properties props;
+  props.addProperty(prop_x);
+  props.addProperty(prop_y);
+  props.addProperty(prop_width);
+  props.addProperty(prop_height);
+
+  setProperties(props);
 }
 
