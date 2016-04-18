@@ -27,11 +27,8 @@
 
 // TerraLib
 #include "MapCompositionItem.h"
-#include "MapItem.h"
 #include "../../core/property/SharedProperties.h"
 #include "../core/pattern/factory/item/ItemFactory.h"
-
-
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
@@ -184,65 +181,5 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
     m_geodesicGridItem->getController()->setProperty(pAssociate);
   }
   return ItemGroup::itemChange(change, value);
-}
-
-void te::layout::MapCompositionItem::updateChildSize(AbstractItemView* item)
-{
-  if (!m_spaceBetweenParentChild.contains(item) || !m_mapItem)
-  {
-    return;
-  }
-
-  MapItem* map = dynamic_cast<MapItem*>(item);
-  if (!map)
-    return;
-
-  if (map != m_mapItem)
-    return;
-
-  QSize childSpace = m_spaceBetweenParentChild[item];
-
-  double currentWidth = m_controller->getProperty("width").getValue().toDouble();
-  double currentHeight = m_controller->getProperty("height").getValue().toDouble();
-
-  double width = currentWidth - childSpace.width();
-  double height = currentHeight - childSpace.height();
-
-  if (width < m_marginResizePrecision || height < m_marginResizePrecision)
-  {
-    return;
-  }
-
-  SharedProperties sharedProps;
-  // search for observable item
-  const Property& pConnectItemPosition = item->getController()->getProperty(sharedProps.getItemObserver());
-  if (pConnectItemPosition.isNull())
-  {
-    //update properties
-    item->getController()->resized(width, height);
-    item->prepareGeometryChange(); //update childrenBoundingRect
-  }
-}
-
-void te::layout::MapCompositionItem::beginResize()
-{
-  m_spaceBetweenParentChild.clear();
-  QList<QGraphicsItem*> children = childItems();
-  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
-  {
-    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-    if (item)
-    {
-      QRectF boundRect = (*it)->boundingRect();
-      double width = childrenBoundingRect().width() - boundRect.width();
-      double height = childrenBoundingRect().height() - boundRect.height();
-      m_spaceBetweenParentChild[item] = QSize(width, height);
-    }
-  }
-}
-
-void te::layout::MapCompositionItem::resized()
-{
-  
 }
 

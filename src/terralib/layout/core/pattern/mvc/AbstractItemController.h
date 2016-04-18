@@ -40,6 +40,8 @@
 // Qt
 #include <QPointF>
 #include <QRectF>
+#include <QMap>
+#include <QSize>
 
 class QVariant;
 
@@ -128,6 +130,12 @@ namespace te
 
         double getMarginResizePrecision();
 
+        virtual void updateChildren();
+
+        virtual void beginResize();
+
+        virtual QRectF calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
+        
       protected:
 
         /*!
@@ -152,15 +160,20 @@ namespace te
         */
         virtual bool syncItemAssociation(Properties& properties);
 
-        virtual QRectF calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
-
         virtual bool isLimitExceeded(QRectF resizeRect);
 
         virtual void updateBoundingRect(QRectF rect);
+
+        virtual void updateChildSize(AbstractItemView* item);
+
+        virtual void endResize();
         
-        AbstractItemModel*    m_model; //!< The model of the view
-        AbstractItemView*     m_view; //!< The view
-        double                m_marginResizePrecision; //precision
+      protected:
+                  
+        AbstractItemModel*                m_model; //!< The model of the view
+        AbstractItemView*                 m_view; //!< The view
+        double                            m_marginResizePrecision; //precision
+        QMap<AbstractItemView*, QSize>    m_spaceBetweenParentChild;
     };
   }
 }

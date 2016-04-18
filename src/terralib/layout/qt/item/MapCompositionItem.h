@@ -78,15 +78,7 @@ namespace te
         \brief Reimplemented from QGraphicsItem to capture changes in the item
         */
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value);
-
-      protected:
-
-        virtual void updateChildSize(AbstractItemView* item);
-
-        virtual void resized();
-
-        virtual void beginResize();
-
+        
       protected:
     
         te::layout::AbstractItemView* m_mapItem;

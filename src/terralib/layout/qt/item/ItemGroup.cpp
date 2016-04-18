@@ -216,11 +216,3 @@ bool te::layout::ItemGroup::hasChildrenInResizeMode()
   return result;
 }
 
-void te::layout::ItemGroup::resized()
-{
-  if (!childItems().isEmpty())
-  {
-    m_controller->resized(childrenBoundingRect().width(), childrenBoundingRect().height());
-  }
-}
-

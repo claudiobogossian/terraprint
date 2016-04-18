@@ -19,9 +19,10 @@
 
 // TerraLib
 #include "MapCompositionController.h"
-#include "MapCompositionItem.h"
-
+#include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
+#include "MapCompositionItem.h"
+#include "MapItem.h"
 
 #include <set>
 
@@ -198,3 +199,66 @@ void te::layout::MapCompositionController::hideProperties(Property& property) co
     property.completelyUpdateSubProperty(subProperty);
   }
 }
+
+void te::layout::MapCompositionController::updateChildSize(AbstractItemView* item)
+{
+  if (!m_spaceBetweenParentChild.contains(item))
+  {
+    return;
+  }
+
+  MapItem* map = dynamic_cast<MapItem*>(item);
+  if (!map)
+    return;
+
+  if (map)
+    return;
+
+  QSize childSpace = m_spaceBetweenParentChild[item];
+
+  double currentWidth = getProperty("width").getValue().toDouble();
+  double currentHeight = getProperty("height").getValue().toDouble();
+
+  double width = currentWidth - childSpace.width();
+  double height = currentHeight - childSpace.height();
+
+  if (width < m_marginResizePrecision || height < m_marginResizePrecision)
+  {
+    return;
+  }
+
+  SharedProperties sharedProps;
+  // search for observable item
+  const Property& pConnectItemPosition = item->getController()->getProperty(sharedProps.getItemObserver());
+  if (pConnectItemPosition.isNull())
+  {
+    //update properties
+    item->getController()->resized(width, height);
+    item->prepareGeometryChange(); //update childrenBoundingRect
+  }
+}
+
+void te::layout::MapCompositionController::beginResize()
+{
+  AbstractItemView* abstractView = getView();
+  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractView);
+  if (!item)
+  {
+    return;
+  }
+
+  m_spaceBetweenParentChild.clear();
+  QList<QGraphicsItem*> children = item->childItems();
+  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+  {
+    AbstractItemView* currentItem = dynamic_cast<AbstractItemView*>(*it);
+    if (currentItem)
+    {
+      QRectF boundRect = (*it)->boundingRect();
+      double width = item->childrenBoundingRect().width() - boundRect.width();
+      double height = item->childrenBoundingRect().height() - boundRect.height();
+      m_spaceBetweenParentChild[currentItem] = QSize(width, height);
+    }
+  }
+}
+
