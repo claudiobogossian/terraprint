@@ -1,28 +1,28 @@
 /*  Copyright (C) 2008 National Institute For Space Research (INPE) - Brazil.
 
-    This file is part of the TerraLib - a Framework for building GIS enabled applications.
+This file is part of the TerraLib - a Framework for building GIS enabled applications.
 
-    TerraLib is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License,
-    or (at your option) any later version.
+TerraLib is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
 
-    TerraLib is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Lesser General Public License for more details.
+TerraLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with TerraLib. See COPYING. If not, write to
-    TerraLib Team at <terralib-team@terralib.org>.
- */
+You should have received a copy of the GNU Lesser General Public License
+along with TerraLib. See COPYING. If not, write to
+TerraLib Team at <terralib-team@terralib.org>.
+*/
 
 /*!
-  \file ImageItem.cpp
-   
-  \brief 
+\file ImageItem.cpp
 
-  \ingroup layout
+\brief
+
+\ingroup layout
 */
 
 // TerraLib
@@ -30,57 +30,9 @@
 
 // Qt
 #include <QStyleOptionGraphicsItem>
-#include <QBitmap>
-
-static const char* simbolos[46] =
-{
-  "40 40 2 1",
-  ". c #cfcfcfcfc1c1",
-  "X c #000",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  ".................XXXXX..................",
-  "...............XXXXXXXXX................",
-  ".............XXXXXXXXXXXXX..............",
-  ".............XXXXXXXXXXXXX..............",
-  "............XXXXXXXXXXXXXXX.............",
-  "............XXXXXXXXXXXXXXX.............",
-  "...........XXXXXXXXXXXXXXXXX............",
-  "...........XXXXXXXXXXXXXXXXX............",
-  "...........XXXXXXXXXXXXXXXXX............",
-  "...........XXXXXXXXXXXXXXXXX............",
-  "...........XXXXXXXXXXXXXXXXX............",
-  "............XXXXXXXXXXXXXXX.............",
-  "............XXXXXXXXXXXXXXX.............",
-  ".............XXXXXXXXXXXXX..............",
-  ".............XXXXXXXXXXXXX..............",
-  "...............XXXXXXXXX................",
-  ".................XXXXX..................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................",
-  "........................................"
-};
 
 te::layout::ImageItem::ImageItem(AbstractItemController* controller)
-: AbstractItem<QGraphicsItem>(controller)
+  : AbstractItem<QGraphicsItem>(controller)
 {
 }
 
@@ -144,34 +96,7 @@ void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraph
   painter->setRenderHint(QPainter::Antialiasing, true);
 
   //draws the item
-  //painter->drawImage(boundRect, m_image, sourceRect);
-
-  //teste
-  QPixmap xpmPixmap(simbolos);
-  QBitmap mask = xpmPixmap.createMaskFromColor(qRgb(207, 207, 193));
-  xpmPixmap.fill(qRgba(255, 0, 0, 255));
-  xpmPixmap.setMask(mask);
-
-  /*
-  QBitmap mask(m_image.width(), m_image.height());
-  mask.fill(Qt::color0);
-
-  QPainter maskPainter(&mask);
-
-  QPen maskPen(Qt::color1);
-
-  maskPainter.setPen(maskPen);
-  maskPainter.drawLine(0, 0, m_image.width(), m_image.height());
-
-  maskPainter.end();
-
-  QPixmap newPixmap(m_image.width(), m_image.height());
-  newPixmap.fill(qRgba(255, 0, 0, 255));
-  newPixmap.setMask(mask);*/
-
-  //painter->drawPixmap(boundRect, newPixmap, sourceRect);
-  //xpmPixmap.setMask()
-  painter->drawPixmap(boundRect, xpmPixmap, sourceRect);
+  painter->drawImage(boundRect, m_image, sourceRect);
 
   painter->restore();
 }
@@ -197,17 +122,15 @@ void te::layout::ImageItem::adjustSize()
   {
     Property property(0);
     property.setName("width");
-    property.setValue((double) width, dataType->getDataTypeDouble());
+    property.setValue((double)width, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
 
   {
     Property property(0);
     property.setName("height");
-    property.setValue((double) height, dataType->getDataTypeDouble());
+    property.setValue((double)height, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
   m_controller->setProperties(properties);
 }
-
-
