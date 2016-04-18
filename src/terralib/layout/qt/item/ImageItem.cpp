@@ -30,6 +30,54 @@
 
 // Qt
 #include <QStyleOptionGraphicsItem>
+#include <QBitmap>
+
+static const char* simbolos[46] =
+{
+  "40 40 2 1",
+  ". c #cfcfcfcfc1c1",
+  "X c #000",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  ".................XXXXX..................",
+  "...............XXXXXXXXX................",
+  ".............XXXXXXXXXXXXX..............",
+  ".............XXXXXXXXXXXXX..............",
+  "............XXXXXXXXXXXXXXX.............",
+  "............XXXXXXXXXXXXXXX.............",
+  "...........XXXXXXXXXXXXXXXXX............",
+  "...........XXXXXXXXXXXXXXXXX............",
+  "...........XXXXXXXXXXXXXXXXX............",
+  "...........XXXXXXXXXXXXXXXXX............",
+  "...........XXXXXXXXXXXXXXXXX............",
+  "............XXXXXXXXXXXXXXX.............",
+  "............XXXXXXXXXXXXXXX.............",
+  ".............XXXXXXXXXXXXX..............",
+  ".............XXXXXXXXXXXXX..............",
+  "...............XXXXXXXXX................",
+  ".................XXXXX..................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................",
+  "........................................"
+};
 
 te::layout::ImageItem::ImageItem(AbstractItemController* controller)
 : AbstractItem<QGraphicsItem>(controller)
@@ -96,7 +144,34 @@ void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraph
   painter->setRenderHint(QPainter::Antialiasing, true);
 
   //draws the item
-  painter->drawImage(boundRect, m_image, sourceRect);
+  //painter->drawImage(boundRect, m_image, sourceRect);
+
+  //teste
+  QPixmap xpmPixmap(simbolos);
+  QBitmap mask = xpmPixmap.createMaskFromColor(qRgb(207, 207, 193));
+  xpmPixmap.fill(qRgba(255, 0, 0, 255));
+  xpmPixmap.setMask(mask);
+
+  /*
+  QBitmap mask(m_image.width(), m_image.height());
+  mask.fill(Qt::color0);
+
+  QPainter maskPainter(&mask);
+
+  QPen maskPen(Qt::color1);
+
+  maskPainter.setPen(maskPen);
+  maskPainter.drawLine(0, 0, m_image.width(), m_image.height());
+
+  maskPainter.end();
+
+  QPixmap newPixmap(m_image.width(), m_image.height());
+  newPixmap.fill(qRgba(255, 0, 0, 255));
+  newPixmap.setMask(mask);*/
+
+  //painter->drawPixmap(boundRect, newPixmap, sourceRect);
+  //xpmPixmap.setMask()
+  painter->drawPixmap(boundRect, xpmPixmap, sourceRect);
 
   painter->restore();
 }
