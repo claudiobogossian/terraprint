@@ -56,6 +56,18 @@ void te::layout::GridPlanarItem::calculateGrid()
   const Property& pHeight = m_controller->getProperty("height");
   const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
 
+
+  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
+    return;
+
+
+  const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
+  const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
+
+  double initalX = pInitialX.getValue().toDouble();
+  double initalY = pInitialY.getValue().toDouble();
+
   const te::gm::Envelope& planarBox = pPlanarBox.getValue().toEnvelope();
   double width = pWidth.getValue().toDouble();
   double height = pHeight.getValue().toDouble();
@@ -65,24 +77,20 @@ void te::layout::GridPlanarItem::calculateGrid()
 
   clear();
 
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
   
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
 
   double verticalGap = pVerticalGap.getValue().toDouble();
-
-  if (validateVrtGap(planarBox, verticalGap))
-  {
-    calculateVertical(planarBox, referenceBoxMM);
-  }
 
 
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
 
   double horizontalGap = pHorizontalGap.getValue().toDouble();
 
+  if (validateVrtGap(planarBox, verticalGap))
+  {
+    calculateVertical(planarBox, referenceBoxMM);
+  }
 
   if (validateHrzGap(planarBox, horizontalGap))
   {
@@ -116,6 +124,7 @@ void te::layout::GridPlanarItem::calculateGrid()
 
   prepareGeometryChange();
 }
+
 
 void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM )
 {

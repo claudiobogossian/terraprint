@@ -1368,7 +1368,7 @@
             <attribute name="title">
              <string>Grid Settings</string>
             </attribute>
-            <layout class="QGridLayout" name="gridLayout">
+            <layout class="QGridLayout" name="gridLayout2">
              <item row="0" column="0">
               <widget class="QFrame" name="fraGridSettings">
                <property name="frameShape">
