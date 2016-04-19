@@ -122,14 +122,14 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
 
   if (!(m_properties.getTypeObj() == PaperType))
   {
-    QAction* actionCopy = createAction("Copy", "Copy", "Copy");
+    QAction* actionCopy = createAction(tr("Copy"), "Copy", "Copy");
     m_menu->addAction(actionCopy);
 
-    QAction* actionCut = createAction("Cut", "Cut", "Cut");
+    QAction* actionCut = createAction(tr("Cut"), "Cut", "Cut");
     m_menu->addAction(actionCut);
   }
 
-  QAction* actionPaste = createAction("Paste", "Paste", "Paste");
+  QAction* actionPaste = createAction(tr("Paste"), "Paste", "Paste");
   m_menu->addAction(actionPaste);
 
   m_menu->addSeparator();
