@@ -52,6 +52,9 @@
 #include <QImage>
 #include <QCursor>
 #include <QMap>
+#include <QClipboard>
+#include <QMimeData>
+#include <QApplication>
 
 class QMouseEvent;
 class QWheelEvent;
@@ -95,6 +98,7 @@ namespace te
     class TELAYOUTEXPORT View : public QGraphicsView, public AbstractView
     {
       Q_OBJECT //for slots/signals
+
 
       public:
 
@@ -262,6 +266,13 @@ namespace te
         */
         virtual void closeToolbar();
 
+        virtual void copyToClipboard();
+
+        virtual void paste();
+
+        virtual void cutSelectedItens();
+
+
       public slots:
     
     /*!
@@ -365,6 +376,8 @@ namespace te
 
         void showDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList);
 
+
+
       protected:
 
     /*!
@@ -451,6 +464,9 @@ namespace te
         */
         virtual void positioningToolbarOnTheScreen(AbstractItemView* item);
 
+        QMimeData* convert2MimeData(const  std::vector<Properties>& properties);
+
+
       protected:
 
         VisualizationArea*                   m_visualizationArea;
@@ -476,6 +492,13 @@ namespace te
         EnumType*                            m_currentToolbarInsideType;
         bool                                 m_midButtonClicked;
         bool                                 m_showContextMenu;
+        QClipboard*                          m_clipboard;
+        bool                                 m_cutObject;
+
+
+
+
+
     };
   }
 }

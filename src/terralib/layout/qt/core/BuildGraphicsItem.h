@@ -77,7 +77,7 @@ namespace te
       
       \return z value
         */
-        QGraphicsItem* buildItem(te::layout::Properties props, bool addUndo = true);
+        QGraphicsItem* buildItem(te::layout::Properties props, bool addUndo = true, bool isCopy = false);
     
        /*!
          \brief Method to create a graphic object from the properties.
@@ -98,7 +98,11 @@ namespace te
       
           \return item value
         */
-        QGraphicsItem* createItem(te::layout::EnumType* itemType, bool addUndo = true);
+        QGraphicsItem* createItem(te::layout::EnumType* itemType, bool addUndo = true, bool isCopy = false);
+
+
+        std::string getNewName();
+
 
       signals:
 
@@ -128,9 +132,12 @@ namespace te
 
       protected:
 
-        virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type);
+        virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type, bool isCopy = false);
 
         Scene*      m_scene;
+
+        std::string   m_name;
+        
     };
   }
 }

@@ -46,6 +46,7 @@
 #include "BuildGraphicsOutside.h"
 #include "../inside/ToolbarItemInside.h"
 #include "../inside/DialogItemToolbar.h"
+#include "../../core/property/SharedProperties.h"
 
 // Qt
 #include <QMouseEvent>
@@ -65,6 +66,10 @@
 #include <QScrollBar>
 #include <QLayout>
 
+#include <memory>
+
+
+
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
   m_visualizationArea(0),
@@ -81,8 +86,11 @@ te::layout::View::View( QWidget* widget) :
   m_dialogItemToolbar(0),
   m_currentToolbarInsideType(0),
   m_midButtonClicked(false),
-  m_showContextMenu(true)
+  m_showContextMenu(true),
+  m_clipboard(QApplication::clipboard()),
+  m_cutObject(false)
 {
+
   setDragMode(RubberBandDrag);
 
   m_horizontalRuler = new HorizontalRuler;
@@ -147,7 +155,12 @@ te::layout::View::~View()
     delete m_horizontalRuler;
     m_horizontalRuler = 0;
   }
+  
+  m_clipboard->clear();
 }
+
+
+
 
 void te::layout::View::mousePressEvent( QMouseEvent * event )
 {
@@ -406,7 +419,271 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
       m_currentTool->keyPressEvent(keyEvent);
     }
   }
+  else if ((keyEvent->modifiers() == Qt::ControlModifier) & (keyEvent->key() == Qt::Key_C))
+  {
+    copyToClipboard();
+  }
+  else if ((keyEvent->modifiers() == Qt::ControlModifier) & (keyEvent->key() == Qt::Key_V))
+  {
+    paste();
+  }
+  else if ((keyEvent->modifiers() == Qt::ControlModifier) & (keyEvent->key() == Qt::Key_X))
+  {
+    cutSelectedItens();
+  }
   QGraphicsView::keyPressEvent(keyEvent);
+}
+
+void te::layout::View::copyToClipboard()
+{
+  QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
+  std::vector<Properties> propertiesList;
+ 
+
+  foreach(QGraphicsItem* item, graphicsItems)
+  {
+    AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+    Properties itemProperties = view->getController()->getProperties();
+    propertiesList.push_back(itemProperties);
+
+  }
+
+  QMimeData* data = convert2MimeData(propertiesList);
+
+  m_clipboard->setMimeData(data);
+
+  m_cutObject = false;
+ 
+}
+
+void te::layout::View::paste()
+{
+  const QMimeData *clipboardData = m_clipboard->mimeData();
+
+  if (!clipboardData->hasFormat("application/layout-item"))
+  {
+    return;
+  }
+
+  QByteArray arrayData = clipboardData->data("application/layout-item");
+
+  qulonglong dataValue = arrayData.toULongLong();
+
+  Scene* nscene = dynamic_cast<Scene*>(scene());
+
+  if (!nscene)
+    return;
+
+  std::auto_ptr< std::vector<Properties>> changed(reinterpret_cast< std::vector<Properties>*>(dataValue));
+
+  std::map<std::string, std::string> newNames;
+  std::map<int, int> newIds;
+
+  std::vector<Properties> p = *changed.get();
+
+  std::vector<Properties> mapItens;
+  std::vector<Properties> otherItens;
+
+  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+
+  for (int i = 0; i < p.size(); i++){
+
+    Properties prop;
+    prop = p.at(i);
+
+    if (prop.getTypeObj() == mapCompositionType)
+    {
+      mapItens.push_back(prop);
+    }
+    else
+    {
+      otherItens.push_back(prop);
+    }
+
+    
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    Property pX = prop.getProperty("x");
+    Property pY = prop.getProperty("y");
+
+    double x = pX.getValue().toDouble();
+    double y = pY.getValue().toDouble();
+
+    Variant varX;
+    Variant varY;
+
+    varX.setValue(x + 20.0, dataType->getDataTypeDouble());
+    pX.setValue(varX);
+    prop.updateProperty(pX);
+
+    varY.setValue(y - 20.0, dataType->getDataTypeDouble());
+    pY.setValue(varY);
+    prop.updateProperty(pY);
+
+
+  }
+
+  for (int i = 0; i < mapItens.size(); i++)
+  {
+    Properties prop;
+    prop = mapItens.at(i);
+    Property pro_name = prop.getProperty("name");
+    Property pro_id = prop.getProperty("id");
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    if (m_cutObject == false)
+    {
+
+      Property pX = prop.getProperty("x");
+      Property pY = prop.getProperty("y");
+
+      double x = pX.getValue().toDouble();
+      double y = pY.getValue().toDouble();
+
+      Variant varX;
+      Variant varY;
+
+      varX.setValue(x + 20.0, dataType->getDataTypeDouble());
+      pX.setValue(varX);
+      prop.updateProperty(pX);
+
+      varY.setValue(y - 20.0, dataType->getDataTypeDouble());
+      pY.setValue(varY);
+      prop.updateProperty(pY);
+
+    }
+
+
+    SharedProperties sharedProps;
+
+    std::string oldName;
+    int oldId;
+
+    oldName = pro_name.getValue().toString();
+    oldId = pro_id.getValue().toInt();
+
+    Variant var;
+    pro_name.setValue(var);
+    prop.updateProperty(pro_name);
+    std::string newName;
+
+    nscene->buildItem(prop, newName, true);
+
+    newNames[oldName] = newName;
+  }
+
+
+  for (int i = 0; i < otherItens.size(); i++)
+  {
+    Properties prop;
+    prop = otherItens.at(i);
+    Property pro_name = prop.getProperty("name");
+    Property pro_id = prop.getProperty("id");
+
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    if (m_cutObject == false)
+    {
+      Property pX = prop.getProperty("x");
+      Property pY = prop.getProperty("y");
+
+      double x = pX.getValue().toDouble();
+      double y = pY.getValue().toDouble();
+
+      Variant varX;
+      Variant varY;
+
+      varX.setValue(x + 5.0, dataType->getDataTypeDouble());
+      pX.setValue(varX);
+      prop.updateProperty(pX);
+
+      varY.setValue(y - 5.0, dataType->getDataTypeDouble());
+      pY.setValue(varY);
+      prop.updateProperty(pY);
+
+    }
+    
+
+    SharedProperties sharedProps;
+    Property connect = prop.getProperty(sharedProps.getItemObserver());
+
+    Variant varConnect;
+    std::string currentNameConnect = connect.getValue().toString();
+    currentNameConnect = currentNameConnect.substr(0, currentNameConnect.find("_Map"));
+    std::string nameConnect = newNames[currentNameConnect];
+    varConnect.setValue(nameConnect + "_Map", dataType->getDataTypeItemObserver());
+    connect.setValue(varConnect);
+    prop.updateProperty(connect);
+
+    std::string oldName;
+    int oldId;
+
+    oldName = pro_name.getValue().toString();
+    oldId = pro_id.getValue().toInt();
+
+    Variant var;
+    pro_name.setValue(var);
+    prop.updateProperty(pro_name);
+    std::string newName;
+
+    nscene->buildItem(prop, newName, true);
+
+  }
+  if (m_cutObject ==  false)
+  {
+
+    QMimeData* data = convert2MimeData(p);
+    m_clipboard->setMimeData(data);
+  
+  }
+  else
+  {
+    m_clipboard->setText("");
+  }
+
+}
+
+void te::layout::View::cutSelectedItens()
+{
+  copyToClipboard();
+
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  
+  if (scne->isEditionMode() == false)
+  {
+    scne->removeSelectedItems();
+  }
+  else
+  {
+    return;
+  }
+
+  m_cutObject = true;
+
+}
+
+QMimeData* te::layout::View::convert2MimeData(const  std::vector<Properties>& properties)
+{
+  QMimeData *mimeData = new QMimeData();
+  std::vector<Properties>* aux = new std::vector<Properties>();
+
+  foreach(Properties prop, properties)
+  {
+    aux->push_back(prop);
+  }
+
+  qulonglong longValue = (qulonglong)aux;
+
+  QString s;
+  s.setNum((qulonglong)aux);
+
+  QByteArray encodedData(s.toStdString().c_str());
+
+  mimeData->setData("application/layout-item", encodedData);
+
+  return mimeData;
+
 }
 
 void te::layout::View::config()

@@ -372,6 +372,8 @@ namespace te
 
         te::qt::widgets::Canvas* getCanvas();
 
+        void buildItem(te::layout::Properties props, std::string &name, bool isCopy = false);
+
         /*!
         \brief Returns the current subselected item. If there is not any subselected item, return 0.
         */
