@@ -163,12 +163,6 @@ namespace te
 
         virtual QPixmap& getDraftPixmap();
 
-    protected slots:
-
-        virtual void  dragLeaveEvent ( QGraphicsSceneDragDropEvent * event );
-
-        virtual void  dragMoveEvent ( QGraphicsSceneDragDropEvent * event );
-
       protected:
 
         EnumType*                       m_currentEditionMode;

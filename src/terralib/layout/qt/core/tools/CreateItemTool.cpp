@@ -146,37 +146,22 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
   std::string itemName = "";
   ItemUtils utils(sc);
   std::vector<MapItem*> mapList = utils.getMapItemList();
-  MapItem* mapItem = NULL;
-  if (mapList.size() > 0)
+  for (size_t i = 0; i < mapList.size(); ++i)
   {
-    mapItem = mapList[0];
-    if (mapItem)
+    MapItem* mapItem = mapList[i];
+    if (mapItem == item)
     {
-      itemName = mapItem->getController()->getProperty("name").getValue().toString();
+      continue;
     }
+
+    itemName = mapItem->getController()->getProperty("name").getValue().toString();
+
+    //we do not break in order to find the last Map on the list
   }
 
-  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
-  if (m_itemType == itemType->getGridPlanarItem() || m_itemType == itemType->getGridGeodesicItem())
+  if (itemName.empty() == true)
   {
-    if (mapItem != NULL)
-    {
-      item->setPos(mapItem->scenePos());
-      EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
-      QList<QGraphicsItem*> listItemsToConnect;
-      listItemsToConnect.push_back(item);
-      //checks if the map item is already in a group
-      QGraphicsItemGroup* group = mapItem->group();
-      if (group != 0)
-      {
-        listItemsToConnect.push_front(group);
-      }
-      else
-      {
-        listItemsToConnect.push_front(mapItem);
-      }
-      QGraphicsItemGroup* newGroup = sc->createItemGroup(listItemsToConnect, objType->getMapCompositionItem());
-    }
+    return;
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();

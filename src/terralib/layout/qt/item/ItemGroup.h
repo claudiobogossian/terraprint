@@ -84,9 +84,7 @@ namespace te
         virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
         
         virtual bool hasChildrenInResizeMode();
-
-        virtual void resized();
-
+        
       protected:
 
         bool m_stacksBehindParent;

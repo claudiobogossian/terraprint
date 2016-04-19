@@ -369,31 +369,29 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
 void te::layout::MapItem::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
 {
   //Copy the map from layer tree
-  Qt::DropActions actions = event->dropAction();
-  if(!(actions & Qt::CopyAction))
+  Qt::DropActions actions = event->possibleActions();
+  if (!(actions & Qt::CopyAction))
+  {
+    event->ignore();
     return;
+  }
 
   const QMimeData* mime = event->mimeData();
   QString s = mime->data("application/x-terralib;value=\"DraggedItems\"").constData();
-  if(s.isEmpty())
+  if (s.isEmpty())
+  {
+    event->ignore();
     return;
+  }
 
-  event->acceptProposedAction();
-}
-
-void te::layout::MapItem::dragLeaveEvent( QGraphicsSceneDragDropEvent * event )
-{
-  AbstractItem<QGraphicsObject>::dragLeaveEvent(event);
-}
-
-void te::layout::MapItem::dragMoveEvent( QGraphicsSceneDragDropEvent * event )
-{
-  AbstractItem<QGraphicsObject>::dragMoveEvent(event);
+  event->setDropAction(Qt::CopyAction);
+  event->accept();
 }
 
 void te::layout::MapItem::dropEvent( QGraphicsSceneDragDropEvent * event )
 {
   event->setDropAction(Qt::CopyAction);
+  event->accept();
 
   QByteArray encodedData = event->mimeData()->data("application/x-terralib;value=\"DraggedItems\"");
   qulonglong dataValue = encodedData.toULongLong();
