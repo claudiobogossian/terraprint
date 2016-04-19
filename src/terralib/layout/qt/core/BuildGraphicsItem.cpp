@@ -45,8 +45,7 @@
 
 te::layout::BuildGraphicsItem::BuildGraphicsItem(Scene* scene, QObject* parent) :
   QObject(parent),
-  m_scene(scene),
-  m_newId(-1)
+  m_scene(scene)
 {
   if (m_scene)
   {
@@ -126,8 +125,6 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
     Property nameProp = m_props.getProperty("name");
     nameProp.setValue(nameItem(itemType), dataType->getDataTypeString());
     m_props.updateProperty(nameProp);
-
-    m_newId = m_id;
 
   }
 
@@ -293,10 +290,6 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   }
 }
 
-int te::layout::BuildGraphicsItem::getNewId()
-{
-  return m_newId;
-}
 
 std::string te::layout::BuildGraphicsItem::getNewName()
 {

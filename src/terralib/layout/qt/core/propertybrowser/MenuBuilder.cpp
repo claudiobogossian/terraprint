@@ -116,7 +116,23 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
+  te::layout::EnumType* PaperType = Enums::getInstance().getEnumObjectType()->getPaperItem();
+
   setAllProperties(m_properties);
+
+  if (!(m_properties.getTypeObj() == PaperType))
+  {
+    QAction* actionCopy = createAction("Copy", "Copy", "Copy");
+    m_menu->addAction(actionCopy);
+
+    QAction* actionCut = createAction("Cut", "Cut", "Cut");
+    m_menu->addAction(actionCut);
+  }
+
+  QAction* actionPaste = createAction("Paste", "Paste", "Paste");
+  m_menu->addAction(actionPaste);
+
+  m_menu->addSeparator();
 
   foreach(Property prop, m_properties.getProperties()) 
   {
@@ -162,6 +178,21 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
 
   QString qObjectName = action->objectName();
   std::string objectName = ItemUtils::convert2StdString(qObjectName);
+
+  if (objectName == "Copy")
+  {
+    m_scene->getView()->copyToClipboard();
+  }
+
+  if (objectName == "Cut")
+  {
+    m_scene->getView()->cutSelectedItens();
+  }
+
+  if (objectName == "Paste")
+  {
+    m_scene->getView()->paste();
+  }
 
   m_currentPropertyClicked = findMnuProperty(objectName);
 

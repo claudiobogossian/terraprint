@@ -270,6 +270,8 @@ namespace te
 
         virtual void paste();
 
+        virtual void cutSelectedItens();
+
 
       public slots:
     
@@ -464,6 +466,7 @@ namespace te
 
         QMimeData* convert2MimeData(const  std::vector<Properties>& properties);
 
+
       protected:
 
         VisualizationArea*                   m_visualizationArea;
@@ -490,6 +493,7 @@ namespace te
         bool                                 m_midButtonClicked;
         bool                                 m_showContextMenu;
         QClipboard*                          m_clipboard;
+        bool                                 m_cutObject;
 
 
 

@@ -100,7 +100,6 @@ namespace te
         */
         QGraphicsItem* createItem(te::layout::EnumType* itemType, bool addUndo = true, bool isCopy = false);
 
-        int getNewId();
 
         std::string getNewName();
 
@@ -139,7 +138,6 @@ namespace te
 
         std::string   m_name;
         
-        int          m_newId;
     };
   }
 }

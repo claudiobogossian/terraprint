@@ -839,12 +839,11 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 }
 
 
-void te::layout::Scene::buildItem(te::layout::Properties props,std::string &name, int &id, bool isCopy)
+void te::layout::Scene::buildItem(te::layout::Properties props,std::string &name, bool isCopy)
 {
   BuildGraphicsItem build(this);
 
   build.buildItem(props, false, isCopy);
-  id = build.getNewId();
   name = build.getNewName();
 
 }
