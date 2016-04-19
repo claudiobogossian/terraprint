@@ -198,6 +198,12 @@ te::layout::Property te::layout::ItemObserverManager::getProperty(QtProperty* qt
     return prop;
   }
 
+  prop = m_mapProperty[qtProperty];
+  if (prop.isNull() == true)
+  {
+    return prop;
+  }
+
   Data data = m_values[qtProperty];
   QString qCurrentName = data.currentName;
   std::string currentName = ItemUtils::convert2StdString(qCurrentName);
