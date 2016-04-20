@@ -29,6 +29,7 @@
 #include "MapCompositionItem.h"
 #include "../../core/property/SharedProperties.h"
 #include "../core/pattern/factory/item/ItemFactory.h"
+#include "MapItem.h"
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
@@ -131,6 +132,17 @@ void te::layout::MapCompositionItem::setEditionMode(bool editionMode)
 bool te::layout::MapCompositionItem::isEditionMode()
 {
   return m_mapItem->isEditionMode();
+}
+
+bool te::layout::MapCompositionItem::changeCurrentTool(EnumType* tool)
+{
+  MapItem* mapItem = dynamic_cast<MapItem*>(m_mapItem);
+  if(mapItem != 0)
+  {
+    return mapItem->changeCurrentTool(tool);
+  }
+
+  return false;
 }
 
 QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)

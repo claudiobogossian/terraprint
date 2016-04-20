@@ -337,10 +337,19 @@ void te::layout::OutsideArea::addAllItemToolbars()
 {
   EnumObjectType* object = Enums::getInstance().getEnumObjectType();
 
-  MapToolbarController* controller = new MapToolbarController;
-  MapToolbarInside* inside = new MapToolbarInside(controller);
+  {
+    MapToolbarController* controller = new MapToolbarController;
+    MapToolbarInside* inside = new MapToolbarInside(controller);
 
-  m_view->addToolbarItemInside(object->getMapCompositionItem(), inside);
+    m_view->addToolbarItemInside(object->getMapCompositionItem(), inside);
+  }
+
+  {
+    MapToolbarController* controller = new MapToolbarController;
+    MapToolbarInside* inside = new MapToolbarInside(controller);
+
+    m_view->addToolbarItemInside(object->getMapLocationItem(), inside);
+  }
 }
 
 void te::layout::OutsideArea::onExit()

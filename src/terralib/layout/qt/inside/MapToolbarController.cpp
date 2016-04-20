@@ -34,7 +34,8 @@
 #include "MapToolbarInside.h"
 #include "../../../layout/core/enum/Enums.h"
 #include "../../../layout/core/enum/EnumModeType.h"
-#include "../item/MapItem.h"
+#include "../item/MapCompositionItem.h"
+#include "../item/MapLocationItem.h"
 
 // Qt
 #include <QToolButton>
@@ -107,10 +108,22 @@ void te::layout::MapToolbarController::changeMapTool(EnumType* tool)
     AbstractItemView* item = m_toolbarItem->getItem();
     if (item)
     {
-      MapItem* mapItem = dynamic_cast<MapItem*>(item);
-      if (mapItem)
+      te::layout::EnumObjectType* objectType = Enums::getInstance().getEnumObjectType();
+      if (objectType->getMapCompositionItem()->getName() == item->getController()->getProperties().getTypeObj()->getName())
       {
-        mapItem->changeCurrentTool(tool);
+        MapCompositionItem* mapItem = dynamic_cast<MapCompositionItem*>(item);
+        if (mapItem)
+        {
+          mapItem->changeCurrentTool(tool);
+        }
+      }
+      else if(objectType->getMapLocationItem()->getName() == item->getController()->getProperties().getTypeObj()->getName())
+      {
+        MapLocationItem* mapItem = dynamic_cast<MapLocationItem*>(item);
+        if (mapItem)
+        {
+          mapItem->changeCurrentTool(tool);
+        }
       }
     }
   }
