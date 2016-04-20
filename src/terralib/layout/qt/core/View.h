@@ -272,6 +272,8 @@ namespace te
 
         virtual void cutSelectedItens();
 
+        virtual void removeSelectedItem();
+
 
       public slots:
     
