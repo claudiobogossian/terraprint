@@ -33,7 +33,6 @@
 #include "../core/enum/Enums.h"
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
-#include "geos/platform.h"
 #include "../core/Utils.h"
 #include "../core/pattern/singleton/Context.h"
 #include "../core/property/SharedProperties.h"
@@ -42,6 +41,8 @@
 #ifdef GEOGRAPHICLIB_ENABLED
   #include <GeographicLib/MagneticModel.hpp>
 #endif
+
+# define M_PI		3.14159265358979323846
 
 te::layout::ThreeNorthModel::ThreeNorthModel()
 : AbstractItemModel()
