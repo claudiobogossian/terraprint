@@ -455,6 +455,19 @@ void te::layout::View::copyToClipboard()
   m_cutObject = false;
  
 }
+void te::layout::View::removeSelectedItem()
+{
+  Scene* scne = dynamic_cast<Scene*>(scene());
+
+  EnumModeType* mode = Enums::getInstance().getEnumModeType();
+  if (getCurrentMode() != mode->getModeTextEditorInteraction())
+  {
+    if (scne->isEditionMode() == false)
+    {
+      scne->removeSelectedItems();
+    }
+  }
+}
 
 void te::layout::View::paste()
 {

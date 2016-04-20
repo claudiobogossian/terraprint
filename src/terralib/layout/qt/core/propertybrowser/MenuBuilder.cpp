@@ -127,11 +127,18 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
 
     QAction* actionCut = createAction(tr("Cut"), "Cut", "Cut");
     m_menu->addAction(actionCut);
+
+
   }
 
   QAction* actionPaste = createAction(tr("Paste"), "Paste", "Paste");
   m_menu->addAction(actionPaste);
-
+  
+  if (!(m_properties.getTypeObj() == PaperType))
+  {
+    QAction* actionRemove = createAction(tr("Remove"), "Remove", "Remove");
+    m_menu->addAction(actionRemove);
+  }
   m_menu->addSeparator();
 
   foreach(Property prop, m_properties.getProperties()) 
@@ -192,6 +199,11 @@ void te::layout::MenuBuilder::onMenuTriggered( QAction* action )
   if (objectName == "Paste")
   {
     m_scene->getView()->paste();
+  }
+
+  if (objectName == "Remove")
+  {
+    m_scene->getView()->removeSelectedItem();
   }
 
   m_currentPropertyClicked = findMnuProperty(objectName);
