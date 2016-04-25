@@ -28,6 +28,7 @@
 // TerraLib
 #include "MapCompositionItem.h"
 #include "../../core/property/SharedProperties.h"
+#include "../../core/property/GridSettingsConfigProperties.h"
 #include "../core/pattern/factory/item/ItemFactory.h"
 #include "MapItem.h"
 
@@ -115,13 +116,27 @@ void te::layout::MapCompositionItem::initItems()
   }
 
   SharedProperties sharedProps;
+  GridSettingsConfigProperties settingsConfig;
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   te::layout::Property pAssociate;
   pAssociate.setName(sharedProps.getItemObserver());
   pAssociate.setValue(mapName, dataType->getDataTypeItemObserver());
+  
+  //sets the properties for the planar grid
   m_planarGridItem->getController()->setProperty(pAssociate);
-  m_geodesicGridItem->getController()->setProperty(pAssociate);
+
+  //sets the properties for the geodesic grid
+  te::layout::Property pVisible;
+  pVisible.setName(settingsConfig.getVisible());
+  pVisible.setValue(false, dataType->getDataTypeBool());
+
+  Properties geodesicProperties;    
+  geodesicProperties.addProperty(pAssociate);
+  geodesicProperties.addProperty(pVisible);
+
+
+  m_geodesicGridItem->getController()->setProperties(geodesicProperties);
 }
 
 void te::layout::MapCompositionItem::setEditionMode(bool editionMode)
