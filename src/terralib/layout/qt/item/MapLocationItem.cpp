@@ -49,18 +49,17 @@ void te::layout::MapLocationItem::refresh()
   te::layout::MapItem::refresh();
 }
 
-void te::layout::MapLocationItem::drawMapOnDevice(QPaintDevice* device)
+void te::layout::MapLocationItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)
 {
-  te::layout::MapItem::drawMapOnDevice(device);
-
+  te::layout::MapItem::drawLayers(canvas, envelope);
 
   const Property& pSrid = m_controller->getProperty("srid");
-  const Property& pWorldBox = m_controller->getProperty("world_box");
   const Property& pReferenceSrid = m_controller->getProperty("reference_srid");
   const Property& pReferenceBox = m_controller->getProperty("reference_box");
   const Property& pFillColor = m_controller->getProperty("reference_box_fill_color");
   const Property& pContourColor = m_controller->getProperty("reference_box_contour_color");
 
+  int srid = pSrid.getValue().toInt();
   int referenceSrid = pReferenceSrid.getValue().toInt();
   te::gm::Envelope referenceBox = pReferenceBox.getValue().toEnvelope();
   const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
@@ -71,16 +70,10 @@ void te::layout::MapLocationItem::drawMapOnDevice(QPaintDevice* device)
     return;
   }
 
-  te::gm::Envelope envelope = pWorldBox.getValue().toEnvelope();
-  int srid = pSrid.getValue().toInt();
-
   if (srid <= 0 || envelope.isValid() == false)
   {
     return;
   }
-
-  te::qt::widgets::Canvas canvas(device);
-  canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
 
   if (srid != referenceSrid)
   {
@@ -89,11 +82,11 @@ void te::layout::MapLocationItem::drawMapOnDevice(QPaintDevice* device)
 
   te::gm::Geometry* referenceGeometry = te::gm::GetGeomFromEnvelope(&referenceBox, srid);
 
-  canvas.setPolygonFillColor(fillColor);
-  canvas.setPolygonContourColor(contourColor);
-  canvas.setPolygonContourDashStyle(te::map::DashLine);
-  canvas.setPolygonContourWidth(2);
-  canvas.draw(referenceGeometry);
+  canvas->setPolygonFillColor(fillColor);
+  canvas->setPolygonContourColor(contourColor);
+  canvas->setPolygonContourDashStyle(te::map::DashLine);
+  canvas->setPolygonContourWidth(2);
+  canvas->draw(referenceGeometry);
 
   delete referenceGeometry;
 }
