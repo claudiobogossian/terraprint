@@ -74,7 +74,7 @@ namespace te
 
     protected:
 
-        virtual void drawMapOnDevice(QPaintDevice* device);
+        virtual void drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope);
 
     };
   }

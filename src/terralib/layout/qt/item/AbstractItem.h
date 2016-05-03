@@ -335,7 +335,7 @@ namespace te
         return;
       }
 
-      if (m_currentAction == te::layout::RESIZE_ACTION && m_useResizePixmap)
+      if ((m_currentAction == te::layout::RESIZE_ACTION || m_currentAction == te::layout::MOVE_ACTION) && m_useResizePixmap)
       {
         drawItemResized(painter, option, widget);
         drawFrame(painter);
@@ -794,6 +794,9 @@ namespace te
       {
         if (event->buttons() == Qt::LeftButton)
         {
+          if(m_currentAction != te::layout::MOVE_ACTION)
+            setPixmap();
+          T::setOpacity(0.5);
           m_currentAction = te::layout::MOVE_ACTION;
         }
 
@@ -813,6 +816,7 @@ namespace te
       }
       else if (m_currentAction == te::layout::MOVE_ACTION)
       {
+        T::setOpacity(1.);
         m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
       }
 
