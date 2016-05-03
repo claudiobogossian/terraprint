@@ -37,8 +37,28 @@
 te::layout::SVGModel::SVGModel()
   : AbstractItemModel()
 {
-  /*m_type = Enums::getInstance().getEnumObjectType()->getSVGItem();
-  m_box = te::gm::Envelope(0., 0., 20., 20.);*/
+
+  std::string fileName("");
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  {
+    Property property(0);
+    property.setName("file_name");
+    property.setLabel(TR_LAYOUT("File Name"));
+    property.setValue(fileName, dataType->getDataTypeImage());
+    property.setMenu(true);
+    m_properties.addProperty(property);
+  }
+
+
+  {
+    Property property(0);
+    property.setName("show_frame");
+    property.setValue(false, dataType->getDataTypeBool());
+    this->m_properties.updateProperty(property);
+  }
+  this->reparentProperties(Enums::getInstance().getEnumObjectType()->getSVGItem());
 }
 
 te::layout::SVGModel::~SVGModel()

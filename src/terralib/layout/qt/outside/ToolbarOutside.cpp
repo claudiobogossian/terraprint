@@ -340,8 +340,8 @@ QToolButton* te::layout::ToolbarOutside::createGeometryToolButton()
   QAction* actionPolygon = createAction(tr("Polygon Object"), m_actionPolygon, "layout-polygon", "", menu);
   menu->addAction(actionPolygon);
 
-  /*QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, "layout-svg", "", menu);
-  menu->addAction(actionSVG);*/
+  QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, "layout-svg", "", menu);
+  menu->addAction(actionSVG);
 
   btnGeometry->setMenu(menu);
   btnGeometry->setPopupMode(QToolButton::MenuButtonPopup);

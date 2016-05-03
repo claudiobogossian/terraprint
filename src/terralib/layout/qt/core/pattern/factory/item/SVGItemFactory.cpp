@@ -29,6 +29,7 @@
 #include "../../../../../item/SVGModel.h"
 #include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/SVGItem.h"
+#include "../../../../item/SVGController.h"
 
 te::layout::AbstractItemView* te::layout::SVGItemFactory::build(ItemFactoryParamsCreate params)
 {
@@ -40,7 +41,7 @@ te::layout::AbstractItemView* te::layout::SVGItemFactory::build(ItemFactoryParam
     setProperties(model, params);
   }
 
-  AbstractItemController* controller = new AbstractItemController(model);
+  SVGController* controller = new SVGController(model);
   SVGItem* view = new SVGItem(controller);
   controller->setView(view);
 

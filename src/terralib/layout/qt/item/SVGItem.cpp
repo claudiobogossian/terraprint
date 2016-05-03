@@ -35,6 +35,7 @@
 #include "../../item/PointModel.h"
 #include "../../core/enum/EnumPointType.h"
 #include "../../item/SVGModel.h"
+#include "SVGController.h"
 
 // STL
 #include <cmath>
@@ -44,10 +45,11 @@
 #include <QPen>
 #include <QPolygonF>
 #include <QPainterPath>
+#include <QtSvg/QSvgRenderer>
 #include "AbstractItem.h"
 
 te::layout::SVGItem::SVGItem(AbstractItemController* controller, bool invertedMatrix)
-    : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+: AbstractItem<QGraphicsItem>(controller, invertedMatrix)
 {
     
 }
@@ -59,6 +61,34 @@ te::layout::SVGItem::~SVGItem()
 
 void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0 */ )
 {
+  painter->save();
+  SVGController *svgController = dynamic_cast<SVGController*>(m_controller);
+
+  //QRectF adjustBoundRect = svgController->calculateSVGRect();
+
+  QRectF boundRect = boundingRect();
+  QTransform transform;
+  transform.translate(0., boundRect.y() + boundRect.height());
+  transform.scale(1., -1.);
+  transform.translate(0., -boundRect.y());
+
+  painter->setTransform(transform, true);
+
+  Property pFileName = svgController->getProperty("file_name");
+
+  if (pFileName.getValue().toString() == ""){
+   
+    painter->drawPolygon(boundRect);
+    painter->restore();
+    return;
+  }
+    
+  const QString fileName = ItemUtils::convert2QString(pFileName.getValue().toString());
+
+  QSvgRenderer renderer(fileName);
+
+  renderer.render(painter, boundRect);
+  painter->restore();
 
 }
 
