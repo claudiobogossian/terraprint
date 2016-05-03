@@ -211,7 +211,7 @@ if(Qt5_FOUND)
 
   add_library(terralib_mod_layout SHARED ${TERRALIB_FILES})
 
-  qt5_use_modules(terralib_mod_layout Widgets)
+  qt5_use_modules(terralib_mod_layout Widgets PrintSupport Svg)
 
 else()
 

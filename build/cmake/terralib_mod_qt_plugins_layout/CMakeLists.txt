@@ -43,7 +43,7 @@ if(Qt5_FOUND)
   set(TERRALIB_FILES ${TERRALIB_SRC_FILES} ${TERRALIB_HDR_FILES})
 
   add_library(terralib_mod_qt_plugins_layout SHARED ${TERRALIB_FILES})
-
+  
   target_link_libraries(terralib_mod_qt_plugins_layout terralib_mod_layout
                                                        terralib_mod_plugin
                                                        terralib_mod_qt_apf
@@ -56,7 +56,7 @@ if(Qt5_FOUND)
                                                        terralib_mod_qt_widgets
                                                        ${QTPROPERTYBROWSER_LIBRARY})
 
-  qt5_use_modules(terralib_mod_qt_plugins_layout Widgets)
+  qt5_use_modules(terralib_mod_qt_plugins_layout Widgets Svg)
 
 else()
   include_directories(${CMAKE_CURRENT_BINARY_DIR})
@@ -75,7 +75,7 @@ else()
   set(TERRALIB_FILES ${TERRALIB_SRC_FILES} ${TERRALIB_HDR_FILES} ${TERRALIB_GEN_SRC_FILES})
 
   add_library(terralib_mod_qt_plugins_layout SHARED ${TERRALIB_FILES})
-
+ 
   target_link_libraries(terralib_mod_qt_plugins_layout terralib_mod_layout
                                                        terralib_mod_plugin
                                                        terralib_mod_qt_apf
