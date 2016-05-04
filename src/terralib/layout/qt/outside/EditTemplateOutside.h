@@ -32,7 +32,9 @@
 #include <QWidget>
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#endif
 #include "../../core/Config.h"
 #include "terralib/geometry/Coord2D.h"
 

@@ -148,7 +148,7 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale);
+    it->get()->draw(&canvas, envelope, srid, scale, false);
   }
 }
 
@@ -189,10 +189,11 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   const Property& pLayerList = m_controller->getProperty("layers");
   const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
 
+  bool cancel;
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale);
+    it->get()->draw(&canvas, envelope, srid, scale, &cancel);
   }
   painter->restore();
 }

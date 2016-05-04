@@ -38,10 +38,12 @@
 #include "terralib/geometry/Envelope.h"
 #include "terralib/geometry/Coord2D.h"
 #include "Scene.h"
+#ifndef Q_MOC_RUN
 #include "../outside/PageSetupOutside.h"
 #include "../outside/SystematicScaleOutside.h"
 #include "../item/MovingItemGroup.h"
 #include "../../core/property/Property.h"
+#endif
 
 // STL
 #include <string>

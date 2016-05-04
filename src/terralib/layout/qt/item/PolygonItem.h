@@ -29,8 +29,10 @@
 #define __TERRALIB_LAYOUT_INTERNAL_POLYGON_ITEM_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractItem.h"
 #include "LineItem.h"
+#endif
 
 class QGraphicsSceneMouseEvent;
 

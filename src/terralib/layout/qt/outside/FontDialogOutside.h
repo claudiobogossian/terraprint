@@ -29,7 +29,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_FONT_DIALOG_OUTSIDE_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#endif
 #include "../../core/Config.h"
 #include "terralib/geometry/Coord2D.h"
 

@@ -31,10 +31,12 @@
 #define __TERRALIB_LAYOUT_INTERNAL_BUILD_GRAPHICS_ITEM_H
 
 //TerraLib
+#ifndef Q_MOC_RUN
 #include "../../core/AbstractBuildGraphicsItem.h"
 #include "../../core/property/Properties.h"
 #include "../../core/Config.h"
 #include "pattern/factory/item/ItemFactoryParamsCreate.h"
+#endif
 
 #include <QObject>
 

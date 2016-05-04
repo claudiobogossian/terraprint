@@ -30,11 +30,14 @@
 
 // Qt
 #include <QObject>
+#include <qpoint.h>
 
 
 // TerraLib
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../../core/property/Properties.h"
+#endif
 
 // STL
 #include <vector>

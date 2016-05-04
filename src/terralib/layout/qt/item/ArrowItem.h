@@ -31,7 +31,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ARROW_ITEM_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractItem.h"
+#endif
 #include "../../core/Config.h"
 
 #include <QGraphicsItem>

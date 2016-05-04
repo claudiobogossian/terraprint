@@ -29,9 +29,11 @@
 #define __TERRALIB_LAYOUT_INTERNAL_DIALOG_PROPERTIES_BROWSER_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractPropertiesBrowser.h"
 #include "../../../core/Config.h"
 #include "../../../core/property/Property.h"
+#endif
 
 // STL
 #include <map>

@@ -33,7 +33,9 @@
 
 //TerraLib
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "AbstractItem.h"
+#endif
 
 // Qt
 #include <QGraphicsItem>

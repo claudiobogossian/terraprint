@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.0" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -162,11 +162,11 @@
     </message>
     <message>
         <source>Continuous Lines</source>
-        <translation type="vanished">Linhas Contínuas</translation>
+        <translation type="obsolete">Linhas Contínuas</translation>
     </message>
     <message>
         <source>Cross Lines</source>
-        <translation type="vanished">Cruzetas</translation>
+        <translation type="obsolete">Cruzetas</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="140"/>
@@ -198,23 +198,23 @@
     </message>
     <message>
         <source>Continuous</source>
-        <translation type="vanished">Contínuo</translation>
+        <translation type="obsolete">Contínuo</translation>
     </message>
     <message>
         <source>Dashed</source>
-        <translation type="vanished">Tracejado</translation>
+        <translation type="obsolete">Tracejado</translation>
     </message>
     <message>
         <source>Dotted</source>
-        <translation type="vanished">Pontilhado</translation>
+        <translation type="obsolete">Pontilhado</translation>
     </message>
     <message>
         <source>Dash Dot</source>
-        <translation type="vanished">Traço-Ponto</translation>
+        <translation type="obsolete">Traço-Ponto</translation>
     </message>
     <message>
         <source>Dash Dot Dot</source>
-        <translation type="vanished">Traço-Ponto-Ponto</translation>
+        <translation type="obsolete">Traço-Ponto-Ponto</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="308"/>
@@ -404,7 +404,7 @@
         <source>Bottom Text</source>
         <translation>Textos Inferiores</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="895"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="902"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="909"/>
@@ -634,7 +634,7 @@
     </message>
     <message>
         <source>Connected To:</source>
-        <translation type="vanished">Conectado à:</translation>
+        <translation type="obsolete">Conectado à:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="790"/>
@@ -905,7 +905,7 @@
         <source>Form</source>
         <translation type="unfinished">Formulário</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="85"/>
         <source>º</source>
         <translation type="unfinished"></translation>
@@ -978,22 +978,22 @@
     </message>
     <message>
         <source>Imagem</source>
-        <translation type="vanished">Imagem</translation>
+        <translation type="obsolete">Imagem</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="vanished">Cancelar</translation>
+        <translation type="obsolete">Cancelar</translation>
     </message>
     <message>
         <source>&amp;Help</source>
-        <translation type="vanished">&amp;Ajuda</translation>
+        <translation type="obsolete">&amp;Ajuda</translation>
     </message>
 </context>
 <context>
     <name>MapSettings</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation type="obsolete">Configurações do PDF</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="32"/>
@@ -1052,19 +1052,19 @@
     </message>
     <message>
         <source>DPI:</source>
-        <translation type="vanished">Resolução (DPI):</translation>
+        <translation type="obsolete">Resolução (DPI):</translation>
     </message>
     <message>
         <source>File:</source>
-        <translation type="vanished">Arquivo:</translation>
+        <translation type="obsolete">Arquivo:</translation>
     </message>
     <message>
         <source>Save As...</source>
-        <translation type="vanished">Salvar como...</translation>
+        <translation type="obsolete">Salvar como...</translation>
     </message>
     <message>
         <source>DPI Information</source>
-        <translation type="vanished">Informação de Resolução (DPI)</translation>
+        <translation type="obsolete">Informação de Resolução (DPI)</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapSettings.ui" line="299"/>
@@ -1542,7 +1542,7 @@ nononon</source>
     <name>ScaleSettings</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation type="obsolete">Configurações do PDF</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="32"/>
@@ -1636,19 +1636,19 @@ nononon</source>
     </message>
     <message>
         <source>DPI:</source>
-        <translation type="vanished">Resolução (DPI):</translation>
+        <translation type="obsolete">Resolução (DPI):</translation>
     </message>
     <message>
         <source>File:</source>
-        <translation type="vanished">Arquivo:</translation>
+        <translation type="obsolete">Arquivo:</translation>
     </message>
     <message>
         <source>Save As...</source>
-        <translation type="vanished">Salvar como...</translation>
+        <translation type="obsolete">Salvar como...</translation>
     </message>
     <message>
         <source>DPI Information</source>
-        <translation type="vanished">Informação de DPI</translation>
+        <translation type="obsolete">Informação de DPI</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="452"/>
@@ -1963,11 +1963,11 @@ nononon</source>
     <name>te::layout::MapLayerChoiceOutside</name>
     <message>
         <source>Available Layers</source>
-        <translation type="vanished">Planos Disponíveis</translation>
+        <translation type="obsolete">Planos Disponíveis</translation>
     </message>
     <message>
         <source>Selected Layers</source>
-        <translation type="vanished">Planos Selecionados</translation>
+        <translation type="obsolete">Planos Selecionados</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="60"/>
@@ -1984,27 +1984,27 @@ nononon</source>
     <name>te::layout::MapSettingsOutside</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation type="obsolete">Configurações do PDF</translation>
     </message>
     <message>
         <source>Please complete the filename.</source>
-        <translation type="vanished">Por favor, complete o nome do arquivo.</translation>
+        <translation type="obsolete">Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
         <source>Save Image File</source>
-        <translation type="vanished">Gravar o Arquivo de Imagem</translation>
+        <translation type="obsolete">Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
         <source>PDF Files (*.pdf)</source>
-        <translation type="vanished">Arquivos PDF (*.pdf)</translation>
+        <translation type="obsolete">Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="obsolete">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="obsolete">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/MapSettingsOutside.cpp" line="107"/>
@@ -2063,6 +2063,29 @@ nononon</source>
         <location filename="../../../src/terralib/layout/qt/inside/MapToolbarInside.cpp" line="222"/>
         <source>Legend as Object</source>
         <translation>Legenda como Objeto</translation>
+    </message>
+</context>
+<context>
+    <name>te::layout::MenuBuilder</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="125"/>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="128"/>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="134"/>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="139"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2133,7 +2156,7 @@ nononon</source>
 </context>
 <context>
     <name>te::layout::ObjectInspectorDock</name>
-    <message>
+    <message id="0">
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>
@@ -2161,47 +2184,47 @@ nononon</source>
     <name>te::layout::OutsideArea</name>
     <message>
         <source>Print Model</source>
-        <translation type="vanished">Modelo de Impressão</translation>
+        <translation type="obsolete">Modelo de Impressão</translation>
     </message>
     <message>
         <source>New</source>
-        <translation type="vanished">Novo</translation>
+        <translation type="obsolete">Novo</translation>
     </message>
     <message>
         <source>Update Map</source>
-        <translation type="vanished">Atualizar Carta</translation>
+        <translation type="obsolete">Atualizar Carta</translation>
     </message>
     <message>
         <source>Import Map</source>
-        <translation type="vanished">Importar Carta</translation>
+        <translation type="obsolete">Importar Carta</translation>
     </message>
     <message>
         <source>Export Map</source>
-        <translation type="vanished">Exportar Carta</translation>
+        <translation type="obsolete">Exportar Carta</translation>
     </message>
     <message>
         <source>Import Xml Map</source>
-        <translation type="vanished">Importar Carta XML</translation>
+        <translation type="obsolete">Importar Carta XML</translation>
     </message>
     <message>
         <source>Export XML Map</source>
-        <translation type="vanished">Exportar Carta XML</translation>
+        <translation type="obsolete">Exportar Carta XML</translation>
     </message>
     <message>
         <source>Dock Inspector</source>
-        <translation type="vanished">Exibir Inspetor de Objetos</translation>
+        <translation type="obsolete">Exibir Inspetor de Objetos</translation>
     </message>
     <message>
         <source>Dock Properties</source>
-        <translation type="vanished">Exibir Editor de Propriedades</translation>
+        <translation type="obsolete">Exibir Editor de Propriedades</translation>
     </message>
     <message>
         <source>Page Config...</source>
-        <translation type="vanished">Configuração da Página...</translation>
+        <translation type="obsolete">Configuração da Página...</translation>
     </message>
     <message>
         <source>Print...</source>
-        <translation type="vanished">Imprimir...</translation>
+        <translation type="obsolete">Imprimir...</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="279"/>
@@ -2284,27 +2307,27 @@ nononon</source>
     <name>te::layout::ScaleSettingsOutside</name>
     <message>
         <source>PDF Settings</source>
-        <translation type="vanished">Configurações do PDF</translation>
+        <translation type="obsolete">Configurações do PDF</translation>
     </message>
     <message>
         <source>Please complete the filename.</source>
-        <translation type="vanished">Por favor, complete o nome do arquivo.</translation>
+        <translation type="obsolete">Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
         <source>Save Image File</source>
-        <translation type="vanished">Gravar o Arquivo de Imagem</translation>
+        <translation type="obsolete">Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
         <source>PDF Files (*.pdf)</source>
-        <translation type="vanished">Arquivos PDF (*.pdf)</translation>
+        <translation type="obsolete">Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="obsolete">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation type="vanished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation type="obsolete">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
 </context>
 <context>
@@ -2331,11 +2354,11 @@ nononon</source>
     </message>
     <message>
         <source>Grid Planar</source>
-        <translation type="vanished">Grade Planar</translation>
+        <translation type="obsolete">Grade Planar</translation>
     </message>
     <message>
         <source>Grid Geodesic</source>
-        <translation type="vanished">Grade Geodésica</translation>
+        <translation type="obsolete">Grade Geodésica</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="251"/>
@@ -2614,43 +2637,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1225"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1391"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1226"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1271"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1392"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1437"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1247"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1413"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1252"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1418"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1270"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1436"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1299"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1465"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1306"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1472"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1317"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1483"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

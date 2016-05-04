@@ -30,7 +30,9 @@
 
 // TerraLib
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#endif
 
 // STL
 #include <string>

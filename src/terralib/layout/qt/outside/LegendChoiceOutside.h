@@ -27,9 +27,11 @@
 #define __TERRALIB_LAYOUT_INTERNAL_LEGEND_CHOICE_OUTSIDE_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/Config.h"
 #include "../../core/property/Property.h"
+#endif
 #include "DoubleTreeWidgetOutside.h"
 
 // STL

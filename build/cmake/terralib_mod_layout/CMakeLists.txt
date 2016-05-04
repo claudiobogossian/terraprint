@@ -227,7 +227,6 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ToolbarController.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/View.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/MapItem.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/MapLocationItem.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/PropertyBrowser.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/VisualizationArea.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/GridSettingsOutside.h
@@ -236,7 +235,6 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/EditTemplateOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/MenuBuilder.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/TextItem.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/MapLocationItem.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/TextGridSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/PrintScene.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapLayerChoiceOutside.h
@@ -301,7 +299,7 @@ target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            terralib_mod_srs
                                            terralib_mod_symbology
                                            ${QTPROPERTYBROWSER_LIBRARY}
-                                           ${GeographicLib_STATIC_LIBRARIES}
+                                           ${GeographicLib_LIBRARY}
 										   ${Boost_LIBRARIES})
 
 set_target_properties(terralib_mod_layout

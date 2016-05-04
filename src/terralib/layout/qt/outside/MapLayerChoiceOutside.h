@@ -28,9 +28,11 @@
 
 // TerraLib
 #include "terralib/qt/widgets/utils/DoubleListWidget.h"
+#ifndef Q_MOC_RUN
 #include "terralib/maptools/AbstractLayer.h"
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#endif
 
 // STL
 #include <memory>

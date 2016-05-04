@@ -32,7 +32,9 @@
 #include <QDialog>
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#endif
 #include "../../core/Config.h"
 #include "terralib/geometry/Envelope.h"
 #include "terralib/color/RGBAColor.h"

@@ -31,7 +31,9 @@
 #define __TE_QT_PLUGINS_LAYOUT_INTERNAL_PROXY_PROJECT_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../../layout/core/pattern/proxy/AbstractProxyProject.h"
+#endif
 
 // Qt
 #include <QObject>

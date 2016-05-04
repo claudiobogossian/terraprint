@@ -30,9 +30,11 @@
 #define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_BROWSER_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../../core/property/Property.h"
 #include "../../../core/Config.h"
 #include "../../../core/property/Properties.h"
+#endif
 
 //STL
 #include <vector>

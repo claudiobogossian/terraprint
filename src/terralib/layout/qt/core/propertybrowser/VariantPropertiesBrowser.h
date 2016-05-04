@@ -29,7 +29,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_VARIANT_PROPERTIES_BROWSER_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractPropertiesBrowser.h"
+#endif
 //#include "../../../core/property/Property.h"
 #include "../../../core/Config.h"
 

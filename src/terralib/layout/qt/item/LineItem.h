@@ -29,7 +29,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_LINE_ITEM_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractItem.h"
+#endif
 
 // Qt 
 #include <QGraphicsItem>
