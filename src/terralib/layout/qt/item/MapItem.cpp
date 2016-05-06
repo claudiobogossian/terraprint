@@ -142,26 +142,15 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
   canvas.clear();
 
-  const Property& pLayerList = m_controller->getProperty("layers");
-  const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
-
-  std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
-  for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
-  {
-    it->get()->draw(&canvas, envelope, srid, scale, false);
-  }
+  drawLayers(&canvas, envelope);
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 {
-  const Property& pSrid = m_controller->getProperty("srid");
   const Property& pWorldBox = m_controller->getProperty("world_box");
-  const Property& pScale = m_controller->getProperty("scale");
   const Property& property = m_controller->getProperty("background_color");
 
-  int srid = pSrid.getValue().toInt();;
   const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
-  double scale = pScale.getValue().toDouble();
   const te::color::RGBAColor& color = property.getValue().toColor();
 
   //here we render the layers on the given device
@@ -186,16 +175,27 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   canvas.setBackgroundColor(color);
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
 
+  drawLayers(&canvas, envelope);
+
+  painter->restore();
+}
+
+void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)
+{
+  const Property& pSrid = m_controller->getProperty("srid");  
+  const Property& pScale = m_controller->getProperty("scale");
   const Property& pLayerList = m_controller->getProperty("layers");
+  
+  int srid = pSrid.getValue().toInt();
+  double scale = pScale.getValue().toDouble();
   const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
 
   bool cancel;
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale, &cancel);
+    it->get()->draw(canvas, envelope, srid, scale, &cancel);
   }
-  painter->restore();
 }
 
 QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
