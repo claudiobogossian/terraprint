@@ -29,7 +29,9 @@
 // TerraLib
 #include "terralib/qt/widgets/utils/DoubleListWidget.h"
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
+#endif
 
 // STL
 #include <memory>

@@ -32,11 +32,13 @@
 #include <QDialog>
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/Config.h"
 #include "terralib/geometry/Envelope.h"
 #include "terralib/color/RGBAColor.h"
 #include "../../core/enum/AbstractType.h"
+#endif
 
 namespace Ui { class TextGridSettings; }
 

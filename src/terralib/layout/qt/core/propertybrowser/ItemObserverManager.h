@@ -29,7 +29,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ITEM_OBSERVER_MANAGER_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "../../../core/property/Property.h"
+#endif
 
 // Qt
 #include <QtPropertyBrowser/qtpropertybrowser.h>

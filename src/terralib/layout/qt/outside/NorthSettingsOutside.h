@@ -28,12 +28,14 @@
 
 // TerraLib
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/property/NorthSettingsConfigProperties.h"
 #include "../../core/Config.h"
 #include "terralib/geometry/Envelope.h"
 #include "terralib/color/RGBAColor.h"
 #include "../../core/property/Property.h"
+#endif
 
 // Qt
 #include <QDialog>

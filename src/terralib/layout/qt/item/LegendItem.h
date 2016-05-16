@@ -31,10 +31,12 @@
 #define __TERRALIB_LAYOUT_INTERNAL_LEGEND_ITEM_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractItem.h"
 #include "../../core/Config.h"
 #include "terralib/maptools/GroupingItem.h"
 #include "terralib/maptools/AbstractLayer.h"
+#endif
 
 // STL
 #include <string>

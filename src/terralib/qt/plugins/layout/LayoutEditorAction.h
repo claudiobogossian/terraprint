@@ -30,7 +30,9 @@
 #include "Config.h"
 #include "AbstractAction.h"
 #include "../../../layout/qt/default/DisplayDock.h"
+#ifndef Q_MOC_RUN
 #include "../../../layout/qt/default/MainLayout.h"
+#endif
 #include <QGroupBox>
 #include <QVBoxLayout>
 

@@ -28,8 +28,10 @@
 
 // TerraLib
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/property/Variant.h"
+#endif
 #include "../../core/Font.h"
 
 // STL

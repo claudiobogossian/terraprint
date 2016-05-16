@@ -29,9 +29,11 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ITEM_OBSERVER_FACTORY_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include <QtPropertyBrowser/qtpropertybrowser.h>
 #include <QVariant>
 #include "ItemObserverManager.h"
+#endif
 
 namespace te
 {

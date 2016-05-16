@@ -31,9 +31,11 @@
 #define __TERRALIB_LAYOUT_INTERNAL_GRIDMAP_ITEM_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include "AbstractItem.h"
 #include "../../core/Config.h"
 #include "terralib/geometry/LineString.h"
+#endif
 
 namespace te
 {

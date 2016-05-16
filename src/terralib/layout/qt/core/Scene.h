@@ -36,7 +36,9 @@
 #include "terralib/geometry/Envelope.h"
 #include "../../core/AbstractScene.h"
 #include "../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../item/MovingItemGroup.h"
+#endif
 #include "AlignItems.h"
 #include "terralib/qt/widgets/canvas/Canvas.h"
 #include "Value.h"

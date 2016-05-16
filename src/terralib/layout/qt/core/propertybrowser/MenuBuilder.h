@@ -33,8 +33,10 @@
 
 // TerraLib
 #include "../../../core/Config.h"
+#ifndef Q_MOC_RUN
 #include "../../../core/property/Properties.h"
 #include "DialogPropertiesBrowser.h"
+#endif
 
 // STL
 #include <string>
