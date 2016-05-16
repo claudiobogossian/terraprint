@@ -190,7 +190,7 @@ void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::
   double scale = pScale.getValue().toDouble();
   const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
 
-  bool cancel;
+  bool cancel = false;
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
