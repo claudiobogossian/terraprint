@@ -136,6 +136,8 @@ namespace te
       public slots:
 
       virtual void onShowImageDlg();
+      
+      virtual void onShowFolderDlg();
 
       signals:
 

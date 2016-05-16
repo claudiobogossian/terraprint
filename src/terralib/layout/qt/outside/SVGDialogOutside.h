@@ -68,6 +68,8 @@ namespace te
 
         virtual void setPathsProperty( Property prop );
 
+        virtual void loadSvgImages();
+
       signals:
 
         void updateProperty(Property prop);
@@ -80,12 +82,21 @@ namespace te
 
         void onCancelPushButtonClicked();
 
+        void on_m_listWidget_itemDoubleClicked(QListWidgetItem * item);
+
+        void on_btnSelectPath_clicked();
+
+
       private:
 
         std::auto_ptr<Ui::SVGView> m_ui;
         std::auto_ptr<te::qt::widgets::DoubleListWidget> m_widget;
         Property m_property;
         std::string m_initFile;
+        double m_svgWidth;
+        double m_svgHeight;
+        double m_x;
+        double m_y;
     };
   }    
 }     

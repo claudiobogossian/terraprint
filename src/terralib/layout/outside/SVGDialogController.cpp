@@ -27,9 +27,14 @@
 
 // TerraLib
 #include "SVGDialogController.h"
+#include "SVGDialogModel.h"
+#include "../qt/item/MapItem.h"
+#include "../qt/core/ItemUtils.h"
 
-te::layout::SVGDialogController::SVGDialogController(AbstractOutsideModel* o) :
-  AbstractOutsideController(o)
+te::layout::SVGDialogController::SVGDialogController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o) :
+  AbstractOutsideController(o),
+  m_scene(scene),
+  m_proxy(proxy)
 {
   
 }
@@ -37,4 +42,58 @@ te::layout::SVGDialogController::SVGDialogController(AbstractOutsideModel* o) :
 te::layout::SVGDialogController::~SVGDialogController()
 {
 
+}
+
+/*
+te::layout::Property te::layout::SVGDialogController::getProperty(std::string name)
+{
+  SVGDialogModel* outsideModel = 0;
+  Property prop;
+
+  if (m_model)
+  {
+    AbstractOutsideModel* model = dynamic_cast<AbstractOutsideModel*>(m_model);
+    outsideModel = dynamic_cast<SVGDialogModel*>(model);
+  }
+
+  if (!outsideModel)
+    return prop;
+
+  prop = outsideModel->containsOutsideSubProperty(name);
+
+  return prop;
+}*/
+
+
+te::layout::Property te::layout::SVGDialogController::getProperty(std::string name)
+{
+  Property prop;
+
+  ItemUtils utils(m_scene);
+  AbstractItemView* view = utils.getSelectedItem();
+
+  prop = view->getController()->getProperty(name);
+
+  /*
+  if (vecMap.empty() == true)
+    return prop;
+
+  //seraches for the selected MapItem
+  for (size_t i = 0; i < vecMap.size(); ++i)
+  {
+    MapItem* mapItem = vecMap[i];
+
+    if (mapItem->isSelected() == true)
+    {
+      prop = mapItem->getController()->getProperty(name);
+      break;
+    }
+    else if (mapItem->parentItem() != 0 && mapItem->parentItem()->isSelected())
+    {
+      prop = mapItem->getController()->getProperty(name);
+      break;
+    }
+  }
+  */
+  return prop;
 }

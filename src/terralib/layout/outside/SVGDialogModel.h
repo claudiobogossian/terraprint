@@ -58,10 +58,15 @@ namespace te
       virtual void setPathsProperty(Property property);
 
       virtual std::vector<std::string> getPaths();
+
+      virtual te::layout::Property containsOutsideSubProperty(std::string name);
     
     protected:
 
       Property m_svgProperty;
+
+      Property m_property;
+
     };
   }
 }

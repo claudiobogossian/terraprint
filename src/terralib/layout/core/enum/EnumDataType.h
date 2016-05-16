@@ -255,6 +255,9 @@ namespace te
         */
         virtual EnumType* getDataTypePageSetup() const;
 
+
+        virtual EnumType* getDataTypePath() const;
+
       protected:
 
         /*!
@@ -292,6 +295,7 @@ namespace te
         EnumType* m_dataTypeScaleSettings; //!< value that represents type ScaleSettings (string) belonging to enumeration
         EnumType* m_dataTypeNorthSettings; //!< value that represents type NorthSettings (string) belonging to enumeration
         EnumType* m_dataTypePageSetup; //!< value that represents type PageSetup (string) belonging to enumeration
+        EnumType* m_dataTypePath; //!< value that represents type Path (string) belonging to enumeration
     };
   }
 }

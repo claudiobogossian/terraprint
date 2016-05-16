@@ -82,7 +82,7 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
     painter->restore();
     return;
   }
-    
+
   const QString fileName = ItemUtils::convert2QString(pFileName.getValue().toString());
 
   QSvgRenderer renderer(fileName);

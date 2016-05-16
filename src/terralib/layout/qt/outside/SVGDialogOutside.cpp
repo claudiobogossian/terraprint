@@ -33,6 +33,7 @@
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "ui_SVGView.h"
+#include "../../outside/SVGDialogController.h"
 
 // STL
 #include <algorithm>
@@ -44,6 +45,10 @@
 #include <QImage>
 #include <QPainter>
 #include <QIcon>
+#include <QDir>
+#include <QtSvg/QSvgRenderer>
+#include <QListWidgetItem>
+#include <QFileDialog>
 
 te::layout::SVGDialogOutside::SVGDialogOutside(AbstractOutsideController* controller, QWidget* parent)
   : QDialog(parent),
@@ -63,22 +68,24 @@ te::layout::SVGDialogOutside::~SVGDialogOutside()
 
 void te::layout::SVGDialogOutside::init()
 {
-  m_initFile = "";
-
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
-  SVGDialogModel* model = dynamic_cast<SVGDialogModel*>(abstractModel);
-  if(!model)
-  {
+  SVGDialogController* controller = dynamic_cast<SVGDialogController*>(m_controller);
+  if (!controller)
     return;
-  }
 
-  std::vector<std::string> paths = model->getPaths();
+  Property pWidth = controller->getProperty("width");
+  Property pHeight = controller->getProperty("height");
 
-  QListWidgetItem* item = new QListWidgetItem(m_ui->listWidget);
+  m_svgWidth = pWidth.getValue().toDouble();
+  m_svgHeight = pHeight.getValue().toDouble();
 
-  item->setData(Qt::DecorationRole, QIcon(QString::fromStdString(m_initFile)));
+  Property pX = controller->getProperty("x");
+  Property pY = controller->getProperty("y");
+  m_x = pX.getValue().toDouble();
+  m_y = pY.getValue().toDouble();
 
-  m_ui->listWidget->addItem(item);
+  m_initFile = "";
+  loadSvgImages();
+
 }
 
 void te::layout::SVGDialogOutside::onOkPushButtonClicked()
@@ -115,3 +122,122 @@ void te::layout::SVGDialogOutside::setPathsProperty( Property prop )
   m_property = prop;
 }
 
+void te::layout::SVGDialogOutside::on_m_listWidget_itemDoubleClicked(QListWidgetItem * item)
+{
+
+  SVGDialogController* controller = dynamic_cast<SVGDialogController*>(m_controller);
+  if (!controller)
+    return;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  QString txt = item->text();
+
+  Property propDir = controller->getProperty("file_dir");
+
+  std::string selectedFile = propDir.getValue().toString() + "\\" + ItemUtils::convert2StdString(txt);
+
+  Variant variant;
+  variant.setValue(selectedFile, dataType->getDataTypeString());
+
+  Property propFileName = controller->getProperty("file_name");
+  propFileName.setValue(variant);
+
+
+  Property pWidth = controller->getProperty("width");
+  Property pHeight = controller->getProperty("height");
+
+  pWidth.setValue(m_svgWidth, dataType->getDataTypeDouble());
+  pHeight.setValue(m_svgHeight, dataType->getDataTypeDouble());
+
+
+  Property pX = controller->getProperty("x");
+  Property pY = controller->getProperty("y");
+
+  pX.setValue(m_x, dataType->getDataTypeDouble());
+  pY.setValue(m_y, dataType->getDataTypeDouble());
+
+
+  emit updateProperty(pX);
+  emit updateProperty(pY);
+
+  emit updateProperty(pWidth);
+  emit updateProperty(pHeight);
+
+  emit updateProperty(propFileName);
+
+}
+
+void te::layout::SVGDialogOutside::on_btnSelectPath_clicked()
+{
+
+  SVGDialogController* controller = dynamic_cast<SVGDialogController*>(m_controller);
+  if (!controller)
+    return;
+
+  QString dir = QFileDialog::getExistingDirectory(0, tr("Open Directory"),
+    "/home",
+    QFileDialog::ShowDirsOnly
+    | QFileDialog::DontResolveSymlinks);
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  std::string svgDir = ItemUtils::convert2StdString(dir);
+
+  QString labelPath = ItemUtils::convert2QString(svgDir);
+  m_ui->lblPath->setText(labelPath);
+
+
+  Property prop = controller->getProperty("file_dir");
+  prop.setValue(svgDir, dataType->getDataTypePath());
+
+  emit updateProperty(prop);
+
+  loadSvgImages();
+
+}
+
+void te::layout::SVGDialogOutside::loadSvgImages()
+{
+
+  SVGDialogController* controller = dynamic_cast<SVGDialogController*>(m_controller);
+  if (!controller)
+    return;
+
+  m_ui->m_listWidget->clear();
+
+  Property propDir = controller->getProperty("file_dir");
+  QString labelPath = ItemUtils::convert2QString(propDir.getValue().toString());
+  m_ui->lblPath->setText(labelPath);
+
+  QString directory = ItemUtils::convert2QString(propDir.getValue().toString());
+  QDir svgDir(directory);
+  svgDir.setNameFilters(QStringList() << "*.svg");
+  QStringList fileList = svgDir.entryList();
+
+  std::string fileLocal;
+  for (int i = 0; i < fileList.size(); i++)
+  {
+    QString fDir = fileList.at(i);
+
+    QString file(directory + "\\" + fDir);
+
+    QSvgRenderer svgRenderer(file);
+
+    QPixmap svgPixmap(svgRenderer.defaultSize());
+    svgPixmap.fill();
+    QPainter pixPainter(&svgPixmap);
+    svgRenderer.render(&pixPainter);
+
+    QIcon ico(svgPixmap);
+
+    QListWidgetItem *item = new QListWidgetItem(ico, fDir);
+
+    QSize size(90, 90);
+    m_ui->m_listWidget->setIconSize(size);
+
+    m_ui->m_listWidget->insertItem(i, item);
+  }
+
+
+}

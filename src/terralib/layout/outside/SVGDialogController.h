@@ -31,20 +31,34 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/Config.h"
+#include "../qt/core/Scene.h"
+#include "../core/pattern/proxy/AbstractProxyProject.h"
 
 namespace te
 {
   namespace layout
   {
     class AbstractOutsideModel;
+    class Scene;
+    class AbstractProxyProject;
 
     class TELAYOUTEXPORT SVGDialogController : public AbstractOutsideController
     {
       public:
 
-        SVGDialogController(AbstractOutsideModel* o);
+        SVGDialogController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o);
+
+        virtual Property getProperty(std::string name);
 
         virtual ~SVGDialogController();
+
+      private:
+
+      private:
+        Scene * m_scene;
+        AbstractProxyProject * m_proxy;
+
+
     };
   }
 }

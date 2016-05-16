@@ -190,6 +190,10 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowNorthSettingsDlg()));
   }
+  if (currentType == dataType->getDataTypePath())
+  {
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowFolderDlg()));
+  }
 }
 
 QtStringPropertyManager* te::layout::DialogPropertiesBrowser::getStringPropertyManager()
@@ -314,6 +318,25 @@ void te::layout::DialogPropertiesBrowser::onShowNorthSettingsDlg()
   northSettings->load();
   northSettings->show(); // modeless dialog
   northSettings->raise(); // top of the parent widget's stack
+}
+
+void te::layout::DialogPropertiesBrowser::onShowFolderDlg()
+{
+
+  QString dir = QFileDialog::getExistingDirectory(0, tr("Open Directory"),
+    "/home",
+    QFileDialog::ShowDirsOnly
+    | QFileDialog::DontResolveSymlinks);
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  std::string svgDir = ItemUtils::convert2StdString(dir);
+
+  Property prop = m_currentPropertyClicked;
+  prop.setValue(svgDir, dataType->getDataTypePath());
+
+  emit changeDlgProperty(prop);
+
 }
 
 void te::layout::DialogPropertiesBrowser::onShowImageDlg()
