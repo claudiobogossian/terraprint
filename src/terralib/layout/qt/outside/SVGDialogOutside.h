@@ -97,8 +97,7 @@ namespace te
         std::string m_initFile;
         double m_svgWidth;
         double m_svgHeight;
-        double m_x;
-        double m_y;
+        std::string m_currentFile;
     };
   }    
 }     

@@ -54,7 +54,8 @@ te::layout::SVGDialogOutside::SVGDialogOutside(AbstractOutsideController* contro
   : QDialog(parent),
     AbstractOutsideView(controller),
     m_ui(new Ui::SVGView), 
-    m_property(0)
+    m_property(0),
+    m_currentFile("")
 {
   m_ui->setupUi(this);
 
@@ -80,8 +81,6 @@ void te::layout::SVGDialogOutside::init()
 
   Property pX = controller->getProperty("x");
   Property pY = controller->getProperty("y");
-  m_x = pX.getValue().toDouble();
-  m_y = pY.getValue().toDouble();
 
   m_initFile = "";
   loadSvgImages();
@@ -90,6 +89,56 @@ void te::layout::SVGDialogOutside::init()
 
 void te::layout::SVGDialogOutside::onOkPushButtonClicked()
 {
+
+
+  SVGDialogController* controller = dynamic_cast<SVGDialogController*>(m_controller);
+  if (!controller)
+    return;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  QListWidgetItem * item = m_ui->m_listWidget->currentItem();
+
+  QString txt = item->text();
+
+  Property propDir = controller->getProperty("file_dir");
+
+  std::string selectedFile = propDir.getValue().toString() + "\\" + ItemUtils::convert2StdString(txt);
+
+  if (m_currentFile == selectedFile){
+    reject();
+    return;
+  }
+
+  Variant variant;
+  variant.setValue(selectedFile, dataType->getDataTypeString());
+
+  Property propFileName = controller->getProperty("file_name");
+  propFileName.setValue(variant);
+
+
+  Property pWidth = controller->getProperty("width");
+  Property pHeight = controller->getProperty("height");
+
+  pWidth.setValue(m_svgWidth, dataType->getDataTypeDouble());
+  pHeight.setValue(m_svgHeight, dataType->getDataTypeDouble());
+
+
+  Property pX = controller->getProperty("x");
+  Property pY = controller->getProperty("y");
+
+  m_currentFile = selectedFile;
+
+
+  emit updateProperty(pX);
+  emit updateProperty(pY);
+
+  emit updateProperty(pWidth);
+  emit updateProperty(pHeight);
+
+  emit updateProperty(propFileName);
+
+  reject();
   
 }
 
@@ -137,6 +186,10 @@ void te::layout::SVGDialogOutside::on_m_listWidget_itemDoubleClicked(QListWidget
 
   std::string selectedFile = propDir.getValue().toString() + "\\" + ItemUtils::convert2StdString(txt);
 
+  if (m_currentFile == selectedFile){
+    return;
+  }
+
   Variant variant;
   variant.setValue(selectedFile, dataType->getDataTypeString());
 
@@ -154,18 +207,16 @@ void te::layout::SVGDialogOutside::on_m_listWidget_itemDoubleClicked(QListWidget
   Property pX = controller->getProperty("x");
   Property pY = controller->getProperty("y");
 
-  pX.setValue(m_x, dataType->getDataTypeDouble());
-  pY.setValue(m_y, dataType->getDataTypeDouble());
-
-
-  emit updateProperty(pX);
-  emit updateProperty(pY);
+  m_currentFile = selectedFile;
 
   emit updateProperty(pWidth);
   emit updateProperty(pHeight);
 
   emit updateProperty(propFileName);
 
+
+  emit updateProperty(pX);
+  emit updateProperty(pY);
 }
 
 void te::layout::SVGDialogOutside::on_btnSelectPath_clicked()
