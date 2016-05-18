@@ -65,6 +65,7 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
   SVGController *svgController = dynamic_cast<SVGController*>(m_controller);
 
   //QRectF adjustBoundRect = svgController->calculateSVGRect();
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   QRectF boundRect = boundingRect();
   QTransform transform;
@@ -75,6 +76,7 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
   painter->setTransform(transform, true);
 
   Property pFileName = svgController->getProperty("file_name");
+
 
   if (pFileName.getValue().toString() == ""){
    

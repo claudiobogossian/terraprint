@@ -77,13 +77,13 @@
       <widget class="QLabel" name="label">
        <property name="minimumSize">
         <size>
-         <width>50</width>
+         <width>160</width>
          <height>0</height>
         </size>
        </property>
        <property name="maximumSize">
         <size>
-         <width>109</width>
+         <width>160</width>
          <height>16777215</height>
         </size>
        </property>

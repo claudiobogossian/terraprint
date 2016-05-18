@@ -58,7 +58,6 @@ te::layout::SVGModel::SVGModel()
   {
     Property property(0);
     property.setName("file_dir");
-    property.setLabel(TR_LAYOUT("File Dir"));
     property.setValue(fileDir, dataType->getDataTypePath());
     property.setMenu(false);
     property.setVisible(false);

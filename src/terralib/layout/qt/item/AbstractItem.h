@@ -705,22 +705,22 @@ namespace te
 
       bool keepAspect = pKeepAspect.getValue().toBool();
 
-      if (keepAspect == true && smallLeftTopRect.contains(checkPoint))
+      if (smallLeftTopRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeFDiagCursor);
         m_enumSides = TPTopLeft;
       }
-      else if (keepAspect == true && smallRightTopRect.contains(checkPoint))
+      else if (smallRightTopRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeBDiagCursor);
         m_enumSides = TPTopRight;
       }
-      else if (keepAspect == true && smallLeftBottomRect.contains(checkPoint))
+      else if (smallLeftBottomRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeBDiagCursor);
         m_enumSides = TPLowerLeft;
       }
-      else if (keepAspect == true && smallRightBottomRect.contains(checkPoint))
+      else if (smallRightBottomRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeFDiagCursor);
         m_enumSides = TPLowerRight;

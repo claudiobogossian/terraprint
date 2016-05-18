@@ -99,6 +99,12 @@ void te::layout::SVGDialogOutside::onOkPushButtonClicked()
 
   QListWidgetItem * item = m_ui->m_listWidget->currentItem();
 
+  if (item == 0)
+  {
+    reject();
+    return;
+  }
+
   QString txt = item->text();
 
   Property propDir = controller->getProperty("file_dir");
@@ -128,10 +134,6 @@ void te::layout::SVGDialogOutside::onOkPushButtonClicked()
   Property pY = controller->getProperty("y");
 
   m_currentFile = selectedFile;
-
-
-  emit updateProperty(pX);
-  emit updateProperty(pY);
 
   emit updateProperty(pWidth);
   emit updateProperty(pHeight);
@@ -214,9 +216,6 @@ void te::layout::SVGDialogOutside::on_m_listWidget_itemDoubleClicked(QListWidget
 
   emit updateProperty(propFileName);
 
-
-  emit updateProperty(pX);
-  emit updateProperty(pY);
 }
 
 void te::layout::SVGDialogOutside::on_btnSelectPath_clicked()
@@ -259,6 +258,9 @@ void te::layout::SVGDialogOutside::loadSvgImages()
 
   Property propDir = controller->getProperty("file_dir");
   QString labelPath = ItemUtils::convert2QString(propDir.getValue().toString());
+  if (labelPath.isEmpty()){
+    return;
+  }
   m_ui->lblPath->setText(labelPath);
 
   QString directory = ItemUtils::convert2QString(propDir.getValue().toString());

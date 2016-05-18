@@ -645,14 +645,24 @@ te::layout::AbstractItemView* te::layout::ItemUtils::getSelectedItem()
   }
 
   QList<QGraphicsItem*> items = m_scene->items();
-  QGraphicsItem* item = items.first();
+  //QGraphicsItem* item = items.first();
 
-  if (!item)
+  foreach(QGraphicsItem *item, items)
   {
-    return abstractItem;
-  }
 
-  abstractItem = dynamic_cast<AbstractItemView*>(item);
+    if (!item)
+    {
+      return abstractItem;
+    }
+
+    if (item->isSelected())
+    {
+      abstractItem = dynamic_cast<AbstractItemView*>(item);
+      return abstractItem;
+    }
+  }
+  
+  
   return abstractItem;
 }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -404,7 +404,7 @@
         <source>Bottom Text</source>
         <translation>Textos Inferiores</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="895"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="902"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="909"/>
@@ -903,37 +903,37 @@
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="32"/>
         <source>Form</source>
-        <translation type="unfinished">Formulário</translation>
+        <translation>Formulário</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="85"/>
         <source>º</source>
-        <translation type="unfinished"></translation>
+        <translation>º</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="117"/>
         <source>&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="155"/>
         <source>&apos;&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>&apos;&apos;</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="166"/>
         <source>degrees.</source>
-        <translation type="unfinished"></translation>
+        <translation>graus.</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="180"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancelar</translation>
+        <translation>Cancelar</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="203"/>
         <source>OK</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1523,17 +1523,27 @@ nononon</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="85"/>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="97"/>
+        <source>SVG Library Path:</source>
+        <translation>Caminho da Biblioteca SVG:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="117"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="147"/>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="105"/>
-        <source>OK</source>
-        <translation></translation>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="167"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="112"/>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="174"/>
         <source>CANCEL</source>
         <translation>Cancelar</translation>
     </message>
@@ -1889,27 +1899,32 @@ nononon</source>
 <context>
     <name>te::layout::DialogPropertiesBrowser</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="322"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="326"/>
+        <source>Open Directory</source>
+        <translation type="unfinished">Abrir Diretório</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="345"/>
         <source>Images</source>
         <translation>Imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="335"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="358"/>
         <source>Select an Image File</source>
         <translation>Selecione um Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="343"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="366"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="343"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="366"/>
         <source>The selected image cannot be loaded.</source>
         <translation>A imagem selecionada não pôde ser carregada.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="406"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="429"/>
         <source>Select Font</source>
         <translation>Selecione a Fonte</translation>
     </message>
@@ -2156,7 +2171,7 @@ nononon</source>
 </context>
 <context>
     <name>te::layout::ObjectInspectorDock</name>
-    <message id="0">
+    <message>
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>
@@ -2301,6 +2316,14 @@ nononon</source>
         <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="366"/>
         <source>Component::</source>
         <translation>Componente::</translation>
+    </message>
+</context>
+<context>
+    <name>te::layout::SVGDialogOutside</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="228"/>
+        <source>Open Directory</source>
+        <translation type="unfinished">Abrir Diretório</translation>
     </message>
 </context>
 <context>
@@ -2477,6 +2500,11 @@ nononon</source>
         <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="361"/>
         <source>Paper Tools</source>
         <translation>Ferramentas de Papel</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="343"/>
+        <source>SVG Object</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="389"/>

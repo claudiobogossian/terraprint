@@ -100,10 +100,6 @@ void te::layout::SVGController::calculateSVGRect(QString& fileName)
       }
     }
 
-    double adjustX = (boundrect.width() - adjustBoundRect.width()) / 2;
-    double adjustY = (boundrect.height() - adjustBoundRect.height()) / 2;
-
-    adjustBoundRect.translate(adjustX, adjustY);
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -111,23 +107,3 @@ void te::layout::SVGController::calculateSVGRect(QString& fileName)
   updateBoundingRect(adjustBoundRect);
 }
 
-/*
-void te::layout::SVGController::setProperty(const te::layout::Property& property)
-{
-  if (property.getName() == "file_name")
-  {
-    if ((property.getValue().toString() != "") && (property.getValue().toString() != getProperty("file_name").getValue().toString()))
-    {
-      QString fileName = ItemUtils::convert2QString(property.getValue().toString());
-      calculateSVGRect(fileName);
-      AbstractItemController::setProperty(property);
-    }
-
-  }
-  else
-  {
-    AbstractItemController::setProperty(property);
-  }
-  
-}
-*/
