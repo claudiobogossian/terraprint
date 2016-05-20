@@ -742,3 +742,86 @@ int te::layout::Variant::getprecision() const{
 bool  te::layout::Variant::isUsingPrecision() const{
   return m_usePrecision;
 }
+
+te::layout::Variant& te::layout::Variant::operator=(const Variant& variant)
+{
+  this->m_sValue = variant.m_sValue;
+  this->m_dValue = variant.m_dValue; //!< value of double type
+  this->m_iValue = variant.m_iValue; //!< value of int type
+  this->m_lValue = variant.m_lValue; //!< value of long type
+  this->m_fValue = variant.m_fValue; //!< value of float type
+  this->m_bValue = variant.m_bValue; //!< value of boolean type 
+  this->m_colorValue = variant.m_colorValue; //!< value of te::color::RGBAColor type
+  this->m_fontValue = variant.m_fontValue; //!< value of te::layout::Font type
+  this->m_envelopeValue = variant.m_envelopeValue; //!< value of the envelope type
+  this->m_type = variant.m_type; //!< data type of this object
+  this->m_null = variant.m_null; //!< true if no value has been set, false otherwise
+  this->m_complex = variant.m_complex; //!< true if value is not of common C++ data type, false otherwise
+  this->m_generic = variant.m_generic; //!< value of te::layout::GenericVariant type
+  this->m_vString = variant.m_vString; //!< value of string vector type
+  this->m_listLayer = variant.m_listLayer; //!< value of te::map::AbstractLayerPtr list type
+  this->m_usePrecision = variant.m_usePrecision; //!< true if uses precision in double value
+  this->m_precision = variant.m_precision;
+
+  if (variant.m_geometryPtr.get() != 0)
+    this->m_geometryPtr.reset((te::gm::Geometry*)variant.m_geometryPtr->clone());
+
+  return *this;
+}
+
+bool te::layout::Variant::operator ==(const Variant& other) const
+{
+  Variant& otherProp = const_cast<Variant&>(other);
+
+  if (getType() == otherProp.getType())
+  {
+    if (m_sValue == otherProp.toString() &&
+      m_dValue == otherProp.toDouble() &&
+      m_iValue == otherProp.toInt() &&
+      m_lValue == otherProp.toLong() &&
+      m_fValue == otherProp.toFloat() &&
+      m_bValue == otherProp.toBool() &&
+      m_colorValue == otherProp.toColor() &&
+      m_fontValue == otherProp.toFont())
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+bool te::layout::Variant::operator !=(const Variant& other) const
+{
+  Variant& otherProp = const_cast<Variant&>(other);
+
+  if (getType() != otherProp.getType())
+  {
+    return true;
+  }
+
+  if (getType() == otherProp.getType())
+  {
+    if (m_sValue != otherProp.toString() ||
+      m_dValue != otherProp.toDouble() ||
+      m_iValue != otherProp.toInt() ||
+      m_lValue != otherProp.toLong() ||
+      m_fValue != otherProp.toFloat() ||
+      m_colorValue != otherProp.toColor() ||
+      m_fontValue != otherProp.toFont())
+    {
+      return true;
+    }
+    else
+    {
+      if (m_bValue != otherProp.toBool())
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+  }
+  return true;
+}

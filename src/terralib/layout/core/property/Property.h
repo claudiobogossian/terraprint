@@ -337,10 +337,6 @@ namespace te
         v.usePrecision(usePrecision);
         v.setPrecision(precisionValue);
       }
-      /*else{
-        v.usePrecision(false);
-        v.setPrecision(precisionValue);
-      }*/
 
       m_value = v;
       m_type = type;

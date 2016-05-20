@@ -250,6 +250,7 @@ namespace te
                 
         bool operator ==(const Variant& other) const;
         bool operator !=(const Variant& other) const;
+        Variant& operator=(const Variant& properties);
 
     protected:
 
@@ -361,63 +362,6 @@ namespace te
       const ValueType& value, EnumType* type )
     {
       v = Variant(type, &value);      
-    }
-    
-    inline bool te::layout::Variant::operator ==(const Variant& other) const
-    { 
-      Variant& otherProp = const_cast<Variant&>(other);
-
-      if(getType() == otherProp.getType())
-      {
-        if(m_sValue == otherProp.toString() &&
-          m_dValue == otherProp.toDouble() &&
-          m_iValue == otherProp.toInt() &&
-          m_lValue == otherProp.toLong() &&
-          m_fValue == otherProp.toFloat() &&
-          m_bValue == otherProp.toBool() &&
-          m_colorValue == otherProp.toColor() &&
-          m_fontValue == otherProp.toFont())
-        {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    inline bool te::layout::Variant::operator !=(const Variant& other) const
-    { 
-      Variant& otherProp = const_cast<Variant&>(other);
-
-      if(getType() != otherProp.getType())
-      {
-        return true;
-      }
-
-      if(getType() == otherProp.getType())
-      {
-        if(m_sValue != otherProp.toString() ||
-          m_dValue != otherProp.toDouble() ||
-          m_iValue != otherProp.toInt() ||
-          m_lValue != otherProp.toLong() ||
-          m_fValue != otherProp.toFloat() ||
-          m_colorValue != otherProp.toColor() ||
-          m_fontValue != otherProp.toFont())
-        {
-          return true;
-        }
-        else
-        {
-          if(m_bValue != otherProp.toBool())
-          {
-            return true;
-          }
-          else
-          {
-            return false;
-          }
-        }
-      }
-      return true;
     }
   }
 }
