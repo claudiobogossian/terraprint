@@ -64,10 +64,9 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
   painter->save();
   SVGController *svgController = dynamic_cast<SVGController*>(m_controller);
 
-  //QRectF adjustBoundRect = svgController->calculateSVGRect();
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  QRectF boundRect = boundingRect();
+  QRectF boundRect = getAdjustedBoundingRect(painter);
   QTransform transform;
   transform.translate(0., boundRect.y() + boundRect.height());
   transform.scale(1., -1.);
