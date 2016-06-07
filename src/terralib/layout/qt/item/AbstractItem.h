@@ -510,7 +510,7 @@ namespace te
 
       QRectF convertedRect = qRectToQPolygonMap(rectAdjusted);
 
-      qreal penWidth = painter->pen().widthF();
+      qreal penWidth = 3;
       if (painter->pen().style() == Qt::NoPen)
       {
         penWidth = 0.;
@@ -518,7 +518,7 @@ namespace te
 
       QRectF bRect = convertedRect;
 
-      qreal adj = penWidth / 2.;
+      qreal adj = std::ceil(penWidth / 2.);
       convertedRect = bRect.adjusted(adj, adj, -adj, -adj);
 
       QPointF topL = convertedRect.topLeft();
@@ -538,7 +538,7 @@ namespace te
       QLineF lineLeft(bottomR, topR);
 
 
-      penBackground.setWidthF(3.);
+      penBackground.setWidthF(penWidth);
       painter->setPen(penBackground);
       painter->setBrush(Qt::NoBrush);
       
@@ -548,7 +548,7 @@ namespace te
       painter->drawLine(lineLeft);
 
 
-      penForeground.setWidthF(3.);
+      penForeground.setWidthF(penWidth);
       painter->setPen(penForeground);
       painter->setBrush(Qt::NoBrush);
 
