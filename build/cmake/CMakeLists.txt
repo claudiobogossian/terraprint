@@ -175,7 +175,7 @@ endif()
 find_package(Qt5 5.1 QUIET COMPONENTS Core Gui Widgets PrintSupport)
 
 if(NOT Qt5_FOUND)
-  find_package(Qt4 4.6.3 QUIET COMPONENTS QtCore QtGui)
+  find_package(Qt4 4.6.3 QUIET COMPONENTS QtCore QtGui QtSvg)
 else()
   find_package(Qt5LinguistTools QUIET)
 endif()
@@ -229,7 +229,7 @@ else()
   if(DEFINED TERRALIB_TRANSLATOR_ENABLED)
     set(TERRALIB_TRANSLATOR_ENABLED 0 CACHE BOOL "Enable translator support?" FORCE)
   endif()
-  
+
 endif()
 
 if(GNUICONV_FOUND)
@@ -404,8 +404,7 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
     IMMEDIATE @ONLY)
 
-  
+
 
 add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake)
-  
