@@ -50,9 +50,9 @@ endif()
 find_package(GeographicLib 1.45)
 if(GEOGRAPHICLIB_FOUND)
   include_directories(${GeographicLib_INCLUDE_DIRS})
-  
+
   add_definitions(-DGEOGRAPHICLIB_ENABLED)
-  
+
   file(GLOB GEOGRAPHICLIB_MODEL_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/magnetic_model/*.*)
 endif()
 
@@ -153,55 +153,55 @@ source_group("Source Files\\qt\\inside"  FILES ${TERRALIB_LAYOUT_QT_INSIDE_SRC_F
 source_group("Header Files\\qt\\inside"  FILES ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
 source_group("UI Files\\"  FILES ${TERRALIB_LAYOUT_UI_HDR_FILES})
 
-set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_ENUM_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_ENUM_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_FACTORY_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_FACTORY_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_MVC_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_MVC_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_OBSERVER_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_OBSERVER_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_PROXY_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_PROXY_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_SINGLETON_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_SINGLETON_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_PROPERTY_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_PROPERTY_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_SERIALIZATION_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_SERIALIZATION_HDR_FILES} 
-           ${TERRALIB_LAYOUT_CORE_TEMPLATE_SRC_FILES} 
-           ${TERRALIB_LAYOUT_CORE_TEMPLATE_HDR_FILES} 
-           ${TERRALIB_LAYOUT_ITEM_SRC_FILES} 
-           ${TERRALIB_LAYOUT_ITEM_HDR_FILES} 
-           ${TERRALIB_LAYOUT_OUTSIDE_SRC_FILES} 
-           ${TERRALIB_LAYOUT_OUTSIDE_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_CORE_SRC_FILES} 
+set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_ENUM_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_ENUM_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_FACTORY_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_FACTORY_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_MVC_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_MVC_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_OBSERVER_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_OBSERVER_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_PROXY_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_PROXY_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_SINGLETON_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_SINGLETON_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_PROPERTY_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_PROPERTY_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_SERIALIZATION_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_SERIALIZATION_HDR_FILES}
+           ${TERRALIB_LAYOUT_CORE_TEMPLATE_SRC_FILES}
+           ${TERRALIB_LAYOUT_CORE_TEMPLATE_HDR_FILES}
+           ${TERRALIB_LAYOUT_ITEM_SRC_FILES}
+           ${TERRALIB_LAYOUT_ITEM_HDR_FILES}
+           ${TERRALIB_LAYOUT_OUTSIDE_SRC_FILES}
+           ${TERRALIB_LAYOUT_OUTSIDE_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_CORE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_CORE_HDR_FILES}
-           ${TERRALIB_LAYOUT_QT_DEFAULT_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}  
-           ${TERRALIB_LAYOUT_QT_FACTORY_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_COMMAND_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_COMMAND_HDR_FILES}  
-           ${TERRALIB_LAYOUT_QT_TOOLS_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_TOOLS_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_ITEM_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_SRC_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_HDR_FILES} 
-           ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_SRC_FILES} 
+           ${TERRALIB_LAYOUT_QT_DEFAULT_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_COMMAND_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_COMMAND_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_TOOLS_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_TOOLS_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_ITEM_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_HDR_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
-       ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES} 
+       ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
-           
+
 if(Qt5_FOUND)
 
 # uic'ing
@@ -219,7 +219,7 @@ else()
   QT4_WRAP_UI(TERRALIB_LAYOUT_GEN_HDR_FILES ${TERRALIB_LAYOUT_UI_HDR_FILES})
 
 # moc'ing
-  set(TERRALIB_HDRS_TO_MOC_FILES 
+  set(TERRALIB_HDRS_TO_MOC_FILES
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/Scene.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PropertiesOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ObjectInspectorOutside.h
@@ -250,7 +250,7 @@ else()
                                  #Base Layout
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MainLayout.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/OutsideArea.h
-                                 
+
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
@@ -264,7 +264,7 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/PropertiesDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/EditTemplateDock.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarInside.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h  
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/MapToolbarController.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/DialogItemToolbar.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ScaleSettingsOutside.h
@@ -285,7 +285,7 @@ else()
 
   target_link_libraries(terralib_mod_layout ${QT_LIBRARIES})
 
-endif() 
+endif()
 
 target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            terralib_mod_common
@@ -299,8 +299,8 @@ target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            terralib_mod_srs
                                            terralib_mod_symbology
                                            ${QTPROPERTYBROWSER_LIBRARY}
-                                           ${GeographicLib_LIBRARY}
-										   ${Boost_LIBRARIES})
+                                           ${Boost_LIBRARIES})
+
 
 set_target_properties(terralib_mod_layout
                       PROPERTIES VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
@@ -318,15 +318,15 @@ file(COPY ${mo_input_dir}/telayout.mo DESTINATION ${mo_output_dir})
 
 file(GLOB _qm_files)
 if (QT4_FOUND)
-  GenerateTranslationQt4("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files) 
+  GenerateTranslationQt4("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files)
 else()
   if (Qt5_FOUND)
-    GenerateTranslationQt5("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files) 
+    GenerateTranslationQt5("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files)
   endif()
 endif()
 file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
 
-#Copying translated files to build translation folder, to be installed with it 
+#Copying translated files to build translation folder, to be installed with it
 file(COPY ${translated_files} DESTINATION "${CMAKE_BINARY_DIR}/share/terralib/translations")
 
 #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
@@ -360,9 +360,11 @@ install(
 if(GEOGRAPHICLIB_FOUND)
   #for build version
   set(geographiclib_output_dir "${CMAKE_BINARY_DIR}/share/terralib/magnetic_model")
-  
+
   file( MAKE_DIRECTORY ${geographiclib_output_dir})
   file(COPY ${GEOGRAPHICLIB_MODEL_FILES} DESTINATION ${geographiclib_output_dir})
+
+  target_link_libraries(terralib_mod_layout ${GeographicLib_LIBRARY})
 
   #for installed version
   install(
@@ -392,10 +394,10 @@ install(FILES ${TERRALIB_LAYOUT_CORE_FACTORY_HDR_FILES}
 
 install(FILES ${TERRALIB_LAYOUT_CORE_MVC_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/core/pattern/mvc COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_CORE_OBSERVER_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/core/pattern/observer COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_CORE_PROXY_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/core/pattern/proxy COMPONENT devel)
 
@@ -411,7 +413,7 @@ install(FILES ${TERRALIB_LAYOUT_CORE_SERIALIZATION_HDR_FILES}
 install(FILES ${TERRALIB_LAYOUT_CORE_TEMPLATE_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/core/template COMPONENT devel)
 
-install(FILES ${TERRALIB_LAYOUT_ITEM_HDR_FILES}        
+install(FILES ${TERRALIB_LAYOUT_ITEM_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/item COMPONENT devel)
 
 install(FILES ${TERRALIB_LAYOUT_OUTSIDE_HDR_FILES}
@@ -419,28 +421,28 @@ install(FILES ${TERRALIB_LAYOUT_OUTSIDE_HDR_FILES}
 
 install(FILES ${TERRALIB_LAYOUT_QT_CORE_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core COMPONENT devel)
-        
+
 install(FILES ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/default COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_QT_DEFAULT_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/inside COMPONENT devel)
 
 install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/factory/item COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/factory/outside COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/factory/tool COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_QT_COMMAND_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/command COMPONENT devel)
 
 install(FILES ${TERRALIB_LAYOUT_QT_TOOLS_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/tools COMPONENT devel)
-    
+
 install(FILES ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/propertybrowser COMPONENT devel)
 
@@ -449,13 +451,13 @@ install(FILES ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES}
 
 install(FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/outside COMPONENT devel)
-        
+
 if(UNIX)
   install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_layout.so.${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
           DESTINATION ${terralib_DIR}/../../)
   install(FILES ${CMAKE_BINARY_DIR}/bin/libterralib_mod_layout.so
           DESTINATION ${terralib_DIR}/../../)
-endif()          
+endif()
 
 export(TARGETS terralib_mod_layout APPEND FILE ${CMAKE_BINARY_DIR}/terralib_layout-exports.cmake)
 
@@ -464,7 +466,7 @@ if(MSVC)
         TARGET terralib_mod_layout
         POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_BINARY_DIR}/Debug ${terralib_DIR}/debug
-        
+
         COMMENT "Copying plugin files..."
         VERBATIM
       )
@@ -472,7 +474,7 @@ if(MSVC)
     TARGET terralib_mod_layout
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E  copy_directory ${CMAKE_BINARY_DIR}/Release ${terralib_DIR}/release
-    
+
     COMMENT "Copying plugin files..."
     VERBATIM
     )
