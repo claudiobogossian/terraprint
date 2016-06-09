@@ -36,6 +36,7 @@
 
 // TerraLib
 #include "../core/ItemUtils.h"
+#include "../../core/Utils.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../../core/AbstractScene.h"
@@ -45,6 +46,7 @@
 
 //Qt
 #include <QGraphicsItem>
+#include <QGraphicsView>
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QRectF>
@@ -217,6 +219,8 @@ namespace te
         virtual void drawItemResized( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
         
         virtual AbstractScene* getScene();
+
+        virtual QRectF qRectToQPolygonMap(QRectF rect);
                 
      protected:
 
@@ -228,6 +232,7 @@ namespace te
         LayoutAlign                       m_enumSides;
         te::layout::ItemAction            m_currentAction;
         double                            m_marginResizePrecision; //precision
+        double                            m_selectionPointSize;
     };
 
     template <class T>
@@ -236,7 +241,8 @@ namespace te
       , AbstractItemView(controller, invertedMatrix)
       , m_enumSides(TPNoneSide)
       , m_currentAction(te::layout::NO_ACTION)
-      , m_marginResizePrecision(2.)
+      , m_marginResizePrecision(5.)
+      , m_selectionPointSize(10.)
     {
       T::setFlags(QGraphicsItem::ItemIsMovable
         | QGraphicsItem::ItemIsSelectable
@@ -481,6 +487,8 @@ namespace te
 
       painter->save();
 
+      int zoom = this->getScene()->getContext().getZoom();
+
       const QColor fgcolor(0, 255, 0);
       const QColor backgroundColor(0, 0, 0);
 
@@ -489,32 +497,98 @@ namespace te
       painter->setBrush(Qt::NoBrush);
 
       //gets the adjusted boundigng rectangle based of the painter settings
-      QRectF rectAdjusted = getAdjustedBoundingRect(painter);
-      painter->drawRect(rectAdjusted);
-
+      QRectF rectAdjusted = boundingRect();
+      
       QPen penForeground(fgcolor, frameThickness, Qt::DashLine);
       painter->setPen(penForeground);
       painter->setBrush(Qt::NoBrush);
 
-      //gets the adjusted boundigng rectangle based of the painter settings
-      painter->drawRect(rectAdjusted);
+      QTransform t;
+      painter->setTransform(t);
+      
+      double half = m_selectionPointSize / 2;
 
-      painter->setPen(Qt::NoPen);
+      QRectF convertedRect = qRectToQPolygonMap(rectAdjusted);
+
+      qreal penWidth = 3;
+      if (painter->pen().style() == Qt::NoPen)
+      {
+        penWidth = 0.;
+      }
+
+      QRectF bRect = convertedRect;
+
+      qreal adj = std::ceil(penWidth / 2.);
+      convertedRect = bRect.adjusted(adj, adj, -adj, -adj);
+
+      QPointF topL = convertedRect.topLeft();
+
+      QPointF topR = convertedRect.topRight();
+
+      QPointF bottomR = convertedRect.bottomRight();
+
+      QPointF bottomL = convertedRect.bottomLeft();
+
+      QPointF center = convertedRect.center();
+
+      
+      QLineF lineDown(bottomL, bottomR);
+      QLineF lineUp(topL, topR);
+      QLineF lineRight(bottomL, topL);
+      QLineF lineLeft(bottomR, topR);
+
+
+      penBackground.setWidthF(penWidth);
+      painter->setPen(penBackground);
+      painter->setBrush(Qt::NoBrush);
+      
+      painter->drawLine(lineDown);
+      painter->drawLine(lineUp);
+      painter->drawLine(lineRight);
+      painter->drawLine(lineLeft);
+
+
+      penForeground.setWidthF(penWidth);
+      painter->setPen(penForeground);
+      painter->setBrush(Qt::NoBrush);
+
+      painter->drawLine(lineDown);
+      painter->drawLine(lineUp);
+      painter->drawLine(lineRight);
+      painter->drawLine(lineLeft);
+
+
+      QPen pen;
+      pen.setColor(QColor(255, 0, 0));
+      pen.setStyle(Qt::DotLine);
+
       QBrush brushEllipse(fgcolor);
       painter->setBrush(fgcolor);
 
-      double w = 2.;
-      double h = 2.;
-      double half = 1.;
-
-      painter->drawRect(rectAdjusted.center().x() - half, rectAdjusted.center().y() - half, w, h); // center
-      painter->drawRect(rectAdjusted.bottomLeft().x(), rectAdjusted.bottomLeft().y() - half, w, h); // left-top
-      painter->drawRect(rectAdjusted.bottomRight().x() - half, rectAdjusted.bottomRight().y() - half, w, h); // right-top
-      painter->drawRect(rectAdjusted.topLeft().x(), rectAdjusted.topLeft().y(), w, h); // left-bottom
-      painter->drawRect(rectAdjusted.topRight().x() - half, rectAdjusted.topRight().y(), w, h); // right-bottom
+      pen.setWidthF(m_selectionPointSize);
+      painter->setPen(pen);
+      painter->drawPoint(topL.x()+ half, topL.y() + half);
+      painter->drawPoint(topR.x() - half, topR.y() + half);
+      painter->drawPoint(bottomR.x() - half, bottomR.y() - half);
+      painter->drawPoint(bottomL.x() + half, bottomL.y() - half);
+      painter->drawPoint(center.x(), center.y());
 
       painter->restore();
     }
+
+     template <class T>
+     inline QRectF te::layout::AbstractItem<T>::qRectToQPolygonMap(QRectF rect)
+     {
+       
+       QGraphicsScene* scene = this->scene();
+       QGraphicsView* view = scene->views().first();
+
+       QRectF convRect = this->mapRectToScene(rect);
+       QRectF rectConverted = view->mapFromScene(convRect).boundingRect();
+
+       return rectConverted;
+     
+     }
 
     template <class T>
     inline void te::layout::AbstractItem<T>::drawText(const QPointF& point, QPainter* painter, const QFont& font, const std::string& text, int rotate)
@@ -680,26 +754,44 @@ namespace te
       bool result = true;
       QRectF bRect = boundingRect();
 
-      QPointF ll = bRect.bottomLeft();
-      QPointF lr = bRect.bottomRight();
-      QPointF tl = bRect.topLeft();
-      QPointF tr = bRect.topRight();
+      QRectF remapRect = qRectToQPolygonMap(bRect);
+
+      QPointF ll = remapRect.bottomLeft();//bRect.bottomLeft();
+      QPointF lr = remapRect.bottomRight();//bRect.bottomRight();
+      QPointF tl = remapRect.topLeft();//bRect.topLeft();
+      QPointF tr = remapRect.topRight();//bRect.topRight();
+
+      QGraphicsScene* scene = this->scene();
+      QGraphicsView* view = scene->views().first();
+
+      QPointF mousePoint(x, y);
+
+      QPointF convPoint = this->mapToScene(mousePoint);
+      QPointF remapedPoint = view->mapFromScene(convPoint);
+
+
+
+      Utils utils = this->getScene()->getUtils();
+      double marginPixel =  utils.mm2pixel(m_marginResizePrecision);
       
-      QRectF leftRect(ll.x(), tl.y(), ll.x() + m_marginResizePrecision, tl.y() + bRect.height());
-      QRectF rightRect(tr.x() - m_marginResizePrecision, tl.y(), tr.x() + m_marginResizePrecision, tl.y() + bRect.height());
-      QRectF topRect(ll.x(), lr.y() - m_marginResizePrecision, tr.x(), lr.y());
-      QRectF bottomRect(ll.x(), tr.y(), tr.x(), tl.y() + m_marginResizePrecision);
+      double w = marginPixel;
+      double h = marginPixel;
+      double half = marginPixel / 2.;
 
-      double w = m_marginResizePrecision;
-      double h = m_marginResizePrecision;
-      double half = m_marginResizePrecision/2.;
+      QRectF smallLeftTopRect(remapRect.topLeft().x(), remapRect.topLeft().y() - half, w, h); // left-top
+      QRectF smallRightTopRect(remapRect.topRight().x() - half, remapRect.topRight().y() - half, w, h); // right-top
+      QRectF smallLeftBottomRect(remapRect.bottomLeft().x(), remapRect.bottomLeft().y() - half, w, h); // left-bottom
+      QRectF smallRightBottomRect(remapRect.bottomRight().x() - half, remapRect.bottomRight().y() - half, w, h); // right-bottom
 
-      QRectF smallLeftTopRect(bRect.bottomLeft().x(), bRect.bottomLeft().y() - half, w, h); // left-top
-      QRectF smallRightTopRect(bRect.bottomRight().x() - half, bRect.bottomRight().y() - half, w, h); // right-top
-      QRectF smallLeftBottomRect(bRect.topLeft().x(), bRect.topLeft().y(), w, h); // left-bottom
-      QRectF smallRightBottomRect(bRect.topRight().x() - half, bRect.topRight().y(), w, h); // right-bottom
-                 
-      QPointF checkPoint(x, y);
+      QRectF leftRect(smallLeftTopRect.topLeft(), smallLeftBottomRect.bottomRight());
+      QRectF rightRect(smallRightTopRect.topLeft(), smallRightBottomRect.bottomRight());
+      QRectF topRect(smallLeftTopRect.topLeft(), smallRightTopRect.bottomRight());
+      QRectF bottomRect(smallLeftBottomRect.topLeft(), smallRightBottomRect.bottomRight());
+
+
+
+           
+      QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
 
       Property pKeepAspect = m_controller->getProperty("keep_aspect");
 
