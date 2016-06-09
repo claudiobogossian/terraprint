@@ -487,7 +487,7 @@ void te::layout::View::paste()
   if (!nscene)
     return;
 
-  std::auto_ptr< std::vector<Properties>> changed(reinterpret_cast<std::vector<Properties>* >(dataValue));
+  std::auto_ptr< std::vector<Properties> > changed(reinterpret_cast<std::vector<Properties>* >(dataValue));
 
   std::map<std::string, std::string> newNames;
   std::map<int, int> newIds;
