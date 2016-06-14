@@ -938,6 +938,18 @@ void te::layout::ItemUtils::DD2DMS(QString dd, QString& degreeString, QString& m
   ll = (ll * 60.) - minute;
   second = ll * 60.;
 
+  if (minute < 0)
+  {
+	  minute = minute * (-1);
+  }
+
+
+  if (second < 0)
+  {
+	  second = second * (-1);
+  }
+
+
   degreeString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(degree));
   minuteString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(minute));
   secondString = ItemUtils::convert2QString(boost::lexical_cast<std::string>(second));
