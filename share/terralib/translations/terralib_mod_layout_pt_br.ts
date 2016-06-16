@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.0" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -404,7 +404,7 @@
         <source>Bottom Text</source>
         <translation>Textos Inferiores</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="895"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="902"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="909"/>
@@ -901,11 +901,15 @@
 <context>
     <name>InputCoordWidgetForm</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="32"/>
         <source>Form</source>
-        <translation>Formulário</translation>
+        <translation type="obsolete">Formulário</translation>
     </message>
     <message>
+        <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="32"/>
+        <source>Coordinate</source>
+        <translation>Coordenada</translation>
+    </message>
+    <message utf8="true">
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="85"/>
         <source>º</source>
         <translation>º</translation>
@@ -2171,7 +2175,7 @@ nononon</source>
 </context>
 <context>
     <name>te::layout::ObjectInspectorDock</name>
-    <message>
+    <message id="0">
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>

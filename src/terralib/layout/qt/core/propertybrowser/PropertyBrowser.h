@@ -114,7 +114,7 @@ namespace te
         */
         virtual bool equalsProperties(Properties props);
 
-        void te::layout::PropertyBrowser::associateProperty(QtProperty* qtProperty, const te::layout::Property& property);
+        void associateProperty(QtProperty* qtProperty, const te::layout::Property& property);
 
       protected slots:
 
