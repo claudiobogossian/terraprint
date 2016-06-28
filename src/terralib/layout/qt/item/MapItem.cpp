@@ -148,7 +148,7 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale);
+    it->get()->draw(&canvas, envelope, srid, scale, 0);
   }
 }
 
@@ -168,14 +168,27 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
 
+  int fullDeviceWidth = painter->device()->width();
+  int fullDeviceHeight = painter->device()->height();
+
   //as canvas will transform from World CS to Device CS, we must add a transform in order to make the painter expect drawings in Device CS
-  double xScale = boundingRect().width() / painter->device()->width();
-  double yScale = boundingRect().height() / painter->device()->height();
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  Utils utils(myScene, 0);
+
+  QRectF qBoundingRect = boundingRect();
+  int deviceWidth = utils.mm2pixel(qBoundingRect.width());
+  int deviceHeight = utils.mm2pixel(qBoundingRect.height());
+
+  painter->setViewport(0, 0, deviceWidth, deviceHeight);
+
+  double xScale = qBoundingRect.width() / deviceWidth;
+  double yScale = qBoundingRect.height() / deviceHeight;
 
   QTransform transform;
-  transform.translate(0, boundingRect().height());
+  transform.translate(0, qBoundingRect.height());
   transform.scale(xScale, -yScale);
-
+  
+  
   painter->setTransform(transform, true);
 
   //then we create the canvas and initialize it
@@ -189,7 +202,7 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale);
+    it->get()->draw(&canvas, envelope, srid, scale, 0);
   }
   painter->restore();
 }

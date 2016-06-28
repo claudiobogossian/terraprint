@@ -48,6 +48,8 @@ void te::layout::DisplayDock::closeEvent( QCloseEvent * event )
 {
   QDockWidget::closeEvent(event);
 
+  setPreviousCentralWidget(0);
+
   if(widget())
   {
     widget()->close();
@@ -61,7 +63,10 @@ void te::layout::DisplayDock::setPreviousCentralWidget( QWidget* previous )
 {
   m_previousCentralWidget = previous;
 
-  m_previousCentralWidget->setParent(0);
+  if (m_previousCentralWidget != 0)
+  {
+    m_previousCentralWidget->setParent(0);
+  }
 }
 
 void te::layout::DisplayDock::removeDock()
