@@ -202,7 +202,7 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale, 0);
+    it->get()->draw(&canvas, envelope, srid, scale);
   }
   painter->restore();
 }
