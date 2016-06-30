@@ -48,8 +48,6 @@ void te::layout::DisplayDock::closeEvent( QCloseEvent * event )
 {
   QDockWidget::closeEvent(event);
 
-  setPreviousCentralWidget(0);
-
   if(widget())
   {
     widget()->close();
