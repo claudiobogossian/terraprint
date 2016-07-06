@@ -402,6 +402,9 @@ namespace te
         */
         virtual EnumType* getPrintSettingsDialog() const;
 
+        virtual EnumType* getMapLocationSettingsDialog() const;
+
+
       protected:
 
         /*!
@@ -457,6 +460,7 @@ namespace te
         EnumType* m_pdfSettingsDialog; //!< value that represents SVG type belonging to enumeration
         EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
         EnumType* m_mapSettingsDialog; //!< value that represents map settings type belonging to enumeration
+        EnumType* m_mapLocationSettingsDialog; //!< value that represents map settings type belonging to enumeration
         EnumType* m_scaleSettingsDialog; //!< value that represents scale settings type belonging to enumeration
         EnumType* m_printSettingsDialog; //!< value that represents scale settings type belonging to enumeration
     };

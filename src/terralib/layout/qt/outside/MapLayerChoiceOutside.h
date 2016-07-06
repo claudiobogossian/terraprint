@@ -72,17 +72,35 @@ namespace te
         
         virtual Property getSavedLayers();
 
+        virtual void load();
+
       signals:
 
-        void updateProperty(Property prop);
+        void updateWidgetProperty(Property prop);
 
         void updateProperties(std::vector<Property> props);
+        
+        void closeWidget();
 
 
         
       protected slots:
 
        void onCancelPushButtonClicked();
+
+       void onOkPushButtonPressed();
+
+       void onCancelPushButtonPressed();
+
+       void on_lneWidth_editingFinished();
+
+       void on_lneHeight_editingFinished();
+
+       void on_ckbFixedScale_clicked();
+
+       virtual void on_cmbUnit_currentIndexChanged(const QString & text);
+
+       virtual void on_cmbScale_currentIndexChanged(const QString & text);
 
       protected:
 
@@ -100,6 +118,14 @@ namespace te
 
         virtual std::list<te::map::AbstractLayerPtr> getLayers();
         virtual std::list<te::map::AbstractLayerPtr> getSelectedLayers();
+
+        void initDouble(QWidget* widget, std::string nameComponent);
+        void initCombo(QWidget* widget, std::string nameComponent);
+        void initBool(QWidget* widget, std::string nameComponent);
+        double mm2cm(double mmSize);
+        double cm2mm(double cmSize);
+        std::string formatScaleValue(std::string inputValue);
+        virtual void loadScaleCombobox();
     };
   }    
 }     

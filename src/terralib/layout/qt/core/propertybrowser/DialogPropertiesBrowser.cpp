@@ -58,9 +58,11 @@
 #include "../Scene.h"
 #include "../../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../../outside/MapSettingsOutside.h"
+#include "../../outside/MapLocationSettingsOutside.h"
 #include "../../../outside/MapSettingsModel.h"
 #include "../../outside/ScaleSettingsOutside.h"
 #include "../../outside/ScaleSettingsController.h"
+#include "../../../outside/MapLocationSettingsModel.h"
 
 // STL
 #include <vector>
@@ -193,6 +195,15 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
   if (currentType == dataType->getDataTypePath())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowFolderDlg()));
+  }
+  if (currentType == dataType->getDataTypeMapSettings())
+  {
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapLocationSettingsDlg()));
+  }
+
+  if (currentType == dataType->getDataTypeMapLocationSettings())
+  {
+    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapLocationSettingsDlg()));
   }
 }
 
@@ -618,6 +629,45 @@ void te::layout::DialogPropertiesBrowser::onShowViewDlg()
   svgOutside->show();
 }
 
+void te::layout::DialogPropertiesBrowser::onShowMapLocationSettingsDlg()
+{
+  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
+  if (!enumObj)
+  {
+    return;
+  }
+
+  QWidget* widget = createOutside(enumObj->getMapLocationSettingsDialog());
+  if (!widget)
+  {
+    return;
+  }
+
+  MapLocationSettingsOutside* mapLocationSettings = dynamic_cast<MapLocationSettingsOutside*>(widget);
+  if (!mapLocationSettings)
+  {
+    return;
+  }
+
+  appendDialog(mapLocationSettings);
+
+  AbstractOutsideController* abstractController = const_cast<AbstractOutsideController*>(mapLocationSettings->getController());
+  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(abstractController->getModel());
+
+  MapLocationSettingsModel* model = dynamic_cast<MapLocationSettingsModel*>(abstractModel);
+  if (!model)
+  {
+    return;
+  }
+  
+  mapLocationSettings->load();
+  mapLocationSettings->show(); // modeless dialog
+  mapLocationSettings->raise(); // top of the parent widget's stack
+  
+  
+}
+
+
 void te::layout::DialogPropertiesBrowser::onShowMapSettingsDlg()
 {
   EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
@@ -648,11 +698,13 @@ void te::layout::DialogPropertiesBrowser::onShowMapSettingsDlg()
   {
     return;
   }
-  
+
   mapSettings->load();
   mapSettings->show(); // modeless dialog
   mapSettings->raise(); // top of the parent widget's stack
 }
+
+
 
 void te::layout::DialogPropertiesBrowser::onShowScaleSettingsDlg()
 {
@@ -883,4 +935,10 @@ void te::layout::DialogPropertiesBrowser::directlyShowWindow(Property prop)
   {
     onShowNorthSettingsDlg();
   }
+
+ if (prop.getType() == dataType->getDataTypeMapLocationSettings())
+  {
+    onShowMapLocationSettingsDlg();
+  }
+
 }
