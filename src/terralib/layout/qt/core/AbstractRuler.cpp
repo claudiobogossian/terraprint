@@ -166,3 +166,23 @@ void te::layout::AbstractRuler::setSpacingLineText( double size )
 {
   m_spacingLineText = size;
 }
+
+bool te::layout::AbstractRuler::isEven(int value)
+{
+  if (value % 2 == 0)
+    return true;
+  else
+    return false;
+}
+
+void te::layout::AbstractRuler::adapterRulerMarks(double zoomFactor, int &value)
+{
+  if (zoomFactor >= 0.55 && zoomFactor < 2.)
+  {
+    value = value + m_blockSize; // less than 50%
+  }
+  else if (zoomFactor > 2.)
+  {
+    value = value + (m_blockSize * 6); // less than 25%
+  }
+}

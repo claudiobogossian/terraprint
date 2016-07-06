@@ -99,6 +99,10 @@ namespace te
       protected:
 
         virtual void drawText(QPoint p, std::string txt, double angle, QPainter* painter);
+
+        bool isEven(int value);
+
+        void adapterRulerMarks(double zoomFactor, int &value);
                 
       protected:
 

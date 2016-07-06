@@ -142,6 +142,8 @@ void te::layout::HorizontalRuler::drawMarks( QGraphicsView* view, QPainter* pain
   {
     if((i % (int)(m_blockSize)) == 0)
     {
+      adapterRulerMarks(zoomFactor, i);
+
       box = QLineF(QPointF(i, y), QPointF(i, y + m_longLine * zoomFactor));  
 
       std::stringstream ss;//create a stringstream
@@ -159,13 +161,9 @@ void te::layout::HorizontalRuler::drawMarks( QGraphicsView* view, QPainter* pain
       painter->drawText(p, ss.str().c_str());
       painter->setMatrixEnabled(true);
     }
-    else if((i % (int)(m_middleBlockSize)) == 0)
+    else if ((i % (int)(m_middleBlockSize)) == 0 && zoomFactor <= 0.52)
     {
       box = QLineF(QPointF(i, y), QPointF(i, y + m_mediumLine * zoomFactor)); 
-    }
-    else if((i % (int)(m_smallBlockSize)) == 0)
-    {
-      box = QLineF(QPointF(i, y), QPointF(i, y + m_smallLine * zoomFactor));  
     }
 
     painter->drawLine(box);
