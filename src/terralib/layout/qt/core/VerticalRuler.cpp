@@ -144,6 +144,8 @@ void te::layout::VerticalRuler::drawMarks( QGraphicsView* view, QPainter* painte
   {
     if((i % (int)m_blockSize) == 0)
     {
+      adapterRulerMarks(zoomFactor, i);
+
       box = QLineF(QPointF(x, i), QPointF(x - m_longLine * zoomFactor, i));
 
       std::stringstream ss;//create a stringstream
@@ -154,14 +156,14 @@ void te::layout::VerticalRuler::drawMarks( QGraphicsView* view, QPainter* painte
       QPointF pTranslate(x - m_spacingLineText * zoomFactor, i);
 
       QPointF p1 = view->mapFromScene(pTranslate);
-      p1.setY(p1.y() + 1 + (wtxt/4.));
+      p1.setY(p1.y() + 1 + (wtxt / 4.));
 
       painter->save();
 
       QTransform m;
-      m.translate( p1.x(), p1.y() );
+      m.translate(p1.x(), p1.y());
       m.rotate(-90);
-      m.translate( -p1.x(), -p1.y() );
+      m.translate(-p1.x(), -p1.y());
 
       painter->setMatrixEnabled(false);
       painter->setTransform(m);
@@ -170,13 +172,9 @@ void te::layout::VerticalRuler::drawMarks( QGraphicsView* view, QPainter* painte
 
       painter->restore();
     }
-    else if((i % (int)m_middleBlockSize) == 0)
+    else if ((i % (int)m_middleBlockSize) == 0 && zoomFactor <= 0.52)
     {
       box = QLineF(QPointF(x, i), QPointF(x - m_mediumLine * zoomFactor, i));
-    }
-    else if((i % (int)m_smallBlockSize) == 0)
-    {
-      box = QLineF(QPointF(x, i), QPointF(x - m_smallLine * zoomFactor, i));
     }
 
     painter->drawLine(box);
