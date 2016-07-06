@@ -51,12 +51,6 @@ te::layout::MapLocationSettingsOutside::MapLocationSettingsOutside(AbstractOutsi
 {
   m_ui->setupUi(this);
 
-  //m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
-  //m_ui->lneWidth->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneWidth));
-
-  //m_ui->cmbUnit->setItemData(0, QVariant("Centimeter"));
-  //m_ui->cmbUnit->setItemData(1, QVariant("Millimeter"));
-
   MapLocationSettingsController* controllerSettings = dynamic_cast<MapLocationSettingsController*>(m_controller);
   m_mapChoice = controllerSettings->getMapLayerChoice();
   m_mapChoice->setParent(this);
@@ -70,8 +64,6 @@ te::layout::MapLocationSettingsOutside::MapLocationSettingsOutside(AbstractOutsi
   QGridLayout* layout = new QGridLayout(m_ui->m_widget_MapChoice);
   layout->addWidget(m_widget.get());
   
-  //ui_MapLayerChoice = m_mapChoice->getWidget();
-
   connect(m_widget.get(), SIGNAL(closeWidget()), this, SLOT(onCancelPushButtonPressed()));
   connect(m_widget.get(), SIGNAL(updateWidgetProperty(Property)), this, SLOT(updateWidgetProperty(Property)));
 
