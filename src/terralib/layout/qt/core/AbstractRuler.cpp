@@ -177,11 +177,11 @@ bool te::layout::AbstractRuler::isEven(int value)
 
 void te::layout::AbstractRuler::adapterRulerMarks(double zoomFactor, int &value)
 {
-  if (zoomFactor >= 0.55 && zoomFactor < 2.)
+  if (zoomFactor >= 0.55 && zoomFactor < 1.5)
   {
     value = value + m_blockSize; // less than 50%
   }
-  else if (zoomFactor > 2.)
+  else if (zoomFactor > 1.5)
   {
     value = value + (m_blockSize * 6); // less than 25%
   }
