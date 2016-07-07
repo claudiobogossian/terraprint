@@ -55,6 +55,17 @@ te::layout::MapLocationModel::MapLocationModel()
     m_properties.addProperty(property);
   }
 
+  Property propertyMapSettings  = m_properties.getProperty("mapSettings");
+
+  {
+    std::string value = TR_LAYOUT("Settings");
+    propertyMapSettings.setName("mapSettings");
+    propertyMapSettings.setLabel(TR_LAYOUT("Map Location Settings"));
+    propertyMapSettings.setValue(value, dataType->getDataTypeMapLocationSettings());
+    propertyMapSettings.setMenu(true);
+    m_properties.completelyUpdateProperty(propertyMapSettings);
+  }
+  
   {
     Property property(0);
     property.setName("reference_srid");

@@ -456,6 +456,8 @@ void te::layout::EnumObjectType::init()
   m_scaleSettingsDialog = createEnum("Scale_Settings", this, TR_LAYOUT("Scale Settings"));
 
   m_printSettingsDialog = createEnum("Print_Settings", this, TR_LAYOUT("Print Settings"));
+
+  m_mapLocationSettingsDialog = createEnum("Map_Location_Settings", this, TR_LAYOUT("Map Location Settings"));
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getRectangleItem() const
@@ -698,3 +700,10 @@ te::layout::EnumType* te::layout::EnumObjectType::getPrintSettingsDialog() const
 {
   return m_printSettingsDialog;
 }
+
+
+te::layout::EnumType* te::layout::EnumObjectType::getMapLocationSettingsDialog() const
+{
+  return m_mapLocationSettingsDialog;
+}
+

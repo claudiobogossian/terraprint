@@ -258,6 +258,8 @@ namespace te
 
         virtual EnumType* getDataTypePath() const;
 
+        virtual EnumType* getDataTypeMapLocationSettings() const;
+
       protected:
 
         /*!
@@ -296,6 +298,7 @@ namespace te
         EnumType* m_dataTypeNorthSettings; //!< value that represents type NorthSettings (string) belonging to enumeration
         EnumType* m_dataTypePageSetup; //!< value that represents type PageSetup (string) belonging to enumeration
         EnumType* m_dataTypePath; //!< value that represents type Path (string) belonging to enumeration
+        EnumType* m_dataTypeMapLocationSettings; //!< value that represents type MapLocationSettings (string) belonging to enumeration
     };
   }
 }

@@ -18,13 +18,13 @@
  */
 
 /*!
-  \file terralib/layout/qt/outside/MapSettingsOutside.h
+  \file terralib/layout/qt/outside/MapLocationSettingsOutside.h
 
   \brief
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_OUTSIDE_H
-#define __TERRALIB_LAYOUT_INTERNAL_MAP_SETTINGS_OUTSIDE_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_LOCATION_MAP_SETTINGS_OUTSIDE_H
+#define __TERRALIB_LAYOUT_INTERNAL_LOCATION_MAP_SETTINGS_OUTSIDE_H
 
 // TerraLib
 #include "../../core/Config.h"
@@ -35,9 +35,10 @@
 // Qt
 #include <QDialog>
 #include <QString>
+#include <QComboBox>
 
-namespace Ui { class MapSettings;
-               //class MapLayerChoice;
+namespace Ui { class LocationMapSettings;
+               class MapLayerChoice;
 }
 
 
@@ -47,17 +48,16 @@ namespace te
   {
     class AbstractOutsideController;
     class MapLayerChoiceOutside;
-    class MapLayerChoice;
 
-    class TELAYOUTEXPORT MapSettingsOutside : public QDialog, public AbstractOutsideView
+    class TELAYOUTEXPORT MapLocationSettingsOutside : public QDialog, public AbstractOutsideView
     {
       Q_OBJECT
 
       public:
 
-        MapSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
+        MapLocationSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
 
-        virtual ~MapSettingsOutside();
+        virtual ~MapLocationSettingsOutside();
 
         /*!
           \brief Load layers in double widget.
@@ -71,7 +71,6 @@ namespace te
         virtual te::gm::Coord2D getPosition();
 
 
-
       signals:
 
         void updateProperty(Property prop);
@@ -83,19 +82,34 @@ namespace te
         void onCancelPushButtonPressed();
 
         void updateWidgetProperty(Property prop);
+
+        void on_cmbConnected_currentIndexChanged(const QString & text);
+        
+        void on_colorButton_pressed();
+
+        void on_cColorButton_pressed();
+
+      protected :
+
+       // virtual void initCombo(QWidget* widget, std::string nameComponent);
+
+        virtual void addComboOptions(QComboBox* combo, std::vector<Variant> options);
+        
+        virtual te::color::RGBAColor configColor(QWidget* widget);
         
 
         
       private:
 
-        std::auto_ptr<Ui::MapSettings> m_ui;
-        //std::auto_ptr<Ui::MapLayerChoice> ui_MapLayerChoice;
+        std::auto_ptr<Ui::LocationMapSettings> m_ui;
+        std::auto_ptr<Ui::MapLayerChoice> ui_MapLayerChoice;
         std::auto_ptr<MapLayerChoiceOutside> m_widget;
         void initDouble(QWidget* widget, std::string nameComponent);
         void initCombo(QWidget* widget, std::string nameComponent);
         void initBool(QWidget* widget, std::string nameComponent);
         double mm2cm(double mmSize);
         double cm2mm(double cmSize);
+        void loadColor(QWidget* widget, std::string nameComponent);
         std::string formatScaleValue(std::string inputValue);
         MapLayerChoiceOutside *m_mapChoice;
         
