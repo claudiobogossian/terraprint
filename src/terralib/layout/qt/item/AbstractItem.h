@@ -251,8 +251,6 @@ namespace te
 
       //If enabled is true, this item will accept hover events
       T::setAcceptHoverEvents(true);
-
-      m_rect = boundingRect();
     }
 
     template <class T>
@@ -345,6 +343,7 @@ namespace te
       {
         drawItemResized(painter, option, widget);
         drawFrame(painter);
+        drawSelection(painter);
         return;
       }
 
@@ -858,13 +857,10 @@ namespace te
         bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
         if (startResizing == true)
         {
-          m_currentAction = te::layout::RESIZE_ACTION;
+          m_rect = boundingRect();
           setPixmap();
-          m_initialCoord = event->pos();      
-          if (m_controller)
-          {
-            m_controller->beginResize();
-          }
+          m_currentAction = te::layout::RESIZE_ACTION;
+          m_initialCoord = event->pos();
         }
       }
 
@@ -905,18 +901,17 @@ namespace te
     {
       if (m_currentAction == te::layout::RESIZE_ACTION)
       {
+        m_currentAction = te::layout::NO_ACTION;
         m_finalCoord = event->pos();
-        m_rect = m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
-        m_rect.moveTo(0, 0);
+        m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
         T::setOpacity(1.);
       }
       else if (m_currentAction == te::layout::MOVE_ACTION)
       {
+        m_currentAction = te::layout::NO_ACTION;
         T::setOpacity(1.);
         m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
       }
-
-      m_currentAction = te::layout::NO_ACTION;
 
       T::mouseReleaseEvent(event);
     }
