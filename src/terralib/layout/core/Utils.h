@@ -326,6 +326,9 @@ namespace te
 
         static void setLineWidthMinimumValue(double minimumValue);
 
+
+        static double round(double n, double precision);
+
       protected:
         
         /*!
@@ -351,6 +354,7 @@ namespace te
           \param box in mm   
         */ 
         virtual te::gm::Envelope viewportBoxFromMM(te::gm::Envelope box);
+
         
       protected:
 
