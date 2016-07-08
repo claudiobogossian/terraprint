@@ -69,11 +69,7 @@ namespace te
 
         virtual void hideProperties(Property& property) const;
 
-        virtual void beginResize();
-
       protected: 
-
-        virtual void updateChildSize(AbstractItemView* item);
 
         mutable te::layout::Properties m_propertiesFullReference;
     };

@@ -280,7 +280,9 @@ namespace te
         static void DD2DMS(QString dd, QString& degreeString, QString& minuteString, QString& secondString);
 
         static void DMS2DD(QString degree, QString minute, QString second, QString &dd);
-        
+
+        static void normalizeChildrenPosition(QGraphicsItem* item);
+
       protected:
 
         /*!
