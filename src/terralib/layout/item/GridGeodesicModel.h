@@ -31,26 +31,18 @@
 // TerraLib
 #include "GridMapModel.h"
 #include "../core/Config.h"
-#include "../core/pattern/observer/Observer.h"
 
 namespace te
 {
   namespace layout
   {
-    class TELAYOUTEXPORT GridGeodesicModel: public GridMapModel, public Observer
+    class TELAYOUTEXPORT GridGeodesicModel: public GridMapModel
     {
       public:
 
         GridGeodesicModel();
 
         virtual ~GridGeodesicModel();
-
-        virtual void update(const Subject* subject);
-
-        virtual te::gm::Envelope getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
-
-      private:
-        bool m_gridPropertiesInitialized;
     };
   }
 }

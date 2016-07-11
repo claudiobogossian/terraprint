@@ -27,7 +27,7 @@
 #include "ThreeNorthItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/ThreeNorthModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../../item/ThreeNorthController.h"
 #include "../../../../item/ThreeNorthItem.h"
 
 te::layout::AbstractItemView* te::layout::ThreeNorthItemFactory::build(ItemFactoryParamsCreate params)
@@ -40,7 +40,7 @@ te::layout::AbstractItemView* te::layout::ThreeNorthItemFactory::build(ItemFacto
       setProperties(model, params);
     }
 
-    AbstractItemController* controller = new AbstractItemController(model);
+    AbstractItemController* controller = new ThreeNorthController(model);
     ThreeNorthItem* view = new ThreeNorthItem(controller);
     controller->setView(view);
 

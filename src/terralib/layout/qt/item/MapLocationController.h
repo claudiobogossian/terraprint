@@ -18,52 +18,53 @@
  */
 
 /*!
-  \file LegendModel.h
+  \file MapCompositionController.h
    
-   \brief Class that represents a "Model" part of Legend MVC component.  
-   Its coordinate system is the same of scene (millimeters). 
-   This is also son of ItemModelObservable, so it can become observable, and son of AbstractVisitor, so it can become visitor.
-   It is must visit the map, via te::layout::Visitable*, to get the layers.
-
+  \brief Class that represents associate item group controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_LEGEND_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_LEGEND_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_LOCATION_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_LOCATION_CONTROLLER_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/Config.h"
+#include "../../core/Config.h"
+#include "MapController.h"
 
 namespace te
 {
   namespace layout
   {
-
+    class AbstractItemModel;
+    class AbstractItemView;
     /*!
-      \brief Class that represents a "Model" part of Rectangle MVC component. 
-          Its coordinate system is the same of scene (millimeters). 
-          He is also the son of AbstractItemModel, so it can become subject (observer pattern).
-          
-      \ingroup layout
-
-      \sa te::layout::AbstractItemModel
+    \brief Class that represents associate item group controller.
+    
+    \ingroup layout
+    \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT LegendModel : public AbstractItemModel
+    class TELAYOUTEXPORT MapLocationController : public MapController
     {
       public:
 
         /*!
           \brief Constructor
-        */
-        LegendModel();
+
+          \param controller "Controller" part of MVC component
+          \param o "Model" part of MVC component
+        */ 
+        MapLocationController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~LegendModel();
+        virtual ~MapLocationController();
+
+        /*!
+        \brief This function is called by the subject every time its model is changed
+        */
+        virtual void update(const Subject* subject);
     };
   }
 }
-
-#endif
+#endif //__TERRALIB_LAYOUT_INTERNAL_MAP_LOCATION_CONTROLLER_H

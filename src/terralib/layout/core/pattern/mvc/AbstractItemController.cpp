@@ -120,8 +120,9 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
 {
-  Observer* observer = dynamic_cast<Observer*>(controller->getModel());
-  if(observer == 0)
+  //we try to attach to the controller
+  Observer* observer = dynamic_cast<Observer*>(controller);
+  if (observer == 0)
   {
     return;
   }
@@ -131,7 +132,7 @@ void te::layout::AbstractItemController::attach(te::layout::AbstractItemControll
 
 void te::layout::AbstractItemController::detach(AbstractItemController* controller)
 {
-  Observer* observer = dynamic_cast<Observer*>(controller->getModel());
+  Observer* observer = dynamic_cast<Observer*>(controller);
   if (observer == 0)
   {
     return;
