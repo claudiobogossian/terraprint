@@ -41,6 +41,7 @@
 #include "EnumModeType.h"
 #include "EnumTemplateType.h"
 #include "EnumToolType.h"
+#include "EnumTempDataStorageType.h"
 
 namespace te
 {
@@ -157,6 +158,20 @@ namespace te
         */
         virtual EnumToolType* getEnumToolType();
 
+        /*!
+        \brief Change data type enumeration.
+
+        \param type data type enumeration
+        */
+        virtual void setEnumTempDataStorageType(EnumTempDataStorageType* type);
+
+        /*!
+        \brief Returns data type enumeration.
+
+        \return data type enumeration
+        */
+        virtual EnumTempDataStorageType* getEnumTempDataStorageType();
+
       protected:
 
         /*!
@@ -173,6 +188,7 @@ namespace te
         EnumModeType* m_modeType; //!< mode type enumeration
         EnumTemplateType* m_templateType; //!< template type enumeration
         EnumToolType* m_toolType; //!< tool type enumeration
+        EnumTempDataStorageType* m_tempDataStorageType; //!< tool type enumeration
 
       private:
       

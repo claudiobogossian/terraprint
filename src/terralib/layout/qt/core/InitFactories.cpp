@@ -76,6 +76,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 //templates
 #include "../../core/template/XmlTemplateFactory.h"
+#include "tempDataStorage/TempFileFactory.h"
 
 namespace te
 {
@@ -163,6 +164,7 @@ namespace te
       if (!TemplateFactoryInitalized)
       {
         static XmlTemplateFactory XmlTemplateFactory_instance;
+        static TempFileFactory TempFileFactory_instance;
       }
     }
   }

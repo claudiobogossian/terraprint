@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -404,7 +404,7 @@
         <source>Bottom Text</source>
         <translation>Textos Inferiores</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="895"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="902"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="909"/>
@@ -909,7 +909,7 @@
         <source>Coordinate</source>
         <translation>Coordenada</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="85"/>
         <source>º</source>
         <translation>º</translation>
@@ -2175,7 +2175,7 @@ nononon</source>
 </context>
 <context>
     <name>te::layout::ObjectInspectorDock</name>
-    <message id="0">
+    <message>
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>
@@ -2669,43 +2669,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1391"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1399"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1392"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1437"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1400"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1445"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1413"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1421"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1418"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1426"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1436"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1444"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1465"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1473"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1472"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1480"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1483"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1491"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

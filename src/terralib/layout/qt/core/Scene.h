@@ -390,6 +390,13 @@ namespace te
 
         static bool zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2);
 
+        /*!
+        \brief Method that returns a list of the properties of all the graphic objects in the scene.
+
+        \return list of properties
+        */
+        virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
+
       signals:
 
       /*!
@@ -462,13 +469,6 @@ namespace te
       \param hMM height of physical screen in millimeters
         */
         virtual void calculateWindow(double wMM, double hMM); 
-
-    /*!
-          \brief Method that returns a list of the properties of all the graphic objects in the scene.
-      
-      \return list of properties
-        */
-        virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
 
         virtual QList<QGraphicsItem*> sortItemsByDependency(const QList<QGraphicsItem*>& listItems);
 
