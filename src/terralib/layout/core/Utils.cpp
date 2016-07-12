@@ -779,3 +779,7 @@ void te::layout::Utils::setLineWidthMinimumValue(double minimumValue)
   m_lineWidthMinimumValue = minimumValue;
 }
 
+double te::layout::Utils::round(double n, double precision)
+{
+  return floor(n * pow(10., precision) + .5) / pow(10., precision);
+}

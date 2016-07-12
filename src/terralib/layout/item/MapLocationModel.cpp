@@ -55,6 +55,17 @@ te::layout::MapLocationModel::MapLocationModel()
     m_properties.addProperty(property);
   }
 
+  Property propertyMapSettings  = m_properties.getProperty("mapSettings");
+
+  {
+    std::string value = TR_LAYOUT("Settings");
+    propertyMapSettings.setName("mapSettings");
+    propertyMapSettings.setLabel(TR_LAYOUT("Map Location Settings"));
+    propertyMapSettings.setValue(value, dataType->getDataTypeMapLocationSettings());
+    propertyMapSettings.setMenu(true);
+    m_properties.completelyUpdateProperty(propertyMapSettings);
+  }
+  
   {
     Property property(0);
     property.setName("reference_srid");
@@ -93,35 +104,4 @@ te::layout::MapLocationModel::MapLocationModel()
 te::layout::MapLocationModel::~MapLocationModel()
 {
 
-}
-
-void te::layout::MapLocationModel::update(const Subject* subject)
-{
-  const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
-  if (subjectModel == 0)
-  {
-    return;
-  }
-
-  Property pBoxNew = subjectModel->getProperty("world_box");
-  const Property& pBoxCurrent = this->getProperty("reference_box");
-  te::gm::Envelope boxNew = pBoxNew.getValue().toEnvelope();
-  te::gm::Envelope boxCurrent = pBoxCurrent.getValue().toEnvelope();
-
-  Property pSridNew = subjectModel->getProperty("srid");
-  const Property& pSridCurrent = this->getProperty("reference_srid");
-  int sridNew = pSridNew.getValue().toInt();
-  int sridCurrent = pSridCurrent.getValue().toInt();
-
-  if (sridNew != sridCurrent || boxNew.equals(boxCurrent) == false)
-  {
-    pSridNew.setName("reference_srid");
-    pBoxNew.setName("reference_box");
-
-    Properties properties;
-    properties.addProperty(pSridNew);
-    properties.addProperty(pBoxNew);
-
-    setProperties(properties);
-  }
 }

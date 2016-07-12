@@ -31,6 +31,7 @@
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../core/ItemUtils.h"
+#include "../../core/Utils.h"
 #include "../core/Scene.h"
 
 #include <QBrush>
@@ -747,16 +748,38 @@ bool te::layout::GridMapItem::isNearEdge(const te::gm::Point& p, const te::gm::L
 
 }
 
+te::gm::LineString te::layout::GridMapItem::roundLineString(const te::gm::LineString& lines)
+{
 
+  double x1 = Utils::round(lines.getPointN(0)->getX(), 6);
+  double y1 = Utils::round(lines.getPointN(0)->getY(), 6);
+  
+
+  double x2 = Utils::round(lines.getPointN(1)->getX(), 6);
+  double y2 = Utils::round(lines.getPointN(1)->getY(), 6);
+
+  te::gm::LineString line(2, te::gm::LineStringType);
+
+
+  line.setPoint(0, x1, y1);
+  line.setPoint(1, x2, y2);
+  return line;
+
+}
 
 bool te::layout::GridMapItem::checkBolderIntersection(const te::gm::LineString& bolderLine, const te::gm::LineString& gridLine, te::gm::Point& intersectionPoint)
 {
 
   std::auto_ptr<te::gm::Geometry> interGeometry;
   te::gm::Point* interPoint = 0;
+
+  te::gm::LineString bLine = roundLineString(bolderLine);
+  te::gm::LineString gLine = roundLineString(gridLine);
+
+
   try
   {
-    interGeometry.reset(bolderLine.intersection(&gridLine));
+    interGeometry.reset(bLine.intersection(&gLine));
   }
   catch (...)
   {

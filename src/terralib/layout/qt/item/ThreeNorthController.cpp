@@ -36,13 +36,29 @@ te::layout::ThreeNorthController::~ThreeNorthController()
 
 void te::layout::ThreeNorthController::update(const Subject* subject)
 {
-  AbstractItemController::update(subject);
-  
-  ThreeNorthItem* item = dynamic_cast<ThreeNorthItem*>(m_view);
-  if (item)
+  if (m_model == subject)
   {
-    item->update();
+    AbstractItemController::update(subject);
+    return;
   }
+
+  const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
+  if (subjectModel == 0)
+  {
+    return;
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pNewWorldBox = subjectModel->getProperty("world_box");
+  const Property& pNewSrid = subjectModel->getProperty("srid");
+
+  Properties properties;
+
+  properties.addProperty(pNewWorldBox);
+  properties.addProperty(pNewSrid);
+
+  setProperties(properties);
 }
 
 

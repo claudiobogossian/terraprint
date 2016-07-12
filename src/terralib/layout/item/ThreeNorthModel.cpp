@@ -46,7 +46,6 @@
 
 te::layout::ThreeNorthModel::ThreeNorthModel()
 : AbstractItemModel()
-, Observer()
 {
   this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getThreeNorthItem());
   te::gm::Envelope wbox;
@@ -179,31 +178,12 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
       property.setValue(srid, dataType->getDataTypeInt());
       m_properties.addProperty(property);
     }
-    
   }
-
-  
 }
 
-void te::layout::ThreeNorthModel::update(const Subject* subject)
+te::layout::ThreeNorthModel::~ThreeNorthModel()
 {
-    const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
-    if (subjectModel == 0)
-    {
-      return;
-    }
 
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  
-    const Property& pNewWorldBox = subjectModel->getProperty("world_box");
-    const Property& pNewSrid = subjectModel->getProperty("srid");
-
-    Properties properties;
-
-    properties.addProperty(pNewWorldBox);
-    properties.addProperty(pNewSrid);
-
-    setProperties(properties);
 }
 
 double te::layout::ThreeNorthModel::calculateMeridianConvergence(const double &latitude, const double &longitude, const double &longitudeSource)
@@ -252,12 +232,6 @@ double te::layout::ThreeNorthModel::calculateMeridianConvergence(const double &l
     return C5;
 }
 
-te::layout::ThreeNorthModel::~ThreeNorthModel()
-{
-
-}
-
-
 void te::layout::ThreeNorthModel::setProperty(const Property& property)
 {
     Properties properties;
@@ -277,13 +251,10 @@ void te::layout::ThreeNorthModel::setProperties(const Properties& properties)
 
     calculateThreeNorth(newProperties);
     AbstractItemModel::setProperties(newProperties);
-  
 }
-
 
 void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
 {
-
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
     Property pNewWorldBox = getProperty("world_box");

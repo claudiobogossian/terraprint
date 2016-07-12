@@ -18,33 +18,35 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file MapLocationSettingsModel.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_LOCATION_SETTINGS_MODEL_H 
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_LOCATION_SETTINGS_MODEL_H
 
 // TerraLib
-#include "GridMapModel.h"
+#include "../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../core/Config.h"
 
 namespace te
 {
   namespace layout
   {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
+    class Properties;
+
+    class TELAYOUTEXPORT MapLocationSettingsModel : public AbstractOutsideModel
     {
-      public:
+    public:
 
-        GridPlanarModel();
+      MapLocationSettingsModel();
 
-        virtual ~GridPlanarModel();
+      virtual ~MapLocationSettingsModel();
     };
   }
 }
 
-#endif 
+#endif

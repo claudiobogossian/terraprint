@@ -33,6 +33,11 @@
 
 namespace te
 {
+  namespace gm
+  {
+    class Envelope;
+  }
+
   namespace layout
   {
     class AbstractItemModel;
@@ -66,7 +71,11 @@ namespace te
         */
         virtual void update(const Subject* subject);
 
-        bool syncItemAssociation(Properties& properties);
+        virtual bool syncItemAssociation(Properties& properties);
+
+        virtual double adjustInitialX(const te::gm::Envelope& planarBox, const double initialX, const double& gapX);
+
+        virtual double adjustInitialY(const te::gm::Envelope& planarBox, const double initialY, const double& gapY);
     };
   }
 }

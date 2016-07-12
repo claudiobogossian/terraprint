@@ -131,6 +131,8 @@ namespace te
 
         virtual void onShowMapSettingsDlg();
 
+        virtual void onShowMapLocationSettingsDlg();
+
         virtual void onShowScaleSettingsDlg();
 
         virtual void onShowNorthSettingsDlg();

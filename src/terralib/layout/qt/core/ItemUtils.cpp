@@ -1031,3 +1031,34 @@ QString te::layout::ItemUtils::DMS2DD(const QString dms)
   return qValue;
 }
 
+void te::layout::ItemUtils::normalizeChildrenPosition(QGraphicsItem* item)
+{
+  QRectF oldRectItem = item->boundingRect();
+
+  //first, we check if the bounding rect of the item has a displacement
+  double dx = oldRectItem.x();
+  double dy = oldRectItem.y();
+
+  if (dx == 0. && dy == 0.)
+  {
+    return;
+  }
+
+  //if so, we must move the item and all its children in order to make the bounding rect of the item be placed in 0,0
+
+  QPointF oldPos = item->pos();
+  item->moveBy(dx, dy);
+
+  QList<QGraphicsItem*> qChildrenList = item->childItems();
+  QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
+  while (itChild != qChildrenList.end())
+  {
+    QGraphicsItem* qChild = *itChild;
+    QPointF oldChildPos = qChild->pos();
+
+    qChild->moveBy(-dx, -dy);
+
+    ++itChild;
+  }
+}
+

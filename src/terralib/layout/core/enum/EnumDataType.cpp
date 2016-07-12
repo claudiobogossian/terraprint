@@ -57,7 +57,8 @@ te::layout::EnumDataType::EnumDataType() :
   m_dataTypeScaleSettings(0),
   m_dataTypeNorthSettings(0),
   m_dataTypePageSetup(0),
-  m_dataTypePath(0)
+  m_dataTypePath(0),
+  m_dataTypeMapLocationSettings(0)
 {
   init();
 }
@@ -204,6 +205,12 @@ te::layout::EnumDataType::~EnumDataType()
     delete m_dataTypePath;
     m_dataTypePath = 0;
   }
+
+  if (m_dataTypeMapLocationSettings)
+  {
+    delete m_dataTypeMapLocationSettings;
+    m_dataTypeMapLocationSettings = 0;
+  }
 }
 
 void te::layout::EnumDataType::init()
@@ -265,6 +272,8 @@ void te::layout::EnumDataType::init()
   m_dataTypePageSetup = createEnum("PageSetup", this, TR_LAYOUT("Page Setup"));
 
   m_dataTypePath = createEnum("PathString", this, TR_LAYOUT("Path"));
+
+  m_dataTypeMapLocationSettings = createEnum("MapLocationSettings", this, TR_LAYOUT("Map Location Settings"));
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNone() const
@@ -411,3 +420,10 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypePath() const
 {
   return m_dataTypePath;
 }
+
+
+te::layout::EnumType* te::layout::EnumDataType::getDataTypeMapLocationSettings() const
+{
+  return m_dataTypeMapLocationSettings;
+}
+

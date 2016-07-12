@@ -18,33 +18,28 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file MapLocationSettingsModel.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "MapLocationSettingsModel.h"
+#include "../core/property/Property.h"
+#include "../core/property/Properties.h"
+#include "../core/enum/Enums.h"
 
-namespace te
+te::layout::MapLocationSettingsModel::MapLocationSettingsModel() :
+  AbstractOutsideModel()
 {
-  namespace layout
-  {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
-    {
-      public:
-
-        GridPlanarModel();
-
-        virtual ~GridPlanarModel();
-    };
-  }
+  m_type = Enums::getInstance().getEnumObjectType()->getMapSettingsDialog();
+  m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
-#endif 
+te::layout::MapLocationSettingsModel::~MapLocationSettingsModel()
+{
+
+}
+

@@ -32,7 +32,6 @@
 
 // TerraLib
 #include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/pattern/observer/Observer.h"
 #include "../core/Config.h"
 
 namespace te
@@ -49,7 +48,7 @@ namespace te
 
       \sa te::layout::AbstractItemModel
     */
-    class TELAYOUTEXPORT ThreeNorthModel : public AbstractItemModel, public Observer
+    class TELAYOUTEXPORT ThreeNorthModel : public AbstractItemModel
     {
     public:
 
@@ -62,8 +61,6 @@ namespace te
       \brief Destructor
       */
       virtual ~ThreeNorthModel();
-
-      virtual void update(const Subject* subject);
 
       double calculateMeridianConvergence(const double &latitude, const double &longitude, const double &longitudeSource);
 

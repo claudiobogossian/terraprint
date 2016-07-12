@@ -24,13 +24,12 @@
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_CONTROLLER_H
-#define __TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_CONTROLLER_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_GEODESIC_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_GRID_GEODESIC_CONTROLLER_H
 
 // TerraLib
 #include "../../core/Config.h"
-#include "ItemGroupController.h"
-#include "../../core/property/Properties.h"
+#include "GridMapController.h"
 
 namespace te
 {
@@ -44,7 +43,7 @@ namespace te
     \ingroup layout
     \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT MapCompositionController : public ItemGroupController
+    class TELAYOUTEXPORT GridGeodesicController : public GridMapController
     {
       public:
 
@@ -54,25 +53,24 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        MapCompositionController(AbstractItemModel* model);
+        GridGeodesicController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~MapCompositionController();
+        virtual ~GridGeodesicController();
 
-        virtual const Properties& getProperties() const;
+        /*!
+        \brief This function is called by the subject every time its model is changed
+        */
+        virtual void update(const Subject* subject);
 
-        virtual void setProperties(const Properties& properties);
+        virtual te::gm::Envelope getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
 
-        virtual std::map<std::string, te::layout::Properties> groupPropertiesByParent(const Properties& properties);
+    private:
 
-        virtual void hideProperties(Property& property) const;
-
-      protected: 
-
-        mutable te::layout::Properties m_propertiesFullReference;
+      bool m_gridPropertiesInitialized;
     };
   }
 }
-#endif //__TERRALIB_LAYOUT_INTERNAL_MAP_COMPOSITION_CONTROLLER_H
+#endif //__TERRALIB_LAYOUT_INTERNAL_GRID_GEODESIC_CONTROLLER_H

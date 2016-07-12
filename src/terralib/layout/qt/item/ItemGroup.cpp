@@ -85,7 +85,6 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     {
       child->setFlag(QGraphicsItem::ItemStacksBehindParent, true);
     }
-    m_rect = boundingRect();
   }
   else if (change == QGraphicsItem::ItemChildRemovedChange)
   {
@@ -100,7 +99,6 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
         absItem->setSubSelection(false);
       }
     }
-    m_rect = boundingRect();
   }
   else if (change == QGraphicsItem::ItemSelectedHasChanged)
   {
@@ -136,6 +134,11 @@ void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
   bool wasSelected = isSelected();
   AbstractItem<QGraphicsItemGroup>::mousePressEvent(event);
   bool continuedSelected = isSelected();
+
+  if (m_currentAction == te::layout::RESIZE_ACTION)
+  {
+    return;
+  }
 
   bool is_childrenResizeMode = hasChildrenInResizeMode();
 

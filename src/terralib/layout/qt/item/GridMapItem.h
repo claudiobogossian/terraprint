@@ -136,6 +136,8 @@ namespace te
         virtual void calculateText(const QPointF& point, const QFont& font, const std::string& text, int rotate);
         
         virtual void calculateSuperScriptText(const QPointF& point, const QFont& font, const std::string& text, int rotate);
+
+        virtual  te::gm::LineString roundLineString(const te::gm::LineString& lines);
     
     
     protected:
