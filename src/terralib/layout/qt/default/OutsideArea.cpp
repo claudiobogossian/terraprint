@@ -339,14 +339,14 @@ void te::layout::OutsideArea::addAllItemToolbars()
 
   {
     MapToolbarController* controller = new MapToolbarController;
-    MapToolbarInside* inside = new MapToolbarInside(controller);
+    MapToolbarInside* inside = new MapToolbarInside(controller, m_view);
 
     m_view->addToolbarItemInside(object->getMapCompositionItem(), inside);
   }
 
   {
     MapToolbarController* controller = new MapToolbarController;
-    MapToolbarInside* inside = new MapToolbarInside(controller);
+    MapToolbarInside* inside = new MapToolbarInside(controller, m_view);
 
     m_view->addToolbarItemInside(object->getMapLocationItem(), inside);
   }

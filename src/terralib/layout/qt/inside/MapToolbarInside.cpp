@@ -38,7 +38,7 @@
 #include <QToolButton>
 #include <QAction>
 
-te::layout::MapToolbarInside::MapToolbarInside(MapToolbarController* controller, QObject* parent) :
+te::layout::MapToolbarInside::MapToolbarInside(MapToolbarController* controller, QWidget* parent) :
     QObject(parent)
   , m_controller(controller)
 {
@@ -66,7 +66,13 @@ te::layout::MapToolbarInside::~MapToolbarInside()
 
 void te::layout::MapToolbarInside::createToolbar()
 {
-  m_toolbar = new QToolBar(tr("Map Component ToolBar"));
+  QWidget* widgetParent = 0;
+  if (this->parent() != 0)
+  {
+    widgetParent = dynamic_cast<QWidget*>(this->parent());
+  }
+
+  m_toolbar = new QToolBar(tr("Map Component ToolBar"), widgetParent);
 
   createRecomposeButton();
   m_toolbar->addSeparator();
