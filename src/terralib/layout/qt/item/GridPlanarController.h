@@ -18,38 +18,32 @@
  */
 
 /*!
-  \file GridMapController.h
+  \file MapCompositionController.h
    
-  \brief Class that represents grid controller.
+  \brief Class that represents associate item group controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_MAP_CONTROLLER_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_MAP_CONTROLLER_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_CONTROLLER_H
 
 // TerraLib
 #include "../../core/Config.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
+#include "GridMapController.h"
 
 namespace te
 {
-  namespace gm
-  {
-    class Envelope;
-  }
-
   namespace layout
   {
     class AbstractItemModel;
-    class Subject;
-
+    class AbstractItemView;
     /*!
-    \brief Class that represents text controller.
+    \brief Class that represents associate item group controller.
     
     \ingroup layout
     \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT GridMapController : public AbstractItemController
+    class TELAYOUTEXPORT GridPlanarController : public GridMapController
     {
       public:
 
@@ -59,25 +53,24 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        GridMapController(AbstractItemModel* model);
+        GridPlanarController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~GridMapController();
+        virtual ~GridPlanarController();
 
         /*!
-        \brief Method called by the subject to inform changes in the model
+        \brief This function is called by the subject every time its model is changed
         */
         virtual void update(const Subject* subject);
 
-        virtual bool syncItemAssociation(Properties& properties);
+        double getInitialCoord(double intialCoord, double distance, double& gap);
 
-        virtual double adjustInitialX(const te::gm::Envelope& planarBox, const double initialX, const double& gapX);
+    private:
 
-        virtual double adjustInitialY(const te::gm::Envelope& planarBox, const double initialY, const double& gapY);
+      bool m_gridPropertiesInitialized;
     };
   }
 }
-#endif //__TERRALIB_LAYOUT_INTERNAL_GRID_MAP_CONTROLLER_H
-
+#endif //__TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_CONTROLLER_H

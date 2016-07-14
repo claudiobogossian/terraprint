@@ -35,7 +35,8 @@ te::layout::Enums::Enums() :
   m_lineStyleType(new EnumLineStyleType()),
   m_modeType(new EnumModeType()),
   m_templateType(new EnumTemplateType()),
-  m_toolType(new EnumToolType())
+  m_toolType(new EnumToolType()),
+  m_tempDataStorageType(new EnumTempDataStorageType())
 {
 
 }
@@ -52,6 +53,12 @@ te::layout::Enums::~Enums()
   {
     delete m_objType;
     m_objType = 0;
+  }
+
+  if (m_tempDataStorageType)
+  {
+    delete m_tempDataStorageType;
+    m_tempDataStorageType = 0;
   }
 }
 
@@ -150,4 +157,18 @@ te::layout::EnumToolType* te::layout::Enums::getEnumToolType()
   return m_toolType;
 }
 
+void te::layout::Enums::setEnumTempDataStorageType(EnumTempDataStorageType* type)
+{
+  if (m_tempDataStorageType)
+  {
+    delete m_tempDataStorageType;
+    m_tempDataStorageType = 0;
+  }
+  m_tempDataStorageType = type;
+}
+
+te::layout::EnumTempDataStorageType* te::layout::Enums::getEnumTempDataStorageType()
+{
+  return m_tempDataStorageType;
+}
 

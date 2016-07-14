@@ -129,6 +129,8 @@ namespace te
 
         virtual QRectF resize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
 
+        virtual void scaleItem(double widthFactor, double heightFactor);
+
         double getMarginResizePrecision();
 
         virtual QRectF calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);

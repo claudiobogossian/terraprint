@@ -18,33 +18,29 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file AbstractTempDataStorageInfo.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "AbstractTempDataStorageInfo.h"
 
-namespace te
+te::layout::AbstractTempDataStorageInfo::AbstractTempDataStorageInfo(Scene* scene) :
+  m_scene(scene)
 {
-  namespace layout
-  {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
-    {
-      public:
-
-        GridPlanarModel();
-
-        virtual ~GridPlanarModel();
-    };
-  }
+  
 }
 
-#endif 
+te::layout::AbstractTempDataStorageInfo::~AbstractTempDataStorageInfo()
+{
+
+}
+
+te::layout::Scene* te::layout::AbstractTempDataStorageInfo::getScene()
+{
+  return m_scene;
+}
+

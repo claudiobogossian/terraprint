@@ -18,33 +18,28 @@
  */
 
 /*!
-  \file GridPlanarModel.h
-   
-  \brief 
+  \file terralib/layout/qt/core/template/XmlTemplateFactory.cpp
 
-  \ingroup layout
+  \brief This is the concrete factory for zoom area tools.
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "TempFileFactory.h"
+#include "../../../core/enum/Enums.h"
+#include "TempFile.h"
 
-namespace te
+te::layout::AbstractTempDataStorage* te::layout::TempFileFactory::build(TempDataStorageFactoryParamCreate params)
 {
-  namespace layout
-  {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
-    {
-      public:
-
-        GridPlanarModel();
-
-        virtual ~GridPlanarModel();
-    };
-  }
+  return new TempFile(params.getTempDataStorageInfo());
 }
 
-#endif 
+te::layout::TempFileFactory::TempFileFactory() :
+  TempDataStorageFactory(Enums::getInstance().getEnumTempDataStorageType()->getTempFileType()->getName())
+{
+
+}
+
+te::layout::TempFileFactory::~TempFileFactory()
+{
+
+}

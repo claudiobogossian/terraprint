@@ -18,33 +18,24 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file TempDataStorageFactory.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "TempDataStorageFactory.h"
 
-namespace te
+te::layout::TempDataStorageFactory::~TempDataStorageFactory()
 {
-  namespace layout
-  {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
-    {
-      public:
 
-        GridPlanarModel();
-
-        virtual ~GridPlanarModel();
-    };
-  }
 }
 
-#endif 
+te::layout::TempDataStorageFactory::TempDataStorageFactory(const std::string& factoryKey)
+: te::common::ParameterizedAbstractFactory<AbstractTempDataStorage, std::string, TempDataStorageFactoryParamCreate>(factoryKey)
+{
+
+}
+

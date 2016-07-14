@@ -32,12 +32,7 @@
 
 // TerraLib
 #include "MapModel.h"
-#include "../core/pattern/observer/Observer.h"
 #include "../core/Config.h"
-
-// STL
-#include <map>
-#include <string>
 
 namespace te
 {
@@ -52,7 +47,7 @@ namespace te
 
       \sa te::layout::MapModel, Observer
     */
-    class TELAYOUTEXPORT MapLocationModel : public MapModel, public Observer
+    class TELAYOUTEXPORT MapLocationModel : public MapModel
     {
       public:
 
@@ -65,11 +60,6 @@ namespace te
           \brief Destructor
         */ 
         virtual ~MapLocationModel();
-
-        /*!
-        \brief This function is called by the subject every time its model is changed
-        */
-        virtual void update(const Subject* subject);
     };
   }
 }

@@ -41,21 +41,41 @@ te::layout::ScaleController::~ScaleController()
 
 void te::layout::ScaleController::update(const Subject* subject)
 {
-  ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(this->getView());
-  if (scaleItem == 0)
+  if (m_model == subject)
   {
-    return;
-  }
+    ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(this->getView());
+    if (scaleItem == 0)
+    {
+      return;
+    }
 
-  
-  if (changeScaleWidthAfterConnection())
-  {
+    if (changeScaleWidthAfterConnection())
+    {
+      AbstractItemController::update(subject);
+      return;
+    }
+
+    scaleItem->refreshScaleProperties();
     AbstractItemController::update(subject);
+
     return;
   }
 
-  scaleItem->refreshScaleProperties();
-  AbstractItemController::update(subject);
+  const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
+  if (subjectModel == 0)
+  {
+    return;
+  }
+
+  const Property& pScaleNew = subjectModel->getProperty("scale");
+  const Property& pScaleCurrent = this->getProperty("scale");
+  double scaleNew = pScaleNew.getValue().toDouble();
+  double scaleCurrent = pScaleCurrent.getValue().toDouble();
+
+  if (scaleNew != scaleCurrent)
+  {
+    setProperty(pScaleNew);
+  }
 }
 
 double te::layout::ScaleController::getCurrentUnit(std::string& strUnit)

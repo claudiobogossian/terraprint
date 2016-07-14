@@ -84,6 +84,7 @@ namespace te
     class EnumType;
     class ToolbarItemInside;
     class DialogItemToolbar;
+    class TempDataStorageEditor;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -317,6 +318,10 @@ namespace te
 
         virtual void onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList);
 
+        virtual void onRequestIOEnterAccessTempDataStorage();
+
+        virtual void onRequestIOEndAccessTempDataStorage();
+
       signals:
 
     /*!
@@ -379,9 +384,7 @@ namespace te
         void showContextMenu(QPointF scenePoint, QPointF globalPoint);
 
         void showDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList);
-
-
-
+        
       protected:
 
     /*!
@@ -470,6 +473,7 @@ namespace te
 
         QMimeData* convert2MimeData(const  std::vector<Properties>& properties);
 
+        virtual void configTempFileDataStorage();
 
       protected:
 
@@ -498,11 +502,7 @@ namespace te
         bool                                 m_showContextMenu;
         QClipboard*                          m_clipboard;
         bool                                 m_cutObject;
-
-
-
-
-
+        TempDataStorageEditor*               m_tempDataStorageEditor;
     };
   }
 }

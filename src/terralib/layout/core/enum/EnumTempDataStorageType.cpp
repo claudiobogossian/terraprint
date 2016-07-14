@@ -18,33 +18,50 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file EnumTempDataStorageType.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "EnumTempDataStorageType.h"
 
-namespace te
+te::layout::EnumTempDataStorageType::EnumTempDataStorageType() :
+  m_noneType(0),
+  m_tempFileType(0)
 {
-  namespace layout
+  init();
+}
+
+te::layout::EnumTempDataStorageType::~EnumTempDataStorageType()
+{
+  if(m_noneType)
   {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
-    {
-      public:
-
-        GridPlanarModel();
-
-        virtual ~GridPlanarModel();
-    };
+    delete m_noneType;
+    m_noneType = 0;
+  }
+  if (m_tempFileType)
+  {
+    delete m_tempFileType;
+    m_tempFileType = 0;
   }
 }
 
-#endif 
+void te::layout::EnumTempDataStorageType::init()
+{
+  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+
+  m_tempFileType = createEnum("TempFile", this, TR_LAYOUT("Temp File"));
+}
+
+te::layout::EnumType* te::layout::EnumTempDataStorageType::getNoneType() const
+{
+  return m_noneType;
+}
+
+te::layout::EnumType* te::layout::EnumTempDataStorageType::getTempFileType() const
+{
+  return m_tempFileType;
+}

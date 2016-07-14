@@ -18,33 +18,48 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file TemplateEditor.h
    
-  \brief 
+  \brief Calls the factory to create a template of the specified type and keep. Responsible for delete the created template.
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_TEMP_DATASTORAGE_INFO_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_TEMP_DATASTORAGE_INFO_H
 
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "../../../core/Config.h"
+
+// STL
+#include <string>
 
 namespace te
 {
   namespace layout
   {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
+    class EnumType;
+    class Scene;
+    /*!
+      \brief Calls the factory to create a temp data storage of the specified type and keep. Responsible for delete the created temp data storage.
+    
+      \ingroup layout
+    */
+    class TELAYOUTEXPORT AbstractTempDataStorageInfo
     {
       public:
 
-        GridPlanarModel();
+        AbstractTempDataStorageInfo(Scene* scene);
 
-        virtual ~GridPlanarModel();
+        virtual ~AbstractTempDataStorageInfo();
+        
+        Scene* getScene();
+
+      protected:
+
+        Scene*      m_scene;
     };
   }
 }
 
-#endif 
+#endif

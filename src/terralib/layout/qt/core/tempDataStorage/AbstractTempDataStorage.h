@@ -18,33 +18,51 @@
  */
 
 /*!
-  \file GridPlanarModel.h
+  \file AbstractTempDataStorage.h
    
-  \brief 
+  \brief Abstract class that represents a temp data storage.
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_TEMP_DATASTORAGE_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_TEMP_DATASTORAGE_H
 
 // TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "../../../core/Config.h"
 
 namespace te
 {
   namespace layout
   {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
+    class AbstractTempDataStorageInfo;
+    /*!
+      \brief Abstract class that represents a Template.
+    
+      \ingroup layout
+    */
+    class TELAYOUTEXPORT AbstractTempDataStorage
     {
       public:
 
-        GridPlanarModel();
+        /*
+          \brief Constructor. 
 
-        virtual ~GridPlanarModel();
+          \param info information about the temporary data
+        */
+        AbstractTempDataStorage(AbstractTempDataStorageInfo* info);
+
+        virtual ~AbstractTempDataStorage();
+
+        AbstractTempDataStorageInfo* getInfo();
+
+        virtual bool save() = 0;
+
+      protected:
+
+        AbstractTempDataStorageInfo* m_info;
     };
   }
 }
 
-#endif 
+#endif
