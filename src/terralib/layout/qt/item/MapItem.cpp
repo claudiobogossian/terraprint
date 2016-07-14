@@ -50,8 +50,6 @@
 te::layout::MapItem::MapItem(AbstractItemController* controller)
   : AbstractItem<QGraphicsObject>(controller, false)
   , m_currentEditionMode(0)
-  , m_isPrinting(false)
-  , m_useQImage(false)
 {
   this->setAcceptDrops(true);
 }
@@ -60,31 +58,16 @@ te::layout::MapItem::~MapItem()
 {
 }
 
-void te::layout::MapItem::contextUpdated(const ContextObject& context)
-{
-  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
-
-  m_isPrinting = false;
-  m_useQImage = false;
-  if (context.getCurrentMode() == enumMode->getModePrinterPreview())
-  {
-    m_isPrinting = true;
-    return;
-  }
-  else if (context.getCurrentMode() == enumMode->getModePrinter())
-  {
-    m_isPrinting = true;
-    m_useQImage = true;
-    return;
-  }
-
-  this->update();
-}
-
 void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
   Scene* myScene = dynamic_cast<Scene*>(this->scene());
   if (myScene == 0)
+  {
+    return;
+  }
+
+  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  if (mapController == 0)
   {
     return;
   }

@@ -82,6 +82,8 @@ namespace te
         virtual void setProperties(const Properties& properties);
 
         virtual std::list<te::map::AbstractLayerPtr> getIntersection(const std::list<te::map::AbstractLayerPtr>& listA, const std::list<te::map::AbstractLayerPtr>& listB) const;
+        
+        virtual void validateItem();
 
       protected:
 
@@ -98,6 +100,7 @@ namespace te
         virtual bool syncMapScaleProperties(Properties& properties);
 
         virtual AbstractProxyProject* getAbstractProxyProject();
+
     };
   }
 }

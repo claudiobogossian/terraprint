@@ -561,3 +561,17 @@ te::layout::AbstractProxyProject* te::layout::MapController::getAbstractProxyPro
   return project;
 }
 
+
+void te::layout::MapController::validateItem()
+{
+  this->getWarningManager()->clearWarnings();
+
+  const Property& pSrid = this->getProperty("srid");
+  int srid = pSrid.getValue().toInt();
+
+  if (srid <= 0)
+  {
+    m_warningManager->addWarning("Map Without Projection");
+  }
+
+}

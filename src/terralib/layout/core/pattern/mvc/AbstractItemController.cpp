@@ -28,6 +28,7 @@
 #include "../../property/GenericVariant.h"
 #include "../../AbstractScene.h"
 #include "../../../qt/core/ItemUtils.h"
+#include "../../WarningManager.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -37,6 +38,7 @@ te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* mo
   , m_model(model)
   , m_view(0)
   , m_marginResizePrecision(2.)
+  , m_warningManager(new WarningManager())
 {
   if(m_model != 0)
   {
@@ -116,6 +118,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   {
    // updateChildren(); // update children size
   }
+
+  validateItem();
 }
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
@@ -562,4 +566,15 @@ void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
   props.addProperty(prop_height);
 
   setProperties(props);
+}
+
+
+te::layout::WarningManager* te::layout::AbstractItemController::getWarningManager()
+{
+  return m_warningManager;
+}
+
+void te::layout::AbstractItemController::validateItem()
+{
+
 }

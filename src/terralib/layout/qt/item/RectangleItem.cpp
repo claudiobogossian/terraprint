@@ -69,6 +69,7 @@ void te::layout::RectangleItem::drawItem( QPainter * painter, const QStyleOption
     {
       drawSingleCornerTrimmedRectangle(painter);
     }
+
   }
 }
 
