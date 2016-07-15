@@ -31,6 +31,7 @@
 // TerraLib
 #include "AbstractTempDataStorage.h"
 #include "../../../core/Config.h"
+#include "../../../core/property/Properties.h"
 
 // STL
 #include <string>
@@ -53,6 +54,13 @@ namespace te
         virtual ~TempFile();
 
         virtual bool save();
+
+        virtual void readProperties();
+
+      protected:
+
+        std::vector<te::layout::Properties>                 m_properties;
+        std::map< std::string, std::vector<std::string> >   m_mapGroups;
     };
   }
 }

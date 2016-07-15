@@ -58,6 +58,8 @@ namespace te
 
         virtual bool save() = 0;
 
+        virtual void readProperties() = 0;
+
       protected:
 
         AbstractTempDataStorageInfo* m_info;
