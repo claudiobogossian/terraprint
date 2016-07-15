@@ -31,3 +31,5 @@ get_filename_component(_prefix "${_dir}/../../../" ABSOLUTE)
 include("${_prefix}/lib/cmake/terralib_layout-@TERRALIB_LAYOUT_PKG_VERSION@/terralib_layout-exports.cmake")
 
 set(terralib_layout_INCLUDE_DIRS "${_prefix}/include")
+
+set ( TERRALIB5_LAYOUT_INSTALL_DIR "${_dir}/../../../" )
