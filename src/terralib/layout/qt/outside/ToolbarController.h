@@ -31,6 +31,7 @@
 // TerraLib
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/Config.h"
+#include "../core/ItemIconManager.h"
 
 // Qt
 #include <QObject>
@@ -53,6 +54,8 @@ namespace te
         ToolbarController(AbstractOutsideModel* o, Scene* scene);
 
         virtual ~ToolbarController();
+
+        const ItemIconManager& getIconManager() const;
 
       public slots:
 
@@ -109,6 +112,8 @@ namespace te
       protected:
 
         Scene* m_scene;
+
+        ItemIconManager m_iconManager;
     };
   }
 }

@@ -150,6 +150,11 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
     parentList.append(qParentTypeName);
 
     QTreeWidgetItem* parentTreeItem = new QTreeWidgetItem(parentList);
+    QString qIconName = m_iconManager.getIconNameAsQString(absParentItem->getController()->getProperties().getTypeObj()->getName());
+    if (qIconName.isEmpty() == false)
+    {
+      parentTreeItem->setIcon(1, QIcon::fromTheme(qIconName));
+    }
 
     //we just look into the children if the parent is a GroupItem
     if (parentTypeName == groupType->getItemGroup()->getName())
@@ -175,6 +180,13 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
         childList.append(qChildTypeName);
 
         QTreeWidgetItem* childTreeItem = new QTreeWidgetItem(childList);
+        
+        QString qIconName = m_iconManager.getIconNameAsQString(absChildItem->getController()->getProperties().getTypeObj()->getName());
+        if (qIconName.isEmpty() == false)
+        {
+          childTreeItem->setIcon(1, QIcon::fromTheme(qIconName));
+        }
+        
         parentTreeItem->addChild(childTreeItem);
       }
     }
@@ -184,6 +196,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
   m_treeWidget->sortItems(0, Qt::AscendingOrder);
   m_treeWidget->expandAll();
+  m_treeWidget->adjustSize();
 }
 
 void te::layout::ObjectInspectorOutside::onRemoveProperties( std::vector<std::string> names )
@@ -227,6 +240,11 @@ void te::layout::ObjectInspectorOutside::selectItems( QList<QGraphicsItem*> grap
   }
 
   m_isChangingSelection = false;
+}
+
+void te::layout::ObjectInspectorOutside::setIconManager(const te::layout::ItemIconManager& iconManager)
+{
+  m_iconManager = iconManager;
 }
 
 void te::layout::ObjectInspectorOutside::itemSelectionChanged()
