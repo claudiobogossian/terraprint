@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="pt_BR">
+<TS version="2.0" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -76,87 +76,87 @@
     <name>GridSettings</name>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="14"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="97"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="112"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1377"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2115"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="99"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="114"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1369"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2107"/>
         <source>Grid Settings</source>
         <translation>Configurações da Grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="54"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="56"/>
         <source>Grid visualization settings</source>
         <translation>Configurações de visualização da grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="73"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="75"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3690"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3672"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3693"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3675"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3716"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3698"/>
         <source>&amp;Close</source>
         <translation>&amp;Fechar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3719"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3701"/>
         <source>Alt+O</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="87"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="89"/>
         <source>Planar</source>
         <translation>Planar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="207"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2023"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="199"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2015"/>
         <source>Gap Settings</source>
         <translation>Configurações de Intervalo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="216"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2032"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="208"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2024"/>
         <source>Horizontal Gap</source>
         <translation>Intervalo Horizontal</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="226"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2072"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="218"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2064"/>
         <source>Vertical Gap</source>
         <translation>Intervalo Vertical</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="245"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1392"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="237"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1384"/>
         <source>Grid Initial Point</source>
         <translation>Ponto Inicial da Grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="251"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1441"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="243"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1433"/>
         <source>Y:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="267"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1401"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="259"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1393"/>
         <source>X:</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="135"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2138"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="127"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2120"/>
         <source>Grid Style</source>
         <translation>Estilo da Grade</translation>
     </message>
@@ -169,30 +169,30 @@
         <translation type="obsolete">Cruzetas</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="148"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="140"/>
         <source>Show Planar Grid</source>
         <translation>Exibir Grade Planar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="163"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="155"/>
         <source>Unit</source>
         <translation>Unidade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="178"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2165"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="170"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2147"/>
         <source>Superscript</source>
         <translation>Sobrescrito</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="288"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1490"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="280"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1482"/>
         <source>Line Settings</source>
         <translation>Configurações da Linha</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="303"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1505"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="295"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1497"/>
         <source>Line Type</source>
         <translation>Tipo da Linha</translation>
     </message>
@@ -217,689 +217,683 @@
         <translation type="obsolete">Traço-Ponto-Ponto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="316"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1522"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="308"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1514"/>
         <source>Line Width</source>
         <translation>Largura da Linha</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="947"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="968"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1120"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2303"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2357"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2471"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2492"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2631"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2988"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="939"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="960"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1112"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2285"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2339"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2453"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2474"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2613"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2970"/>
         <source>1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1125"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2636"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2993"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1117"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2618"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2975"/>
         <source>2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1130"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2641"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2998"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1122"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2623"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2980"/>
         <source>3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1135"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2646"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3003"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1127"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2628"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2985"/>
         <source>4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1140"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2651"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3008"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1132"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2633"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2990"/>
         <source>5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1145"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2656"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3013"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1137"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2638"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2995"/>
         <source>6</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1150"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2661"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3018"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1142"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2643"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3000"/>
         <source>7</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1155"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2666"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3023"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1147"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2648"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3005"/>
         <source>8</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1160"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2671"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3028"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1152"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2653"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3010"/>
         <source>9</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1165"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2676"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3033"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1157"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2658"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3015"/>
         <source>10</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1170"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2681"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3038"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1162"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2663"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3020"/>
         <source>11</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1175"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2686"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3043"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1167"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2668"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3025"/>
         <source>12</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1180"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2691"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3048"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1172"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2673"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3030"/>
         <source>13</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1185"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2696"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3053"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1177"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2678"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3035"/>
         <source>14</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1190"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2701"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3058"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1182"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2683"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3040"/>
         <source>15</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1195"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2706"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3063"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1187"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2688"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3045"/>
         <source>16</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1200"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2711"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3068"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1192"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2693"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3050"/>
         <source>17</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1205"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2716"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3073"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1197"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2698"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3055"/>
         <source>18</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1210"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2721"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3078"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1202"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2703"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3060"/>
         <source>19</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1215"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2726"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3083"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1207"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2708"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3065"/>
         <source>20</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="798"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1994"/>
-        <source>Line Color</source>
-        <translation>Cor da Linha</translation>
-    </message>
-    <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="834"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2199"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="826"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2181"/>
         <source>Text Settings</source>
         <translation>Configurações do Texto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="842"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2207"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="834"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2189"/>
         <source>Text Grid Settings</source>
         <translation>Configurações do Texto da Grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="859"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2220"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="851"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2202"/>
         <source>Right Text</source>
         <translation>Textos à Direita</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="869"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2230"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="861"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2212"/>
         <source>Left Text</source>
         <translation>Textos à Esquerda </translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="879"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2240"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="871"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2222"/>
         <source>Top Text</source>
         <translation>Textos Superiores</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="889"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2250"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="881"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2232"/>
         <source>Bottom Text</source>
         <translation>Textos Inferiores</translation>
     </message>
-    <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="903"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="910"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="917"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="924"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2264"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2271"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2278"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2285"/>
+    <message utf8="true">
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="895"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="902"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="909"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="916"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2246"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2253"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2260"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2267"/>
         <source>90°</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="937"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2364"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="929"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2346"/>
         <source>Vertical Displacement</source>
         <translation>Deslocamento Vertical</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="958"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2347"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="950"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2329"/>
         <source>Horizontal Displacement</source>
         <translation>Deslocamento Horizontal</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="975"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2296"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2503"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="967"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2278"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2485"/>
         <source>Visible Texts</source>
         <translation>Exibir Textos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1004"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2513"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="996"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2495"/>
         <source>Font Settings</source>
         <translation>Configurações da Fonte</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1017"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2528"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1009"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2510"/>
         <source>Grid Text Font Family</source>
         <translation>Nome  da Fonte do Texto da Grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1028"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2539"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2883"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1020"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2521"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2865"/>
         <source>Arial</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1033"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2544"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2888"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1025"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2526"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2870"/>
         <source>Verdana</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1038"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2549"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2893"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1030"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2531"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2875"/>
         <source>Times New Roman</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1043"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2554"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2898"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1035"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2536"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2880"/>
         <source>Symbol</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1048"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2559"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2903"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1040"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2541"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2885"/>
         <source>Courier</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1053"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2564"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2908"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1045"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2546"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2890"/>
         <source>Modern</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1058"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1050"/>
         <source>MS Sans Serif</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1063"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2574"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2918"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1055"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2556"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2900"/>
         <source>Smallfonts</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1068"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2579"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2923"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1060"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2561"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2905"/>
         <source>Wingdings</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1073"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2584"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2928"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1065"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2566"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2910"/>
         <source>Tahoma</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1078"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2589"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2933"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1070"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2571"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2915"/>
         <source>Impact</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1103"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2614"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1095"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2596"/>
         <source>Grid Text Size</source>
         <translation>Tamanho do Texto da Grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1220"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2731"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3088"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1212"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2713"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3070"/>
         <source>25</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1225"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2736"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3093"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1217"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2718"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3075"/>
         <source>30</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1230"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2741"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3098"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1222"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2723"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3080"/>
         <source>35</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1235"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2746"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3103"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1227"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2728"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3085"/>
         <source>40</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1240"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2751"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3108"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1232"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2733"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3090"/>
         <source>45</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1245"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2756"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3113"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1237"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2738"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3095"/>
         <source>50</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1250"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2761"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3118"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1242"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2743"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3100"/>
         <source>60</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1255"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2766"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3123"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1247"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2748"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3105"/>
         <source>70</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1260"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2771"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3128"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1252"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2753"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3110"/>
         <source>80</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1265"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2776"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3133"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1257"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2758"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3115"/>
         <source>90</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1270"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2781"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3138"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3406"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1262"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2763"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3120"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3388"/>
         <source>100</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1320"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2831"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1312"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2813"/>
         <source>Grid Text Color</source>
         <translation>Cor do Texto da Grade</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1367"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1359"/>
         <source>Geodesic</source>
         <translation>Geodésica</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2155"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2137"/>
         <source>Show Geodesic Grid</source>
         <translation>Exibir Grade Geodésica</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2374"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2356"/>
         <source>Text Format</source>
         <translation>Formato do Texto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2310"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2292"/>
         <source>Degrees</source>
         <translation>Graus</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="125"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2128"/>
         <source>Connected To:</source>
-        <translation>Conectado à:</translation>
+        <translation type="obsolete">Conectado à:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1432"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1472"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2063"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2103"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="790"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1986"/>
+        <source>Line Color</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1424"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="1464"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2055"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2095"/>
         <source>...</source>
         <translation type="unfinished">...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2320"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2302"/>
         <source>Minutes</source>
         <translation>Minutos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2327"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2309"/>
         <source>Seconds</source>
         <translation>Segundos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2340"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2322"/>
         <source>Precision</source>
         <translation>Precisão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2393"/>
-        <source>0; </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2396"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2375"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2378"/>
         <source>0</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2412"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2394"/>
         <source>Corner Settings</source>
         <translation>Configurações dos Cantos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2425"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2407"/>
         <source>Upper Left</source>
         <translation>Superior Esquerdo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2432"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2414"/>
         <source>Lower Left</source>
         <translation>Inferior Esquerdo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2443"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2425"/>
         <source>UpperRight</source>
         <translation>Superior Direito</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2450"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2432"/>
         <source>Lower Right</source>
         <translation>Inferior Direito</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2461"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2443"/>
         <source>Horizontal Corner Displacement</source>
         <translation>Deslocamento Horizontal nos Cantos </translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2482"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2464"/>
         <source>Vertical Corner Displacement</source>
         <translation>Deslocamento Vertial nos Cantos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2569"/>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2913"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2551"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2895"/>
         <source>MS San Serif</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2872"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2854"/>
         <source>Corner Font Family</source>
         <translation>Nome da Fonte dos Cantos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2958"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2940"/>
         <source>Corner Text Size</source>
         <translation>Tamanho do Texto dos Cantos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3175"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3157"/>
         <source>Corner Text Color</source>
         <translation>Cor do Texto dos Cantos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3207"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3189"/>
         <source>Topographic Map</source>
         <translation>Mapa Topográfico</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3237"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3219"/>
         <source>Y3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3247"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3229"/>
         <source>X3</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3257"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3239"/>
         <source>X4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3267"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3249"/>
         <source>Y4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3305"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3287"/>
         <source>X2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3318"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3300"/>
         <source>Y2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3328"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3310"/>
         <source>X1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3341"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3323"/>
         <source>Y1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3376"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3358"/>
         <source>Define Scale</source>
         <translation>Definir Escala</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3389"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3371"/>
         <source>Clip</source>
         <translation>Recortar Área</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3411"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3393"/>
         <source>200</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3416"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3398"/>
         <source>250</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3421"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3403"/>
         <source>500</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3426"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3408"/>
         <source>1000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3431"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3413"/>
         <source>2000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3436"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3418"/>
         <source>2500</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3441"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3423"/>
         <source>5000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3446"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3428"/>
         <source>10000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3451"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3433"/>
         <source>20000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3456"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3438"/>
         <source>25000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3461"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3443"/>
         <source>50000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3466"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3448"/>
         <source>100000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3471"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3453"/>
         <source>200000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3476"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3458"/>
         <source>250000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3481"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3463"/>
         <source>500000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3486"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3468"/>
         <source>1000000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3491"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3473"/>
         <source>2000000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3496"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3478"/>
         <source>2500000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3501"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3483"/>
         <source>5000000</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3558"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3540"/>
         <source>x1,y1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3580"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3562"/>
         <source>x4,y4</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3624"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3606"/>
         <source>x2,y2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3646"/>
+        <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="3628"/>
         <source>x3,y3</source>
         <translation></translation>
     </message>
@@ -915,7 +909,7 @@
         <source>Coordinate</source>
         <translation>Coordenada</translation>
     </message>
-    <message>
+    <message utf8="true">
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="85"/>
         <source>º</source>
         <translation>º</translation>
@@ -1417,7 +1411,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="129"/>
         <source>Super Draft</source>
-        <translation>Super Rascunho</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="136"/>
@@ -1533,17 +1527,27 @@ nononon</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="85"/>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="97"/>
+        <source>SVG Library Path:</source>
+        <translation>Caminho da Biblioteca SVG:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="117"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="147"/>
         <source>Help</source>
         <translation>Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="105"/>
-        <source>OK</source>
-        <translation></translation>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="167"/>
+        <source>Ok</source>
+        <translation>Ok</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="112"/>
+        <location filename="../../../src/terralib/layout/qt/ui/SVGView.ui" line="174"/>
         <source>CANCEL</source>
         <translation>Cancelar</translation>
     </message>
@@ -1899,27 +1903,32 @@ nononon</source>
 <context>
     <name>te::layout::DialogPropertiesBrowser</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="403"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="326"/>
+        <source>Open Directory</source>
+        <translation type="unfinished">Abrir Diretório</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="345"/>
         <source>Images</source>
         <translation>Imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="416"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="358"/>
         <source>Select an Image File</source>
         <translation>Selecione um Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="424"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="366"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="424"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="366"/>
         <source>The selected image cannot be loaded.</source>
         <translation>A imagem selecionada não pôde ser carregada.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="487"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="429"/>
         <source>Select Font</source>
         <translation>Selecione a Fonte</translation>
     </message>
@@ -2076,6 +2085,87 @@ nononon</source>
     </message>
 </context>
 <context>
+    <name>te::layout::MenuBuilder</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="125"/>
+        <source>Copy</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="128"/>
+        <source>Cut</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="134"/>
+        <source>Paste</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="139"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>te::layout::MenuPrincipal</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="88"/>
+        <source>Print Model</source>
+        <translation type="unfinished">Modelo de Impressão</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="93"/>
+        <source>New</source>
+        <translation type="unfinished">Novo</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="96"/>
+        <source>Update Map</source>
+        <translation type="unfinished">Atualizar Carta</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="101"/>
+        <source>Import Map</source>
+        <translation type="unfinished">Importar Carta</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="102"/>
+        <source>Export Map</source>
+        <translation type="unfinished">Exportar Carta</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="104"/>
+        <source>Import Xml Map</source>
+        <translation type="unfinished">Importar Carta XML</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="107"/>
+        <source>Export XML Map</source>
+        <translation type="unfinished">Exportar Carta XML</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="112"/>
+        <source>Dock Inspector</source>
+        <translation type="unfinished">Exibir Inspetor de Objetos</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="117"/>
+        <source>Dock Properties</source>
+        <translation type="unfinished">Exibir Editor de Propriedades</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="124"/>
+        <source>Page Config...</source>
+        <translation type="unfinished">Configuração da Página...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="127"/>
+        <source>Print...</source>
+        <translation type="unfinished">Imprimir...</translation>
+    </message>
+</context>
+<context>
     <name>te::layout::NorthSettingsOutside</name>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/NorthSettingsOutside.cpp" line="79"/>
@@ -2085,7 +2175,7 @@ nononon</source>
 </context>
 <context>
     <name>te::layout::ObjectInspectorDock</name>
-    <message>
+    <message id="0">
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>
@@ -2112,67 +2202,56 @@ nononon</source>
 <context>
     <name>te::layout::OutsideArea</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="211"/>
         <source>Print Model</source>
-        <translation>Modelo de Impressão</translation>
+        <translation type="obsolete">Modelo de Impressão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="216"/>
         <source>New</source>
-        <translation>Novo</translation>
+        <translation type="obsolete">Novo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="219"/>
         <source>Update Map</source>
-        <translation>Atualizar Carta</translation>
+        <translation type="obsolete">Atualizar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="224"/>
         <source>Import Map</source>
-        <translation>Importar Carta</translation>
+        <translation type="obsolete">Importar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="225"/>
         <source>Export Map</source>
-        <translation>Exportar Carta</translation>
+        <translation type="obsolete">Exportar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="227"/>
         <source>Import Xml Map</source>
-        <translation>Importar Carta XML</translation>
+        <translation type="obsolete">Importar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="230"/>
         <source>Export XML Map</source>
-        <translation>Exportar Carta XML</translation>
+        <translation type="obsolete">Exportar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="235"/>
         <source>Dock Inspector</source>
-        <translation>Exibir Inspetor de Objetos</translation>
+        <translation type="obsolete">Exibir Inspetor de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="240"/>
         <source>Dock Properties</source>
-        <translation>Exibir Editor de Propriedades</translation>
+        <translation type="obsolete">Exibir Editor de Propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="247"/>
         <source>Page Config...</source>
-        <translation>Configuração da Página...</translation>
+        <translation type="obsolete">Configuração da Página...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="250"/>
         <source>Print...</source>
-        <translation>Imprimir...</translation>
+        <translation type="obsolete">Imprimir...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="518"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="279"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="523"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="284"/>
         <source>TerraPrint - TerraLib 5 | Context: </source>
         <translation>TerraPrint - TerraLib 5 | Contexto:</translation>
     </message>
@@ -2221,26 +2300,34 @@ nononon</source>
 <context>
     <name>te::layout::PropertiesOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="74"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="73"/>
         <source>Properties</source>
         <translation>Editor de Propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="126"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="122"/>
         <source>Config</source>
         <translation>Configurar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="131"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="127"/>
         <source>String or regular expression to filter property list with</source>
         <translation>Utilize texto ou expressão regular para filtrar a lista de propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="140"/>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="215"/>
-        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="493"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="136"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="197"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PropertiesOutside.cpp" line="366"/>
         <source>Component::</source>
         <translation>Componente::</translation>
+    </message>
+</context>
+<context>
+    <name>te::layout::SVGDialogOutside</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="228"/>
+        <source>Open Directory</source>
+        <translation type="unfinished">Abrir Diretório</translation>
     </message>
 </context>
 <context>
@@ -2273,305 +2360,308 @@ nononon</source>
 <context>
     <name>te::layout::ToolbarOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="156"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="154"/>
         <source>Layout - Toolbar</source>
         <translation>Barra de Ferramentas do Editor de Cartas</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="246"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="244"/>
         <source>Map</source>
         <translation>Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="246"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="244"/>
         <source>Map Objects</source>
         <translation>Objetos de Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="250"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="248"/>
         <source>Default Map Object</source>
         <translation>Objeto Mapa Padrão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="253"/>
         <source>Grid Planar</source>
-        <translation>Grade Planar</translation>
+        <translation type="obsolete">Grade Planar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="256"/>
         <source>Grid Geodesic</source>
-        <translation>Grade Geodésica</translation>
+        <translation type="obsolete">Grade Geodésica</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="259"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="251"/>
         <source>Default Legend</source>
         <translation>Legenda Padrão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="262"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="254"/>
         <source>Scale Object</source>
         <translation>Objeto Escala</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="265"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="257"/>
         <source>North Object</source>
         <translation>Objeto Norte</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="268"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="260"/>
         <source>Three North Object</source>
         <translation>Objeto 3-Nortes</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="271"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="263"/>
         <source>Map Location Object</source>
         <translation>Objeto Mapa de Localização</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="289"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="281"/>
         <source>Map Tools</source>
         <translation>Ferramentas de Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="293"/>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="373"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="285"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="365"/>
         <source>Pan Tool</source>
         <translation>Ferramenta de Voo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="296"/>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="376"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="288"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="368"/>
         <source>Zoom In</source>
         <translation>Zoom Mais</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="299"/>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="379"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="291"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="371"/>
         <source>Zoom Out</source>
         <translation>Zoom Menos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="302"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="294"/>
         <source>Systematic Scale</source>
         <translation>Escala Sistemática</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="305"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="297"/>
         <source>Text Grid as Object</source>
         <translation>Texto da Grade como Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="308"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="300"/>
         <source>Text Map as Object</source>
         <translation>Texto do Mapa como Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="311"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="303"/>
         <source>Legend as Object</source>
         <translation>Legenda como Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="329"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="321"/>
         <source>Geometry Tools</source>
         <translation>Ferramentas de Geometria</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="329"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="321"/>
         <source>Geometries Objects</source>
         <translation>Ferramentas de Geometrias</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="333"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="325"/>
         <source>Rectangle Object</source>
         <translation>Objeto Retângulo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="336"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="328"/>
         <source>Arrow Object</source>
         <translation>Objeto Seta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="339"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="331"/>
         <source>Ellipse Object</source>
         <translation>Objeto Elipse</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="342"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="334"/>
         <source>Point Object</source>
         <translation>Objeto Ponto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="345"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="337"/>
         <source>Line Object</source>
         <translation>Objeto Linha</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="348"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="340"/>
         <source>Polygon Object</source>
         <translation>Objeto Polígono</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="684"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="676"/>
         <source>Undo</source>
         <translation>Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="369"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="361"/>
         <source>Paper Tools</source>
         <translation>Ferramentas de Papel</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="397"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="343"/>
+        <source>SVG Object</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="389"/>
         <source>Arrow Cursor</source>
         <translation>Ferramenta de Seleção</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="412"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="404"/>
         <source>Item Tools</source>
         <translation>Ferramentas de Ítens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="416"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="408"/>
         <source>Group</source>
         <translation>Agrupar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="419"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="411"/>
         <source>Ungroup</source>
         <translation>Desagrupar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="467"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="459"/>
         <source>Bring to front</source>
         <translation>Trazer para frente</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="482"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="474"/>
         <source>Send to back</source>
         <translation>Enviar para trás</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="497"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="489"/>
         <source>Bring Forward</source>
         <translation>Avançar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="512"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="504"/>
         <source>Send Backward</source>
         <translation>Recuar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="527"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="519"/>
         <source>Recompose</source>
         <translation>Recompor</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="542"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="534"/>
         <source>Text Tools</source>
         <translation>Ferramentas de Textos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="546"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="538"/>
         <source>Default Text Object</source>
         <translation>Objeto Texto Padrão</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="549"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="541"/>
         <source>Title Object</source>
         <translation>Objeto Título</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="555"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="547"/>
         <source>Image Object</source>
         <translation>Objeto Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="579"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="571"/>
         <source>Align Left</source>
         <translation>Alinhar à Esquerda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="594"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="586"/>
         <source>Align Right</source>
         <translation>Alinhar à Direita</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="609"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="601"/>
         <source>Align Top</source>
         <translation>Alinhar Parte Superior</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="624"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="616"/>
         <source>Align Bottom</source>
         <translation>Alinhar Parte Inferior</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="639"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="631"/>
         <source>Align Center Horizontal</source>
         <translation>Alinhar Horizontalmente no Centro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="654"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="646"/>
         <source>Align Center Vertical</source>
         <translation>Alinhar Verticalmente no Centro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="669"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="661"/>
         <source>Remove Object</source>
         <translation>Remover Objeto</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="693"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="685"/>
         <source>&amp;Undo</source>
         <translation>&amp;Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="697"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="689"/>
         <source>Undo Action</source>
         <translation>Ação de Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="709"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="701"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="718"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="710"/>
         <source>&amp;Redo</source>
         <translation>&amp;Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="722"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="714"/>
         <source>Redo Action</source>
         <translation>Ação de Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="734"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="726"/>
         <source>Redraw Selection Map</source>
         <translation>Redesenhar Mapa Selecionado</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="749"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="741"/>
         <source>Object To Image</source>
         <translation>Gravar Objeto como Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="749"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="741"/>
         <source>Export all selected objects to image</source>
         <translation>Exporta todos os objetos selecionados como imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="764"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="756"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="779"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="771"/>
         <source>Export To PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="779"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="771"/>
         <source>Export to PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
@@ -2579,43 +2669,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1148"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1391"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1149"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1194"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1392"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1437"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1170"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1413"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1175"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1418"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1193"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1436"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1222"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1465"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1229"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1472"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1240"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1483"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>
