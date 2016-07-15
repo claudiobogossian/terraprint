@@ -119,9 +119,9 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
   
   createPropertiesDock(proxyProject);
 
-  createInspectorDock();
-  
   createToolbar();
+
+  createInspectorDock();
 
   createEditTemplateDock();
 
@@ -151,6 +151,17 @@ void te::layout::OutsideArea::createInspectorDock()
   m_dockInspector = new ObjectInspectorDock(m_view->getScene());
   m_dockInspector->setFeatures(QDockWidget::DockWidgetMovable |  
     QDockWidget::DockWidgetFloatable);
+
+  if (m_toolbar != 0)
+  {
+    te::layout::ToolbarController* controller = dynamic_cast<te::layout::ToolbarController*>(m_toolbar->getController());
+    const ItemIconManager& iconManager = controller->getIconManager();
+
+    te::layout::ObjectInspectorOutside* objectInspector = m_dockInspector->getObjectInspectorOutside();
+
+    objectInspector->setIconManager(iconManager);
+  }
+
 }
 
 void te::layout::OutsideArea::createToolbar()

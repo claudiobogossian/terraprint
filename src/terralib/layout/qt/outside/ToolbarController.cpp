@@ -41,12 +41,43 @@ te::layout::ToolbarController::ToolbarController(AbstractOutsideModel* o, Scene*
   AbstractOutsideController(o),
   m_scene(scene)
 {
-  
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+
+  //map related items
+  m_iconManager.setIcon(itemType->getLegendItem()->getName(), "layout-default-legend");
+  m_iconManager.setIcon(itemType->getMapItem()->getName(),"layout-default-map");
+  m_iconManager.setIcon(itemType->getMapCompositionItem()->getName(), "layout-default-map");
+  m_iconManager.setIcon(itemType->getMapLocationItem()->getName(), "layout-map-location");
+  m_iconManager.setIcon(itemType->getNorthItem()->getName(), "layout-north");
+  m_iconManager.setIcon(itemType->getScaleItem()->getName(), "layout-scale");
+  m_iconManager.setIcon(itemType->getThreeNorthItem()->getName(), "layout-three-north");
+
+  //geometry related items
+  m_iconManager.setIcon(itemType->getRectangleItem()->getName(), "layout-square");
+  m_iconManager.setIcon(itemType->getArrowItem()->getName(), "layout-arrow");
+  m_iconManager.setIcon(itemType->getEllipseItem()->getName(), "layout-ellipse");
+  m_iconManager.setIcon(itemType->getPointItem()->getName(), "layout-point");
+  m_iconManager.setIcon(itemType->getLineItem()->getName(), "layout-drawline");
+  m_iconManager.setIcon(itemType->getPolygonItem()->getName(), "layout-polygon");
+  m_iconManager.setIcon(itemType->getSVGItem()->getName(), "layout-svg");
+
+  //text related items
+  m_iconManager.setIcon(itemType->getTextItem()->getName(), "layout-default-text");
+  m_iconManager.setIcon(itemType->getTitleItem()->getName(), "layout-title");
+  m_iconManager.setIcon(itemType->getImageItem()->getName(), "layout-image");
+
+  //group related items
+  m_iconManager.setIcon(itemType->getItemGroup()->getName(), "layout-group");
 }
 
 te::layout::ToolbarController::~ToolbarController()
 {
 
+}
+
+const te::layout::ItemIconManager& te::layout::ToolbarController::getIconManager() const
+{
+  return m_iconManager;
 }
 
 void te::layout::ToolbarController::onMapTriggered(QAction* action)
