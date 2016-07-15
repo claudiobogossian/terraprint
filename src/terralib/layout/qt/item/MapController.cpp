@@ -567,7 +567,8 @@ void te::layout::MapController::validateItem()
   this->getWarningManager()->clearWarnings();
 
   const Property& pLayers = this->getProperty("layers");
-  const std::list<te::map::AbstractLayerPtr>& currentLayerList = pLayers.getValue().toLayerList();
+  std::list<te::map::AbstractLayerPtr> currentLayerList;
+  currentLayerList = pLayers.getValue().toLayerList();
 
   if (currentLayerList.empty())
     return;
@@ -580,8 +581,11 @@ void te::layout::MapController::validateItem()
     m_warningManager->addWarning(TR_LAYOUT("Map Item Without Projection"));
   }
 
-  for each (te::map::AbstractLayerPtr layer in currentLayerList)
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = currentLayerList.begin(); it != currentLayerList.end(); it++)
   {
+
+    te::map::AbstractLayerPtr layer = (*it);
     int layerSrid = layer->getSRID();
 
     if (layerSrid <= 0)
