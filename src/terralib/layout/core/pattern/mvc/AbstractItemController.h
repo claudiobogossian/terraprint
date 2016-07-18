@@ -33,6 +33,7 @@
 #include "../../enum/AbstractType.h"
 #include "../observer/Observer.h"
 #include "terralib/geometry/Coord2D.h"
+#include "../../WarningManager.h"
 
 // STL
 #include <string>
@@ -128,9 +129,15 @@ namespace te
 
         virtual QRectF resize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
 
+        virtual void scaleItem(double widthFactor, double heightFactor);
+
         double getMarginResizePrecision();
 
         virtual QRectF calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
+
+        virtual WarningManager* getWarningManager();
+
+        virtual void validateItem();
         
       protected:
 
@@ -165,6 +172,7 @@ namespace te
         AbstractItemModel*                m_model; //!< The model of the view
         AbstractItemView*                 m_view; //!< The view
         double                            m_marginResizePrecision; //precision
+        WarningManager*                    m_warningManager;
     };
   }
 }

@@ -561,3 +561,41 @@ te::layout::AbstractProxyProject* te::layout::MapController::getAbstractProxyPro
   return project;
 }
 
+
+void te::layout::MapController::validateItem()
+{
+  this->getWarningManager()->clearWarnings();
+
+  const Property& pLayers = this->getProperty("layers");
+  std::list<te::map::AbstractLayerPtr> currentLayerList;
+  currentLayerList = pLayers.getValue().toLayerList();
+
+  if (currentLayerList.empty())
+    return;
+
+  const Property& pSrid = this->getProperty("srid");
+  int srid = pSrid.getValue().toInt();
+
+  if (srid <= 0)
+  {
+    m_warningManager->addWarning(TR_LAYOUT("Map Item Without Projection"));
+  }
+
+
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = currentLayerList.begin(); it != currentLayerList.end(); it++)
+  {
+
+    te::map::AbstractLayerPtr layer = (*it);
+    int layerSrid = layer->getSRID();
+
+    if (layerSrid <= 0)
+    {
+      std::string warningMSG = TR_LAYOUT("Layer ") + layer->getTitle() + TR_LAYOUT(" Without Projection");
+      m_warningManager->addWarning(warningMSG);
+    }
+
+  }
+
+
+
+}

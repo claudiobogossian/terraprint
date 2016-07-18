@@ -28,6 +28,7 @@
 #include "../../property/GenericVariant.h"
 #include "../../AbstractScene.h"
 #include "../../../qt/core/ItemUtils.h"
+#include "../../WarningManager.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -37,6 +38,7 @@ te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* mo
   , m_model(model)
   , m_view(0)
   , m_marginResizePrecision(2.)
+  , m_warningManager(new WarningManager())
 {
   if(m_model != 0)
   {
@@ -116,6 +118,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   {
    // updateChildren(); // update children size
   }
+
+  validateItem();
 }
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
@@ -376,52 +380,96 @@ QRectF te::layout::AbstractItemController::resize(te::layout::LayoutAlign grabbe
   {
     QGraphicsItem* qChild = *itChild;
     AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
-    const Property& pConnectItemPosition = childView->getController()->getProperty("connect_item_position");
-    //if (pConnectItemPosition.getValue().toBool() == false)
-    {
-      QRectF oldChildRect = qChild->boundingRect();
-      QPointF oldChildPos = qChild->mapToScene(QPoint(0,0));
-
-      double oldDistanceFromOriginX = oldChildPos.x() - oldItemPos.x();
-      double oldDistanceFromOriginY = oldChildPos.y() - oldItemPos.y();
-
-      double newDistanceFromOriginX = oldItemPos.x() + (oldDistanceFromOriginX * itemWidthFactor);
-      double newDistanceFromOriginY = oldItemPos.y() + (oldDistanceFromOriginY * itemHeightFactor);
-
-      double newChildWidth = oldChildRect.width() * itemWidthFactor;
-      double newChildHeight = oldChildRect.height() * itemHeightFactor;
-
-      QPointF newChildPoint(newDistanceFromOriginX, newDistanceFromOriginY);
-      newChildPoint = qChild->mapFromScene(newChildPoint);
-
-      QRectF newChildRect(newChildPoint.x(), newChildPoint.y(), newChildWidth, newChildHeight);
-
-      childView->getController()->updateBoundingRect(newChildRect);
-    }
-
+    childView->getController()->scaleItem(itemWidthFactor, itemHeightFactor);
+ 
     ++itChild;
-  }
-
-  if (qChildrenList.isEmpty() == false)
-  {
-    //ItemUtils::normalizeChildrenPosition(currentItem);
-   // newRect = currentItem->boundingRect();
   }
 
   //update the bounding box of the item
   updateBoundingRect(newRect);
 
-  QPointF newItemPos = currentItem->pos();
-  newRect = currentItem->boundingRect();
-
   //we normalize the box and position so the item bounding rect can start at 0,0
   if (qChildrenList.isEmpty() == false)
   {
     ItemUtils::normalizeChildrenPosition(currentItem);
+
     newRect = currentItem->boundingRect();
+    updateBoundingRect(newRect);
   }
 
+  //we normalize the parent
+  if (currentItem->parentItem() != 0)
+  {
+    QGraphicsItem* qParentItem = currentItem->parentItem();
+    AbstractItemView* parentView = dynamic_cast<AbstractItemView*>(qParentItem);
+
+    QRectF newParentRect = qParentItem->boundingRect();
+
+    ItemUtils::normalizeChildrenPosition(qParentItem);
+  }
+
+  newRect = currentItem->boundingRect();
+
   return newRect;
+}
+
+void te::layout::AbstractItemController::scaleItem(double widthFactor, double heightFactor)
+{
+  QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->m_view);
+
+  //if the item has children, we must resize them first
+  QList<QGraphicsItem*> qChildrenList = qItem->childItems();
+  if (qChildrenList.isEmpty() == false)
+  {
+    QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
+    while (itChild != qChildrenList.end())
+    {
+      QGraphicsItem* qChild = *itChild;
+      AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
+      childView->getController()->scaleItem(widthFactor, heightFactor);
+
+      ++itChild;
+    }
+
+    if (qChildrenList.isEmpty() == false)
+    {
+      ItemUtils::normalizeChildrenPosition(qItem);
+
+      QRectF newRect = qItem->boundingRect();
+      updateBoundingRect(newRect);
+    }
+
+    return;
+  }
+
+  QGraphicsItem* qParentItem = qItem->parentItem();
+
+  //if we have a parent, our CS must me revative to it.
+  //if we dont have a parent, we consider the scene
+  QPointF oldItemPos(0, 0);
+  if (qParentItem != 0)
+  {
+    oldItemPos = qParentItem->mapToScene(QPoint(0, 0));
+  }
+
+  QRectF oldChildRect = qItem->boundingRect();
+  QPointF oldChildPos = qItem->mapToScene(QPoint(0, 0));
+
+  double oldDistanceFromOriginX = oldChildPos.x() - oldItemPos.x();
+  double oldDistanceFromOriginY = oldChildPos.y() - oldItemPos.y();
+
+  double newDistanceFromOriginX = oldItemPos.x() + (oldDistanceFromOriginX * widthFactor);
+  double newDistanceFromOriginY = oldItemPos.y() + (oldDistanceFromOriginY * heightFactor);
+
+  double newChildWidth = oldChildRect.width() * widthFactor;
+  double newChildHeight = oldChildRect.height() * heightFactor;
+
+  QPointF newChildPoint(newDistanceFromOriginX, newDistanceFromOriginY);
+  newChildPoint = qItem->mapFromScene(newChildPoint);
+
+  QRectF newChildRect(newChildPoint.x(), newChildPoint.y(), newChildWidth, newChildHeight);
+
+  this->m_view->getController()->updateBoundingRect(newChildRect);
 }
 
 QRectF te::layout::AbstractItemController::calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)
@@ -563,4 +611,15 @@ void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
   props.addProperty(prop_height);
 
   setProperties(props);
+}
+
+
+te::layout::WarningManager* te::layout::AbstractItemController::getWarningManager()
+{
+  return m_warningManager;
+}
+
+void te::layout::AbstractItemController::validateItem()
+{
+
 }

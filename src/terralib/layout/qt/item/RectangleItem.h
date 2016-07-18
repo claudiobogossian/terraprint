@@ -73,9 +73,11 @@ namespace te
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
+
         virtual void drawRectangle(QPainter * painter);
         virtual void drawRoundedRectangle(QPainter * painter);
         virtual void drawSingleCornerTrimmedRectangle(QPainter * painter);
+
     };
   }
 }

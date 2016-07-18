@@ -58,7 +58,7 @@ namespace te
 
     public:
 
-      MapToolbarInside(MapToolbarController* controller, QObject* parent = 0);
+      MapToolbarInside(MapToolbarController* controller, QWidget* parent);
 
       virtual ~MapToolbarInside();
 
