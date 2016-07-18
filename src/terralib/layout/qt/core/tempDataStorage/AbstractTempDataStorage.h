@@ -58,6 +58,14 @@ namespace te
 
         virtual bool save() = 0;
 
+        /*
+          \brief Reading the properties of items that are in the scene.
+            The reading of the properties of the items must be made before the use of multithreading. 
+            One reason is that between the execution of the threads can have redraw and changes in Qt 
+            graphical components via main thread.
+        */
+        virtual void readProperties() = 0;
+
       protected:
 
         AbstractTempDataStorageInfo* m_info;

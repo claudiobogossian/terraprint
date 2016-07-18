@@ -34,6 +34,12 @@
 
 // STL
 #include <string>
+#include <memory>
+#include <vector>
+#include <map>
+
+// Boost
+#include <boost/thread.hpp>
 
 // Qt
 #include <QObject>
@@ -47,6 +53,7 @@ namespace te
     class AbstractTempDataStorageInfo;
     class EnumType;
     class Scene;
+    class AbstractTempDataStorage;
 
     /*!
       \brief Calls the factory to create a temp data storage of the specified type and update. 
@@ -65,9 +72,11 @@ namespace te
 
           \param info information about the temporary data
         */
-        TempDataStorageEditor(QUndoStack* undoStack, EnumType* dataStorageType, AbstractTempDataStorageInfo* info, bool asynchronous = false);
+        TempDataStorageEditor(QUndoStack* undoStack, EnumType* dataStorageType, AbstractTempDataStorageInfo* info, bool asynchronous = true);
 
         virtual ~TempDataStorageEditor();
+
+        void stop();
 
       signals:
 
@@ -81,18 +90,34 @@ namespace te
 
       protected:
 
-        virtual bool save();
+        virtual void save();
 
-        virtual bool update();
+        virtual void update();
 
-        virtual bool saveAsynchronous();
+        virtual void saveAsynchronous();
+
+        void runSave();
+
+        void done();
+
+        void wait(int millisec);
+
+        void verifySentinelThread();
+
+        void deleteAllDoneThreads();
 
       protected:
 
-        AbstractTempDataStorageInfo*  m_info;
-        QUndoStack*                   m_undoStack;
-        bool                          m_asynchronous;
-        EnumType*                     m_dataStorageType;
+        AbstractTempDataStorageInfo*                    m_info;
+        QUndoStack*                                     m_undoStack;
+        bool                                            m_asynchronous;
+        EnumType*                                       m_dataStorageType;
+        bool                                            m_requestIOEnterAccess;
+        boost::mutex                                    m_mutex; //!< A mutex to lock the access
+        std::map<std::string, boost::thread*>           m_threads;
+        std::vector<std::string>                        m_idsDone;
+        AbstractTempDataStorage*                        m_tempDataStorage;
+        boost::thread*                                  m_threadSentinel;
     };
   }
 }

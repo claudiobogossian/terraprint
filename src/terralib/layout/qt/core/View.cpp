@@ -896,13 +896,17 @@ void te::layout::View::changeMode( EnumType* newMode )
 void te::layout::View::hideEvent( QHideEvent * event )
 {
   QGraphicsView::hideEvent(event);
+  if (m_tempDataStorageEditor)
+  {
+    m_tempDataStorageEditor->stop();
+  }
   emit hideView();
 }
 
 void te::layout::View::closeEvent( QCloseEvent * event )
 {
   closeToolbar();
-
+  
   QGraphicsView::closeEvent(event);
   emit closeView();
 }

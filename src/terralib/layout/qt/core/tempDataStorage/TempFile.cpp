@@ -63,13 +63,9 @@ bool te::layout::TempFile::save()
 
   std::string path = tempFileInfo->getPath();
   Scene* scene = tempFileInfo->getScene();
-  PaperConfig* paperConfig = scene->getPaperConfig();
+  PaperConfig* paperConfig = scene->getPaperConfig();  
 
-  std::vector<te::layout::Properties> properties;
-  std::map< std::string, std::vector<std::string> > mapGroups;
-  scene->getItemsProperties(properties, mapGroups);
-
-  if (properties.empty())
+  if (m_properties.empty())
     return result;
 
   TemplateEditor editor(type, path);
@@ -78,8 +74,22 @@ bool te::layout::TempFile::save()
   if (!jtemplate)
     return result;
 
-  result = jtemplate->exportTemplate(*paperConfig, properties, mapGroups);
+  result = jtemplate->exportTemplate(*paperConfig, m_properties, m_mapGroups);
   
   return result;
+}
+
+void te::layout::TempFile::readProperties()
+{
+  TempFileInfo* tempFileInfo = dynamic_cast<TempFileInfo*>(m_info);
+  if (!tempFileInfo)
+  {
+    return;
+  }
+  
+  Scene* scene = tempFileInfo->getScene();
+  m_properties.clear();
+  m_mapGroups.clear();
+  scene->getItemsProperties(m_properties, m_mapGroups);
 }
 

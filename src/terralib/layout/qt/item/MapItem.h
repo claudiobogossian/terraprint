@@ -92,8 +92,6 @@ namespace te
         */ 
         virtual ~MapItem();
 
-        virtual void contextUpdated(const ContextObject& context);
-
         virtual bool changeCurrentTool(EnumType* tool);
 
         virtual bool removeCurrentTool();
@@ -173,8 +171,6 @@ namespace te
       protected:
 
         EnumType*                       m_currentEditionMode;
-        bool                            m_isPrinting;
-        bool                            m_useQImage;
         QPixmap                         m_screenCache;
         QPixmap                         m_screenDraft;
         te::gm::Point                   m_clickedPointMM;
