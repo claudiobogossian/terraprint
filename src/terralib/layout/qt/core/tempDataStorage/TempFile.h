@@ -53,8 +53,14 @@ namespace te
 
         virtual ~TempFile();
 
+        /*!
+          \brief Implemented from AbstractTempDataStorage
+        */
         virtual bool save();
 
+        /*!
+          \brief Implemented from AbstractTempDataStorage
+        */
         virtual void readProperties();
 
       protected:
