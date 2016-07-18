@@ -33,6 +33,7 @@
 #ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #endif
+#include "../core/ItemIconManager.h"
 
 // STL
 #include <string>
@@ -80,6 +81,8 @@ namespace te
 
       virtual void selectItems(QList<QGraphicsItem*> graphicsItems);
 
+      virtual void setIconManager(const ItemIconManager& iconManager);
+
     protected slots:
       
       virtual void onRemoveProperties(std::vector<std::string> names);
@@ -115,6 +118,7 @@ namespace te
       QList<QGraphicsItem*>   m_graphicsItems;
       Scene*                  m_scene;
       QMenu*                  m_menu;
+      ItemIconManager         m_iconManager;
     };
   }
 }

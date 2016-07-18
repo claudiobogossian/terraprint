@@ -33,7 +33,6 @@
 
 // TerraLib
 #include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/pattern/observer/Observer.h"
 #include "../core/Config.h"
 
 namespace te
@@ -50,7 +49,7 @@ namespace te
 
       \sa te::layout::AbstractItemModel, Observer
     */
-    class TELAYOUTEXPORT ScaleModel : public AbstractItemModel, public Observer
+    class TELAYOUTEXPORT ScaleModel : public AbstractItemModel
     {
       public:
 
@@ -63,11 +62,6 @@ namespace te
           \brief Destructor
         */
         virtual ~ScaleModel();
-
-        /*!
-        \brief This function is called by the subject every time its model is changed
-        */
-        virtual void update(const Subject* subject);
     };
   }
 }

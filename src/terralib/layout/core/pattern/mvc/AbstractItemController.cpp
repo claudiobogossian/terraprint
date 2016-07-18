@@ -27,6 +27,8 @@
 #include "../../property/SharedProperties.h"
 #include "../../property/GenericVariant.h"
 #include "../../AbstractScene.h"
+#include "../../../qt/core/ItemUtils.h"
+#include "../../WarningManager.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -36,6 +38,7 @@ te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* mo
   , m_model(model)
   , m_view(0)
   , m_marginResizePrecision(2.)
+  , m_warningManager(new WarningManager())
 {
   if(m_model != 0)
   {
@@ -113,14 +116,17 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   m_model->setProperties(propertiesCopy);
   if (hasGeometryChanged)
   {
-    updateChildren(); // update children size
+   // updateChildren(); // update children size
   }
+
+  validateItem();
 }
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
 {
-  Observer* observer = dynamic_cast<Observer*>(controller->getModel());
-  if(observer == 0)
+  //we try to attach to the controller
+  Observer* observer = dynamic_cast<Observer*>(controller);
+  if (observer == 0)
   {
     return;
   }
@@ -130,7 +136,7 @@ void te::layout::AbstractItemController::attach(te::layout::AbstractItemControll
 
 void te::layout::AbstractItemController::detach(AbstractItemController* controller)
 {
-  Observer* observer = dynamic_cast<Observer*>(controller->getModel());
+  Observer* observer = dynamic_cast<Observer*>(controller);
   if (observer == 0)
   {
     return;
@@ -348,22 +354,134 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
 
 QRectF te::layout::AbstractItemController::resize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)
 {
-  QRectF newRectSize = calculateResize(grabbedPoint, initialCoord, finalCoord);
-  updateBoundingRect(newRectSize);
-  
-  endResize();
-  return newRectSize;
+  if (initialCoord == finalCoord)
+  {
+    return QRectF();
+  }
+
+  AbstractItemView* currentView = getView();
+  QGraphicsItem* currentItem = dynamic_cast<QGraphicsItem*>(currentView);
+
+  QPointF oldItemPos = currentItem->mapToScene(QPoint(0, 0));
+  QRectF oldItemRec = currentItem->boundingRect();
+  QRectF newRect = calculateResize(grabbedPoint, initialCoord, finalCoord);
+
+  double oldItemWidth = oldItemRec.width();
+  double oldItemHeight = oldItemRec.height();
+
+  //calculates the porcentage of the new size in comparisson with the old size
+  double itemWidthFactor = newRect.width() / oldItemWidth;
+  double itemHeightFactor = newRect.height() / oldItemHeight;
+
+  //if the item has children, we must resize them first
+  QList<QGraphicsItem*> qChildrenList = currentItem->childItems();
+  QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
+  while(itChild != qChildrenList.end())
+  {
+    QGraphicsItem* qChild = *itChild;
+    AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
+    childView->getController()->scaleItem(itemWidthFactor, itemHeightFactor);
+ 
+    ++itChild;
+  }
+
+  //update the bounding box of the item
+  updateBoundingRect(newRect);
+
+  //we normalize the box and position so the item bounding rect can start at 0,0
+  if (qChildrenList.isEmpty() == false)
+  {
+    ItemUtils::normalizeChildrenPosition(currentItem);
+
+    newRect = currentItem->boundingRect();
+    updateBoundingRect(newRect);
+  }
+
+  //we normalize the parent
+  if (currentItem->parentItem() != 0)
+  {
+    QGraphicsItem* qParentItem = currentItem->parentItem();
+    AbstractItemView* parentView = dynamic_cast<AbstractItemView*>(qParentItem);
+
+    QRectF newParentRect = qParentItem->boundingRect();
+
+    ItemUtils::normalizeChildrenPosition(qParentItem);
+  }
+
+  newRect = currentItem->boundingRect();
+
+  return newRect;
+}
+
+void te::layout::AbstractItemController::scaleItem(double widthFactor, double heightFactor)
+{
+  QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->m_view);
+
+  //if the item has children, we must resize them first
+  QList<QGraphicsItem*> qChildrenList = qItem->childItems();
+  if (qChildrenList.isEmpty() == false)
+  {
+    QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
+    while (itChild != qChildrenList.end())
+    {
+      QGraphicsItem* qChild = *itChild;
+      AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
+      childView->getController()->scaleItem(widthFactor, heightFactor);
+
+      ++itChild;
+    }
+
+    if (qChildrenList.isEmpty() == false)
+    {
+      ItemUtils::normalizeChildrenPosition(qItem);
+
+      QRectF newRect = qItem->boundingRect();
+      updateBoundingRect(newRect);
+    }
+
+    return;
+  }
+
+  QGraphicsItem* qParentItem = qItem->parentItem();
+
+  //if we have a parent, our CS must me revative to it.
+  //if we dont have a parent, we consider the scene
+  QPointF oldItemPos(0, 0);
+  if (qParentItem != 0)
+  {
+    oldItemPos = qParentItem->mapToScene(QPoint(0, 0));
+  }
+
+  QRectF oldChildRect = qItem->boundingRect();
+  QPointF oldChildPos = qItem->mapToScene(QPoint(0, 0));
+
+  double oldDistanceFromOriginX = oldChildPos.x() - oldItemPos.x();
+  double oldDistanceFromOriginY = oldChildPos.y() - oldItemPos.y();
+
+  double newDistanceFromOriginX = oldItemPos.x() + (oldDistanceFromOriginX * widthFactor);
+  double newDistanceFromOriginY = oldItemPos.y() + (oldDistanceFromOriginY * heightFactor);
+
+  double newChildWidth = oldChildRect.width() * widthFactor;
+  double newChildHeight = oldChildRect.height() * heightFactor;
+
+  QPointF newChildPoint(newDistanceFromOriginX, newDistanceFromOriginY);
+  newChildPoint = qItem->mapFromScene(newChildPoint);
+
+  QRectF newChildRect(newChildPoint.x(), newChildPoint.y(), newChildWidth, newChildHeight);
+
+  this->m_view->getController()->updateBoundingRect(newChildRect);
 }
 
 QRectF te::layout::AbstractItemController::calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)
 {
-  te::gm::Envelope box = m_model->getBoundingRect();
+  AbstractItemView* currentView = getView();
+  QGraphicsItem* currentItem = dynamic_cast<QGraphicsItem*>(currentView);
 
-  QRectF oldRect(0, 0, box.getWidth(), box.getHeight());
+  QRectF oldRect = currentItem->boundingRect();
   QRectF resizeRect = oldRect;
 
-  double width = getProperty("width").getValue().toDouble();
-  double height = getProperty("height").getValue().toDouble();
+  double width = oldRect.width();
+  double height = oldRect.height();
   bool keepAspect = getProperty("keep_aspect").getValue().toBool();
   double factor = width / height;
   
@@ -495,103 +613,13 @@ void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
   setProperties(props);
 }
 
-void te::layout::AbstractItemController::updateChildSize(AbstractItemView* item)
+
+te::layout::WarningManager* te::layout::AbstractItemController::getWarningManager()
 {
-  if (!m_spaceBetweenParentChild.contains(item))
-  {
-    return;
-  }
-
-  QSize childSpace = m_spaceBetweenParentChild[item];
-
-  double currentWidth = getProperty("width").getValue().toDouble();
-  double currentHeight = getProperty("height").getValue().toDouble();
-
-  double width = currentWidth - childSpace.width();
-  double height = currentHeight - childSpace.height();
-
-  if (width < m_marginResizePrecision || height < m_marginResizePrecision)
-  {
-    return;
-  }
-
-  //update properties
-  item->getController()->resized(width, height);
-  item->prepareGeometryChange(); //update childrenBoundingRect
+  return m_warningManager;
 }
 
-void te::layout::AbstractItemController::beginResize()
+void te::layout::AbstractItemController::validateItem()
 {
-  m_spaceBetweenParentChild.clear();
 
-  AbstractItemView* abstractView = getView();
-  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractView);
-  if (!item)
-  {
-    return;
-  }
-
-  QList<QGraphicsItem*> children = item->childItems();
-  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
-  {
-    AbstractItemView* currentItem = dynamic_cast<AbstractItemView*>(*it);
-    if (currentItem)
-    {
-      if (currentItem->getController()->getProperty("resizable").getValue().toBool())
-      {
-        QRectF boundRect = (*it)->boundingRect();
-        double width = item->childrenBoundingRect().width() - boundRect.width();
-        double height = item->childrenBoundingRect().height() - boundRect.height();
-        m_spaceBetweenParentChild[currentItem] = QSize(width, height);
-      }
-    }
-  }
 }
-
-void te::layout::AbstractItemController::endResize()
-{
-  AbstractItemView* abstractView = getView();
-  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractView);
-  if (!item)
-  {
-    return;
-  }
-
-  te::gm::Envelope box = m_model->getBoundingRect();
-  QRectF rect(0, 0, box.getWidth(), box.getHeight());
-
-  QRectF childrenBoundRect = item->childrenBoundingRect();
-  if (rect != childrenBoundRect)
-  {
-    updateChildren();
-  }
-
-  if (!m_spaceBetweenParentChild.isEmpty())
-  {
-    item->update();
-  }
-
-  m_spaceBetweenParentChild.clear();
-}
-
-
-void te::layout::AbstractItemController::updateChildren()
-{
-  AbstractItemView* abstractView = getView();
-  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractView);
-  if (!item)
-  {
-    return;
-  }
-
-  QList<QGraphicsItem*> children = item->childItems();
-  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
-  {
-    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
-    if (item)
-    {
-      updateChildSize(item);
-    }
-  }
-}
-

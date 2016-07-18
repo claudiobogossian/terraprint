@@ -33,7 +33,6 @@
 
 // TerraLib
 #include "../core/pattern/mvc/AbstractItemModel.h"
-#include "../core/pattern/observer/Observer.h"
 #include "../core/Config.h"
 
 namespace te
@@ -50,7 +49,7 @@ namespace te
 
       \sa te::layout::AbstractItemModel
     */
-    class TELAYOUTEXPORT LegendModel : public AbstractItemModel, public Observer
+    class TELAYOUTEXPORT LegendModel : public AbstractItemModel
     {
       public:
 
@@ -63,8 +62,6 @@ namespace te
           \brief Destructor
         */ 
         virtual ~LegendModel();
-
-        virtual void update(const Subject* subject);
     };
   }
 }

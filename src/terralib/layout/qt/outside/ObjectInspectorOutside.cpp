@@ -54,29 +54,32 @@ te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, Abstrac
   , m_scene(scene)
   , m_menu(0)
 {
-  m_treeWidget = new QTreeWidget(this);
-
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   te::gm::Envelope box = abstractModel->getBox();
   setBaseSize(box.getWidth(), box.getHeight());
   setVisible(false);
   setWindowTitle(tr("Object Inspector"));
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  
-  QVBoxLayout* layout = new QVBoxLayout(this);
-  layout->setMargin(0);
+
+  QGridLayout* layout = new QGridLayout(this);
+  m_treeWidget = new QTreeWidget(this);
   layout->addWidget(m_treeWidget);
+  layout->setContentsMargins(0, 0, 0, 0);
   
-  QGroupBox* groupBox = new QGroupBox;
-  groupBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  groupBox->setLayout(layout);
+  //QVBoxLayout* layout = new QVBoxLayout(this);
+  //layout->setMargin(0);
+  //layout->addWidget(m_treeWidget);
+  //
+  //QGroupBox* groupBox = new QGroupBox;
+  //groupBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  //groupBox->setLayout(layout);
 
-  QVBoxLayout* layoutAll = new QVBoxLayout(this);
-  layoutAll->setMargin(0);
+  //QVBoxLayout* layoutAll = new QVBoxLayout(this);
+  //layoutAll->setMargin(0);
 
-  layoutAll->addWidget(groupBox);
+  //layoutAll->addWidget(groupBox);
 
-  setLayout(layoutAll);
+  //setLayout(layoutAll);
 
   QStringList headerLabels;
   headerLabels.append(tr("Name"));
@@ -150,6 +153,11 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
     parentList.append(qParentTypeName);
 
     QTreeWidgetItem* parentTreeItem = new QTreeWidgetItem(parentList);
+    QString qIconName = m_iconManager.getIconNameAsQString(absParentItem->getController()->getProperties().getTypeObj()->getName());
+    if (qIconName.isEmpty() == false)
+    {
+      parentTreeItem->setIcon(1, QIcon::fromTheme(qIconName));
+    }
 
     //we just look into the children if the parent is a GroupItem
     if (parentTypeName == groupType->getItemGroup()->getName())
@@ -175,6 +183,13 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
         childList.append(qChildTypeName);
 
         QTreeWidgetItem* childTreeItem = new QTreeWidgetItem(childList);
+        
+        QString qIconName = m_iconManager.getIconNameAsQString(absChildItem->getController()->getProperties().getTypeObj()->getName());
+        if (qIconName.isEmpty() == false)
+        {
+          childTreeItem->setIcon(1, QIcon::fromTheme(qIconName));
+        }
+        
         parentTreeItem->addChild(childTreeItem);
       }
     }
@@ -184,6 +199,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
   m_treeWidget->sortItems(0, Qt::AscendingOrder);
   m_treeWidget->expandAll();
+  m_treeWidget->adjustSize();
 }
 
 void te::layout::ObjectInspectorOutside::onRemoveProperties( std::vector<std::string> names )
@@ -227,6 +243,11 @@ void te::layout::ObjectInspectorOutside::selectItems( QList<QGraphicsItem*> grap
   }
 
   m_isChangingSelection = false;
+}
+
+void te::layout::ObjectInspectorOutside::setIconManager(const te::layout::ItemIconManager& iconManager)
+{
+  m_iconManager = iconManager;
 }
 
 void te::layout::ObjectInspectorOutside::itemSelectionChanged()

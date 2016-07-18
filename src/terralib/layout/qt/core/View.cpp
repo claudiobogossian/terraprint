@@ -47,6 +47,8 @@
 #include "../inside/ToolbarItemInside.h"
 #include "../inside/DialogItemToolbar.h"
 #include "../../core/property/SharedProperties.h"
+#include "tempDataStorage/TempDataStorageEditor.h"
+#include "tempDataStorage/TempFileInfo.h"
 
 // Qt
 #include <QMouseEvent>
@@ -65,10 +67,11 @@
 #include <QSize>
 #include <QScrollBar>
 #include <QLayout>
+#include <QDir>
+#include <QString>
 
+// STL
 #include <memory>
-
-
 
 te::layout::View::View( QWidget* widget) : 
   QGraphicsView(new QGraphicsScene, widget),
@@ -88,9 +91,9 @@ te::layout::View::View( QWidget* widget) :
   m_midButtonClicked(false),
   m_showContextMenu(true),
   m_clipboard(QApplication::clipboard()),
-  m_cutObject(false)
+  m_cutObject(false),
+  m_tempDataStorageEditor(0)
 {
-
   setDragMode(RubberBandDrag);
 
   m_horizontalRuler = new HorizontalRuler;
@@ -156,11 +159,14 @@ te::layout::View::~View()
     m_horizontalRuler = 0;
   }
   
+  if (m_tempDataStorageEditor)
+  {
+    delete m_tempDataStorageEditor;
+    m_tempDataStorageEditor = 0;
+  }
+
   m_clipboard->clear();
 }
-
-
-
 
 void te::layout::View::mousePressEvent( QMouseEvent * event )
 {
@@ -750,6 +756,8 @@ void te::layout::View::config()
   //scrollbars
   connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
   connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
+
+  configTempFileDataStorage(); // init temporary file data storage
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -888,13 +896,17 @@ void te::layout::View::changeMode( EnumType* newMode )
 void te::layout::View::hideEvent( QHideEvent * event )
 {
   QGraphicsView::hideEvent(event);
+  if (m_tempDataStorageEditor)
+  {
+    m_tempDataStorageEditor->stop();
+  }
   emit hideView();
 }
 
 void te::layout::View::closeEvent( QCloseEvent * event )
 {
   closeToolbar();
-
+  
   QGraphicsView::closeEvent(event);
   emit closeView();
 }
@@ -1660,5 +1672,45 @@ void te::layout::View::onScrollBarValueChanged(int value)
 void te::layout::View::onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> itemList)
 {
   emit showDialogWindow(type, itemList);
+}
+
+void te::layout::View::configTempFileDataStorage()
+{
+  Scene* scene = getScene();
+  
+  // User folder path
+  // Whether a directory separator is added to the end or not, depends on the operating system.
+  QString newPath = QDir(QDir::tempPath()).filePath("TerraPrint"); 
+
+  QDir dir(newPath);
+  if (!dir.exists())
+  {
+    emit aboutToPerformIO();
+    bool result = dir.mkpath(newPath); // create a new path or directory
+    emit endedPerformingIO();
+    if (!result)
+    {
+      return;
+    }
+  }  
+
+  QString fullNewPath = newPath + "/~layoutTemp.xml";
+
+  std::string path = ItemUtils::convert2StdString(fullNewPath);
+  EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
+  TempFileInfo* info = new TempFileInfo(scene, path);
+  m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+
+  connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
+  connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
+}
+void te::layout::View::onRequestIOEnterAccessTempDataStorage()
+{
+  emit aboutToPerformIO();
+}
+
+void te::layout::View::onRequestIOEndAccessTempDataStorage()
+{
+  emit endedPerformingIO();
 }
 

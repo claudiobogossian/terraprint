@@ -102,6 +102,8 @@ file(GLOB TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src
 file(GLOB TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/*.cpp)
 file(GLOB TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/inside/*.h)
+file(GLOB TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/tempDataStorage/*.cpp)
+file(GLOB TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/tempDataStorage/*.h)
 file(GLOB TERRALIB_LAYOUT_UI_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/ui/*.ui)
 
 # datasource
@@ -145,6 +147,8 @@ source_group("Source Files\\qt\\core\\tools"  FILES ${TERRALIB_LAYOUT_QT_TOOLS_S
 source_group("Header Files\\qt\\core\\tools"  FILES ${TERRALIB_LAYOUT_QT_TOOLS_HDR_FILES})
 source_group("Source Files\\qt\\core\\propertybrowser"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_SRC_FILES})
 source_group("Header Files\\qt\\core\\propertybrowser"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES})
+source_group("Source Files\\qt\\core\\tempDataStorage" FILES ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_SRC_FILES})
+source_group("Header Files\\qt\\core\\tempDataStorage" FILES ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_HDR_FILES})
 source_group("Source Files\\qt\\item"  FILES ${TERRALIB_LAYOUT_QT_ITEM_SRC_FILES})
 source_group("Header Files\\qt\\item"  FILES ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES})
 source_group("Source Files\\qt\\outside"  FILES ${TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES})
@@ -193,13 +197,15 @@ set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_OUTSIDE_HDR_FILES}
            ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES}
+		   ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_HDR_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_HDR_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_OUTSIDE_HDR_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
-       ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES}
+		   ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
 
 if(Qt5_FOUND)
@@ -238,6 +244,7 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/TextGridSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/PrintScene.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapLayerChoiceOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/MapLocationSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/SVGDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/VariantPropertiesBrowser.h
@@ -275,6 +282,7 @@ else()
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MenuPrincipal.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/PropertiesCentralController.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/BuildGraphicsItem.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/tempDataStorage/TempDataStorageEditor.h
                                  )
 
   QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)

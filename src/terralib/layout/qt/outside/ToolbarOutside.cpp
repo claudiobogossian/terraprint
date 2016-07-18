@@ -241,26 +241,40 @@ void te::layout::ToolbarOutside::createToolbar()
 
 QToolButton* te::layout::ToolbarOutside::createMapToolButton()
 {
+  if (m_controller == 0)
+  {
+    return 0;
+  }
+
+  ToolbarController* toolbarController = dynamic_cast<ToolbarController*>(m_controller);
+  if (toolbarController == 0)
+  {
+    return 0;
+  }
+
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+  const ItemIconManager& iconManager = toolbarController->getIconManager();
+
   QToolButton *btnMap = createToolButton(tr("Map"), tr("Map Objects"), "");
 
   QMenu* menu = new QMenu(btnMap);
 
-  QAction* actionDefaultMenu = createAction(tr("Default Map Object"), m_actionMapDefault, "layout-default-map", "", menu);
+  QAction* actionDefaultMenu = createAction(tr("Default Map Object"), m_actionMapDefault, iconManager.getIconNameAsQString(itemType->getMapCompositionItem()->getName()), "", menu);
   menu->addAction(actionDefaultMenu);
   
-  QAction* actionLegend = createAction(tr("Default Legend"), m_actionLegendDefault, "layout-default-legend", "", menu);
+  QAction* actionLegend = createAction(tr("Default Legend"), m_actionLegendDefault, iconManager.getIconNameAsQString(itemType->getLegendItem()->getName()), "", menu);
   menu->addAction(actionLegend);
 
-  QAction* actionScale = createAction(tr("Scale Object"), m_actionScale, "layout-scale", "", menu);
+  QAction* actionScale = createAction(tr("Scale Object"), m_actionScale, iconManager.getIconNameAsQString(itemType->getScaleItem()->getName()), "", menu);
   menu->addAction(actionScale);
 
-  QAction* actionNorth = createAction(tr("North Object"), m_actionNorth, "layout-north", "", menu);
+  QAction* actionNorth = createAction(tr("North Object"), m_actionNorth, iconManager.getIconNameAsQString(itemType->getNorthItem()->getName()), "", menu);
   menu->addAction(actionNorth);
 
-  QAction* actionThreeNorth = createAction(tr("Three North Object"), m_actionThreeNorth, "layout-three-north", "", menu);
+  QAction* actionThreeNorth = createAction(tr("Three North Object"), m_actionThreeNorth, iconManager.getIconNameAsQString(itemType->getNorthItem()->getName()), "", menu);
   menu->addAction(actionThreeNorth);
 
-  QAction* actionMapLocation = createAction(tr("Map Location Object"), m_actionMapLocation, "layout-map-location", "", menu);
+  QAction* actionMapLocation = createAction(tr("Map Location Object"), m_actionMapLocation, iconManager.getIconNameAsQString(itemType->getMapLocationItem()->getName()), "", menu);
   menu->addAction(actionMapLocation);
   
   btnMap->setMenu(menu);
@@ -318,29 +332,43 @@ QToolButton* te::layout::ToolbarOutside::createMapToolsToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createGeometryToolButton()
 {
+  if (m_controller == 0)
+  {
+    return 0;
+  }
+
+  ToolbarController* toolbarController = dynamic_cast<ToolbarController*>(m_controller);
+  if (toolbarController == 0)
+  {
+    return 0;
+  }
+
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+  const ItemIconManager& iconManager = toolbarController->getIconManager();
+
   QToolButton *btnGeometry = createToolButton(tr("Geometry Tools"), tr("Geometries Objects"), "");
 
   QMenu* menu = new QMenu(btnGeometry);
 
-  QAction* actionRectagle = createAction(tr("Rectangle Object"), m_actionRectangle, "layout-square", "", menu);
+  QAction* actionRectagle = createAction(tr("Rectangle Object"), m_actionRectangle, iconManager.getIconNameAsQString(itemType->getRectangleItem()->getName()), "", menu);
   menu->addAction(actionRectagle);
 
-  QAction* actionArrow = createAction(tr("Arrow Object"), m_actionArrow, "layout-arrow", "", menu);
+  QAction* actionArrow = createAction(tr("Arrow Object"), m_actionArrow, iconManager.getIconNameAsQString(itemType->getArrowItem()->getName()), "", menu);
   menu->addAction(actionArrow);
 
-  QAction* actionEllipse = createAction(tr("Ellipse Object"), m_actionEllipse, "layout-ellipse", "", menu);
+  QAction* actionEllipse = createAction(tr("Ellipse Object"), m_actionEllipse, iconManager.getIconNameAsQString(itemType->getEllipseItem()->getName()), "", menu);
   menu->addAction(actionEllipse);
 
-  QAction* actionPoint = createAction(tr("Point Object"), m_actionPoint, "layout-point", "", menu);
+  QAction* actionPoint = createAction(tr("Point Object"), m_actionPoint, iconManager.getIconNameAsQString(itemType->getPointItem()->getName()), "", menu);
   menu->addAction(actionPoint);
 
-  QAction* actionLine = createAction(tr("Line Object"), m_actionLine, "layout-drawline", "", menu);
+  QAction* actionLine = createAction(tr("Line Object"), m_actionLine, iconManager.getIconNameAsQString(itemType->getLineItem()->getName()), "", menu);
   menu->addAction(actionLine);
 
-  QAction* actionPolygon = createAction(tr("Polygon Object"), m_actionPolygon, "layout-polygon", "", menu);
+  QAction* actionPolygon = createAction(tr("Polygon Object"), m_actionPolygon, iconManager.getIconNameAsQString(itemType->getPolygonItem()->getName()), "", menu);
   menu->addAction(actionPolygon);
 
-  QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, "layout-svg", "", menu);
+  QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, iconManager.getIconNameAsQString(itemType->getSVGItem()->getName()), "", menu);
   menu->addAction(actionSVG);
 
   btnGeometry->setMenu(menu);
@@ -401,11 +429,25 @@ QToolButton* te::layout::ToolbarOutside::createArrowCursorButton()
 
 QToolButton* te::layout::ToolbarOutside::createItemTools()
 {
+  if (m_controller == 0)
+  {
+    return 0;
+  }
+
+  ToolbarController* toolbarController = dynamic_cast<ToolbarController*>(m_controller);
+  if (toolbarController == 0)
+  {
+    return 0;
+  }
+
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+  const ItemIconManager& iconManager = toolbarController->getIconManager();
+
   QToolButton *btnTools = createToolButton(tr("Item Tools"), tr("Item Tools"), "");
 
   QMenu* menu = new QMenu(btnTools);
 
-  QAction* actionGroup = createAction(tr("Group"), m_actionGroup, "layout-group", "", menu);
+  QAction* actionGroup = createAction(tr("Group"), m_actionGroup, iconManager.getIconNameAsQString(itemType->getItemGroup()->getName()), "", menu);
   menu->addAction(actionGroup);
 
   QAction* actionUngroup = createAction(tr("Ungroup"), m_actionUngroup, "layout-ungroup", "", menu);
@@ -531,20 +573,35 @@ QToolButton* te::layout::ToolbarOutside::createRecomposeToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createTextToolButton()
 {
+  if (m_controller == 0)
+  {
+    return 0;
+  }
+
+  ToolbarController* toolbarController = dynamic_cast<ToolbarController*>(m_controller);
+  if (toolbarController == 0)
+  {
+    return 0;
+  }
+
+  EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
+  const ItemIconManager& iconManager = toolbarController->getIconManager();
+
+
   QToolButton *btn = createToolButton(tr("Text Tools"), tr("Text Tools"), "");
 
   QMenu* menu = new QMenu(btn);
 
-  QAction* actionTxtDefault = createAction(tr("Default Text Object"), m_actionTextDefault, "layout-default-text", "", menu);
+  QAction* actionTxtDefault = createAction(tr("Default Text Object"), m_actionTextDefault, iconManager.getIconNameAsQString(itemType->getTextItem()->getName()), "", menu);
   menu->addAction(actionTxtDefault);
   
-  QAction* actionTitle = createAction(tr("Title Object"), m_actionTitle, "layout-title", "", menu);
+  QAction* actionTitle = createAction(tr("Title Object"), m_actionTitle, iconManager.getIconNameAsQString(itemType->getTitleItem()->getName()), "", menu);
   menu->addAction(actionTitle);
 
   /*QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
   menu->addAction(actionStringGrid);*/
 
-  QAction* actionImage = createAction(tr("Image Object"), m_actionImage, "layout-image", "", menu);
+  QAction* actionImage = createAction(tr("Image Object"), m_actionImage, iconManager.getIconNameAsQString(itemType->getImageItem()->getName()), "", menu);
   menu->addAction(actionImage);
 
   /*QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);

@@ -48,7 +48,9 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
 
 te::layout::MapCompositionItem::~MapCompositionItem()
 {
-
+  delete m_mapItem;
+  delete m_planarGridItem;
+  delete m_geodesicGridItem;
 }
 
 te::layout::AbstractItemView* te::layout::MapCompositionItem::getMapItem()
@@ -135,8 +137,10 @@ void te::layout::MapCompositionItem::initItems()
   geodesicProperties.addProperty(pAssociate);
   geodesicProperties.addProperty(pVisible);
 
-
   m_geodesicGridItem->getController()->setProperties(geodesicProperties);
+
+  this->prepareGeometryChange();
+  ItemUtils::normalizeChildrenPosition(this);
 }
 
 void te::layout::MapCompositionItem::setEditionMode(bool editionMode)
@@ -163,6 +167,8 @@ bool te::layout::MapCompositionItem::changeCurrentTool(EnumType* tool)
 QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  QVariant variant = ItemGroup::itemChange(change, value);
 
   if (change == QGraphicsItem::ItemChildAddedChange)
   {
@@ -214,6 +220,6 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   {
     initItems();
   }
-  return ItemGroup::itemChange(change, value);
+  return variant;
 }
 

@@ -36,7 +36,10 @@
 #include <QDialog>
 #include <QString>
 
-namespace Ui { class MapSettings; }
+namespace Ui { class MapSettings;
+               //class MapLayerChoice;
+}
+
 
 namespace te
 {
@@ -44,6 +47,7 @@ namespace te
   {
     class AbstractOutsideController;
     class MapLayerChoiceOutside;
+    class MapLayerChoice;
 
     class TELAYOUTEXPORT MapSettingsOutside : public QDialog, public AbstractOutsideView
     {
@@ -59,11 +63,9 @@ namespace te
           \brief Load layers in double widget.
         */
         virtual void init();
-        
+
         virtual void load();
         
-        virtual void loadScaleCombobox();
-
         virtual void setPosition(const double& x, const double& y);
 
         virtual te::gm::Coord2D getPosition();
@@ -78,24 +80,16 @@ namespace te
                         
       protected slots:
 
-        void onOkPushButtonPressed();
-
         void onCancelPushButtonPressed();
 
-        void on_lneWidth_editingFinished();
-
-        void on_lneHeight_editingFinished();
-
-        void on_ckbFixedScale_clicked();
-
-        virtual void on_cmbUnit_currentIndexChanged(const QString & text);
-
-        virtual void on_cmbScale_currentIndexChanged(const QString & text);
+        void updateWidgetProperty(Property prop);
+        
 
         
       private:
 
         std::auto_ptr<Ui::MapSettings> m_ui;
+        //std::auto_ptr<Ui::MapLayerChoice> ui_MapLayerChoice;
         std::auto_ptr<MapLayerChoiceOutside> m_widget;
         void initDouble(QWidget* widget, std::string nameComponent);
         void initCombo(QWidget* widget, std::string nameComponent);
@@ -103,6 +97,7 @@ namespace te
         double mm2cm(double mmSize);
         double cm2mm(double cmSize);
         std::string formatScaleValue(std::string inputValue);
+        MapLayerChoiceOutside *m_mapChoice;
         
     };
   }    

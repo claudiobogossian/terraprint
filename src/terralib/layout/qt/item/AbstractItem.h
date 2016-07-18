@@ -58,6 +58,7 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QSize>
 #include <QMap>
+#include <QToolTip>
 
 class QWidget;
 
@@ -199,6 +200,8 @@ namespace te
 
         virtual bool checkTouchesCorner( const double& x, const double& y );
 
+        virtual void checkTouchesWarningAlert(const double& x, const double& y/*, QPainter * painter*/);
+
         /*!
           \brief Reimplemented from QGraphicsItem
          */
@@ -221,6 +224,9 @@ namespace te
         virtual AbstractScene* getScene();
 
         virtual QRectF qRectToQPolygonMap(QRectF rect);
+        
+        virtual void drawWarningAlert(QPainter * painter);
+
                 
      protected:
 
@@ -233,6 +239,8 @@ namespace te
         te::layout::ItemAction            m_currentAction;
         double                            m_marginResizePrecision; //precision
         double                            m_selectionPointSize;
+        QPolygonF                         m_polygonWarning;
+        bool                              m_isPrinting;
     };
 
     template <class T>
@@ -243,6 +251,7 @@ namespace te
       , m_currentAction(te::layout::NO_ACTION)
       , m_marginResizePrecision(5.)
       , m_selectionPointSize(10.)
+      , m_isPrinting(false)
     {
       T::setFlags(QGraphicsItem::ItemIsMovable
         | QGraphicsItem::ItemIsSelectable
@@ -251,8 +260,6 @@ namespace te
 
       //If enabled is true, this item will accept hover events
       T::setAcceptHoverEvents(true);
-
-      m_rect = boundingRect();
     }
 
     template <class T>
@@ -287,7 +294,25 @@ namespace te
     template <class T>
     inline void te::layout::AbstractItem<T>::contextUpdated(const ContextObject& context)
     {
+      EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
+
+      m_isPrinting = false;
+
+      if (context.getCurrentMode() == enumMode->getModePrinterPreview())
+      {
+        m_isPrinting = true;
+        return;
+      }
+      else if (context.getCurrentMode() == enumMode->getModePrinter())
+      {
+        m_isPrinting = true;
+
+        return;
+      }
+
+      this->update();
     }
+
 
     template <class T>
     inline double te::layout::AbstractItem<T>::getItemRotation() const
@@ -345,6 +370,7 @@ namespace te
       {
         drawItemResized(painter, option, widget);
         drawFrame(painter);
+        drawSelection(painter);
         return;
       }
 
@@ -355,7 +381,11 @@ namespace te
 
       //Draws the item
       drawItem(painter, option, widget);
-
+      if (m_controller->getWarningManager()->hasWarning() && (m_isPrinting == false))
+      {
+        drawWarningAlert(painter);
+      }
+      
       //Draws the frame
       drawFrame(painter);
 
@@ -745,7 +775,141 @@ namespace te
       {
         checkTouchesCorner(event->pos().x(), event->pos().y());
       }
+      checkTouchesWarningAlert(event->pos().x(), event->pos().y());
       T::hoverMoveEvent(event);
+    }
+
+    template <class T>
+    inline void te::layout::AbstractItem<T>::drawWarningAlert(QPainter * painter)
+    {
+      if (!painter)
+      {
+        return;
+      }
+
+      painter->save();
+
+      QColor qFillColor(255, 0, 0);
+      QColor qContourColor(255, 0, 0);
+
+      QBrush brush(qFillColor);
+      QPen pen(qContourColor, 0.5, Qt::SolidLine);
+
+      painter->setPen(pen);
+      painter->setBrush(brush);
+
+      //QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+      QRectF rectAdjusted = boundingRect();
+
+      QTransform t;
+      painter->setTransform(t);
+
+      QRectF convertedRect = qRectToQPolygonMap(rectAdjusted);
+
+      QRectF bRect = convertedRect;
+
+      qreal adj = std::ceil(0.5 / 2.);
+      convertedRect = bRect.adjusted(adj, adj, -adj, -adj);
+
+      QPointF p1 = QPointF(convertedRect.topRight().x(), convertedRect.topRight().y());
+      QPointF p2 = QPointF(convertedRect.topRight().x() - 40, convertedRect.topRight().y());
+      QPointF p3 = QPointF(convertedRect.topRight().x(), convertedRect.topRight().y() + 40);
+
+      QPolygonF warningPolygon;
+
+      warningPolygon << p1 << p2 << p3 << p1;
+
+      m_polygonWarning = warningPolygon;
+
+      //draws the item
+      painter->drawPolygon(warningPolygon);
+
+      QColor qContourColorRed(0, 0, 0);
+      pen.setStyle(Qt::DashLine);
+      pen.setColor(qContourColorRed);
+      painter->setPen(pen);
+
+      painter->drawPolygon(warningPolygon);
+
+
+      QString warningString = "!";
+
+      qFillColor.setRed(0);
+      qFillColor.setGreen(0);
+      qFillColor.setBlue(0);
+
+      qContourColor.setRed(0);
+      qContourColor.setGreen(0);
+      qContourColor.setBlue(0);
+
+      brush.setColor(qFillColor);
+      pen.setColor(qContourColor);
+
+      painter->setPen(pen);
+      painter->setBrush(brush);
+
+      QFont font;
+      font.setPointSize(60);
+      font.setFamily("Arial");
+
+
+      double adjX = warningPolygon.boundingRect().center().x() + 6;
+      double adjY = warningPolygon.boundingRect().center().y() - 12;
+
+      QPointF txtPoint(adjX, adjY);
+
+      this->drawText(txtPoint, painter, font, "!", 180);
+
+      painter->restore();
+
+    }
+
+    
+    template <class T>
+    inline void te::layout::AbstractItem<T>::checkTouchesWarningAlert(const double& x, const double& y/*, QPainter * painter*/)
+    {
+      QRectF rectAdjusted = boundingRect();
+      QRectF remapRect = qRectToQPolygonMap(rectAdjusted);
+
+      QGraphicsScene* scene = this->scene();
+      QGraphicsView* view = scene->views().first();
+
+
+      QPointF mousePoint(x, y);
+
+      QPointF convPoint = this->mapToScene(mousePoint);
+      QPointF remapedPoint = view->mapFromScene(convPoint);
+
+      QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
+
+
+      QPoint tipPoint = QCursor::pos();
+
+      std::vector<std::string> warningVect = m_controller->getWarningManager()->getWarnings();
+
+      std::string warningsMsg = "";
+
+      for (int i = 0; i < warningVect.size(); i++)
+      {
+        if (i == 0)
+        {
+          warningsMsg = warningsMsg + warningVect.at(i);
+        }
+        else
+        {
+          warningsMsg = warningsMsg + "\n" + warningVect.at(i);
+        }
+        
+      }
+
+      QString qWarningsMsg = ItemUtils::convert2QString(warningsMsg);
+
+      
+      if (m_polygonWarning.containsPoint(checkPoint, Qt::OddEvenFill))
+      {
+        QToolTip::showText(tipPoint, qWarningsMsg, view);
+      }
+
     }
 
     template <class T>
@@ -756,10 +920,10 @@ namespace te
 
       QRectF remapRect = qRectToQPolygonMap(bRect);
 
-      QPointF ll = remapRect.bottomLeft();//bRect.bottomLeft();
-      QPointF lr = remapRect.bottomRight();//bRect.bottomRight();
-      QPointF tl = remapRect.topLeft();//bRect.topLeft();
-      QPointF tr = remapRect.topRight();//bRect.topRight();
+      QPointF ll = remapRect.bottomLeft();
+      QPointF lr = remapRect.bottomRight();
+      QPointF tl = remapRect.topLeft();
+      QPointF tr = remapRect.topRight();
 
       QGraphicsScene* scene = this->scene();
       QGraphicsView* view = scene->views().first();
@@ -858,13 +1022,10 @@ namespace te
         bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
         if (startResizing == true)
         {
-          m_currentAction = te::layout::RESIZE_ACTION;
+          m_rect = boundingRect();
           setPixmap();
-          m_initialCoord = event->pos();      
-          if (m_controller)
-          {
-            m_controller->beginResize();
-          }
+          m_currentAction = te::layout::RESIZE_ACTION;
+          m_initialCoord = event->pos();
         }
       }
 
@@ -905,18 +1066,17 @@ namespace te
     {
       if (m_currentAction == te::layout::RESIZE_ACTION)
       {
+        m_currentAction = te::layout::NO_ACTION;
         m_finalCoord = event->pos();
-        m_rect = m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
-        m_rect.moveTo(0, 0);
+        m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
         T::setOpacity(1.);
       }
       else if (m_currentAction == te::layout::MOVE_ACTION)
       {
+        m_currentAction = te::layout::NO_ACTION;
         T::setOpacity(1.);
         m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
       }
-
-      m_currentAction = te::layout::NO_ACTION;
 
       T::mouseReleaseEvent(event);
     }
@@ -995,6 +1155,7 @@ namespace te
     {
       return m_currentAction;
     }
+
   } // end namespace layout
 } // end namespace te
 

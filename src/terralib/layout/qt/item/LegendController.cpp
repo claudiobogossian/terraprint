@@ -36,12 +36,36 @@ te::layout::LegendController::~LegendController()
 
 void te::layout::LegendController::update(const Subject* subject)
 {
-  LegendItem* legendItem = dynamic_cast<LegendItem*>(this->getView());
-  if (legendItem == 0)
+  if (m_model == subject)
+  {
+    AbstractItemController::update(subject);
+
+    LegendItem* legendItem = dynamic_cast<LegendItem*>(this->getView());
+    if (legendItem == 0)
+    {
+      return;
+    }
+    legendItem->refreshLegendProperties();
+
+    return;
+  }
+
+  const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
+  if (subjectModel == 0)
   {
     return;
   }
-  legendItem->refreshLegendProperties();  
+
+  const Property& pLayersNewUri = subjectModel->getProperty("layers_uri");
+  const Property& pLayersCurrentUri = this->getProperty("layers_uri");
+
+  const std::vector<std::string>& layersNewUri = pLayersNewUri.getValue().toStringVector();
+  const std::vector<std::string>& layersCurrentUri = pLayersCurrentUri.getValue().toStringVector();
+
+  if (layersNewUri != layersCurrentUri)
+  {
+    setProperty(pLayersNewUri);
+  }
 }
 
 std::list<te::map::AbstractLayerPtr>  te::layout::LegendController::searchLayersFromURI()

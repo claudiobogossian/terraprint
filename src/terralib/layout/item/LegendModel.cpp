@@ -48,7 +48,6 @@
 
 te::layout::LegendModel::LegendModel()
   : AbstractItemModel()
-  , Observer()
 {
   m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getLegendItem());
 
@@ -235,24 +234,3 @@ te::layout::LegendModel::~LegendModel()
 {
 
 }
-
-void te::layout::LegendModel::update(const Subject* subject)
-{
-  const AbstractItemModel* subjectModel = dynamic_cast<const AbstractItemModel*>(subject);
-  if(subjectModel == 0)
-  {
-    return;
-  }
-
-  const Property& pLayersNewUri = subjectModel->getProperty("layers_uri");
-  const Property& pLayersCurrentUri = this->getProperty("layers_uri");
-
-  const std::vector<std::string>& layersNewUri = pLayersNewUri.getValue().toStringVector();
-  const std::vector<std::string>& layersCurrentUri = pLayersCurrentUri.getValue().toStringVector();
-
-  if (layersNewUri != layersCurrentUri)
-  {
-    setProperty(pLayersNewUri);
-  }
-}
-

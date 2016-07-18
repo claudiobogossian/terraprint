@@ -60,10 +60,6 @@ namespace te
           \brief Destructor
         */ 
         virtual ~GridMapModel();
-
-        virtual double adjustInitialX(const te::gm::Envelope& planarBox, const double initialX, const double& gapX);
-
-        virtual double adjustInitialY(const te::gm::Envelope& planarBox, const double initialY, const double& gapY);
     };
   }
 }

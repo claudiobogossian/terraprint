@@ -73,9 +73,11 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/outside/ScaleSettingsOutsideFactory.h"
 #include "pattern/factory/outside/NorthSettingsOutsideFactory.h"
 #include "pattern/factory/outside/PrintSettingsOutsideFactory.h"
+#include "pattern/factory/outside/MapLocationSettingsOutsideFactory.h"
 
 //templates
 #include "../../core/template/XmlTemplateFactory.h"
+#include "tempDataStorage/TempFileFactory.h"
 
 namespace te
 {
@@ -117,6 +119,7 @@ namespace te
         static ScaleSettingsOutsideFactory ScaleSettingsOutsideFactory_instance;
         static NorthSettingsOutsideFactory NorthSettingsOutsideFactory_instance;
         static PrintSettingsOutsideFactory PrintSettingsOutsideFactory_instance;
+        static MapLocationSettingsOutsideFactory MapLocationSettingsOutsideFactory_instance;
       }
     }
 
@@ -163,6 +166,7 @@ namespace te
       if (!TemplateFactoryInitalized)
       {
         static XmlTemplateFactory XmlTemplateFactory_instance;
+        static TempFileFactory TempFileFactory_instance;
       }
     }
   }

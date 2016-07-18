@@ -39,26 +39,27 @@ void te::layout::GridMapController::update(const Subject* subject)
 {
   AbstractItemController::update(subject);
   
-  GridMapItem* item = dynamic_cast<GridMapItem*>(m_view);
-  if (item)
+  if (m_model == subject)
   {
-    item->calculateGrid();
+    GridMapItem* item = dynamic_cast<GridMapItem*>(m_view);
+    if (item)
+    {
+      item->calculateGrid();
+    }
   }
 }
 
-bool te::layout::GridMapController::syncItemAssociation(Properties& properties){
-  
-  
+bool te::layout::GridMapController::syncItemAssociation(Properties& properties)
+{
   SharedProperties sharedProps;
 
   Properties prop = m_model->getProperties();
 
   Property propObserv = properties.getProperty(sharedProps.getItemObserver());
 
-  if (propObserv.getValue().isNull()){
-
+  if (propObserv.getValue().isNull())
+  {
     return false;
-
   }
 
   Property propertyHeigh = prop.getProperty("height");
@@ -66,8 +67,8 @@ bool te::layout::GridMapController::syncItemAssociation(Properties& properties){
 
   std::string itemObservable = propObserv.getValue().toString();
 
-  if (!itemObservable.empty()){
-
+  if (!itemObservable.empty())
+  {
     propertyHeigh.setEditable(false);
     propertyWidth.setEditable(false);
 
@@ -75,17 +76,34 @@ bool te::layout::GridMapController::syncItemAssociation(Properties& properties){
     m_model->completelyUpdateProperty(propertyWidth);
 
   }
-  else{
-
+  else
+  {
     propertyHeigh.setEditable(true);
     propertyWidth.setEditable(true);
 
     m_model->completelyUpdateProperty(propertyHeigh);
     m_model->completelyUpdateProperty(propertyWidth);
-
   }
   
   return AbstractItemController::syncItemAssociation(properties);
-
 }
 
+double te::layout::GridMapController::adjustInitialX(const te::gm::Envelope& planarBox, const double initialX, const double& gapX)
+{
+  double lowerLeftX = planarBox.getLowerLeftX();
+  double distance = initialX - planarBox.getLowerLeftX();
+  double gapCount = floor(distance / gapX);
+  double newInitialX = initialX - (gapCount * gapX);
+
+  return newInitialX;
+}
+
+double te::layout::GridMapController::adjustInitialY(const te::gm::Envelope& planarBox, const double initialY, const double& gapY)
+{
+  double loweLeftY = planarBox.getLowerLeftY();
+  double distance = initialY - planarBox.getLowerLeftY();
+  double gapCount = floor(distance / gapY);
+  double newInitialY = initialY - (gapCount * gapY);
+
+  return newInitialY;
+}
