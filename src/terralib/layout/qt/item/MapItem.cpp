@@ -168,17 +168,20 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
 
-  //as canvas will transform from World CS to Device CS, we must add a transform in order to make the painter expect drawings in Device CS
-  double xScale = boundingRect().width() / painter->device()->width();
-  double yScale = boundingRect().height() / painter->device()->height();
 
-  QTransform transform;
-  transform.translate(0, boundingRect().height());
-  transform.scale(xScale, -yScale);
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  Utils utils(myScene, 0);
 
-  painter->setTransform(transform, true);
+  QRectF qBoundingRect = boundingRect();
+  int deviceWidth = utils.mm2pixel(qBoundingRect.width());
+  int deviceHeight = utils.mm2pixel(qBoundingRect.height());
+  QRectF qrectDevice = painter->transform().mapRect(qBoundingRect);
 
-  //then we create the canvas and initialize it
+  painter->setTransform(QTransform());
+
+  painter->setViewport(qrectDevice.x(), qrectDevice.y(), deviceWidth, deviceHeight);
+  painter->setWindow(0,0, deviceWidth, deviceHeight);
+
   te::qt::widgets::Canvas canvas(painter);
   canvas.setBackgroundColor(color);
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
