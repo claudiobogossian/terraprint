@@ -553,15 +553,36 @@ void te::layout::ScaleItem::refreshScaleProperties()
 
 bool te::layout::ScaleItem::validateGaps()
 {
+
   const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
-  
+  const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
+  const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
+
   m_gapX = pScaleGapX.getValue().toDouble();
+  m_gapY = pScaleGapY.getValue().toDouble();
+  m_scaleUnitGapX = pScaleUnitGapX.getValue().toDouble();
 
   QRectF boundRect = boundingRect();
 
   double result = boundRect.width() / m_gapX;
 
   if (result > 40)
+  {
+    return false;
+  }
+
+  if (m_gapX <= 0)
+  {
+    return false;
+  }
+
+  if (m_gapY <= 0)
+  {
+    return false;
+  }
+
+
+  if (m_scaleUnitGapX <= 0)
   {
     return false;
   }
