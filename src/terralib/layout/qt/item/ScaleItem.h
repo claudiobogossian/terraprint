@@ -85,6 +85,8 @@ namespace te
         */
         virtual bool isLimitExceeded(QRectF resizeRect);
 
+        virtual bool validateGaps();
+
         double  m_scale;
         double  m_gapX;
         double  m_gapY;
