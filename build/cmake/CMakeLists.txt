@@ -79,6 +79,10 @@ if(NOT DEFINED TERRALIB_DESTINATION_SHARE)
   set(TERRALIB_DESTINATION_SHARE "${TERRALIB_BASE_DESTINATION_DIR}share")
 endif()
 
+if(NOT DEFINED TERRALIB_DESTINATION_UNITTEST)
+  set(TERRALIB_DESTINATION_UNITTEST "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/unittest")
+endif()
+
 # variable that set the bundle items as writable before install_name_tool tries to change them (for APPLE platforms)
 if(APPLE AND TERRALIB_BUILD_AS_BUNDLE AND TERRALIB_TRACK_3RDPARTY_DEPENDENCIES AND NOT DEFINED BU_CHMOD_BUNDLE_ITEMS)
   set(BU_CHMOD_BUNDLE_ITEMS ON CACHE BOOL "If ON, set the bundle items as writable")
@@ -166,7 +170,7 @@ include(terralib_layout_macros.cmake)
 
 find_package ( terralib 5.0.1 )
 
-find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread)
+find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread unit_test_framework)
 
 if(NOT Boost_FOUND)
   message(FATAL_ERROR "TerraLib: could not find required Boost libraries!")
@@ -297,6 +301,11 @@ option(TERRALIB_MOD_LAYOUT_ENABLED "Build Layout module?" ON)
 
 CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plugin?" ON "TERRALIB_MOD_LAYOUT_ENABLED" OFF)
 
+#
+# build options for the Layout Module Unit Test
+#
+
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED "Build the unit test for the layout module?" ON "TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED" OFF)
 
 #
 # process TERRALIB configuration files
@@ -334,6 +343,14 @@ endif()
 
 if(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED)
   add_subdirectory(terralib_mod_qt_plugins_layout)
+endif()
+
+#
+# build unit test
+#
+
+if(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED)
+  add_subdirectory(terralib_mod_layout_unittest)
 endif()
 
 #
