@@ -35,7 +35,7 @@
 #include "../../../layout/core/enum/Enums.h"
 #include "../../../layout/qt/core/BuildGraphicsItem.h"
 #include "../../../layout/qt/core/BuildGraphicsOutside.h"
-#include "terralib/layout/qt/outside/ToolbarController.h"
+#include "../../../layout/qt/outside/ToolbarController.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../inside/MapToolbarInside.h"
 #include "../inside/MapToolbarController.h"
