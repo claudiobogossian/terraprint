@@ -38,8 +38,10 @@
 #include <vector>
 #include <map>
 
+#ifndef Q_MOC_RUN
 // Boost
 #include <boost/thread.hpp>
+#endif
 
 // Qt
 #include <QObject>
