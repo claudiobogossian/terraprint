@@ -36,6 +36,7 @@
 te::layout::CreateLineItemTool::CreateLineItemTool(View* view, EnumType* itemType, QObject* parent)
   : AbstractLayoutTool(view, parent),
   m_controller(NULL),
+  m_item(0),
   m_itemType(itemType)
 {
   setCursor(Qt::ArrowCursor);

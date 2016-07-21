@@ -137,9 +137,7 @@ namespace te
         virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type, bool isCopy = false);
 
         Scene*      m_scene;
-
-        std::string   m_name;
-        
+       
     };
   }
 }

@@ -35,9 +35,10 @@
 #include "../../enum/Enums.h"
 #include "../proxy/AbstractProxyProject.h"
 
-te::layout::Context::Context() :
-  m_version("TerraPrintQt5_1.0.0"),
-  m_systematicConfig(0)
+te::layout::Context::Context() 
+  : m_unitMetric(TPMillimeter)
+  , m_version("TerraPrintQt5_1.0.0")
+  , m_systematicConfig(0)
 {
   
 }

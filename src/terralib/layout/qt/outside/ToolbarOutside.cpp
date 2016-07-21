@@ -109,6 +109,8 @@ te::layout::ToolbarOutside::ToolbarOutside(AbstractOutsideController* controller
   m_itemTools(0),
   m_bringToFrontToolButton(0),
   m_sendToBackToolButton(0),
+  m_bringForwardToolButton(0),
+  m_sendBackwardToolButton(0),
   m_recomposeToolButton(0),
   m_textToolButton(0),
   m_alignLeftToolButton(0),
