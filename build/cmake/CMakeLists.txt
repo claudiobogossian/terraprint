@@ -176,10 +176,10 @@ if(NOT Boost_FOUND)
   message(FATAL_ERROR "TerraLib: could not find required Boost libraries!")
 endif()
 
-find_package(Qt5 5.1 QUIET COMPONENTS Core Gui Widgets PrintSupport)
+find_package(Qt5 5.1 QUIET COMPONENTS Core Gui Widgets PrintSupport Test)
 
 if(NOT Qt5_FOUND)
-  find_package(Qt4 4.6.3 QUIET COMPONENTS QtCore QtGui QtSvg)
+  find_package(Qt4 4.6.3 QUIET COMPONENTS QtCore QtGui QtSvg QtTest)
 else()
   find_package(Qt5LinguistTools QUIET)
 endif()
@@ -305,7 +305,9 @@ CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plug
 # build options for the Layout Module Unit Test
 #
 
-CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED "Build the unit test for the layout module?" ON "TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED" OFF)
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED "Build the unit test for the layout module?" ON "TERRALIB_MOD_LAYOUT_ENABLED;" OFF)
+
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_QTEST_ENABLED "Build tests with QTest for the layout module?" ON "TERRALIB_MOD_LAYOUT_ENABLED;" OFF)
 
 #
 # process TERRALIB configuration files
@@ -351,6 +353,10 @@ endif()
 
 if(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED)
   add_subdirectory(terralib_mod_layout_unittest)
+endif()
+
+if(TERRALIB_MOD_LAYOUT_QTEST_ENABLED)
+  add_subdirectory(terralib_mod_layout_qtest)
 endif()
 
 #

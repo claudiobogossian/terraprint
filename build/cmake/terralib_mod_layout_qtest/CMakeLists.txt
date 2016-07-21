@@ -32,22 +32,23 @@ endif()
 
 if(WIN32)
   add_definitions(-D_SCL_SECURE_NO_WARNINGS -DTELAYOUTUNITTESTDLL -DQT_QTPROPERTYBROWSER_IMPORT)
+  set(QT_USE_QTMAIN TRUE)
 endif()
 
-file(GLOB TERRALIB_MOD_LAYOUT_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/layout/*.cpp)
-file(GLOB TERRALIB_MOD_LAYOUT_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/layout/*.h)
+file(GLOB TERRALIB_MOD_LAYOUT_QTEST_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/qtest/*.cpp)
+file(GLOB TERRALIB_MOD_LAYOUT_QTEST_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/qtest/*.h)
 
-set(TERRALIB_MOD_LAYOUT_UNITTEST_FILES 	${TERRALIB_MOD_LAYOUT_SRC_FILES} 
-										${TERRALIB_MOD_LAYOUT_HDR_FILES})
+set(TERRALIB_MOD_LAYOUT_UNITTEST_FILES 	${TERRALIB_MOD_LAYOUT_QTEST_SRC_FILES}
+										${TERRALIB_MOD_LAYOUT_QTEST_HDR_FILES})
 
 if(Qt5_FOUND)
 
   set(CMAKE_AUTOMOC ON)
   set(CMAKE_INCLUDE_CURRENT_DIR ON)
   
-  add_executable(terralib_mod_layout_unittest ${TERRALIB_MOD_LAYOUT_UNITTEST_FILES})
+  add_executable(terralib_mod_layout_qtest ${TERRALIB_MOD_LAYOUT_UNITTEST_FILES})
   
-  qt5_use_modules(terralib_mod_layout_unittest Widgets)
+  qt5_use_modules(terralib_mod_layout_qtest Widgets Test)
   
 else() # QT4_FOUND
 
@@ -56,11 +57,11 @@ else() # QT4_FOUND
   include_directories(${QT_INCLUDE_DIR})
   add_definitions(${QT_DEFINITIONS})
   
-  add_executable(terralib_mod_layout_unittest ${TERRALIB_MOD_LAYOUT_UNITTEST_FILES})
+  add_executable(terralib_mod_layout_qtest ${TERRALIB_MOD_LAYOUT_UNITTEST_FILES})
 
 endif()
 
-target_link_libraries(terralib_mod_layout_unittest terralib_mod_layout
+target_link_libraries(terralib_mod_layout_qtest terralib_mod_layout
 												   terralib_mod_qt_plugins_layout
 												   terralib_mod_color
 												   terralib_mod_common
@@ -78,4 +79,4 @@ target_link_libraries(terralib_mod_layout_unittest terralib_mod_layout
 												   )
 
 install(FILES ${TERRALIB_MOD_LAYOUT_SRC_FILES} ${TERRALIB_MOD_LAYOUT_HDR_FILES}
-        DESTINATION ${TERRALIB_DESTINATION_UNITTEST}/layout COMPONENT devel)
+        DESTINATION ${TERRALIB_DESTINATION_UNITTEST}/qtest COMPONENT devel)
