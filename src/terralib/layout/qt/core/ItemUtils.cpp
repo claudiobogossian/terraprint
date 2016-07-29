@@ -945,11 +945,24 @@ void te::layout::ItemUtils::DD2DMS(QString dd, QString& degreeString, QString& m
 
 void te::layout::ItemUtils::DMS2DD(QString degree, QString minute, QString second, QString &dd)
 {
+  bool negativeValue = false;
 
   double deg = degree.toDouble();
   double min = minute.toDouble();
-  double sec = second.toDouble(); 
+  double sec = second.toDouble();
+
+  if (deg < 0)
+  {
+    negativeValue = true;
+    deg = deg * (-1);
+  }
+
   double coord = deg + (min / 60.0) + (sec / 3600.0);
+
+  if (negativeValue == true)
+  {
+    coord = coord * (-1);
+  }
 
   dd = ItemUtils::convert2QString(boost::lexical_cast<std::string>(coord));
 
