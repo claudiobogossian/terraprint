@@ -65,7 +65,10 @@ te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
 {
   TerraLib::getInstance().remove(TE_LAYOUT_MODULE_NAME);
 
-  m_dockLayoutDisplay->setPreviousCentralWidget(0);
+  if (m_dockLayoutDisplay != 0)
+  {
+    m_dockLayoutDisplay->setPreviousCentralWidget(0);
+  }
 
   onExit();
 

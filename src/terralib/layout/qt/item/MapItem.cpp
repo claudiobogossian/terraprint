@@ -89,6 +89,12 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
     return;
   }
 
+  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  if (mapController == 0)
+  {
+    return;
+  }
+
   const Property& property = m_controller->getProperty("background_color");
   const te::color::RGBAColor& color = property.getValue().toColor();
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
@@ -115,7 +121,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
 
       drawMapOnDevice(&m_screenCache);
     }
-    
+
     drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
     if (m_screenDraft.isNull() == false)
     {
@@ -142,59 +148,60 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
   canvas.clear();
 
-  const Property& pLayerList = m_controller->getProperty("layers");
-  const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
-
-  std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
-  for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
-  {
-    it->get()->draw(&canvas, envelope, srid, scale);
-  }
+  drawLayers(&canvas, envelope);
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 {
-  const Property& pSrid = m_controller->getProperty("srid");
   const Property& pWorldBox = m_controller->getProperty("world_box");
-  const Property& pScale = m_controller->getProperty("scale");
   const Property& property = m_controller->getProperty("background_color");
 
-  int srid = pSrid.getValue().toInt();;
   const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
-  double scale = pScale.getValue().toDouble();
   const te::color::RGBAColor& color = property.getValue().toColor();
 
   //here we render the layers on the given device
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
 
+  QColor qFillColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+  painter->fillRect(this->getAdjustedBoundingRect(painter), qFillColor);
 
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  Utils utils(myScene, 0);
+  //as canvas will transform from World CS to Device CS, we must add a transform in order to make the painter expect drawings in Device CS
+  double xScale = boundingRect().width() / painter->device()->width();
+  double yScale = boundingRect().height() / painter->device()->height();
 
-  QRectF qBoundingRect = boundingRect();
-  int deviceWidth = utils.mm2pixel(qBoundingRect.width());
-  int deviceHeight = utils.mm2pixel(qBoundingRect.height());
-  QRectF qrectDevice = painter->transform().mapRect(qBoundingRect);
+  QTransform transform;
+  transform.translate(0, boundingRect().height());
+  transform.scale(xScale, -yScale);
 
-  painter->setTransform(QTransform());
+  painter->setTransform(transform, true);
 
-  painter->setViewport(qrectDevice.x(), qrectDevice.y(), deviceWidth, deviceHeight);
-  painter->setWindow(0,0, deviceWidth, deviceHeight);
-
+  //then we create the canvas and initialize it
   te::qt::widgets::Canvas canvas(painter);
   canvas.setBackgroundColor(color);
   canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
 
+  drawLayers(&canvas, envelope);
+
+  painter->restore();
+}
+
+void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)
+{
+  const Property& pSrid = m_controller->getProperty("srid");
+  const Property& pScale = m_controller->getProperty("scale");
   const Property& pLayerList = m_controller->getProperty("layers");
+
+  int srid = pSrid.getValue().toInt();
+  double scale = pScale.getValue().toDouble();
   const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
 
+  bool cancel = false;
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
   for (it = layerList.rbegin(); it != layerList.rend(); ++it) // for each layer
   {
-    it->get()->draw(&canvas, envelope, srid, scale);
+    it->get()->draw(canvas, envelope, srid, scale);
   }
-  painter->restore();
 }
 
 QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )

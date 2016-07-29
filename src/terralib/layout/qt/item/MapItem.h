@@ -121,6 +121,11 @@ namespace te
         virtual void drawMapOnPainter(QPainter* painter);
 
         /*!
+        \brief Draws the layers using the given canvas
+        */
+        virtual void drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope);
+
+        /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
         */
         virtual QVariant itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value );
