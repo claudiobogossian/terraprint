@@ -41,11 +41,11 @@ te::layout::PropertiesCentralController::PropertiesCentralController(View* view,
 {
   if (m_view)
   {
-    connect(m_view, SIGNAL(loadProperties()), this, SLOT(onSelectionChanged()));
-    connect(m_view, SIGNAL(reloadProperties()), this, SLOT(onPropertiesChanged()));
+    connect(m_view, SIGNAL(loadProperties()), this, SLOT(onSelectionChanged()), Qt::QueuedConnection);
+    connect(m_view, SIGNAL(reloadProperties()), this, SLOT(onPropertiesChanged()), Qt::QueuedConnection);
     connect(m_view, SIGNAL(showContextMenu(QPointF, QPointF)), this, SLOT(onShowContextMenu(QPointF, QPointF)));
     connect(m_view->scene(), SIGNAL(addItemFinalized(QGraphicsItem*)), this, SLOT(onAddItemFinalized(QGraphicsItem*)));
-    connect(m_view->scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()));
+    connect(m_view->scene(), SIGNAL(selectionChanged()), this, SLOT(onSelectionChanged()), Qt::QueuedConnection);
     connect(m_view, SIGNAL(showDialogWindow(EnumType*, QList<QGraphicsItem*>)), this, SLOT(onShowDialogWindow(EnumType*, QList<QGraphicsItem*>)));
   }
 }

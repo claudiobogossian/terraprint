@@ -52,7 +52,8 @@ te::layout::MainLayout::MainLayout(AbstractProxyProject* proxyProject) :
   m_statusBar(0),
   m_outsideArea(0),
   m_buildEnums(0),
-  m_proxyProject(proxyProject)
+  m_proxyProject(proxyProject),
+  m_canvas(0)
 {
   m_buildEnums = new te::layout::BuildEnums;
 }

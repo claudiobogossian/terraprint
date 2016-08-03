@@ -490,8 +490,6 @@ namespace te
         bool                                 m_isMoving;
         te::layout::MovingItemGroup*         m_movingItemGroup;
         bool                                 m_updateItemPos;
-        WaitView*                            m_wait;
-        bool                                 m_flag;
         QPixmap                              m_foreground; //!< This pixmap represents the foreground drawings and is used for double buffering
         std::vector<AbstractLayoutTool*>     m_lateRemovalVec;
         bool                                 m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True

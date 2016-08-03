@@ -54,29 +54,32 @@ te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, Abstrac
   , m_scene(scene)
   , m_menu(0)
 {
-  m_treeWidget = new QTreeWidget(this);
-
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   te::gm::Envelope box = abstractModel->getBox();
   setBaseSize(box.getWidth(), box.getHeight());
   setVisible(false);
   setWindowTitle(tr("Object Inspector"));
   setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  
-  QVBoxLayout* layout = new QVBoxLayout(this);
-  layout->setMargin(0);
+
+  QGridLayout* layout = new QGridLayout(this);
+  m_treeWidget = new QTreeWidget(this);
   layout->addWidget(m_treeWidget);
+  layout->setContentsMargins(0, 0, 0, 0);
   
-  QGroupBox* groupBox = new QGroupBox;
-  groupBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  groupBox->setLayout(layout);
+  //QVBoxLayout* layout = new QVBoxLayout(this);
+  //layout->setMargin(0);
+  //layout->addWidget(m_treeWidget);
+  //
+  //QGroupBox* groupBox = new QGroupBox;
+  //groupBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+  //groupBox->setLayout(layout);
 
-  QVBoxLayout* layoutAll = new QVBoxLayout(this);
-  layoutAll->setMargin(0);
+  //QVBoxLayout* layoutAll = new QVBoxLayout(this);
+  //layoutAll->setMargin(0);
 
-  layoutAll->addWidget(groupBox);
+  //layoutAll->addWidget(groupBox);
 
-  setLayout(layoutAll);
+  //setLayout(layoutAll);
 
   QStringList headerLabels;
   headerLabels.append(tr("Name"));

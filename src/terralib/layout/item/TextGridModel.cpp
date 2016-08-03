@@ -70,7 +70,6 @@ void te::layout::TextGridModel::removeCell( te::gm::Point* cell )
   m_textCells.erase(cell);
 
   delete cell;
-  cell = 0;
 }
 
 std::map<te::gm::Point*, std::string> te::layout::TextGridModel::getTextCells()

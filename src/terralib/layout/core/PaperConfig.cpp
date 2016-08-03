@@ -28,19 +28,21 @@
 // TerraLib
 #include "PaperConfig.h"
 
-te::layout::PaperConfig::PaperConfig() :
-  m_paperType(te::layout::A4),
-  m_paperOrientationType(Portrait),
-  m_customW(0),
-  m_customH(0)
+te::layout::PaperConfig::PaperConfig() 
+  : m_paperType(te::layout::A4)
+  , m_paperOrientationType(Portrait)
+  , m_customW(0)
+  , m_customH(0)
 {
   
 }
 
-te::layout::PaperConfig::PaperConfig(LayoutAbstractPaperType paperType) :
-  m_paperOrientationType(Portrait)
+te::layout::PaperConfig::PaperConfig(LayoutAbstractPaperType paperType) 
+  : m_paperType(paperType)
+  , m_paperOrientationType(Portrait)
+  , m_customW(0)
+  , m_customH(0)
 {
-  m_paperType = paperType;
 }
 
 te::layout::PaperConfig::~PaperConfig()

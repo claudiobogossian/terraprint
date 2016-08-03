@@ -230,6 +230,7 @@ namespace te
     inline WorldTransformer::WorldTransformer(const double& s1llx, const double& s1lly,
                                               const double& s1urx, const double& s1ury,
                                                        double s2width, double s2height)
+      : m_mirroring(true)
     {
       te::gm::Envelope system1Box(s1llx, s1lly, s1urx, s1ury);
       te::gm::Envelope system2Box(0, 0, s2width, s2height);
@@ -238,6 +239,7 @@ namespace te
     }
 
     inline WorldTransformer::WorldTransformer( const te::gm::Envelope& system1Box, const te::gm::Envelope& system2Box )
+      : m_mirroring(true)
     {
       setTransformationParameters(system1Box, system2Box);
     }

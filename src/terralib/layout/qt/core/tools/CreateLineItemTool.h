@@ -96,7 +96,6 @@ namespace te
           AbstractItemController*     m_controller;
           QGraphicsItem*              m_item;
           EnumType*                   m_itemType;
-          EnumType* m_type;
       };
 
   }   // end namespace layout

@@ -40,7 +40,8 @@ te::layout::AbstractOutsideModel::AbstractOutsideModel() :
   m_color(0),
   m_publicProperties(0),
   m_type(0),
-  m_id(0),
+  m_zValue(0),
+  m_id(0),  
   m_resizable(true),
   m_hashCode(0),
   m_name("unknown")

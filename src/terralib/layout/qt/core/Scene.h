@@ -192,20 +192,6 @@ namespace te
         virtual void addUndoStack( QUndoCommand* command );
 
     /*!
-          \brief Method that limits the size of the stack of Undo/Redo.
-      
-      \param limit limit
-        */
-        virtual void setUndoStackLimit( int limit );
-
-    /*!
-          \brief Method that returns the size limit of the stack Undo/Redo.
-      
-      \return limit
-        */
-        virtual int getUndoStackLimit();
-
-    /*!
           \brief Method that return stack of Undo/Redo.
       
       \return stack
@@ -530,7 +516,6 @@ namespace te
         QTransform                            m_matrix; //!< transformation matrix of the scene.
         QColor                                m_backgroundColor; //!< background color that is applied to each observer(QGraphicsView) of the scene.
         QUndoStack*                           m_undoStack; //!< Undo/Redo stack
-        int                                   m_undoStackLimit; //!< Undo/Redo limit size
         AlignItems*                           m_align; //!< object responsible for aligning objects in the scene.
         bool                                  m_moveOrResizeWatched;
         std::map<QGraphicsItem*, QPointF>     m_moveWatches;

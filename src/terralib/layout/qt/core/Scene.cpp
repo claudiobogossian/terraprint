@@ -83,6 +83,7 @@ te::layout::Scene::Scene( QObject* object):
   m_paperConfig(0),
   m_currentItemEdition(0),
   m_isEditionMode(false),
+  m_canvas(0),
   m_context(0,0,0,0),
   m_increasedUnprintableArea(40.)
 {
@@ -101,7 +102,11 @@ te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* 
   m_align(align),
   m_moveOrResizeWatched(false),
   m_paperConfig(paperConfig),
-  m_context(0,0,0,0)
+  m_currentItemEdition(0),
+  m_isEditionMode(false),
+  m_context(0, 0, 0, 0),  
+  m_canvas(0),
+  m_increasedUnprintableArea(40.)
 {
 }
 
@@ -362,16 +367,6 @@ bool te::layout::Scene::removeItemByName(std::string name)
 void te::layout::Scene::addUndoStack( QUndoCommand* command )
 {
   m_undoStack->push(command);
-}
-
-void te::layout::Scene::setUndoStackLimit( int limit )
-{
-  m_undoStackLimit = limit;
-}
-
-int te::layout::Scene::getUndoStackLimit()
-{
-  return m_undoStackLimit;
 }
 
 QUndoStack* te::layout::Scene::getUndoStack()
@@ -1229,7 +1224,6 @@ bool te::layout::Scene::deleteItem( QGraphicsItem *item )
     if(item)
     {
       delete item;
-      item = 0;
       result = true;
     }
   }
