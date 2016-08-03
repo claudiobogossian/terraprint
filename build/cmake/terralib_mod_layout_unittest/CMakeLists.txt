@@ -57,11 +57,12 @@ else() # QT4_FOUND
   add_definitions(${QT_DEFINITIONS})
   
   add_executable(terralib_mod_layout_unittest ${TERRALIB_MOD_LAYOUT_UNITTEST_FILES})
+  
+  target_link_libraries(terralib_mod_layout_unittest ${QT_LIBRARIES})
 
 endif()
 
 target_link_libraries(terralib_mod_layout_unittest terralib_mod_layout
-												   terralib_mod_qt_plugins_layout
 												   terralib_mod_color
 												   terralib_mod_common
 												   terralib_mod_dataaccess

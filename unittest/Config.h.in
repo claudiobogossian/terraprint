@@ -1,4 +1,4 @@
-/*  Copyright (C) 2008 National Institute For Space Research (INPE) - Brazil.
+/*  Copyright (C) 2008-2014 National Institute For Space Research (INPE) - Brazil.
 
     This file is part of the TerraLib - a Framework for building GIS enabled applications.
 
@@ -17,14 +17,18 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// TerraLib
-#include "ViewTest.h"
+/*!
+  \file unittest/Config.h.in
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
+  \brief Global configuration file for the TerraLib Unit Test.
+*/
 
-// Qt
-#include <QtTest/QtTest>
+#ifndef __UNITTEST_INTERNAL_TERRALIB_LAYOUT_UNITTEST_CONFIG_H
+#define __UNITTEST_INTERNAL_TERRALIB_LAYOUT_UNITTEST_CONFIG_H
 
-QTEST_MAIN(te::layout::ViewTest)
+#cmakedefine TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED
 
+#cmakedefine TERRALIB_MOD_LAYOUT_QTEST_ENABLED
+
+
+#endif  // __UNITTEST_INTERNAL_TERRALIB_LAYOUT_UNITTEST_CONFIG_H

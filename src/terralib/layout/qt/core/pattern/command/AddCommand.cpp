@@ -60,6 +60,9 @@ void te::layout::AddCommand::undo()
 {
   Scene* scene = dynamic_cast<Scene*>(m_scene);
 
+  if (!m_item)
+    return;
+
   if(m_item->scene() != scene)
     return;
 

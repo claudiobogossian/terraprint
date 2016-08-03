@@ -17,33 +17,46 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_NO_MAIN
 #define BOOST_TEST_MODULE TempDataStorageEditorTest
+
+// STL
+#include <iostream> // std::cout
+#include <fstream> // std::ofstream
+
+// Qt
+#include <QApplication>
+
+// Boost 
 #include <boost/test/unit_test.hpp>
+#include <boost/test/debug.hpp>
 
-int add(int i, int j) 
-{ 
-  return i + j; 
-}
-
-BOOST_AUTO_TEST_CASE(tempDataStorageTest)
+struct UnitTestConfig
 {
-  // seven ways to detect and report the same error:
-  BOOST_CHECK(add(2, 2) == 4);        // #1 continues on error
+  UnitTestConfig() : test_log("layout_unittest_boost_test.log")  
+  { 
+    /* The only platform which supports memory leak detection is 
+    Microsoft Visual Studio family of compilers in debug builds.  */
+    boost::debug::detect_memory_leaks(false);
 
-  BOOST_REQUIRE(add(2, 2) == 4);      // #2 throws on error
+    boost::unit_test::unit_test_log.set_threshold_level(boost::unit_test::log_messages); // output the contents of the macro BOOST_TEST_MESSAGE
+    //boost::unit_test::unit_test_log.set_stream(test_log); 
+  }
+  ~UnitTestConfig()
+  { 
+    boost::unit_test::unit_test_log.set_stream(std::cout); 
+  }
+  std::ofstream test_log;
+};
 
-  if (add(2, 2) != 4)
-    BOOST_ERROR("Ouch...");            // #3 continues on error
+BOOST_GLOBAL_FIXTURE(UnitTestConfig);
 
-  if (add(2, 2) != 4)
-    BOOST_FAIL("Ouch...");             // #4 throws on error
+int main(int argv, char **args)
+{
+  QApplication app(argv, args); // required to run Boost Unit Test with Qt
 
-  if (add(2, 2) != 4) throw "Ouch..."; // #5 throws on error
-
-  BOOST_CHECK_MESSAGE(add(2, 2) == 4,  // #6 continues on error
-    "add(..) result: " << add(2, 2));
-
-  BOOST_CHECK_EQUAL(add(2, 2), 4);   // #7 continues on error
+  int result = boost::unit_test::unit_test_main(&init_unit_test, argv, args);
+ 
+  return result;
 }
 

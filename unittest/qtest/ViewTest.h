@@ -17,9 +17,17 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_QTEST_VIEW_TEST_ENUM_H
-#define __TERRALIB_LAYOUT_INTERNAL_QTEST_VIEW_TEST_ENUM_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_QTEST_VIEW_TEST_H
+#define __TERRALIB_LAYOUT_INTERNAL_QTEST_VIEW_TEST_H
 
+// Layout Module
+#include "terralib/layout/qt/core/View.h"
+#include "terralib/layout/qt/default/OutsideArea.h"
+
+// STL
+#include <memory>
+
+// Qt
 #include <QObject>
 
 namespace te
@@ -37,11 +45,28 @@ namespace te
 
       private slots:
 
-        void testChanges();
+        void on_test_create_view();
 
-        void testValidator_data();
+        void on_test_create_scene();
 
-        void testValidator();
+        void on_test_click_view();
+
+        void on_test_create_outside_area();
+
+        void on_test_create_rectangle_item();
+
+        void on_test_click_rectangle_item();
+
+        void on_test_create_map_composition_item();
+
+        void on_test_click_map_composition_item();
+
+        void on_test_verify_items();
+
+      private:
+
+        std::unique_ptr<te::layout::View>         m_view;
+        std::unique_ptr<te::layout::OutsideArea>  m_outsideArea;
     };
   }
 }

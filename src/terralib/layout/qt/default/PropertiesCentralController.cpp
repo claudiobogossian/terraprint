@@ -37,7 +37,10 @@
 
 te::layout::PropertiesCentralController::PropertiesCentralController(View* view, QObject *parent) :
   QObject(parent),
-  m_view(view)
+  m_view(view),
+  m_propertiesOutside(0),
+  m_objectInspectorOutside(0),
+  m_menuBuilder(0)
 {
   if (m_view)
   {

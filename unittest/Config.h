@@ -17,14 +17,20 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
+/*!
+  \file unittest/Config.h
+
+  \brief Proxy file for the real global configuration of TerraLib Unit Test.
+ */
+
+#ifndef __TERRALIB__LAYOUT_UNITTEST_INTERNAL_CONFIG_H
+#define __TERRALIB__LAYOUT_UNITTEST_INTERNAL_CONFIG_H
+
 // TerraLib
-#include "ViewTest.h"
+#include <terralib/BuildConfig.h>
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
+// UnitTest
+#include "terralib_layout_unittest_config.h"
 
-// Qt
-#include <QtTest/QtTest>
 
-QTEST_MAIN(te::layout::ViewTest)
-
+#endif  // __TERRALIB__LAYOUT_UNITTEST_INTERNAL_CONFIG_H

@@ -29,6 +29,7 @@
 #define __TE_QT_PLUGINS_LAYOUT_INTERNAL_OUTSIDE_AREA_H
 
 // TerraLib
+#include "../../core/Config.h"
 #include "../../../layout/qt/core/View.h"
 #include "../../../layout/qt/outside/ToolbarOutside.h"
 
@@ -57,7 +58,7 @@ namespace te
     class MenuPrincipal;
     class PropertiesCentralController;
 
-    class OutsideArea : public QObject
+    class TELAYOUTEXPORT OutsideArea : public QObject
     {
       Q_OBJECT //for slots/signals
 

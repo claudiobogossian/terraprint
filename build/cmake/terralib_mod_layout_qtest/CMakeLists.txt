@@ -18,7 +18,7 @@
 #  TerraLib Team at <terralib-team@terralib.org>.
 #
 #
-#  Description: Build the Unit Test for the Layout Module.
+#  Description: Build the tests with QTest for the Layout Module.
 #
 #  Author: Juliana Hohara de Souza Coelho <juliana.coelho@funcate.org.br>
 
@@ -57,26 +57,33 @@ else() # QT4_FOUND
   include_directories(${QT_INCLUDE_DIR})
   add_definitions(${QT_DEFINITIONS})
   
+  # moc'ing
+  set(TERRALIB_HDRS_TO_MOC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/qtest/ViewTest.h)
+
+  QT4_WRAP_CPP(TERRALIB_GEN_SRC_FILES ${TERRALIB_HDRS_TO_MOC_FILES} OPTIONS -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED)
+  
+  list(APPEND TERRALIB_MOD_LAYOUT_UNITTEST_FILES ${TERRALIB_GEN_SRC_FILES})
+  
   add_executable(terralib_mod_layout_qtest ${TERRALIB_MOD_LAYOUT_UNITTEST_FILES})
+  
+  target_link_libraries(terralib_mod_layout_qtest ${QT_LIBRARIES})
 
 endif()
 
 target_link_libraries(terralib_mod_layout_qtest terralib_mod_layout
-												   terralib_mod_qt_plugins_layout
-												   terralib_mod_color
-												   terralib_mod_common
-												   terralib_mod_dataaccess
-												   terralib_mod_datatype
-												   terralib_mod_geometry
-												   terralib_mod_maptools
-												   terralib_mod_memory
-												   terralib_mod_plugin
-												   terralib_mod_qt_widgets
-												   terralib_mod_srs
-												   terralib_mod_symbology
-												   ${QTPROPERTYBROWSER_LIBRARY}
-												   ${Boost_LIBRARIES}
-												   )
+											    terralib_mod_color
+											    terralib_mod_common
+											    terralib_mod_dataaccess
+											    terralib_mod_datatype
+											    terralib_mod_geometry
+											    terralib_mod_maptools
+											    terralib_mod_memory
+											    terralib_mod_qt_widgets
+											    terralib_mod_srs
+											    terralib_mod_symbology
+											    ${QTPROPERTYBROWSER_LIBRARY}
+											    ${Boost_LIBRARIES}
+											    )
 
-install(FILES ${TERRALIB_MOD_LAYOUT_SRC_FILES} ${TERRALIB_MOD_LAYOUT_HDR_FILES}
+install(FILES ${TERRALIB_MOD_LAYOUT_QTEST_SRC_FILES} ${TERRALIB_MOD_LAYOUT_QTEST_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_UNITTEST}/qtest COMPONENT devel)

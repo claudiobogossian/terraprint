@@ -19,72 +19,142 @@
 
 #include "ViewTest.h"
 
+// Layout Module
+#include "terralib/layout/qt/core/Scene.h"
+#include "terralib/layout/qt/item/RectangleItem.h"
+#include "terralib/layout/qt/item/MapCompositionItem.h"
+#include "terralib/layout/core/pattern/proxy/AbstractProxyProject.h"
+#include "terralib/layout/qt/outside/ToolbarOutside.h"
+
 // Qt
 #include <QtTest/QtTest>
-#include <QDate>
-#include <QDateEdit>
 #include <QSize>
 #include <QPoint>
 #include <QString>
+#include <QToolButton>
+#include <QAction>
+#include <QList>
+#include <QMenu>
+#include <QStatusBar>
 
-Q_DECLARE_METATYPE(QDate)
-
-void te::layout::ViewTest::testChanges()
+void te::layout::ViewTest::on_test_create_view()
 {
-  // 11 March 1967
-  QDate date(1967, 3, 11);
-  QDateEdit dateEdit(date);
-  
-  // up-arrow should increase day by one
-  QTest::keyClick(&dateEdit, Qt::Key_Up);
-  QCOMPARE(dateEdit.date(), date.addDays(1));
-  
-  // we click twice on the "reduce" arrow at the bottom RH corner
-  // first we need the widget size to know where to click
-  QSize editWidgetSize = dateEdit.size();
-  QPoint clickPoint(editWidgetSize.rwidth() - 2, editWidgetSize.rheight() - 2);
-  // issue two clicks
-  QTest::mouseClick(&dateEdit, Qt::LeftButton, 0, clickPoint);
-  QTest::mouseClick(&dateEdit, Qt::LeftButton, 0, clickPoint);
-  // and we should have decreased day by two (one less than original)
-  QCOMPARE(dateEdit.date(), date.addDays(-1));
-  
-  QTest::keyClicks(&dateEdit, "25122005");
-  QCOMPARE(dateEdit.date(), QDate(2005, 12, 25));
-  
-  QTest::keyClick(&dateEdit, Qt::Key_Tab, Qt::ShiftModifier);
-  QTest::keyClicks(&dateEdit, "08");
-  QCOMPARE(dateEdit.date(), QDate(2005, 8, 25));
+  m_view.reset(new te::layout::View);
+  QVERIFY2(m_view.get() != 0, "Could not create a View object.");
 }
 
-void te::layout::ViewTest::testValidator_data()
+void te::layout::ViewTest::on_test_create_scene()
 {
-  qRegisterMetaType<QDate>("QDate");
-  
-  QTest::addColumn<QDate>("initialDate");
-  QTest::addColumn<QString>("keyclicks");
-  QTest::addColumn<QDate>("finalDate");
-  
-  QTest::newRow("1968/4/12") << QDate(1967, 3, 11)
-  << QString("12041968")
-  << QDate(1968, 4, 12);
-  
-  QTest::newRow("1967/3/14") << QDate(1967, 3, 11)
-  << QString("140abcdef[")
-  << QDate(1967, 3, 14);
-  // more rows can go in here
+  te::layout::Scene* myScene = new te::layout::Scene(m_view.get());
+  m_view->setScene(myScene);
+
+  QVERIFY2(m_view->getScene() != 0, "Could not create a Scene object.");
+  m_view->config();
 }
 
-void te::layout::ViewTest::testValidator()
+void te::layout::ViewTest::on_test_click_view()
 {
-  QFETCH(QDate, initialDate);
-  QFETCH(QString, keyclicks);
-  QFETCH(QDate, finalDate);
+  QPoint clickPoint1(100, 80);
+  QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint1);
+
+  QPoint clickPoint2(75, 105);
+  QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint2);
+}
+
+void te::layout::ViewTest::on_test_create_outside_area()
+{
+  m_outsideArea.reset(new OutsideArea(0, m_view.get()));
+  QVERIFY2(m_outsideArea.get() != 0, "Could not create a OutsideArea object.");
+}
+
+void te::layout::ViewTest::on_test_create_rectangle_item()
+{  
+  QVERIFY2(m_outsideArea->getToolbar() != 0, "The ToolBar object is null.");
+  QString rectName = m_outsideArea->getToolbar()->getActionRectangle();
+
+  QToolButton* toolButton = m_outsideArea->getToolbar()->getGeometryToolButton();
+  QVERIFY2(toolButton != 0, "The geometry toolbutton object is null.");
+
+  QMenu* mnu = toolButton->menu();
+  QVERIFY2(mnu != 0, "The menu of geometry toolbutton object is null.");
+
+  QList<QAction*> actions = mnu->actions();
+  QAction* rectActionMnu = 0;
+  for (int i = 0; i < actions.size(); ++i)
+  {
+    QAction* action = actions.value(i);
+    if (action->objectName().compare(rectName) == 0)
+    {
+      rectActionMnu = action;
+      break;
+    }
+  }
+
+  QVERIFY2(rectActionMnu != 0, "The rectangle action of the menu of geometry toolbutton object is null.");
+    
+  // Test: click on geometry menu
+  QTest::mouseClick(mnu, Qt::LeftButton, 0, mnu->geometry().center(), 300);
+  // Test: click on rectangle item action (select rectangle item for creation)
+  QTest::mouseClick(mnu, Qt::LeftButton, 0, mnu->actionGeometry(rectActionMnu).center(), 300);
   
-  QDateEdit dateEdit(initialDate);
-  // this next line is just to start editing
-  QTest::keyClick(&dateEdit, Qt::Key_Enter);
-  QTest::keyClicks(&dateEdit, keyclicks);
-  QCOMPARE(dateEdit.date(), finalDate);
+  // Test: create rectangle item via mouse click
+  QPoint clickPoint(75, 105);
+  QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
+}
+
+void te::layout::ViewTest::on_test_click_rectangle_item()
+{
+  // Test: select rectangle item
+  QPoint clickPoint(75, 105);
+  QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
+}
+
+void te::layout::ViewTest::on_test_create_map_composition_item()
+{
+  QString rectName = m_outsideArea->getToolbar()->getActionMapDefault();
+
+  QToolButton* toolButton = m_outsideArea->getToolbar()->getMapToolButton();
+  QVERIFY2(toolButton != 0, "The map tool toolbutton object is null.");
+
+  QMenu* mnu = toolButton->menu();
+  QVERIFY2(mnu != 0, "The menu of map tool toolbutton object is null.");
+
+  QList<QAction*> actions = mnu->actions();
+  QAction* mapActionMenu = 0;
+  for (int i = 0; i < actions.size(); ++i)
+  {
+    QAction* action = actions.value(i);
+    if (action->objectName().compare(rectName) == 0)
+    {
+      mapActionMenu = action;
+      break;
+    }
+  }
+
+  QVERIFY2(mapActionMenu != 0, "The map composition action of the menu of map tool toolbutton object is null.");
+
+  // Test: click on map menu
+  QTest::mouseClick(mnu, Qt::LeftButton, 0, mnu->geometry().center(), 300);
+  // Test: click on map composition item action (select map composition item for creation)
+  QTest::mouseClick(mnu, Qt::LeftButton, 0, mnu->actionGeometry(mapActionMenu).center(), 300);
+
+  /* Map Composition: MapComposition (group) + MapItem + GridGeodesic + GridPlanar  */
+
+  // Test: create map composition item via mouse click
+  QPoint clickPoint(100, 80);
+  QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
+}
+
+void te::layout::ViewTest::on_test_click_map_composition_item()
+{
+  // Test: select map composition item
+  QPoint clickPoint(100, 80);
+  QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
+}
+
+void te::layout::ViewTest::on_test_verify_items()
+{
+  int total = m_view->getScene()->items().size();
+  QVERIFY2(total == 6, "Wrong number of created objects, inconsistent scene.");
 }
 

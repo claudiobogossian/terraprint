@@ -1532,8 +1532,8 @@ nononon</source>
         <translation>Adicionar %1</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="105"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="110"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="108"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="113"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="145"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="151"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/DeleteCommand.cpp" line="97"/>
@@ -1543,7 +1543,7 @@ nononon</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="115"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="118"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="158"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="162"/>
         <source>%1 at (%2, %3)</source>

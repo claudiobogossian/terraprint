@@ -1,0 +1,21 @@
+@echo OFF
+
+set Qt_DIR=${Qt5_DIR}
+
+IF EXIST %Qt_DIR% set PATH=%Qt_DIR%\..\..\..\bin
+
+set PATH=%PATH%;${BIN_DIR};${DEPS_DIR};
+
+set TERRALIB_HOME=${CMAKE_SOURCE_DIR}\..\..
+
+cd @BIN_DIR@
+
+  echo | set /p="qtest... "<nul
+( terralib_mod_layout_qtest.exe >nul 2>nul ) && echo success! || echo fail.
+
+  echo | set /p="unittest... "<nul
+( terralib_mod_layout_unittest.exe >nul 2>nul ) && echo success! || echo fail.
+
+echo.
+
+pause
