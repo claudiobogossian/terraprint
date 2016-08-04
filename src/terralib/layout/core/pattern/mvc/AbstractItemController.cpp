@@ -192,6 +192,23 @@ void te::layout::AbstractItemController::resized(const double& width, const doub
   setProperties(properties);
 }
 
+
+void te::layout::AbstractItemController::rotated(const double& degree)
+{
+  Properties properties;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property property(0);
+    property.setName("rotation");
+    property.setValue(degree, dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+
+  setProperties(properties);
+}
+
+
+
 void te::layout::AbstractItemController::itemPositionChanged(double x, double y)
 {
   Properties properties;

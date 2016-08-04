@@ -123,6 +123,8 @@ namespace te
 
         virtual void resized(const double& width, const double& height);
 
+        virtual void rotated(const double& degree);
+
         virtual void itemPositionChanged(double x, double y);
 
         virtual void itemZValueChanged(int index);
