@@ -153,28 +153,33 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 {
+  const Property& pSrid = m_controller->getProperty("srid");
   const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pScale = m_controller->getProperty("scale");
   const Property& property = m_controller->getProperty("background_color");
 
+  int srid = pSrid.getValue().toInt();;
   const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
+  double scale = pScale.getValue().toDouble();
   const te::color::RGBAColor& color = property.getValue().toColor();
 
   //here we render the layers on the given device
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
 
-  QColor qFillColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-  painter->fillRect(this->getAdjustedBoundingRect(painter), qFillColor);
 
-  //as canvas will transform from World CS to Device CS, we must add a transform in order to make the painter expect drawings in Device CS
-  double xScale = boundingRect().width() / painter->device()->width();
-  double yScale = boundingRect().height() / painter->device()->height();
+  Scene* myScene = dynamic_cast<Scene*>(this->scene());
+  Utils utils(myScene, 0);
 
-  QTransform transform;
-  transform.translate(0, boundingRect().height());
-  transform.scale(xScale, -yScale);
+  QRectF qBoundingRect = boundingRect();
+  int deviceWidth = utils.mm2pixel(qBoundingRect.width());
+  int deviceHeight = utils.mm2pixel(qBoundingRect.height());
+  QRectF qrectDevice = painter->transform().mapRect(qBoundingRect);
 
-  painter->setTransform(transform, true);
+  painter->setTransform(QTransform());
+
+  painter->setViewport(qrectDevice.x(), qrectDevice.y(), deviceWidth, deviceHeight);
+  painter->setWindow(0, 0, deviceWidth, deviceHeight);
 
   //then we create the canvas and initialize it
   te::qt::widgets::Canvas canvas(painter);
