@@ -87,8 +87,8 @@ target_link_libraries(terralib_mod_layout_qtest terralib_mod_layout
 
 # Add the tests.  These invoke "cmake --build ..." which is a
 # cross-platform way of building the given target.
-add_test(NAME terralib_mod_layout_unittest
-         COMMAND ${CMAKE_COMMAND} --build . --target terralib_mod_layout_unittest --config $<CONFIGURATION>
+add_test(NAME terralib_mod_layout_qtest
+         COMMAND ${CMAKE_COMMAND} --build . --target terralib_mod_layout_qtest --config $<CONFIGURATION>
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR})	
 												
 install(FILES ${TERRALIB_MOD_LAYOUT_QTEST_SRC_FILES} ${TERRALIB_MOD_LAYOUT_QTEST_HDR_FILES}
