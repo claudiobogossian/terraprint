@@ -77,6 +77,12 @@ target_link_libraries(terralib_mod_layout_unittest terralib_mod_layout
 												   ${QTPROPERTYBROWSER_LIBRARY}
 												   ${Boost_LIBRARIES}
 												   )
-
+												   
+# Add the tests.  These invoke "cmake --build ..." which is a
+# cross-platform way of building the given target.
+add_test(NAME terralib_mod_layout_unittest
+         COMMAND ${CMAKE_COMMAND} --build . --target terralib_mod_layout_unittest --config $<CONFIGURATION>
+         WORKING_DIRECTORY ${CMAKE_BINARY_DIR})		 
+		 
 install(FILES ${TERRALIB_MOD_LAYOUT_SRC_FILES} ${TERRALIB_MOD_LAYOUT_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_UNITTEST}/layout COMPONENT devel)
