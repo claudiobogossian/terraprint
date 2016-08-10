@@ -175,7 +175,7 @@ void te::layout::TempDataStorageEditor::verifySentinelThread()
   }
   catch (boost::thread_interrupted&)
   {
-    std::cout << "Sentinel Thread for temp data storage is stopped" << std::endl;
+    std::cout << "Sentinel Thread for temp data storage was stopped!" << std::endl;
     return;
   }
 }

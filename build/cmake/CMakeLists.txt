@@ -79,11 +79,18 @@ if(NOT DEFINED TERRALIB_DESTINATION_SHARE)
   set(TERRALIB_DESTINATION_SHARE "${TERRALIB_BASE_DESTINATION_DIR}share")
 endif()
 
+if(NOT DEFINED TERRALIB_DESTINATION_UNITTEST)
+  set(TERRALIB_DESTINATION_UNITTEST "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/unittest")
+endif()
+
+if(NOT DEFINED TERRALIB_BUILD_LAYOUT_TEST_ENABLED)
+  set(TERRALIB_BUILD_LAYOUT_TEST_ENABLED ON CACHE BOOL "If on, shows the list of unit-tests to be built")
+endif()
+
 # variable that set the bundle items as writable before install_name_tool tries to change them (for APPLE platforms)
 if(APPLE AND TERRALIB_BUILD_AS_BUNDLE AND TERRALIB_TRACK_3RDPARTY_DEPENDENCIES AND NOT DEFINED BU_CHMOD_BUNDLE_ITEMS)
   set(BU_CHMOD_BUNDLE_ITEMS ON CACHE BOOL "If ON, set the bundle items as writable")
 endif()
-
 
 #
 # global definitions and includes
@@ -92,7 +99,7 @@ if(MSVC)
   set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
-add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_VERSION=3 -DBOOST_UBLAS_TYPE_CHECK=0)
+add_definitions(-DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_VERSION=3 -DBOOST_UBLAS_TYPE_CHECK=0 -DBOOST_TEST_DYN_LINK)
 
 if(WIN32)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
@@ -121,7 +128,6 @@ endif()
 
 
 include_directories(${CMAKE_BINARY_DIR})
-
 
 #
 # Build will generate files into a single folder
@@ -166,16 +172,16 @@ include(terralib_layout_macros.cmake)
 
 find_package ( terralib 5.0.1 )
 
-find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread)
+find_package(Boost 1.53.0 REQUIRED system date_time chrono timer filesystem thread unit_test_framework)
 
 if(NOT Boost_FOUND)
   message(FATAL_ERROR "TerraLib: could not find required Boost libraries!")
 endif()
 
-find_package(Qt5 5.1 QUIET COMPONENTS Core Gui Widgets PrintSupport)
+find_package(Qt5 5.1 QUIET COMPONENTS Core Gui Widgets PrintSupport Test)
 
 if(NOT Qt5_FOUND)
-  find_package(Qt4 4.6.3 QUIET COMPONENTS QtCore QtGui QtSvg)
+  find_package(Qt4 4.6.3 QUIET COMPONENTS QtCore QtGui QtSvg QtTest)
 else()
   find_package(Qt5LinguistTools QUIET)
 endif()
@@ -287,8 +293,6 @@ endif()
 # warning: please, do not change the order below!
 #
 
-
-
 #CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_ENABLED "Build Layout module?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_COLOR_ENABLED;TERRALIB_MOD_DATAACCESS_ENABLED;TERRALIB_MOD_MAPTOOLS_ENABLED;TERRALIB_MOD_MEMORY_ENABLED;TERRALIB_MOD_PLUGIN_ENABLED;TERRALIB_MOD_QT_WIDGETS_ENABLED;TERRALIB_MOD_SRS_ENABLED" OFF)
 
 #CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plugin?" ON "TERRALIB_QT_ENABLED;TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_MOD_QT_APF_ENABLED" OFF)
@@ -297,6 +301,13 @@ option(TERRALIB_MOD_LAYOUT_ENABLED "Build Layout module?" ON)
 
 CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED "Build Layout plugin?" ON "TERRALIB_MOD_LAYOUT_ENABLED" OFF)
 
+#
+# build options for the Layout Module Unit Test
+#
+
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED "Build the unit test for the layout module?" OFF "TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_BUILD_LAYOUT_TEST_ENABLED" OFF)
+
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_QTEST_ENABLED "Build tests with QTest for the layout module?" OFF "TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_BUILD_LAYOUT_TEST_ENABLED" OFF)
 
 #
 # process TERRALIB configuration files
@@ -316,6 +327,9 @@ configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/BuildConfig.h.in
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/Version.h.in
                ${CMAKE_BINARY_DIR}/terralib_layout_version.h @ONLY)
+			 
+configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/Config.h.in
+               ${CMAKE_BINARY_DIR}/terralib_layout_unittest_config.h @ONLY)
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/COPYING ${CMAKE_BINARY_DIR}/COPYING.txt COPYONLY)
 
@@ -334,6 +348,35 @@ endif()
 
 if(TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED)
   add_subdirectory(terralib_mod_qt_plugins_layout)
+endif()
+
+#
+# build unit test
+#
+
+if(TERRALIB_BUILD_LAYOUT_TEST_ENABLED AND Boost_FOUND)
+  set (DEPS_DIR ${terralib_DIR}/Debug ${CMAKE_PREFIX_PATH} ${Boost_LIBRARY_DIRS})	 
+
+  set (BIN_DIR ${CMAKE_BINARY_DIR}/Debug)
+  
+  configure_file(${CMAKE_SOURCE_DIR}/unittest.bat.in ${CMAKE_BINARY_DIR}/unittest.debug.bat)
+
+  set (DEPS_DIR ${terralib_DIR}/Release ${CMAKE_BINARY_DIR}/Release ${CMAKE_PREFIX_PATH} ${Boost_LIBRARY_DIRS})	
+  
+  set (BIN_DIR ${CMAKE_BINARY_DIR}/Release)
+
+  configure_file(${CMAKE_SOURCE_DIR}/unittest.bat.in ${CMAKE_BINARY_DIR}/unittest.release.bat)
+
+  enable_testing()
+  
+endif()
+
+if(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED)
+  add_subdirectory(terralib_mod_layout_unittest)
+endif()
+
+if(TERRALIB_MOD_LAYOUT_QTEST_ENABLED)
+  add_subdirectory(terralib_mod_layout_qtest)
 endif()
 
 #
