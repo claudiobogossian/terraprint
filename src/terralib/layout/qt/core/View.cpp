@@ -776,6 +776,11 @@ void te::layout::View::createItemGroup()
   Scene* sc = dynamic_cast<Scene*>(scene());
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
 
+  if (graphicsItems.isEmpty())
+  {
+    return;
+  }
+
   if(sc)
   {
     QGraphicsItemGroup* group = sc->createItemGroup(graphicsItems);
