@@ -716,6 +716,10 @@ namespace te
                  
       QPointF checkPoint(x, y);
 
+      Property pKeepAspect = m_controller->getProperty("keep_aspect");
+
+      bool keepAspect = pKeepAspect.getValue().toBool();
+
       if (smallLeftTopRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeFDiagCursor);
@@ -736,22 +740,22 @@ namespace te
         T::setCursor(Qt::SizeFDiagCursor);
         m_enumSides = TPLowerRight;
       }
-      else if (leftRect.contains(checkPoint))
+      else if (keepAspect == false && leftRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeHorCursor);
         m_enumSides = TPLeft;
       }
-      else if (rightRect.contains(checkPoint))
+      else if (keepAspect == false && rightRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeHorCursor);
         m_enumSides = TPRight;
       }
-      else if (topRect.contains(checkPoint))
+      else if (keepAspect == false && topRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeVerCursor);
         m_enumSides = TPTop;
       }
-      else if (bottomRect.contains(checkPoint))
+      else if (keepAspect == false && bottomRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeVerCursor);
         m_enumSides = TPLower;
@@ -897,7 +901,7 @@ namespace te
         resizeRect.setTopLeft(finalCoord);
         break;
 
-      case TPRight:        
+      case TPRight: 
         resizeRect.setRight(m_initialCoord.x() + correctionX);
         break;
 
