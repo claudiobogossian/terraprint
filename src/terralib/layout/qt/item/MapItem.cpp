@@ -72,12 +72,6 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
-  if (mapController == 0)
-  {
-    return;
-  }
-
   const Property& property = m_controller->getProperty("background_color");
   const te::color::RGBAColor& color = property.getValue().toColor();
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
