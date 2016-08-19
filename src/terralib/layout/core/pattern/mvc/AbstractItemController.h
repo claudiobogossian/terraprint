@@ -174,7 +174,7 @@ namespace te
         AbstractItemModel*                m_model; //!< The model of the view
         AbstractItemView*                 m_view; //!< The view
         double                            m_marginResizePrecision; //precision
-        WarningManager*                    m_warningManager;
+        WarningManager*                   m_warningManager;
     };
   }
 }

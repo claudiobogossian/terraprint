@@ -109,6 +109,47 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       hasGeometryChanged = true;
     }
   }
+  bool hasRotation = !propertiesCopy.getProperty("rotation").isNull();
+  if (hasRotation)
+  {
+      double newRotation = propertiesCopy.getProperty("rotation").getValue().toDouble();
+      double currentRotation = m_model->getProperty("rotation").getValue().toDouble();
+      if (newRotation != 0.0)
+      {
+          EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+          Property property(0);
+          property.setName("resizable");
+          property.setLabel(TR_LAYOUT("Resizable"));
+          property.setValue(false, dataType->getDataTypeBool());
+          propertiesCopy.addProperty(property);
+
+          Property pWidth = m_model->getProperty("width");
+          pWidth.setEditable(false);
+          m_model->completelyUpdateProperty(pWidth);
+
+          Property pHeight = m_model->getProperty("height");
+          pHeight.setEditable(false);
+          m_model->completelyUpdateProperty(pHeight);
+
+      }
+      else
+      {
+          EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+          Property property(0);
+          property.setName("resizable");
+          property.setLabel(TR_LAYOUT("Resizable"));
+          property.setValue(true, dataType->getDataTypeBool());
+          propertiesCopy.addProperty(property);
+
+          Property pWidth = m_model->getProperty("width");
+          pWidth.setEditable(true);
+          m_model->completelyUpdateProperty(pWidth);
+
+          Property pHeight = m_model->getProperty("height");
+          pHeight.setEditable(true);
+          m_model->completelyUpdateProperty(pHeight);
+      }
+  }
   if (hasGeometryChanged)
   {
     m_view->prepareGeometryChange();
@@ -118,6 +159,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   {
    // updateChildren(); // update children size
   }
+
+
 
   validateItem();
 }
