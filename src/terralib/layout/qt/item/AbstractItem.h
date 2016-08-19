@@ -1133,21 +1133,6 @@ namespace te
 
       }
 
-
-      QGraphicsScene* scene = this->scene();
-      QGraphicsView* view = scene->views().first();
-
-      QPointF mousePoint(event->pos().x(), event->pos().y());
-      QPointF convPoint = this->mapToScene(mousePoint);
-      QPointF remapedPoint = view->mapFromScene(convPoint);
-
-      QString txt = "X: " + QString::number(mousePoint.x());
-      txt = txt + ", ";
-      txt = txt + "Y: " + QString::number(mousePoint.y());
-
-      QPoint tipPoint = QCursor::pos();
-      QToolTip::showText(tipPoint, txt, view);
-
       T::mousePressEvent(event);
     }
 
@@ -1165,6 +1150,22 @@ namespace te
         m_finalCoord = event->pos();
         T::prepareGeometryChange();
         m_rect = m_controller->calculateResize(m_enumSides, m_initialCoord, m_finalCoord);
+
+        QGraphicsScene* scene = this->scene();
+        QGraphicsView* view = scene->views().first();
+
+        QPointF mousePoint(event->pos().x(), event->pos().y());
+        QPointF convPoint = this->mapToScene(mousePoint);
+        QPointF remapedPoint = view->mapFromScene(convPoint);
+
+        QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
+        QString txt = "X: " + QString::number(mousePoint.x());
+        txt = txt + ", ";
+        txt = txt + "Y: " + QString::number(mousePoint.y());
+
+        QPoint tipPoint = QCursor::pos();
+        QToolTip::showText(tipPoint, txt, view);
+
       }
       else if (m_currentAction == te::layout::ROTATION_ACTION)
       {
@@ -1222,20 +1223,6 @@ namespace te
         m_currentAction = te::layout::NO_ACTION;
       }
 
-      QGraphicsScene* scene = this->scene();
-      QGraphicsView* view = scene->views().first();
-
-      QPointF mousePoint(event->pos().x(), event->pos().y());
-      QPointF convPoint = this->mapToScene(mousePoint);
-      QPointF remapedPoint = view->mapFromScene(convPoint);
-
-      QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
-      QString txt = "X: " + QString::number(mousePoint.x());
-      txt = txt + ", ";
-      txt = txt + "Y: " + QString::number(mousePoint.y());
-
-      QPoint tipPoint = QCursor::pos();
-      QToolTip::showText(tipPoint, txt, view);
 
       double rotation = getItemRotation();
       

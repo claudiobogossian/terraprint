@@ -114,41 +114,25 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   {
       double newRotation = propertiesCopy.getProperty("rotation").getValue().toDouble();
       double currentRotation = m_model->getProperty("rotation").getValue().toDouble();
-      if (newRotation != 0.0)
-      {
-          EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-          Property property(0);
-          property.setName("resizable");
-          property.setLabel(TR_LAYOUT("Resizable"));
-          property.setValue(false, dataType->getDataTypeBool());
-          propertiesCopy.addProperty(property);
 
-          Property pWidth = m_model->getProperty("width");
-          pWidth.setEditable(false);
-          m_model->completelyUpdateProperty(pWidth);
+      bool rotationDiffZero = newRotation != 0.0;
+      bool disableEdt = !rotationDiffZero;
 
-          Property pHeight = m_model->getProperty("height");
-          pHeight.setEditable(false);
-          m_model->completelyUpdateProperty(pHeight);
+      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+      Property property(0);
+      property.setName("resizable");
+      property.setLabel(TR_LAYOUT("Resizable"));
+      property.setValue(!rotationDiffZero, dataType->getDataTypeBool());
+      propertiesCopy.addProperty(property);
 
-      }
-      else
-      {
-          EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-          Property property(0);
-          property.setName("resizable");
-          property.setLabel(TR_LAYOUT("Resizable"));
-          property.setValue(true, dataType->getDataTypeBool());
-          propertiesCopy.addProperty(property);
+      Property pWidth = m_model->getProperty("width");
+      pWidth.setEditable(!rotationDiffZero);
+      m_model->completelyUpdateProperty(pWidth);
 
-          Property pWidth = m_model->getProperty("width");
-          pWidth.setEditable(true);
-          m_model->completelyUpdateProperty(pWidth);
+      Property pHeight = m_model->getProperty("height");
+      pHeight.setEditable(!rotationDiffZero);
+      m_model->completelyUpdateProperty(pHeight);
 
-          Property pHeight = m_model->getProperty("height");
-          pHeight.setEditable(true);
-          m_model->completelyUpdateProperty(pHeight);
-      }
   }
   if (hasGeometryChanged)
   {
