@@ -200,6 +200,8 @@ namespace te
 
         virtual bool checkTouchesCorner( const double& x, const double& y );
 
+        virtual bool checkRotationArea(const double& x, const double& y);
+
         virtual void checkTouchesWarningAlert(const double& x, const double& y/*, QPainter * painter*/);
 
         /*!
@@ -241,6 +243,7 @@ namespace te
         double                            m_selectionPointSize;
         QPolygonF                         m_polygonWarning;
         bool                              m_isPrinting;
+
     };
 
     template <class T>
@@ -276,8 +279,6 @@ namespace te
       }
 
       //models stores size information in item CS. 
-      double x = 0.;
-      double y = 0.;
       double width = m_controller->getProperty("width").getValue().toDouble();
       double height = m_controller->getProperty("height").getValue().toDouble();
 
@@ -325,8 +326,6 @@ namespace te
     {
       QPointF center = boundingRect().center();
 
-      double w = boundingRect().width();
-      double h = boundingRect().height();
 
       if (m_invertedMatrix)
       {
@@ -517,8 +516,6 @@ namespace te
 
       painter->save();
 
-      int zoom = this->getScene()->getContext().getZoom();
-
       const QColor fgcolor(0, 255, 0);
       const QColor backgroundColor(0, 0, 0);
 
@@ -527,18 +524,18 @@ namespace te
       painter->setBrush(Qt::NoBrush);
 
       //gets the adjusted boundigng rectangle based of the painter settings
-      QRectF rectAdjusted = boundingRect();
+      QRectF rectAdjusted = getAdjustedBoundingRect(painter);
       
       QPen penForeground(fgcolor, frameThickness, Qt::DashLine);
       painter->setPen(penForeground);
       painter->setBrush(Qt::NoBrush);
 
-      QTransform t;
-      painter->setTransform(t);
-      
       double half = m_selectionPointSize / 2;
 
-      QRectF convertedRect = qRectToQPolygonMap(rectAdjusted);
+      int tempRotation = this->getItemRotation();
+      this->setItemRotation(0);
+      QRectF convertedRect =  qRectToQPolygonMap(rectAdjusted);
+      this->setItemRotation(tempRotation);
 
       qreal penWidth = 3;
       if (painter->pen().style() == Qt::NoPen)
@@ -567,26 +564,41 @@ namespace te
       QLineF lineRight(bottomL, topL);
       QLineF lineLeft(bottomR, topR);
 
+      double rotation = getItemRotation();
+
+      QTransform transform;
+      painter->setTransform(transform);
+
+      double transformWidth = convertedRect.width();
+      double transformHeight = convertedRect.height();
+
+      QPointF originPoint(transformWidth / 2, transformHeight / 2);
+
+      //this->setTransformOriginPoint(originPoint);
+
+      double translateX = convertedRect.topLeft().x() + transformWidth / 2;
+      double translateY = convertedRect.topLeft().y() + transformHeight / 2;
+      transform.translate(translateX, translateY);
+      transform.rotate(-rotation);
+      transform.translate(-translateX, -translateY);
+      painter->setTransform(transform);
 
       penBackground.setWidthF(penWidth);
       painter->setPen(penBackground);
       painter->setBrush(Qt::NoBrush);
+
+      QRectF selectionRect(topL, bottomR);
       
       painter->drawLine(lineDown);
       painter->drawLine(lineUp);
       painter->drawLine(lineRight);
       painter->drawLine(lineLeft);
 
-
       penForeground.setWidthF(penWidth);
       painter->setPen(penForeground);
       painter->setBrush(Qt::NoBrush);
 
-      painter->drawLine(lineDown);
-      painter->drawLine(lineUp);
-      painter->drawLine(lineRight);
-      painter->drawLine(lineLeft);
-
+      painter->drawRect(selectionRect);
 
       QPen pen;
       pen.setColor(QColor(255, 0, 0));
@@ -602,6 +614,42 @@ namespace te
       painter->drawPoint(bottomR.x() - half, bottomR.y() - half);
       painter->drawPoint(bottomL.x() + half, bottomL.y() - half);
       painter->drawPoint(center.x(), center.y());
+
+      double rectSize = 16;
+
+      QRectF rectRotation((convertedRect.x() + (convertedRect.width() / 2)) - (rectSize / 2), convertedRect.y() + 8, rectSize, rectSize);
+
+      QPainterPath Ppath;
+      
+      pen.setColor(QColor(0, 0, 0));
+      pen.setStyle(Qt::SolidLine);
+      pen.setWidthF(1.5);
+      painter->setPen(pen);
+      painter->setBrush(Qt::NoBrush);
+
+      QPointF centerRight = rectRotation.center();
+      centerRight.setX(centerRight.x() + (rectRotation.width() / 2));
+      Ppath.moveTo(centerRight);
+
+      Ppath.lineTo(centerRight.x() + 3, centerRight.y() - 3);
+      Ppath.moveTo(centerRight);
+      Ppath.lineTo(centerRight.x() - 3, centerRight.y() - 3);
+      Ppath.moveTo(centerRight);
+      Ppath.arcTo(rectRotation, 0.0, 150.0);
+
+      QPointF centerLeft = rectRotation.center();
+      centerLeft.setX(centerLeft.x() - (rectRotation.width() / 2));
+
+      Ppath.moveTo(centerLeft);
+
+      Ppath.lineTo(centerLeft.x() - 3, centerLeft.y() + 3);
+      Ppath.moveTo(centerLeft);
+      Ppath.lineTo(centerLeft.x() + 3, centerLeft.y() + 3);
+      Ppath.moveTo(centerLeft);
+      Ppath.arcTo(rectRotation, 180.0, 150.0);
+
+
+      painter->drawPath(Ppath);
 
       painter->restore();
     }
@@ -628,8 +676,6 @@ namespace te
       QString qText = ItemUtils::convert2QString(text);
 
       QPainterPath textObject = itemUtils.textToVector(qText, font, point, rotate);
-
-      int fontSize = painter->font().pointSize();
 
       QPen pen = painter->pen();
       pen.setWidthF(0);
@@ -798,7 +844,6 @@ namespace te
       painter->setPen(pen);
       painter->setBrush(brush);
 
-      //QRectF rectAdjusted = getAdjustedBoundingRect(painter);
       QRectF rectAdjusted = boundingRect();
 
       QTransform t;
@@ -916,9 +961,13 @@ namespace te
     inline bool te::layout::AbstractItem<T>::checkTouchesCorner(const double& x, const double& y)
     {
       bool result = true;
-      QRectF bRect = boundingRect();
 
+      QRectF bRect = boundingRect();
+      
+      int tempRotation = this->getItemRotation();
+      this->setItemRotation(0);
       QRectF remapRect = qRectToQPolygonMap(bRect);
+      this->setItemRotation(tempRotation);
 
       QPointF ll = remapRect.bottomLeft();
       QPointF lr = remapRect.bottomRight();
@@ -952,8 +1001,6 @@ namespace te
       QRectF topRect(smallLeftTopRect.topLeft(), smallRightTopRect.bottomRight());
       QRectF bottomRect(smallLeftBottomRect.topLeft(), smallRightBottomRect.bottomRight());
 
-
-
            
       QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
 
@@ -981,6 +1028,7 @@ namespace te
         T::setCursor(Qt::SizeFDiagCursor);
         m_enumSides = TPLowerRight;
       }
+
       else if (keepAspect == false && leftRect.contains(checkPoint))
       {
         T::setCursor(Qt::SizeHorCursor);
@@ -1011,6 +1059,37 @@ namespace te
       return result;
     }
 
+
+    template <class T>
+    inline bool te::layout::AbstractItem<T>::checkRotationArea(const double& x, const double& y)
+    {
+        Utils utils = this->getScene()->getUtils();
+        
+        QGraphicsScene* scene = this->scene();
+        QGraphicsView* view = scene->views().first();
+
+        int zoom = this->getScene()->getContext().getZoom();
+        double zoomFactor = zoom / 100.;
+        double rectSize = 16.;
+        double rectSizeMM = utils.pixel2mm(rectSize) / zoomFactor;
+        QPointF referencePointInItemCS(this->boundingRect().width() / 2., this->boundingRect().height() - rectSizeMM);
+
+        QPointF referencePointInSceneCS = this->mapToScene(referencePointInItemCS);
+        QPointF referencePointInViewCS = view->mapFromScene(referencePointInSceneCS);
+
+        QPointF mousePoint(x, y);
+        QRectF rectRotation(referencePointInItemCS.x() - (rectSizeMM / 2.), referencePointInItemCS.y() - (rectSizeMM / 2.), rectSizeMM, rectSizeMM);
+        
+        if (rectRotation.contains(mousePoint))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     template <class T>
     inline void te::layout::AbstractItem<T>::mousePressEvent(QGraphicsSceneMouseEvent * event)
     {
@@ -1020,6 +1099,9 @@ namespace te
       {
         //If so, checks if the resize operation must be started
         bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
+
+
+        
         if (startResizing == true)
         {
           m_rect = boundingRect();
@@ -1027,6 +1109,28 @@ namespace te
           m_currentAction = te::layout::RESIZE_ACTION;
           m_initialCoord = event->pos();
         }
+       
+      }
+
+      bool startRotation = checkRotationArea(event->pos().x(), event->pos().y());
+      if (startRotation == true)
+      {
+          m_currentAction = te::layout::ROTATION_ACTION;
+
+          QRectF bRect = boundingRect();
+
+          QRectF remapRect = qRectToQPolygonMap(bRect);
+
+          QGraphicsScene* scene = this->scene();
+          QGraphicsView* view = scene->views().first();
+
+          QPointF mousePoint(event->pos().x(), event->pos().y());
+
+          QPointF convPoint = this->mapToScene(mousePoint);
+          QPointF remapedPoint = view->mapFromScene(convPoint);
+
+          QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
+
       }
 
       T::mousePressEvent(event);
@@ -1046,6 +1150,43 @@ namespace te
         m_finalCoord = event->pos();
         T::prepareGeometryChange();
         m_rect = m_controller->calculateResize(m_enumSides, m_initialCoord, m_finalCoord);
+
+        QGraphicsScene* scene = this->scene();
+        QGraphicsView* view = scene->views().first();
+
+        QPointF mousePoint(event->pos().x(), event->pos().y());
+        QPointF convPoint = this->mapToScene(mousePoint);
+        QPointF remapedPoint = view->mapFromScene(convPoint);
+
+        QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
+        QString txt = "X: " + QString::number(mousePoint.x());
+        txt = txt + ", ";
+        txt = txt + "Y: " + QString::number(mousePoint.y());
+
+        QPoint tipPoint = QCursor::pos();
+        QToolTip::showText(tipPoint, txt, view);
+
+      }
+      else if (m_currentAction == te::layout::ROTATION_ACTION)
+      {
+        QRectF bRect = boundingRect();
+
+        QRectF remapRect = qRectToQPolygonMap(bRect);
+
+        QGraphicsScene* scene = this->scene();
+        QGraphicsView* view = scene->views().first();
+
+        QPointF mousePoint(event->pos().x(), event->pos().y());
+
+        QPointF convPoint = this->mapToScene(mousePoint);
+        QPointF remapedPoint = view->mapFromScene(convPoint);
+
+        QPointF checkPoint(remapedPoint.x(), remapedPoint.y());
+
+        double angle = Utils::calculateAngle(remapRect.center(), checkPoint);
+        angle = angle - 90;
+        this->setItemRotation(-angle);
+        this->setItemRotation(-angle);
       }
       else
       {
@@ -1077,7 +1218,16 @@ namespace te
         T::setOpacity(1.);
         m_controller->itemPositionChanged(T::pos().x(), T::pos().y());
       }
+      else if (m_currentAction == te::layout::ROTATION_ACTION)
+      {
+        m_currentAction = te::layout::NO_ACTION;
+      }
 
+
+      double rotation = getItemRotation();
+      
+      m_controller->rotated(rotation);
+      
       T::mouseReleaseEvent(event);
     }
     
