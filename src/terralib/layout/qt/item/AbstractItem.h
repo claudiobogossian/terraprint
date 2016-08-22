@@ -1265,11 +1265,6 @@ namespace te
       QStyleOptionGraphicsItem opt;
       this->drawItem(&p, &opt, 0);
 
-      if (!T::childItems().isEmpty())
-      {
-        drawSelection(&p);
-      }
-
       p.end();
 
       QImage image = m_clonePixmap.toImage();
