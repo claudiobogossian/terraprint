@@ -228,6 +228,7 @@ void te::layout::AbstractItemController::rotated(const double& degree)
     Property property(0);
     property.setName("rotation");
     property.setValue(degree, dataType->getDataTypeDouble());
+    property.setParent(this->getModel()->getProperties().getTypeObj()->getName());
     properties.addProperty(property);
   }
 
