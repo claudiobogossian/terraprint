@@ -60,6 +60,9 @@
 #include <QMap>
 #include <QToolTip>
 
+//STL
+#include <math.h>
+
 class QWidget;
 
 namespace te
@@ -1185,7 +1188,14 @@ namespace te
 
         double angle = Utils::calculateAngle(remapRect.center(), checkPoint);
         angle = angle - 90;
-        this->setItemRotation(-angle);
+
+        //here we try to round the degree before setting it into the model
+        double roundedAngle = std::round(angle / 90.) * 90.;
+        if (fabs(roundedAngle - angle) <= 5)
+        {
+          angle = roundedAngle;
+        }
+
         this->setItemRotation(-angle);
       }
       else
@@ -1221,13 +1231,11 @@ namespace te
       else if (m_currentAction == te::layout::ROTATION_ACTION)
       {
         m_currentAction = te::layout::NO_ACTION;
+
+        double rotation = getItemRotation();
+        m_controller->rotated(rotation);
       }
 
-
-      double rotation = getItemRotation();
-      
-      m_controller->rotated(rotation);
-      
       T::mouseReleaseEvent(event);
     }
     
