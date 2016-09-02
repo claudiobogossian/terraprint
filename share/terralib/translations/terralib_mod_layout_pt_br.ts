@@ -2038,7 +2038,7 @@ nononon</source>
 <context>
     <name>te::layout::MainLayout</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MainLayout.cpp" line="117"/>
+        <location filename="../../../src/terralib/layout/qt/default/MainLayout.cpp" line="119"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>

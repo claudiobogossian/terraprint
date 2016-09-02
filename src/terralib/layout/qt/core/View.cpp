@@ -92,7 +92,9 @@ te::layout::View::View( QWidget* widget) :
   m_showContextMenu(true),
   m_clipboard(QApplication::clipboard()),
   m_cutObject(false),
-  m_tempDataStorageEditor(0)
+  m_tempDataStorageEditor(0),
+  m_fullTempPath(""),
+  m_tempFileName("~layoutTemp.xml")
 {
   setDragMode(RubberBandDrag);
 
@@ -756,8 +758,6 @@ void te::layout::View::config()
   //scrollbars
   connect(verticalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
   connect(horizontalScrollBar(), SIGNAL(valueChanged(int)), this, SLOT(onScrollBarValueChanged(int)));
-
-  configTempFileDataStorage(); // init temporary file data storage
 }
 
 void te::layout::View::resizeEvent(QResizeEvent * event)
@@ -1681,14 +1681,16 @@ void te::layout::View::onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> 
   emit showDialogWindow(type, itemList);
 }
 
-void te::layout::View::configTempFileDataStorage()
+void te::layout::View::configLayoutWithTempFile()
 {
+  // init or read temporary file data storage
+
   Scene* scene = getScene();
-  
+
   // User folder path
   // Whether a directory separator is added to the end or not, depends on the operating system.
-  QString newPath = QDir(QDir::tempPath()).filePath("TerraPrint"); 
-
+  QString newPath = QDir(QDir::tempPath()).filePath("TerraPrint");
+  
   QDir dir(newPath);
   if (!dir.exists())
   {
@@ -1699,9 +1701,26 @@ void te::layout::View::configTempFileDataStorage()
     {
       return;
     }
-  }  
+  }
+  else
+  {
+    QString pathToLoad = newPath + "/" + m_tempFileName;
+    QFile file(pathToLoad);
+    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+      file.close();
+      te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
+      importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+    }
+  }
 
-  QString fullNewPath = newPath + "/~layoutTemp.xml";
+  m_fullTempPath = newPath + "/" + m_tempFileName;
+  configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+}
+
+void te::layout::View::configTempFileDataStorage(QString fullNewPath)
+{
+  Scene* scene = getScene();
 
   std::string path = ItemUtils::convert2StdString(fullNewPath);
   EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
@@ -1711,6 +1730,7 @@ void te::layout::View::configTempFileDataStorage()
   connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
   connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
 }
+
 void te::layout::View::onRequestIOEnterAccessTempDataStorage()
 {
   emit aboutToPerformIO();
@@ -1719,5 +1739,38 @@ void te::layout::View::onRequestIOEnterAccessTempDataStorage()
 void te::layout::View::onRequestIOEndAccessTempDataStorage()
 {
   emit endedPerformingIO();
+}
+
+QString te::layout::View::getFullTempPath()
+{
+  return m_fullTempPath;
+}
+
+QString te::layout::View::getTempFileName()
+{
+  return m_tempFileName;
+}
+
+bool te::layout::View::importTempFile(EnumType* type, QString fullTempPath)
+{
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+    return false;
+
+  emit aboutToPerformIO();
+
+  if (fullTempPath.isEmpty())
+  {
+    emit endedPerformingIO();
+    return false;
+  }
+
+  std::string j_name = ItemUtils::convert2StdString(fullTempPath);
+
+  bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+
+  emit endedPerformingIO();
+
+  return result;
 }
 
