@@ -1550,6 +1550,8 @@ bool te::layout::View::addToolbarItemInside(EnumType* itemType, ToolbarItemInsid
   if (!toolbarInside)
     return false;
 
+  toolbarInside->getToolbar()->setVisible(false);
+
   m_itemToolbars[itemType] = toolbarInside;
   return true;
 }

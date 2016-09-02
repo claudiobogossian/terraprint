@@ -329,6 +329,8 @@ namespace te
 
         static double round(double n, double precision);
 
+        static double calculateAngle(QPointF p1, QPointF p2);
+
       protected:
         
         /*!

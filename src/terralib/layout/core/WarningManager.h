@@ -60,7 +60,7 @@ namespace te
 
       virtual void addWarning(const std::string &warningText);
 
-      virtual void clearWarnings();
+      virtual void clearWarnings(); 
 
       virtual std::vector<std::string> getWarnings();
 

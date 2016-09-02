@@ -141,7 +141,7 @@ namespace te
 
     enum TELAYOUTEXPORT ItemAction
     {
-      NO_ACTION, RESIZE_ACTION, MOVE_ACTION
+      NO_ACTION, RESIZE_ACTION, MOVE_ACTION, ROTATION_ACTION
     };
   }
 }

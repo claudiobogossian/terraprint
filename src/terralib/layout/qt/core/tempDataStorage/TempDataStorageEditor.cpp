@@ -166,6 +166,13 @@ void te::layout::TempDataStorageEditor::verifySentinelThread()
     {
       wait(5000);
       deleteAllDoneThreads();
+
+      //if the thread was deleted, we stop the function
+      if (m_threadSentinel == 0)
+      {
+        break;
+      }
+
       if (m_requestIOEnterAccess && m_idsDone.empty())
       {
         m_requestIOEnterAccess = false;

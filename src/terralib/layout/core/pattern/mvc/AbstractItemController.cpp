@@ -109,6 +109,31 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       hasGeometryChanged = true;
     }
   }
+  bool hasRotation = !propertiesCopy.getProperty("rotation").isNull();
+  if (hasRotation)
+  {
+      double newRotation = propertiesCopy.getProperty("rotation").getValue().toDouble();
+      double currentRotation = m_model->getProperty("rotation").getValue().toDouble();
+
+      bool rotationDiffZero = newRotation != 0.0;
+      bool disableEdt = !rotationDiffZero;
+
+      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+      Property property(0);
+      property.setName("resizable");
+      property.setLabel(TR_LAYOUT("Resizable"));
+      property.setValue(!rotationDiffZero, dataType->getDataTypeBool());
+      propertiesCopy.addProperty(property);
+
+      Property pWidth = m_model->getProperty("width");
+      pWidth.setEditable(!rotationDiffZero);
+      m_model->completelyUpdateProperty(pWidth);
+
+      Property pHeight = m_model->getProperty("height");
+      pHeight.setEditable(!rotationDiffZero);
+      m_model->completelyUpdateProperty(pHeight);
+
+  }
   if (hasGeometryChanged)
   {
     m_view->prepareGeometryChange();
@@ -118,6 +143,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   {
    // updateChildren(); // update children size
   }
+
+
 
   validateItem();
 }
@@ -191,6 +218,24 @@ void te::layout::AbstractItemController::resized(const double& width, const doub
   }
   setProperties(properties);
 }
+
+
+void te::layout::AbstractItemController::rotated(const double& degree)
+{
+  Properties properties;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property property(0);
+    property.setName("rotation");
+    property.setValue(degree, dataType->getDataTypeDouble());
+    property.setParent(this->getModel()->getProperties().getTypeObj()->getName());
+    properties.addProperty(property);
+  }
+
+  setProperties(properties);
+}
+
+
 
 void te::layout::AbstractItemController::itemPositionChanged(double x, double y)
 {

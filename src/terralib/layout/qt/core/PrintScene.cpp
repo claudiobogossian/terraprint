@@ -201,6 +201,7 @@ QPrinter* te::layout::PrintScene::createPrinter()
   config->getPaperSize(w, h);
 
   printer = new QPrinter(QPrinter::HighResolution);
+  printer->setFullPage(true);
 
   QSizeF sf(w, h);
 

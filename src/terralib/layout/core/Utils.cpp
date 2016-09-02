@@ -783,3 +783,11 @@ double te::layout::Utils::round(double n, double precision)
 {
   return floor(n * pow(10., precision) + .5) / pow(10., precision);
 }
+
+
+double te::layout::Utils::calculateAngle(QPointF p1, QPointF p2)
+{
+  double angle = std::atan2(p1.y() - p2.y(), p1.x() - p2.x());
+
+  return (angle * 180) / 3.14159265;
+}

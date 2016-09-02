@@ -87,6 +87,11 @@ void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGrap
     const std::string& label = property.getOptionByCurrentChoice().toString();
     EnumType* currentScaleType = enumScale.searchLabel(label);
 
+    if (validateGaps() == false)
+    {
+      return;
+    }
+
     if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
     {
       drawDoubleAlternatingScaleBar(painter);
@@ -543,5 +548,46 @@ void te::layout::ScaleItem::refreshScaleProperties()
   m_gapY = pScaleGapY.getValue().toDouble();
   m_font = pTextFont.getValue().toFont();
   m_scaleUnitGapX = pScaleUnitGapX.getValue().toDouble();
+}
+
+
+bool te::layout::ScaleItem::validateGaps()
+{
+
+  const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
+  const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
+  const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
+
+  m_gapX = pScaleGapX.getValue().toDouble();
+  m_gapY = pScaleGapY.getValue().toDouble();
+  m_scaleUnitGapX = pScaleUnitGapX.getValue().toDouble();
+
+  QRectF boundRect = boundingRect();
+
+  double result = boundRect.width() / m_gapX;
+
+  if (result > 40)
+  {
+    return false;
+  }
+
+  if (m_gapX <= 0)
+  {
+    return false;
+  }
+
+  if (m_gapY <= 0)
+  {
+    return false;
+  }
+
+
+  if (m_scaleUnitGapX <= 0)
+  {
+    return false;
+  }
+
+  return true;
+
 }
 
