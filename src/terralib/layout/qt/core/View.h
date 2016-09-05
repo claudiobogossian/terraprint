@@ -479,9 +479,9 @@ namespace te
 
         QMimeData* convert2MimeData(const  std::vector<Properties>& properties);
 
-        virtual void configTempFileDataStorage(QString fullNewPath);
+        virtual void configTempFileDataStorage(const QString& fullNewPath);
 
-        virtual bool importTempFile(EnumType* type, QString fullTempPath);
+        virtual bool importTempFile(EnumType* type, const QString& fullTempPath);
 
       protected:
 

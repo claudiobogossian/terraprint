@@ -1718,7 +1718,7 @@ void te::layout::View::configLayoutWithTempFile()
   configTempFileDataStorage(m_fullTempPath); // init temp data storage 
 }
 
-void te::layout::View::configTempFileDataStorage(QString fullNewPath)
+void te::layout::View::configTempFileDataStorage(const QString& fullNewPath)
 {
   Scene* scene = getScene();
 
@@ -1751,7 +1751,7 @@ QString te::layout::View::getTempFileName()
   return m_tempFileName;
 }
 
-bool te::layout::View::importTempFile(EnumType* type, QString fullTempPath)
+bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPath)
 {
   Scene* scne = dynamic_cast<Scene*>(scene());
   if (!scne)
