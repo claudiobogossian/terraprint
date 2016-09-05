@@ -604,7 +604,7 @@ void te::layout::MapController::validateItem()
   }
 }
 
-void te::layout::MapController::changedPropertyLayerURIFromDropEvent(Properties beforeProps)
+void te::layout::MapController::changedPropertyLayerURIFromDropEvent(const Properties& beforeProps)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Property prop;
