@@ -101,6 +101,7 @@ namespace te
 
         virtual AbstractProxyProject* getAbstractProxyProject();
 
+        virtual void changedPropertyLayerURIFromDropEvent(Properties beforeProps);
     };
   }
 }
