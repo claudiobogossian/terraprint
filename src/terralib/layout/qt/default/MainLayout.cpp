@@ -108,8 +108,10 @@ void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
 
   if(create)
   {
-    //Calculate matrix and centralizes the scene
+    // Calculate matrix and centralizes the scene
     m_view->config();
+    // init or read temporary file data storage
+    m_view->configLayoutWithTempFile();
   }
 
   m_statusBar = new QStatusBar;

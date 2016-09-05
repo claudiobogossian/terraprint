@@ -64,10 +64,7 @@ bool te::layout::TempFile::save()
   std::string path = tempFileInfo->getPath();
   Scene* scene = tempFileInfo->getScene();
   PaperConfig* paperConfig = scene->getPaperConfig();  
-
-  if (m_properties.empty())
-    return result;
-
+  
   TemplateEditor editor(type, path);
   AbstractTemplate* jtemplate = editor.getTemplate();
 

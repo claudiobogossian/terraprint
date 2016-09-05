@@ -24,6 +24,7 @@
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../core/Value.h"
 #include "../core/Scene.h"
+#include "../core/pattern/command/ChangePropertyCommand.h"
 
 #include "terralib/maptools/Utils.h"
 
@@ -31,6 +32,9 @@
 #include <set>
 #include <vector>
 #include <map>
+
+// Qt
+#include <QGraphicsItem>
 
 te::layout::MapController::MapController(AbstractItemModel* model)
   : AbstractItemController(model)
@@ -141,7 +145,11 @@ void te::layout::MapController::addLayers(const std::list<te::map::AbstractLayer
   property.setName("layers");
   property.setValue(currentLayersList, dataType->getDataTypeLayerList());
 
+  Properties beforeProps = getProperties();
+
   setProperty(property);
+
+  changedPropertyLayerURIFromDropEvent(beforeProps); // add change property command to undo/redo 
 }
 
 void te::layout::MapController::setProperty(const te::layout::Property& property)
@@ -593,9 +601,36 @@ void te::layout::MapController::validateItem()
       std::string warningMSG = TR_LAYOUT("Layer ") + layer->getTitle() + TR_LAYOUT(" Without Projection");
       m_warningManager->addWarning(warningMSG);
     }
-
   }
-
-
-
 }
+
+void te::layout::MapController::changedPropertyLayerURIFromDropEvent(const Properties& beforeProps)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  Property prop;
+  prop = m_model->getProperty("layers_uri");
+
+  std::vector<QGraphicsItem*> commandItems;
+  std::vector<Properties> commandOld;
+  std::vector<Properties> commandNew;
+  
+  Properties afterProps = getProperties();
+  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(m_view);
+  if (item)
+  {
+    commandItems.push_back(item);
+  }
+  commandOld.push_back(beforeProps);
+  commandNew.push_back(afterProps);
+
+  QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew);
+  if (item)
+  {
+    Scene* scene = dynamic_cast<Scene*>(item->scene());
+    if (scene)
+    {
+      scene->addUndoStack(command);
+    }    
+  }
+}
+

@@ -327,7 +327,7 @@ const te::layout::Property& te::layout::Property::containsSubProperty(std::strin
     for (std::vector<Property>::const_iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
     {
       const Property& prop = itSub->containsSubProperty(name);
-      if (!prop.isNull())
+      if (prop.getName().compare(name) == 0)
       {
         return prop;
       }

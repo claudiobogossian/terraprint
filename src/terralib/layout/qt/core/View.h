@@ -57,6 +57,7 @@
 #include <QClipboard>
 #include <QMimeData>
 #include <QApplication>
+#include <QString>
 
 class QMouseEvent;
 class QWheelEvent;
@@ -277,6 +278,11 @@ namespace te
 
         virtual void removeSelectedItem();
 
+        virtual QString getFullTempPath();
+
+        virtual QString getTempFileName();
+
+        virtual void configLayoutWithTempFile();
 
       public slots:
     
@@ -473,7 +479,9 @@ namespace te
 
         QMimeData* convert2MimeData(const  std::vector<Properties>& properties);
 
-        virtual void configTempFileDataStorage();
+        virtual void configTempFileDataStorage(const QString& fullNewPath);
+
+        virtual bool importTempFile(EnumType* type, const QString& fullTempPath);
 
       protected:
 
@@ -501,6 +509,8 @@ namespace te
         QClipboard*                          m_clipboard;
         bool                                 m_cutObject;
         TempDataStorageEditor*               m_tempDataStorageEditor;
+        QString                              m_fullTempPath;
+        QString                              m_tempFileName;
     };
   }
 }

@@ -430,7 +430,7 @@ namespace te
         for (std::vector<te::layout::Property>::const_iterator itSub = m_properties.begin(); itSub != m_properties.end(); ++itSub)
         {
           const Property& prop = itSub->containsSubProperty(name);
-          if (!prop.isNull())
+          if (prop.getName().compare(name) == 0)
           {
             return prop;
           }
