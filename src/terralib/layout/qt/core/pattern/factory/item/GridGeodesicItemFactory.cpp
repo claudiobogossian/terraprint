@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::GridGeodesicItemFactory::build(ItemFac
   Properties      props = params.getProperties(); 
 
   GridGeodesicModel* model = new GridGeodesicModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   te::layout::AbstractItemController* controller = new GridGeodesicController(model);
   GridGeodesicItem* view = new GridGeodesicItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

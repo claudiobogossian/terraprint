@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::MapCompositionItemFactory::build(ItemF
   Properties      props = params.getProperties(); 
 
   MapCompositionModel* model = new MapCompositionModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   MapCompositionController* controller = new MapCompositionController(model);
   MapCompositionItem* view = new MapCompositionItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

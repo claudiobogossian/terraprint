@@ -27,13 +27,14 @@
 #include "SVGDialogOutside.h"
 #include "terralib/common/Logger.h"
 #include "terralib/qt/widgets/utils/DoubleListWidget.h"
-#include "../../outside/SVGDialogModel.h"
+#include "../core/ItemUtils.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/property/GenericVariant.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
-#include "ui_SVGView.h"
 #include "../../outside/SVGDialogController.h"
+#include "../../outside/SVGDialogModel.h"
+#include "ui_SVGView.h"
 
 // STL
 #include <algorithm>

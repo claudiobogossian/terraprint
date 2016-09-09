@@ -48,10 +48,6 @@ namespace te
     {
     public:
       BalloonController(AbstractItemModel* model);
-      bool sync();
-      virtual QSizeF updateView();
-      virtual void updateModel(const QSizeF& size);
-
     };
 
   }

@@ -63,15 +63,21 @@ bool te::layout::TempFile::save()
 
   std::string path = tempFileInfo->getPath();
   Scene* scene = tempFileInfo->getScene();
-  PaperConfig* paperConfig = scene->getPaperConfig();  
-  
+  PaperConfig* paperConfig = scene->getPaperConfig();
+
   TemplateEditor editor(type, path);
   AbstractTemplate* jtemplate = editor.getTemplate();
 
   if (!jtemplate)
     return result;
 
-  result = jtemplate->exportTemplate(*paperConfig, m_properties, m_mapGroups);
+  //to make this funcion thread safe, we must copy the properties before stating to process it
+  std::vector<te::layout::Properties> vecPropertiesCopy(m_properties);
+
+  if (vecPropertiesCopy.empty())
+    return result;
+
+  result = jtemplate->exportTemplate(*paperConfig, vecPropertiesCopy, m_mapGroups);
   
   return result;
 }

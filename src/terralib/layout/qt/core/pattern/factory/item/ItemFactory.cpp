@@ -30,7 +30,7 @@
 #include "terralib/geometry/Coord2D.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../core/property/Properties.h"
-#include "../../../../../core/pattern/mvc/AbstractItemModel.h"
+#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 
 // STL
 #include <string>
@@ -46,10 +46,9 @@ te::layout::ItemFactory::ItemFactory(const std::string& factoryKey)
 
 }
 
-void te::layout::ItemFactory::setProperties(AbstractItemModel* model, ItemFactoryParamsCreate params)
+te::layout::Properties te::layout::ItemFactory::convertToProperties(const ItemFactoryParamsCreate& params)
 {
-  if (!model)
-    return;
+  Properties props;
 
   std::string     name = params.getName();
   int             id = params.getId();
@@ -57,8 +56,6 @@ void te::layout::ItemFactory::setProperties(AbstractItemModel* model, ItemFactor
   double          height = params.getHeight();
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  Properties props;
 
   Property prop_name(0);
   prop_name.setName("name");
@@ -74,7 +71,6 @@ void te::layout::ItemFactory::setProperties(AbstractItemModel* model, ItemFactor
   {
     Property prop_width(0);
     prop_width.setName("width");
-    prop_width.setLabel("Width");
     prop_width.setValue(width, dataType->getDataTypeDouble());
     props.addProperty(prop_width);
   }
@@ -83,12 +79,10 @@ void te::layout::ItemFactory::setProperties(AbstractItemModel* model, ItemFactor
   {
     Property prop_height(0);
     prop_height.setName("height");
-    prop_height.setLabel("Height");
     prop_height.setValue(height, dataType->getDataTypeDouble());
     props.addProperty(prop_height);
   }
 
-  //update properties
-  model->setProperties(props);
+  return props;
 }
 

@@ -52,7 +52,7 @@ namespace te
 
       \sa te::layout::ObjectItem
     */
-    class TELAYOUTEXPORT ArrowItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT ArrowItem : public AbstractItem
     {
       public:
 
@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ArrowItem(AbstractItemController* controller, bool invertedMatrix = false);
+        ArrowItem(AbstractItemController* controller);
         
         /*!
           \brief Destructor

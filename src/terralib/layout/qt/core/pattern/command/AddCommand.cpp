@@ -31,6 +31,7 @@
 #include "../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../../../core/enum/EnumType.h"
+#include "../../ItemUtils.h"
 #include "../../Scene.h"
 
 // Qt

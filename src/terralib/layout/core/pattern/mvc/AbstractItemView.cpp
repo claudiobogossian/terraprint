@@ -4,9 +4,8 @@
 #include "AbstractItemController.h"
 #include "AbstractItemModel.h"
 
-te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controller, bool invertedMatrix)
+te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controller)
   : m_controller(controller)
-  , m_invertedMatrix(invertedMatrix)
   , m_isEditionMode(false)
   , m_subSelected(false)
   , m_useResizePixmap(true)
@@ -36,11 +35,6 @@ void te::layout::AbstractItemView::setController(AbstractItemController* control
     m_controller = 0;
   }
   m_controller = controller;
-}
-
-bool te::layout::AbstractItemView::isInverted()
-{
-  return m_invertedMatrix;
 }
 
 void te::layout::AbstractItemView::setEditionMode(bool editionMode)

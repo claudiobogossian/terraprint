@@ -65,6 +65,11 @@ namespace te
 
         virtual void setProperties(const Properties& properties);
 
+        /*!
+        \brief Method called by the subject to inform changes in the model
+        */
+        virtual void update(const Subject* subject);
+
         virtual std::map<std::string, te::layout::Properties> groupPropertiesByParent(const Properties& properties);
 
         virtual void hideProperties(Property& property) const;

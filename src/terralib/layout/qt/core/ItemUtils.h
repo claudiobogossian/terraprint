@@ -283,6 +283,26 @@ namespace te
 
         static void normalizeChildrenPosition(QGraphicsItem* item);
 
+        /*!
+        \brief Draws the given image in the given location
+        */
+        static void drawImage(const QRectF& rectMM, QPainter* painter, const QImage& image);
+
+        /*!
+        \brief Draws the given pixmap in the given location
+        */
+        static void drawPixmap(const QRectF& rectMM, QPainter* painter, const QPixmap& pixmap);
+
+        /*!
+        \brief Draws the given text in the given location with rotation
+        */
+        static void drawText(const QPointF& pointMM, QPainter* painter, const QFont& font, const std::string& text, int rotate = 0);
+
+        /*!
+        \brief Draws the given text super script in the given location with rotation
+        */
+        static void drawSuperScriptText(const QPointF& pointMM, QPainter* painter, const QFont& font, const std::string& text, int rotate = 0);
+
       protected:
 
         /*!

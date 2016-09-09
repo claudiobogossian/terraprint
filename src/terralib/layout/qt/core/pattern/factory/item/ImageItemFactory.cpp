@@ -35,22 +35,20 @@ te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryPar
   Properties props = params.getProperties(); 
 
   ImageModel* model = new ImageModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   AbstractItemController* controller = new ImageController(model);
   ImageItem* view = new ImageItem(controller);
+
   double width = model->getProperty("width").getValue().toDouble();
   double height = model->getProperty("height").getValue().toDouble();
   view->setPos(params.getCoord().getX() - width / 2, params.getCoord().getY() - height / 2);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return dynamic_cast<AbstractItemView*>(view);
 }
 

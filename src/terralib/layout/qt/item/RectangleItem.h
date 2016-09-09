@@ -52,7 +52,7 @@ namespace te
 
       \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT RectangleItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT RectangleItem : public AbstractItem
     {
       public:
 
@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        RectangleItem(AbstractItemController* controller, bool invertedMatrix = false);
+        RectangleItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

@@ -32,23 +32,20 @@
 
 te::layout::AbstractItemView* te::layout::ThreeNorthItemFactory::build(ItemFactoryParamsCreate params)
 {
-    Properties      props = params.getProperties();
+  Properties      props = params.getProperties();
 
-    ThreeNorthModel* model = new ThreeNorthModel();
-    if (props.getProperties().empty())
-    {
-      setProperties(model, params);
-    }
+  ThreeNorthModel* model = new ThreeNorthModel();
+  AbstractItemController* controller = new ThreeNorthController(model);
+  ThreeNorthItem* view = new ThreeNorthItem(controller);
+  controller->setView(view);
 
-    AbstractItemController* controller = new ThreeNorthController(model);
-    ThreeNorthItem* view = new ThreeNorthItem(controller);
-    controller->setView(view);
+  if (props.getProperties().empty())
+  {
+    props = convertToProperties(params);
+  }
+  controller->setProperties(props);
 
-    if (!props.getProperties().empty())
-    {
-      model->setProperties(props);
-    }
-    return view;
+  return view;
 }
 
 te::layout::ThreeNorthItemFactory::ThreeNorthItemFactory() :

@@ -28,8 +28,8 @@
 // TerraLib
 #include "LegendChildItem.h"
 
-te::layout::LegendChildItem::LegendChildItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::LegendChildItem::LegendChildItem(AbstractItemController* controller)
+  : AbstractItem(controller)
 {  
  
 }

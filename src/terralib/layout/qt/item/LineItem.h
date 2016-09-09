@@ -45,11 +45,11 @@ namespace te
   {
     class AbstractItemController;
 
-    class LineItem : public AbstractItem<QGraphicsItem>
+    class LineItem : public AbstractItem
     {
       public:
 
-        LineItem(AbstractItemController* controller, bool invertedMatrix = false);
+        LineItem(AbstractItemController* controller);
 
         virtual ~LineItem ();
 

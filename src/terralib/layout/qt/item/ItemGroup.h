@@ -55,7 +55,7 @@ namespace te
 
       \sa te::layout::ItemObserver
     */
-    class TELAYOUTEXPORT ItemGroup : public AbstractItem<QGraphicsItemGroup>
+    class TELAYOUTEXPORT ItemGroup : public AbstractItem
     {
       public:
 
@@ -77,6 +77,10 @@ namespace te
           \brief Reimplemented from QGraphicsItem to capture changes in the item
          */
         virtual QVariant itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value );
+
+        virtual void addToGroup(QGraphicsItem* item);
+
+        virtual void removeFromGroup(QGraphicsItem* item);
 
       protected:
 

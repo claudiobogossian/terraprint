@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::EllipseItemFactory::build(ItemFactoryP
   Properties      props = params.getProperties();
 
   EllipseModel* model = new EllipseModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   AbstractItemController* controller = new AbstractItemController(model);
   EllipseItem* view = new EllipseItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

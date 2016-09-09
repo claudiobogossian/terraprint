@@ -24,6 +24,7 @@
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../qt/core/Scene.h"
+#include "../../qt/item/AbstractItem.h"
 #include "../../qt/item/TextItem.h"
 
 #include <QGraphicsTextItem>
@@ -41,6 +42,65 @@ te::layout::TextController::~TextController()
 {
 }
 
+void te::layout::TextController::setProperty(const te::layout::Property& property)
+{
+  te::layout::Properties properties;
+  properties.addProperty(property);
+
+  setProperties(properties);
+}
+
+void te::layout::TextController::setProperties(const te::layout::Properties& properties)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  Properties propertiesCopy(properties);
+
+  if (propertiesCopy.contains("text") == false && propertiesCopy.contains("font") == false)
+  {
+    AbstractItemController::setProperties(propertiesCopy);
+    return;
+  }
+
+  te::layout::Property pText = propertiesCopy.getProperty("text");
+  if (pText.isNull())
+  {
+    pText = this->getProperty("text");
+  }
+
+  te::layout::Property pFont = propertiesCopy.getProperty("font");
+  if (pFont.isNull())
+  {
+    pFont = this->getProperty("font");
+  }
+
+  QString qText = ItemUtils::convert2QString(pText.getValue().toString());
+  QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
+
+  QPainterPath qPath = ItemUtils::textToVector(qText, qFont);
+  QRectF rect = qPath.boundingRect();
+  QSizeF size = rect.size();
+
+  //We map to MM
+  AbstractItem* absItem = (AbstractItem*)m_view;
+  QSizeF sizeMM(size);
+
+  Property propertyWidth(0);
+  propertyWidth.setName("width");
+  propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
+
+  Property propertyHeight(0);
+  propertyHeight.setName("height");
+  propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
+
+  propertiesCopy.addProperty(propertyWidth);
+  propertiesCopy.addProperty(propertyHeight);
+
+  absItem->prepareGeometryChange();
+
+  AbstractItemController::setProperties(propertiesCopy);
+}
+
+/*
 QSizeF te::layout::TextController::updateView()
 {
   TextItem* view = dynamic_cast<TextItem*>(m_view);
@@ -158,67 +218,13 @@ QSizeF te::layout::TextController::updateView()
     //we finally return the new size in millimiters
     return boundingRect.size();
   }
-
   return QSizeF();
 }
-
-void te::layout::TextController::updateModel(const QSizeF& size)
-{
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  Property propertyWidth(0);
-  propertyWidth.setName("width");
-  propertyWidth.setValue(size.width(), dataType->getDataTypeDouble());
-
-  Property propertyHeight(0);
-  propertyHeight.setName("height");
-  propertyHeight.setValue(size.height(), dataType->getDataTypeDouble());
-
-  Properties properties("");
-  properties.addProperty(propertyWidth);
-  properties.addProperty(propertyHeight);
-
-  m_model->setProperties(properties);
-}
-
-void te::layout::TextController::update(const te::layout::Subject* subject)
-{
-  if(sync() == true)
-  {
-    return;
-  }
-
-  AbstractItemController::update(subject);
-}
-
-bool te::layout::TextController::sync()
-{
-  const Property& pWidth = getProperty("width");
-  const Property& pHeight = getProperty("height");
-
-  //gets the current size of the item
-  QSizeF currentSize(pWidth.getValue().toDouble(), pHeight.getValue().toDouble());
-
-  //updates the view with the current model configuration
-  QSizeF newSize = updateView();
-
-  //if the size of the view needed to be changed, we update the model
-  if(currentSize != newSize)
-  {
-    updateModel(newSize);
-    return true;
-  }
-
-  return false;
-}
-
-void te::layout::TextController::sceneChanged()
-{
-  sync();
-}
+*/
 
 void te::layout::TextController::textChanged()
 {
+  /*
   TextItem* view = dynamic_cast<TextItem*>(m_view);
   if(view != 0)
   {
@@ -252,10 +258,5 @@ void te::layout::TextController::textChanged()
       }
     }
   }
+  */
 }
-
-void te::layout::TextController::refresh()
-{
-  updateView();
-}
-

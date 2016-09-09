@@ -79,7 +79,7 @@ namespace te
 
       \sa te::layout::ObjectItem
     */
-    class TELAYOUTEXPORT LegendItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT LegendItem : public AbstractItem
     {
       public:
 

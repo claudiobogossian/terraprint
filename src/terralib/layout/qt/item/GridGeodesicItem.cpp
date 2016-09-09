@@ -37,8 +37,8 @@
 #include "terralib/geometry/Utils.h"
 #include "../core/Scene.h"
 
-te::layout::GridGeodesicItem::GridGeodesicItem(AbstractItemController* controller, bool invertedMatrix)
-  : GridMapItem(controller, invertedMatrix)
+te::layout::GridGeodesicItem::GridGeodesicItem(AbstractItemController* controller)
+  : GridMapItem(controller)
 {  
   
 }
@@ -127,9 +127,8 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   }
 
-  m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
-
   prepareGeometryChange();
+  m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 }
 
 double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& geoBox )

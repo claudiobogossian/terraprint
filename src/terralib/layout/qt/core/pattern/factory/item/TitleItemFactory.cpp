@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::TitleItemFactory::build(ItemFactoryPar
   Properties      props = params.getProperties(); 
 
   TitleModel* model = new TitleModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   TitleController* controller = new TitleController(model);
   TitleItem* view = new TitleItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

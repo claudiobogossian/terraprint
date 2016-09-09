@@ -33,14 +33,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_SCENE_H
 
 // TerraLib
-#include "terralib/geometry/Envelope.h"
 #include "../../core/AbstractScene.h"
 #include "../../core/Config.h"
-#ifndef Q_MOC_RUN
-#include "../item/MovingItemGroup.h"
-#endif
 #include "AlignItems.h"
-#include "terralib/qt/widgets/canvas/Canvas.h"
 #include "Value.h"
 
 // STL
@@ -58,15 +53,28 @@
 
 class QUndoCommand;
 class QUndoStack;
-class QGraphicsItemGroup;
 class QPainter;
 class QWidget;
 class QStyleOptionGraphicsItem;
 class QGraphicsSceneMouseEvent;
 class QKeyEvent;
+class QGraphicsItem;
 
 namespace te
 {
+  namespace qt
+  {
+    namespace widgets
+    {
+      class Canvas;
+    }
+  }
+
+  namespace gm
+  {
+    class Envelope;
+  }
+
   namespace layout
   {
     class EnumType;
@@ -81,6 +89,7 @@ namespace te
     class ItemUtils;
     class Utils;
     class AbstractProxyProject;
+    class ItemGroup;
 
   /*!
     \brief Class representing the scene. This scene is child of QGraphicsScene, part of Graphics View Framework. 
@@ -166,23 +175,20 @@ namespace te
         virtual bool removeItemByName(std::string name);
     
     /*!
-          \brief Groups objects and creates a QGraphicsItemGroup object. A command Undo/Redo of type AddCommand is created.
+          \brief Groups objects and creates a QGraphicsItem object. A command Undo/Redo of type AddCommand is created.
       
       \param list of objects
       
       \return items group of objects
         */
-        virtual QGraphicsItemGroup* createItemGroup( const QList<QGraphicsItem *> & items, EnumType* groupType = 0 );
-
-        
-        virtual te::layout::MovingItemGroup* createMovingItemGroup( const QList<QGraphicsItem*>& items);
+        virtual QGraphicsItem* createItemGroup( const QList<QGraphicsItem *> & items, EnumType* groupType = 0 );
 
     /*!
           \brief Method that delete object grouping, but the individual objects continue to exist.
       
       \param group list of objects
         */
-        virtual void destroyItemGroup( QGraphicsItemGroup *group );
+        virtual void destroyItemGroup(te::layout::ItemGroup* group );
         
     /*!
           \brief Method that insert command Undo/Redo of type AddCommand in the Undo/Redo stack.

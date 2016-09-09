@@ -34,6 +34,8 @@
 #include "BuildGraphicsItem.h"
 #include "../../core/enum/Enums.h"
 
+#include <QGraphicsItem>
+
 te::layout::VisualizationArea::VisualizationArea( Scene* scene, te::gm::Envelope boxArea ) :
   m_boxArea(boxArea),
   m_scene(scene)

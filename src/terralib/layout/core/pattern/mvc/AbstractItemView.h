@@ -55,7 +55,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        AbstractItemView(AbstractItemController* controller, bool invertedMatrix = false);
+        AbstractItemView(AbstractItemController* controller);
 
         /*!
           \brief Destructor
@@ -97,13 +97,6 @@ namespace te
         */
         virtual void setItemPosition(double x, double y) = 0;
 
-        /*!
-        \brief Returns whether the graph component has the inverted matrix, otherwise the matrix scene.
-
-        \return true if inverted, false otherwise
-        */
-        bool isInverted();
-
         virtual void setEditionMode(bool editionMode);
 
         virtual bool isEditionMode();
@@ -127,7 +120,6 @@ namespace te
       protected:
 
         AbstractItemController* m_controller; //!< The controller
-        bool                    m_invertedMatrix;
         bool                    m_isEditionMode;
         bool                    m_subSelected;
         bool                    m_useResizePixmap; //!< use or not pixmap for resizing

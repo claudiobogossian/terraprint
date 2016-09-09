@@ -43,7 +43,6 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_gridGeodesicItem(0),
   m_itemGroup(0),
   m_mapCompositionItem(0),
-  m_movingItemGroup(0),
   m_scaleItem(0),
   m_pageSetup(0),
   m_imageItem(0),
@@ -164,12 +163,6 @@ te::layout::EnumObjectType::~EnumObjectType()
   {
     delete m_mapCompositionItem;
     m_mapCompositionItem = 0;
-  }
-
-  if (m_movingItemGroup)
-  {
-    delete m_movingItemGroup;
-    m_movingItemGroup = 0;
   }
 
   if(m_scaleItem)
@@ -417,8 +410,6 @@ void te::layout::EnumObjectType::init()
 
   m_legendChildItem = createEnum("Legend_Child_Item", this, TR_LAYOUT("Legend Child Item"));
 
-  m_movingItemGroup = createEnum("Moving_Item_Group", this, TR_LAYOUT("Moving Item Group"));
-
   m_lineItem = createEnum("Line_Item", this, TR_LAYOUT("Line Item")); 
 
   m_polygonItem = createEnum("Polygon_Item", this, TR_LAYOUT("Polygon Item")); 
@@ -554,12 +545,6 @@ te::layout::EnumType* te::layout::EnumObjectType::getMapCompositionItem() const
 {
   return m_mapCompositionItem;
 }
-
-te::layout::EnumType* te::layout::EnumObjectType::getMovingItemGroup() const
-{
-  return m_movingItemGroup;
-}
-
 
 te::layout::EnumType* te::layout::EnumObjectType::getScaleItem() const
 {

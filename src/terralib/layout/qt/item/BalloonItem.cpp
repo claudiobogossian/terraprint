@@ -33,12 +33,10 @@
 #include <algorithm>    // std::max and std::min
 #include <cmath>
 
-#include <qgraphicsitem.h>
-
-te::layout::BalloonItem::BalloonItem(AbstractItemController* controller, bool invertedMatrix)
+te::layout::BalloonItem::BalloonItem(AbstractItemController* controller)
 : TextItem(controller)
-{      
-  
+{
+
 }
 
 te::layout::BalloonItem::~BalloonItem()
@@ -126,7 +124,7 @@ QRectF te::layout::BalloonItem::boundingRect() const
   double height = m_controller->getProperty("balloonheight").getValue().toDouble();
 
   QRectF rectSceneCS(x, y, width , height);
-  QRectF rectItemCS = this->mapRectFromScene(rectSceneCS);
+  QRectF rectItemCS = AbstractItem::mapRectFromScene(rectSceneCS);
 
   QRectF boundingRect(0, 0, rectItemCS.width(), rectItemCS.height());
   return boundingRect;

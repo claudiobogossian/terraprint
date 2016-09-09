@@ -53,7 +53,7 @@ namespace te
 
       \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT ThreeNorthItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT ThreeNorthItem : public AbstractItem
     {
       public:
 
@@ -63,7 +63,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ThreeNorthItem(AbstractItemController* controller, bool invertedMatrix = false);
+        ThreeNorthItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

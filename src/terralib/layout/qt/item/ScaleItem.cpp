@@ -36,8 +36,8 @@
 // STL
 #include <iostream>
 
-te::layout::ScaleItem::ScaleItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::ScaleItem::ScaleItem(AbstractItemController* controller)
+  : AbstractItem(controller)
   , m_scale(0)
   , m_gapX(0)
   , m_gapY(0)
@@ -219,12 +219,12 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     {
       if (value == 0)
       {
-        drawText(coordText, painter, qFont, text);
+        ItemUtils::drawText(coordText, painter, qFont, text);
       }
     }
     else
     {
-      drawText(coordText, painter, qFont, text);
+      ItemUtils::drawText(coordText, painter, qFont, text);
     }
 
     unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
@@ -238,7 +238,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   if (only_first_and_last)
   {
     // last text
-    drawText(coordText, painter, qFont, ss_value.str());
+    ItemUtils::drawText(coordText, painter, qFont, ss_value.str());
   }
 
   //Rect around scale
@@ -247,7 +247,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
   //middle-bottom text
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, qFont, strCurrentUnit);
+  ItemUtils::drawText(unitCoord, painter, qFont, strCurrentUnit);
 
   painter->restore();
 }
@@ -356,12 +356,12 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
     {
       if (value == 0)
       {
-        drawText(coordText, painter, qFont, text);
+        ItemUtils::drawText(coordText, painter, qFont, text);
       }
     }
     else
     {
-      drawText(coordText, painter, qFont, text);
+      ItemUtils::drawText(coordText, painter, qFont, text);
     }
 
     unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
@@ -375,7 +375,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   if (only_first_and_last)
   {
     // last text
-    drawText(coordText, painter, qFont, ss_value.str());
+    ItemUtils::drawText(coordText, painter, qFont, ss_value.str());
   }
 
   //Rect around scale
@@ -384,7 +384,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
   //middle-bottom text
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, qFont, strCurrentUnit);
+  ItemUtils::drawText(unitCoord, painter, qFont, strCurrentUnit);
 
   painter->restore();
 }
@@ -502,12 +502,12 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     {
       if (value == 0)
       {
-        drawText(coordText, painter, qFont, text);
+        ItemUtils::drawText(coordText, painter, qFont, text);
       }
     }
     else
     {
-      drawText(coordText, painter, qFont, text);
+      ItemUtils::drawText(coordText, painter, qFont, text);
     }
 
     unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
@@ -521,7 +521,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   if (only_first_and_last)
   {
     // last text
-    drawText(coordText, painter, qFont, ss_value.str());
+    ItemUtils::drawText(coordText, painter, qFont, ss_value.str());
   }
 
   //Rect around scale
@@ -530,7 +530,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   //middle-bottom text
   painter->setBrush(QBrush(textColor));
-  drawText(unitCoord, painter, qFont, strCurrentUnit);
+  ItemUtils::drawText(unitCoord, painter, qFont, strCurrentUnit);
 
   painter->restore();
 }

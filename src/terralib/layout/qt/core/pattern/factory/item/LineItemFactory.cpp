@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::LineItemFactory::build(ItemFactoryPara
   Properties      props = params.getProperties(); 
 
   LineModel* model = new LineModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   LineController* controller = new LineController(model);
   LineItem* view = new LineItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

@@ -32,11 +32,12 @@
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../core/property/GenericVariant.h"
-#include "VariantPropertiesBrowser.h"
+#include "../../core/ItemUtils.h"
+#include "../../core/Scene.h"
 #include "DialogPropertiesBrowser.h"
-#include "../../../qt/core/Scene.h"
 #include "ItemObserverFactory.h"
 #include "ItemObserverManager.h"
+#include "VariantPropertiesBrowser.h"
 
 // QtPropertyBrowser
 #include <QtPropertyBrowser/QtStringPropertyManager>

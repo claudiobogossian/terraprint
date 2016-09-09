@@ -51,7 +51,7 @@ namespace te
 
       \sa te::layout::ObjectItem
     */
-    class TELAYOUTEXPORT ImageItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT ImageItem : public AbstractItem
     {
       public:
 

@@ -36,19 +36,16 @@ te::layout::AbstractItemView* te::layout::BarCodeItemFactory::build(ItemFactoryP
   Properties      props = params.getProperties();
 
   BarCodeModel* model = new BarCodeModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   BarCodeController* controller = new BarCodeController(model);
   BarCodeItem* view = new BarCodeItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return dynamic_cast<AbstractItemView*>(view);
 }
 

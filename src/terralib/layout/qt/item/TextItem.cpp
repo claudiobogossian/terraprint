@@ -47,13 +47,14 @@
 #include <QKeyEvent>
 
 te::layout::TextItem::TextItem(AbstractItemController* controller)
-  : AbstractItem<QGraphicsTextItem>(controller, false)
+  : QObject()
+  , AbstractItem(controller)
 {  
   //If enabled is true, this item will accept hover events
   setAcceptHoverEvents(false);
   setCursor(Qt::ArrowCursor); // default cursor
 
-  connect(document(), SIGNAL(contentsChange(int, int, int)), this, SLOT(updateGeometry(int, int, int)));
+  //connect(document(), SIGNAL(contentsChange(int, int, int)), this, SLOT(updateGeometry(int, int, int)));
 }
 
 te::layout::TextItem::~TextItem()
@@ -63,13 +64,21 @@ te::layout::TextItem::~TextItem()
 
 void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  //asks the item to paint itself
-  QGraphicsTextItem::paint(painter, option, widget);
+  const Property& pText = m_controller->getProperty("text");
+  const Property& pFont = m_controller->getProperty("font");
+
+  std::string text = pText.getValue().toString();
+  const Font& font = pFont.getValue().toFont();
+  QFont qFont = ItemUtils::convertToQfont(font);
+
+  QRectF boundingRect = this->boundingRect();
+
+  ItemUtils::drawText(boundingRect.topLeft(), painter, qFont, text);
 }
 
 QVariant te::layout::TextItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
 {
-  if (change == QGraphicsItem::ItemSceneHasChanged)
+  /*if (change == QGraphicsItem::ItemSceneHasChanged)
   {
     Scene* myScene = dynamic_cast<Scene*>(this->scene());
     if (myScene != 0)
@@ -88,14 +97,14 @@ QVariant te::layout::TextItem::itemChange(QGraphicsItem::GraphicsItemChange chan
 
       this->setTransform(trans);
     }
-  }
-  return AbstractItem<QGraphicsTextItem>::itemChange(change, value);
+  }*/
+  return AbstractItem::itemChange(change, value);
 }
 
 
 void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
-  QGraphicsTextItem::mousePressEvent(event);
+  QGraphicsItem::mousePressEvent(event);
   if (m_isEditionMode)
   {
     setCursor(Qt::IBeamCursor);
@@ -115,10 +124,11 @@ void te::layout::TextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * even
 
 void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
 {
+  /*
   QGraphicsTextItem::keyPressEvent(event);
 
-  /* Required to remove formatting texts coming from outside the application. 
-     This item will only accept "plain text", no "rich texts".*/
+  // Required to remove formatting texts coming from outside the application. 
+  // This item will only accept "plain text", no "rich texts".
   if (event->matches(QKeySequence::Paste))
   {
     QTextCursor cursor(textCursor());
@@ -128,17 +138,19 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
     setTextCursor(cursor);
     setPlainText(qPlainText);
   }
+  */
 }
 
 QRectF te::layout::TextItem::boundingRect() const
 {
   //when we are editing the item, we let the item handle the changes in the bounding box
-  QRectF rect = QGraphicsTextItem::boundingRect();
+  QRectF rect = AbstractItem::boundingRect();
   return rect;
 }
 
 void te::layout::TextItem::enterEditionMode()
 {
+  /*
   AbstractItem<QGraphicsTextItem>::enterEditionMode();
 
   //If enabled is true, this item will accept hover events
@@ -149,11 +161,12 @@ void te::layout::TextItem::enterEditionMode()
   cursor.clearSelection();
   setTextCursor(cursor);
   setFocus();
-
+  */
 }
 
 void te::layout::TextItem::leaveEditionMode()
 {
+  /*
   AbstractItem<QGraphicsTextItem>::leaveEditionMode();
 
   //Necessary clear the selection and focus of the edit 
@@ -171,10 +184,12 @@ void te::layout::TextItem::leaveEditionMode()
   {
     controller->textChanged();
   }
+  */
 }
 
 void te::layout::TextItem::updateGeometry(int position, int charsRemoved, int charsAdded)
 {
+  /*
   setTextWidth(-1);
   setTextWidth(boundingRect().width());
   
@@ -182,5 +197,5 @@ void te::layout::TextItem::updateGeometry(int position, int charsRemoved, int ch
   if(controller != 0)
   {
     controller->textChanged();
-  }
+  }*/
 }

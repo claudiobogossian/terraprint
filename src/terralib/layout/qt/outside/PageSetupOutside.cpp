@@ -29,6 +29,7 @@
 #include "PageSetupOutside.h"
 #include "ui_PageSetup.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../core/ItemUtils.h"
 #include "../core/Scene.h"
 
 // STL

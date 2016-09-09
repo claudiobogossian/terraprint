@@ -79,10 +79,13 @@ void te::layout::MapCompositionItem::initItems()
     std::string type = "MAP_ITEM";
 
     AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
+    abstractItem->getController()->attach(this->getController());
+
     QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
 
     if (item != 0)
     {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
       this->addToGroup(item);
     }
 
@@ -93,10 +96,13 @@ void te::layout::MapCompositionItem::initItems()
     std::string type = "GRID_PLANAR_ITEM";
 
     AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
+    abstractItem->getController()->attach(this->getController());
+
     QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
 
     if (item != 0)
     {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
       this->addToGroup(item);
     }
 
@@ -107,10 +113,13 @@ void te::layout::MapCompositionItem::initItems()
     std::string type = "GRID_GEODESIC_ITEM";
 
     AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
+    abstractItem->getController()->attach(this->getController());
+
     QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
 
     if (item != 0)
     {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
       this->addToGroup(item);
     }
 
@@ -126,7 +135,9 @@ void te::layout::MapCompositionItem::initItems()
   pAssociate.setValue(mapName, dataType->getDataTypeItemObserver());
   
   //sets the properties for the planar grid
-  m_planarGridItem->getController()->setProperty(pAssociate);
+  Properties planarProperties;
+  planarProperties.addProperty(pAssociate);
+  m_planarGridItem->getController()->setProperties(planarProperties);
 
   //sets the properties for the geodesic grid
   te::layout::Property pVisible;

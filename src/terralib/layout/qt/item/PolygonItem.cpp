@@ -38,8 +38,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::PolygonItem::PolygonItem(AbstractItemController* controller, bool invertedMatrix)
-  : LineItem(controller, invertedMatrix)
+te::layout::PolygonItem::PolygonItem(AbstractItemController* controller)
+  : LineItem(controller)
 { 
   
 }

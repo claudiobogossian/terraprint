@@ -48,8 +48,8 @@
 #include <QtSvg/QSvgRenderer>
 #include "AbstractItem.h"
 
-te::layout::SVGItem::SVGItem(AbstractItemController* controller, bool invertedMatrix)
-: AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::SVGItem::SVGItem(AbstractItemController* controller)
+: AbstractItem(controller)
 {
     
 }

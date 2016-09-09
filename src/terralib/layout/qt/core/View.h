@@ -41,7 +41,6 @@
 #ifndef Q_MOC_RUN
 #include "../outside/PageSetupOutside.h"
 #include "../outside/SystematicScaleOutside.h"
-#include "../item/MovingItemGroup.h"
 #include "../../core/property/Property.h"
 #endif
 
@@ -496,7 +495,6 @@ namespace te
         double                               m_width;
         double                               m_height;
         bool                                 m_isMoving;
-        te::layout::MovingItemGroup*         m_movingItemGroup;
         bool                                 m_updateItemPos;
         QPixmap                              m_foreground; //!< This pixmap represents the foreground drawings and is used for double buffering
         std::vector<AbstractLayoutTool*>     m_lateRemovalVec;

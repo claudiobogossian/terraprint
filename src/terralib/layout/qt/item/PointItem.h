@@ -36,8 +36,6 @@
 #endif
 #include "../../core/Config.h"
 
-#include <QGraphicsItem>
-
 namespace te
 {
   namespace layout
@@ -52,7 +50,7 @@ namespace te
 
       \sa te::layout::ObjectItem
     */
-    class TELAYOUTEXPORT PointItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT PointItem : public AbstractItem
     {
       public:
 
@@ -62,7 +60,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        PointItem(AbstractItemController* controller, bool invertedMatrix = false);
+        PointItem(AbstractItemController* controller);
         
         /*!
           \brief Destructor

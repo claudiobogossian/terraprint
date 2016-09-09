@@ -104,17 +104,17 @@ namespace te
 
         void reset() throw(te::common::Exception);
 
-        std::string getName();
+        std::string getName() const;
 
-        Properties getProperties();
+        Properties getProperties() const;
 
-        te::gm::Coord2D getCoord();
+        te::gm::Coord2D getCoord() const;
         
-        int getId();
+        int getId() const;
 
-        double getWidth();
+        double getWidth() const;
 
-        double getHeight();
+        double getHeight() const;
 
       protected:
 

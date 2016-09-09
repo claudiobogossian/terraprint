@@ -52,7 +52,7 @@ namespace te
 
       \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT EllipseItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT EllipseItem : public AbstractItem
     {
       public:
 
@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        EllipseItem(AbstractItemController* controller, bool invertedMatrix = false);
+        EllipseItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

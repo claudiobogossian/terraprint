@@ -27,12 +27,14 @@
 
 // TerraLib
 #include "MoveCommand.h"
-#include "../../../../core/pattern/mvc/AbstractItemView.h"
+#include "../../../../core/enum/EnumType.h"
 #include "../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../../../core/enum/EnumType.h"
-#include "../../Scene.h"
+#include "../../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../../core/pattern/singleton/Context.h"
+#include "../../ItemUtils.h"
+#include "../../Scene.h"
+
 
 // Qt
 #include <QGraphicsItem>

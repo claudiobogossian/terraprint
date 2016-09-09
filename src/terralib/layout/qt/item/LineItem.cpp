@@ -38,8 +38,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::LineItem::LineItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::LineItem::LineItem(AbstractItemController* controller)
+  : AbstractItem(controller)
 {
     setFlag(QGraphicsItem::ItemClipsToShape);
 }

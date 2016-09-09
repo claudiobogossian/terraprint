@@ -32,7 +32,7 @@
 #include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
-#include "../item/MovingItemGroup.h"
+#include "../core/ItemUtils.h"
 #include "../core/Scene.h"
 
 //Qt
@@ -397,14 +397,6 @@ bool te::layout::ObjectInspectorOutside::isValidItem(QGraphicsItem* item)
 {
   bool result = false;
 
-  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
-
-  MovingItemGroup* moving = dynamic_cast<MovingItemGroup*>(item);
-  if (moving)
-  {
-    return result;
-  }
-
   AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(item);
   if (absParentItem == 0)
   {
@@ -415,6 +407,7 @@ bool te::layout::ObjectInspectorOutside::isValidItem(QGraphicsItem* item)
     return result;
   }
 
+  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
   if (absParentItem->getController()->getProperties().getTypeObj() == enumObj->getPaperItem())
   {
     return result;
