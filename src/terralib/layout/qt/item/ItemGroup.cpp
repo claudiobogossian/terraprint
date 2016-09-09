@@ -143,7 +143,16 @@ void te::layout::ItemGroup::addToGroup(QGraphicsItem* item)
 
 void te::layout::ItemGroup::removeFromGroup(QGraphicsItem* item)
 {
+  QPointF itemNewPos = item->mapToScene(QPointF(0,0));
   item->setParentItem(this->parentItem());
+
+  if (item->parentItem() != 0)
+  {
+    itemNewPos = item->parentItem()->mapFromScene(itemNewPos);
+  }
+
+  item->setPos(itemNewPos);
+
 
   ItemUtils::normalizeChildrenPosition(this);
 }

@@ -42,6 +42,10 @@ te::layout::AbstractItemView* te::layout::MapCompositionItemFactory::build(ItemF
   if (props.getProperties().empty())
   {
     props = convertToProperties(params);
+
+    props.setTypeObj(model->getType());
+    std::string parentName = model->getType()->getName();
+    props.reparentProperties(parentName);
   }
   controller->setProperties(props);
 

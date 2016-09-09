@@ -99,7 +99,7 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
 {
   std::map<std::string, te::layout::Properties> mapProperties = groupPropertiesByParent(properties);
 
-  const std::string& parentClass = this->getProperties().getTypeObj()->getName();
+  const std::string& parentClass = this->getModel()->getType()->getName();
 
   std::map<std::string, te::layout::Properties>::iterator it = mapProperties.find(parentClass);
 
