@@ -78,6 +78,9 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../../core/template/XmlTemplateFactory.h"
 #include "tempDataStorage/TempFileFactory.h"
 
+// Editors
+#include "../core/pattern/factory/editor/SpinBoxEditorFactory.h"
+
 namespace te
 {
   namespace layout
@@ -165,6 +168,16 @@ namespace te
       {
         static XmlTemplateFactory XmlTemplateFactory_instance;
         static TempFileFactory TempFileFactory_instance;
+      }
+    }
+
+    void initEditorFactories()
+    {
+      static bool EditorFactoryInitalized = false;
+
+      if (!EditorFactoryInitalized)
+      {
+        static SpinBoxEditorFactory SpinBoxEditorFactory_instance;
       }
     }
   }

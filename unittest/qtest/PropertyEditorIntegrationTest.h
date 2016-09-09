@@ -17,29 +17,53 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// TerraLib
-#include "ViewTest.h"
-#include "PropertyEditorIntegrationTest.h"
+#ifndef __TERRALIB_LAYOUT_INTERNAL_QTEST_PROPERTY_EDITOR_TEST_H
+#define __TERRALIB_LAYOUT_INTERNAL_QTEST_PROPERTY_EDITOR_TEST_H
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
+// Layout Module
+#include "terralib/layout/qt/core/View.h"
+#include "terralib/layout/qt/default/OutsideArea.h"
+
+// STL
+#include <memory>
 
 // Qt
-#include <QtTest/QtTest>
+#include <QObject>
 
-int main(int argv, char **args)
+namespace te
 {
-  QApplication app(argv, args); // required to run classes with Qt
+  namespace layout
+  {
+    /*!
+      \brief 
+    
+      \ingroup layout
+    */
+    class PropertyEditorIntegrationTest : public QObject
+    {
+      Q_OBJECT
 
-  int result = 0;
-  {
-    te::layout::ViewTest viewTest;
-    result |= QTest::qExec(&viewTest, argv, args);
+      private slots:
+
+        void on_test_create_view();
+
+        void on_test_create_scene();
+
+        void on_test_create_outside_area();
+
+        void on_test_create_rectangle_item();
+
+        void on_test_click_rectangle_item();
+
+        void on_test_create_property_tree();
+
+      private:
+
+        std::unique_ptr<te::layout::View>         m_view;
+        std::unique_ptr<te::layout::OutsideArea>  m_outsideArea;
+    };
   }
-  {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
-    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
-  }
-  return result;
 }
+
+#endif
 

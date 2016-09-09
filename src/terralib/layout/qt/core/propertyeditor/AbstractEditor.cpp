@@ -17,29 +17,30 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
+/*!
+  \file AbstractEditor.cpp
+   
+  \brief 
+
+  \ingroup layout
+*/
+
 // TerraLib
-#include "ViewTest.h"
-#include "PropertyEditorIntegrationTest.h"
+#include "AbstractEditor.h"
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
 
-// Qt
-#include <QtTest/QtTest>
-
-int main(int argv, char **args)
+te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index)
 {
-  QApplication app(argv, args); // required to run classes with Qt
+  
+}
 
-  int result = 0;
-  {
-    te::layout::ViewTest viewTest;
-    result |= QTest::qExec(&viewTest, argv, args);
-  }
-  {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
-    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
-  }
-  return result;
+te::layout::AbstractEditor::~AbstractEditor()
+{
+
+}
+
+void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
+{
+  m_vprops = vprops;
 }
 

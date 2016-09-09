@@ -28,6 +28,9 @@
 // TerraLib
 #include "EnumDataType.h"
 
+// Qt
+#include <QtCore>
+
 te::layout::EnumDataType::EnumDataType() :
   m_dataTypeNone(0),
   m_dataTypeInt(0),
@@ -210,65 +213,97 @@ te::layout::EnumDataType::~EnumDataType()
 
 void te::layout::EnumDataType::init()
 {
-  m_dataTypeNone = createEnum("None", this, TR_LAYOUT("None"));
+  int id = 1;
 
-  m_dataTypeInt = createEnum("Int", this, TR_LAYOUT("Int"));
+  id += Qt::UserRole; // Qt::UserRole: The first role that can be used for application-specific purposes.
+  m_dataTypeNone = createEnum(id, "None", this, TR_LAYOUT("None"));
 
-  m_dataTypeDouble = createEnum("Double", this, TR_LAYOUT("Double"));
+  ++id;
+  m_dataTypeInt = createEnum(id, "Int", this, TR_LAYOUT("Int"));
 
-  m_dataTypeLong = createEnum("Long", this, TR_LAYOUT("Long"));
+  ++id;
+  m_dataTypeDouble = createEnum(id, "Double", this, TR_LAYOUT("Double"));
 
-  m_dataTypeFloat = createEnum("Float", this, TR_LAYOUT("Float"));
+  ++id;
+  m_dataTypeLong = createEnum(id, "Long", this, TR_LAYOUT("Long"));
 
-  m_dataTypeString = createEnum("String", this, TR_LAYOUT("String"));
+  ++id;
+  m_dataTypeFloat = createEnum(id, "Float", this, TR_LAYOUT("Float"));
 
-  m_dataTypeBool = createEnum("Bool", this, TR_LAYOUT("Bool"));
+  ++id;
+  m_dataTypeString = createEnum(id, "String", this, TR_LAYOUT("String"));
 
-  m_dataTypeColor = createEnum("Color", this, TR_LAYOUT("Color"));
+  ++id;
+  m_dataTypeBool = createEnum(id, "Bool", this, TR_LAYOUT("Bool"));
 
-  m_dataTypeGridSettings = createEnum("GridSettings", this, TR_LAYOUT("Grid Settings"));
+  ++id;
+  m_dataTypeColor = createEnum(id, "Color", this, TR_LAYOUT("Color"));
 
-  m_dataTypeStringList = createEnum("StringList", this, TR_LAYOUT("String List"));
+  ++id;
+  m_dataTypeGridSettings = createEnum(id, "GridSettings", this, TR_LAYOUT("Grid Settings"));
 
-  m_dataTypeFont = createEnum("Font", this, TR_LAYOUT("Font"));
+  ++id;
+  m_dataTypeStringList = createEnum(id, "StringList", this, TR_LAYOUT("String List"));
 
-  m_dataTypeEnvelope = createEnum("Envelope", this, TR_LAYOUT("Envelope"));
+  ++id;
+  m_dataTypeFont = createEnum(id, "Font", this, TR_LAYOUT("Font"));
 
-  m_dataTypeImage = createEnum("Image", this, TR_LAYOUT("Image"));
+  ++id;
+  m_dataTypeEnvelope = createEnum(id, "Envelope", this, TR_LAYOUT("Envelope"));
 
-  m_dataTypeTextGridSettings = createEnum("TextGridSettings", this, TR_LAYOUT("Text Grid Settings"));
+  ++id;
+  m_dataTypeImage = createEnum(id, "Image", this, TR_LAYOUT("Image"));
 
-  m_dataTypeGroup = createEnum("Group", this, TR_LAYOUT("Group"));
+  ++id;
+  m_dataTypeTextGridSettings = createEnum(id, "TextGridSettings", this, TR_LAYOUT("Text Grid Settings"));
 
-  m_dataTypeMapChoice = createEnum("MapChoice", this, TR_LAYOUT("Map Choice"));
+  ++id;
+  m_dataTypeGroup = createEnum(id, "Group", this, TR_LAYOUT("Group"));
 
-  m_dataTypeLegendChoice = createEnum("LegendChoice", this, TR_LAYOUT("Legend Choice"));
+  ++id;
+  m_dataTypeMapChoice = createEnum(id, "MapChoice", this, TR_LAYOUT("Map Choice"));
 
-  m_dataTypeLayerList = createEnum("Layer", this, TR_LAYOUT("None"));
+  ++id;
+  m_dataTypeGenericVariant = createEnum(id, "GenericVariant", this, TR_LAYOUT("Generic Variant"));
 
-  m_dataTypeStringVector = createEnum("StringVector", this, TR_LAYOUT("String Vector"));
+  ++id;
+  m_dataTypeLayerList = createEnum(id, "Layer", this, TR_LAYOUT("None"));
 
+  ++id;
+  m_dataTypeStringVector = createEnum(id, "StringVector", this, TR_LAYOUT("String Vector"));
   m_dataTypeStringMatrix = createEnum("StringMatrix", this, TR_LAYOUT("String Matrix"));
 
   m_dataTypeSVGView = createEnum("SVGView", this, TR_LAYOUT("SVG View"));
 
-  m_dataTypeGeometry = createEnum("Geometry", this, TR_LAYOUT("Geometry"));
+  ++id;
+  m_dataTypeSVGView = createEnum(id, "SVGView", this, TR_LAYOUT("SVG View"));
 
-  m_dataTypeItemObserver = createEnum("ItemObserver", this, TR_LAYOUT("Item Observer"));
+  ++id;
+  m_dataTypeGeometry = createEnum(id, "Geometry", this, TR_LAYOUT("Geometry"));
 
-  m_dataTypeGroupProperties = createEnum("GroupProperties", this, TR_LAYOUT("Group Properties"));
+  ++id;
+  m_dataTypeItemObserver = createEnum(id, "ItemObserver", this, TR_LAYOUT("Item Observer"));
 
-  m_dataTypeMapSettings = createEnum("MapSettings", this, TR_LAYOUT("Map Settings"));
+  ++id;
+  m_dataTypeGroupProperties = createEnum(id, "GroupProperties", this, TR_LAYOUT("Group Properties"));
 
-  m_dataTypeScaleSettings = createEnum("ScaleSettings", this, TR_LAYOUT("Scale Settings"));
+  ++id;
+  m_dataTypeMapSettings = createEnum(id, "MapSettings", this, TR_LAYOUT("Map Settings"));
+
+  ++id;
+  m_dataTypeScaleSettings = createEnum(id, "ScaleSettings", this, TR_LAYOUT("Scale Settings"));
   
-  m_dataTypeNorthSettings = createEnum("NorthSettings", this, TR_LAYOUT("North Settings"));
+  ++id;
+  m_dataTypeNorthSettings = createEnum(id, "NorthSettings", this, TR_LAYOUT("North Settings"));
 
-  m_dataTypePageSetup = createEnum("PageSetup", this, TR_LAYOUT("Page Setup"));
+  ++id;
+  m_dataTypePageSetup = createEnum(id, "PageSetup", this, TR_LAYOUT("Page Setup"));
 
-  m_dataTypePath = createEnum("PathString", this, TR_LAYOUT("Path"));
+  ++id;
+  m_dataTypePath = createEnum(id, "PathString", this, TR_LAYOUT("Path"));
 
-  m_dataTypeMapLocationSettings = createEnum("MapLocationSettings", this, TR_LAYOUT("Map Location Settings"));
+  ++id;
+  m_dataTypeMapLocationSettings = createEnum(id, "MapLocationSettings", this, TR_LAYOUT("Map Location Settings"));
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNone() const
@@ -415,7 +450,6 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypePath() const
 {
   return m_dataTypePath;
 }
-
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeMapLocationSettings() const
 {

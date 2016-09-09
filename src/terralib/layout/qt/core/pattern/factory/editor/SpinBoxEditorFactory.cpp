@@ -17,29 +17,36 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
+/*!
+  \file terralib/layout/qt/core/pattern/factory/editor/SpinBoxEditorFactory.cpp
+
+  \brief This is the concrete factory for zoom area tools.
+*/
+
 // TerraLib
-#include "ViewTest.h"
-#include "PropertyEditorIntegrationTest.h"
+#include "SpinBoxEditorFactory.h"
+#include "../../../../../core/enum/Enums.h"
+#include "../../../View.h"
+#include "../../../propertyeditor/SpinBoxEditor.h"
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
-
-// Qt
-#include <QtTest/QtTest>
-
-int main(int argv, char **args)
+te::layout::AbstractEditor* te::layout::SpinBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  QApplication app(argv, args); // required to run classes with Qt
+  std::vector<Property> props = params.getProperties();
+  QModelIndex index = params.getModelIndex();
+  QWidget* parent = params.getParent();
 
-  int result = 0;
-  {
-    te::layout::ViewTest viewTest;
-    result |= QTest::qExec(&viewTest, argv, args);
-  }
-  {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
-    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
-  }
-  return result;
+  SpinBoxEditor* editor = new SpinBoxEditor(index, parent);
+  editor->setProperties(props);
+  return editor;
 }
 
+te::layout::SpinBoxEditorFactory::SpinBoxEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeInt()->getName())
+{
+
+}
+
+te::layout::SpinBoxEditorFactory::~SpinBoxEditorFactory()
+{
+
+}

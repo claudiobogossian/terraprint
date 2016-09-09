@@ -31,6 +31,7 @@
 #include <terralib/common/StringUtils.h>
 #include "terralib/geometry/WKTReader.h"
 #include "terralib/geometry/WKTWriter.h"
+#include "../../qt/core/ItemUtils.h"
 
 //Boost
 #include <boost/tokenizer.hpp>
@@ -43,6 +44,13 @@
 #include <cctype>
 #include <iostream>
 #include <stdlib.h>
+#include <algorithm>
+
+// Qt
+#include <QColor>
+#include <QFont>
+#include <QVector>
+#include <QVariant>
 
 te::layout::Variant::Variant() :
   m_sValue("unknown"),
@@ -868,3 +876,94 @@ bool te::layout::Variant::operator !=(const Variant& other) const
   }
   return true;
 }
+
+QVariant te::layout::Variant::toQVariant() const
+{
+  if (!m_type)
+  {
+    return QVariant();
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  QVariant value;
+
+  if (m_type == dataType->getDataTypeString())
+  {
+    QString svalue = ItemUtils::convert2QString(m_sValue);
+    value = QVariant(svalue);
+  }
+  else if (m_type == dataType->getDataTypeStringList())
+  {
+    QString svalue = ItemUtils::convert2QString(m_sValue);
+    value = QVariant(svalue);
+  }
+  else if (m_type == dataType->getDataTypeDouble())
+  {
+    value = QVariant(m_dValue);
+  }
+  else if (m_type == dataType->getDataTypeFloat())
+  {
+    value = QVariant(m_fValue);
+  }
+  else if (m_type == dataType->getDataTypeLong())
+  {
+    value = QVariant(m_lValue);
+  }
+  else if (m_type == dataType->getDataTypeInt())
+  {
+    value = QVariant(m_iValue);
+  }
+  else if (m_type == dataType->getDataTypeBool())
+  {
+    value = QVariant(m_bValue);
+  }
+  else if (m_type == dataType->getDataTypeColor())
+  {
+    int a = m_colorValue.getAlpha();
+    int r = m_colorValue.getRed();
+    int g = m_colorValue.getGreen();
+    int b = m_colorValue.getBlue();
+    QColor color(r, g, b, a);
+    value = QVariant(color);
+  }
+  else if (m_type == dataType->getDataTypeFont())
+  {
+    QFont qfont;
+    std::string fontName = m_fontValue.getFamily();
+    QString qFontName = ItemUtils::convert2QString(fontName);
+
+    qfont.setFamily(qFontName);
+    qfont.setPointSize(m_fontValue.getPointSize());
+    qfont.setBold(m_fontValue.isBold());
+    qfont.setItalic(m_fontValue.isItalic());
+    qfont.setUnderline(m_fontValue.isUnderline());
+    qfont.setStrikeOut(m_fontValue.isStrikeout());
+    qfont.setKerning(m_fontValue.isKerning());
+    value = QVariant(qfont);
+  }
+  else if (m_type == dataType->getDataTypeEnvelope())
+  {
+    QRectF rect(m_envelopeValue.getLowerLeftX(), m_envelopeValue.getUpperRightY(), m_envelopeValue.getWidth(), m_envelopeValue.getHeight());
+    value = QVariant(rect);
+  }
+  else if (m_type == dataType->getDataTypeStringVector())
+  {
+    QList<QString> qvString;
+
+    std::vector<std::string>::const_iterator it;
+    for (it = m_vString.begin(); it != m_vString.end(); ++it)
+    {
+      QString svalue = ItemUtils::convert2QString(m_sValue);
+      qvString.append(svalue);
+    }
+    value = QVariant(qvString);
+  }
+  else // Any remaining data will be by default "std::string"  
+  {
+    QString svalue = ItemUtils::convert2QString(m_sValue);
+    value = QVariant(svalue);
+  }
+  return value;
+}
+

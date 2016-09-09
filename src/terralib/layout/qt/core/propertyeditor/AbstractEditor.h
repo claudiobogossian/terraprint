@@ -17,29 +17,58 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// TerraLib
-#include "ViewTest.h"
-#include "PropertyEditorIntegrationTest.h"
+/*!
+  \file AbstractEditor.h
+   
+   \brief 
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
+  \ingroup layout
+*/
+
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_EDITOR_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_EDITOR_H
+
+// TerraLib
+#ifndef Q_MOC_RUN
+#include "../../../core/property/Property.h"
+#include "../../../core/Config.h"
+#endif
 
 // Qt
-#include <QtTest/QtTest>
+#include <QModelIndex>
+#include <QVariant>
 
-int main(int argv, char **args)
+namespace te
 {
-  QApplication app(argv, args); // required to run classes with Qt
+  namespace layout
+  {
+    class View;
 
-  int result = 0;
-  {
-    te::layout::ViewTest viewTest;
-    result |= QTest::qExec(&viewTest, argv, args);
+    /*!
+    \brief 
+    
+    \ingroup layout
+    */
+    class TELAYOUTEXPORT AbstractEditor 
+    {
+      public:
+
+        AbstractEditor(const QModelIndex& index);
+
+        virtual ~AbstractEditor();
+
+        virtual void setProperties(std::vector<Property> vprops);
+
+        virtual void setEditorData(const QModelIndex& index) = 0;
+
+        virtual QVariant getValue() = 0;
+
+      protected:
+        
+        std::vector<Property>   m_vprops;
+    };
   }
-  {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
-    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
-  }
-  return result;
 }
+
+#endif
 

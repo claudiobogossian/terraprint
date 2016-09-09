@@ -17,29 +17,24 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
+/*!
+  \file EditorFactory.cpp
+   
+  \brief 
+
+  \ingroup layout
+*/
+
 // TerraLib
-#include "ViewTest.h"
-#include "PropertyEditorIntegrationTest.h"
+#include "EditorFactory.h"
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
-
-// Qt
-#include <QtTest/QtTest>
-
-int main(int argv, char **args)
+te::layout::EditorFactory::~EditorFactory()
 {
-  QApplication app(argv, args); // required to run classes with Qt
 
-  int result = 0;
-  {
-    te::layout::ViewTest viewTest;
-    result |= QTest::qExec(&viewTest, argv, args);
-  }
-  {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
-    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
-  }
-  return result;
 }
 
+te::layout::EditorFactory::EditorFactory(const std::string& factoryKey)
+: te::common::ParameterizedAbstractFactory<AbstractEditor, std::string, EditorFactoryParamsCreate>(factoryKey)
+{
+
+}
