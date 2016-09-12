@@ -31,7 +31,6 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/Config.h"
-#include "../qt/core/Scene.h"
 #include "../core/pattern/proxy/AbstractProxyProject.h"
 
 namespace te
@@ -39,8 +38,9 @@ namespace te
   namespace layout
   {
     class AbstractOutsideModel;
-    class Scene;
     class AbstractProxyProject;
+    class Property;
+    class Scene;
 
     class TELAYOUTEXPORT SVGDialogController : public AbstractOutsideController
     {
@@ -57,8 +57,6 @@ namespace te
       private:
         Scene * m_scene;
         AbstractProxyProject * m_proxy;
-
-
     };
   }
 }

@@ -259,7 +259,7 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
 
 void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
 {
-  te::layout::AbstractItem<QGraphicsItem>* abstractItem = dynamic_cast<te::layout::AbstractItem<QGraphicsItem> *> (item);
+  te::layout::AbstractItem* abstractItem = dynamic_cast<te::layout::AbstractItem*> (item);
   if (abstractItem == NULL)
   {
     return;

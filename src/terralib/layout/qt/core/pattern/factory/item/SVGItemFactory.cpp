@@ -36,19 +36,16 @@ te::layout::AbstractItemView* te::layout::SVGItemFactory::build(ItemFactoryParam
   Properties      props = params.getProperties();  
 
   SVGModel* model = new SVGModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   SVGController* controller = new SVGController(model);
   SVGItem* view = new SVGItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

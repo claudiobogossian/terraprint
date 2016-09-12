@@ -506,6 +506,11 @@ te::layout::Property te::layout::BoostPropertySerializer::decodeProperty(const b
 
 std::string te::layout::BoostPropertySerializer::toUTF8(const std::string& latin1String) const
 {
+  if (latin1String.empty())
+  {
+    return latin1String;
+  }
+
   te::common::CharEncodingConv convert(te::common::LATIN1, te::common::UTF8);
   std::string utf8_string = convert.conv(latin1String);
   return utf8_string;
@@ -513,6 +518,11 @@ std::string te::layout::BoostPropertySerializer::toUTF8(const std::string& latin
 
 std::string te::layout::BoostPropertySerializer::fromUTF8(const std::string& utf8String) const
 {
+  if (utf8String.empty())
+  {
+    return utf8String;
+  }
+
   te::common::CharEncodingConv convert(te::common::UTF8, te::common::LATIN1);
   std::string latin1_string = convert.conv(utf8String);
 

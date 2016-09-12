@@ -45,6 +45,7 @@ te::layout::TitleController::~TitleController()
 
 QSizeF te::layout::TitleController::updateView()
 {
+  /*
   TextItem* view = dynamic_cast<TextItem*>(m_view);
   if(view == 0)
   {
@@ -194,11 +195,14 @@ QSizeF te::layout::TitleController::updateView()
   boundingRect = view->mapRectToScene(boundingRect);
 
   //we finally return the new size in millimiters
+  */
+  QRectF boundingRect;
   return boundingRect.size();
 }
 
 void te::layout::TitleController::textChanged()
 {
+  /*
   TextItem* view = dynamic_cast<TextItem*>(m_view);
   if(view != 0)
   {
@@ -252,4 +256,5 @@ void te::layout::TitleController::textChanged()
       }
     }
   }
+  */
 }

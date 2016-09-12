@@ -50,7 +50,7 @@ namespace te
 
     \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT PaperItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT PaperItem : public AbstractItem
     {
       public:
 
@@ -60,7 +60,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        PaperItem(AbstractItemController* controller, bool invertedMatrix = false);
+        PaperItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

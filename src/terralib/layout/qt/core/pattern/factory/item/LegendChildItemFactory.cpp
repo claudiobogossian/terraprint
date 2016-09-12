@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::LegendChildItemFactory::build(ItemFact
   Properties      props = params.getProperties(); 
 
   LegendChildModel* model = new LegendChildModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   AbstractItemController* controller = new AbstractItemController(model);
   LegendChildItem* view = new LegendChildItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

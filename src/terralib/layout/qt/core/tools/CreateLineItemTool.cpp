@@ -146,7 +146,7 @@ void te::layout::CreateLineItemTool::createItem()
     BuildGraphicsItem buildItem(sc);
     m_item = buildItem.createItem(m_itemType);
 
-    AbstractItem<QGraphicsItem> * itemView = dynamic_cast<AbstractItem<QGraphicsItem> *> (m_item);
+    AbstractItem* itemView = dynamic_cast<AbstractItem*> (m_item);
     m_controller = itemView->getController();
   }
 }

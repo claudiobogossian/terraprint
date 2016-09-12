@@ -61,32 +61,14 @@ namespace te
         virtual ~TextController();
 
         /*!
-          \brief Method called by the subject to inform changes in the model
+        \brief Sets the new value of the given property
         */
-        virtual void update(const Subject* subject);
+        virtual void setProperty(const Property& property);
 
         /*!
-          \brief Updates the view with the current configuration of the model
-          \return The new size of the view
+        \brief Sets the new values of the given properties
         */
-        virtual QSizeF updateView();
-
-        /*!
-          \brief Updates the model with the new size of the view
-          \param size The new size of the view
-        */
-        virtual void updateModel(const QSizeF& size);
-
-        /*!
-          \brief Synchronizes the information between the model and the view
-          \return TRUE if the size of the view changed due to the changes in the model. FALSE if the size did not change
-         */
-        virtual bool sync();
-
-        /*!
-          \brief This function will be called by the view every time the item´s scene was changed
-         */
-        virtual void sceneChanged();
+        virtual void setProperties(const Properties& properties);
 
         /*!
           \brief This function will be called by the view every time the item´s text was changed
@@ -94,11 +76,6 @@ namespace te
         virtual void textChanged();
     
       protected:
-
-        /*!
-        \brief Reimplemented from AbstractItemController
-        */
-        virtual void refresh();
 
         QRectF m_originalRect;
         

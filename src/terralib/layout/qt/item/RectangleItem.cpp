@@ -35,8 +35,8 @@
 #include <QPen>
 #include <QRectF>
 
-te::layout::RectangleItem::RectangleItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::RectangleItem::RectangleItem(AbstractItemController* controller)
+  : AbstractItem(controller)
 {
 
 }

@@ -83,7 +83,6 @@ te::layout::View::View( QWidget* widget) :
   m_width(-1),
   m_height(-1),
   m_isMoving(false),
-  m_movingItemGroup(0),
   m_updateItemPos(false),
   m_mouseEvent(false),
   m_dialogItemToolbar(0),
@@ -191,36 +190,6 @@ void te::layout::View::mousePressEvent( QMouseEvent * event )
   {
     QGraphicsView::mousePressEvent(event);
   }
-
-  QPointF scenePos = mapToScene(event->pos());
-  te::gm::Coord2D coord(scenePos.x(), scenePos.y());
-
-  if (m_isMoving == false)
-  {
-    QList<QGraphicsItem*> selectedItems = sc->selectedItems();
-
-    if (selectedItems.size() > 1)
-    {
-      bool isInvertedMatrix = false;
-      foreach(QGraphicsItem* item, selectedItems)
-      {
-        AbstractItemView* observer = dynamic_cast<AbstractItemView*> (item);
-        if (observer)
-        {
-          if (observer->isInverted() == true)
-          {
-            isInvertedMatrix = true;
-          }
-        }
-      }
-
-      if (isInvertedMatrix == true)
-      {
-        m_movingItemGroup = sc->createMovingItemGroup(selectedItems);
-        m_isMoving = true;
-      }
-    }
-  }
 }
 
 void te::layout::View::mouseMoveEvent( QMouseEvent * event )
@@ -278,28 +247,7 @@ void te::layout::View::mouseReleaseEvent( QMouseEvent * event )
   {
     QGraphicsView::mouseReleaseEvent(event);
   }
-
-  if (m_isMoving == true)
-  {
-    QList<QGraphicsItem*> selectedItems = m_movingItemGroup->childItems();
-
-    sc->destroyItemGroup(m_movingItemGroup);
-    m_movingItemGroup = 0;
-    m_isMoving = false;
-
-    sc->clearSelection();
-
-    foreach (QGraphicsItem* item, selectedItems)
-    {
-      if (item->isSelected())
-      {
-        item->setSelected(false);
-      }
-    }
-
-    sc->selectItems(selectedItems);
-  }
-  
+ 
   if (m_midButtonClicked)
   {
     m_midButtonClicked = false;
@@ -783,7 +731,7 @@ void te::layout::View::createItemGroup()
 
   if(sc)
   {
-    QGraphicsItemGroup* group = sc->createItemGroup(graphicsItems);
+    QGraphicsItem* group = sc->createItemGroup(graphicsItems);
 
     if(!group)
       return;
@@ -807,7 +755,7 @@ void te::layout::View::destroyItemGroup()
   {
     if (item)
     {
-      QGraphicsItemGroup* group = dynamic_cast<QGraphicsItemGroup*>(item);
+      te::layout::ItemGroup* group = dynamic_cast<te::layout::ItemGroup*>(item);
       if(group)
       {
         if(sc)

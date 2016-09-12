@@ -43,6 +43,7 @@
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../core/pattern/mvc/AbstractItemModel.h"
 #include "../View.h"
+#include "../ItemUtils.h"
 
 //STL
 #include <string>

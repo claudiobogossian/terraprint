@@ -156,13 +156,6 @@ namespace te
         virtual EnumType* getMapCompositionItem() const;
 
         /*!
-          \brief Returns value that represents moving item group (MVC Component) type belonging to enumeration.
-      
-          \return enum value      
-        */
-        virtual EnumType* getMovingItemGroup() const;
-        
-        /*!
           \brief Returns value that represents scale (MVC Component) type belonging to enumeration.
       
           \return enum value      

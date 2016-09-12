@@ -38,8 +38,8 @@
 
 #include <memory>
 
-te::layout::GridMapItem::GridMapItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::GridMapItem::GridMapItem(AbstractItemController* controller)
+  : AbstractItem(controller)
   , m_maxWidthTextMM(0)
   , m_maxHeigthTextMM(0)
   , m_changeSize(false)
@@ -323,8 +323,6 @@ void te::layout::GridMapItem::calculateText(const QPointF& point, const QFont& f
 
 void te::layout::GridMapItem::calculateSuperScriptText(const QPointF& point, const QFont& font, const std::string& text, int rotate)
 {
-  ItemUtils itemUtils = this->getScene()->getItemUtils();
-
   std::vector<QString> textVect;
   std::vector<QFont> fontVect;
 
@@ -356,8 +354,7 @@ void te::layout::GridMapItem::calculateSuperScriptText(const QPointF& point, con
 
   textVect.push_back(txtSScript2);
 
-  m_gridText.addPath(itemUtils.superscriptTextToVector(textVect, fontVect, point, rotate));
-
+  m_gridText.addPath(ItemUtils::superscriptTextToVector(textVect, fontVect, point, rotate));
 }
 
 
@@ -506,14 +503,14 @@ QRectF te::layout::GridMapItem::boundingRect() const
 {
   if (m_currentAction == RESIZE_ACTION)
   {
-    return AbstractItem<QGraphicsItem>::boundingRect();
+    return AbstractItem::boundingRect();
   }
 
   if(m_boundingBox.isValid())
   {
     return QRectF(m_boundingBox.getLowerLeftX(), m_boundingBox.getLowerLeftY(), m_boundingBox.getWidth(), m_boundingBox.getHeight());
   }
-  return AbstractItem<QGraphicsItem>::boundingRect();
+  return AbstractItem::boundingRect();
 }
 
 void te::layout::GridMapItem::calculateCrossLines()

@@ -44,7 +44,7 @@
 #include <QPixmap>
 
 te::layout::LegendItem::LegendItem(AbstractItemController* controller)
-  : AbstractItem<QGraphicsItem>(controller)
+  : AbstractItem(controller)
   , m_currentMaxHeight(0)
   , m_maxWidth(0)
   , m_displacementBetweenSymbols(0)
@@ -131,7 +131,7 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
 
   m_maxWidth = qMax(textBoundary.width(), m_maxWidth);
 
-  drawText(ptTitle, painter, m_qFontTitle, title);
+  ItemUtils::drawText(ptTitle, painter, m_qFontTitle, title);
 
   painter->restore();
 
@@ -278,7 +278,7 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
     QPixmap* pixmap = geomCanvas->getPixmap();
     if (pixmap)
     {
-      drawPixmap(geomRect, painter, *pixmap);
+      te::layout::ItemUtils::drawPixmap(geomRect, painter, *pixmap);
     }
     painter->restore();
     delete geomCanvas;
@@ -305,7 +305,7 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont f
   painter->setFont(font);
   painter->setBrush(fontColor);
 
-  drawText(point, painter, font, text);
+  ItemUtils::drawText(point, painter, font, text);
 
   painter->restore();
 }

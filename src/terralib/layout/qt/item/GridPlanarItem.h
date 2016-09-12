@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        GridPlanarItem(AbstractItemController* controller, bool invertedMatrix = false);
+        GridPlanarItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

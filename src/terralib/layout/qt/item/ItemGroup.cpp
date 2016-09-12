@@ -36,7 +36,7 @@
 #include <QStyleOptionGraphicsItem>
 
 te::layout::ItemGroup::ItemGroup(AbstractItemController* controller)
-  : AbstractItem<QGraphicsItemGroup>(controller, false)
+  : AbstractItem(controller)
   , m_stacksBehindParent(false)
   , m_isSubSelectionAllowed(true)
 {
@@ -53,7 +53,7 @@ QRectF te::layout::ItemGroup::boundingRect() const
   bool resizable = m_controller->getProperty("resizable").getValue().toBool();
   if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
   {
-    return AbstractItem<QGraphicsItemGroup>::boundingRect();
+    return AbstractItem::boundingRect();
   }
 
   QRectF rect = this->childrenBoundingRect();
@@ -62,7 +62,7 @@ QRectF te::layout::ItemGroup::boundingRect() const
     return rect;
   }
 
-  return QGraphicsItemGroup::boundingRect();
+  return AbstractItem::boundingRect();
 }
 
 void te::layout::ItemGroup::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
@@ -126,13 +126,41 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     }
   }
 
-  return AbstractItem<QGraphicsItemGroup>::itemChange(change, value);
+  return AbstractItem::itemChange(change, value);
+}
+
+void te::layout::ItemGroup::addToGroup(QGraphicsItem* item)
+{
+  QPointF itemCurrentPos = item->pos();
+
+  item->setParentItem(this);
+
+  QPointF itemNewPos = this->mapFromScene(itemCurrentPos);
+  item->setPos(itemNewPos);
+
+  ItemUtils::normalizeChildrenPosition(this);
+}
+
+void te::layout::ItemGroup::removeFromGroup(QGraphicsItem* item)
+{
+  QPointF itemNewPos = item->mapToScene(QPointF(0,0));
+  item->setParentItem(this->parentItem());
+
+  if (item->parentItem() != 0)
+  {
+    itemNewPos = item->parentItem()->mapFromScene(itemNewPos);
+  }
+
+  item->setPos(itemNewPos);
+
+
+  ItemUtils::normalizeChildrenPosition(this);
 }
 
 void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
   bool wasSelected = isSelected();
-  AbstractItem<QGraphicsItemGroup>::mousePressEvent(event);
+  AbstractItem::mousePressEvent(event);
   bool continuedSelected = isSelected();
 
   if (m_currentAction == te::layout::RESIZE_ACTION)

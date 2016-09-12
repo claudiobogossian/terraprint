@@ -19,10 +19,13 @@
 
 // TerraLib
 #include "MapCompositionController.h"
+#include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "MapCompositionItem.h"
 #include "MapItem.h"
+
+
 
 #include <set>
 
@@ -96,7 +99,7 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
 {
   std::map<std::string, te::layout::Properties> mapProperties = groupPropertiesByParent(properties);
 
-  const std::string& parentClass = this->getProperties().getTypeObj()->getName();
+  const std::string& parentClass = this->getModel()->getType()->getName();
 
   std::map<std::string, te::layout::Properties>::iterator it = mapProperties.find(parentClass);
 
@@ -139,6 +142,16 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
     {
       currentView->getController()->setProperties(it->second);
     }
+  }
+}
+
+void te::layout::MapCompositionController::update(const Subject* subject)
+{
+  ItemGroupController::update(subject);
+
+  if (subject != m_model)
+  {
+    m_view->prepareGeometryChange();
   }
 }
 

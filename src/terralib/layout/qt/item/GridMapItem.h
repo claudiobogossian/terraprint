@@ -53,7 +53,7 @@ namespace te
 
       \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT GridMapItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT GridMapItem : public AbstractItem
     {
       protected:
         typedef std::pair<std::string, QPointF> TextPosition;
@@ -67,7 +67,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        GridMapItem(AbstractItemController* controller, bool invertedMatrix = false);
+        GridMapItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

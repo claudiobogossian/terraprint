@@ -15,15 +15,12 @@ namespace te
 {
   namespace layout
   {
+    class TELAYOUTEXPORT BarCodeController : public TextController
+    {
+    public:
 
-class TELAYOUTEXPORT BarCodeController : public TextController
-{
-public:
-
-      BarCodeController(AbstractItemModel* model);
-      virtual QSizeF updateView();
-
-};
+          BarCodeController(AbstractItemModel* model);
+    };
   }
 }
 

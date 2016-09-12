@@ -36,7 +36,7 @@ namespace te
 {
   namespace layout
   {
-    class AbstractItemModel;
+    class AbstractItemController;
     /*!
       \class NewItemFactory
 
@@ -78,7 +78,7 @@ namespace te
         */
         ItemFactory(const std::string& factoryKey);
 
-        virtual void setProperties(AbstractItemModel* model, ItemFactoryParamsCreate params);
+        virtual te::layout::Properties convertToProperties(const ItemFactoryParamsCreate& params);
         
     };
   }

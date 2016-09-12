@@ -37,8 +37,6 @@
 #include "../../core/Config.h"
 #include "../../core/Font.h"
 
-#include <QGraphicsItem>
-
 namespace te
 {
   namespace layout
@@ -53,7 +51,7 @@ namespace te
 
       \sa te::layout::AbstractItem
     */
-    class TELAYOUTEXPORT ScaleItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT ScaleItem : public AbstractItem
     {
       public:
 
@@ -63,7 +61,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ScaleItem(AbstractItemController* controller, bool invertedMatrix = false);
+        ScaleItem(AbstractItemController* controller);
 
         /*!
           \brief Destructor

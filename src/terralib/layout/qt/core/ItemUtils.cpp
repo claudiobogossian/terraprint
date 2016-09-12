@@ -1075,3 +1075,104 @@ void te::layout::ItemUtils::normalizeChildrenPosition(QGraphicsItem* item)
   }
 }
 
+void te::layout::ItemUtils::drawImage(const QRectF& rectMM, QPainter* painter, const QImage& image)
+{
+  painter->save();
+
+  QTransform transform;
+  transform.translate(0., rectMM.y() + rectMM.height());
+  transform.scale(1., -1.);
+  transform.translate(0., -rectMM.y());
+
+  painter->setTransform(transform, true);
+  painter->drawImage(rectMM, image, image.rect());
+
+  painter->restore();
+}
+
+void te::layout::ItemUtils::drawPixmap(const QRectF& rectMM, QPainter* painter, const QPixmap& pixmap)
+{
+  painter->save();
+
+  QTransform transform;
+  transform.translate(0., rectMM.y() + rectMM.height());
+  transform.scale(1., -1.);
+  transform.translate(0., -rectMM.y());
+
+  painter->setTransform(transform, true);
+  painter->drawPixmap(rectMM, pixmap, pixmap.rect());
+
+  painter->restore();
+}
+
+void te::layout::ItemUtils::drawText(const QPointF& pointMM, QPainter* painter, const QFont& font, const std::string& text, int rotate)
+{
+  QString qText = ItemUtils::convert2QString(text);
+
+  QPainterPath textObject = ItemUtils::textToVector(qText, font, pointMM, rotate);
+
+  QPen pen = painter->pen();
+  pen.setWidthF(0);
+
+  QBrush brush = painter->brush();
+  brush.setStyle(Qt::SolidPattern);
+
+  painter->save();
+
+  painter->setPen(pen);
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->fillPath(textObject, brush);
+
+  painter->restore();
+}
+
+void te::layout::ItemUtils::drawSuperScriptText(const QPointF& pointMM, QPainter* painter, const QFont& font, const std::string& text, int rotate)
+{
+  std::vector<QString> textVect;
+  std::vector<QFont> fontVect;
+
+  QFont fontSScript2 = font;
+  fontSScript2.setPointSize(fontSScript2.pointSize() / 2);
+
+  fontVect.push_back(fontSScript2);
+  fontVect.push_back(font);
+
+  int index = (int)text.size() / 2;
+  int indexNegative = (int)(text.size() - 1) / 2;
+
+  std::string txtSubstr1 = text.substr(0, indexNegative + 1).c_str();
+  QString qTxtSubstr1 = ItemUtils::convert2QString(txtSubstr1);
+
+  std::string txtSubstr2 = text.substr(0, index).c_str();
+  QString qTxtSubstr2 = ItemUtils::convert2QString(txtSubstr2);
+
+  std::string txtSubstr3 = text.substr(indexNegative + 1, text.size()).c_str();
+  QString qTxtSubstr3 = ItemUtils::convert2QString(txtSubstr3);
+
+  std::string txtSubstr4 = text.substr(index, text.size()).c_str();
+  QString qTxtSubstr4 = ItemUtils::convert2QString(txtSubstr4);
+
+  QString txtSScript1(text.at(0) == '-' ? qTxtSubstr1 : qTxtSubstr2);
+  QString txtSScript2(text.at(0) == '-' ? qTxtSubstr3 : qTxtSubstr4);
+
+  textVect.push_back(txtSScript1);
+
+  textVect.push_back(txtSScript2);
+
+  QPainterPath textObject = ItemUtils::superscriptTextToVector(textVect, fontVect, pointMM, rotate);
+
+  QPen pen = painter->pen();
+  pen.setWidthF(0);
+
+  QBrush brush = painter->brush();
+  brush.setStyle(Qt::SolidPattern);
+
+  painter->save();
+
+  painter->setPen(pen);
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  painter->fillPath(textObject, brush);
+
+  painter->restore();
+}
+

@@ -32,6 +32,7 @@
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/enum/Enums.h"
 #include "../../../core/property/Properties.h"
+#include "../ItemUtils.h"
 #include "../Scene.h"
 
 // Qt

@@ -32,7 +32,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include <QStyleOptionGraphicsItem>
 
 te::layout::ImageItem::ImageItem(AbstractItemController* controller)
-  : AbstractItem<QGraphicsItem>(controller)
+  : AbstractItem(controller)
 {
 }
 

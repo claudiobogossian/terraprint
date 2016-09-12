@@ -39,7 +39,7 @@
 #include "../../core/Config.h"
 
 // Qt
-#include <QGraphicsTextItem>
+#include <QObject>
 
 class QKeyEvent;
 
@@ -60,7 +60,7 @@ namespace te
 
     \sa te::layout::AbstractItem
   */
-    class TELAYOUTEXPORT TextItem : public AbstractItem<QGraphicsTextItem>
+    class TELAYOUTEXPORT TextItem : public QObject, public AbstractItem
     {
       Q_OBJECT
 

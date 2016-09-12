@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::GridPlanarItemFactory::build(ItemFacto
   Properties      props = params.getProperties(); 
 
   GridPlanarModel* model = new GridPlanarModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   te::layout::AbstractItemController* controller = new GridPlanarController(model);
   GridPlanarItem* view = new GridPlanarItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return dynamic_cast<AbstractItemView*>(view);
 }
 

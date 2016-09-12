@@ -25,8 +25,8 @@
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_LAYER_CHOISE_CONTROLLER_H 
-#define __TERRALIB_LAYOUT_INTERNAL_MAP_LAYER_CHOISE_CONTROLLER_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_MAP_LAYER_CHOICE_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_MAP_LAYER_CHOICE_CONTROLLER_H
 
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideController.h"
@@ -39,8 +39,10 @@ namespace te
   namespace layout
   {
     class AbstractOutsideModel;
-    class Scene;
     class AbstractProxyProject;
+    class Property;
+    class Scene;
+    
 
     class TELAYOUTEXPORT MapLayerChoiceController : public AbstractOutsideController
     {
@@ -61,4 +63,4 @@ namespace te
   }
 }
 
-#endif
+#endif //__TERRALIB_LAYOUT_INTERNAL_MAP_LAYER_CHOICE_CONTROLLER_H

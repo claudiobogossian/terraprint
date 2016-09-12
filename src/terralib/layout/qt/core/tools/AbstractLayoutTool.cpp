@@ -19,6 +19,7 @@
 
 // TerraLib
 #include "AbstractLayoutTool.h"
+#include "../ItemUtils.h"
 #include "../View.h"
 
 // Qt

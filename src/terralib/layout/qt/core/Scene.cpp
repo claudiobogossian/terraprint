@@ -183,17 +183,6 @@ void te::layout::Scene::insertItem(QGraphicsItem* item)
     return;
   }
 
-  if (abstractItem->isInverted())
-  {
-    QTransform transfItem = item->transform();
-    // Check if the item had been inserted
-    if(transfItem != m_matrix.inverted())
-    {
-      QTransform transf = m_matrix.inverted();
-      item->setTransform(transf);
-    }
-  }
-
   item->setZValue(total);
   this->addItem(item); 
   
@@ -403,7 +392,7 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
       }
 
       this->removeItem(item);
-      destroyItemGroup((QGraphicsItemGroup*)item);
+      destroyItemGroup((te::layout::ItemGroup*)item);
     }
     else
     {
@@ -413,7 +402,7 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
   return listUngroupedItems;
 }
 
-QGraphicsItemGroup* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, EnumType* groupType)
+QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, EnumType* groupType)
 {
   this->clearSelection();
 
@@ -483,7 +472,7 @@ QGraphicsItemGroup* te::layout::Scene::createItemGroup(const QList<QGraphicsItem
   return group;
 }
 
-void te::layout::Scene::destroyItemGroup( QGraphicsItemGroup *group )
+void te::layout::Scene::destroyItemGroup(te::layout::ItemGroup* group )
 {
   group->setHandlesChildEvents(false);
   
@@ -520,32 +509,6 @@ void te::layout::Scene::destroyItemGroup( QGraphicsItemGroup *group )
 
   if (!vecNames.empty())
     emit deleteFinalized(vecNames);
-}
-
-te::layout::MovingItemGroup* te::layout::Scene::createMovingItemGroup( const QList<QGraphicsItem*>& items )
-{
-  //Create a new group
-  BuildGraphicsItem build(this);
-  EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
-
-  QGraphicsItem* item = 0;
-  
-  item = build.createItem(enumObj->getMovingItemGroup());
-
-  te::layout::MovingItemGroup* movingItem = dynamic_cast<MovingItemGroup*>(item);
-
-  if (movingItem)
-  {
-    movingItem->setPos(QPointF(0,0)); //The group component must be initialized with a position (setPos).
-    foreach(QGraphicsItem* i, items)
-    {
-      movingItem->addToGroup(i);
-    }
-
-    movingItem->setHandlesChildEvents(true);
-  }
-
-  return movingItem;
 }
 
 void te::layout::Scene::calculateSceneMeasures(double widthMM, double heightMM)
@@ -820,7 +783,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
     const Properties& groupProperties = mapProperties[groupName];
 
-    QGraphicsItemGroup* qItemGroup = createItemGroup(listItems, groupProperties.getTypeObj());
+    QGraphicsItem* qItemGroup = createItemGroup(listItems, groupProperties.getTypeObj());
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(qItemGroup);
     if (itemView != 0)
     {

@@ -36,20 +36,16 @@ te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryP
   Properties      props = params.getProperties(); 
 
   BalloonModel* model = new BalloonModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   BalloonController* controller = new BalloonController(model);
   BalloonItem* view = new BalloonItem(controller);
   controller->setView(view);
-  view->isInverted();
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

@@ -43,9 +43,9 @@
 #include "../../item/ThreeNorthModel.h"
 #include "terralib/common/StringUtils.h"
 
-te::layout::ThreeNorthItem::ThreeNorthItem(AbstractItemController* controller, bool invertedMatrix) :
-AbstractItem<QGraphicsItem>(controller, invertedMatrix)
-{  
+te::layout::ThreeNorthItem::ThreeNorthItem(AbstractItemController* controller) 
+  : AbstractItem(controller)
+{
 
 }
 

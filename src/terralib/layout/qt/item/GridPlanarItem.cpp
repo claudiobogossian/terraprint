@@ -35,8 +35,8 @@
 #include "../../core/Utils.h"
 #include "../core/Scene.h"
 
-te::layout::GridPlanarItem::GridPlanarItem(AbstractItemController* controller, bool invertedMatrix)
-  : GridMapItem(controller, invertedMatrix)
+te::layout::GridPlanarItem::GridPlanarItem(AbstractItemController* controller)
+  : GridMapItem(controller)
 {
 
 }
@@ -120,9 +120,8 @@ void te::layout::GridPlanarItem::calculateGrid()
     addGridLinesToPath();
   }
 
-  m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
-
   prepareGeometryChange();
+  m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
 }
 
 

@@ -39,7 +39,8 @@
 #include "../../core/Config.h"
 
 // Qt
-#include <QGraphicsObject>
+#include <QGraphicsItem>
+#include <QObject>
 #include <QCursor>
 
 class QVariant;
@@ -73,7 +74,7 @@ namespace te
 
     \sa te::layout::AbstractItem
   */
-    class TELAYOUTEXPORT MapItem : public AbstractItem<QGraphicsObject>
+    class TELAYOUTEXPORT MapItem : public QObject, public AbstractItem
     {
       Q_OBJECT //for slots/signals
 
@@ -170,10 +171,10 @@ namespace te
 
       protected:
 
-        EnumType*                       m_currentEditionMode;
-        QPixmap                         m_screenCache;
-        QPixmap                         m_screenDraft;
-        te::gm::Point                   m_clickedPointMM;
+        EnumType*                       m_currentEditionMode; //!< The current edition mode of the item
+        QPixmap                         m_screenCache; //!< A double buffer to cache the drawings, avoiding the need of a full redraw of the item when paint is called
+        QPixmap                         m_screenDraft; //!< A pixmap to be used as a draft during the edition of the item. Used by pan and zoom area
+        te::gm::Point                   m_clickedPointMM; //!< The current clicked coord. Is valid only during the mouse click. When the mouse button is released, it is reset to its default value
     };
   }
 }

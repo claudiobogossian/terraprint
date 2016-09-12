@@ -30,6 +30,7 @@
 #include "SVGDialogModel.h"
 #include "../qt/item/MapItem.h"
 #include "../qt/core/ItemUtils.h"
+#include "../qt/core/Scene.h"
 
 te::layout::SVGDialogController::SVGDialogController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o) :
   AbstractOutsideController(o),

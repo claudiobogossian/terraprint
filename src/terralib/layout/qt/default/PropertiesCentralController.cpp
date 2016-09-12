@@ -27,9 +27,11 @@
 
 // TerraLib
 #include "PropertiesCentralController.h"
-#include "../core/View.h"
+#include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../outside/PropertiesOutside.h"
 #include "../outside/ObjectInspectorOutside.h"
+#include "../core/ItemUtils.h"
+#include "../core/View.h"
 #include "../core/propertybrowser/MenuBuilder.h"
 
 // Qt
@@ -213,7 +215,7 @@ void te::layout::PropertiesCentralController::onShowContextMenu(QPointF scenePoi
     return;
   }
 
-  ItemUtils iUtils = ((Scene*)m_view->scene())->getItemUtils();
+  te::layout::ItemUtils iUtils = ((Scene*)m_view->scene())->getItemUtils();
 
   QGraphicsItem* hasItem = iUtils.intersectionSelectionItem(scenePoint.x(), scenePoint.y());
   QList<QGraphicsItem*> graphicsItems = getSelectedGraphicsItems();

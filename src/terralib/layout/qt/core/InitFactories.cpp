@@ -43,7 +43,6 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/item/LegendItemFactory.h"
 #include "pattern/factory/item/MapItemFactory.h"
 #include "pattern/factory/item/MapLocationItemFactory.h"
-#include "pattern/factory/item/MovingItemGroupItemFactory.h"
 #include "pattern/factory/item/NorthItemFactory.h"
 #include "pattern/factory/item/PointItemFactory.h"
 #include "pattern/factory/item/ScaleItemFactory.h"
@@ -144,7 +143,6 @@ namespace te
         static LegendItemFactory LegendItemFactory_instance;
         static MapItemFactory MapItemFactory_instance;
         static MapLocationItemFactory MapLocationItemFactory_instance;
-        static MovingItemGroupItemFactory MovingItemGroupItemFactory_instance;
         static NorthItemFactory NorthItemFactory_instance;
         static PointItemFactory PointItemFactory_instance;
         static ScaleItemFactory ScaleItemFactory_instance;

@@ -46,7 +46,7 @@ namespace te
     {
       public:
 
-        PolygonItem(AbstractItemController* controller, bool invertedMatrix = false);
+        PolygonItem(AbstractItemController* controller);
 
         virtual ~PolygonItem ();
 

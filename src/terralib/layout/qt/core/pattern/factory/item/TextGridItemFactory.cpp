@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactory
   Properties      props = params.getProperties(); 
 
   TextGridModel* model = new TextGridModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   AbstractItemController* controller = new AbstractItemController(model);
   TextGridItem* view = new TextGridItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if (props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

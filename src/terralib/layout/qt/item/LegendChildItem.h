@@ -41,11 +41,11 @@ namespace te
   {
     class AbstractItemController;
 
-    class TELAYOUTEXPORT LegendChildItem : public AbstractItem<QGraphicsItem>
+    class TELAYOUTEXPORT LegendChildItem : public AbstractItem
     {
     public:
 
-      LegendChildItem(AbstractItemController* controller, bool invertedMatrix = false);
+      LegendChildItem(AbstractItemController* controller);
 
       virtual ~LegendChildItem();
 

@@ -29,8 +29,8 @@
 #include "PaperItem.h"
 #include "terralib/color/RGBAColor.h"
 
-te::layout::PaperItem::PaperItem(AbstractItemController* controller, bool invertedMatrix)
-  : AbstractItem<QGraphicsItem>(controller, invertedMatrix)
+te::layout::PaperItem::PaperItem(AbstractItemController* controller)
+  : AbstractItem(controller)
 {  
   this->setFlags(QGraphicsItem::ItemSendsGeometryChanges);
 }

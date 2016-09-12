@@ -35,19 +35,16 @@ te::layout::AbstractItemView* te::layout::MapItemFactory::build(ItemFactoryParam
   Properties      props = params.getProperties(); 
 
   MapModel* model = new MapModel();
-  if (props.getProperties().empty())
-  {
-    setProperties(model, params);
-  }
-
   MapController* controller = new MapController(model);
   MapItem* view = new MapItem(controller);
   controller->setView(view);
 
-  if (!props.getProperties().empty())
+  if(props.getProperties().empty())
   {
-    controller->setProperties(props);
+    props = convertToProperties(params);
   }
+  controller->setProperties(props);
+
   return view;
 }
 

@@ -48,7 +48,8 @@
 #include <QPaintEngine>
 
 te::layout::MapItem::MapItem(AbstractItemController* controller)
-  : AbstractItem<QGraphicsObject>(controller, false)
+  : QObject()
+  , AbstractItem(controller)
   , m_currentEditionMode(0)
 {
   this->setAcceptDrops(true);
@@ -60,49 +61,43 @@ te::layout::MapItem::~MapItem()
 
 void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  if (myScene == 0)
-  {
-    return;
-  }
-
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
-  if (mapController == 0)
-  {
-    return;
-  }
-
-  const Property& property = m_controller->getProperty("background_color");
-  const te::color::RGBAColor& color = property.getValue().toColor();
-  QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
-  //we first calculate the size in pixels
-  Utils utils = ((Scene*) this->scene())->getUtils();
-
-  QRectF boxMM = boundingRect();
-  te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
-  boxViewport = utils.viewportBox(boxViewport);
-
   if (m_isPrinting == true)
   {
     drawMapOnPainter(painter);
   }
   else
   {
+    Scene* myScene = dynamic_cast<Scene*>(this->scene());
+    if (myScene == 0)
+    {
+      return;
+    }
+
+    //we first calculate the size in pixels
+    Utils utils = myScene->getUtils();
+
+    QRectF boxMM = boundingRect();
+    te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
+    boxViewport = utils.viewportBox(boxViewport);
+
     //if for any reason the size has been changed, we recreate the screen pixmap
     QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
     if (m_screenCache.size() != sizeInPixels)
     {
+      const Property& property = m_controller->getProperty("background_color");
+      const te::color::RGBAColor& color = property.getValue().toColor();
+      QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
       m_screenCache = QPixmap(sizeInPixels);
       m_screenCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
 
       drawMapOnDevice(&m_screenCache);
     }
     
-    drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
+    te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
     if (m_screenDraft.isNull() == false)
     {
-      drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenDraft);
+      te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenDraft);
     }
   }
 }
@@ -195,17 +190,17 @@ QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange cha
       //contextUpdated(myScene->getContext());
 
       //we dont want AbstractItem to handle this event, so we 'jump' to its father
-      return QGraphicsObject::itemChange(change, value);
+      return QGraphicsItem::itemChange(change, value);
     }
   }
-  return AbstractItem<QGraphicsObject>::itemChange(change, value);
+  return AbstractItem::itemChange(change, value);
 }
 
 void te::layout::MapItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
 {
   if(m_isEditionMode == false)
   {
-    AbstractItem<QGraphicsObject>::mousePressEvent(event);
+    AbstractItem::mousePressEvent(event);
     return;
   }
 
@@ -216,7 +211,7 @@ void  te::layout::MapItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 {
   if(m_isEditionMode == false)
   {
-    AbstractItem<QGraphicsObject>::mouseMoveEvent(event);
+    AbstractItem::mouseMoveEvent(event);
     return;
   }
 
@@ -286,7 +281,7 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
 {
   if(m_isEditionMode == false)
   {
-    AbstractItem<QGraphicsObject>::mouseReleaseEvent(event);
+    AbstractItem::mouseReleaseEvent(event);
     m_clickedPointMM = te::gm::Point();
     return;
   }
@@ -416,7 +411,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
 {
   if(m_isEditionMode == false)
   {
-    AbstractItem<QGraphicsObject>::wheelEvent(event);
+    AbstractItem::wheelEvent(event);
     return;
   }
 
@@ -450,7 +445,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
 
 void te::layout::MapItem::enterEditionMode()
 {
-  AbstractItem<QGraphicsObject>::enterEditionMode();
+  AbstractItem::enterEditionMode();
 
   if(parentItem() != 0)
   {
@@ -463,7 +458,7 @@ void te::layout::MapItem::enterEditionMode()
 
 void te::layout::MapItem::leaveEditionMode()
 {
-  AbstractItem<QGraphicsObject>::leaveEditionMode();
+  AbstractItem::leaveEditionMode();
 
   //we now uninstall the visualization tools from the map display and no more events will be forward to it
   removeCurrentTool();

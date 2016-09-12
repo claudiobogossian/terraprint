@@ -93,34 +93,33 @@ void te::layout::ItemFactoryParamsCreate::reset() throw(te::common::Exception)
   m_height = 0;
 }
 
-std::string te::layout::ItemFactoryParamsCreate::getName()
+std::string te::layout::ItemFactoryParamsCreate::getName() const
 {
   return m_name;
 }
 
-te::layout::Properties te::layout::ItemFactoryParamsCreate::getProperties()
+te::layout::Properties te::layout::ItemFactoryParamsCreate::getProperties() const
 {
   return m_props;
 }
 
-te::gm::Coord2D te::layout::ItemFactoryParamsCreate::getCoord()
+te::gm::Coord2D te::layout::ItemFactoryParamsCreate::getCoord() const
 {
   return m_coord;
 }
 
-int te::layout::ItemFactoryParamsCreate::getId()
+int te::layout::ItemFactoryParamsCreate::getId() const
 {
   return m_id;
 }
 
-double te::layout::ItemFactoryParamsCreate::getWidth()
+double te::layout::ItemFactoryParamsCreate::getWidth() const
 {
   return m_width;
 }
 
-double te::layout::ItemFactoryParamsCreate::getHeight()
+double te::layout::ItemFactoryParamsCreate::getHeight() const
 {
   return m_height;
 }
-
 
