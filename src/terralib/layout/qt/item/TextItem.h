@@ -33,15 +33,13 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TEXT_ITEM_H
 
 // TerraLib
+#include "../../core/Config.h"
 #ifndef Q_MOC_RUN
 #include "AbstractItem.h"
 #endif
-#include "../../core/Config.h"
 
-// Qt
-#include <QObject>
-
-class QKeyEvent;
+//Qt
+class QTextDocument;
 
 namespace te
 {
@@ -60,10 +58,8 @@ namespace te
 
     \sa te::layout::AbstractItem
   */
-    class TELAYOUTEXPORT TextItem : public QObject, public AbstractItem
+    class TELAYOUTEXPORT TextItem : public AbstractItem
     {
-      Q_OBJECT
-
       public:
 
         /*!
@@ -80,19 +76,16 @@ namespace te
         virtual ~TextItem();
 
         /*!
+        \brief Reimplemented from QGraphicsItem
+        */
+        virtual QRectF boundingRect() const;
+
+        virtual void refresh();
+
+        /*!
           \brief For any specific drawing, the item must reimplement this function
         */
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
-
-        /*!
-        \brief Reimplemented from QGraphicsItem to capture changes in the item
-        */
-        virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value);
-
-        /*!
-          \brief Reimplemented from QGraphicsItem
-        */
-        virtual QRectF boundingRect() const;
 
       protected:
 
@@ -100,6 +93,11 @@ namespace te
         \brief Reimplemented from QGraphicsTextItem
         */
         virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
+        
+        /*!
+        \brief Reimplemented from QGraphicsTextItem
+        */
+        virtual void mouseMoveEvent(QGraphicsSceneMouseEvent * event);
 
         /*!
           \brief Reimplemented from QGraphicsTextItem
@@ -121,10 +119,11 @@ namespace te
          */
         void leaveEditionMode();
 
-      protected slots:
+      protected:
 
-        virtual void updateGeometry( int position, int charsRemoved, int charsAdded );
+        QTextCursor* m_textCursor; //!< The cursor object that is used to manipulate the document that represents the text
+
     };
   }
 }
-#endif
+#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_ITEM_H

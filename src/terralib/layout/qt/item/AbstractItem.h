@@ -105,6 +105,9 @@ namespace te
         */
         virtual QRectF boundingRect() const;
 
+        /*!
+        \brief This function is called every time the view must be updated
+        */
         virtual void refresh();
 
         virtual void contextUpdated(const ContextObject& context);
@@ -200,7 +203,7 @@ namespace te
 
         virtual void drawItemResized( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
         
-        virtual AbstractScene* getScene();
+        virtual AbstractScene* getScene() const;
 
         virtual QRectF qRectToQPolygonMap(QRectF rect);
         

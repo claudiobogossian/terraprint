@@ -31,8 +31,6 @@
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
-class QSizeF;
-
 namespace te
 {
   namespace layout
@@ -70,16 +68,12 @@ namespace te
         */
         virtual void setProperties(const Properties& properties);
 
-        /*!
-          \brief This function will be called by the view every time the item´s text was changed
-         */
-        virtual void textChanged();
-    
-      protected:
+        virtual double getDpiForCalculation() const;
 
-        QRectF m_originalRect;
-        
-       
+    protected:
+
+        double m_dpiForCalculation; //!< Holds the information of the DPI used to calculate the bounding rect (in MM) of the item
+
     };
   }
 }
