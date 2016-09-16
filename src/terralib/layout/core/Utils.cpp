@@ -145,7 +145,7 @@ int te::layout::Utils::mm2pixel( double mm )
   const ContextObject& context = m_scene->getContext();
 
   int devDpi = context.getDpiX();
-  int px = (mm * devDpi) / 25.4 ;
+  int px = roundNumber((mm * devDpi) / 25.4);
   return px;
 }
 

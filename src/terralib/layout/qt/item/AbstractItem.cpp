@@ -122,7 +122,7 @@ void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraph
   {
     drawWarningAlert(painter);
   }
-      
+
   //Draws the frame
   drawFrame(painter);
 
@@ -858,7 +858,7 @@ void te::layout::AbstractItem::setPixmap()
   m_clonePixmap = QPixmap::fromImage(image);
 }
     
-te::layout::AbstractScene* te::layout::AbstractItem::getScene()
+te::layout::AbstractScene* te::layout::AbstractItem::getScene() const
 {
   QGraphicsScene* scene = this->scene();
   if (scene == 0)

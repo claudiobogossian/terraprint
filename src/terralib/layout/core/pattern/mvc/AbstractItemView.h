@@ -105,7 +105,7 @@ namespace te
 
         virtual bool isSubSelected() const;
 
-        virtual AbstractScene* getScene() = 0;
+        virtual AbstractScene* getScene() const = 0;
 
         virtual void prepareGeometryChange() = 0;
 
