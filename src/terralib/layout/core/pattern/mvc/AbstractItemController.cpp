@@ -39,10 +39,17 @@ te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* mo
   , m_view(0)
   , m_marginResizePrecision(2.)
   , m_warningManager(new WarningManager())
+  , m_resizableDefaultState(false)
 {
   if(m_model != 0)
   {
     m_model->attach(this);
+  }
+
+  const Property& pResizable = m_model->getProperty("resizable");
+  if (pResizable.isNull() == false)
+  {
+    m_resizableDefaultState = pResizable.getValue().toBool();
   }
 }
 
@@ -93,7 +100,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   if (hasWidth)
   {
     double newWidth = propertiesCopy.getProperty("width").getValue().toDouble();
-    double currentWidth = m_model->getProperty("width").getValue().toDouble();
+    double currentWidth = getProperty("width").getValue().toDouble();
     if (newWidth != currentWidth)
     {
       hasGeometryChanged = true;
@@ -103,7 +110,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   if (hasHeight)
   {
     double newHeight = propertiesCopy.getProperty("height").getValue().toDouble();
-    double currentHeight = m_model->getProperty("height").getValue().toDouble();
+    double currentHeight = getProperty("height").getValue().toDouble();
     if (newHeight != currentHeight)
     {
       hasGeometryChanged = true;
@@ -113,38 +120,36 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   if (hasRotation)
   {
       double newRotation = propertiesCopy.getProperty("rotation").getValue().toDouble();
-      double currentRotation = m_model->getProperty("rotation").getValue().toDouble();
+      double currentRotation = getProperty("rotation").getValue().toDouble();
 
-      bool rotationDiffZero = newRotation != 0.0;
-      bool disableEdt = !rotationDiffZero;
+      bool enableResize = m_resizableDefaultState;
+      if (newRotation != 0.0)
+      {
+        enableResize = false;
+      }
 
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+      //if it has rotation, we be turn-off the resizable property
       Property property(0);
       property.setName("resizable");
       property.setLabel(TR_LAYOUT("Resizable"));
-      property.setValue(!rotationDiffZero, dataType->getDataTypeBool());
+      property.setValue(enableResize, dataType->getDataTypeBool());
       propertiesCopy.addProperty(property);
 
       Property pWidth = m_model->getProperty("width");
-      pWidth.setEditable(!rotationDiffZero);
+      pWidth.setEditable(enableResize);
       m_model->completelyUpdateProperty(pWidth);
 
       Property pHeight = m_model->getProperty("height");
-      pHeight.setEditable(!rotationDiffZero);
+      pHeight.setEditable(enableResize);
       m_model->completelyUpdateProperty(pHeight);
-
   }
   if (hasGeometryChanged)
   {
     m_view->prepareGeometryChange();
   }
   m_model->setProperties(propertiesCopy);
-  if (hasGeometryChanged)
-  {
-   // updateChildren(); // update children size
-  }
-
-
 
   validateItem();
 }
