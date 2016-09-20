@@ -196,11 +196,6 @@ void te::layout::DialogPropertiesBrowser::onSetDlg( QWidget *parent, QtProperty 
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowFolderDlg()));
   }
-  if (currentType == dataType->getDataTypeMapSettings())
-  {
-    connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapLocationSettingsDlg()));
-  }
-
   if (currentType == dataType->getDataTypeMapLocationSettings())
   {
     connect(parent, SIGNAL(showDlg()), this, SLOT(onShowMapLocationSettingsDlg()));
