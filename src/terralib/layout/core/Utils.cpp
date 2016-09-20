@@ -144,8 +144,13 @@ int te::layout::Utils::mm2pixel( double mm )
   }
   const ContextObject& context = m_scene->getContext();
 
-  int devDpi = context.getDpiX();
-  int px = roundNumber((mm * devDpi) / 25.4);
+  double devDpi = (double)context.getDpiX();
+  return mm2pixel(mm, devDpi);
+}
+
+int te::layout::Utils::mm2pixel(double mm, double dpi)
+{
+  int px = roundNumber((mm * dpi) / 25.4);
   return px;
 }
 
@@ -158,7 +163,12 @@ double te::layout::Utils::pixel2mm( int pixel )
   const ContextObject& context = m_scene->getContext();
 
   double devDpi = (double)context.getDpiX();
-  double mm = (pixel / devDpi) * 25.4 ;
+  return pixel2mm(pixel, devDpi);
+}
+
+double te::layout::Utils::pixel2mm(int pixel, double dpi)
+{
+  double mm = (pixel / dpi) * 25.4;
   return mm;
 }
 

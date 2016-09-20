@@ -109,12 +109,29 @@ namespace te
         virtual int mm2pixel(double mm);
 
         /*!
+        \brief Millimeter to pixel
+
+        \param millimeter value
+        \return pixel value
+        */
+        static int mm2pixel(double mm, double dpi);
+
+        /*!
           \brief Pixel to millimeter
       
           \param pixel value
           \return millimeter value
         */ 
         virtual double pixel2mm(int pixel);
+
+        /*!
+        \brief Pixel to millimeter
+
+        \param pixel value
+        \return millimeter value
+        */
+        static double pixel2mm(int pixel, double dpi);
+
 
 
         /*!
@@ -218,7 +235,7 @@ namespace te
           \param value   
           \return number rounded
         */ 
-        virtual int roundNumber(const double& value);
+        static int roundNumber(const double& value);
 
         /*!
           \brief Returns string wkt with non-planar projection.
