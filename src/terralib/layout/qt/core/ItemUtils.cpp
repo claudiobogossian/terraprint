@@ -1176,3 +1176,35 @@ void te::layout::ItemUtils::drawSuperScriptText(const QPointF& pointMM, QPainter
   painter->restore();
 }
 
+QPainterPath te::layout::ItemUtils::getRotationSymbol(const QPointF& pos, double widthMM)
+{
+  double halfWidthMM = widthMM / 2.;
+  double arrowWidthMM = widthMM / 4.;
+
+  QRectF rectRotation(pos.x() - halfWidthMM, pos.y() - widthMM, widthMM, widthMM);
+  QPointF centerRight = rectRotation.center();
+  centerRight.setX(centerRight.x() + halfWidthMM);
+
+  QPainterPath Ppath;
+  Ppath.moveTo(centerRight);
+
+  Ppath.lineTo(centerRight.x() + arrowWidthMM, centerRight.y() - arrowWidthMM);
+  Ppath.moveTo(centerRight);
+  Ppath.lineTo(centerRight.x() - arrowWidthMM, centerRight.y() - arrowWidthMM);
+  Ppath.moveTo(centerRight);
+  Ppath.arcTo(rectRotation, 0.0, 150.0);
+
+  QPointF centerLeft = rectRotation.center();
+  centerLeft.setX(centerLeft.x() - halfWidthMM);
+
+  Ppath.moveTo(centerLeft);
+
+  Ppath.lineTo(centerLeft.x() - arrowWidthMM, centerLeft.y() + arrowWidthMM);
+  Ppath.moveTo(centerLeft);
+  Ppath.lineTo(centerLeft.x() + arrowWidthMM, centerLeft.y() + arrowWidthMM);
+  Ppath.moveTo(centerLeft);
+  Ppath.arcTo(rectRotation, 180.0, 150.0);
+
+  return Ppath;
+}
+

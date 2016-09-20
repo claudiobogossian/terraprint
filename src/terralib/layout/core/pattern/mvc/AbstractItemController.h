@@ -175,6 +175,7 @@ namespace te
         AbstractItemView*                 m_view; //!< The view
         double                            m_marginResizePrecision; //precision
         WarningManager*                   m_warningManager;
+        bool                              m_resizableDefaultState;
     };
   }
 }

@@ -303,6 +303,8 @@ namespace te
         */
         static void drawSuperScriptText(const QPointF& pointMM, QPainter* painter, const QFont& font, const std::string& text, int rotate = 0);
 
+        static QPainterPath getRotationSymbol(const QPointF& pos, double widthMM);
+
       protected:
 
         /*!

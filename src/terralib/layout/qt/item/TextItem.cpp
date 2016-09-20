@@ -149,11 +149,15 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   //the we aquire information about the bounding rect references in pixels and in millimeters
   QRectF boxMM = this->boundingRect();
-  QRect boxPixels = painter->transform().mapRect(boxMM).toRect();
 
-  QAbstractTextDocumentLayout::PaintContext context;
+  Utils utils = myScene->getUtils();
+  double widthPx = utils.mm2pixel(boxMM.width());
+  double heightPx = utils.mm2pixel(boxMM.height());
 
+  double conversionfactor = boxMM.width() / widthPx;
+  
   //if we are in edition mode, we must draw the cursor position and the selection
+  QAbstractTextDocumentLayout::PaintContext context;
   if (isEditionMode())
   {
     //we define the position
@@ -171,11 +175,11 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   //we finally set the transformation into the qpainter
   QTransform transform;
-  transform.scale(zoomFactor * dpiFactor, zoomFactor * dpiFactor);
+  painter->setClipRect(boxMM);
 
-  painter->setViewport(boxPixels);
-  painter->setWindow(0, 0, boxPixels.width(), boxPixels.height());
-  painter->setTransform(transform);
+  transform.translate(0, boxMM.height());
+  transform.scale(dpiFactor * conversionfactor, dpiFactor * conversionfactor * -1);
+  painter->setTransform(transform, true);
 
   //and here we effectivally asks the textLayout to draw the document
   QAbstractTextDocumentLayout* documentLayout = m_textCursor->document()->documentLayout();
@@ -189,7 +193,7 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
   if (isEditionMode() == false)
   {
-    QGraphicsItem::mousePressEvent(event);
+    AbstractItem::mousePressEvent(event);
     return;
   }
   
@@ -214,6 +218,7 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
   if (newPosition != -1)
   {
     m_textCursor->setPosition(newPosition);
+    update();
   }
 
   event->accept();
@@ -223,7 +228,7 @@ void te::layout::TextItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
   if (isEditionMode() == false)
   {
-    QGraphicsItem::mouseMoveEvent(event);
+    AbstractItem::mouseMoveEvent(event);
     return;
   }
 
@@ -318,6 +323,7 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
     break;
   }
 
+  prepareGeometryChange();
   m_textCursor->document()->setTextWidth(m_textCursor->document()->size().width());
   update();
 }

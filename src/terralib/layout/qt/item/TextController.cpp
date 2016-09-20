@@ -76,34 +76,29 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
 
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
   
-  QSizeF sizeMM;
+  QTextDocument textDocument;
+  textDocument.setTextWidth(-1);
+  textDocument.setDefaultFont(qFont);
+  textDocument.setPlainText(qText);
+  textDocument.setDocumentMargin(0);
+  textDocument.setTextWidth(textDocument.size().width());
+  QSizeF sizePx = textDocument.size();
 
+  QSizeF sizeMM;
   QGraphicsScene* qScene = textItem->scene();
   if (qScene != 0)
   {
     Scene* myScene = dynamic_cast<Scene*>(qScene);
-
     m_dpiForCalculation = myScene->getContext().getDpiX();
 
     Utils utils = myScene->getUtils();
-
-    QTextDocument textDocument;
-    textDocument.setTextWidth(-1);
-    textDocument.setDefaultFont(qFont);
-    textDocument.setPlainText(qText);
-    textDocument.setDocumentMargin(0);
-    textDocument.setTextWidth(textDocument.size().width());
-
-    QSizeF sizePx = textDocument.size();
-
     sizeMM.setWidth(utils.pixel2mm(sizePx.width()));
     sizeMM.setHeight(utils.pixel2mm(sizePx.height()));
   }
   else
   {
-    QPainterPath qPath = ItemUtils::textToVector(qText, qFont);
-    QRectF rectMM = qPath.boundingRect();
-    sizeMM = rectMM.size();
+    sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
+    sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
   }
 
   Property propertyWidth(0);

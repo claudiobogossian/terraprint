@@ -167,6 +167,11 @@ namespace te
           \brief Draws the selection of the item
          */
         virtual void drawSelection(QPainter* painter);
+
+        /*!
+        \brief Draws the feedback of the item that is in edition mode
+        */
+        virtual void drawEdition(QPainter* painter);
         
         /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
@@ -219,9 +224,11 @@ namespace te
         LayoutAlign                       m_enumSides;
         te::layout::ItemAction            m_currentAction;
         double                            m_marginResizePrecision; //precision
-        double                            m_selectionPointSize;
         QPolygonF                         m_polygonWarning;
         bool                              m_isPrinting;
+        int                               m_hotPointSizePixels;
+        int                               m_selectionLineWidthPixels;
+        int                               m_rotationHotPointSizePixels;
 
     };
   } // end namespace layout

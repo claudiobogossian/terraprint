@@ -1309,21 +1309,23 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   if ( !painter )
     return;
 
-  QGraphicsView::drawForeground(painter, rect);
-  if(!m_visibleRulers)
+  if (!m_visibleRulers)
+  {
+    QGraphicsView::drawForeground(painter, rect);
     return;
+  }
 
   QGraphicsScene* scene = this->scene();
   if(scene == 0)
   {
+    QGraphicsView::drawForeground(painter, rect);
     return;
   }
 
-  double scale = transform().m11();
-
-
   if (m_foreground.isNull())
   {
+    double scale = transform().m11();
+
     m_foreground = QPixmap(painter->device()->width(), painter->device()->height());
     m_foreground.fill(Qt::transparent);
     QPainter painter2(&m_foreground);
@@ -1341,6 +1343,9 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   QPolygonF polygonScene = this->mapToScene(rectView);
 
   painter->drawPixmap(polygonScene.boundingRect(), m_foreground, m_foreground.rect());
+
+  //then we draw the foreground of the scene
+  QGraphicsView::drawForeground(painter, rect);
 }
 
 bool te::layout::View::exportProperties( EnumType* type )
@@ -1715,7 +1720,16 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
 
   std::string j_name = ItemUtils::convert2StdString(fullTempPath);
 
-  bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  bool result = false;
+  
+  try
+  {
+    result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  }
+  catch (...)
+  {
+
+  }
 
   emit endedPerformingIO();
 
