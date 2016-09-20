@@ -886,12 +886,20 @@ void te::layout::Scene::exportItemsToImage(std::string dir)
 
 void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
 {
-  QGraphicsScene::mouseMoveEvent(mouseEvent);
-
-  if (m_isEditionMode) // Don't have move event in edition mode
+  if (m_isEditionMode && m_currentItemEdition) // Don't have move or resize event in edition mode
   {
+    //if an item is in edition mode, we restrict the events to its position
+    QPointF pointScene = mouseEvent->scenePos();
+    QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_currentItemEdition);
+
+    if (gItem->contains(gItem->mapFromScene(pointScene)))
+    {
+      QGraphicsScene::mouseMoveEvent(mouseEvent);
+    }
     return;
   }
+
+  QGraphicsScene::mouseMoveEvent(mouseEvent);
 
   QGraphicsItem* item = mouseGrabberItem();
   if (item) // MoveCommand and ChangePropertyCommand block
@@ -902,6 +910,19 @@ void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
 
 void te::layout::Scene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
 {
+  if (m_isEditionMode && m_currentItemEdition) // Don't have move or resize event in edition mode
+  {
+    //if an item is in edition mode, we restrict the events to its position
+    QPointF pointScene = mouseEvent->scenePos();
+    QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_currentItemEdition);
+    
+    if (gItem->contains(gItem->mapFromScene(pointScene)))
+    {
+      QGraphicsScene::mousePressEvent(mouseEvent);
+    }
+    return;
+  }
+
   QGraphicsItem* currentSubSelectedItem = getSubSelectedItem();
   QGraphicsScene::mousePressEvent(mouseEvent);
   QGraphicsItem* newSubSelectedItem = getSubSelectedItem();
@@ -911,10 +932,6 @@ void te::layout::Scene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
     emit selectionChanged();
   }
 
-  if (m_isEditionMode) // Don't have move or resize event in edition mode
-  {
-    return;
-  }
   QGraphicsItem* item = mouseGrabberItem();
   if (item) // MoveCommand and ChangePropertyCommand block
   {
@@ -928,6 +945,19 @@ void te::layout::Scene::mousePressEvent(QGraphicsSceneMouseEvent * mouseEvent)
 
 void te::layout::Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
 {
+  if (m_isEditionMode && m_currentItemEdition) // Don't have move or resize event in edition mode
+  {
+    //if an item is in edition mode, we restrict the events to its position
+    QPointF pointScene = mouseEvent->scenePos();
+    QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_currentItemEdition);
+
+    if (gItem->contains(gItem->mapFromScene(pointScene)))
+    {
+      QGraphicsScene::mouseReleaseEvent(mouseEvent);
+    }
+    return;
+  }
+
   QGraphicsItem* item = mouseGrabberItem();
 
   if (!m_isEditionMode) // Don't have move or resize event in edition mode
@@ -1015,6 +1045,8 @@ void te::layout::Scene::keyPressEvent(QKeyEvent * keyEvent)
 
 void te::layout::Scene::drawForeground(QPainter * painter, const QRectF & rect)
 {
+  QGraphicsScene::drawForeground(painter, rect);
+
   if (m_isEditionMode)
   {
     if (!m_currentItemEdition)
@@ -1029,7 +1061,6 @@ void te::layout::Scene::drawForeground(QPainter * painter, const QRectF & rect)
       painter->save();
 
       QRectF rec = item->sceneBoundingRect();
-      painter->setClipRect(rec);
 
       QPainterPath outerPath;
       outerPath.setFillRule(Qt::WindingFill);
@@ -1044,21 +1075,9 @@ void te::layout::Scene::drawForeground(QPainter * painter, const QRectF & rect)
       painter->setRenderHint(QPainter::Antialiasing);
       painter->fillPath(fillPath, backgroundColor);
 
-      /* paint the outlines
-      QPainterPath::simplified() : this converts the set of layered shapes
-      into one QPainterPath which has no intersections */
-      QColor contourColor(178, 34, 34);
-      QPen penOuterPath(Qt::NoPen);
-      QPen penInnerPath(contourColor, 2);
-      QPainterPath simplifiedPath = outerPath.simplified();
-      painter->strokePath(simplifiedPath, penOuterPath);
-      painter->strokePath(innerPath, penInnerPath);
-
       painter->restore();
     }
   }
-  
-  QGraphicsScene::drawForeground(painter, rect);
 }
 
 void te::layout::Scene::selectItem(std::string name)
