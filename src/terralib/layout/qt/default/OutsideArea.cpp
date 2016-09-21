@@ -161,8 +161,14 @@ void te::layout::OutsideArea::createInspectorDock()
     te::layout::ObjectInspectorOutside* objectInspector = m_dockInspector->getObjectInspectorOutside();
 
     objectInspector->setIconManager(iconManager);
-  }
 
+    //Refresh Inspector Object window
+    QList<QGraphicsItem*> allItems = m_view->scene()->items();
+    if (allItems.isEmpty() == false)
+    {
+      objectInspector->itemsInspector(allItems);
+    }
+  }
 }
 
 void te::layout::OutsideArea::createToolbar()
