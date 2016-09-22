@@ -69,8 +69,8 @@ namespace te
   {
     class AbstractItemController;
     class AbstractItemModel;
-	class AbstractScene;
-	class Context;
+    class AbstractScene;
+    class Context;
     /*!
     \brief Abstract class that represents a graphic item.  
       Its coordinate system is the same of scene (millimeters). Knows rotate and resize. Stores a pixmap drawn by model.
@@ -183,6 +183,11 @@ namespace te
          */
         virtual void hoverMoveEvent( QGraphicsSceneHoverEvent * event );
 
+        /*!
+        \brief Reimplemented from QGraphicsItem
+        */
+        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
+
         virtual bool checkTouchesCorner( const double& x, const double& y );
 
         virtual bool checkRotationArea(const double& x, const double& y);
@@ -213,6 +218,10 @@ namespace te
         virtual QRectF qRectToQPolygonMap(QRectF rect);
         
         virtual void drawWarningAlert(QPainter * painter);
+
+        virtual bool isZoomAdequateForResize() const;
+
+        virtual bool isZoomAdequateForRotation() const;
 
      protected:
 

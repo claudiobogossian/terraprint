@@ -271,16 +271,6 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   {
     drawHotPoints = false;
   }
-  else if (boxMM.width() <= (hotPointSizeMM * 3) || boxMM.height() <= (hotPointSizeMM * 3))
-  {
-    drawHotPoints = false;
-  }
-
-  bool drawRotationHotPoint = true;
-  if ((rotationHotPointSizeMM * 3) >= boxMM.height())
-  {
-    drawRotationHotPoint = false;
-  }
 
   painter->save();
 
@@ -302,7 +292,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   painter->drawRect(adjustedBoxMM);
 
   //draw the hot-points
-  if (drawHotPoints)
+  if (drawHotPoints && isZoomAdequateForResize())
   {
     QRectF adjustedHotPointsRectMM = boxMM.adjusted(halfHotPointSizeMM, halfHotPointSizeMM, -halfHotPointSizeMM, -halfHotPointSizeMM);
 
@@ -315,7 +305,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   }
 
   //the we draw the rotation hot point
-  if (drawRotationHotPoint)
+  if (isZoomAdequateForRotation())
   {
     painter->setPen(rotationPen);
     painter->setBrush(Qt::NoBrush);
@@ -352,8 +342,11 @@ void te::layout::AbstractItem::drawEdition(QPainter* painter)
   QPen pen(color, penWidthSelectionMM);
 
   painter->save();
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(pen);
   painter->drawRect(adjustedBoxMM);
+  
   painter->restore();
 }
 
@@ -390,10 +383,22 @@ void te::layout::AbstractItem::hoverMoveEvent(QGraphicsSceneHoverEvent * event)
 {
   if (isEditionMode() == false && m_controller->getProperty("resizable").getValue().toBool())
   {
-    checkTouchesCorner(event->pos().x(), event->pos().y());
+    if (isZoomAdequateForResize())
+    {
+      checkTouchesCorner(event->pos().x(), event->pos().y());
+    }
   }
   checkTouchesWarningAlert(event->pos().x(), event->pos().y());
   QGraphicsItem::hoverMoveEvent(event);
+}
+
+void te::layout::AbstractItem::hoverLeaveEvent(QGraphicsSceneHoverEvent * event)
+{
+  QGraphicsItem::hoverMoveEvent(event);
+  if (isEditionMode() == false)
+  {
+    this->setCursor(Qt::ArrowCursor);
+  }
 }
 
 void te::layout::AbstractItem::drawWarningAlert(QPainter * painter)
@@ -476,8 +481,50 @@ void te::layout::AbstractItem::drawWarningAlert(QPainter * painter)
   ItemUtils::drawText(txtPoint, painter, font, "!", 180);
 
   painter->restore();
-
 }
+
+bool te::layout::AbstractItem::isZoomAdequateForResize() const
+{
+  AbstractScene* myScene = this->getScene();
+  te::layout::Utils utils = myScene->getUtils();
+
+  //We convert the expeted size in Pixels to MM. We also consider the zoom factor
+  QRectF boxMM = this->boundingRect();
+  int zoom = myScene->getContext().getZoom();
+  double zoomFactor = zoom / 100.;
+  double hotPointSizeMM = utils.pixel2mm(m_hotPointSizePixels) / zoomFactor;    
+  double minItemSizeMM = hotPointSizeMM * 4;
+
+  //if the rect is too small to fit two hot points in the same axis plus a gap between them, we do not draw the hot points
+  if (minItemSizeMM <= boxMM.width() && minItemSizeMM <= boxMM.height())
+  {
+    return true;
+  }
+
+  return false;
+}
+
+bool te::layout::AbstractItem::isZoomAdequateForRotation() const
+{
+  AbstractScene* myScene = this->getScene();
+  te::layout::Utils utils = myScene->getUtils();
+
+  //We convert the expeted size in Pixels to MM. We also consider the zoom factor
+  QRectF boxMM = this->boundingRect();
+  int zoom = myScene->getContext().getZoom();
+  double zoomFactor = zoom / 100.;
+  double rotationSizeMM = utils.pixel2mm(m_rotationHotPointSizePixels) / zoomFactor;
+  double minItemSizeMM = rotationSizeMM * 3;
+
+  //if the rect is too small to fit two hot points in the same axis plus a gap between them, we do not draw the hot points
+  if (minItemSizeMM <= boxMM.width() && minItemSizeMM <= boxMM.height())
+  {
+    return true;
+  }
+
+  return false;
+}
+
 
 void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const double& y/*, QPainter * painter*/)
 {
@@ -649,7 +696,7 @@ void te::layout::AbstractItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
   //checks if the item is resizable.
   const Property& property = m_controller->getProperty("resizable");
-  if (property.getValue().toBool() == true)
+  if (property.getValue().toBool() == true && isZoomAdequateForResize())
   {
     //If so, checks if the resize operation must be started
     bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());
@@ -662,10 +709,13 @@ void te::layout::AbstractItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
     }
   }
 
-  bool startRotation = checkRotationArea(event->pos().x(), event->pos().y());
-  if (startRotation == true)
+  if (isZoomAdequateForRotation())
   {
-    m_currentAction = te::layout::ROTATION_ACTION;
+    bool startRotation = checkRotationArea(event->pos().x(), event->pos().y());
+    if (startRotation == true)
+    {
+      m_currentAction = te::layout::ROTATION_ACTION;
+    }
   }
 
   QGraphicsItem::mousePressEvent(event);
