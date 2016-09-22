@@ -28,6 +28,7 @@
 // TerraLib
 #include "BalloonItem.h"
 #include "TextItem.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 // STL
 #include <algorithm>    // std::max and std::min

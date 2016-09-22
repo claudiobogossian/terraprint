@@ -32,6 +32,8 @@
 #include "terralib/qt/widgets/canvas/MapDisplay.h"
 #include "terralib/geometry/Utils.h"
 
+#include "../../core/pattern/mvc/AbstractItemController.h"
+
 te::layout::MapLocationItem::MapLocationItem(AbstractItemController* controller) 
   : MapItem(controller)
 {

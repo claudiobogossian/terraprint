@@ -28,6 +28,7 @@
 // TerraLib
 #include "PaperItem.h"
 #include "terralib/color/RGBAColor.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 te::layout::PaperItem::PaperItem(AbstractItemController* controller)
   : AbstractItem(controller)

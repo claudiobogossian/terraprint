@@ -30,6 +30,7 @@
 
 #include "../core/ItemUtils.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/Utils.h"

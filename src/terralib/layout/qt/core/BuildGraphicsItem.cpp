@@ -28,6 +28,7 @@
 // TerraLib
 #include "BuildGraphicsItem.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "pattern/factory/item/ItemFactory.h"
 #include "pattern/command/AddCommand.h"
 #include "Scene.h"

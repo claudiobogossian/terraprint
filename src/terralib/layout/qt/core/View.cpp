@@ -39,6 +39,7 @@
 #include "../../core/enum/EnumTemplateType.h"
 #include "ItemUtils.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "pattern/factory/tool/ToolFactoryParamsCreate.h"
 #include "pattern/factory/tool/ToolFactory.h"
 #include "../../core/ContextObject.h"

@@ -34,14 +34,12 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H
 #define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H
 
+#include "../../core/Config.h"
+
 // TerraLib
 #include "../core/ItemUtils.h"
 #include "../../core/Utils.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
-#include "../../core/AbstractScene.h"
-#include "../../core/property/Property.h"
-#include "../../core/pattern/singleton/Context.h"
 #include "../../core/enum/AbstractType.h"
 
 //Qt
@@ -71,6 +69,8 @@ namespace te
   {
     class AbstractItemController;
     class AbstractItemModel;
+	class AbstractScene;
+	class Context;
     /*!
     \brief Abstract class that represents a graphic item.  
       Its coordinate system is the same of scene (millimeters). Knows rotate and resize. Stores a pixmap drawn by model.
@@ -83,7 +83,7 @@ namespace te
 
       \sa te::layout::AbstractItemView
     */
-    class AbstractItem : public QGraphicsItem, public AbstractItemView
+	class TELAYOUTEXPORT AbstractItem : public QGraphicsItem, public AbstractItemView
     {
       public:
 

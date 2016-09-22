@@ -43,6 +43,8 @@
 #include "../../item/ThreeNorthModel.h"
 #include "terralib/common/StringUtils.h"
 
+#include "../../core/pattern/mvc/AbstractItemController.h"
+
 te::layout::ThreeNorthItem::ThreeNorthItem(AbstractItemController* controller) 
   : AbstractItem(controller)
 {

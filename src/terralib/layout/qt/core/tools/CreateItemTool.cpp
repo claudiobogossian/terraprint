@@ -22,6 +22,7 @@
 #include "../View.h"
 #include "../Scene.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
+#include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../BuildGraphicsItem.h"
 #include "../../../core/property/SharedProperties.h"
 #include "../../item/MapItem.h"
