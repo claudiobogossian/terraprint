@@ -83,7 +83,6 @@ te::layout::Scene::Scene( QObject* object):
   m_paperConfig(0),
   m_currentItemEdition(0),
   m_isEditionMode(false),
-  m_canvas(0),
   m_context(0,0,0,0),
   m_increasedUnprintableArea(40.)
 {
@@ -105,7 +104,6 @@ te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* 
   m_currentItemEdition(0),
   m_isEditionMode(false),
   m_context(0, 0, 0, 0),  
-  m_canvas(0),
   m_increasedUnprintableArea(40.)
 {
 }
@@ -1388,16 +1386,6 @@ te::layout::AlignItems* te::layout::Scene::getAlignItems()
   return m_align;
 }
 
-void te::layout::Scene::changeViewMode( EnumType* mode )
-{
-  View* view = getView();
-  if(!view)
-  {
-    return;
-  }
-  view->changeMode(mode);
-}
-
 te::layout::View* te::layout::Scene::getView()
 {
   View* view = 0;
@@ -1454,17 +1442,7 @@ te::layout::ItemUtils te::layout::Scene::getItemUtils()
 
 te::layout::Utils te::layout::Scene::getUtils()
 {
-  return te::layout::Utils(this, m_canvas);
-}
-
-void te::layout::Scene::setCanvas( te::qt::widgets::Canvas* canvas )
-{
-  m_canvas = canvas;
-}
-
-te::qt::widgets::Canvas* te::layout::Scene::getCanvas()
-{
-  return m_canvas;
+  return te::layout::Utils(this);
 }
 
 bool te::layout::Scene::isEditionMode()

@@ -714,11 +714,6 @@ void te::layout::View::resizeEvent(QResizeEvent * event)
   m_foreground = QPixmap();
 }
 
-void te::layout::View::onToolbarChangeMode( te::layout::EnumType* newMode )
-{
-  changeMode(newMode);
-}
-
 void te::layout::View::createItemGroup()
 {
   Scene* sc = dynamic_cast<Scene*>(scene());
@@ -800,50 +795,6 @@ void te::layout::View::resetDefaultConfig(bool toolLateRemoval)
       m_currentTool = 0;
     }    
   }
-}
-
-void te::layout::View::onMainMenuChangeMode( te::layout::EnumType* newMode )
-{
-  changeMode(newMode);
-}
-
-void te::layout::View::changeMode( EnumType* newMode )
-{
-  if(newMode == getCurrentMode())
-  {
-    return;
-  }
-
-  setCurrentMode(newMode);
-
-  resetDefaultConfig();
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-
-  if(!sc)
-    return;
-
-  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
-  ItemUtils iUtils = sc->getItemUtils();
-
-  EnumType* mode = getCurrentMode();
-  
-  if(mode == enumMode->getModeMapPan())
-  {
-    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapPan());
-  }
-  else if(mode == enumMode->getModeMapZoomIn())
-  {
-    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomIn());
-  }
-  else if(mode == enumMode->getModeMapZoomOut()) 
-  {
-    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomOut());
-  }
-
-  sc->setContext(getContext());
-
-  emit changeContext();
 }
 
 void te::layout::View::hideEvent( QHideEvent * event )

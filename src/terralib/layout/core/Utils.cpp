@@ -29,13 +29,12 @@
 #include "Utils.h"
 
 #include "WorldTransformer.h"
-#include "terralib/color/RGBAColor.h"
 #include "terralib/geometry/Polygon.h"
 #include "terralib/geometry/Enums.h"
 #include "terralib/geometry/LinearRing.h"
 #include "terralib/geometry/Point.h"
 #include "terralib/maptools/Utils.h"
-#include "terralib/qt/widgets/canvas/Canvas.h"
+#include "terralib/maptools/WorldDeviceTransformer.h"
 #include "terralib/srs/SpatialReferenceSystemManager.h"
 #include "terralib/common/Translator.h"
 #include "../core/ContextObject.h"
@@ -56,10 +55,9 @@
 
 double te::layout::Utils::m_lineWidthMinimumValue = 0.3;
 
-te::layout::Utils::Utils(te::layout::Scene* scene, te::qt::widgets::Canvas* canvas) :
-  m_applyZoom(true),
-  m_scene(scene),
-  m_canvas(canvas)
+te::layout::Utils::Utils(te::layout::Scene* scene) 
+  : m_applyZoom(true)
+  , m_scene(scene)
 {
 
 }
@@ -67,73 +65,6 @@ te::layout::Utils::Utils(te::layout::Scene* scene, te::qt::widgets::Canvas* canv
 te::layout::Utils::~Utils()
 {
 
-}
-
-void te::layout::Utils::drawRectW( te::gm::Envelope box )
-{
-  if(!m_canvas)
-  {
-    return;
-  }
-      
-  te::gm::Polygon* rect = new te::gm::Polygon(1, te::gm::PolygonType);
-  
-  te::gm::LinearRing* outRingPtr0 = new te::gm::LinearRing(5, te::gm::LineStringType);
-  outRingPtr0->setPointN( 0, te::gm::Point(box.getLowerLeftX(), box.getLowerLeftY()));
-  outRingPtr0->setPointN( 1, te::gm::Point(box.getUpperRightX(), box.getLowerLeftY())); 
-  outRingPtr0->setPointN( 2, te::gm::Point(box.getUpperRightX(), box.getUpperRightY()));
-  outRingPtr0->setPointN( 3, te::gm::Point(box.getLowerLeftX(), box.getUpperRightY())); 
-  outRingPtr0->setPointN( 4, te::gm::Point(box.getLowerLeftX(), box.getLowerLeftY())); 
-
-  rect->setRingN(0, outRingPtr0);
-
-  m_canvas->draw(rect);
-
-  if(rect)
-  {
-    delete rect;
-    rect = 0;
-  }
-}
-
-void te::layout::Utils::drawLineW( te::gm::LinearRing* line )
-{
-  if(!m_canvas)
-  {
-    return;
-  }
-    
-  m_canvas->draw(line);
-}
-
-te::gm::LinearRing* te::layout::Utils::createSimpleLine( te::gm::Envelope box )
-{
-  te::gm::LinearRing* line = new te::gm::LinearRing(3, te::gm::LineStringType);
-  line->setNumCoordinates(3);
-
-  line->setPointN(0, te::gm::Point(box.getLowerLeftX(), box.getLowerLeftY()));
-  line->setPointN(1, te::gm::Point(box.getUpperRightX(), box.getUpperRightY()));
-  line->setPointN(2, te::gm::Point(box.getLowerLeftX(), box.getLowerLeftY()));
-
-  return line;
-}
-
-te::color::RGBAColor** te::layout::Utils::getImageW( te::gm::Envelope boxmm )
-{
-  te::color::RGBAColor** pixmap = 0;
-
-  if(!m_canvas)
-  {
-    return pixmap;
-  }
-
-  te::gm::Envelope boxViewport = viewportBox(boxmm);
-
-  if(boxViewport.isValid())
-  {
-    pixmap = m_canvas->getImage(0, 0, boxViewport.getWidth(), boxViewport.getHeight());
-  }
-  return pixmap;
 }
 
 int te::layout::Utils::mm2pixel( double mm )
@@ -170,33 +101,6 @@ double te::layout::Utils::pixel2mm(int pixel, double dpi)
 {
   double mm = (pixel / dpi) * 25.4;
   return mm;
-}
-
-void te::layout::Utils::configCanvas( te::gm::Envelope box, bool resize, bool applyZoom )
-{
-  m_applyZoom = applyZoom;
-  te::gm::Envelope boxViewport = viewportBox(box);
-  changeCanvas(boxViewport, box, resize); 
-}
-
-void te::layout::Utils::changeCanvas( te::gm::Envelope viewport, te::gm::Envelope world, bool resize /*= true*/ )
-{
-  if(!m_canvas)
-  {
-    return;
-  }
-
-  if(resize)
-  {
-    //Transparent
-    te::color::RGBAColor color(255,255,255, 0);
-    m_canvas->setBackgroundColor(color);
-
-    m_canvas->resize(viewport.getWidth(), viewport.getHeight());
-  }
-
-  m_canvas->setWindow(world.getLowerLeftX(), world.getLowerLeftY(), 
-    world.getUpperRightX(), world.getUpperRightY()); 
 }
 
 te::gm::Envelope te::layout::Utils::viewportBox( te::gm::Envelope box)
@@ -308,31 +212,6 @@ te::gm::LinearRing* te::layout::Utils::addCoordsInY( te::gm::Envelope box, doubl
   line->setPointN(count, te::gm::Point(axisCoord, box.getUpperRightY()));
 
   return line;
-}
-
-void te::layout::Utils::textBoundingBox( double &w, double &h, std::string txt )
-{
-  if(!m_canvas)
-  {
-    return;
-  }
-
-  w = 0;
-  h = 0;
-
-  te::gm::Polygon* poly = m_canvas->getTextBoundary(0, 0, txt, 0);
-  if(poly)
-  {
-    //Box = mbr: minimum bounding rectangle
-    const te::gm::Envelope* env = poly->getMBR();
-    te::gm::Envelope* box = 0;
-    box = const_cast<te::gm::Envelope*>(env);
-    if(box)
-    {
-      w = box->getWidth();
-      h = box->getHeight();
-    }
-  }
 }
 
 te::layout::WorldTransformer te::layout::Utils::getTransformGeo(te::gm::Envelope boxgeo, te::gm::Envelope boxmm)
@@ -622,72 +501,6 @@ void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::Po
   }
 
   poly->computeMBR(true);
-}
-
-char* te::layout::Utils::imageToChar( std::string fileName, std::ifstream::pos_type &size )
-{
-  char* memblock = 0;
-
-  if(fileName.compare("") == 0)
-    return memblock;
-
-  try 
-  { 
-    std::ifstream file (fileName.c_str(), std::ios::in|std::ios::binary|std::ios::ate);
-    if (file.is_open())
-    {
-      size = file.tellg();
-      memblock = new char[size]; 
-      file.seekg (0, std::ios::beg);
-      file.read((char*)memblock, size); // cast to a char* to give to file.read
-
-      file.close();
-    }
-  }
-  catch (std::ifstream::failure &e) 
-  {
-    std::cerr << e.what() << std::endl;
-    std::string errmsg = "Exception opening/reading/closing file: \n ";
-    te::common::Exception ex(TE_TR(errmsg));
-  }
-  catch (std::exception const& e)
-  {
-    std::cerr << e.what() << std::endl;
-  }
-  return memblock;
-}
-
-std::string te::layout::Utils::getFileExtension( std::string fileName )
-{
-  std::string extension = fileName.substr(fileName.find_last_of("/\\.") + 1);
-  return extension;
-}
-
-void te::layout::Utils::setApplyZoom( bool apply )
-{
-  m_applyZoom = apply;
-}
-
-bool te::layout::Utils::getApplyZoom()
-{
-  return m_applyZoom;
-}
-
-void te::layout::Utils::resetCanvas()
-{
-  if(!m_canvas)
-  {
-    return;
-  }
-
-  int size = 1;
-
-  m_canvas->clear();
-  m_canvas->setLineWidth(size);
-  m_canvas->setPointWidth(size);
-  m_canvas->setPolygonContourWidth(size);
-  m_canvas->setPolygonPatternWidth(size);
-  m_canvas->setTextContourWidth(size);
 }
 
 te::layout::Properties te::layout::Utils::convertToProperties(const te::layout::PaperConfig& paperConfig)

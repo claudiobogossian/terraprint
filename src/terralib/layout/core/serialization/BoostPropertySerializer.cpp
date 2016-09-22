@@ -224,9 +224,6 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te
   double paperHeight = 0.;
   paperConfig.getPaperSize(paperWidth, paperHeight);
 
-  std::vector<te::layout::Properties>::iterator it;
-  std::vector<te::layout::Property>::iterator ity;
-  
   boost::property_tree::ptree rootNode; //the root node contains the metadata of the template and the list of the items
   rootNode.add("name", m_rootKey);
   
@@ -297,8 +294,6 @@ boost::property_tree::ptree te::layout::BoostPropertySerializer::encode(const te
 
 bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptree& tree, te::layout::PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties, std::map< std::string, std::vector<std::string> >& oMapGroups)
 {
-  std::vector<te::layout::Properties> vecProperties;
-
   //we first read the information about the paper
   const boost::property_tree::ptree& paperNode = tree.get_child("template.paper");
   int orientation = paperNode.get<int>("orientation");

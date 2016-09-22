@@ -270,7 +270,7 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
       pNewSrid = properties.getProperty("srid");
     }
 
-    Utils utils(0, 0);
+    Utils utils(0);
     int newSrid = pNewSrid.getValue().toInt();
     const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
 

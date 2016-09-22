@@ -29,18 +29,16 @@
 #define __TERRALIB_LAYOUT_INTERNAL_UTILS_H
 
 // TerraLib
-#include "terralib/geometry/Envelope.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/maptools/WorldDeviceTransformer.h"
 #include "terralib/common/UnitOfMeasure.h"
 #include "terralib/maptools/Enums.h"
-#include "terralib/qt/widgets/canvas/Canvas.h"
 #include "Config.h"
 
 // STL
 #include <string>
 #include <iostream>
 #include <fstream>
+
+class QPointF;
 
 namespace te
 {
@@ -50,6 +48,11 @@ namespace te
     class LinearRing;
     class Point;
     class Polygon;
+  }
+
+  namespace map
+  {
+    class WorldDeviceTransformer;
   }
 
   namespace layout
@@ -71,34 +74,12 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        Utils(Scene* scene, te::qt::widgets::Canvas* canvas);
+        Utils(Scene* scene);
 
         /*!
           \brief Destructor
         */
         virtual ~Utils();
-
-        /*!
-          \brief Draw a rectangle in world coordinates (mm).
-      
-          \param box in mm
-        */ 
-        virtual void drawRectW(te::gm::Envelope box);
-
-        /*!
-          \brief Draw a line in world coordinates (mm).
-      
-          \param LinearRing pointer with coordinates in millimeters    
-        */ 
-        virtual void drawLineW(te::gm::LinearRing* line);
-        
-        /*!
-          \brief Returns a pointer RGBA colors that representing an image.
-      
-          \param box in mm    
-          \return The Pointer RGBA colors
-        */ 
-        virtual te::color::RGBAColor** getImageW(te::gm::Envelope boxmm);
 
         /*!
           \brief Millimeter to pixel
@@ -132,16 +113,6 @@ namespace te
         */
         static double pixel2mm(int pixel, double dpi);
 
-
-
-        /*!
-          \brief Creates a LinearRing (line) pointer from a box in world coordinates (mm) 
-      
-          \param box in mm
-          \return new line
-        */ 
-        virtual te::gm::LinearRing* createSimpleLine(te::gm::Envelope box);
-
         /*!
           \brief Creates a line with n points in x axis. Method used to create the grid lines on a map. Horizontal line.
             
@@ -164,13 +135,6 @@ namespace te
         virtual te::gm::LinearRing* addCoordsInY(te::gm::Envelope box, double axisCoord, double gap);
 
         /*!
-          \brief Sets the viewport and window of the canvas. The viewport is only changed if the resize parameter is true.
-      
-          \param box window coordinate (mm)    
-        */ 
-        virtual void configCanvas(te::gm::Envelope box, bool resize = true, bool applyZoom = true);
-                     
-        /*!
           \brief Converts the box world (mm) to screen coordinates (pixel).
       
           \param box in mm    
@@ -178,15 +142,6 @@ namespace te
         */ 
         virtual te::gm::Envelope viewportBox(te::gm::Envelope box);
 
-        /*!
-          \brief A method that calculates the height and width of a text.
-      
-          \param w returns the width    
-          \param h returns the height
-          \param text 
-        */ 
-        virtual void textBoundingBox(double &w, double &h, std::string txt);
-        
         /*!
           \brief Returns a WorldTransformer object to transformations between geo coordinates and millimeter coordinates.
                 
@@ -290,42 +245,6 @@ namespace te
           \param line LinearRing pointer in one coordinate system
         */
         virtual void convertToMillimeter(WorldTransformer transf, te::gm::Polygon* poly); 
-        
-        /*!
-          \brief Opens the file and loads the image into memory and converts to char*.
-      
-          \param fileName full path to image     
-          \return size length of file
-        */
-        virtual char* imageToChar(std::string fileName, std::ifstream::pos_type &size);
-
-        /*!
-          \brief Returns the file extension.
-      
-          \param fileName full path to image  
-          \return file extension
-        */
-        virtual std::string getFileExtension(std::string fileName);
-        
-        /*!
-          \brief 
-      
-          \param     
-        */
-        virtual void setApplyZoom(bool apply);
-
-        /*!
-          \brief 
-      
-          \param    
-          \return
-        */
-        virtual bool getApplyZoom();
-
-        /*!
-          \brief Clears the canvas content and fills with the background color. Sets all width with 1. 
-        */
-        virtual void resetCanvas();
 
         /*!
           \brief Converts from PaperConfig to Properties
@@ -343,22 +262,12 @@ namespace te
 
         static void setLineWidthMinimumValue(double minimumValue);
 
-
         static double round(double n, double precision);
 
         static double calculateAngle(QPointF p1, QPointF p2);
 
       protected:
         
-        /*!
-          \brief Sets the viewport and window of the canvas. The viewport is only changed if the resize parameter is true. 
-      
-          \param viewport viewport box(pixel)
-          \param world world box(mm)
-          \param resize true if to resize, false otherwise
-        */
-        virtual void changeCanvas(te::gm::Envelope viewport, te::gm::Envelope world, bool resize = true);
-
         /*!
           \brief Transforms the box (mm) to screen coordinates (pixel).
       
@@ -379,7 +288,6 @@ namespace te
 
         bool                      m_applyZoom; //!<
         Scene*                    m_scene;
-        te::qt::widgets::Canvas*  m_canvas;
         static double             m_lineWidthMinimumValue;
     };
   }

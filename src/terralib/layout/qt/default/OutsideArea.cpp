@@ -128,7 +128,6 @@ void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)
 
   if(m_toolbar)
   {
-    connect(m_toolbar, SIGNAL(changeMode(te::layout::EnumType*)), m_view, SLOT(onToolbarChangeMode(te::layout::EnumType*)));
     connect(m_toolbar, SIGNAL(zoomChangedInComboBox(int)), m_view, SLOT(setZoom(int)));
 
     te::layout::ToolbarController* controller = dynamic_cast<te::layout::ToolbarController*>(m_toolbar->getController());

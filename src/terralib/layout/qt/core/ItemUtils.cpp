@@ -237,41 +237,6 @@ int te::layout::ItemUtils::maxTypeId( te::layout::EnumType* type )
   return id;
 }
 
-bool te::layout::ItemUtils::isCurrentMapTools()
-{
-  bool result = false;
-
-  if(!m_scene)
-  {
-    return result;
-  }
-
-  Scene* sc = dynamic_cast<Scene*>(m_scene);
-  if(!sc)
-  {
-    return result;
-  }
-
-  ContextObject context = sc->getContext();
-
-  te::layout::EnumType* mode = context.getCurrentMode();
-  te::layout::EnumModeType* type = te::layout::Enums::getInstance().getEnumModeType();
-
-  if(mode == type->getModeMapPan())
-  {
-    result = true;
-  }
-  else if(mode == type->getModeMapZoomIn())
-  {
-    result = true;
-  }
-  else if(mode == type->getModeMapZoomOut())
-  {
-    result = true;
-  }
-  return result;
-}
-
 QList<QGraphicsItem*> te::layout::ItemUtils::getItems( bool selected )
 {
   QList<QGraphicsItem*> graphicsItems;
@@ -286,71 +251,6 @@ QList<QGraphicsItem*> te::layout::ItemUtils::getItems( bool selected )
   }
 
   return graphicsItems;
-}
-
-void te::layout::ItemUtils::setCurrentToolInSelectedMapItems( EnumType* mode )
-{
-  
-}
-
-void te::layout::ItemUtils::createTextGridAsObject()
-{
-  //do nothing;
-}
-
-void te::layout::ItemUtils::createTextMapAsObject()
-{
-
-}
-
-void te::layout::ItemUtils::createTextItemFromObject( std::map<te::gm::Point*, std::string> map, QFont* ft )
-{
-  
-}
-
-void te::layout::ItemUtils::createLegendChildItemFromLegend( std::map<te::gm::Point*, std::string> map, te::layout::MapModel* visitable )
-{
- 
-}
-
-std::vector<te::layout::Properties*> te::layout::ItemUtils::getGridMapProperties()
-{
-  std::vector<te::layout::Properties*> props;
-  return props;
-}
-
-std::vector<te::layout::GridMapItem*> te::layout::ItemUtils::getMapChildren()
-{
-  std::vector<te::layout::GridMapItem*> gridMapItems;
-
-  QGraphicsItem *item = m_scene->selectedItems().first();
-  if(!item)
-  {
-    return gridMapItems;
-  }
-  
-  MapItem* map = dynamic_cast<MapItem*>(item);
-  if(!map)
-  {
-    return gridMapItems;
-  }
-
-  QList<QGraphicsItem*> graphicsItems = map->childItems();
-  foreach(QGraphicsItem *item, graphicsItems) 
-  {
-    if(!item)
-      continue;
-
-    GridMapItem* grid = dynamic_cast<GridMapItem*>(item);
-    if(!grid)
-    {
-      continue;
-    }
-
-    gridMapItems.push_back(grid);
-  }
-  
-  return gridMapItems;
 }
 
 QGraphicsItem* te::layout::ItemUtils::intersectionSelectionItem( int x, int y )
@@ -617,22 +517,6 @@ QPainterPath te::layout::ItemUtils::textToVector(const QString& text, const QFon
 
   //and return it
   return painterPath;
-}
-
-void te::layout::ItemUtils::changeViewMode( EnumType* mode )
-{
-  if(!m_scene)
-  {
-    return;
-  }
-
-  View* view = ((Scene *) m_scene)->getView();
-  if(!view)
-  {
-    return;
-  }
-
-  view->changeMode(mode);
 }
 
 te::layout::AbstractItemView* te::layout::ItemUtils::getSelectedItem()

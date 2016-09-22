@@ -51,9 +51,10 @@ namespace te
   {
     namespace widgets
     {
+      class AbstractTool;
+      class Canvas;
       class Pan;
       class ZoomWheel;
-      class AbstractTool;
     }
   }
 

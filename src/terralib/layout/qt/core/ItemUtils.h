@@ -131,46 +131,6 @@ namespace te
         virtual int maxTypeId(te::layout::EnumType* type);
 
         /*!
-          \brief Indicates whether there is a tool active for object te::layout::MapItem.
-      
-          \return true if tool active, false otherwise 
-        */
-        virtual bool isCurrentMapTools();
-
-        /*!
-          \brief Changes the active tool of te::layout::MapItem.
-      
-          \param type of tool
-        */
-        virtual void setCurrentToolInSelectedMapItems(EnumType* mode);
-
-        /*!
-          \brief Vectorizes grid text of selected MapItem. (generates te::layout::TextItem objects)
-        */
-        virtual void createTextGridAsObject();
-
-        /*!
-          \brief Vectorizes inside text of selected MapItem. (generates te::layout::TextItem objects)
-        */
-        virtual void createTextMapAsObject();
-        
-        /*!
-          \brief Get properties of all GridMapItem, children of a MapItem.
-      
-          \param 
-          \return properties of all GridMapItem, children of a MapItem.
-        */
-        virtual std::vector<Properties*> getGridMapProperties();
-
-        /*!
-          \brief Get all GridMapItem, children of a MapItem.
-      
-          \param 
-          \return all GridMapItem, children of a MapItem.
-        */
-        virtual std::vector<GridMapItem*> getMapChildren();
-
-        /*!
           \brief Checks whether the coordinated intersects an item and returns.
 
           \param x axis x coordinate, in scene CS
@@ -227,8 +187,6 @@ namespace te
 
         */
         static QPainterPath superscriptTextToVector(std::vector<QString> text, std::vector<QFont> font, const QPointF& referencePoint = QPointF(), double rotationAngle = 0.);
-
-        void changeViewMode(EnumType* mode);
 
         virtual AbstractItemView* getSelectedItem();
 
@@ -314,22 +272,6 @@ namespace te
           \return list of items
         */
         virtual QList<QGraphicsItem*> getItems(bool selected = false);
-
-        /*!
-          \brief Vectorizes grid text of selected MapItem. (generates te::layout::TextItem objects)
-      
-          \param map coordinate and text
-          \param ft font
-        */
-        virtual void createTextItemFromObject(std::map<te::gm::Point*, std::string> map, QFont* ft = 0);
-
-        /*!
-          \brief Vectorizes grid text of selected MapItem. (generates te::layout::TextItem objects)
-      
-          \param map coordinate and text
-          \param visitable MapItem model associated
-        */
-        virtual void createLegendChildItemFromLegend(std::map<te::gm::Point*, std::string> map, MapModel* visitable);
 
       protected:
 

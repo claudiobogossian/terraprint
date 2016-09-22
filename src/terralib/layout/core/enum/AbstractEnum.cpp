@@ -43,7 +43,7 @@ te::layout::EnumType* te::layout::AbstractEnum::getEnum( int enumId ) const
 {
   EnumType* enumTp = 0;
 
-  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); it++)
+  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); ++it)
   {
     if((*it)->getId() == enumId)
     {
@@ -63,7 +63,7 @@ te::layout::EnumType* te::layout::AbstractEnum::getEnum( const std::string& name
   std::string label = name;
   std::string upperName = te::common::Convert2UCase(name);
 
-  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); it++)
+  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); ++it)
   {
     if ((*it)->getName().compare(upperName) == 0 || (*it)->getLabel().compare(label) == 0)
     {
@@ -79,7 +79,7 @@ te::layout::EnumType* te::layout::AbstractEnum::searchLabel( std::string label )
 {
   EnumType* enumTp = 0;
 
-  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); it++)
+  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); ++it)
   {
     if((*it)->getLabel().compare(label) == 0)
     {
@@ -98,7 +98,7 @@ int te::layout::AbstractEnum::maxId()
   if(m_enums.empty())
     return max;
 
-  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); it++)
+  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); ++it)
   {
     if((*it)->getId() > max)
     {
@@ -118,7 +118,7 @@ int te::layout::AbstractEnum::minId()
 
   min = m_enums[0]->getId();
 
-  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); it++)
+  for(std::vector<EnumType*>::const_iterator it = m_enums.begin(); it != m_enums.end(); ++it)
   {
     if((*it)->getId() < min)
     {
