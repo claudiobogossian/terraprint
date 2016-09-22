@@ -1,5 +1,9 @@
 #include "AbstractItem.h"
 
+#include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../core/Utils.h"
+#include "../core/Scene.h"
+
 te::layout::AbstractItem::AbstractItem(AbstractItemController* controller)
   : QGraphicsItem()
   , AbstractItemView(controller)

@@ -30,6 +30,8 @@
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
+#include "../../core/pattern/mvc/AbstractItemController.h"
+
 te::layout::NorthItem::NorthItem(AbstractItemController* controller) 
   : AbstractItem(controller)
 {

@@ -35,6 +35,8 @@
 #include <QPen>
 #include <QRectF>
 
+#include "../../core/pattern/mvc/AbstractItemController.h"
+
 te::layout::RectangleItem::RectangleItem(AbstractItemController* controller)
   : AbstractItem(controller)
 {

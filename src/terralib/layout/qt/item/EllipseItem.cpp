@@ -28,6 +28,7 @@
 // TerraLib
 #include "EllipseItem.h"
 #include "terralib/color/RGBAColor.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 te::layout::EllipseItem::EllipseItem(AbstractItemController* controller)
 : AbstractItem(controller)

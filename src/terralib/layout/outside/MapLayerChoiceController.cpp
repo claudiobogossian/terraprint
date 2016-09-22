@@ -27,6 +27,8 @@
 
 // TerraLib
 #include "MapLayerChoiceController.h"
+
+#include "../core/pattern/mvc/AbstractItemController.h"
 #include "../qt/item/MapItem.h"
 #include "../../layout/outside/MapLayerChoiceModel.h"
 

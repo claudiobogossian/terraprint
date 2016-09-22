@@ -33,6 +33,7 @@
 #include "../core/ItemUtils.h"
 #include "../../core/Utils.h"
 #include "../core/Scene.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 #include <QBrush>
 

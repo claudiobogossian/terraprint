@@ -27,6 +27,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 // TerraLib
 #include "MapLocationSettingsController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../outside/MapSettingsModel.h"
 #include "../core/BuildGraphicsOutside.h"
 #include "../outside/MapLayerChoiceOutside.h"

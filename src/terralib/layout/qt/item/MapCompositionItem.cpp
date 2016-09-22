@@ -30,6 +30,7 @@
 #include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../core/pattern/factory/item/ItemFactory.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "MapItem.h"
 
 // Qt
