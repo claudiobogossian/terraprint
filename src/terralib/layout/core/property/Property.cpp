@@ -87,7 +87,7 @@ void te::layout::Property::addOption(Variant variant)
 
 void te::layout::Property::removeOption(Variant variant)
 {
-  for(std::vector<Variant>::iterator it = m_options.begin(); it != m_options.end(); it++)
+  for(std::vector<Variant>::iterator it = m_options.begin(); it != m_options.end(); ++it)
   {
     if((*it) == variant)
     {
@@ -153,7 +153,7 @@ bool te::layout::Property::addSubProperty(const Property& parent, const Property
 }
 void te::layout::Property::removeSubProperty( Property property )
 {
-  for(std::vector<Property>::iterator it = m_subProperty.begin(); it != m_subProperty.end(); it++)
+  for(std::vector<Property>::iterator it = m_subProperty.begin(); it != m_subProperty.end(); ++it)
   {
     if((*it) == property)
     {

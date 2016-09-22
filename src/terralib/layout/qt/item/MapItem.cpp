@@ -140,7 +140,7 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 
 
   Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  Utils utils(myScene, 0);
+  Utils utils(myScene);
 
   QRectF qBoundingRect = boundingRect();
   int deviceWidth = utils.mm2pixel(qBoundingRect.width());

@@ -1527,25 +1527,25 @@ nononon</source>
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="51"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="52"/>
         <source>Add %1</source>
         <translation>Adicionar %1</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="108"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="113"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="109"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="114"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="145"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="151"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/DeleteCommand.cpp" line="97"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="152"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="157"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="154"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="159"/>
         <source>%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="118"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="119"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="158"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="162"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="164"/>
         <source>%1 at (%2, %3)</source>
         <translation></translation>
     </message>
@@ -1566,10 +1566,10 @@ nononon</source>
         <translation>Remover %1</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="75"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="93"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="101"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="146"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="77"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="95"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="103"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/MoveCommand.cpp" line="148"/>
         <source>Move %1</source>
         <translation>Mover %1</translation>
     </message>
@@ -2167,22 +2167,22 @@ nononon</source>
 <context>
     <name>te::layout::MenuBuilder</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="125"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="126"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="128"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="129"/>
         <source>Cut</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="134"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="135"/>
         <source>Paste</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="139"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="140"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2326,12 +2326,12 @@ nononon</source>
         <translation type="obsolete">Imprimir...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="290"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="297"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="295"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="302"/>
         <source>TerraPrint - TerraLib 5 | Context: </source>
         <translation>TerraPrint - TerraLib 5 | Contexto:</translation>
     </message>
@@ -2405,7 +2405,7 @@ nononon</source>
 <context>
     <name>te::layout::SVGDialogOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="228"/>
+        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="229"/>
         <source>Open Directory</source>
         <translation type="unfinished">Abrir Diretório</translation>
     </message>
@@ -2749,43 +2749,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1408"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1361"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1409"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1454"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1362"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1407"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1430"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1383"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1435"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1388"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1453"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1406"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1482"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1435"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1489"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1442"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1500"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1453"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>
