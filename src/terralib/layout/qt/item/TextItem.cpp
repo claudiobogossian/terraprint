@@ -172,11 +172,10 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   }
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
   //we finally set the transformation into the qpainter
   QTransform transform;
-  painter->setClipRect(boxMM);
-
   transform.translate(0, boxMM.height());
   transform.scale(dpiFactor * conversionfactor, dpiFactor * conversionfactor * -1);
   painter->setTransform(transform, true);

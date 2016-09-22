@@ -93,6 +93,7 @@ void te::layout::RectangleItem::drawRectangle( QPainter * painter )
   QBrush brush(qFillColor);
   QPen pen(qContourColor, frameThickness, Qt::SolidLine);
 
+  painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(pen);
   painter->setBrush(brush);
 
@@ -126,9 +127,9 @@ void te::layout::RectangleItem::drawRoundedRectangle(QPainter * painter)
   QBrush brush(qFillColor);
   QPen pen(qContourColor, frameThickness, Qt::SolidLine);
 
+  painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(pen);
   painter->setBrush(brush);
-
 
   //gets the adjusted boundigng rectangle based of the painter settings
   QRectF rectAdjusted = getAdjustedBoundingRect(painter);
@@ -160,6 +161,7 @@ void te::layout::RectangleItem::drawSingleCornerTrimmedRectangle(QPainter * pain
   QBrush brush(qFillColor);
   QPen pen(qContourColor, frameThickness, Qt::SolidLine);
 
+  painter->setRenderHint(QPainter::Antialiasing, true);
   painter->setPen(pen);
   painter->setBrush(brush);
 
