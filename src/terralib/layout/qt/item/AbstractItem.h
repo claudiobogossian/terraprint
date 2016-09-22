@@ -69,8 +69,8 @@ namespace te
   {
     class AbstractItemController;
     class AbstractItemModel;
-	class AbstractScene;
-	class Context;
+    class AbstractScene;
+    class Context;
     /*!
     \brief Abstract class that represents a graphic item.  
       Its coordinate system is the same of scene (millimeters). Knows rotate and resize. Stores a pixmap drawn by model.
