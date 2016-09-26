@@ -29,7 +29,6 @@
 #include "View.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/enum/Enums.h"
-#include "terralib/geometry/Envelope.h"
 #include "VisualizationArea.h"
 #include "../item/ItemGroup.h"
 #include "tools/ZoomClickTool.h"
@@ -50,6 +49,9 @@
 #include "../../core/property/SharedProperties.h"
 #include "tempDataStorage/TempDataStorageEditor.h"
 #include "tempDataStorage/TempFileInfo.h"
+
+#include "terralib/geometry/Envelope.h"
+#include "terralib/qt/widgets/Utils.h"
 
 // Qt
 #include <QMouseEvent>
@@ -1311,7 +1313,7 @@ bool te::layout::View::exportProperties( EnumType* type )
   bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
-    QDir::currentPath(), tr("XML Files (*.xml)"));
+    te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {
@@ -1322,6 +1324,9 @@ bool te::layout::View::exportProperties( EnumType* type )
   {
     fileName.append(".xml");
   }
+
+  QFileInfo fileInfo(fileName);
+  te::qt::widgets::AddFilePathToSettings(fileInfo.absolutePath(), "map");
 
   std::string j_name = ItemUtils::convert2StdString(fileName);
 
@@ -1356,7 +1361,7 @@ bool te::layout::View::importTemplate( EnumType* type )
   emit aboutToPerformIO();
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
-    QDir::currentPath(), tr("XML Files (*.xml)"));
+    te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {
