@@ -2339,32 +2339,32 @@ nononon</source>
 <context>
     <name>te::layout::PDFSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="83"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="85"/>
         <source>PDF Settings</source>
         <translation>Configurações do PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="83"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="85"/>
         <source>Please complete the filename.</source>
         <translation>Por favor, completo o nome do arquivo.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="93"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="95"/>
         <source>Save Image File</source>
         <translation>Gravar o Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="93"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="95"/>
         <source>PDF Files (*.pdf)</source>
         <translation>Arquivos PDF (*.pdf)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="120"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="125"/>
         <source>The DPI chosen is high. Can cause very large files.</source>
         <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="124"/>
+        <location filename="../../../src/terralib/layout/qt/outside/PDFSettingsOutside.cpp" line="129"/>
         <source>The DPI chosen is too high. Can cause very large files.</source>
         <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
@@ -2749,43 +2749,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1313"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1315"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1314"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1359"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1316"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1364"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1335"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1340"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1340"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1345"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1358"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1363"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1387"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1392"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1394"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1399"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1405"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1410"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

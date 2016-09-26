@@ -29,6 +29,8 @@
 #include "../core/ItemUtils.h"
 #include "ui_PDFSettings.h"
 
+#include <terralib/qt/widgets/Utils.h>
+
 // Qt
 #include <QMessageBox>
 #include <QString>
@@ -90,7 +92,7 @@ void te::layout::PDFSettingsOutside::onCancelPushButtonPressed()
 
 void te::layout::PDFSettingsOutside::onSaveAsClicked()
 {
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image File"), QDir::currentPath(), tr("PDF Files (*.pdf)"));
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image File"), te::qt::widgets::GetFilePathFromSettings("pdf"), tr("PDF Files (*.pdf)"));
 
   if (!fileName.isEmpty())
   {
@@ -100,6 +102,9 @@ void te::layout::PDFSettingsOutside::onSaveAsClicked()
   {
     fileName.append(".pdf");
   }
+
+  QFileInfo fileInfo(fileName);
+  te::qt::widgets::AddFilePathToSettings(fileInfo.absolutePath(), "pdf");
 }
 
 void te::layout::PDFSettingsOutside::onCurrentIndexChanged(const QString & text)
