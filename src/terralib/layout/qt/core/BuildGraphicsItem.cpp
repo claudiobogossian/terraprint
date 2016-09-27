@@ -166,14 +166,14 @@ std::string te::layout::BuildGraphicsItem::nameItem( te::layout::EnumType* type 
   QList<QGraphicsItem*> graphicsItems;
   std::stringstream ss;//create a stringstream
 
+  m_id = -1;
   if (m_scene)
   {
     graphicsItems = m_scene->items();
+
+    ItemUtils iUtils = m_scene->getItemUtils();
+    m_id = iUtils.maxTypeId(type);
   }  
-
-  ItemUtils iUtils = m_scene->getItemUtils();
-
-  m_id = iUtils.maxTypeId(type);
 
   if(m_id < 0)
     m_id = 0;

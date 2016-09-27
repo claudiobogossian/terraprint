@@ -17,35 +17,43 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// TerraLib
-#include "ViewTest.h"
-#include "PropertyEditorIntegrationTest.h"
-#include "PropertyEditorTest.h"
+#ifndef __TERRALIB_LAYOUT_INTERNAL_QTEST_PROPERTY_EDITOR_TEST_H
+#define __TERRALIB_LAYOUT_INTERNAL_QTEST_PROPERTY_EDITOR_TEST_H
 
-// Unit-Test TerraLib includes by platform
-#include "../Config.h"
+// Layout Module
+#include "terralib/layout/qt/item/RectangleItem.h"
+
+// STL
+#include <memory>
 
 // Qt
-#include <QtTest/QtTest>
+#include <QObject>
 
-int main(int argv, char **args)
+namespace te
 {
-  QApplication app(argv, args); // required to run classes with Qt
+  namespace layout
+  {
+    /*!
+      \brief 
+    
+      \ingroup layout
+    */
+    class PropertyEditorTest : public QObject
+    {
+      Q_OBJECT
 
-  int result = 0;
-  {
-    te::layout::ViewTest viewTest;
-    result |= QTest::qExec(&viewTest, argv, args);
-  }
-  {
-    te::layout::PropertyEditorTest propertyEditorTest;
-    result |= QTest::qExec(&propertyEditorTest, argv, args);
+      private slots:
 
+        void on_test_create_rectangle_item();
+        
+        void on_test_create_property_tree();
+
+      private:
+
+        std::unique_ptr<te::layout::RectangleItem> m_rectItem;
+    };
   }
-  {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
-    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
-  }
-  return result;
 }
+
+#endif
 
