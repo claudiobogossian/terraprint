@@ -77,6 +77,8 @@ namespace te
         virtual bool isEditionMode();
 
         virtual bool changeCurrentTool(EnumType* tool);
+        
+        virtual void drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0);
 
         /*!
         \brief Reimplemented from QGraphicsItem to capture changes in the item
