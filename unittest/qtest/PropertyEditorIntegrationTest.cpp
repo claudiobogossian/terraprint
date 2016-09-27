@@ -23,12 +23,15 @@
 #include "terralib/layout/qt/core/propertyeditor/PropertyTree.h"
 #include "terralib/layout/qt/outside/ToolbarOutside.h"
 #include "terralib/layout/qt/core/Scene.h"
+#include "terralib/layout/core/pattern/mvc/AbstractItemView.h"
+#include "terralib/layout/core/pattern/mvc/AbstractItemController.h"
 
 // STL
 #include <vector>
 
 // Qt
 #include <QtTest/QtTest>
+#include <QGraphicsItem>
 #include <QSize>
 #include <QPoint>
 #include <QString>
@@ -122,6 +125,10 @@ void te::layout::PropertyEditorIntegrationTest::on_test_create_property_tree()
   {
     QTreeWidgetItem* item0 = tree->topLevelItem(0);
     tree->editItem(item0, 1); // enter edit mode, automatically call the delegate
+  }
+  else
+  {
+    QVERIFY2(tree->topLevelItemCount() == 0, "List of items is empty.");
   }
 }
 
