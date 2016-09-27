@@ -68,7 +68,6 @@ QRectF te::layout::ItemGroup::boundingRect() const
 void te::layout::ItemGroup::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   //we dont want the group to draw its selection, so we dont call the paint function
-  AbstractItem::drawFrame(painter);
 }
 
 QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
