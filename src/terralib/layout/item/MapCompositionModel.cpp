@@ -32,6 +32,21 @@ te::layout::MapCompositionModel::MapCompositionModel()
   : ItemGroupModel()
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  double thickness = 1.0;
+
+  {
+    Property property(0);
+    property.setName("show_frame");
+    property.setValue(true, dataType->getDataTypeBool());
+    this->m_properties.updateProperty(property);
+  }
+
+  {
+    Property property = m_properties.getProperty("frame_thickness");
+    property.setVisible(true);
+    property.setEditable(true);
+    this->m_properties.completelyUpdateProperty(property);
+  }
 
   //updating properties
   {

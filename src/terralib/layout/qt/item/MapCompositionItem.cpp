@@ -235,3 +235,8 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   return variant;
 }
 
+
+void te::layout::MapCompositionItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+{
+  AbstractItem::drawFrame(painter);
+}
