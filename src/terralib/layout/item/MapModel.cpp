@@ -155,7 +155,12 @@ te::layout::MapModel::MapModel()
     property.setValue(backgroundColor, dataType->getDataTypeColor());
     this->m_properties.updateProperty(property);
   }
-
+  {
+    Property property(0);
+    property.setName("show_frame");
+    property.setValue(true, dataType->getDataTypeBool());
+    this->m_properties.updateProperty(property);
+  }
 
   {
     Property property(0);
