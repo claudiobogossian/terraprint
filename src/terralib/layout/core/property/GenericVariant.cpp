@@ -41,7 +41,7 @@ te::layout::GenericVariant::~GenericVariant()
   clear();
 }
 
-std::vector<std::string> te::layout::GenericVariant::toStringVector()
+const std::vector<std::string>& te::layout::GenericVariant::toStringVector() const
 {
   return m_vString;
 }

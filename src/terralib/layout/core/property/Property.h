@@ -84,7 +84,7 @@ namespace te
         */
         EnumType* getType() const;
 
-        std::vector<te::layout::Property> getSubProperty() const;
+        const std::vector<te::layout::Property>& getSubProperty() const;
         
         /*
           To use this method, you need to declare a variable with 
@@ -130,11 +130,11 @@ namespace te
 
         /*Property Options*/
 
-        void addOption(Variant variant);
+        void addOption(const Variant& variant);
 
-        void removeOption(Variant variant);
+        void removeOption(const Variant& variant);
 
-        void setOptionChoice(Variant variant);
+        void setOptionChoice(const Variant& variant);
 
         void setOptionChoice(int numberOption);
 
@@ -143,15 +143,15 @@ namespace te
         const std::vector<Variant>& getOptionChoices() const;
 
         //Ex.: For font information
-        void addSubProperty( Property property );
+        void addSubProperty( const Property& property );
 
         bool addSubProperty(const Property& parent, const Property& subProperty);
 
-        void removeSubProperty( Property property );
+        void removeSubProperty( const Property& property );
 
         bool removeSubProperty(const std::string& name);
 
-        virtual bool updateSubProperty(Property property);
+        virtual bool updateSubProperty(const Property& property);
 
         virtual bool completelyUpdateSubProperty(const Property& property);
         
@@ -181,9 +181,9 @@ namespace te
         */
         virtual const std::string& getLabel() const;
 
-        virtual bool containsSubProperty(Property subProperty) const;
+        virtual bool containsSubProperty( const Property& subProperty ) const;
 
-        virtual const te::layout::Property& containsSubProperty(std::string name) const;
+        virtual const te::layout::Property& containsSubProperty( const std::string& name ) const;
         
         /*!
           \brief Sets true if property will be used in a menu, false otherwise.
@@ -199,9 +199,9 @@ namespace te
         */
         virtual bool isMenu() const;
 
-        virtual void setIcon(std::string icon);
+        virtual void setIcon(const std::string& icon);
 
-        virtual std::string getIcon() const;
+        virtual const std::string& getIcon() const;
 
         /*!
           \brief Return true if value is not of common C++ data type, false otherwise.

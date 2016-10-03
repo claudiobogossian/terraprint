@@ -54,6 +54,12 @@ te::layout::GridMapItem::~GridMapItem()
 
 }
 
+void te::layout::GridMapItem::refresh()
+{
+  m_screenCache = QPixmap();
+  AbstractItem::refresh();
+}
+
 void te::layout::GridMapItem::addGridLinesToPath()
 {
   for (int i = 0; i < m_horizontalLines.size(); i++)
@@ -68,10 +74,8 @@ void te::layout::GridMapItem::addGridLinesToPath()
   calculateTexts();
 }
 
-
 void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
   if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
     return;
@@ -86,7 +90,60 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
     return;
   }
 
+  if (m_isPrinting == true)
+  {
+    drawGridOnDevice(painter);
+  }
+  else
+  {
+    Scene* myScene = dynamic_cast<Scene*>(this->scene());
+    if (myScene == 0)
+    {
+      return;
+    }
+
+    //we first calculate the size in pixels
+    Utils utils = myScene->getUtils();
+
+    QRectF boxMM = boundingRect();
+    te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
+    boxViewport = utils.viewportBox(boxViewport);
+
+    //if for any reason the size has been changed, we recreate the screen pixmap
+    QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
+    if (m_screenCache.size() != sizeInPixels)
+    {
+      const Property& property = m_controller->getProperty("background_color");
+      const te::color::RGBAColor& color = property.getValue().toColor();
+      QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+      m_screenCache = QPixmap(sizeInPixels);
+      m_screenCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+
+      double xFactor = sizeInPixels.width() / boxMM.width();
+      double yFactor = sizeInPixels.height() / boxMM.height();
+
+      QTransform transform;
+      transform.scale(xFactor, -yFactor);
+      transform.translate(-boxMM.x(), -boxMM.height() - boxMM.y());
+
+      QPainter cachePainter;
+      cachePainter.begin(&m_screenCache);
+
+      cachePainter.setTransform(transform);
+
+      drawGridOnDevice(&cachePainter);
+    }
+
+    te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
+  }
+}
+
+void te::layout::GridMapItem::drawGridOnDevice( QPainter* painter )
+{
   painter->save();
+
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
   configPainter(painter);
 
@@ -96,7 +153,6 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
 
   configTextPainter(painter);
 
-
   QPen pen = painter->pen();
   pen.setWidthF(0);
 
@@ -104,16 +160,9 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
   brush.setStyle(Qt::SolidPattern);
 
   painter->setPen(pen);
-  painter->setRenderHint(QPainter::Antialiasing, true);
   painter->fillPath(m_gridText, brush);
 
   painter->restore();
-
-}
-
-void te::layout::GridMapItem::drawGrid( QPainter* painter )
-{
-
 }
 
 void te::layout::GridMapItem::configPainter( QPainter* painter )
