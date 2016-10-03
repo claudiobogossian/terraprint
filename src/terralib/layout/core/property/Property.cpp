@@ -75,7 +75,7 @@ const te::layout::Variant& te::layout::Property::getValue() const
   return m_value;
 }
 
-void te::layout::Property::addOption(Variant variant)
+void te::layout::Property::addOption(const Variant& variant)
 {
   if(m_options.empty())
   {
@@ -85,7 +85,7 @@ void te::layout::Property::addOption(Variant variant)
   m_options.push_back(variant);
 }
 
-void te::layout::Property::removeOption(Variant variant)
+void te::layout::Property::removeOption(const Variant& variant)
 {
   for(std::vector<Variant>::iterator it = m_options.begin(); it != m_options.end(); ++it)
   {
@@ -97,7 +97,7 @@ void te::layout::Property::removeOption(Variant variant)
   }
 }
 
-void te::layout::Property::setOptionChoice(Variant variant)
+void te::layout::Property::setOptionChoice(const Variant& variant)
 {
   m_currentChoice = variant; 
 }
@@ -122,14 +122,14 @@ void te::layout::Property::setEditable( bool editable )
   m_editable = editable;
 }
 
-void te::layout::Property::addSubProperty( Property property )
+void te::layout::Property::addSubProperty( const Property& property )
 {
   m_subProperty.push_back(property);
 }
 
 bool te::layout::Property::addSubProperty(const Property& parent, const Property& subProperty)
 {
-  std::vector<te::layout::Property> subProperties = parent.getSubProperty();
+  const std::vector<te::layout::Property>& subProperties = parent.getSubProperty();
   std::size_t total = subProperties.size();
   std::size_t totalResult = 0;
 
@@ -151,7 +151,7 @@ bool te::layout::Property::addSubProperty(const Property& parent, const Property
     return true;
   return false;
 }
-void te::layout::Property::removeSubProperty( Property property )
+void te::layout::Property::removeSubProperty( const Property& property )
 {
   for(std::vector<Property>::iterator it = m_subProperty.begin(); it != m_subProperty.end(); ++it)
   {
@@ -197,12 +197,12 @@ bool te::layout::Property::removeSubProperty(const std::string& name)
   return is_removeProp;
 }
 
-std::vector<te::layout::Property> te::layout::Property::getSubProperty() const
+const std::vector<te::layout::Property>& te::layout::Property::getSubProperty() const
 {
   return m_subProperty;
 }
 
-bool te::layout::Property::updateSubProperty(Property property)
+bool te::layout::Property::updateSubProperty(const Property& property)
 {
   bool result = false;
 
@@ -275,7 +275,7 @@ bool te::layout::Property::isNull() const
   return result;
 }
 
-bool te::layout::Property::containsSubProperty( Property subProperty ) const
+bool te::layout::Property::containsSubProperty( const Property& subProperty ) const
 {
   bool is_present = false;
 
@@ -301,11 +301,8 @@ bool te::layout::Property::containsSubProperty( Property subProperty ) const
   return is_present;
 }
 
-const te::layout::Property& te::layout::Property::containsSubProperty(std::string name) const
+const te::layout::Property& te::layout::Property::containsSubProperty( const std::string& name ) const
 {
-  Property property;
-  property.setName(name);
-  
   if (!m_nullProperty)
   {
     m_nullProperty = Property::Ptr(new Property);
@@ -316,6 +313,9 @@ const te::layout::Property& te::layout::Property::containsSubProperty(std::strin
     Property* p = m_nullProperty.get();
     return *p;
   }
+
+  Property property;
+  property.setName(name);
 
   if(std::find(m_subProperty.begin(), m_subProperty.end(), property) != m_subProperty.end())
   {
@@ -388,12 +388,12 @@ bool te::layout::Property::isMenu() const
   return m_menu;
 }
 
-void te::layout::Property::setIcon( std::string icon )
+void te::layout::Property::setIcon( const std::string& icon )
 {
   m_icon = icon;
 }
 
-std::string te::layout::Property::getIcon() const
+const std::string& te::layout::Property::getIcon() const
 {
   return m_icon;
 }

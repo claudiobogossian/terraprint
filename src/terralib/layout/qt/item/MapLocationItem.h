@@ -70,8 +70,6 @@ namespace te
         */ 
         virtual ~MapLocationItem();
 
-        void refresh();
-
     protected:
 
         virtual void drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope);

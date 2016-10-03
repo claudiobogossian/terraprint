@@ -45,12 +45,6 @@ te::layout::MapLocationItem::~MapLocationItem()
 
 }
 
-void te::layout::MapLocationItem::refresh()
-{
-  te::layout::MapItem::doRefresh();
-  te::layout::MapItem::refresh();
-}
-
 void te::layout::MapLocationItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)
 {
   te::layout::MapItem::drawLayers(canvas, envelope);
