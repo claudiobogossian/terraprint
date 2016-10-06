@@ -744,7 +744,6 @@ QToolButton* te::layout::ToolbarOutside::createUndoToolButton()
     return 0;
 
   QAction* actionUndo = undoStack->createUndoAction(menu, tr("&Undo"));
-  actionUndo->setShortcuts(QKeySequence::Undo);
   actionUndo->setObjectName(m_actionUndo);
   actionUndo->setIcon(QIcon::fromTheme("layout-undo"));
   actionUndo->setToolTip(tr("Undo Action"));
@@ -769,7 +768,6 @@ QToolButton* te::layout::ToolbarOutside::createRedoToolButton()
     return 0;
 
   QAction* actionRedo = undoStack->createRedoAction(menu, tr("&Redo"));
-  actionRedo->setShortcuts(QKeySequence::Redo);
   actionRedo->setObjectName(m_actionRedo);
   actionRedo->setIcon(QIcon::fromTheme("layout-redo"));
   actionRedo->setToolTip(tr("Redo Action"));
