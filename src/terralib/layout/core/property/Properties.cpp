@@ -205,13 +205,10 @@ const te::layout::Property& te::layout::Properties::getProperty(const std::strin
   Property property(0);
   property.setName(name);
 
-  if (std::find(m_properties.begin(), m_properties.end(), property) != m_properties.end())
+  std::vector<Property>::const_iterator it = std::find(m_properties.begin(), m_properties.end(), property);
+  if (it != m_properties.end())
   {
-    std::vector<Property>::const_iterator it = std::find(m_properties.begin(), m_properties.end(), property);
-    if (it != m_properties.end())
-    {
-      return (*it);
-    }
+    return (*it);
   }
   else
   {
