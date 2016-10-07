@@ -45,13 +45,14 @@
 #include <QTextOption>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
+#include <QApplication>
+#include <QClipboard>
 
 te::layout::TextItem::TextItem(AbstractItemController* controller)
   : AbstractItem(controller)
   , m_textCursor(0)
 {  
   //If enabled is true, this item will accept hover events
-  setAcceptHoverEvents(false);
   setCursor(Qt::ArrowCursor); // default cursor
 
   QTextDocument* document = new QTextDocument();
@@ -263,7 +264,8 @@ void te::layout::TextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * even
   {
     if(m_isEditionMode == true)
     {
-      enterEditionMode();
+      m_textCursor->select(QTextCursor::WordUnderCursor);
+      update();
     }
   }
 }
@@ -276,8 +278,6 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
     return;
   }
 
-  event->accept();
-
   QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor;
   if (event->modifiers() & Qt::ShiftModifier)
   {
@@ -285,42 +285,88 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
   }
 
   m_textCursor->document()->setTextWidth(-1);
-  switch (event->key())
+  if (event->key() < Qt::Key_Escape && !(event->modifiers() & Qt::ControlModifier))
   {
-  case Qt::Key_Backspace:
-    m_textCursor->deletePreviousChar();
-    break;
-  case Qt::Key_Delete:
-    m_textCursor->deleteChar();
-    break;
-  case Qt::Key_Left:
-    m_textCursor->movePosition(QTextCursor::Left, moveMode);
-    break;
-  case Qt::Key_Right:
-    m_textCursor->movePosition(QTextCursor::Right, moveMode);
-    break;
-  case Qt::Key_Up:
-    m_textCursor->movePosition(QTextCursor::Up, moveMode);
-    break;
-  case Qt::Key_Down:
-    m_textCursor->movePosition(QTextCursor::Down, moveMode);
-    break;
-  case Qt::Key_Home:
-    if(event->modifiers() & Qt::ControlModifier)
-      m_textCursor->movePosition(QTextCursor::Start, moveMode);
-    else
-      m_textCursor->movePosition(QTextCursor::StartOfLine, moveMode);
-    break;
-  case Qt::Key_End:
-    if (event->modifiers() & Qt::ControlModifier)
-      m_textCursor->movePosition(QTextCursor::End, moveMode);
-    else
-      m_textCursor->movePosition(QTextCursor::EndOfLine, moveMode);
-    break;
-  default:
     m_textCursor->insertText(event->text());
-    break;
   }
+  //here we handle the navigation
+  else if (event == QKeySequence::MoveToNextChar || event == QKeySequence::SelectNextChar)
+  {
+    m_textCursor->movePosition(QTextCursor::Right, moveMode);
+  }
+  else if (event == QKeySequence::MoveToPreviousChar || event == QKeySequence::SelectPreviousChar)
+  {
+    m_textCursor->movePosition(QTextCursor::Left, moveMode);
+  }
+  else if (event == QKeySequence::MoveToNextLine || event == QKeySequence::SelectNextLine)
+  {
+    m_textCursor->movePosition(QTextCursor::Down, moveMode);
+  }
+  else if (event == QKeySequence::MoveToPreviousLine || event == QKeySequence::SelectPreviousLine)
+  {
+    m_textCursor->movePosition(QTextCursor::Up, moveMode);
+  }
+  else if (event == QKeySequence::MoveToStartOfLine || event == QKeySequence::SelectStartOfLine)
+  {
+    m_textCursor->movePosition(QTextCursor::StartOfLine, moveMode);
+  }
+  else if (event == QKeySequence::MoveToEndOfLine || event == QKeySequence::SelectEndOfLine)
+  {
+    m_textCursor->movePosition(QTextCursor::EndOfLine, moveMode);
+  }
+  else if (event == QKeySequence::MoveToStartOfDocument || event == QKeySequence::SelectStartOfDocument)
+  {
+    m_textCursor->movePosition(QTextCursor::Start, moveMode);
+  }
+  else if (event == QKeySequence::MoveToEndOfDocument || event == QKeySequence::SelectEndOfDocument)
+  {
+    m_textCursor->movePosition(QTextCursor::End, moveMode);
+  }
+  else if (event == QKeySequence::SelectAll)
+  {
+    m_textCursor->select(QTextCursor::Document);
+  }
+  //here we handle the edition keys
+  else if (event == QKeySequence::InsertParagraphSeparator)
+  {
+    m_textCursor->insertText(event->text());
+  }
+  else if (event->key() == Qt::Key_Backspace) //we need a special handle here
+  {
+    m_textCursor->deletePreviousChar();
+  }
+  else if (event == QKeySequence::Delete)
+  {
+    m_textCursor->deleteChar();
+  }
+  else if (event == QKeySequence::Copy)
+  {
+    QApplication::clipboard()->setText(m_textCursor->selectedText(), QClipboard::Clipboard);
+  }
+  else if (event == QKeySequence::Cut)
+  {
+    QApplication::clipboard()->setText(m_textCursor->selectedText(), QClipboard::Clipboard);
+    m_textCursor->removeSelectedText();
+  }
+  else if (event == QKeySequence::Paste)
+  {
+    m_textCursor->insertText(QApplication::clipboard()->text(QClipboard::Clipboard));
+  }
+  else if (event == QKeySequence::Undo)
+  {
+    m_textCursor->document()->undo();
+  }
+  else if (event == QKeySequence::Redo)
+  {
+    m_textCursor->document()->redo();
+  }
+  else
+  {
+    event->ignore();
+    return;
+  }
+
+  event->accept();
 
   prepareGeometryChange();
   m_textCursor->document()->setTextWidth(m_textCursor->document()->size().width());
@@ -333,13 +379,14 @@ void te::layout::TextItem::enterEditionMode()
 
   setCursor(Qt::IBeamCursor);
 
-  m_textCursor->movePosition(QTextCursor::Start);
-  m_textCursor->movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
+  m_textCursor->select(QTextCursor::Document);
 }
 
 void te::layout::TextItem::leaveEditionMode()
 {
   AbstractItem::leaveEditionMode();
+
+  m_textCursor->document()->clearUndoRedoStacks();
 
   setCursor(Qt::ArrowCursor);
 

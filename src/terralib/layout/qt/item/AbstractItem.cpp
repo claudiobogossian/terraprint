@@ -12,7 +12,7 @@ te::layout::AbstractItem::AbstractItem(AbstractItemController* controller)
   , m_marginResizePrecision(5.)
   , m_isPrinting(false)
   , m_hotPointSizePixels(10)
-  , m_selectionLineWidthPixels(4)
+  , m_selectionLineWidthPixels(3)
   , m_rotationHotPointSizePixels(16)
 {
   this->setFlags(QGraphicsItem::ItemIsMovable
@@ -630,7 +630,7 @@ bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double&
   }
   else
   {
-    Property pKeepAspect = m_controller->getProperty("keep_aspect");
+    const Property& pKeepAspect = m_controller->getProperty("keep_aspect");
     bool keepAspect = pKeepAspect.getValue().toBool();
     if (keepAspect == false)
     {

@@ -1033,12 +1033,28 @@ void te::layout::Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEv
 
 void te::layout::Scene::keyPressEvent(QKeyEvent * keyEvent)
 {
+  QGraphicsScene::keyPressEvent(keyEvent);
+  if (keyEvent->isAccepted() == true)
+  {
+    return;
+  }
+
   if (keyEvent->key() == Qt::Key_Escape)
   {
     closeDock();
     setEditionMode(false); //Edition off
+    keyEvent->setAccepted(true);
   }
-  QGraphicsScene::keyPressEvent(keyEvent);
+  else if (keyEvent->matches(QKeySequence::Undo))
+  {
+    m_undoStack->undo();
+    keyEvent->setAccepted(true);
+  }
+  else if (keyEvent->matches(QKeySequence::Redo))
+  {
+    m_undoStack->redo();
+    keyEvent->setAccepted(true);
+  }
 }
 
 void te::layout::Scene::drawForeground(QPainter * painter, const QRectF & rect)
