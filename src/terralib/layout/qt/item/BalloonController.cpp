@@ -30,3 +30,42 @@ te::layout::BalloonController::BalloonController(AbstractItemModel* model)
 {
 
 }
+
+void te::layout::BalloonController::calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy)
+{
+
+  TextController::calculateSize(properties, sizeMM, dx, dy);
+  Property pMarginSize;
+
+  if (properties.contains("margin_size") == false)
+  {
+    pMarginSize = this->getProperty("margin_size");
+  }
+  else
+  {
+    pMarginSize = properties.getProperty("margin_size");
+  }
+
+  double marginSize = pMarginSize.getValue().toDouble();
+  
+  qreal newHeight = sizeMM.height() + (marginSize * 4);
+
+  sizeMM.setHeight(newHeight);
+
+  qreal newWidth = sizeMM.width() + (marginSize * 2);
+  sizeMM.setWidth(newWidth);
+
+  dx = marginSize;
+  dy = marginSize * 3;
+
+}
+
+
+bool  te::layout::BalloonController::needUpdateBox(const te::layout::Properties& properties)
+{
+  if (properties.contains("text") == false && properties.contains("font") == false && properties.contains("margin_size") == false)
+  {
+    return false;
+  }
+  return true;
+}

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2016-09-27 16:44-0300\n"
-"PO-Revision-Date: 2016-09-27 16:49-0300\n"
+"POT-Creation-Date: 2016-10-10 14:08-0300\n"
+"PO-Revision-Date: 2016-10-10 14:08-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -17,12 +17,13 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-0: qt\n"
 
 #: core/enum/EnumAlignmentType.cpp:48 core/enum/EnumArrowType.cpp:47
-#: core/enum/EnumDataType.cpp:218 core/enum/EnumDataType.cpp:254
-#: core/enum/EnumGridStyleType.cpp:60 core/enum/EnumModeType.cpp:112
-#: core/enum/EnumNorthArrowType.cpp:47 core/enum/EnumObjectType.cpp:357
-#: core/enum/EnumPointType.cpp:53 core/enum/EnumRectangleType.cpp:47
-#: core/enum/EnumScaleType.cpp:65 core/enum/EnumTempDataStorageType.cpp:54
-#: core/enum/EnumTemplateType.cpp:54 core/enum/EnumToolType.cpp:77
+#: core/enum/EnumBalloonType.cpp:47 core/enum/EnumDataType.cpp:218
+#: core/enum/EnumDataType.cpp:254 core/enum/EnumGridStyleType.cpp:60
+#: core/enum/EnumModeType.cpp:112 core/enum/EnumNorthArrowType.cpp:47
+#: core/enum/EnumObjectType.cpp:357 core/enum/EnumPointType.cpp:53
+#: core/enum/EnumRectangleType.cpp:47 core/enum/EnumScaleType.cpp:65
+#: core/enum/EnumTempDataStorageType.cpp:54 core/enum/EnumTemplateType.cpp:54
+#: core/enum/EnumToolType.cpp:77
 msgid "None"
 msgstr "Nenhum"
 
@@ -54,6 +55,18 @@ msgstr "Seta à Esquerda"
 msgid "Double Arrow"
 msgstr "Seta Dupla"
 
+#: core/enum/EnumBalloonType.cpp:49
+msgid "Rectangle Balloon"
+msgstr "Balão Retângular"
+
+#: core/enum/EnumBalloonType.cpp:51
+msgid "Rounded Rectangle Balloon"
+msgstr "Balão Retângular Arredondado"
+
+#: core/enum/EnumBalloonType.cpp:53
+msgid "Ellipse Balloon"
+msgstr "Balão Elipse"
+
 #: core/enum/EnumDataType.cpp:220
 msgid "Int"
 msgstr "Inteiro"
@@ -79,7 +92,7 @@ msgid "Bool"
 msgstr "Booleano"
 
 #: core/enum/EnumDataType.cpp:232 item/LineModel.cpp:89 item/NorthModel.cpp:89
-#: item/TextModel.cpp:66 item/TitleModel.cpp:102
+#: item/TextModel.cpp:68 item/TitleModel.cpp:102
 msgid "Color"
 msgstr "Cor"
 
@@ -93,7 +106,7 @@ msgid "String List"
 msgstr "Lista de Textos"
 
 #: core/enum/EnumDataType.cpp:238 item/GridMapModel.cpp:225
-#: item/ScaleModel.cpp:149 item/TextModel.cpp:50
+#: item/ScaleModel.cpp:149 item/TextModel.cpp:52
 msgid "Font"
 msgstr "Fonte"
 
@@ -512,7 +525,7 @@ msgid "Create Item Tool"
 msgstr "Ferramenta de Criação de Item"
 
 #: core/pattern/mvc/AbstractItemController.cpp:136
-#: core/pattern/mvc/AbstractItemModel.cpp:110 item/ItemGroupModel.cpp:57
+#: core/pattern/mvc/AbstractItemModel.cpp:110 item/ItemGroupModel.cpp:42
 #: item/LineModel.cpp:107
 msgid "Resizable"
 msgstr "Redimensionável"
@@ -584,15 +597,27 @@ msgstr "Tipo do Gráfico"
 msgid "Line Width"
 msgstr "Largura da Linha"
 
-#: item/ArrowModel.cpp:89 item/EllipseModel.cpp:63 item/PointModel.cpp:91
-#: item/PolygonModel.cpp:51 item/RectangleModel.cpp:79
+#: item/ArrowModel.cpp:89 item/BalloonModel.cpp:95 item/EllipseModel.cpp:63
+#: item/PointModel.cpp:91 item/PolygonModel.cpp:51 item/RectangleModel.cpp:79
 msgid "Fill Color"
 msgstr "Cor de Preenchimento"
 
-#: item/ArrowModel.cpp:98 item/EllipseModel.cpp:72 item/PointModel.cpp:100
-#: item/PolygonModel.cpp:60 item/RectangleModel.cpp:88
+#: item/ArrowModel.cpp:98 item/BalloonModel.cpp:104 item/EllipseModel.cpp:72
+#: item/PointModel.cpp:100 item/PolygonModel.cpp:60 item/RectangleModel.cpp:88
 msgid "Contour Color"
 msgstr "Cor de Contorno"
+
+#: item/BalloonModel.cpp:54
+msgid "Balloon Type"
+msgstr "Tipo do Balão"
+
+#: item/BalloonModel.cpp:81
+msgid "Margin Size"
+msgstr "Tamanho de Margem"
+
+#: item/BalloonModel.cpp:113
+msgid "Contour Thickness"
+msgstr "Espessura do Contorno"
 
 #: item/BarCodeModel.cpp:59
 msgid "Barcode Size"
@@ -906,11 +931,11 @@ msgstr "Por quebras"
 msgid "Number of graphical scale breaks"
 msgstr "Número de quebras da escala gráfica"
 
-#: item/TextModel.cpp:58
+#: item/TextModel.cpp:60
 msgid "Text"
 msgstr "Texto"
 
-#: item/TextModel.cpp:77
+#: item/TextModel.cpp:98
 msgid "Alignment"
 msgstr "Alinhamento"
 

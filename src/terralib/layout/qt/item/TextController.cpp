@@ -53,11 +53,60 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties propertiesCopy(properties);
 
-  if (propertiesCopy.contains("text") == false && propertiesCopy.contains("font") == false)
+
+  if (!needUpdateBox(properties))
   {
     AbstractItemController::setProperties(propertiesCopy);
     return;
   }
+
+  TextItem* textItem = dynamic_cast<TextItem*>(m_view);
+  QSizeF sizeMM;
+
+  double dx = 0.;
+  double dy = 0.;
+
+  calculateSize(propertiesCopy, sizeMM, dx, dy);
+
+  Property propertyWidth(0);
+  propertyWidth.setName("width");
+  propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
+
+  Property propertyHeight(0);
+  propertyHeight.setName("height");
+  propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
+
+
+  propertiesCopy.addProperty(propertyWidth);
+  propertiesCopy.addProperty(propertyHeight);
+
+
+  Property pDx;
+  pDx.setName("dx");
+  pDx.setValue(dx, dataType->getDataTypeDouble());
+
+  Property pDY;
+  pDY.setName("dy");
+  pDY.setValue(dy, dataType->getDataTypeDouble());
+
+  propertiesCopy.addProperty(pDx);
+  propertiesCopy.addProperty(pDY);
+
+
+  textItem->prepareGeometryChange();
+
+  AbstractItemController::setProperties(propertiesCopy);
+}
+
+double te::layout::TextController::getDpiForCalculation() const
+{
+  return m_dpiForCalculation;
+}
+
+
+void te::layout::TextController::calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy)
+{
+  Properties propertiesCopy(properties);
 
   te::layout::Property pText = propertiesCopy.getProperty("text");
   if (pText.isNull())
@@ -71,11 +120,12 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
     pFont = this->getProperty("font");
   }
 
+
   QString qText = ItemUtils::convert2QString(pText.getValue().toString());
   QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
 
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
-  
+
   QTextDocument textDocument;
   textDocument.setTextWidth(-1);
   textDocument.setDefaultFont(qFont);
@@ -84,7 +134,6 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
   textDocument.setTextWidth(textDocument.size().width());
   QSizeF sizePx = textDocument.size();
 
-  QSizeF sizeMM;
   QGraphicsScene* qScene = textItem->scene();
   if (qScene != 0)
   {
@@ -100,24 +149,15 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
     sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
     sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
   }
-
-  Property propertyWidth(0);
-  propertyWidth.setName("width");
-  propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
-
-  Property propertyHeight(0);
-  propertyHeight.setName("height");
-  propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
-
-  propertiesCopy.addProperty(propertyWidth);
-  propertiesCopy.addProperty(propertyHeight);
-
-  textItem->prepareGeometryChange();
-
-  AbstractItemController::setProperties(propertiesCopy);
+  
 }
 
-double te::layout::TextController::getDpiForCalculation() const
+
+bool  te::layout::TextController::needUpdateBox(const te::layout::Properties& properties)
 {
-  return m_dpiForCalculation;
+  if (properties.contains("text") == false && properties.contains("font") == false)
+  {
+    return false;
+  }
+  return true;
 }

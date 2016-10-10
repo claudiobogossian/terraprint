@@ -64,21 +64,19 @@ namespace te
         BalloonItem(AbstractItemController* controller);
 
         /*!
-        \brief Reimplemented from QGraphicsItem
-        */
-        virtual QRectF boundingRect() const;
-
-        
-        /*!
           \brief Destructor
          */
         virtual ~BalloonItem();
 
+        virtual QRectF te::layout::BalloonItem::boundingRect() const;
+
       protected:
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
-        virtual void drawBalloon1(QPainter * painter);
-        QColor setBrush(QPainter* painter);
+        virtual void drawRectangleBalloon(QPainter * painter);
+        virtual void drawRoundedRectangleBalloon(QPainter * painter);
+        virtual void drawEllipseBalloon(QPainter * painter);
+        void setPainterParameters(QPainter* painter);
     };
 
   }

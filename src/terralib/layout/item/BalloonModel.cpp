@@ -32,12 +32,56 @@
 #include "terralib/color/RGBAColor.h"
 #include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
+#include "../core/enum/EnumBalloonType.h"
 #include "TextModel.h"
 
 te::layout::BalloonModel::BalloonModel()
 : TextModel()
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  double margin = 5.;
+
+  te::color::RGBAColor fillColor(255, 242, 188, 255);
+  te::color::RGBAColor contourColor(0, 0, 0, 255);
+  double contourThickness = 0.5;
+
+  {
+    EnumBalloonType balloonType;
+    EnumType* currentType = balloonType.getRectangleBalloon();
+
+    Property property(0);
+    property.setName("balloon_type");
+    property.setLabel(TR_LAYOUT("Balloon Type"));
+    property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
+
+    Variant v;
+    v.setValue(currentType->getLabel(), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    for (int i = 0; i < balloonType.size(); ++i)
+    {
+      EnumType* enumType = balloonType.getEnum(i);
+
+      if (enumType == balloonType.getNoneType() || enumType == currentType)
+        continue;
+
+      Variant v;
+      v.setValue(enumType->getLabel(), dataType->getDataTypeString());
+      property.addOption(v);
+    }
+
+    this->m_properties.addProperty(property);
+  }
+
+
+  {
+    Property property(0);
+    property.setName("margin_size");
+    property.setLabel(TR_LAYOUT("Margin Size"));
+    property.setValue(margin, dataType->getDataTypeDouble());
+    this->m_properties.addProperty(property);
+  }
   
   {
     Property property(0);
@@ -45,6 +89,34 @@ te::layout::BalloonModel::BalloonModel()
     property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
+  {
+    Property property(0);
+    property.setName("fill_color");
+    property.setLabel(TR_LAYOUT("Fill Color"));
+    property.setValue(fillColor, dataType->getDataTypeColor());
+    property.setMenu(true);
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("contour_color");
+    property.setLabel(TR_LAYOUT("Contour Color"));
+    property.setValue(contourColor, dataType->getDataTypeColor());
+    property.setMenu(true);
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("contour_thickness");
+    property.setLabel(TR_LAYOUT("Contour Thickness"));
+    property.setValue(contourThickness, dataType->getDataTypeDouble());
+    property.setMenu(true);
+    m_properties.addProperty(property);
+  }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getBalloonItem());
 }
 
 te::layout::BalloonModel::~BalloonModel()
