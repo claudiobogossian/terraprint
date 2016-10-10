@@ -292,7 +292,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   painter->drawRect(adjustedBoxMM);
 
   //draw the hot-points
-  if (drawHotPoints && isZoomAdequateForResize())
+  if (!m_isEditionMode && drawHotPoints && isZoomAdequateForResize())
   {
     QRectF adjustedHotPointsRectMM = boxMM.adjusted(halfHotPointSizeMM, halfHotPointSizeMM, -halfHotPointSizeMM, -halfHotPointSizeMM);
 
@@ -305,7 +305,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   }
 
   //the we draw the rotation hot point
-  if (isZoomAdequateForRotation())
+  if (!m_isEditionMode && isZoomAdequateForRotation())
   {
     painter->setPen(rotationPen);
     painter->setBrush(Qt::NoBrush);
