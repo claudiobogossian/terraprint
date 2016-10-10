@@ -192,7 +192,6 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   //we finally set the transformation into the qpainter
   QTransform transform;
-  //transform.translate(dx, boxMM.height() - dx);
   transform.scale(dpiFactor * conversionfactor, dpiFactor * conversionfactor * -1);
   transform.translate(dxPixels, -m_textCursor->document()->size().height() - dyPixels);
   painter->setTransform(transform, true);

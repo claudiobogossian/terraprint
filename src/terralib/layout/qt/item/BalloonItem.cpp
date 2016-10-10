@@ -93,7 +93,7 @@ void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter){
 
   BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
 
-  Property pMarginSize = balloonController->getProperty("margin_size");
+  const Property& pMarginSize = balloonController->getProperty("margin_size");
   double margin = pMarginSize.getValue().toDouble();
  
   painter->save();
@@ -131,7 +131,7 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
 {
   BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
 
-  Property pMarginSize = balloonController->getProperty("margin_size");
+  const Property& pMarginSize = balloonController->getProperty("margin_size");
   double margin = pMarginSize.getValue().toDouble();
 
   painter->save();
@@ -203,7 +203,7 @@ void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
 {
   BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
 
-  Property pMarginSize = balloonController->getProperty("margin_size");
+  const Property& pMarginSize = balloonController->getProperty("margin_size");
   double margin = pMarginSize.getValue().toDouble();
 
   painter->save();
