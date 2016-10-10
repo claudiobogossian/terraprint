@@ -608,9 +608,9 @@ QToolButton* te::layout::ToolbarOutside::createTextToolButton()
   QAction* actionImage = createAction(tr("Image Object"), m_actionImage, iconManager.getIconNameAsQString(itemType->getImageItem()->getName()), "", menu);
   menu->addAction(actionImage);
 
-  /*QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);
+  QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);
   menu->addAction(actionBalloon);
-
+  /*
   QAction* actionBarCode = createAction(tr("BarCode Object"), m_actionBarCode, "layout-barcode", "", menu);
   menu->addAction(actionBarCode);*/
 

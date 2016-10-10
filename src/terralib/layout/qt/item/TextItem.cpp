@@ -80,6 +80,12 @@ QRectF te::layout::TextItem::boundingRect() const
     return AbstractItem::boundingRect();
   }
 
+  const Property& pDx = m_controller->getProperty("dx");
+  double dx = pDx.getValue().toDouble();
+
+  const Property& pDy = m_controller->getProperty("dy");
+  double dy = pDy.getValue().toDouble();
+
   Utils utils = myScene->getUtils();
 
   QSizeF documentSizePx = m_textCursor->document()->size();
@@ -88,7 +94,7 @@ QRectF te::layout::TextItem::boundingRect() const
   double heightMM = utils.pixel2mm(documentSizePx.height());
 
   //when we are editing the item, we let the item handle the changes in the bounding box
-  QRectF rect(0, 0, widthMM, heightMM);
+  QRectF rect(dx, dy, widthMM, heightMM);
   return rect;
 }
 
@@ -175,10 +181,20 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
 
+  const Property& pDx = textController->getProperty("dx");
+  double dx = pDx.getValue().toDouble();
+
+  const Property& pDy = textController->getProperty("dy");
+  double dy = pDy.getValue().toDouble();
+
+  double dxPixels = dx / (dpiFactor * conversionfactor);
+  double dyPixels = dy / (dpiFactor * conversionfactor);
+
   //we finally set the transformation into the qpainter
   QTransform transform;
-  transform.translate(0, boxMM.height());
+  //transform.translate(dx, boxMM.height() - dx);
   transform.scale(dpiFactor * conversionfactor, dpiFactor * conversionfactor * -1);
+  transform.translate(dxPixels, -m_textCursor->document()->size().height() - dyPixels);
   painter->setTransform(transform, true);
 
   //and here we effectivally asks the textLayout to draw the document

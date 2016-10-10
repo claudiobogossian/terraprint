@@ -70,6 +70,10 @@ namespace te
 
         virtual double getDpiForCalculation() const;
 
+        virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
+
+        virtual bool needUpdateBox(const te::layout::Properties& properties);
+
     protected:
 
         double m_dpiForCalculation; //!< Holds the information of the DPI used to calculate the bounding rect (in MM) of the item
