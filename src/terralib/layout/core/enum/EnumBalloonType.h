@@ -61,21 +61,21 @@ namespace te
         virtual EnumType* getNoneType() const;
         
         /*!
-          \brief Returns value that represents north arrow type 1 belonging to enumeration.
+          \brief Returns value that represents rectangle balloon belonging to enumeration.
       
           \return enum value      
         */
         virtual EnumType* getRectangleBalloon() const;
 
         /*!
-          \brief Returns value that represents north arrow type 2 belonging to enumeration.
+          \brief Returns value that represents rounded rectangle balloon belonging to enumeration.
       
           \return enum value      
         */
         virtual EnumType* getRoundedRectangleBalloon() const;
 
         /*!
-          \brief Returns value that represents north arrow type 3 belonging to enumeration.
+          \brief Returns value that represents Ellipse Balloon belonging to enumeration.
       
           \return enum value      
         */
@@ -91,9 +91,9 @@ namespace te
       protected:
 
         EnumType* m_noneType; //!< value that represents none type belonging to enumeration
-        EnumType* m_balloon1; //!< value that represents north arrow type 1 belonging to enumeration
-        EnumType* m_balloon2; //!< value that represents north arrow type 2 belonging to enumeration
-        EnumType* m_balloon3; //!< value that represents north arrow type 3 belonging to enumeration
+        EnumType* m_balloon1; //!< value that represents rectangle balloon belonging to enumeration
+        EnumType* m_balloon2; //!< value that represents rounded rectangle balloon belonging to enumeration
+        EnumType* m_balloon3; //!< value that represents Ellipse balloon belonging to enumeration
  
     };
   }

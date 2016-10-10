@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file EnumNorthArrowType.cpp
+  \file EnumBalloonType.cpp
    
   \brief 
 
