@@ -135,7 +135,14 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue(true, dataType->getDataTypeBool());
+    this->m_properties.updateProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("keep_aspect");
+    property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
   

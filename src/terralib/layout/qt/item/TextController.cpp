@@ -52,48 +52,64 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties propertiesCopy(properties);
-
-
-  if (!needUpdateBox(properties))
+  
+  if (needUpdateBox(properties))
   {
-    AbstractItemController::setProperties(propertiesCopy);
+    TextItem* textItem = dynamic_cast<TextItem*>(m_view);
+    QSizeF sizeMM;
+
+    double dx = 0.;
+    double dy = 0.;
+
+    calculateSize(propertiesCopy, sizeMM, dx, dy);
+
+    Property propertyWidth(0);
+    propertyWidth.setName("width");
+    propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
+
+    Property propertyHeight(0);
+    propertyHeight.setName("height");
+    propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
+
+    propertiesCopy.addProperty(propertyWidth);
+    propertiesCopy.addProperty(propertyHeight);
+
+    Property pDx;
+    pDx.setName("dx");
+    pDx.setValue(dx, dataType->getDataTypeDouble());
+
+    Property pDY;
+    pDY.setName("dy");
+    pDY.setValue(dy, dataType->getDataTypeDouble());
+
+    propertiesCopy.addProperty(pDx);
+    propertiesCopy.addProperty(pDY);
+  }
+  else if (properties.contains("height"))
+  {
+    //if only the height have been changed, we must recalculate the font size based on it
+    const Property& pCurrentHeight = this->getProperty("height");
+    const Property& pNewHeight = propertiesCopy.getProperty("height");
+
+    double currentHeight = pCurrentHeight.getValue().toDouble();
+    double newHeight = pNewHeight.getValue().toDouble();
+    double resizeFactor = newHeight / currentHeight;
+
+    double ptSizeMM = 0.353;
+    double newFontSizeDouble = std::floor(newHeight / ptSizeMM);
+    int newFontSize = (int)newFontSizeDouble;
+
+    te::layout::Property pNewFont = this->getProperty("font");
+    Font newFont = pNewFont.getValue().toFont();
+    newFont.setPointSize(qRound(newFont.getPointSize() * resizeFactor));
+
+    pNewFont.setValue(newFont, dataType->getDataTypeFont());
+    propertiesCopy.addProperty(pNewFont);
+
+    //as we chenged the font size, we must recalcute the other properties. So we call this function recursively
+    setProperties(propertiesCopy);
     return;
   }
-
-  TextItem* textItem = dynamic_cast<TextItem*>(m_view);
-  QSizeF sizeMM;
-
-  double dx = 0.;
-  double dy = 0.;
-
-  calculateSize(propertiesCopy, sizeMM, dx, dy);
-
-  Property propertyWidth(0);
-  propertyWidth.setName("width");
-  propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
-
-  Property propertyHeight(0);
-  propertyHeight.setName("height");
-  propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
-
-
-  propertiesCopy.addProperty(propertyWidth);
-  propertiesCopy.addProperty(propertyHeight);
-
-
-  Property pDx;
-  pDx.setName("dx");
-  pDx.setValue(dx, dataType->getDataTypeDouble());
-
-  Property pDY;
-  pDY.setName("dy");
-  pDY.setValue(dy, dataType->getDataTypeDouble());
-
-  propertiesCopy.addProperty(pDx);
-  propertiesCopy.addProperty(pDY);
-
-
-  textItem->prepareGeometryChange();
 
   AbstractItemController::setProperties(propertiesCopy);
 }

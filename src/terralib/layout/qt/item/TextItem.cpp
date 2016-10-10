@@ -47,24 +47,28 @@
 #include <QKeyEvent>
 #include <QApplication>
 #include <QClipboard>
+#include <QTimer>
 
 te::layout::TextItem::TextItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+  : QObject()
+  , AbstractItem(controller)
+  , m_document(0)
   , m_textCursor(0)
+  , m_cursorTimer(0)
+  , m_showCursor(true)
 {  
   //If enabled is true, this item will accept hover events
   setCursor(Qt::ArrowCursor); // default cursor
 
-  QTextDocument* document = new QTextDocument();
+  m_document = new QTextDocument();
+  m_document->setDefaultCursorMoveStyle(Qt::VisualMoveStyle);
 
-  m_textCursor = new QTextCursor(document);
-  m_textCursor->document()->setDefaultCursorMoveStyle(Qt::VisualMoveStyle);
 }
 
 te::layout::TextItem::~TextItem()
 {
-  delete m_textCursor->document();
   delete m_textCursor;
+  delete m_document;
 }
 
 QRectF te::layout::TextItem::boundingRect() const
@@ -88,7 +92,7 @@ QRectF te::layout::TextItem::boundingRect() const
 
   Utils utils = myScene->getUtils();
 
-  QSizeF documentSizePx = m_textCursor->document()->size();
+  QSizeF documentSizePx = m_document->size();
 
   double widthMM = utils.pixel2mm(documentSizePx.width());
   double heightMM = utils.pixel2mm(documentSizePx.height());
@@ -128,12 +132,12 @@ void te::layout::TextItem::refresh()
     textOption.setAlignment(Qt::AlignJustify);
   }
 
-  m_textCursor->document()->setTextWidth(-1);
-  m_textCursor->document()->setDefaultFont(qFont);
-  m_textCursor->document()->setPlainText(qText);
-  m_textCursor->document()->setDocumentMargin(0);
-  m_textCursor->document()->setDefaultTextOption(textOption);
-  m_textCursor->document()->setTextWidth(m_textCursor->document()->size().width());
+  m_document->setTextWidth(-1);
+  m_document->setDefaultFont(qFont);
+  m_document->setPlainText(qText);
+  m_document->setDocumentMargin(0);
+  m_document->setDefaultTextOption(textOption);
+  m_document->setTextWidth(m_document->size().width());
 
   AbstractItem::refresh();
 }
@@ -168,7 +172,10 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   if (isEditionMode())
   {
     //we define the position
-    context.cursorPosition = m_textCursor->position();
+    if (m_showCursor)
+    {
+      context.cursorPosition = m_textCursor->position();
+    }
 
     //we defined the selection
     QAbstractTextDocumentLayout::Selection selection;
@@ -193,11 +200,11 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   //we finally set the transformation into the qpainter
   QTransform transform;
   transform.scale(dpiFactor * conversionfactor, dpiFactor * conversionfactor * -1);
-  transform.translate(dxPixels, -m_textCursor->document()->size().height() - dyPixels);
+  transform.translate(dxPixels, -m_document->size().height() - dyPixels);
   painter->setTransform(transform, true);
 
   //and here we effectivally asks the textLayout to draw the document
-  QAbstractTextDocumentLayout* documentLayout = m_textCursor->document()->documentLayout();
+  QAbstractTextDocumentLayout* documentLayout = m_document->documentLayout();
 
   documentLayout->draw(painter, context);
 
@@ -229,7 +236,7 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
   double xPos = utils.mm2pixel(event->pos().x());
   double yPos = utils.mm2pixel(boundingRect().height()) - utils.mm2pixel(event->pos().y());
 
-  int newPosition = m_textCursor->document()->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
+  int newPosition = m_document->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
   if (newPosition != -1)
   {
     m_textCursor->setPosition(newPosition);
@@ -263,7 +270,7 @@ void te::layout::TextItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
   double xPos = utils.mm2pixel(event->pos().x());
   double yPos = utils.mm2pixel(boundingRect().height()) - utils.mm2pixel(event->pos().y());
 
-  int newPosition = m_textCursor->document()->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
+  int newPosition = m_document->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
   if (newPosition != -1 && newPosition != m_textCursor->position())
   {
     m_textCursor->setPosition(newPosition, QTextCursor::KeepAnchor);
@@ -275,13 +282,16 @@ void te::layout::TextItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
 void te::layout::TextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
 {
+  if (isEditionMode() == false)
+  {
+    AbstractItem::mouseDoubleClickEvent(event);
+    return;
+  }
+
   if(event->button() == Qt::LeftButton)
   {
-    if(m_isEditionMode == true)
-    {
-      m_textCursor->select(QTextCursor::WordUnderCursor);
-      update();
-    }
+    m_textCursor->select(QTextCursor::WordUnderCursor);
+    update();
   }
 }
 
@@ -299,7 +309,7 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
     moveMode = QTextCursor::KeepAnchor;
   }
 
-  m_textCursor->document()->setTextWidth(-1);
+  m_document->setTextWidth(-1);
   if (event->key() < Qt::Key_Escape && !(event->modifiers() & Qt::ControlModifier))
   {
     m_textCursor->insertText(event->text());
@@ -369,11 +379,11 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
   }
   else if (event == QKeySequence::Undo)
   {
-    m_textCursor->document()->undo();
+    m_document->undo();
   }
   else if (event == QKeySequence::Redo)
   {
-    m_textCursor->document()->redo();
+    m_document->redo();
   }
   else
   {
@@ -384,7 +394,7 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
   event->accept();
 
   prepareGeometryChange();
-  m_textCursor->document()->setTextWidth(m_textCursor->document()->size().width());
+  m_document->setTextWidth(m_document->size().width());
   update();
 }
 
@@ -394,18 +404,32 @@ void te::layout::TextItem::enterEditionMode()
 
   setCursor(Qt::IBeamCursor);
 
+  m_textCursor = new QTextCursor(m_document);
   m_textCursor->select(QTextCursor::Document);
+
+  m_cursorTimer = new QTimer(this);
+  connect(m_cursorTimer, SIGNAL(timeout()), this, SLOT(timerEvent()));
+
+  m_cursorTimer->setInterval(500);
+  m_cursorTimer->start();
 }
 
 void te::layout::TextItem::leaveEditionMode()
 {
   AbstractItem::leaveEditionMode();
 
-  m_textCursor->document()->clearUndoRedoStacks();
+  //we clean the view objects
+  delete m_cursorTimer;
+  m_cursorTimer = 0;
+
+  m_document->clearUndoRedoStacks();
+  delete m_textCursor;
+  m_textCursor = 0;
 
   setCursor(Qt::ArrowCursor);
 
-  QString qNewText = m_textCursor->document()->toPlainText();
+  //and then we update the model with the new values
+  QString qNewText = m_document->toPlainText();
   std::string newText = ItemUtils::convert2StdString(qNewText);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -415,4 +439,10 @@ void te::layout::TextItem::leaveEditionMode()
   propertyText.setValue(newText, dataType->getDataTypeString());
 
   m_controller->setProperty(propertyText);
+}
+
+void te::layout::TextItem::timerEvent()
+{
+  m_showCursor = !m_showCursor;
+  update();
 }

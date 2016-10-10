@@ -40,6 +40,8 @@
 
 //Qt
 class QTextDocument;
+class QTextCursor;
+class QTimer;
 
 namespace te
 {
@@ -58,8 +60,10 @@ namespace te
 
     \sa te::layout::AbstractItem
   */
-    class TELAYOUTEXPORT TextItem : public AbstractItem
+    class TELAYOUTEXPORT TextItem : public QObject, public AbstractItem
     {
+      Q_OBJECT
+
       public:
 
         /*!
@@ -119,9 +123,15 @@ namespace te
          */
         void leaveEditionMode();
 
+      protected slots:
+        void timerEvent();
+
       protected:
 
-        QTextCursor* m_textCursor; //!< The cursor object that is used to manipulate the document that represents the text
+        QTextDocument*  m_document; //!< The text document of the text item
+        QTextCursor*    m_textCursor; //!< The cursor object that is used to navigate and manipulate the text document
+        QTimer*         m_cursorTimer;
+        bool            m_showCursor;
 
     };
   }
