@@ -77,6 +77,7 @@ namespace te
         virtual void drawRoundedRectangleBalloon(QPainter * painter);
         virtual void drawEllipseBalloon(QPainter * painter);
         void setPainterParameters(QPainter* painter);
+        void setBalloonDirection(QPainterPath& qpainterpath);
     };
 
   }
