@@ -109,59 +109,6 @@ void te::layout::TextGridItem::cursorPositionChanged(const QTextCursor& cursor)
 }
 
 /*
-void te::layout::TextGridItem::refreshDocument()
-{
-  if(!m_model)
-    return;
-
-  TitleModel* model = dynamic_cast<TitleModel*>(m_model);
-
-  if(!model)
-    return;
-
-  QImage img = createImage();
-  QPointF pp = scenePos();
-  te::gm::Envelope box(pp.x(), pp.y(), pp.x() + img.widthMM(), pp.y() + img.heightMM());
-
-  model->setBox(box);
-
-  // Update Model
-  int countRows = m_table->rows();
-  int countColumns = m_table->columns();
-
-  //Table Headers (Hrz)
-  for(int i = 1 ; i < countRows ; ++i)
-  {
-    QTextTableCell cellOne = m_table->cellAt(i, 0);
-    QTextCursor cellCursorOne = cellOne.firstCursorPosition();
-    std::string txtOne = cellCursorOne.block().text().toStdString();
-    //model->setTitle(txtOne);
-  }
-
-  //Table Headers (Vrt)
-  for(int j = 0 ; j < countColumns ; ++j)
-  {
-    QTextTableCell cellTwo = m_table->cellAt(0, j);
-    QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
-    std::string txtTwo = cellCursorTwo.block().text().toStdString();
-    //model->setText(txtTwo);
-  }
-
-  //Table
-  for (int i = 1 ; i < countRows ; ++i) 
-  {
-    for(int j = 1 ; j < countColumns ; ++j)
-    {
-      QTextTableCell cellThree = m_table->cellAt(i, j);
-      QTextCursor cellCursorThree = cellThree.firstCursorPosition();
-      std::string txtThree = cellCursorThree.block().text().toStdString();
-      //model->setText(txtThree);
-    }
-  }
-}
-*/
-
-/*
 void te::layout::TextGridItem::updateDocument()
 {
   document()->clear();

@@ -441,16 +441,6 @@ void te::layout::Variant::fromString(const std::string& value, EnumType* type)
 
         m_stringMatrix.push_back(vecRow);
       }
-      /*
-      std::vector<std::string> vecRows;
-      te::common::Tokenize(value, vecRows, ";");
-      for (std::size_t i = 0; i < vecRows.size(); ++i)
-      {
-        std::vector<std::string> vecColumns;
-        te::common::Tokenize(vecRows[i], vecColumns, ",");
-        
-        m_stringMatrix.push_back(vecColumns);
-      }*/
       null = false;
     }
     else if (type == dataType->getDataTypeLayerList())

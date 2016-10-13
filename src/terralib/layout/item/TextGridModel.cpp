@@ -32,22 +32,6 @@
 te::layout::TextGridModel::TextGridModel()
   : TextModel()
 {
-  /*
-  m_type = Enums::getInstance().getEnumObjectType()->getTextGridItem();
-
-  m_spacing = 1;
-  m_padding = 1;
-  m_columnNumber = 5;
-  m_rowNumber = 4;
-
-  m_box = te::gm::Envelope(0., 0., 190., 170.);
-
-  m_tableColor.setColor(0,0,0,255);
-  m_borderGridColor.setColor(0,0,0,255);
-  m_headerHorizontalColor.setColor(192,192,192,255);
-  m_headerVerticalColor.setColor(192,192,192,255);
-  */
-
   std::size_t numRows = 1;
   std::size_t numColumns = 1;
 
