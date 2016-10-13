@@ -33,7 +33,9 @@
 #include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
 #include "../core/enum/EnumBalloonType.h"
+#include "../core/enum/EnumBalloonDirectionType.h"
 #include "TextModel.h"
+#include "../core/enum/EnumAlignmentType.h"
 
 te::layout::BalloonModel::BalloonModel()
 : TextModel()
@@ -52,6 +54,65 @@ te::layout::BalloonModel::BalloonModel()
     Property property(0);
     property.setName("balloon_type");
     property.setLabel(TR_LAYOUT("Balloon Type"));
+    property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
+
+    Variant v;
+    v.setValue(currentType->getLabel(), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    for (int i = 0; i < balloonType.size(); ++i)
+    {
+      EnumType* enumType = balloonType.getEnum(i);
+
+      if (enumType == balloonType.getNoneType() || enumType == currentType)
+        continue;
+
+      Variant v;
+      v.setValue(enumType->getLabel(), dataType->getDataTypeString());
+      property.addOption(v);
+    }
+
+    this->m_properties.addProperty(property);
+  }
+
+  {
+    EnumAlignmentType enumAlignmentType;
+    EnumType* currentAlignmentType = enumAlignmentType.getAlignmentCenterType();
+
+    Property property(0);
+    property.setName("alignment");
+    property.setLabel(TR_LAYOUT("Alignment"));
+    property.setValue(currentAlignmentType->getLabel(), dataType->getDataTypeStringList());
+
+    Variant v;
+    v.setValue(currentAlignmentType->getLabel(), dataType->getDataTypeString());
+    property.addOption(v);
+    property.setOptionChoice(v);
+
+    for (int i = 0; i < enumAlignmentType.size(); ++i)
+    {
+      EnumType* enumType = enumAlignmentType.getEnum(i);
+
+      if (enumType == enumAlignmentType.getNoneType() || enumType == currentAlignmentType)
+        continue;
+
+      Variant v;
+      v.setValue(enumType->getLabel(), dataType->getDataTypeString());
+      property.addOption(v);
+    }
+
+    this->m_properties.updateProperty(property);
+  }
+
+
+  {
+    EnumBalloonDirectionType balloonType;
+    EnumType* currentType = balloonType.getRight();
+
+    Property property(0);
+    property.setName("balloon_direction");
+    property.setLabel(TR_LAYOUT("Balloon Direction"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;

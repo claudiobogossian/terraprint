@@ -30,6 +30,7 @@
 #include "TextItem.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "BalloonController.h"
+#include "../../core/enum/EnumBalloonDirectionType.h"
 #include "../../core/enum/EnumBalloonType.h"
 
 // STL
@@ -123,6 +124,8 @@ void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter){
   qPath.lineTo(p7);
   qPath.lineTo(p1);
 
+  setBalloonDirection(qPath);
+
   painter->drawPath(qPath);
   painter->restore();
 }
@@ -153,11 +156,12 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   QRectF rightTopRect(fullRect.topRight().x() - margin, fullRect.topRight().y() - margin, margin, margin);
   QRectF rightBottomRect(fullRect.bottomRight().x() - margin, fullRect.bottomRight().y(), margin, margin);
 
-  qPath.moveTo(leftTopRect.bottomRight());
-  qPath.quadTo(leftTopRect.bottomLeft(), leftTopRect.topLeft());
-  qPath.lineTo(leftBottomRect.bottomLeft());
-  qPath.quadTo(leftBottomRect.topLeft(), leftBottomRect.topRight());
-  qPath.moveTo(leftTopRect.bottomRight());
+
+  qPath.moveTo(leftBottomRect.topRight());
+  qPath.quadTo(leftBottomRect.topLeft(), leftBottomRect.bottomLeft());
+  qPath.lineTo(leftTopRect.topLeft());
+  qPath.moveTo(leftTopRect.topLeft());
+  qPath.quadTo(leftTopRect.bottomLeft(), leftTopRect.bottomRight());
   qPath.lineTo(rightTopRect.bottomLeft());
   qPath.quadTo(rightTopRect.bottomRight(), rightTopRect.topRight());
   qPath.lineTo(rightBottomRect.bottomRight());
@@ -165,6 +169,9 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   qPath.lineTo(rightBottomRect.topLeft().x(), rightBottomRect.topLeft().y() - (margin * 2));
   qPath.lineTo(rightBottomRect.topLeft().x() - margin, rightBottomRect.topLeft().y());
   qPath.lineTo(leftBottomRect.topRight());
+
+
+  setBalloonDirection(qPath);
 
   painter->drawPath(qPath);
   painter->restore();
@@ -224,6 +231,31 @@ void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
   qPath.lineTo(qPath.currentPosition().x(), adjustedBoundbox.y());
   qPath.arcTo(fullRect, 280, 0);
 
+  setBalloonDirection(qPath);
+
   painter->drawPath(qPath);
   painter->restore();
+}
+
+void  te::layout::BalloonItem::setBalloonDirection(QPainterPath& qpainterpath)
+{
+  BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
+  const Property& pWidth = balloonController->getProperty("width");
+  double width = pWidth.getValue().toDouble();
+
+  EnumBalloonDirectionType balloonDirection;
+  const Property& pDirection = balloonController->getProperty("balloon_direction");
+  const std::string& label = pDirection.getOptionByCurrentChoice().toString();
+  EnumType* currentBalloonDirectionType = balloonDirection.searchLabel(label);
+
+  if (currentBalloonDirectionType == balloonDirection.getLeft())
+  {
+
+    QTransform transform;
+    transform.scale(-1, 1);
+    transform.translate(-width, 0);
+    qpainterpath = transform.map(qpainterpath);
+  
+  }
+
 }
