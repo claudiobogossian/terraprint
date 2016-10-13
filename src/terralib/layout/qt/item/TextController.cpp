@@ -180,6 +180,13 @@ void te::layout::TextController::calculateSize(const te::layout::Properties& pro
   QScopedPointer<QTextDocument> textDocument(createTextDocument(properties));
   QSizeF sizePx = textDocument->size();
 
+  if (m_view == 0)
+  {
+    sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
+    sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
+    return;
+  }
+
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
   QGraphicsScene* qScene = textItem->scene();
   if (qScene != 0)

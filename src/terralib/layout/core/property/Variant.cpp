@@ -32,6 +32,9 @@
 #include "terralib/geometry/WKTReader.h"
 #include "terralib/geometry/WKTWriter.h"
 
+//Boost
+#include <boost/tokenizer.hpp>
+
 // STL
 #include <sstream>
 #include <string>  
@@ -419,6 +422,26 @@ void te::layout::Variant::fromString(const std::string& value, EnumType* type)
     }
     else if (m_type == dataType->getDataTypeStringMatrix())
     {
+      typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+      boost::char_separator<char> separatorRow{";"};
+      tokenizer tokenizerRows{ value, separatorRow};
+      for (tokenizer::iterator itRow = tokenizerRows.begin(); itRow != tokenizerRows.end(); ++itRow)
+      {
+        std::string rowValue = *itRow;
+
+        std::vector<std::string> vecRow;
+
+        boost::char_separator<char> separatorColumn{ ",", 0, boost::keep_empty_tokens };
+        tokenizer tokenizerColumns{ rowValue, separatorColumn };
+        for (tokenizer::iterator itColumn = tokenizerColumns.begin(); itColumn != tokenizerColumns.end(); ++itColumn)
+        {
+          std::string columnValue = *itColumn;
+          vecRow.push_back(columnValue);
+        }
+
+        m_stringMatrix.push_back(vecRow);
+      }
+      /*
       std::vector<std::string> vecRows;
       te::common::Tokenize(value, vecRows, ";");
       for (std::size_t i = 0; i < vecRows.size(); ++i)
@@ -427,7 +450,7 @@ void te::layout::Variant::fromString(const std::string& value, EnumType* type)
         te::common::Tokenize(vecRows[i], vecColumns, ",");
         
         m_stringMatrix.push_back(vecColumns);
-      }
+      }*/
       null = false;
     }
     else if (type == dataType->getDataTypeLayerList())

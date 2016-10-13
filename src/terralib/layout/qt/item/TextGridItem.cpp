@@ -86,7 +86,7 @@ void te::layout::TextGridItem::documentEditionFinished()
     {
       QTextTableCell cell = textTable->cellAt(i, j);
       QTextCursor cellCursor = cell.firstCursorPosition();
-      std::string text = cellCursor.block().text().toStdString();
+      std::string text = ItemUtils::convert2StdString(cellCursor.block().text());
 
       textRow.push_back(text);
     }

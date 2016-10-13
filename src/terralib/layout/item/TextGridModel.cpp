@@ -49,19 +49,39 @@ te::layout::TextGridModel::TextGridModel()
   */
 
   std::size_t numRows = 1;
-  std::size_t numColns = 1;
+  std::size_t numColumns = 1;
 
   std::vector< std::vector<std::string> > textMatrix;
+  textMatrix.resize(numRows);
+  textMatrix[0].resize(numColumns);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   {
-    Property pMatrix;
-    pMatrix.setName("text_matrix");
-    pMatrix.setLabel(TR_LAYOUT("Text Matrix"));
-    pMatrix.setValue(textMatrix, dataType->getDataTypeStringMatrix());
-    pMatrix.setVisible(false);
+    Property property;
+    property.setName("text_matrix");
+    property.setLabel(TR_LAYOUT("Text Matrix"));
+    property.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+    property.setVisible(false);
 
-    m_properties.addProperty(pMatrix);
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("num_rows");
+    property.setLabel(TR_LAYOUT("Number of Rows"));
+    property.setValue(numRows, dataType->getDataTypeInt());
+
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("num_columns");
+    property.setLabel(TR_LAYOUT("Number of Columns"));
+    property.setValue(numColumns, dataType->getDataTypeInt());
+
+    m_properties.addProperty(property);
   }
 
   reparentProperties(Enums::getInstance().getEnumObjectType()->getTextGridItem());

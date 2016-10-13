@@ -60,9 +60,17 @@ namespace te
         */ 
         virtual ~TextGridController();
 
+        /*!
+        \brief Sets the new values of the given properties
+        */
+        virtual void setProperties(const Properties& properties);
+
         virtual QTextDocument* createTextDocument(const te::layout::Properties& properties);
 
         virtual bool needUpdateBox(const te::layout::Properties& properties);
+
+      protected:
+        std::vector< std::vector< std::string > > m_defaultMatrix;
     };
   }
 }

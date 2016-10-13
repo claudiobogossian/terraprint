@@ -34,10 +34,111 @@
 te::layout::TextGridController::TextGridController(AbstractItemModel* model)
   : TextController(model)
 {
+  //here we initialize the empty text matrix
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  int numRows = 2;
+  int numColumns = 2;
+
+  Properties properties;
+  {
+    Property property;
+    property.setName("num_rows");
+    property.setValue(numRows, dataType->getDataTypeInt());
+    properties.addProperty(property);
+  }
+  {
+    Property property;
+    property.setName("num_columns");
+    property.setValue(numColumns, dataType->getDataTypeInt());
+    properties.addProperty(property);
+  }
+
+  setProperties(properties);
 }
 
 te::layout::TextGridController::~TextGridController()
 {
+}
+
+void te::layout::TextGridController::setProperties(const te::layout::Properties& properties)
+{
+  if (properties.contains("text_matrix") == true && (properties.contains("num_rows") == false || properties.contains("num_columns") == false))
+  {
+    const Property& pTextMatrix = properties.getProperty("text_matrix");
+    std::vector< std::vector< std::string > > textMatrix = pTextMatrix.getValue().toStringMatrix(); //we copy the matrix
+
+    //if the matrix is not empty, we must update the properties num_rows and num_columns
+    //if the matrix is empty, we must initialize it with the default values
+    if (textMatrix.empty() || textMatrix[0].empty())
+    {
+      textMatrix = m_defaultMatrix;
+    }
+
+    //here we analyse the matrix the get the number of rows and the number of columns
+    std::size_t numRows = textMatrix.size();
+    std::size_t numColumns = textMatrix[0].size();
+
+    Properties propertiesCopy(properties);
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    {
+      Property property;
+      property.setName("num_rows");
+      property.setValue(numRows, dataType->getDataTypeInt());
+
+      propertiesCopy.addProperty(property);
+    }
+
+    {
+      Property property;
+      property.setName("num_columns");
+      property.setLabel(TR_LAYOUT("Number of Columns"));
+      property.setValue(numColumns, dataType->getDataTypeInt());
+
+      propertiesCopy.addProperty(property);
+    }
+
+    TextController::setProperties(propertiesCopy);
+    return;
+  }
+  else if (properties.contains("text_matrix") == false && (properties.contains("num_rows") == true || properties.contains("num_columns") == true))
+  {
+    Properties propertiesCopy(properties);
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    Property pNumRows = properties.getProperty("num_rows");
+    if (pNumRows.isNull())
+    {
+      pNumRows = this->getProperty("num_rows");
+    }
+
+    Property pNumColumns = properties.getProperty("num_columns");
+    if (pNumColumns.isNull())
+    {
+      pNumColumns = this->getProperty("num_columns");
+    }
+
+    Property pTextMatrix = this->getProperty("text_matrix");
+    
+    int numRows = pNumRows.getValue().toInt();
+    int numColumns = pNumColumns.getValue().toInt();
+    std::vector< std::vector< std::string > > textMatrix = pTextMatrix.getValue().toStringMatrix(); //we copy the matrix
+
+    //here we resize the text matrix according to the new given size
+    textMatrix.resize(numRows);
+    for (std::size_t i = 0; i < numRows; ++i)
+    {
+      textMatrix[i].resize(numColumns);
+    }
+
+    pTextMatrix.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+    propertiesCopy.addProperty(pTextMatrix);
+
+    TextController::setProperties(propertiesCopy);
+    return;
+  }
+
+  TextController::setProperties(properties);
 }
 
 QTextDocument* te::layout::TextGridController::createTextDocument(const te::layout::Properties& properties)
@@ -67,10 +168,12 @@ QTextDocument* te::layout::TextGridController::createTextDocument(const te::layo
   QTextTableFormat tableFormat;
   tableFormat.setAlignment(textDocument->defaultTextOption().alignment());
 
+  int widthPercentage = 100 / numColumns;
+
   QVector<QTextLength> constraints;
-  for (int c = 0; c < 2; ++c)
+  for (int c = 0; c < numColumns; ++c)
   {
-    constraints << QTextLength(QTextLength::PercentageLength, 100);
+    constraints << QTextLength(QTextLength::FixedLength, widthPercentage);
   }
 
   tableFormat.setColumnWidthConstraints(constraints);
@@ -99,5 +202,14 @@ bool te::layout::TextGridController::needUpdateBox(const te::layout::Properties&
   {
     return true;
   }
+  else if (properties.contains("num_rows") == true)
+  {
+    return true;
+  }
+  else if (properties.contains("num_columns") == true)
+  {
+    return true;
+  }
+
   return TextController::needUpdateBox(properties);
 }

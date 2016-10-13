@@ -147,7 +147,10 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   }
   if (hasGeometryChanged)
   {
-    m_view->prepareGeometryChange();
+    if (m_view != 0)
+    {
+      m_view->prepareGeometryChange();
+    }
   }
   m_model->setProperties(propertiesCopy);
 

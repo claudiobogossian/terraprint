@@ -42,7 +42,7 @@ te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactory
   if (props.getProperties().empty())
   {
     props = convertToProperties(params);
-
+    /*
     std::vector< std::vector<std::string> > textMatrix;
 
     std::vector<std::string> r1;
@@ -67,6 +67,7 @@ te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactory
 
       props.addProperty(pMatrix);
     }
+    */
 
   }
   controller->setProperties(props);
