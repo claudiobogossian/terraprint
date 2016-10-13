@@ -18,51 +18,52 @@
  */
 
 /*!
-  \file TextGridModel.h
+  \file TextController.h
    
-   \brief Class that represents a "Model" part of TextGrid MVC component.  
-   Its coordinate system is the same of scene (millimeters). 
-   This is also son of ItemModelObservable, so it can become observable.
-
+  \brief Class that represents text controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_MODEL_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H
 
 // TerraLib
-#include "TitleModel.h"
-#include "../core/Config.h"
+#include "../../core/Config.h"
+#include "TextController.h"
 
+class QTextDocument;
 
 namespace te
 {
   namespace layout
   {
     /*!
-    \brief Class that represents a "Model" part of TextGrid MVC component.  
-    Its coordinate system is the same of scene (millimeters). 
-    This is also son of ItemModelObservable, so it can become observable.
-          
-      \ingroup layout
-
-      \sa te::layout::TitleModel
+    \brief Class that represents text controller.
+    
+    \ingroup layout
+    \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT TextGridModel : public TextModel
+    class TELAYOUTEXPORT TextGridController: public TextController
     {
       public:
 
         /*!
           \brief Constructor
-        */
-        TextGridModel();
+
+          \param controller "Controller" part of MVC component
+          \param o "Model" part of MVC component
+        */ 
+        TextGridController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~TextGridModel();
+        virtual ~TextGridController();
+
+        virtual QTextDocument* createTextDocument(const te::layout::Properties& properties);
+
+        virtual bool needUpdateBox(const te::layout::Properties& properties);
     };
   }
 }
-
-#endif
+#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H

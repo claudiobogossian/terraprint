@@ -27,13 +27,10 @@
 
 // TerraLib
 #include "TextGridModel.h"
-#include "../core/ContextItem.h"
-#include "terralib/geometry/Envelope.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
 
-te::layout::TextGridModel::TextGridModel() 
+te::layout::TextGridModel::TextGridModel()
+  : TextModel()
 {
   /*
   m_type = Enums::getInstance().getEnumObjectType()->getTextGridItem();
@@ -50,45 +47,26 @@ te::layout::TextGridModel::TextGridModel()
   m_headerHorizontalColor.setColor(192,192,192,255);
   m_headerVerticalColor.setColor(192,192,192,255);
   */
+
+  std::size_t numRows = 1;
+  std::size_t numColns = 1;
+
+  std::vector< std::vector<std::string> > textMatrix;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property pMatrix;
+    pMatrix.setName("text_matrix");
+    pMatrix.setLabel(TR_LAYOUT("Text Matrix"));
+    pMatrix.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+    pMatrix.setVisible(false);
+
+    m_properties.addProperty(pMatrix);
+  }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getTextGridItem());
 }
 
 te::layout::TextGridModel::~TextGridModel()
 {
-  clearTextCells();
-}
-
-void te::layout::TextGridModel::addText( te::gm::Point* cell, std::string text )
-{
-  m_textCells[cell] = text;
-}
-
-void te::layout::TextGridModel::removeCell( te::gm::Point* cell )
-{
-  if(!cell)
-    return;
-
-  m_textCells.erase(cell);
-
-  delete cell;
-}
-
-std::map<te::gm::Point*, std::string> te::layout::TextGridModel::getTextCells()
-{
-  return m_textCells;
-}
-
-void te::layout::TextGridModel::clearTextCells()
-{
-  std::map<te::gm::Point*, std::string>::iterator it;
-  for (it = m_textCells.begin(); it != m_textCells.end(); ++it) 
-  {
-    te::gm::Point* pt = it->first;
-    if(pt)
-    {
-      delete pt;
-      pt = 0;
-    }
-  }
-
-  m_textCells.clear();
 }

@@ -71,6 +71,16 @@ te::layout::TextItem::~TextItem()
   delete m_document;
 }
 
+void te::layout::TextItem::setDocument(QTextDocument* textDocument)
+{
+  if (m_document != 0)
+  {
+    delete m_document;
+  }
+
+  m_document = textDocument;
+}
+
 QRectF te::layout::TextItem::boundingRect() const
 {
   if (m_isEditionMode == false)
@@ -104,41 +114,6 @@ QRectF te::layout::TextItem::boundingRect() const
 
 void te::layout::TextItem::refresh()
 {
-  const te::layout::Property& pText = m_controller->getProperty("text");  
-  const te::layout::Property& pFont = m_controller->getProperty("font");
-  const Property& pAligment = m_controller->getProperty("alignment");
-
-  QString qText = ItemUtils::convert2QString(pText.getValue().toString());
-  QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
-  EnumAlignmentType enumAligmentType;
-  const std::string& label = pAligment.getOptionByCurrentChoice().toString();
-  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
-
-  QTextOption textOption;
-  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
-  {
-    textOption.setAlignment(Qt::AlignLeft);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
-  {
-    textOption.setAlignment(Qt::AlignRight);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
-  {
-    textOption.setAlignment(Qt::AlignCenter);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
-  {
-    textOption.setAlignment(Qt::AlignJustify);
-  }
-
-  m_document->setTextWidth(-1);
-  m_document->setDefaultFont(qFont);
-  m_document->setPlainText(qText);
-  m_document->setDocumentMargin(0);
-  m_document->setDefaultTextOption(textOption);
-  m_document->setTextWidth(m_document->size().width());
-
   AbstractItem::refresh();
 }
 
@@ -154,8 +129,6 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   //we must set some transformation in order to prepare the item to be rendered on the screen or in other output device
   //we must first aquire some information about the current dpi and the zoom
-  int zoom = myScene->getContext().getZoom();
-  double zoomFactor = zoom / 100.;
   double dpiFactor = myScene->getContext().getDpiX() / textController->getDpiForCalculation();
 
   //the we aquire information about the bounding rect references in pixels and in millimeters
@@ -231,10 +204,19 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
     return;
   }
 
-  Utils utils = myScene->getUtils();
+  //me must consider the optional displacement
+  const Property& pDx = m_controller->getProperty("dx");
+  double dx = pDx.getValue().toDouble();
 
-  double xPos = utils.mm2pixel(event->pos().x());
-  double yPos = utils.mm2pixel(boundingRect().height()) - utils.mm2pixel(event->pos().y());
+  const Property& pDy = m_controller->getProperty("dy");
+  double dy = pDy.getValue().toDouble();
+
+  double xPosMM = event->pos().x() - dx;
+  double yPosMM = boundingRect().height() - event->pos().y() + dy;
+
+  Utils utils = myScene->getUtils();
+  double xPos = utils.mm2pixel(xPosMM);
+  double yPos = utils.mm2pixel(yPosMM);
 
   int newPosition = m_document->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
   if (newPosition != -1)
@@ -428,6 +410,11 @@ void te::layout::TextItem::leaveEditionMode()
 
   setCursor(Qt::ArrowCursor);
 
+  documentEditionFinished();
+}
+
+void te::layout::TextItem::documentEditionFinished()
+{
   //and then we update the model with the new values
   QString qNewText = m_document->toPlainText();
   std::string newText = ItemUtils::convert2StdString(qNewText);
@@ -440,6 +427,7 @@ void te::layout::TextItem::leaveEditionMode()
 
   m_controller->setProperty(propertyText);
 }
+
 
 void te::layout::TextItem::timerEvent()
 {

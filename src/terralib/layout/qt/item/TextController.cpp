@@ -95,11 +95,11 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
     double newHeight = pNewHeight.getValue().toDouble();
     double resizeFactor = newHeight / currentHeight;
 
-    double ptSizeMM = 0.353;
+    double ptSizeMM = 0.353;//size of one point (font measure), in millimeters
     double newFontSizeDouble = std::floor(newHeight / ptSizeMM);
     int newFontSize = (int)newFontSizeDouble;
 
-    te::layout::Property pNewFont = this->getProperty("font");
+    te::layout::Property pNewFont = this->getProperty("font"); //copies the current property
     Font newFont = pNewFont.getValue().toFont();
     newFont.setPointSize(qRound(newFont.getPointSize() * resizeFactor));
 
@@ -119,37 +119,68 @@ double te::layout::TextController::getDpiForCalculation() const
   return m_dpiForCalculation;
 }
 
-
-void te::layout::TextController::calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy)
+QTextDocument* te::layout::TextController::createTextDocument(const te::layout::Properties& properties)
 {
-  Properties propertiesCopy(properties);
-
-  te::layout::Property pText = propertiesCopy.getProperty("text");
+  te::layout::Property pText = properties.getProperty("text");
   if (pText.isNull())
   {
     pText = this->getProperty("text");
   }
 
-  te::layout::Property pFont = propertiesCopy.getProperty("font");
+  te::layout::Property pFont = properties.getProperty("font");
   if (pFont.isNull())
   {
     pFont = this->getProperty("font");
   }
 
+  Property pAligment = properties.getProperty("alignment");
+  if (pAligment.isNull())
+  {
+    pAligment = this->getProperty("alignment");
+  }
 
   QString qText = ItemUtils::convert2QString(pText.getValue().toString());
   QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
+  EnumAlignmentType enumAligmentType;
+  const std::string& label = pAligment.getOptionByCurrentChoice().toString();
+  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
+
+  QTextOption textOption;
+  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+  {
+    textOption.setAlignment(Qt::AlignLeft);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+  {
+    textOption.setAlignment(Qt::AlignRight);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+  {
+    textOption.setAlignment(Qt::AlignCenter);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+  {
+    textOption.setAlignment(Qt::AlignJustify);
+  }
+
+  QTextDocument* textDocument = new QTextDocument();
+  textDocument->setTextWidth(-1);
+  textDocument->setDefaultFont(qFont);
+  textDocument->setPlainText(qText);
+  textDocument->setDocumentMargin(0);
+  textDocument->setDefaultTextOption(textOption);
+  textDocument->setTextWidth(textDocument->size().width());
+
+  return textDocument;
+}
+
+
+void te::layout::TextController::calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy)
+{
+  QScopedPointer<QTextDocument> textDocument(createTextDocument(properties));
+  QSizeF sizePx = textDocument->size();
 
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
-
-  QTextDocument textDocument;
-  textDocument.setTextWidth(-1);
-  textDocument.setDefaultFont(qFont);
-  textDocument.setPlainText(qText);
-  textDocument.setDocumentMargin(0);
-  textDocument.setTextWidth(textDocument.size().width());
-  QSizeF sizePx = textDocument.size();
-
   QGraphicsScene* qScene = textItem->scene();
   if (qScene != 0)
   {
@@ -165,11 +196,10 @@ void te::layout::TextController::calculateSize(const te::layout::Properties& pro
     sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
     sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
   }
-  
 }
 
 
-bool  te::layout::TextController::needUpdateBox(const te::layout::Properties& properties)
+bool te::layout::TextController::needUpdateBox(const te::layout::Properties& properties)
 {
   if (properties.contains("text") == false && properties.contains("font") == false)
   {
@@ -177,3 +207,14 @@ bool  te::layout::TextController::needUpdateBox(const te::layout::Properties& pr
   }
   return true;
 }
+
+void te::layout::TextController::refresh()
+{
+  QTextDocument* textDocument = createTextDocument(this->getProperties());
+
+  TextItem* textItem = dynamic_cast<TextItem*>(m_view);
+  textItem->setDocument(textDocument);
+
+  AbstractItemController::refresh();
+}
+

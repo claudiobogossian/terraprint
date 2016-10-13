@@ -27,13 +27,7 @@
 
 // TerraLib
 #include "TextGridItem.h"
-#include "../../core/AbstractScene.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/qt/widgets/Utils.h"
-#include "terralib/geometry/Envelope.h"
-#include "terralib/common/STLUtils.h"
-#include "../../item/TextGridModel.h"
-#include "../../core/pattern/singleton/Context.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 // Qt
 #include <QTextDocument>
@@ -41,9 +35,9 @@
 #include <QTextTableCell>
 
 te::layout::TextGridItem::TextGridItem(AbstractItemController* controller) 
-  : TitleItem(controller)
+  : TextItem(controller)
+  , m_textTable(0)
 {
-  init();
 }
 
 te::layout::TextGridItem::~TextGridItem()
@@ -51,16 +45,72 @@ te::layout::TextGridItem::~TextGridItem()
   
 }
 
-void te::layout::TextGridItem::init()
+void te::layout::TextGridItem::keyPressEvent(QKeyEvent * event)
 {
-  updateDocument();
-
-  //resetEdit();
+  //we must ensure that the cursor stay inside the table
+  TextItem::keyPressEvent(event);
 }
 
+void te::layout::TextGridItem::documentEditionFinished()
+{
+  QTextTable* textTable = 0;
+
+  //we first access the table inside the document
+  QTextFrame* rootFrame = m_document->rootFrame();
+  QList<QTextFrame*> qFramesList = rootFrame->childFrames();
+  QList<QTextFrame*>::iterator itFrames = qFramesList.begin();
+  while (itFrames != qFramesList.end())
+  {
+    textTable = qobject_cast<QTextTable*>(*itFrames);
+    if (textTable)
+    {
+      break;
+    }
+  }
+
+  if (textTable == 0)
+  {
+    return;
+  }
+
+  // Update Model
+  int numRows = textTable->rows();
+  int numColumns = textTable->columns();
+
+  //Table Values
+  std::vector< std::vector<std::string> > textMatrix;
+  for (int i = 0; i < numRows; ++i)
+  {
+    std::vector<std::string> textRow;
+    for (int j = 0; j < numColumns; ++j)
+    {
+      QTextTableCell cell = textTable->cellAt(i, j);
+      QTextCursor cellCursor = cell.firstCursorPosition();
+      std::string text = cellCursor.block().text().toStdString();
+
+      textRow.push_back(text);
+    }
+
+    textMatrix.push_back(textRow);
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  Property propertyText(0);
+  propertyText.setName("text_matrix");
+  propertyText.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+
+  m_controller->setProperty(propertyText);
+}
+
+void te::layout::TextGridItem::cursorPositionChanged(const QTextCursor& cursor)
+{
+
+}
+
+/*
 void te::layout::TextGridItem::refreshDocument()
 {
-  /*
   if(!m_model)
     return;
 
@@ -108,12 +158,12 @@ void te::layout::TextGridItem::refreshDocument()
       //model->setText(txtThree);
     }
   }
-  */
 }
+*/
 
+/*
 void te::layout::TextGridItem::updateDocument()
 {
-  /*
   document()->clear();
 
   QTextDocument* doc = document();
@@ -160,5 +210,5 @@ void te::layout::TextGridItem::updateDocument()
     cellTwo.setFormat(fmtTwo);
     
   }
-  */
 }
+*/
