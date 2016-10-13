@@ -602,8 +602,8 @@ QToolButton* te::layout::ToolbarOutside::createTextToolButton()
   QAction* actionTitle = createAction(tr("Title Object"), m_actionTitle, iconManager.getIconNameAsQString(itemType->getTitleItem()->getName()), "", menu);
   menu->addAction(actionTitle);
 
-  /*QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
-  menu->addAction(actionStringGrid);*/
+  QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
+  menu->addAction(actionStringGrid);
 
   QAction* actionImage = createAction(tr("Image Object"), m_actionImage, iconManager.getIconNameAsQString(itemType->getImageItem()->getName()), "", menu);
   menu->addAction(actionImage);

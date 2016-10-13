@@ -76,8 +76,13 @@ namespace te
 
         /*!
           \brief Destructor
-        */ 
+        */
         virtual ~TextItem();
+
+        /*!
+        \brief Sets the text document to be displayed
+        */
+        virtual void setDocument(QTextDocument* textDocument);
 
         /*!
         \brief Reimplemented from QGraphicsItem
@@ -116,14 +121,20 @@ namespace te
         /*!
           \brief Enters the edition mode
          */
-        void enterEditionMode();
+        virtual void enterEditionMode();
 
         /*!
           \brief Leaves edition mode
          */
-        void leaveEditionMode();
+        virtual void leaveEditionMode();
+
+        /*!
+        \brief This function is called when the edtion of a document has fineshed, and it must set the new values in the controller
+        */
+        virtual void documentEditionFinished();
 
       protected slots:
+
         void timerEvent();
 
       protected:

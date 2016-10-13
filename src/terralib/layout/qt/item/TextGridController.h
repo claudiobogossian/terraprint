@@ -24,12 +24,12 @@
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_TEXT_CONTROLLER_H
-#define __TERRALIB_LAYOUT_INTERNAL_TEXT_CONTROLLER_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H
 
 // TerraLib
 #include "../../core/Config.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
+#include "TextController.h"
 
 class QTextDocument;
 
@@ -43,7 +43,7 @@ namespace te
     \ingroup layout
     \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT TextController : public AbstractItemController
+    class TELAYOUTEXPORT TextGridController: public TextController
     {
       public:
 
@@ -53,40 +53,25 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        TextController(AbstractItemModel* model);
+        TextGridController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~TextController();
-
-        /*!
-        \brief Sets the new value of the given property
-        */
-        virtual void setProperty(const Property& property);
+        virtual ~TextGridController();
 
         /*!
         \brief Sets the new values of the given properties
         */
         virtual void setProperties(const Properties& properties);
 
-        virtual double getDpiForCalculation() const;
-
         virtual QTextDocument* createTextDocument(const te::layout::Properties& properties);
-
-        virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
 
         virtual bool needUpdateBox(const te::layout::Properties& properties);
 
-    protected:
-
-      virtual void refresh();
-
-    protected:
-
-        double m_dpiForCalculation; //!< Holds the information of the DPI used to calculate the bounding rect (in MM) of the item
-
+      protected:
+        std::vector< std::vector< std::string > > m_defaultMatrix;
     };
   }
 }
-#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_CONTROLLER_H
+#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H

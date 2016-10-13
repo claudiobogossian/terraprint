@@ -27,13 +27,7 @@
 
 // TerraLib
 #include "TextGridItem.h"
-#include "../../core/AbstractScene.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/qt/widgets/Utils.h"
-#include "terralib/geometry/Envelope.h"
-#include "terralib/common/STLUtils.h"
-#include "../../item/TextGridModel.h"
-#include "../../core/pattern/singleton/Context.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 // Qt
 #include <QTextDocument>
@@ -41,9 +35,9 @@
 #include <QTextTableCell>
 
 te::layout::TextGridItem::TextGridItem(AbstractItemController* controller) 
-  : TitleItem(controller)
+  : TextItem(controller)
+  , m_textTable(0)
 {
-  init();
 }
 
 te::layout::TextGridItem::~TextGridItem()
@@ -51,69 +45,72 @@ te::layout::TextGridItem::~TextGridItem()
   
 }
 
-void te::layout::TextGridItem::init()
+void te::layout::TextGridItem::keyPressEvent(QKeyEvent * event)
 {
-  updateDocument();
-
-  //resetEdit();
+  //we must ensure that the cursor stay inside the table
+  TextItem::keyPressEvent(event);
 }
 
-void te::layout::TextGridItem::refreshDocument()
+void te::layout::TextGridItem::documentEditionFinished()
 {
-  /*
-  if(!m_model)
-    return;
+  QTextTable* textTable = 0;
 
-  TitleModel* model = dynamic_cast<TitleModel*>(m_model);
-
-  if(!model)
-    return;
-
-  QImage img = createImage();
-  QPointF pp = scenePos();
-  te::gm::Envelope box(pp.x(), pp.y(), pp.x() + img.widthMM(), pp.y() + img.heightMM());
-
-  model->setBox(box);
-
-  // Update Model
-  int countRows = m_table->rows();
-  int countColumns = m_table->columns();
-
-  //Table Headers (Hrz)
-  for(int i = 1 ; i < countRows ; ++i)
+  //we first access the table inside the document
+  QTextFrame* rootFrame = m_document->rootFrame();
+  QList<QTextFrame*> qFramesList = rootFrame->childFrames();
+  QList<QTextFrame*>::iterator itFrames = qFramesList.begin();
+  while (itFrames != qFramesList.end())
   {
-    QTextTableCell cellOne = m_table->cellAt(i, 0);
-    QTextCursor cellCursorOne = cellOne.firstCursorPosition();
-    std::string txtOne = cellCursorOne.block().text().toStdString();
-    //model->setTitle(txtOne);
-  }
-
-  //Table Headers (Vrt)
-  for(int j = 0 ; j < countColumns ; ++j)
-  {
-    QTextTableCell cellTwo = m_table->cellAt(0, j);
-    QTextCursor cellCursorTwo = cellTwo.firstCursorPosition();
-    std::string txtTwo = cellCursorTwo.block().text().toStdString();
-    //model->setText(txtTwo);
-  }
-
-  //Table
-  for (int i = 1 ; i < countRows ; ++i) 
-  {
-    for(int j = 1 ; j < countColumns ; ++j)
+    textTable = qobject_cast<QTextTable*>(*itFrames);
+    if (textTable)
     {
-      QTextTableCell cellThree = m_table->cellAt(i, j);
-      QTextCursor cellCursorThree = cellThree.firstCursorPosition();
-      std::string txtThree = cellCursorThree.block().text().toStdString();
-      //model->setText(txtThree);
+      break;
     }
   }
-  */
+
+  if (textTable == 0)
+  {
+    return;
+  }
+
+  // Update Model
+  int numRows = textTable->rows();
+  int numColumns = textTable->columns();
+
+  //Table Values
+  std::vector< std::vector<std::string> > textMatrix;
+  for (int i = 0; i < numRows; ++i)
+  {
+    std::vector<std::string> textRow;
+    for (int j = 0; j < numColumns; ++j)
+    {
+      QTextTableCell cell = textTable->cellAt(i, j);
+      QTextCursor cellCursor = cell.firstCursorPosition();
+      std::string text = ItemUtils::convert2StdString(cellCursor.block().text());
+
+      textRow.push_back(text);
+    }
+
+    textMatrix.push_back(textRow);
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  Property propertyText(0);
+  propertyText.setName("text_matrix");
+  propertyText.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+
+  m_controller->setProperty(propertyText);
 }
 
+void te::layout::TextGridItem::cursorPositionChanged(const QTextCursor& cursor)
+{
+
+}
+
+/*
 void te::layout::TextGridItem::updateDocument()
 {
-  /*
   document()->clear();
 
   QTextDocument* doc = document();
@@ -160,5 +157,5 @@ void te::layout::TextGridItem::updateDocument()
     cellTwo.setFormat(fmtTwo);
     
   }
-  */
 }
+*/

@@ -49,6 +49,7 @@ te::layout::EnumDataType::EnumDataType() :
   m_dataTypeGenericVariant(0),
   m_dataTypeLayerList(0),
   m_dataTypeStringVector(0),
+  m_dataTypeStringMatrix(0),
   m_dataTypeSVGView(0),
   m_dataTypeGeometry(0),
   m_dataTypeItemObserver(0),
@@ -255,6 +256,8 @@ void te::layout::EnumDataType::init()
 
   m_dataTypeStringVector = createEnum("StringVector", this, TR_LAYOUT("String Vector"));
 
+  m_dataTypeStringMatrix = createEnum("StringMatrix", this, TR_LAYOUT("String Matrix"));
+
   m_dataTypeSVGView = createEnum("SVGView", this, TR_LAYOUT("SVG View"));
 
   m_dataTypeGeometry = createEnum("Geometry", this, TR_LAYOUT("Geometry"));
@@ -374,6 +377,11 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypeLayerList() const
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeStringVector() const
 {
   return m_dataTypeStringVector;
+}
+
+te::layout::EnumType* te::layout::EnumDataType::getDataTypeStringMatrix() const
+{
+  return m_dataTypeStringMatrix;
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeSVGView() const
