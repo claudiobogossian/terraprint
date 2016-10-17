@@ -50,8 +50,6 @@ namespace te
     */
     class TELAYOUTEXPORT TextGridItem : public TextItem
     {
-      Q_OBJECT
-
       public:
 
         /*!
@@ -74,13 +72,10 @@ namespace te
 
         void documentEditionFinished();
 
-    protected slots:
-
-        virtual void cursorPositionChanged(const QTextCursor& cursor);
+        virtual void updateBlockEditionRange();
 
     protected:
 
-        QTextTable* m_textTable; //!< Represents a table inside a document
         int         m_lastCursorPosition;
     };
   }

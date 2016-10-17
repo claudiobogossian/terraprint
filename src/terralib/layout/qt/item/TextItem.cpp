@@ -38,6 +38,7 @@
 #include <string>
 
 // Qt
+#include <QTextBlock>
 #include <QTextDocument>
 #include <QAbstractTextDocumentLayout>
 #include <QTextCursor>
@@ -56,6 +57,8 @@ te::layout::TextItem::TextItem(AbstractItemController* controller)
   , m_textCursor(0)
   , m_cursorTimer(0)
   , m_showCursor(true)
+  , m_blockEditionRangeStart(0)
+  , m_blockEditionRangeEnd(0)
 {  
   //If enabled is true, this item will accept hover events
   setCursor(Qt::ArrowCursor); // default cursor
@@ -79,6 +82,8 @@ void te::layout::TextItem::setDocument(QTextDocument* textDocument)
   }
 
   m_document = textDocument;
+
+  updateBlockEditionRange();
 }
 
 QRectF te::layout::TextItem::boundingRect() const
@@ -299,19 +304,39 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
   //here we handle the navigation
   else if (event == QKeySequence::MoveToNextChar || event == QKeySequence::SelectNextChar)
   {
+    int currentPosition = m_textCursor->position();
     m_textCursor->movePosition(QTextCursor::Right, moveMode);
+    if (m_textCursor->blockNumber() > m_blockEditionRangeEnd)
+    {
+      m_textCursor->setPosition(currentPosition, moveMode);
+    }
   }
   else if (event == QKeySequence::MoveToPreviousChar || event == QKeySequence::SelectPreviousChar)
   {
+    int currentPosition = m_textCursor->position();
     m_textCursor->movePosition(QTextCursor::Left, moveMode);
+    if (m_textCursor->blockNumber() < m_blockEditionRangeStart)
+    {
+      m_textCursor->setPosition(currentPosition, moveMode);
+    }
   }
   else if (event == QKeySequence::MoveToNextLine || event == QKeySequence::SelectNextLine)
   {
+    int currentPosition = m_textCursor->position();
     m_textCursor->movePosition(QTextCursor::Down, moveMode);
+    if (m_textCursor->blockNumber() > m_blockEditionRangeEnd)
+    {
+      m_textCursor->setPosition(currentPosition, moveMode);
+    }
   }
   else if (event == QKeySequence::MoveToPreviousLine || event == QKeySequence::SelectPreviousLine)
   {
+    int currentPosition = m_textCursor->position();
     m_textCursor->movePosition(QTextCursor::Up, moveMode);
+    if (m_textCursor->blockNumber() < m_blockEditionRangeStart)
+    {
+      m_textCursor->setPosition(currentPosition, moveMode);
+    }
   }
   else if (event == QKeySequence::MoveToStartOfLine || event == QKeySequence::SelectStartOfLine)
   {
@@ -323,11 +348,16 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
   }
   else if (event == QKeySequence::MoveToStartOfDocument || event == QKeySequence::SelectStartOfDocument)
   {
-    m_textCursor->movePosition(QTextCursor::Start, moveMode);
+    //keeps inside the defined block range, ignoring the document range
+    int position = m_document->findBlockByNumber(m_blockEditionRangeStart).position();
+    m_textCursor->setPosition(position, moveMode);
   }
   else if (event == QKeySequence::MoveToEndOfDocument || event == QKeySequence::SelectEndOfDocument)
   {
-    m_textCursor->movePosition(QTextCursor::End, moveMode);
+    //keeps inside the defined block range, ignoring the document range
+    int position = m_document->findBlockByNumber(m_blockEditionRangeEnd).position();
+    m_textCursor->setPosition(position, moveMode);
+    m_textCursor->movePosition(QTextCursor::EndOfBlock, moveMode);
   }
   else if (event == QKeySequence::SelectAll)
   {
@@ -377,6 +407,7 @@ void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
 
   prepareGeometryChange();
   m_document->setTextWidth(m_document->size().width());
+  updateBlockEditionRange();
   update();
 }
 
@@ -433,4 +464,10 @@ void te::layout::TextItem::timerEvent()
 {
   m_showCursor = !m_showCursor;
   update();
+}
+
+void te::layout::TextItem::updateBlockEditionRange()
+{
+  m_blockEditionRangeStart = m_document->firstBlock().blockNumber();
+  m_blockEditionRangeEnd = m_document->lastBlock().blockNumber();
 }
