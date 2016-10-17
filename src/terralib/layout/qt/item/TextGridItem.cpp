@@ -36,7 +36,6 @@
 
 te::layout::TextGridItem::TextGridItem(AbstractItemController* controller) 
   : TextItem(controller)
-  , m_textTable(0)
 {
 }
 
@@ -103,10 +102,38 @@ void te::layout::TextGridItem::documentEditionFinished()
   m_controller->setProperty(propertyText);
 }
 
-void te::layout::TextGridItem::cursorPositionChanged(const QTextCursor& cursor)
+void te::layout::TextGridItem::updateBlockEditionRange()
 {
+  QTextTable* textTable = 0;
 
+  //we first access the table inside the document
+  QTextFrame* rootFrame = m_document->rootFrame();
+  QList<QTextFrame*> qFramesList = rootFrame->childFrames();
+  QList<QTextFrame*>::iterator itFrames = qFramesList.begin();
+  while (itFrames != qFramesList.end())
+  {
+    textTable = qobject_cast<QTextTable*>(*itFrames);
+    if (textTable)
+    {
+      break;
+    }
+  }
+
+  if (textTable == 0)
+  {
+    return;
+  }
+
+  int numRows = textTable->rows();
+  int numColumns = textTable->columns();
+
+  QTextTableCell firstCell = textTable->cellAt(0, 0);
+  QTextTableCell lastCell = textTable->cellAt(numRows - 1, numColumns - 1);
+
+  m_blockEditionRangeStart = firstCell.firstCursorPosition().block().blockNumber();
+  m_blockEditionRangeEnd = lastCell.firstCursorPosition().block().blockNumber();
 }
+
 
 /*
 void te::layout::TextGridItem::updateDocument()

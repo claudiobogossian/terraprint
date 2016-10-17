@@ -133,6 +133,8 @@ namespace te
         */
         virtual void documentEditionFinished();
 
+        virtual void updateBlockEditionRange();
+
       protected slots:
 
         void timerEvent();
@@ -143,6 +145,8 @@ namespace te
         QTextCursor*    m_textCursor; //!< The cursor object that is used to navigate and manipulate the text document
         QTimer*         m_cursorTimer;
         bool            m_showCursor;
+        int             m_blockEditionRangeStart;
+        int             m_blockEditionRangeEnd;
 
     };
   }
