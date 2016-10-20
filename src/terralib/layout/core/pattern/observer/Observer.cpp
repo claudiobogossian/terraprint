@@ -31,24 +31,39 @@
 #include "Subject.h"
 
 te::layout::Observer::Observer()
-  : m_subject(0)
 {
 
 }
 
 te::layout::Observer::~Observer()
 {
-  if(m_subject != 0)
-    m_subject->detach(this);
+  std::vector<Subject*>::iterator it = m_vecSubjects.begin();
+  while (it != m_vecSubjects.end())
+  {
+    (*it)->detach(this);
+    ++it;
+  }
+
+  m_vecSubjects.clear();
 }
 
-te::layout::Subject* te::layout::Observer::getSubject()
+void te::layout::Observer::addSubject(Subject* subject)
 {
-  return m_subject;
+  m_vecSubjects.push_back(subject);
 }
 
-void te::layout::Observer::setSubject(Subject* subject)
+void te::layout::Observer::removeSubject(Subject* subject)
 {
-  m_subject = subject;
+  std::vector<Subject*>::iterator it = m_vecSubjects.begin();
+  while (it != m_vecSubjects.end())
+  {
+    if ((*it) == subject)
+    {
+      m_vecSubjects.erase(it);
+      break;
+    }
+    
+    ++it;
+  }
 }
 

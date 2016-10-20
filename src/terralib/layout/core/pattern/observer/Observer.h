@@ -65,13 +65,13 @@ namespace te
          */ 
         virtual void update(const Subject* subject) = 0;
 
-        Subject* getSubject();
+        void addSubject(Subject* subject);
 
-        void setSubject(Subject* subject);
+        void removeSubject(Subject* subject);
 
       protected:
 
-        Subject*  m_subject;
+        std::vector<Subject*> m_vecSubjects;
     };
   }
 }
