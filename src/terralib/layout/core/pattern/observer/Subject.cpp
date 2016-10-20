@@ -64,7 +64,7 @@ bool te::layout::Subject::attach(Observer* observer)
     ++it;
   }
 
-  observer->setSubject(this);
+  observer->addSubject(this);
   observer->update(this);
 
   m_observers.push_back(observer);
@@ -84,7 +84,7 @@ bool te::layout::Subject::detach(Observer* observer)
   {
     if(*it == observer)
     {
-      (*it)->setSubject(0);
+      (*it)->removeSubject(this);
       m_observers.erase(it);
       return true;
     }
