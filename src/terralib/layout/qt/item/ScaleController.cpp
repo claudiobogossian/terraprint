@@ -25,6 +25,7 @@
 #include "../core/Value.h"
 #include "../core/Scene.h"
 #include "../../core/property/SharedProperties.h"
+#include "../../core/enum/EnumScaleType.h"
 
 // STL
 #include <algorithm>
@@ -272,6 +273,8 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
   }
 
   te::layout::Properties propertiesCopy = properties;
+
+  calculateNewRectSize(propertiesCopy);
 
   const Property pScaleInUnit = propertiesCopy.getProperty("scale_in_unit_width_rect_gap");
 
@@ -723,3 +726,111 @@ double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, dou
   return width;
 }
 
+
+void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& properties)
+{
+  if (properties.contains("scale_height_rect_gap") == true || properties.contains("font") == true || properties.contains("scale_type")
+    || properties.contains("name") == true && properties.contains("id") == true)
+  {
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    const Property& pWidth = getProperty("width");
+    Property pCopyWidth(pWidth);
+
+
+    const Property& pHeigth = getProperty("height");
+    Property pCopyHeight(pHeigth);
+
+    Property pWidthGap;
+    if (properties.contains("scale_width_rect_gap") == true)
+    {
+      const Property& pWGap = properties.getProperty("scale_width_rect_gap");
+      pWidthGap = pWGap;
+    }
+    else
+    {
+      const Property& pWGap = getProperty("scale_width_rect_gap");
+      pWidthGap = pWGap;
+    }
+
+
+    Property pHeightGap;
+    if (properties.contains("scale_height_rect_gap") == true)
+    {
+      const Property& pHGap = properties.getProperty("scale_height_rect_gap");
+      pHeightGap = pHGap;
+    }
+    else
+    {
+      
+      const Property& pHGap = getProperty("scale_height_rect_gap");
+      pHeightGap = pHGap;
+
+    }
+
+    Property pScaleType;
+
+    if (properties.contains("scale_type") == true)
+    {
+      const Property& pScaleT = properties.getProperty("scale_type");;
+      pScaleType = pScaleT;
+    }
+    else
+    {
+      const Property& pScaleT = getProperty("scale_type");
+      pScaleType = pScaleT;
+    }
+
+    EnumScaleType enumScale;
+
+    const std::string& label = pScaleType.getOptionByCurrentChoice().toString();
+    EnumType* currentScaleType = enumScale.searchLabel(label);
+
+    QRectF rect(0, 0, pCopyWidth.getValue().toDouble(), 10);
+
+    QRectF gap(rect.bottomLeft().x(), rect.bottomLeft().y(), pWidthGap.getValue().toDouble(), pHeightGap.getValue().toDouble());
+    rect = rect.united(gap);
+
+    if (currentScaleType != enumScale.getAlternatingScaleBarType())
+    {
+      QRectF doubleGap(gap.bottomLeft().x(), gap.bottomLeft().y(), pWidthGap.getValue().toDouble(), pHeightGap.getValue().toDouble());
+      rect = rect.united(doubleGap);
+    }
+
+
+    QRectF space(rect.bottomLeft().x(), rect.bottomLeft().y(), pWidthGap.getValue().toDouble(), 4.0);
+
+    QFont qFont;
+
+    if (properties.contains("font") == true)
+    {
+      const Property& pFont = properties.getProperty("font");
+      Font font = pFont.getValue().toFont();
+      qFont = ItemUtils::convertToQfont(font);
+    }
+    else
+    {
+      const Property& pFont = getProperty("font");
+      Font font = pFont.getValue().toFont();
+      qFont = ItemUtils::convertToQfont(font);
+    }
+
+    double height = pWidth.getValue().toDouble();
+    double widthGap = pWidthGap.getValue().toDouble();
+
+    QPointF txtPoint(rect.bottomLeft().x(), rect.bottomLeft().y());
+
+    QString txt("0");
+
+    QPainterPath qpainter = ItemUtils::textToVector(txt, qFont, txtPoint, 0);
+
+    double txtHeight = qpainter.boundingRect().height();
+    rect = rect.united(qpainter.boundingRect());
+    height = rect.height();
+
+    pCopyHeight.setValue(height, dataType->getDataTypeDouble());
+    properties.addProperty(pCopyHeight);
+
+  }
+}

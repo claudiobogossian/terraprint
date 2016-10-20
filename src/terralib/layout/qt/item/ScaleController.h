@@ -82,6 +82,8 @@ namespace te
 
         virtual void setProperties(const Properties& properties);
 
+        virtual void calculateNewRectSize(te::layout::Properties& properties);
+
       protected:
 
         virtual Property checkScaleWidthAndUnit(const Properties& properties);
