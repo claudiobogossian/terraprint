@@ -50,7 +50,7 @@ te::layout::ScaleModel::ScaleModel()
   Font font;
   double scaleUnitGapX = 7.0;
   bool onlyFirstAndLastValue = false;
-  bool byBreaks = false;
+  bool byBreaks = true;
   int numberOfBreaks = 1;
   te::color::RGBAColor fontColor(0, 0, 0, 255);
   double lineWidth = Utils::getLineWidthMinimumValue();
@@ -197,6 +197,7 @@ te::layout::ScaleModel::ScaleModel()
     Property property(0);
     property.setName("by_breaks");
     property.setLabel(TR_LAYOUT("By Breaks"));
+    property.setVisible(false);
     property.setValue(byBreaks, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
@@ -223,6 +224,16 @@ te::layout::ScaleModel::ScaleModel()
     property.setValue(height, dataType->getDataTypeDouble());
     this->m_properties.updateProperty(property);
   }
+
+  {
+    const Property& pResizeble = m_properties.getProperty("resizable");
+    Property property(pResizeble);
+    property.setValue(false, dataType->getDataTypeBool());
+    property.setVisible(true);
+    m_properties.completelyUpdateProperty(property);
+    m_properties.updateProperty(property);
+  }
+
 }
 
 te::layout::ScaleModel::~ScaleModel()
