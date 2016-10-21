@@ -225,15 +225,6 @@ te::layout::ScaleModel::ScaleModel()
     this->m_properties.updateProperty(property);
   }
 
-  {
-    const Property& pResizeble = m_properties.getProperty("resizable");
-    Property property(pResizeble);
-    property.setValue(false, dataType->getDataTypeBool());
-    property.setVisible(true);
-    m_properties.completelyUpdateProperty(property);
-    m_properties.updateProperty(property);
-  }
-
 }
 
 te::layout::ScaleModel::~ScaleModel()
