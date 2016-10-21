@@ -68,7 +68,7 @@ namespace te
          */
         virtual ~BalloonItem();
 
-        virtual QRectF te::layout::BalloonItem::boundingRect() const;
+        virtual QRectF boundingRect() const;
 
       protected:
 
