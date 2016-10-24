@@ -122,6 +122,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   QRectF boundRect = boundingRect();
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   
   std::string strCurrentUnit;
   double unit = controller->getCurrentUnit(strCurrentUnit);
@@ -195,17 +196,17 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
 
       //Down rect
       painter->setBrush(QBrush(secondRect));
-      newBoxSecond = QRectF(x1, boundRect.center().y() - m_gapY, m_gapX, m_gapY);
+      newBoxSecond = QRectF(x1, boundRect.bottomRight().y() - (m_gapY * 2) - 5, m_gapX, m_gapY);
       painter->drawRect(newBoxSecond);
 
       //Up rect
       painter->setBrush(QBrush(firstRect));
-      newBoxFirst = QRectF(x1, boundRect.center().y(), m_gapX, m_gapY);
+      newBoxFirst = QRectF(x1, boundRect.bottomRight().y() - m_gapY - 5, m_gapX, m_gapY);
       painter->drawRect(newBoxFirst);
     }
 
     coordText = QPointF(x1, newBoxSecond.topLeft().y() - textRect.height() - displacementBetweenScaleAndText);
-    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.center().y() - m_gapY,
+    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
       boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
 
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
@@ -267,6 +268,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QRectF boundRect = boundingRect();
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
   double displacementBetweenScaleAndText = 2.;
   
@@ -337,12 +339,12 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
     {
       painter->setPen(Qt::NoPen);
       painter->setBrush(QBrush(secondRect));
-      newBoxSecond = QRectF(x1, boundRect.center().y() - m_gapY / 2, m_gapX, m_gapY);
+      newBoxSecond = QRectF(x1, boundRect.bottomRight().y() - m_gapY - 5, m_gapX, m_gapY);
       painter->drawRect(newBoxSecond);
     }
 
     coordText = QPointF(x1, newBoxSecond.topLeft().y() - textRect.height() - displacementBetweenScaleAndText);
-    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.center().y() - m_gapY / 2,
+    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - m_gapY - 5,
       boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY);
 
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
@@ -404,6 +406,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   QRectF boundRect = boundingRect();
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   
   std::string strCurrentUnit;
   double unit = controller->getCurrentUnit(strCurrentUnit);
@@ -469,6 +472,9 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
       x1 += displacementBetweenScaleAndText + textRect.width();
     }
 
+    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
+      boundRect.x() + lineHrz.x2() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
+
     if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
     {
       QPen penScale(black, lnew, Qt::SolidLine);
@@ -477,19 +483,17 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
       painter->setBrush(Qt::NoBrush);
 
       //horizontal line
-      lineHrz = QLineF(x1, boundRect.center().y(), x1 + m_gapX, boundRect.center().y());
+      lineHrz = QLineF(x1, rectScale.center().y(), x1 + m_gapX, rectScale.center().y());
       painter->drawLine(lineHrz);
 
       penScale.setColor(black);
       painter->setPen(penScale);
       //vertical line
-      lineVrt = QLineF(x1, boundRect.center().y() - m_gapY, x1, boundRect.center().y() + m_gapY);
+      lineVrt = QLineF(x1, rectScale.topRight().y(), x1, rectScale.bottomRight().y());
       painter->drawLine(lineVrt);
     }
 
     coordText = QPointF(x1, lineVrt.y1() - textRect.height() - displacementBetweenScaleAndText);
-    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.center().y() - m_gapY,
-      boundRect.x() + lineHrz.x2() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
 
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
