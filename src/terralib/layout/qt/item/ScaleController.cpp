@@ -276,7 +276,7 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
   calculateNewRectSize(propertiesCopy);
 
-  const Property pScaleInUnit = propertiesCopy.getProperty("scale_in_unit_width_rect_gap");
+  const Property& pScaleInUnit = propertiesCopy.getProperty("scale_in_unit_width_rect_gap");
 
   Property newProperty = checkScaleWidthAndUnit(propertiesCopy);
   if (!newProperty.isNull())
@@ -729,7 +729,7 @@ double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, dou
 
 void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& properties)
 {
-  if (properties.contains("scale_height_rect_gap") == true || properties.contains("font") == true || properties.contains("scale_type")
+  if (properties.contains("scale_height_rect_gap") == true || properties.contains("font") == true || properties.contains("scale_type") == true
     || properties.contains("name") == true && properties.contains("id") == true)
   {
 
@@ -763,7 +763,6 @@ void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& p
     }
     else
     {
-      
       const Property& pHGap = getProperty("scale_height_rect_gap");
       pHeightGap = pHGap;
 
@@ -806,13 +805,13 @@ void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& p
     if (properties.contains("font") == true)
     {
       const Property& pFont = properties.getProperty("font");
-      Font font = pFont.getValue().toFont();
+      const Font& font = pFont.getValue().toFont();
       qFont = ItemUtils::convertToQfont(font);
     }
     else
     {
       const Property& pFont = getProperty("font");
-      Font font = pFont.getValue().toFont();
+      const Font& font = pFont.getValue().toFont();
       qFont = ItemUtils::convertToQfont(font);
     }
 
