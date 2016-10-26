@@ -278,6 +278,8 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
   const Property& pScaleInUnit = propertiesCopy.getProperty("scale_in_unit_width_rect_gap");
 
+  Property scaleinUnit(pScaleInUnit);
+
   Property newProperty = checkScaleWidthAndUnit(propertiesCopy);
   if (!newProperty.isNull())
   {
@@ -291,7 +293,7 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
   std::string unit = pUnit.getValue().convertToString();
 
-  Variant v = pScaleInUnit.getValue();
+  Variant v = scaleinUnit.getValue();
 
   Property prop;
 
