@@ -404,7 +404,7 @@ void te::layout::PropertyBrowser::gatherProperties(QtProperty* qproperty, Proper
   if (property.getSubProperty().empty())
     return;
     
-  std::vector<Property> vecProperties = property.getSubProperty();
+  const std::vector<Property>& vecProperties = property.getSubProperty();
   foreach(Property prop, vecProperties)
   {
     if (!prop.isVisible())
@@ -428,7 +428,7 @@ void te::layout::PropertyBrowser::createGroup(QtProperty* qproperty, Property pr
 
   if (!property.getSubProperty().empty())
   {
-    std::vector<Property> vecProperties = property.getSubProperty();
+    const std::vector<Property>& vecProperties = property.getSubProperty();
     foreach(Property prop, vecProperties)
     {
       if (!prop.isVisible())

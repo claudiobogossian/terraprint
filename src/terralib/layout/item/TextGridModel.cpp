@@ -27,68 +27,50 @@
 
 // TerraLib
 #include "TextGridModel.h"
-#include "../core/ContextItem.h"
-#include "terralib/geometry/Envelope.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
 
-te::layout::TextGridModel::TextGridModel() 
+te::layout::TextGridModel::TextGridModel()
+  : TextModel()
 {
-  /*
-  m_type = Enums::getInstance().getEnumObjectType()->getTextGridItem();
+  std::size_t numRows = 1;
+  std::size_t numColumns = 1;
 
-  m_spacing = 1;
-  m_padding = 1;
-  m_columnNumber = 5;
-  m_rowNumber = 4;
+  std::vector< std::vector<std::string> > textMatrix;
+  textMatrix.resize(numRows);
+  textMatrix[0].resize(numColumns);
 
-  m_box = te::gm::Envelope(0., 0., 190., 170.);
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property property;
+    property.setName("text_matrix");
+    property.setLabel(TR_LAYOUT("Text Matrix"));
+    property.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+    property.setVisible(false);
 
-  m_tableColor.setColor(0,0,0,255);
-  m_borderGridColor.setColor(0,0,0,255);
-  m_headerHorizontalColor.setColor(192,192,192,255);
-  m_headerVerticalColor.setColor(192,192,192,255);
-  */
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("num_rows");
+    property.setLabel(TR_LAYOUT("Number of Rows"));
+    property.setValue(numRows, dataType->getDataTypeInt());
+
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("num_columns");
+    property.setLabel(TR_LAYOUT("Number of Columns"));
+    property.setValue(numColumns, dataType->getDataTypeInt());
+
+    m_properties.addProperty(property);
+  }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getTextGridItem());
 }
 
 te::layout::TextGridModel::~TextGridModel()
 {
-  clearTextCells();
-}
-
-void te::layout::TextGridModel::addText( te::gm::Point* cell, std::string text )
-{
-  m_textCells[cell] = text;
-}
-
-void te::layout::TextGridModel::removeCell( te::gm::Point* cell )
-{
-  if(!cell)
-    return;
-
-  m_textCells.erase(cell);
-
-  delete cell;
-}
-
-std::map<te::gm::Point*, std::string> te::layout::TextGridModel::getTextCells()
-{
-  return m_textCells;
-}
-
-void te::layout::TextGridModel::clearTextCells()
-{
-  std::map<te::gm::Point*, std::string>::iterator it;
-  for (it = m_textCells.begin(); it != m_textCells.end(); ++it) 
-  {
-    te::gm::Point* pt = it->first;
-    if(pt)
-    {
-      delete pt;
-      pt = 0;
-    }
-  }
-
-  m_textCells.clear();
 }

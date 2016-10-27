@@ -219,7 +219,14 @@ namespace te
 
         \return vector of string
         */
-        const std::vector<std::string> toStringVector() const;
+        const std::vector<std::string>& toStringVector() const;
+
+        /*!
+        \brief Returns the vector of string. (The setValue method received a vector of string).
+
+        \return vector of string
+        */
+        const std::vector< std::vector<std::string> >& toStringMatrix() const;
 
         /*!
           \brief Converts the value to a string.
@@ -344,6 +351,7 @@ namespace te
       GenericVariant                        m_generic; //!< value of te::layout::GenericVariant type
       te::gm::GeometryShrPtr                m_geometryPtr; //!< shared pointer of te::gm::Geometry type
       std::vector<std::string>              m_vString; //!< value of string vector type
+      std::vector< std::vector<std::string> > m_stringMatrix; //!< value vector of string vector type
       std::list<te::map::AbstractLayerPtr>  m_listLayer; //!< value of te::map::AbstractLayerPtr list type
       bool                                  m_usePrecision; //!< true if uses precision in double value
       int                                   m_precision; //!< value of precision

@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file RectangleItem.cpp
+  \file BalloonItem.cpp
    
   \brief 
 
@@ -29,6 +29,9 @@
 #include "BalloonItem.h"
 #include "TextItem.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
+#include "BalloonController.h"
+#include "../../core/enum/EnumBalloonDirectionType.h"
+#include "../../core/enum/EnumBalloonType.h"
 
 // STL
 #include <algorithm>    // std::max and std::min
@@ -45,98 +48,214 @@ te::layout::BalloonItem::~BalloonItem()
 
 }
 
+QRectF te::layout::BalloonItem::boundingRect() const
+{
+ return TextItem::boundingRect();
+}
+
 void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-
-  const Property& property = m_controller->getProperty("border");
-
-  if (property.isNull() == false){
-    drawBalloon1(painter);
+  if (m_isEditionMode == true)
+  {
+    TextItem::drawItem(painter, option, widget);
+    return;
   }
+
+
+  const Property& pBalloonType = m_controller->getProperty("balloon_type");
+
+  EnumBalloonType balloonEnum;
+
+  const std::string& label = pBalloonType.getOptionByCurrentChoice().toString();
+  EnumType* currentBalloonType = balloonEnum.searchLabel(label);
+
+
+  if (currentBalloonType == balloonEnum.getRectangleBalloon())
+  {
+    drawRectangleBalloon(painter);
+  }
+
+  if (currentBalloonType == balloonEnum.getRoundedRectangleBalloon())
+  {
+    drawRoundedRectangleBalloon(painter);
+  }
+
+
+  if (currentBalloonType == balloonEnum.getEllipseBalloon())
+  {
+    drawEllipseBalloon(painter);
+  }
+
 
   TextItem::drawItem(painter, option, widget);
-
 }
 
-void te::layout::BalloonItem::drawBalloon1(QPainter * painter){
-  /*
+void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter){
+
+  BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
+
+  const Property& pMarginSize = balloonController->getProperty("margin_size");
+  double margin = pMarginSize.getValue().toDouble();
+ 
   painter->save();
-  QColor cpen = setBrush(painter);
-  QPen pn(cpen, 0, Qt::SolidLine);
-  painter->setPen(pn);
+  setPainterParameters(painter);
 
-  QPen pen(cpen, 0, Qt::SolidLine);
-  pen.setWidth(1);
+  QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
+
+  QPointF p1 = QPointF(adjustedBoundbox.x(), (margin * 2));
+  QPointF p2 = QPointF(adjustedBoundbox.bottomLeft().x(), adjustedBoundbox.bottomLeft().y());
+  QPointF p3 = QPointF(adjustedBoundbox.bottomRight().x(), adjustedBoundbox.bottomRight().y());
+  QPointF p4 = QPointF(adjustedBoundbox.bottomRight().x(), (margin * 2));
+  QPointF p5 = QPointF(adjustedBoundbox.bottomRight().x() - (adjustedBoundbox.width() * 0.05), (margin * 2));
+  QPointF p6 = QPointF(adjustedBoundbox.bottomRight().x() - (adjustedBoundbox.width() * 0.05), adjustedBoundbox.topRight().y());
+  QPointF p7 = QPointF(adjustedBoundbox.bottomRight().x() - margin - (adjustedBoundbox.width() * 0.05), (margin * 2));
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  QPainterPath qPath;
   
-  QPointF p1 = QPointF(boundingRect().x(), boundingRect().y());
-  QPointF p2 = QPointF(boundingRect().x(), boundingRect().y() + boundingRect().height());
-  QPointF p3 = QPointF(boundingRect().width(), boundingRect().height());
-  QPointF p4 = QPointF(boundingRect().x() + boundingRect().width(), boundingRect().y());
-  QPointF p3 = QPointF(boundingRect().width() / 4., boundingRect().height() + (boundingRect().height() / 2.));
-  QPointF p4 = QPointF((p2.rx() - (p2.rx()*0.2)), p3.ry());
-  QPointF p5 = QPointF((p2.rx() - (p2.rx()*0.2)), p3.ry() + (p3.ry()*0.3));
-  QPointF p6 = QPointF((p2.rx() - (p2.rx()*0.1)), p3.ry());
-  QPointF p7 = QPointF(p2.rx(), p3.ry());
+  qPath.moveTo(p1);
+  qPath.lineTo(p1);
+  qPath.lineTo(p2);
+  qPath.lineTo(p3);
+  qPath.lineTo(p4);
+  qPath.lineTo(p5);
+  qPath.lineTo(p6);
+  qPath.lineTo(p7);
+  qPath.lineTo(p1);
+
+  setBalloonDirection(qPath);
+
+  painter->drawPath(qPath);
+  painter->restore();
+}
+
+void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
+{
+  BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
+
+  const Property& pMarginSize = balloonController->getProperty("margin_size");
+  double margin = pMarginSize.getValue().toDouble();
+
+  painter->save();
+  setPainterParameters(painter);
+
+  QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
+
+  QPainterPath qPath;
+
+  QPointF bLeft = adjustedBoundbox.bottomLeft();
+  QPointF tRight = adjustedBoundbox.topRight();
+
+  tRight.setY(tRight.y() + (margin * 2));
+
+  QRectF fullRect(bLeft, tRight);
+
+  QRectF leftTopRect(fullRect.topLeft().x(), fullRect.topLeft().y() - margin, margin, margin);
+  QRectF leftBottomRect(fullRect.bottomLeft().x(), fullRect.bottomLeft().y(), margin, margin);
+  QRectF rightTopRect(fullRect.topRight().x() - margin, fullRect.topRight().y() - margin, margin, margin);
+  QRectF rightBottomRect(fullRect.bottomRight().x() - margin, fullRect.bottomRight().y(), margin, margin);
 
 
-  painter->setPen(pen);
+  qPath.moveTo(leftBottomRect.topRight());
+  qPath.quadTo(leftBottomRect.topLeft(), leftBottomRect.bottomLeft());
+  qPath.lineTo(leftTopRect.topLeft());
+  qPath.moveTo(leftTopRect.topLeft());
+  qPath.quadTo(leftTopRect.bottomLeft(), leftTopRect.bottomRight());
+  qPath.lineTo(rightTopRect.bottomLeft());
+  qPath.quadTo(rightTopRect.bottomRight(), rightTopRect.topRight());
+  qPath.lineTo(rightBottomRect.bottomRight());
+  qPath.quadTo(rightBottomRect.topRight(), rightBottomRect.topLeft());
+  qPath.lineTo(rightBottomRect.topLeft().x(), rightBottomRect.topLeft().y() - (margin * 2));
+  qPath.lineTo(rightBottomRect.topLeft().x() - margin, rightBottomRect.topLeft().y());
+  qPath.lineTo(leftBottomRect.topRight());
 
-  painter->drawLine(p1, p2);
-  painter->drawLine(p2, p3);
-  painter->drawLine(p3, p4);
-  painter->drawLine(p4, p1);
 
-  painter->drawLine(p1, p3);
-  painter->drawLine(p3, p4);
-  painter->drawLine(p4, p5);
-  painter->drawLine(p5, p6);
-  painter->drawLine(p6, p7);
-  painter->drawLine(p7, p2);
+  setBalloonDirection(qPath);
 
+  painter->drawPath(qPath);
   painter->restore();
   
-  */
 }
 
-/*
-QRectF te::layout::BalloonItem::boundingRect() const
-{
-  //when we are editing the item, we let the item handle the changes in the bounding box
-  QRectF rect = TextItem::boundingRect();
-  rect.setWidth(rect.width() + rect.width()*0.5);
-  rect.setHeight(rect.height() + rect.height() * 0.5);
 
-  return rect;
-}
-*/
-
-QRectF te::layout::BalloonItem::boundingRect() const
-{
-  if (m_currentAction == RESIZE_ACTION)
-  {
-    return m_rect;
-  }
-
-  //models stores information in scene CS.
-  //To ensure that everything works fine, we must convert the coordinates from scene CS to item CS
-  double x = 0.;
-  double y = 0.;
-  double width = m_controller->getProperty("balloonwidth").getValue().toDouble();
-  double height = m_controller->getProperty("balloonheight").getValue().toDouble();
-
-  QRectF rectSceneCS(x, y, width , height);
-  QRectF rectItemCS = AbstractItem::mapRectFromScene(rectSceneCS);
-
-  QRectF boundingRect(0, 0, rectItemCS.width(), rectItemCS.height());
-  return boundingRect;
-}
-
-QColor te::layout::BalloonItem::setBrush(QPainter* painter)
+void te::layout::BalloonItem::setPainterParameters(QPainter* painter)
 {
   const Property& colorProperty = m_controller->getProperty("color");
   const te::color::RGBAColor& color = colorProperty.getValue().toColor();
-  QColor brushColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+
+  const Property& pFillColor = m_controller->getProperty("fill_color");
+  const Property& pContourColor = m_controller->getProperty("contour_color");
+
+  Property pContourThickness = m_controller->getProperty("contour_thickness");
+  double contourThickness = pContourThickness.getValue().toDouble();
+
+  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
+  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
+
+  QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
+  QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
+  
+  QColor brushColor(qFillColor);
+  QPen pen(qContourColor, Qt::SolidLine);
+  pen.setWidthF(contourThickness);
+
+  painter->setPen(pen);
+
   painter->setBrush(QBrush(brushColor));
-  return brushColor;
+  painter->setRenderHint(QPainter::Antialiasing, true);
 }
 
+void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
+{
+  BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
+
+  const Property& pMarginSize = balloonController->getProperty("margin_size");
+  double margin = pMarginSize.getValue().toDouble();
+
+  painter->save();
+  setPainterParameters(painter);
+
+  QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
+
+
+  QPointF p2 = QPointF(adjustedBoundbox.x(), adjustedBoundbox.y() + adjustedBoundbox.height());
+  QPointF p3 = QPointF(adjustedBoundbox.x() + adjustedBoundbox.width(), adjustedBoundbox.y() + (margin * 2));
+
+  QPainterPath qPath;
+  
+  QRectF fullRect(p2, p3);
+
+  qPath.arcMoveTo(fullRect, 280);
+  qPath.arcTo(fullRect, 280, -340);
+  qPath.lineTo(qPath.currentPosition().x(), adjustedBoundbox.y());
+  qPath.arcTo(fullRect, 280, 0);
+
+  setBalloonDirection(qPath);
+
+  painter->drawPath(qPath);
+  painter->restore();
+}
+
+void  te::layout::BalloonItem::setBalloonDirection(QPainterPath& qpainterpath)
+{
+  BalloonController *balloonController = dynamic_cast<BalloonController*>(m_controller);
+  const Property& pWidth = balloonController->getProperty("width");
+  double width = pWidth.getValue().toDouble();
+
+  EnumBalloonDirectionType balloonDirection;
+  const Property& pDirection = balloonController->getProperty("balloon_direction");
+  const std::string& label = pDirection.getOptionByCurrentChoice().toString();
+  EnumType* currentBalloonDirectionType = balloonDirection.searchLabel(label);
+
+  if (currentBalloonDirectionType == balloonDirection.getLeft())
+  {
+
+    QTransform transform;
+    transform.scale(-1, 1);
+    transform.translate(-width, 0);
+    qpainterpath = transform.map(qpainterpath);
+  
+  }
+
+}

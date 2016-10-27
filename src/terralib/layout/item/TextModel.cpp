@@ -40,6 +40,8 @@ te::layout::TextModel::TextModel()
   te::color::RGBAColor color(0, 0, 0, 255);
   double width = 40.;
   double height = 20.;
+  double dx = 0.;
+  double dy = 0.;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -68,6 +70,25 @@ te::layout::TextModel::TextModel()
     m_properties.addProperty(property);
   }
 
+
+  {
+    Property property(0);
+    property.setName("dx");
+    property.setVisible(false);
+    property.setValue(dx, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+
+
+  {
+    Property property(0);
+    property.setName("dy");
+    property.setVisible(false);
+    property.setValue(dy, dataType->getDataTypeDouble());
+    m_properties.addProperty(property);
+  }
+
+  
   {
     EnumAlignmentType enumAlignmentType;
     EnumType* currentAlignmentType = enumAlignmentType.getAlignmentLeftType();
@@ -114,7 +135,14 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue(true, dataType->getDataTypeBool());
+    this->m_properties.updateProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("keep_aspect");
+    property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
   

@@ -48,6 +48,11 @@ namespace te
     {
     public:
       BalloonController(AbstractItemModel* model);
+
+      virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
+
+      virtual bool needUpdateBox(const te::layout::Properties& properties);
+
     };
 
   }

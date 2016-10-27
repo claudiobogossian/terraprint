@@ -33,7 +33,7 @@
 
 te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  Properties props = params.getProperties();
 
   BalloonModel* model = new BalloonModel();
   BalloonController* controller = new BalloonController(model);
@@ -43,6 +43,16 @@ te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryP
   if (props.getProperties().empty())
   {
     props = convertToProperties(params);
+
+    std::string text = params.getName();
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    Property prop_name(0);
+    prop_name.setName("text");
+    prop_name.setValue(text, dataType->getDataTypeString());
+    props.addProperty(prop_name);
+
   }
   controller->setProperties(props);
 

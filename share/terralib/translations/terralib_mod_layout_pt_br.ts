@@ -2651,9 +2651,19 @@ nononon</source>
         <translation>Objeto Título</translation>
     </message>
     <message>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="605"/>
+        <source>Text Grid Object</source>
+        <translation>Object Grade de Textos</translation>
+    </message>
+    <message>
         <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="608"/>
         <source>Image Object</source>
         <translation>Objeto Imagem</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="611"/>
+        <source>Balloon Object</source>
+        <translation>Object Balão</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="632"/>
@@ -2696,52 +2706,52 @@ nononon</source>
         <translation>&amp;Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="750"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="749"/>
         <source>Undo Action</source>
         <translation>Ação de Desfazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="762"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="761"/>
         <source>Redo</source>
         <translation>Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="771"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="770"/>
         <source>&amp;Redo</source>
         <translation>&amp;Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="775"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="773"/>
         <source>Redo Action</source>
         <translation>Ação de Refazer</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="787"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="785"/>
         <source>Redraw Selection Map</source>
         <translation>Redesenhar Mapa Selecionado</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="802"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="800"/>
         <source>Object To Image</source>
         <translation>Gravar Objeto como Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="802"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="800"/>
         <source>Export all selected objects to image</source>
         <translation>Exporta todos os objetos selecionados como imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="817"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="815"/>
         <source>Exit</source>
         <translation>Sair</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="832"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="830"/>
         <source>Export To PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="832"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ToolbarOutside.cpp" line="830"/>
         <source>Export to PDF</source>
         <translation>Exportar para PDF</translation>
     </message>
@@ -2749,43 +2759,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1315"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1320"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1316"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1364"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1321"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1369"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1340"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1345"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1345"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1350"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1363"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1368"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1392"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1397"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1399"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1404"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1410"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1415"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

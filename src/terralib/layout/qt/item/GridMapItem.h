@@ -75,6 +75,11 @@ namespace te
         virtual ~GridMapItem();
 
         /*!
+        \brief This function is called every time the view must be updated
+        */
+        virtual void refresh();
+
+        /*!
           \brief For any specific drawing, the item must reimplement this function
         */
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
@@ -91,7 +96,7 @@ namespace te
         /*!
           \brief Draws the grid
         */
-        virtual void drawGrid(QPainter* painter);
+        virtual void drawGridOnDevice(QPainter* painter);
         
         virtual void configPainter(QPainter* painter);
 
@@ -166,6 +171,7 @@ namespace te
         QPainterPath                    m_gridLines;
         QPainterPath                    m_gridCrosses;
         QPainterPath                    m_gridText;
+        QPixmap                         m_screenCache; //!< A cache to avoid unnecessary full redraw
     };
   }
 }

@@ -28,8 +28,12 @@
 // TerraLib
 #include "Variant.h"
 #include "../enum/Enums.h"
+#include <terralib/common/StringUtils.h>
 #include "terralib/geometry/WKTReader.h"
 #include "terralib/geometry/WKTWriter.h"
+
+//Boost
+#include <boost/tokenizer.hpp>
 
 // STL
 #include <sstream>
@@ -242,6 +246,17 @@ void te::layout::Variant::convertValue( const void* valueCopy )
        m_complex = true;
      }
    }
+   else if (m_type == dataType->getDataTypeStringMatrix())
+   {
+     // Cast it back to a vector of string..
+     std::vector< std::vector<std::string> >*  vstringValue = static_cast<std::vector< std::vector<std::string> >* >(value); //Attempting to convert *void to vector
+     if (vstringValue)
+     {
+       null = false;
+       m_stringMatrix = *vstringValue;
+       m_complex = true;
+     }
+   }
    else if (m_type == dataType->getDataTypeLayerList())
    {
      // Cast it back to a list of te::map::AbstractLayerPtr.
@@ -405,6 +420,29 @@ void te::layout::Variant::fromString(const std::string& value, EnumType* type)
         null = false;
       }
     }
+    else if (m_type == dataType->getDataTypeStringMatrix())
+    {
+      typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+      boost::char_separator<char> separatorRow{";"};
+      tokenizer tokenizerRows{ value, separatorRow};
+      for (tokenizer::iterator itRow = tokenizerRows.begin(); itRow != tokenizerRows.end(); ++itRow)
+      {
+        std::string rowValue = *itRow;
+
+        std::vector<std::string> vecRow;
+
+        boost::char_separator<char> separatorColumn{ ",", 0, boost::keep_empty_tokens };
+        tokenizer tokenizerColumns{ rowValue, separatorColumn };
+        for (tokenizer::iterator itColumn = tokenizerColumns.begin(); itColumn != tokenizerColumns.end(); ++itColumn)
+        {
+          std::string columnValue = *itColumn;
+          vecRow.push_back(columnValue);
+        }
+
+        m_stringMatrix.push_back(vecRow);
+      }
+      null = false;
+    }
     else if (type == dataType->getDataTypeLayerList())
     {
       // do nothing
@@ -474,9 +512,14 @@ const std::list<te::map::AbstractLayerPtr> te::layout::Variant::toLayerList() co
   return m_listLayer;
 }
 
-const std::vector<std::string> te::layout::Variant::toStringVector() const
+const std::vector<std::string>& te::layout::Variant::toStringVector() const
 {
   return m_vString;
+}
+
+const std::vector< std::vector<std::string> >& te::layout::Variant::toStringMatrix() const
+{
+  return m_stringMatrix;
 }
 
 bool te::layout::Variant::isNull() const
@@ -573,6 +616,24 @@ std::string te::layout::Variant::convertToString() const
         if (!s_convert.empty())
           s_convert += ",";
         s_convert += (*it);
+      }
+    }
+  }
+  else if (m_type == dataType->getDataTypeStringMatrix())
+  {
+    for (std::size_t i = 0; i < m_stringMatrix.size(); ++i)
+    {
+      if (i != 0)
+      {
+        s_convert += ";";
+      }
+      for (std::size_t j = 0; j < m_stringMatrix[i].size(); ++j)
+      {
+        if (j != 0)
+        {
+          s_convert += ",";
+        }
+        s_convert += m_stringMatrix[i][j];
       }
     }
   }
@@ -759,6 +820,7 @@ te::layout::Variant& te::layout::Variant::operator=(const Variant& variant)
   this->m_complex = variant.m_complex; //!< true if value is not of common C++ data type, false otherwise
   this->m_generic = variant.m_generic; //!< value of te::layout::GenericVariant type
   this->m_vString = variant.m_vString; //!< value of string vector type
+  this->m_stringMatrix = variant.m_stringMatrix; //!< value of vector of string vector type
   this->m_listLayer = variant.m_listLayer; //!< value of te::map::AbstractLayerPtr list type
   this->m_usePrecision = variant.m_usePrecision; //!< true if uses precision in double value
   this->m_precision = variant.m_precision;

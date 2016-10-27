@@ -344,19 +344,16 @@ bool te::layout::BoostPropertySerializer::decode(const boost::property_tree::ptr
   return true;
 }
 
-void te::layout::BoostPropertySerializer::searchProperty( Property& property, boost::property_tree::ptree& array, boost::property_tree::ptree& child )
+void te::layout::BoostPropertySerializer::searchProperty( const Property& property, boost::property_tree::ptree& array, boost::property_tree::ptree& child )
 {
   if(!property.getSubProperty().empty())
   {
-    Property propCopy = property;
-
-    std::vector<Property> props = property.getSubProperty();
-
-    std::vector<Property>::iterator it;
+    const std::vector<Property>& props = property.getSubProperty();
+    std::vector<Property>::const_iterator it;
 
     for(it = props.begin(); it != props.end(); ++it)
-    {    
-      Property prop = (*it);
+    {
+      const Property& prop = (*it);
 
       boost::property_tree::ptree childArray;
       
@@ -370,7 +367,7 @@ void te::layout::BoostPropertySerializer::searchProperty( Property& property, bo
       searchProperty(prop, array, childArray);
     }
 
-    std::string s_nameChild = propCopy.getName() + "_child";
+    std::string s_nameChild = property.getName() + "_child";
     if(array != child)
       array.push_back(std::make_pair(s_nameChild,child));
   }

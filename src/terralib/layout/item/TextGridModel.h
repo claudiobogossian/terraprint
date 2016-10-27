@@ -32,12 +32,8 @@
 
 // TerraLib
 #include "TitleModel.h"
-#include "terralib/geometry/Point.h"
 #include "../core/Config.h"
 
-// STL
-#include <map>
-#include <string>
 
 namespace te
 {
@@ -52,7 +48,7 @@ namespace te
 
       \sa te::layout::TitleModel
     */
-    class TELAYOUTEXPORT TextGridModel : public TitleModel
+    class TELAYOUTEXPORT TextGridModel : public TextModel
     {
       public:
 
@@ -65,18 +61,6 @@ namespace te
           \brief Destructor
         */ 
         virtual ~TextGridModel();
-
-        virtual void addText(te::gm::Point* cell, std::string text);
-
-        virtual void removeCell(te::gm::Point* cell);
-        
-        virtual std::map<te::gm::Point*, std::string> getTextCells();
-
-        virtual void clearTextCells();
-
-      protected:
-
-        std::map<te::gm::Point*, std::string> m_textCells;
     };
   }
 }

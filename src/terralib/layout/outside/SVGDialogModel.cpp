@@ -76,14 +76,14 @@ std::vector<std::string> te::layout::SVGDialogModel::getPaths()
   if (m_svgProperty.getSubProperty().empty())
     return pathsName;
 
-  std::vector<Property> props = m_svgProperty.getSubProperty();
+  const std::vector<Property>& props = m_svgProperty.getSubProperty();
 
   if (props.empty())
     return pathsName;
 
-  Property pro_paths = props[0];
+  const Property& pro_paths = props[0];
 
-  GenericVariant variant = pro_paths.getValue().toGenericVariant();
+  const GenericVariant& variant = pro_paths.getValue().toGenericVariant();
 
   return variant.toStringVector();
 }
