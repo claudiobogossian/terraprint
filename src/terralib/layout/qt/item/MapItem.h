@@ -98,7 +98,10 @@ namespace te
 
         virtual bool removeCurrentTool();
 
-        virtual void doRefresh();
+        /*!
+        \brief This function is called every time the view must be updated
+        */
+        virtual void refresh();
 
         virtual void redraw();
 

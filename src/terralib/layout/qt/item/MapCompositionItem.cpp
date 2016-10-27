@@ -230,7 +230,12 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   }
   else if (change == QGraphicsItem::ItemSceneHasChanged)
   {
-    initItems();
+    QGraphicsScene* scene = qvariant_cast<QGraphicsScene *>(value);
+    if (scene != 0)
+    {
+      initItems();
+    }
+    
   }
   return variant;
 }

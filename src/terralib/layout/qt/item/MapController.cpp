@@ -162,44 +162,28 @@ void te::layout::MapController::setProperty(const te::layout::Property& property
 
 void te::layout::MapController::setProperties(const te::layout::Properties& properties)
 {
-  //if somehow the item is invalid, we do nothing
-  MapItem* view = dynamic_cast<MapItem*>(m_view);
-  if (view == 0)
-  {
-    AbstractItemController::setProperties(properties);
-    return;
-  }
-
   //we first copy the properties that are being set
   te::layout::Properties propertiesCopy = properties;
-
-  bool needRedraw = false;
 
   //then we sync the properties related to the layers
   if (syncLayersProperties(propertiesCopy) == true)
   {
-    needRedraw = true;
   }
 
   //then we sync the properties related to the SRID and Envelope
   if(syncSridAndEnvelope(propertiesCopy) == true)
   {
-    needRedraw = true;
   }
 
   //now we sync the properties related to the size of the map
   if(syncMapSizeProperties(propertiesCopy) == true)
   {
-    needRedraw = true;
   }
 
   //now we sync the properties related to the scale
   if (syncMapScaleProperties(propertiesCopy) == true)
   {
-    needRedraw = true;
   }
-
-  view->doRefresh();
 
   //we finally set the properties into the model
   AbstractItemController::setProperties(propertiesCopy);

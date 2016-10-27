@@ -27,7 +27,7 @@
 #include "TextGridItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../../../item/TextGridModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+#include "../../../../item/TextGridController.h"
 #include "../../../../item/TextGridItem.h"
 
 te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactoryParamsCreate params)
@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactory
   Properties      props = params.getProperties(); 
 
   TextGridModel* model = new TextGridModel();
-  AbstractItemController* controller = new AbstractItemController(model);
+  AbstractItemController* controller = new TextGridController(model);
   TextGridItem* view = new TextGridItem(controller);
   controller->setView(view);
 

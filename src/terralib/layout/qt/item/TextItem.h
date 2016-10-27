@@ -40,6 +40,8 @@
 
 //Qt
 class QTextDocument;
+class QTextCursor;
+class QTimer;
 
 namespace te
 {
@@ -58,8 +60,10 @@ namespace te
 
     \sa te::layout::AbstractItem
   */
-    class TELAYOUTEXPORT TextItem : public AbstractItem
+    class TELAYOUTEXPORT TextItem : public QObject, public AbstractItem
     {
+      Q_OBJECT
+
       public:
 
         /*!
@@ -72,8 +76,13 @@ namespace te
 
         /*!
           \brief Destructor
-        */ 
+        */
         virtual ~TextItem();
+
+        /*!
+        \brief Sets the text document to be displayed
+        */
+        virtual void setDocument(QTextDocument* textDocument);
 
         /*!
         \brief Reimplemented from QGraphicsItem
@@ -112,16 +121,32 @@ namespace te
         /*!
           \brief Enters the edition mode
          */
-        void enterEditionMode();
+        virtual void enterEditionMode();
 
         /*!
           \brief Leaves edition mode
          */
-        void leaveEditionMode();
+        virtual void leaveEditionMode();
+
+        /*!
+        \brief This function is called when the edtion of a document has fineshed, and it must set the new values in the controller
+        */
+        virtual void documentEditionFinished();
+
+        virtual void updateBlockEditionRange();
+
+      protected slots:
+
+        void timerEvent();
 
       protected:
 
-        QTextCursor* m_textCursor; //!< The cursor object that is used to manipulate the document that represents the text
+        QTextDocument*  m_document; //!< The text document of the text item
+        QTextCursor*    m_textCursor; //!< The cursor object that is used to navigate and manipulate the text document
+        QTimer*         m_cursorTimer;
+        bool            m_showCursor;
+        int             m_blockEditionRangeStart;
+        int             m_blockEditionRangeEnd;
 
     };
   }

@@ -31,6 +31,8 @@
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
+class QTextDocument;
+
 namespace te
 {
   namespace layout
@@ -69,6 +71,16 @@ namespace te
         virtual void setProperties(const Properties& properties);
 
         virtual double getDpiForCalculation() const;
+
+        virtual QTextDocument* createTextDocument(const te::layout::Properties& properties);
+
+        virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
+
+        virtual bool needUpdateBox(const te::layout::Properties& properties);
+
+    protected:
+
+      virtual void refresh();
 
     protected:
 

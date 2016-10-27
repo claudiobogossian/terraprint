@@ -52,39 +52,142 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties propertiesCopy(properties);
-
-  if (propertiesCopy.contains("text") == false && propertiesCopy.contains("font") == false)
+  
+  if (needUpdateBox(properties))
   {
-    AbstractItemController::setProperties(propertiesCopy);
+    TextItem* textItem = dynamic_cast<TextItem*>(m_view);
+    QSizeF sizeMM;
+
+    double dx = 0.;
+    double dy = 0.;
+
+    calculateSize(propertiesCopy, sizeMM, dx, dy);
+
+    Property propertyWidth(0);
+    propertyWidth.setName("width");
+    propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
+
+    Property propertyHeight(0);
+    propertyHeight.setName("height");
+    propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
+
+    propertiesCopy.addProperty(propertyWidth);
+    propertiesCopy.addProperty(propertyHeight);
+
+    Property pDx;
+    pDx.setName("dx");
+    pDx.setValue(dx, dataType->getDataTypeDouble());
+
+    Property pDY;
+    pDY.setName("dy");
+    pDY.setValue(dy, dataType->getDataTypeDouble());
+
+    propertiesCopy.addProperty(pDx);
+    propertiesCopy.addProperty(pDY);
+  }
+  else if (properties.contains("height"))
+  {
+    //if only the height have been changed, we must recalculate the font size based on it
+    const Property& pCurrentHeight = this->getProperty("height");
+    const Property& pNewHeight = propertiesCopy.getProperty("height");
+
+    double currentHeight = pCurrentHeight.getValue().toDouble();
+    double newHeight = pNewHeight.getValue().toDouble();
+    double resizeFactor = newHeight / currentHeight;
+
+    double ptSizeMM = 0.353;//size of one point (font measure), in millimeters
+    double newFontSizeDouble = std::floor(newHeight / ptSizeMM);
+    int newFontSize = (int)newFontSizeDouble;
+
+    te::layout::Property pNewFont = this->getProperty("font"); //copies the current property
+    Font newFont = pNewFont.getValue().toFont();
+    newFont.setPointSize(qRound(newFont.getPointSize() * resizeFactor));
+
+    pNewFont.setValue(newFont, dataType->getDataTypeFont());
+    propertiesCopy.addProperty(pNewFont);
+
+    //as we chenged the font size, we must recalcute the other properties. So we call this function recursively
+    setProperties(propertiesCopy);
     return;
   }
 
-  te::layout::Property pText = propertiesCopy.getProperty("text");
+  AbstractItemController::setProperties(propertiesCopy);
+}
+
+double te::layout::TextController::getDpiForCalculation() const
+{
+  return m_dpiForCalculation;
+}
+
+QTextDocument* te::layout::TextController::createTextDocument(const te::layout::Properties& properties)
+{
+  te::layout::Property pText = properties.getProperty("text");
   if (pText.isNull())
   {
     pText = this->getProperty("text");
   }
 
-  te::layout::Property pFont = propertiesCopy.getProperty("font");
+  te::layout::Property pFont = properties.getProperty("font");
   if (pFont.isNull())
   {
     pFont = this->getProperty("font");
   }
 
+  Property pAligment = properties.getProperty("alignment");
+  if (pAligment.isNull())
+  {
+    pAligment = this->getProperty("alignment");
+  }
+
   QString qText = ItemUtils::convert2QString(pText.getValue().toString());
   QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
+  EnumAlignmentType enumAligmentType;
+  const std::string& label = pAligment.getOptionByCurrentChoice().toString();
+  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
+
+  QTextOption textOption;
+  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+  {
+    textOption.setAlignment(Qt::AlignLeft);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+  {
+    textOption.setAlignment(Qt::AlignRight);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+  {
+    textOption.setAlignment(Qt::AlignCenter);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+  {
+    textOption.setAlignment(Qt::AlignJustify);
+  }
+
+  QTextDocument* textDocument = new QTextDocument();
+  textDocument->setTextWidth(-1);
+  textDocument->setDefaultFont(qFont);
+  textDocument->setPlainText(qText);
+  textDocument->setDocumentMargin(0);
+  textDocument->setDefaultTextOption(textOption);
+  textDocument->setTextWidth(textDocument->size().width());
+
+  return textDocument;
+}
+
+
+void te::layout::TextController::calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy)
+{
+  QScopedPointer<QTextDocument> textDocument(createTextDocument(properties));
+  QSizeF sizePx = textDocument->size();
+
+  if (m_view == 0)
+  {
+    sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
+    sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
+    return;
+  }
 
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
-  
-  QTextDocument textDocument;
-  textDocument.setTextWidth(-1);
-  textDocument.setDefaultFont(qFont);
-  textDocument.setPlainText(qText);
-  textDocument.setDocumentMargin(0);
-  textDocument.setTextWidth(textDocument.size().width());
-  QSizeF sizePx = textDocument.size();
-
-  QSizeF sizeMM;
   QGraphicsScene* qScene = textItem->scene();
   if (qScene != 0)
   {
@@ -100,24 +203,25 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
     sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
     sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
   }
-
-  Property propertyWidth(0);
-  propertyWidth.setName("width");
-  propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
-
-  Property propertyHeight(0);
-  propertyHeight.setName("height");
-  propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
-
-  propertiesCopy.addProperty(propertyWidth);
-  propertiesCopy.addProperty(propertyHeight);
-
-  textItem->prepareGeometryChange();
-
-  AbstractItemController::setProperties(propertiesCopy);
 }
 
-double te::layout::TextController::getDpiForCalculation() const
+
+bool te::layout::TextController::needUpdateBox(const te::layout::Properties& properties)
 {
-  return m_dpiForCalculation;
+  if (properties.contains("text") == false && properties.contains("font") == false)
+  {
+    return false;
+  }
+  return true;
 }
+
+void te::layout::TextController::refresh()
+{
+  QTextDocument* textDocument = createTextDocument(this->getProperties());
+
+  TextItem* textItem = dynamic_cast<TextItem*>(m_view);
+  textItem->setDocument(textDocument);
+
+  AbstractItemController::refresh();
+}
+

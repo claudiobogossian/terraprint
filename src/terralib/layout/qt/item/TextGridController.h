@@ -18,40 +18,32 @@
  */
 
 /*!
-  \file BalloonItem.h
+  \file TextController.h
    
-  \brief 
-
+  \brief Class that represents text controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_ITEM_H 
-#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_ITEM_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H
 
 // TerraLib
-#ifndef Q_MOC_RUN
-#include "AbstractItem.h"
-#endif
-#include "TextItem.h"
 #include "../../core/Config.h"
+#include "TextController.h"
 
-#include <QGraphicsItem>
+class QTextDocument;
 
 namespace te
 {
   namespace layout
   {
-    class AbstractItemController;
     /*!
-    \brief Class that represents a graphic Balloon. 
-        Its coordinate system is the same of scene (millimeters). 
-        He is also the son of AbstractItem, so it can become observer of a model (Observable). 
-
-      \ingroup layout
-
-      \sa te::layout::AbstractItem
+    \brief Class that represents text controller.
+    
+    \ingroup layout
+    \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT BalloonItem : public TextItem
+    class TELAYOUTEXPORT TextGridController: public TextController
     {
       public:
 
@@ -61,28 +53,25 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        BalloonItem(AbstractItemController* controller);
+        TextGridController(AbstractItemModel* model);
 
         /*!
           \brief Destructor
-         */
-        virtual ~BalloonItem();
+        */ 
+        virtual ~TextGridController();
 
-        virtual QRectF boundingRect() const;
+        /*!
+        \brief Sets the new values of the given properties
+        */
+        virtual void setProperties(const Properties& properties);
+
+        virtual QTextDocument* createTextDocument(const te::layout::Properties& properties);
+
+        virtual bool needUpdateBox(const te::layout::Properties& properties);
 
       protected:
-
-        virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
-        virtual void drawRectangleBalloon(QPainter * painter);
-        virtual void drawRoundedRectangleBalloon(QPainter * painter);
-        virtual void drawEllipseBalloon(QPainter * painter);
-        void setPainterParameters(QPainter* painter);
-        void setBalloonDirection(QPainterPath& qpainterpath);
+        std::vector< std::vector< std::string > > m_defaultMatrix;
     };
-
   }
 }
-
-#endif
-
-
+#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_CONTROLLER_H

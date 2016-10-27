@@ -147,7 +147,10 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   }
   if (hasGeometryChanged)
   {
-    m_view->prepareGeometryChange();
+    if (m_view != 0)
+    {
+      m_view->prepareGeometryChange();
+    }
   }
   m_model->setProperties(propertiesCopy);
 
@@ -190,7 +193,7 @@ void te::layout::AbstractItemController::update(const te::layout::Subject* subje
     m_view->setItemRotation(property.getValue().toDouble());
   }
 
-  m_view->refresh();
+  refresh();
 }
 
 bool te::layout::AbstractItemController::contains(const te::gm::Coord2D &coord) const
@@ -280,7 +283,13 @@ te::layout::AbstractItemModel* te::layout::AbstractItemController::getModel() co
 
 void te::layout::AbstractItemController::refresh()
 {
+  if (m_view == 0)
+  {
+    return;
+  }
+
   // do nothing
+  m_view->refresh();
 }
 
 bool te::layout::AbstractItemController::syncItemPos(Properties& properties)

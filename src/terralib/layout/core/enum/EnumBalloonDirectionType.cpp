@@ -15,55 +15,52 @@
     You should have received a copy of the GNU Lesser General Public License
     along with TerraLib. See COPYING. If not, write to
     TerraLib Team at <terralib-team@terralib.org>.
-    */
+ */
 
-    /*!
-    \file Observer.h
+/*!
+  \file EnumBalloonType.cpp
+   
+  \brief 
 
-    \brief Abstract class to represent an observer. "View" part of MVC component.
-
-    \ingroup layout
+  \ingroup layout
 */
 
 // TerraLib
-#include "Observer.h"
+#include "EnumBalloonDirectionType.h"
 
-#include "Subject.h"
-
-te::layout::Observer::Observer()
+te::layout::EnumBalloonDirectionType::EnumBalloonDirectionType() :
+  m_none(0),
+  m_left(0),
+  m_right(0)
 {
-
+  init();
 }
 
-te::layout::Observer::~Observer()
+te::layout::EnumBalloonDirectionType::~EnumBalloonDirectionType()
 {
-  std::vector<Subject*>::iterator it = m_vecSubjects.begin();
-  while (it != m_vecSubjects.end())
-  {
-    (*it)->detach(this);
-    ++it;
-  }
-
-  m_vecSubjects.clear();
+  
 }
 
-void te::layout::Observer::addSubject(Subject* subject)
+void te::layout::EnumBalloonDirectionType::init()
 {
-  m_vecSubjects.push_back(subject);
+  m_none = createEnum("None", this, TR_LAYOUT("None"));
+
+  m_left = createEnum("Left", this, TR_LAYOUT("Left"));
+
+  m_right = createEnum("Right", this, TR_LAYOUT("Right"));
 }
 
-void te::layout::Observer::removeSubject(Subject* subject)
+te::layout::EnumType* te::layout::EnumBalloonDirectionType::getLeft() const
 {
-  std::vector<Subject*>::iterator it = m_vecSubjects.begin();
-  while (it != m_vecSubjects.end())
-  {
-    if ((*it) == subject)
-    {
-      m_vecSubjects.erase(it);
-      break;
-    }
-    
-    ++it;
-  }
+  return m_left;
 }
 
+te::layout::EnumType* te::layout::EnumBalloonDirectionType::getRight() const
+{
+  return m_right;
+}
+
+te::layout::EnumType* te::layout::EnumBalloonDirectionType::getNoneType() const
+{
+  return m_none;
+}

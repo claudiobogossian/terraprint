@@ -29,24 +29,26 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_ITEM_H
 
 // TerraLib
-#include "TitleItem.h"
+#include "TextItem.h"
 #include "../../core/Config.h"
+
+//Qt
+class QTextTable;
 
 namespace te
 {
   namespace layout
   {
-    class Observable;
     class AbstractItemController;
 
     /*!
-      \brief Class daughter of te::layout::TitleItem representing a grid with cells which can be inserted texts.
+      \brief Class that represents a matrix of texts
     
       \ingroup layout
 
       \sa te::layout::TitleItem
     */
-    class TELAYOUTEXPORT TextGridItem : public TitleItem
+    class TELAYOUTEXPORT TextGridItem : public TextItem
     {
       public:
 
@@ -63,13 +65,18 @@ namespace te
          */
         virtual ~TextGridItem();
 
-        virtual void refreshDocument();
+        /*!
+        \brief Reimplemented from QGraphicsTextItem
+        */
+        virtual void keyPressEvent(QKeyEvent * event);
 
-      protected:
+        void documentEditionFinished();
 
-        virtual void init();
+        virtual void updateBlockEditionRange();
 
-        virtual void updateDocument();
+    protected:
+
+        int         m_lastCursorPosition;
     };
   }
 }

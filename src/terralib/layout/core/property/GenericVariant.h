@@ -92,7 +92,7 @@ namespace te
 
           \return value of string type
         */
-        std::vector<std::string> toStringVector();
+        const std::vector<std::string>& toStringVector() const;
 
         /*!
           \brief Returns the value of layer list type. (The setValue method received a list layer)

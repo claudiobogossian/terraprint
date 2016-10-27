@@ -464,7 +464,7 @@ void te::layout::MapItem::leaveEditionMode()
   removeCurrentTool();
 }
 
-void te::layout::MapItem::doRefresh()
+void te::layout::MapItem::refresh()
 {
   m_screenCache = QPixmap();
 }
@@ -586,8 +586,7 @@ QPixmap& te::layout::MapItem::getDraftPixmap()
 
 void te::layout::MapItem::redraw()
 {
-  doRefresh();
-  update();
+  refresh();
 }
 
 void te::layout::MapItem::recompose()

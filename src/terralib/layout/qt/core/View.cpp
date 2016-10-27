@@ -329,6 +329,12 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
 
 void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
 {
+  QGraphicsView::keyPressEvent(keyEvent);
+  if (keyEvent->isAccepted() == true)
+  {
+    return;
+  }
+
   Scene* scne = dynamic_cast<Scene*>(scene());
 
   EnumModeType* mode = Enums::getInstance().getEnumModeType();
@@ -390,7 +396,6 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
   {
     cutSelectedItens();
   }
-  QGraphicsView::keyPressEvent(keyEvent);
 }
 
 void te::layout::View::copyToClipboard()

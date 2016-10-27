@@ -201,10 +201,10 @@ void te::layout::MapCompositionController::hideProperties(Property& property) co
     property.setVisible(false);
   }
 
-  std::vector<Property> vecSubProperties = property.getSubProperty();
+  const std::vector<Property>& vecSubProperties = property.getSubProperty();
   for (size_t i = 0; i < vecSubProperties.size(); ++i)
   {
-    Property subProperty = vecSubProperties[i];
+    Property subProperty(vecSubProperties[i]); //copies the property
     hideProperties(subProperty);
     property.completelyUpdateSubProperty(subProperty);
   }
