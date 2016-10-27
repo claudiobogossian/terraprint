@@ -29,7 +29,6 @@
 #include "View.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/enum/Enums.h"
-#include "terralib/geometry/Envelope.h"
 #include "VisualizationArea.h"
 #include "../item/ItemGroup.h"
 #include "tools/ZoomClickTool.h"
@@ -39,6 +38,7 @@
 #include "../../core/enum/EnumTemplateType.h"
 #include "ItemUtils.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "pattern/factory/tool/ToolFactoryParamsCreate.h"
 #include "pattern/factory/tool/ToolFactory.h"
 #include "../../core/ContextObject.h"
@@ -49,6 +49,9 @@
 #include "../../core/property/SharedProperties.h"
 #include "tempDataStorage/TempDataStorageEditor.h"
 #include "tempDataStorage/TempFileInfo.h"
+
+#include "terralib/geometry/Envelope.h"
+#include "terralib/qt/widgets/Utils.h"
 
 // Qt
 #include <QMouseEvent>
@@ -714,11 +717,6 @@ void te::layout::View::resizeEvent(QResizeEvent * event)
   m_foreground = QPixmap();
 }
 
-void te::layout::View::onToolbarChangeMode( te::layout::EnumType* newMode )
-{
-  changeMode(newMode);
-}
-
 void te::layout::View::createItemGroup()
 {
   Scene* sc = dynamic_cast<Scene*>(scene());
@@ -800,50 +798,6 @@ void te::layout::View::resetDefaultConfig(bool toolLateRemoval)
       m_currentTool = 0;
     }    
   }
-}
-
-void te::layout::View::onMainMenuChangeMode( te::layout::EnumType* newMode )
-{
-  changeMode(newMode);
-}
-
-void te::layout::View::changeMode( EnumType* newMode )
-{
-  if(newMode == getCurrentMode())
-  {
-    return;
-  }
-
-  setCurrentMode(newMode);
-
-  resetDefaultConfig();
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-
-  if(!sc)
-    return;
-
-  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
-  ItemUtils iUtils = sc->getItemUtils();
-
-  EnumType* mode = getCurrentMode();
-  
-  if(mode == enumMode->getModeMapPan())
-  {
-    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapPan());
-  }
-  else if(mode == enumMode->getModeMapZoomIn())
-  {
-    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomIn());
-  }
-  else if(mode == enumMode->getModeMapZoomOut()) 
-  {
-    iUtils.setCurrentToolInSelectedMapItems(enumMode->getModeMapZoomOut());
-  }
-
-  sc->setContext(getContext());
-
-  emit changeContext();
 }
 
 void te::layout::View::hideEvent( QHideEvent * event )
@@ -1309,21 +1263,23 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   if ( !painter )
     return;
 
-  QGraphicsView::drawForeground(painter, rect);
-  if(!m_visibleRulers)
+  if (!m_visibleRulers)
+  {
+    QGraphicsView::drawForeground(painter, rect);
     return;
+  }
 
   QGraphicsScene* scene = this->scene();
   if(scene == 0)
   {
+    QGraphicsView::drawForeground(painter, rect);
     return;
   }
 
-  double scale = transform().m11();
-
-
   if (m_foreground.isNull())
   {
+    double scale = transform().m11();
+
     m_foreground = QPixmap(painter->device()->width(), painter->device()->height());
     m_foreground.fill(Qt::transparent);
     QPainter painter2(&m_foreground);
@@ -1341,6 +1297,9 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   QPolygonF polygonScene = this->mapToScene(rectView);
 
   painter->drawPixmap(polygonScene.boundingRect(), m_foreground, m_foreground.rect());
+
+  //then we draw the foreground of the scene
+  QGraphicsView::drawForeground(painter, rect);
 }
 
 bool te::layout::View::exportProperties( EnumType* type )
@@ -1354,7 +1313,7 @@ bool te::layout::View::exportProperties( EnumType* type )
   bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
-    QDir::currentPath(), tr("XML Files (*.xml)"));
+    te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {
@@ -1365,6 +1324,9 @@ bool te::layout::View::exportProperties( EnumType* type )
   {
     fileName.append(".xml");
   }
+
+  QFileInfo fileInfo(fileName);
+  te::qt::widgets::AddFilePathToSettings(fileInfo.absolutePath(), "map");
 
   std::string j_name = ItemUtils::convert2StdString(fileName);
 
@@ -1399,7 +1361,7 @@ bool te::layout::View::importTemplate( EnumType* type )
   emit aboutToPerformIO();
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
-    QDir::currentPath(), tr("XML Files (*.xml)"));
+    te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
   if(fileName.isEmpty())
   {
@@ -1715,7 +1677,16 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
 
   std::string j_name = ItemUtils::convert2StdString(fullTempPath);
 
-  bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  bool result = false;
+  
+  try
+  {
+    result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  }
+  catch (...)
+  {
+
+  }
 
   emit endedPerformingIO();
 

@@ -35,9 +35,6 @@
 te::layout::GridMapModel::GridMapModel() 
   : AbstractItemModel()
 {
-  std::string name;
-  std::string mapName;
-
   //Reference Settings
   double scale = 0.;
 

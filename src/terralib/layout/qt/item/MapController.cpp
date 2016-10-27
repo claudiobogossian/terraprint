@@ -560,7 +560,6 @@ te::layout::AbstractProxyProject* te::layout::MapController::getAbstractProxyPro
     return project;
   }
 
-  std::list<te::map::AbstractLayerPtr> allLayerList;
   Value<AbstractProxyProject* >* value = scene->getContextValues<AbstractProxyProject *>("proxy_project");
   if (value)
   {
@@ -590,7 +589,7 @@ void te::layout::MapController::validateItem()
   }
 
 
-  for (std::list<te::map::AbstractLayerPtr>::iterator it = currentLayerList.begin(); it != currentLayerList.end(); it++)
+  for (std::list<te::map::AbstractLayerPtr>::iterator it = currentLayerList.begin(); it != currentLayerList.end(); ++it)
   {
 
     te::map::AbstractLayerPtr layer = (*it);

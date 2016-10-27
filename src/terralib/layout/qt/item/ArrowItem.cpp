@@ -29,6 +29,7 @@
 #include "ArrowItem.h"
 #include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumArrowType.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 // Qt
 #include <QPointF>

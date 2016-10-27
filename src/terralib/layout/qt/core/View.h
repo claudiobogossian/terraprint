@@ -173,12 +173,6 @@ namespace te
         virtual void refreshAllProperties();
 
         /*!
-          \brief Responsible method for verifying changes made in Context outside the View object and call corresponding actions. 
-          Ex.: Action Pan called in toolbar changed Context to Pan mode, then View object call method to do it.
-        */
-        virtual void changeMode(EnumType* newMode);
-
-        /*!
           \brief Reset the view interaction with the default settings, cursor, viewport update and no current tools.
           \param lateToolDeletion If true, the tool will no be deleted imediately, but added to a list to late removal. This is useful 
         */
@@ -285,17 +279,7 @@ namespace te
 
       public slots:
     
-    /*!
-          \brief Notifies View object that some action on the toolbar has been thrown. 
-        */
-        virtual void onToolbarChangeMode(te::layout::EnumType* newMode);
-
-    /*!
-          \brief Notifies View object that some action on the Menu has been thrown. 
-        */
-        virtual void onMainMenuChangeMode(te::layout::EnumType* newMode);
-
-    /*!
+        /*!
           \brief Notifies View object that some configuration was modified in the Page Settings Window.
         */
         virtual void onChangeConfig();

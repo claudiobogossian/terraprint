@@ -159,7 +159,6 @@ void te::layout::MainLayout::createLayoutContext(int width, int height)
     m_canvas->setWindow(worldbox.getLowerLeftX(), worldbox.getLowerLeftY(), 
       worldbox.getUpperRightX(), worldbox.getUpperRightY());
     m_canvas->clear();
-    lScene->setCanvas(m_canvas);
   }
 }
 

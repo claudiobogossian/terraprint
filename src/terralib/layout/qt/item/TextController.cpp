@@ -20,22 +20,20 @@
 // TerraLib
 #include "TextController.h"
 
-#include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../../core/enum/EnumAlignmentType.h"
-#include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../qt/core/Scene.h"
 #include "../../qt/item/AbstractItem.h"
 #include "../../qt/item/TextItem.h"
 
+
 #include <QGraphicsTextItem>
 #include <QTextDocument>
-#include <QFontMetricsF>
 #include <QTextCursor>
 
 te::layout::TextController::TextController(AbstractItemModel* model)
   : AbstractItemController(model)
+  , m_dpiForCalculation(96.)
 {
-  
 }
 
 te::layout::TextController::~TextController()
@@ -76,13 +74,32 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
   QString qText = ItemUtils::convert2QString(pText.getValue().toString());
   QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
 
-  QPainterPath qPath = ItemUtils::textToVector(qText, qFont);
-  QRectF rect = qPath.boundingRect();
-  QSizeF size = rect.size();
+  TextItem* textItem = dynamic_cast<TextItem*>(m_view);
+  
+  QTextDocument textDocument;
+  textDocument.setTextWidth(-1);
+  textDocument.setDefaultFont(qFont);
+  textDocument.setPlainText(qText);
+  textDocument.setDocumentMargin(0);
+  textDocument.setTextWidth(textDocument.size().width());
+  QSizeF sizePx = textDocument.size();
 
-  //We map to MM
-  AbstractItem* absItem = (AbstractItem*)m_view;
-  QSizeF sizeMM(size);
+  QSizeF sizeMM;
+  QGraphicsScene* qScene = textItem->scene();
+  if (qScene != 0)
+  {
+    Scene* myScene = dynamic_cast<Scene*>(qScene);
+    m_dpiForCalculation = myScene->getContext().getDpiX();
+
+    Utils utils = myScene->getUtils();
+    sizeMM.setWidth(utils.pixel2mm(sizePx.width()));
+    sizeMM.setHeight(utils.pixel2mm(sizePx.height()));
+  }
+  else
+  {
+    sizeMM.setWidth(Utils::pixel2mm(sizePx.width(), m_dpiForCalculation));
+    sizeMM.setHeight(Utils::pixel2mm(sizePx.height(), m_dpiForCalculation));
+  }
 
   Property propertyWidth(0);
   propertyWidth.setName("width");
@@ -95,168 +112,12 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
   propertiesCopy.addProperty(propertyWidth);
   propertiesCopy.addProperty(propertyHeight);
 
-  absItem->prepareGeometryChange();
+  textItem->prepareGeometryChange();
 
   AbstractItemController::setProperties(propertiesCopy);
 }
 
-/*
-QSizeF te::layout::TextController::updateView()
+double te::layout::TextController::getDpiForCalculation() const
 {
-  TextItem* view = dynamic_cast<TextItem*>(m_view);
-
-  if(view != 0)
-  {
-    //reads the properties
-    const Property& pText = getProperty("text");
-    const Property& pFont = getProperty("font");
-    const Property& pColor = getProperty("color");
-    const Property& pAligment = getProperty("alignment");
-
-    const std::string& text = pText.getValue().toString();
-    const Font& ft = pFont.getValue().toFont();
-    const te::color::RGBAColor& color = pColor.getValue().toColor();
-
-    EnumAlignmentType enumAligmentType;
-    const std::string& label = pAligment.getOptionByCurrentChoice().toString();
-    EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
-
-    //converts information about the font
-    QFont qft;
-
-    std::string fontName = ft.getFamily();
-    QString qFontName = ItemUtils::convert2QString(fontName);
-
-    qft.setFamily(qFontName);
-    qft.setBold(ft.isBold());
-    qft.setItalic(ft.isItalic());
-    qft.setKerning(ft.isKerning());
-    qft.setStrikeOut(ft.isStrikeout());
-    qft.setUnderline(ft.isUnderline());
-
-    //we need to set the font size from PT to MM
-
-    qft.setPointSizeF(ft.getPointSize());
-
-    //converts the text
-    QString qText = ItemUtils::convert2QString(text);
-
-    //converts the color
-    QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-
-    //converts information about the type
-    QTextOption txtOpt = view->document()->defaultTextOption();
-    if(currentAligmentType == enumAligmentType.getAlignmentCenterType())
-    {
-
-      txtOpt.setAlignment(Qt::AlignCenter);
-      view->setTextWidth(-1);
-      view->setTextWidth(view->boundingRect().width());
-
-    }
-
-    if(currentAligmentType == enumAligmentType.getAlignmentLeftType())
-    {
-      txtOpt.setAlignment(Qt::AlignLeft);
-      view->setTextWidth(-1);
-      view->setTextWidth(view->boundingRect().width());
-    }
-
-    if(currentAligmentType == enumAligmentType.getAlignmentRightType())
-    {
-
-      txtOpt.setAlignment(Qt::AlignRight);
-      view->setTextWidth(-1);
-      view->setTextWidth(view->boundingRect().width());
-
-    }
-
-    if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
-    {
-
-      txtOpt.setAlignment(Qt::AlignJustify);
-      view->setTextWidth(-1);
-      //setting width to broken text lines. Text width must be < than bounding rect width
-      view->setTextWidth(view->boundingRect().width() -  0.01);
-      
-    }
-
-    // We now synchronize the attributes of the view based on he attributes of the model
-    bool changed = false;
-    if(view->toPlainText() != qText)
-    {
-      view->setPlainText(qText);
-      changed = true;
-    }
-    if(view->font() != qft)
-    {
-      view->setFont(qft);
-      changed = true;
-    }
-    
-    if(changed == true) 
-    {
-      view->setTextWidth(-1);
-      view->setTextWidth(view->boundingRect().width());
-    }
-    if(view->document()->defaultTextOption().alignment() != txtOpt.alignment())
-    {
-      view->document()->setDefaultTextOption(txtOpt);
-    }
-    if(view->defaultTextColor() != qColor)
-    {
-      view->setDefaultTextColor(qColor);
-    }
-
-    //we get the size in pixels
-    QRectF rect = view->boundingRect();
-    QRectF boundingRect(QPointF(0, 0), rect.size());
-
-    //then we convert to millimiters
-    boundingRect = view->mapRectToScene(boundingRect);
-
-    //we finally return the new size in millimiters
-    return boundingRect.size();
-  }
-  return QSizeF();
-}
-*/
-
-void te::layout::TextController::textChanged()
-{
-  /*
-  TextItem* view = dynamic_cast<TextItem*>(m_view);
-  if(view != 0)
-  {
-    const Property& pText = getProperty("text");
-    std::string currentText = pText.getValue().toString();
-
-    QString qCurrentText = ItemUtils::convert2QString(currentText);
-
-    QString qNewText = view->toPlainText();
-
-    if(qCurrentText != qNewText)
-    {
-      EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-      Property propertyText(0);
-      propertyText.setName("text");
-
-      std::string newText = ItemUtils::convert2StdString(qNewText);
-      propertyText.setValue(newText, dataType->getDataTypeString());
-
-      Properties oldCommand = m_model->getProperties();
-      m_model->setProperty(propertyText);
-      Properties newCommand = m_model->getProperties();
-
-      QUndoCommand* command = new ChangePropertyCommand(view, oldCommand, newCommand);
-
-      Scene* sc = dynamic_cast<Scene*>(view->scene());
-      if(sc)
-      {
-        sc->addUndoStack(command);
-      }
-    }
-  }
-  */
+  return m_dpiForCalculation;
 }

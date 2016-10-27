@@ -28,6 +28,7 @@
 // TerraLib
 #include "GridSettingsController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/enum/Enums.h"
 #include "../../outside/GridSettingsModel.h"
 #include "../core/ItemUtils.h"

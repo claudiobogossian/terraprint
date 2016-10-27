@@ -30,6 +30,8 @@
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
+#include "../../core/pattern/mvc/AbstractItemController.h"
+
 te::layout::NorthItem::NorthItem(AbstractItemController* controller) 
   : AbstractItem(controller)
 {
@@ -68,10 +70,23 @@ void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGrap
 
 void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
 {
+  QRectF boundingBoxMM = this->boundingRect();
+  double fontNQ = boundingBoxMM.height() / 2.;
+  QFont font("Arial");
+  font.setPointSizeF(fontNQ);
+
+  QPainterPath northLetter = ItemUtils::textToVector("N", font);
+
+  double northLetterX = boundingBoxMM.center().x() - (northLetter.boundingRect().width() / 2.);
+  double northLetterY = boundingBoxMM.center().y() + boundingBoxMM.height() / 3.;
+  northLetter.translate(northLetterX, northLetterY);
+
   const Property& lineWidth = m_controller->getProperty("line_width");
   double lnew = lineWidth.getValue().toDouble();
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
+
   QColor cpen = setBrush(painter);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
@@ -82,28 +97,29 @@ void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
   QPolygonF north;
   north<<p1<<p2<<p3<<p4;
 
-  QPen pen(cpen, lnew, Qt::SolidLine);
-  pen.setWidth(1);
-  QPointF p5 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)+boundingRect().height()/22.);
-  QPointF p6 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)-boundingRect().height()/22.);
-  QPointF p7 = QPointF(boundingRect().width()/2.2+boundingRect().width()/11,(boundingRect().height()/3.+boundingRect().height()/2.)+boundingRect().height()/22.);
-  QPointF p8 = QPointF(boundingRect().width()/2.2+boundingRect().width()/11,(boundingRect().height()/3.+boundingRect().height()/2.)-boundingRect().height()/22.);
-
-  painter->setPen(pen);
-  painter->drawLine(p5,p6);
-  painter->drawLine(p5,p8);
-  painter->drawLine(p8,p7);
-
   painter->setPen(pn);
   painter->drawPolygon(north);
+  painter->fillPath(northLetter, QBrush(cpen));
   painter->restore();
 }
 void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
 {
+  QRectF boundingBoxMM = this->boundingRect();
+  double fontNQ = boundingBoxMM.height() / 2.;
+  QFont font("Arial");
+  font.setPointSizeF(fontNQ);
+
+  QPainterPath northLetter = ItemUtils::textToVector("N", font);
+
+  double northLetterX = boundingBoxMM.center().x() - (northLetter.boundingRect().width() / 2.);
+  double northLetterY = boundingBoxMM.center().y() + boundingBoxMM.height() / 3.;
+  northLetter.translate(northLetterX, northLetterY);
+
   const Property& lineWidth = m_controller->getProperty("line_width");
   double lnew = lineWidth.getValue().toDouble();
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen = setBrush(painter);
   QPen pn(cpen, lnew, Qt::SolidLine);
   
@@ -114,19 +130,6 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
   QPointF p3 = QPointF(boundingRect().width() / 2.,boundingRect().center().y()-boundingRect().height()/4.);
   QPointF p4 = QPointF(boundingRect().bottomLeft().x()+boundingRect().bottomRight().x()/4,boundingRect().top());
 
-  QPen pen(cpen, lnew, Qt::SolidLine);
-  pen.setWidth(1);
-  QPointF p5 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)+boundingRect().height()/22.);
-  QPointF p6 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/3.+boundingRect().height()/2.)-boundingRect().height()/22.);
-  QPointF p7 = QPointF(boundingRect().width()/2.2+boundingRect().width()/11,(boundingRect().height()/3.+boundingRect().height()/2.)+boundingRect().height()/22.);
-  QPointF p8 = QPointF(boundingRect().width()/2.2+boundingRect().width()/11,(boundingRect().height()/3.+boundingRect().height()/2.)-boundingRect().height()/22.);
-
-  painter->setPen(pen);
-  painter->drawLine(p5,p6);
-  painter->drawLine(p5,p8);
-  painter->drawLine(p8,p7);
-  
-
   QPolygonF north2;
   north2<<p1<<p2<<p3;
   QPolygonF north3;
@@ -136,40 +139,45 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
   painter->drawPolygon(north2);
   painter->setBrush(QBrush(secondPolygon));
   painter->drawPolygon(north3);
+
+  painter->fillPath(northLetter, QBrush(cpen));
   
   painter->restore();
 }
 
 void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
 {
+  QRectF boundingBoxMM = this->boundingRect();
+  double fontNQ = boundingBoxMM.height() / 2.;
+  QFont font("Arial");
+  font.setPointSizeF(fontNQ);
+
+  QPainterPath northLetter = ItemUtils::textToVector("N", font);
+
+  double northLetterX = boundingBoxMM.center().x() - (northLetter.boundingRect().width() / 2.);
+  double northLetterY = boundingBoxMM.center().y() + boundingBoxMM.height() / 3.;
+  northLetter.translate(northLetterX, northLetterY);
+
   const Property& lineWidth = m_controller->getProperty("line_width");
   double lnew = lineWidth.getValue().toDouble();
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen = setBrush(painter);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
 
-  QPen pen(cpen, lnew, Qt::SolidLine);
-  pen.setWidth(1);
-  QPointF p1 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/2.5+boundingRect().height()/2.)+boundingRect().height()/22.);
-  QPointF p2 = QPointF(boundingRect().width()/2.2,(boundingRect().height()/2.5+boundingRect().height()/2.)-boundingRect().height()/22.);
-  QPointF p3 = QPointF(boundingRect().width()/2.2+boundingRect().width()/11,(boundingRect().height()/2.5+boundingRect().height()/2.)+boundingRect().height()/22.);
-  QPointF p4 = QPointF(boundingRect().width()/2.2+boundingRect().width()/11,(boundingRect().height()/2.5+boundingRect().height()/2.)-boundingRect().height()/22.);
+  double symbolCenterX = (boundingRect().width() / 2.);
+  double symbolCenterY = (boundingRect().height() / 2.) - (boundingRect().height() / 10.); //we translate the reference a little bit to fit the North letter
 
-  painter->setPen(pen);
-  painter->drawLine(p1,p2);
-  painter->drawLine(p1,p4);
-  painter->drawLine(p4,p3);
-
-  QPointF p5 = QPointF(boundingRect().width()/2,boundingRect().height()/2+boundingRect().height()/2.7);
-  QPointF p6 = QPointF(boundingRect().width()/2,boundingRect().height()/2-boundingRect().height()/2.5);
-  QPointF p7 = QPointF(boundingRect().width()/2+boundingRect().width()/2.5,boundingRect().height()/2);
-  QPointF p8 = QPointF(boundingRect().width()/2-boundingRect().width()/2.5,boundingRect().height()/2);
-  QPointF p9 = QPointF(boundingRect().width()/2+boundingRect().width()/40,boundingRect().height()/2);
-  QPointF p10 = QPointF(boundingRect().width()/2-boundingRect().width()/40,boundingRect().height()/2);
-  QPointF p11 = QPointF(boundingRect().width()/2,boundingRect().height()/2+boundingRect().height()/40);
-  QPointF p12 = QPointF(boundingRect().width()/2,boundingRect().height()/2-boundingRect().height()/40);
+  QPointF p5 = QPointF(symbolCenterX, symbolCenterY + boundingRect().height()/2.7);
+  QPointF p6 = QPointF(symbolCenterX, symbolCenterY - boundingRect().height()/2.5);
+  QPointF p7 = QPointF(symbolCenterX +boundingRect().width()/2.5, symbolCenterY);
+  QPointF p8 = QPointF(symbolCenterX -boundingRect().width()/2.5, symbolCenterY);
+  QPointF p9 = QPointF(symbolCenterX +boundingRect().width()/40, symbolCenterY);
+  QPointF p10 = QPointF(symbolCenterX -boundingRect().width()/40, symbolCenterY);
+  QPointF p11 = QPointF(symbolCenterX, symbolCenterY + boundingRect().height()/40);
+  QPointF p12 = QPointF(symbolCenterX, symbolCenterY - boundingRect().height()/40);
 
   QPolygonF north4;
   north4<<p5<<p9<<p10;
@@ -182,6 +190,8 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
   painter->setPen(pn);
   painter->drawPolygon(north4);
   painter->drawPolygon(north5);
+
+  painter->fillPath(northLetter, QBrush(cpen));
   painter->restore();
 }
 

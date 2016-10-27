@@ -32,6 +32,7 @@
 #include "../../core/WorldTransformer.h"
 #include "../../core/enum/EnumTextFormatType.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "terralib/maptools/Utils.h"
 #include "terralib/geometry/Utils.h"

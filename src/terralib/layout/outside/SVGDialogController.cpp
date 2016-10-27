@@ -28,6 +28,7 @@
 // TerraLib
 #include "SVGDialogController.h"
 #include "SVGDialogModel.h"
+#include "../core/pattern/mvc/AbstractItemController.h"
 #include "../qt/item/MapItem.h"
 #include "../qt/core/ItemUtils.h"
 #include "../qt/core/Scene.h"

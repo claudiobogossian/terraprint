@@ -34,14 +34,12 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H
 #define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_ITEM_H
 
+#include "../../core/Config.h"
+
 // TerraLib
 #include "../core/ItemUtils.h"
 #include "../../core/Utils.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
-#include "../../core/AbstractScene.h"
-#include "../../core/property/Property.h"
-#include "../../core/pattern/singleton/Context.h"
 #include "../../core/enum/AbstractType.h"
 
 //Qt
@@ -71,6 +69,8 @@ namespace te
   {
     class AbstractItemController;
     class AbstractItemModel;
+    class AbstractScene;
+    class Context;
     /*!
     \brief Abstract class that represents a graphic item.  
       Its coordinate system is the same of scene (millimeters). Knows rotate and resize. Stores a pixmap drawn by model.
@@ -83,7 +83,7 @@ namespace te
 
       \sa te::layout::AbstractItemView
     */
-    class AbstractItem : public QGraphicsItem, public AbstractItemView
+	class TELAYOUTEXPORT AbstractItem : public QGraphicsItem, public AbstractItemView
     {
       public:
 
@@ -105,6 +105,9 @@ namespace te
         */
         virtual QRectF boundingRect() const;
 
+        /*!
+        \brief This function is called every time the view must be updated
+        */
         virtual void refresh();
 
         virtual void contextUpdated(const ContextObject& context);
@@ -164,6 +167,11 @@ namespace te
           \brief Draws the selection of the item
          */
         virtual void drawSelection(QPainter* painter);
+
+        /*!
+        \brief Draws the feedback of the item that is in edition mode
+        */
+        virtual void drawEdition(QPainter* painter);
         
         /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
@@ -174,6 +182,11 @@ namespace te
           \brief Reimplemented from QGraphicsItem
          */
         virtual void hoverMoveEvent( QGraphicsSceneHoverEvent * event );
+
+        /*!
+        \brief Reimplemented from QGraphicsItem
+        */
+        virtual void hoverLeaveEvent(QGraphicsSceneHoverEvent * event);
 
         virtual bool checkTouchesCorner( const double& x, const double& y );
 
@@ -200,11 +213,15 @@ namespace te
 
         virtual void drawItemResized( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
         
-        virtual AbstractScene* getScene();
+        virtual AbstractScene* getScene() const;
 
         virtual QRectF qRectToQPolygonMap(QRectF rect);
         
         virtual void drawWarningAlert(QPainter * painter);
+
+        virtual bool isZoomAdequateForResize() const;
+
+        virtual bool isZoomAdequateForRotation() const;
 
      protected:
 
@@ -216,9 +233,11 @@ namespace te
         LayoutAlign                       m_enumSides;
         te::layout::ItemAction            m_currentAction;
         double                            m_marginResizePrecision; //precision
-        double                            m_selectionPointSize;
         QPolygonF                         m_polygonWarning;
         bool                              m_isPrinting;
+        int                               m_hotPointSizePixels;
+        int                               m_selectionLineWidthPixels;
+        int                               m_rotationHotPointSizePixels;
 
     };
   } // end namespace layout

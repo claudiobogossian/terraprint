@@ -28,87 +28,233 @@
 // TerraLib
 #include "TextItem.h"
 #include "TextController.h"
-#include "../../item/TextModel.h"
 #include "../../qt/core/Scene.h"
 #include "../core/ItemUtils.h"
+#include "../../core/enum/EnumAlignmentType.h"
 #include "../../core/pattern/singleton/Context.h"
+
 
 // STL
 #include <string>
 
 // Qt
 #include <QTextDocument>
-#include <QStyleOptionGraphicsItem>
+#include <QAbstractTextDocumentLayout>
 #include <QTextCursor>
 #include <QPainter>
-#include <QStyleOptionGraphicsItem>
 #include <QTextOption>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 
 te::layout::TextItem::TextItem(AbstractItemController* controller)
-  : QObject()
-  , AbstractItem(controller)
+  : AbstractItem(controller)
+  , m_textCursor(0)
 {  
   //If enabled is true, this item will accept hover events
   setAcceptHoverEvents(false);
   setCursor(Qt::ArrowCursor); // default cursor
 
-  //connect(document(), SIGNAL(contentsChange(int, int, int)), this, SLOT(updateGeometry(int, int, int)));
+  QTextDocument* document = new QTextDocument();
+
+  m_textCursor = new QTextCursor(document);
+  m_textCursor->document()->setDefaultCursorMoveStyle(Qt::VisualMoveStyle);
 }
 
 te::layout::TextItem::~TextItem()
 {
+  delete m_textCursor->document();
+  delete m_textCursor;
+}
 
+QRectF te::layout::TextItem::boundingRect() const
+{
+  if (m_isEditionMode == false)
+  {
+    return AbstractItem::boundingRect();
+  }
+
+  AbstractScene* myScene = this->getScene();
+  if (myScene == 0)
+  {
+    return AbstractItem::boundingRect();
+  }
+
+  Utils utils = myScene->getUtils();
+
+  QSizeF documentSizePx = m_textCursor->document()->size();
+
+  double widthMM = utils.pixel2mm(documentSizePx.width());
+  double heightMM = utils.pixel2mm(documentSizePx.height());
+
+  //when we are editing the item, we let the item handle the changes in the bounding box
+  QRectF rect(0, 0, widthMM, heightMM);
+  return rect;
+}
+
+void te::layout::TextItem::refresh()
+{
+  const te::layout::Property& pText = m_controller->getProperty("text");  
+  const te::layout::Property& pFont = m_controller->getProperty("font");
+  const Property& pAligment = m_controller->getProperty("alignment");
+
+  QString qText = ItemUtils::convert2QString(pText.getValue().toString());
+  QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
+  EnumAlignmentType enumAligmentType;
+  const std::string& label = pAligment.getOptionByCurrentChoice().toString();
+  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
+
+  QTextOption textOption;
+  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+  {
+    textOption.setAlignment(Qt::AlignLeft);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+  {
+    textOption.setAlignment(Qt::AlignRight);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+  {
+    textOption.setAlignment(Qt::AlignCenter);
+  }
+  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+  {
+    textOption.setAlignment(Qt::AlignJustify);
+  }
+
+  m_textCursor->document()->setTextWidth(-1);
+  m_textCursor->document()->setDefaultFont(qFont);
+  m_textCursor->document()->setPlainText(qText);
+  m_textCursor->document()->setDocumentMargin(0);
+  m_textCursor->document()->setDefaultTextOption(textOption);
+  m_textCursor->document()->setTextWidth(m_textCursor->document()->size().width());
+
+  AbstractItem::refresh();
 }
 
 void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& pText = m_controller->getProperty("text");
-  const Property& pFont = m_controller->getProperty("font");
-
-  std::string text = pText.getValue().toString();
-  const Font& font = pFont.getValue().toFont();
-  QFont qFont = ItemUtils::convertToQfont(font);
-
-  QRectF boundingRect = this->boundingRect();
-
-  ItemUtils::drawText(boundingRect.topLeft(), painter, qFont, text);
-}
-
-QVariant te::layout::TextItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
-{
-  /*if (change == QGraphicsItem::ItemSceneHasChanged)
+  AbstractScene* myScene = this->getScene();
+  if (myScene == 0)
   {
-    Scene* myScene = dynamic_cast<Scene*>(this->scene());
-    if (myScene != 0)
-    {
-      //we first calculate the correction factor to be use in the case that the given DPI is not 72.
-      double correctionFactor = myScene->getContext().getDpiX() / 72.;
+    return;
+  }
 
-      //as we are in a CS based in millimeters, we calculate the relation between the millimeters CS and the device CS
-      double ptSizeInches = 1. / 72.; //The size of 1 point, in inches
-      double ptSizeMM = ptSizeInches * 25.4; //The size of 1 point, in millimeters
-      double scale = ptSizeMM * (1. / correctionFactor); //for the calculation of the scale, we consider the pixel size in millimeters and the inverse of the correction factor
+  TextController* textController = (TextController*)m_controller;
 
-      QTransform trans;
-      trans.scale(scale, -scale); //here we scale the item so the text size to be considered will be points and not millimeters
-      trans.translate(0, -boundingRect().height());
+  //we must set some transformation in order to prepare the item to be rendered on the screen or in other output device
+  //we must first aquire some information about the current dpi and the zoom
+  int zoom = myScene->getContext().getZoom();
+  double zoomFactor = zoom / 100.;
+  double dpiFactor = myScene->getContext().getDpiX() / textController->getDpiForCalculation();
 
-      this->setTransform(trans);
-    }
-  }*/
-  return AbstractItem::itemChange(change, value);
+  //the we aquire information about the bounding rect references in pixels and in millimeters
+  QRectF boxMM = this->boundingRect();
+
+  Utils utils = myScene->getUtils();
+  double widthPx = utils.mm2pixel(boxMM.width());
+  double heightPx = utils.mm2pixel(boxMM.height());
+
+  double conversionfactor = boxMM.width() / widthPx;
+  
+  //if we are in edition mode, we must draw the cursor position and the selection
+  QAbstractTextDocumentLayout::PaintContext context;
+  if (isEditionMode())
+  {
+    //we define the position
+    context.cursorPosition = m_textCursor->position();
+
+    //we defined the selection
+    QAbstractTextDocumentLayout::Selection selection;
+    selection.cursor = QTextCursor(*m_textCursor);
+    selection.format.setBackground(QBrush(Qt::blue));
+    selection.format.setForeground(QBrush(Qt::white));
+    context.selections.append(selection);
+  }
+
+  painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
+
+  //we finally set the transformation into the qpainter
+  QTransform transform;
+  transform.translate(0, boxMM.height());
+  transform.scale(dpiFactor * conversionfactor, dpiFactor * conversionfactor * -1);
+  painter->setTransform(transform, true);
+
+  //and here we effectivally asks the textLayout to draw the document
+  QAbstractTextDocumentLayout* documentLayout = m_textCursor->document()->documentLayout();
+
+  documentLayout->draw(painter, context);
+
+  painter->restore();
 }
-
 
 void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
-  QGraphicsItem::mousePressEvent(event);
-  if (m_isEditionMode)
+  if (isEditionMode() == false)
   {
-    setCursor(Qt::IBeamCursor);
+    AbstractItem::mousePressEvent(event);
+    return;
   }
+  
+
+  if (event->button() != Qt::LeftButton)
+  {
+    return;
+  }
+
+  AbstractScene* myScene = this->getScene();
+  if (myScene == 0)
+  {
+    return;
+  }
+
+  Utils utils = myScene->getUtils();
+
+  double xPos = utils.mm2pixel(event->pos().x());
+  double yPos = utils.mm2pixel(boundingRect().height()) - utils.mm2pixel(event->pos().y());
+
+  int newPosition = m_textCursor->document()->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
+  if (newPosition != -1)
+  {
+    m_textCursor->setPosition(newPosition);
+    update();
+  }
+
+  event->accept();
+}
+
+void te::layout::TextItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
+{
+  if (isEditionMode() == false)
+  {
+    AbstractItem::mouseMoveEvent(event);
+    return;
+  }
+
+  if (!(event->buttons() & Qt::LeftButton))
+  {
+    return;
+  }
+
+  AbstractScene* myScene = this->getScene();
+  if (myScene == 0)
+  {
+    return;
+  }
+  
+  Utils utils = myScene->getUtils();
+
+  double xPos = utils.mm2pixel(event->pos().x());
+  double yPos = utils.mm2pixel(boundingRect().height()) - utils.mm2pixel(event->pos().y());
+
+  int newPosition = m_textCursor->document()->documentLayout()->hitTest(QPointF(xPos, yPos), Qt::FuzzyHit);
+  if (newPosition != -1 && newPosition != m_textCursor->position())
+  {
+    m_textCursor->setPosition(newPosition, QTextCursor::KeepAnchor);
+    update();
+  }
+
+  event->accept();
 }
 
 void te::layout::TextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * event)
@@ -124,78 +270,87 @@ void te::layout::TextItem::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * even
 
 void te::layout::TextItem::keyPressEvent(QKeyEvent * event)
 {
-  /*
-  QGraphicsTextItem::keyPressEvent(event);
-
-  // Required to remove formatting texts coming from outside the application. 
-  // This item will only accept "plain text", no "rich texts".
-  if (event->matches(QKeySequence::Paste))
+  if (isEditionMode() == false)
   {
-    QTextCursor cursor(textCursor());
-    QString qPlainText = toPlainText();
-    cursor.select(QTextCursor::Document);
-    cursor.deleteChar();
-    setTextCursor(cursor);
-    setPlainText(qPlainText);
+    AbstractItem::keyPressEvent(event);
+    return;
   }
-  */
-}
 
-QRectF te::layout::TextItem::boundingRect() const
-{
-  //when we are editing the item, we let the item handle the changes in the bounding box
-  QRectF rect = AbstractItem::boundingRect();
-  return rect;
+  event->accept();
+
+  QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor;
+  if (event->modifiers() & Qt::ShiftModifier)
+  {
+    moveMode = QTextCursor::KeepAnchor;
+  }
+
+  m_textCursor->document()->setTextWidth(-1);
+  switch (event->key())
+  {
+  case Qt::Key_Backspace:
+    m_textCursor->deletePreviousChar();
+    break;
+  case Qt::Key_Delete:
+    m_textCursor->deleteChar();
+    break;
+  case Qt::Key_Left:
+    m_textCursor->movePosition(QTextCursor::Left, moveMode);
+    break;
+  case Qt::Key_Right:
+    m_textCursor->movePosition(QTextCursor::Right, moveMode);
+    break;
+  case Qt::Key_Up:
+    m_textCursor->movePosition(QTextCursor::Up, moveMode);
+    break;
+  case Qt::Key_Down:
+    m_textCursor->movePosition(QTextCursor::Down, moveMode);
+    break;
+  case Qt::Key_Home:
+    if(event->modifiers() & Qt::ControlModifier)
+      m_textCursor->movePosition(QTextCursor::Start, moveMode);
+    else
+      m_textCursor->movePosition(QTextCursor::StartOfLine, moveMode);
+    break;
+  case Qt::Key_End:
+    if (event->modifiers() & Qt::ControlModifier)
+      m_textCursor->movePosition(QTextCursor::End, moveMode);
+    else
+      m_textCursor->movePosition(QTextCursor::EndOfLine, moveMode);
+    break;
+  default:
+    m_textCursor->insertText(event->text());
+    break;
+  }
+
+  prepareGeometryChange();
+  m_textCursor->document()->setTextWidth(m_textCursor->document()->size().width());
+  update();
 }
 
 void te::layout::TextItem::enterEditionMode()
 {
-  /*
-  AbstractItem<QGraphicsTextItem>::enterEditionMode();
-
-  //If enabled is true, this item will accept hover events
-  setTextInteractionFlags(Qt::TextEditorInteraction);
+  AbstractItem::enterEditionMode();
 
   setCursor(Qt::IBeamCursor);
-  QTextCursor cursor(textCursor());
-  cursor.clearSelection();
-  setTextCursor(cursor);
-  setFocus();
-  */
+
+  m_textCursor->movePosition(QTextCursor::Start);
+  m_textCursor->movePosition(QTextCursor::End, QTextCursor::KeepAnchor);
 }
 
 void te::layout::TextItem::leaveEditionMode()
 {
-  /*
-  AbstractItem<QGraphicsTextItem>::leaveEditionMode();
+  AbstractItem::leaveEditionMode();
 
-  //Necessary clear the selection and focus of the edit 
-  //after being completely closed and like this not cause bad behavior.
-  QTextCursor cursor(textCursor());
-  cursor.clearSelection();
-  setTextCursor(cursor);
-  setTextInteractionFlags(Qt::NoTextInteraction);
-  unsetCursor();
-  clearFocus();
   setCursor(Qt::ArrowCursor);
 
-  TextController* controller = dynamic_cast<TextController*>(m_controller);
-  if(controller != 0)
-  {
-    controller->textChanged();
-  }
-  */
-}
+  QString qNewText = m_textCursor->document()->toPlainText();
+  std::string newText = ItemUtils::convert2StdString(qNewText);
 
-void te::layout::TextItem::updateGeometry(int position, int charsRemoved, int charsAdded)
-{
-  /*
-  setTextWidth(-1);
-  setTextWidth(boundingRect().width());
-  
-  TextController* controller = dynamic_cast<TextController*>(m_controller);
-  if(controller != 0)
-  {
-    controller->textChanged();
-  }*/
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  Property propertyText(0);
+  propertyText.setName("text");
+  propertyText.setValue(newText, dataType->getDataTypeString());
+
+  m_controller->setProperty(propertyText);
 }

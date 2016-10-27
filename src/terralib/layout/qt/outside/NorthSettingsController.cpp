@@ -28,6 +28,7 @@
 // TerraLib
 #include "../../qt/outside/NorthSettingsController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../outside/NorthSettingsModel.h"
 #include "../../qt/item/NorthItem.h"
 #include "../../qt/core/Scene.h"

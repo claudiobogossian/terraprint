@@ -30,6 +30,7 @@
 #include "../../core/PaperConfig.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/Utils.h"
+#include "../../qt/core/ItemUtils.h"
 #include "Scene.h"
 
 // STL
@@ -127,8 +128,6 @@ void te::layout::HorizontalRuler::drawMarks( QGraphicsView* view, QPainter* pain
 
   painter->setFont(m_font);
 
-  std::stringstream ss;
-
   double llx = rect.bottomLeft().x();
   double lly = rect.bottomLeft().y();
   double urx = rect.topRight().x();
@@ -149,7 +148,10 @@ void te::layout::HorizontalRuler::drawMarks( QGraphicsView* view, QPainter* pain
       std::stringstream ss;//create a stringstream
       ss << i;//add number to the stream
 
-      utils.textBoundingBox(wtxt, htxt, ss.str());
+      QPainterPath text = ItemUtils::textToVector(QString::number(i), painter->font());
+      wtxt = text.boundingRect().width();
+      htxt = text.boundingRect().height();
+      //utils.textBoundingBox(wtxt, htxt, ss.str());
 
       QPointF pTranslate((double)i, y + m_spacingLineText * zoomFactor);
 

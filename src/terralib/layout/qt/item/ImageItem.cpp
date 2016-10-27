@@ -27,6 +27,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "ImageItem.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
+
 
 // Qt
 #include <QStyleOptionGraphicsItem>

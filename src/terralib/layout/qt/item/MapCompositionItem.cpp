@@ -30,6 +30,7 @@
 #include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../core/pattern/factory/item/ItemFactory.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "MapItem.h"
 
 // Qt
@@ -234,3 +235,8 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   return variant;
 }
 
+
+void te::layout::MapCompositionItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
+{
+  AbstractItem::drawFrame(painter);
+}

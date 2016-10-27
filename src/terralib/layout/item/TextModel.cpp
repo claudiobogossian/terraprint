@@ -41,8 +41,6 @@ te::layout::TextModel::TextModel()
   double width = 40.;
   double height = 20.;
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getTextItem());
-  
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
 //adding properties
@@ -126,6 +124,8 @@ te::layout::TextModel::TextModel()
     property.setValue(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getTextItem());
 }
 
 te::layout::TextModel::~TextModel()

@@ -60,7 +60,6 @@ te::layout::LegendModel::LegendModel()
   fontTitle.setPointSize(12);
   te::color::RGBAColor fontLegendColor(0, 0, 0, 255);
   te::color::RGBAColor fontTitleColor(0, 0, 0, 255);
-  std::list<te::map::AbstractLayerPtr> layerList;
   double borderDisplacement = 3.;
   double displacementBetweenSymbols = 5.;
   double displacementBetweenTitleAndSymbols = 4.;

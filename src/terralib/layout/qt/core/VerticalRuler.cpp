@@ -30,6 +30,7 @@
 #include "../../core/PaperConfig.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/Utils.h"
+#include "../../qt/core/ItemUtils.h"
 #include "Scene.h"
 
 // STL
@@ -151,7 +152,11 @@ void te::layout::VerticalRuler::drawMarks( QGraphicsView* view, QPainter* painte
       std::stringstream ss;//create a stringstream
       ss << i;//add number to the stream
 
-      utils.textBoundingBox(wtxt, htxt, ss.str()); // size in mm
+      QPainterPath text = ItemUtils::textToVector(QString::number(i), painter->font());
+      wtxt = text.boundingRect().width();
+      htxt = text.boundingRect().height();
+
+      //utils.textBoundingBox(wtxt, htxt, ss.str()); // size in mm
 
       QPointF pTranslate(x - m_spacingLineText * zoomFactor, i);
 

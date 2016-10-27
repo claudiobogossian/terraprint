@@ -269,7 +269,6 @@ void te::layout::SVGDialogOutside::loadSvgImages()
   svgDir.setNameFilters(QStringList() << "*.svg");
   QStringList fileList = svgDir.entryList();
 
-  std::string fileLocal;
   for (int i = 0; i < fileList.size(); i++)
   {
     QString fDir = fileList.at(i);

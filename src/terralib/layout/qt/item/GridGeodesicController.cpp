@@ -251,7 +251,7 @@ te::gm::Envelope te::layout::GridGeodesicController::getWorldBoxInGeographic(con
   te::gm::Envelope worldBoxGeographic = worldBox;
 
   //About units names (SI): terralib5\resources\json\uom.json 
-  te::layout::Utils utils(0, 0);
+  te::layout::Utils utils(0);
   te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(srid);
 
   if (!unitPtr)

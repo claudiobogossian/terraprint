@@ -62,14 +62,6 @@ class QGraphicsItem;
 
 namespace te
 {
-  namespace qt
-  {
-    namespace widgets
-    {
-      class Canvas;
-    }
-  }
-
   namespace gm
   {
     class Envelope;
@@ -362,10 +354,6 @@ namespace te
 
         Utils getUtils();
 
-        void setCanvas(te::qt::widgets::Canvas* canvas);
-
-        te::qt::widgets::Canvas* getCanvas();
-
         void buildItem(te::layout::Properties props, std::string &name, bool isCopy = false);
 
         /*!
@@ -468,8 +456,6 @@ namespace te
 
         virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemController* controller);
 
-        virtual void changeViewMode(EnumType* mode);
-
         virtual bool enterEditionMode();
 
         virtual void leaveEditionMode();
@@ -530,7 +516,6 @@ namespace te
         AbstractItemView*                     m_currentItemEdition;
         bool                                  m_isEditionMode;
         ContextObject                         m_context;
-        te::qt::widgets::Canvas*              m_canvas;
         std::map<std::string, ValueBase*>     m_contextValues;
         double                                m_increasedUnprintableArea;
         std::map<QGraphicsItem*, Properties>  m_resizeWatches;
