@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
+  \file PropertyTreeItemFactory.cpp
    
   \brief 
 
@@ -26,30 +26,16 @@
 */
 
 // TerraLib
-#include "AbstractEditor.h"
+#include "PropertyTreeItemFactory.h"
 
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
-{
-  m_dataType = type; // type
-}
-
-te::layout::AbstractEditor::~AbstractEditor()
+te::layout::PropertyTreeItemFactory::~PropertyTreeItemFactory()
 {
 
 }
 
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
+te::layout::PropertyTreeItemFactory::PropertyTreeItemFactory(const std::string& factoryKey)
+: te::common::ParameterizedAbstractFactory<PropertyTreeItem, std::string, PropertyTreeItemFactoryParamsCreate>(factoryKey)
 {
-  m_vprops = vprops;
+
 }
 
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}

@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file SpinBoxEditor.cpp
+  \file IntSpinBoxEditor.cpp
    
   \brief 
 
@@ -26,51 +26,37 @@
 */
 
 // TerraLib
-#include "SpinBoxEditor.h"
+#include "IntSpinBoxEditor.h"
 #include "../../../core/enum/Enums.h"
 
-te::layout::SpinBoxEditor::SpinBoxEditor(const QModelIndex& index, QWidget* parent):
+te::layout::IntSpinBoxEditor::IntSpinBoxEditor(const QModelIndex& index, QWidget* parent) :
   QSpinBox(parent),
-  AbstractEditor(index)
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeInt())
 {
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeInt()->getId());
-  if (variant.isValid() && !variant.isNull())
-  {
-    if (variant.canConvert(QVariant::Int))
-    {
-      int newValue = variant.toInt();
-      setValue(newValue);
-    }
-  }
+  changeEditorData(index);
 }
 
-te::layout::SpinBoxEditor::~SpinBoxEditor()
+te::layout::IntSpinBoxEditor::~IntSpinBoxEditor()
 {
 
 }
 
-void te::layout::SpinBoxEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::SpinBoxEditor::setEditorData(const QModelIndex& index)
-{
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeInt()->getId());
-  if (variant.isValid() && !variant.isNull())
-  {
-    if (variant.canConvert(QVariant::Int))
-    {
-      int newValue = variant.toInt();
-      setValue(newValue);
-    }
-  }
-}
-
-QVariant te::layout::SpinBoxEditor::getValue()
+QVariant te::layout::IntSpinBoxEditor::getValue()
 {
   return this->value();
+}
+
+void te::layout::IntSpinBoxEditor::changeEditorData(const QModelIndex& index)
+{
+  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
+  QVariant variant = index.data(propertyData->getDataTypeInt()->getId());
+  if (variant.isValid() && !variant.isNull())
+  {
+    if (variant.canConvert(QVariant::Int))
+    {
+      int newValue = variant.toInt();
+      setValue(newValue);
+    }
+  }
 }
 

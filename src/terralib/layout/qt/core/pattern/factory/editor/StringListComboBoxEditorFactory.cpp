@@ -18,36 +18,35 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/editor/DoubleSpinBoxEditorFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/editor/StringListComboBoxEditorFactory.cpp
 
   \brief This is the concrete factory for zoom area tools.
 */
 
 // TerraLib
-#include "DoubleSpinBoxEditorFactory.h"
+#include "StringListComboBoxEditorFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../View.h"
-#include "../../../propertyeditor/DoubleSpinBoxEditor.h"
+#include "../../../propertyeditor/StringListComboBoxEditor.h"
 
-te::layout::AbstractEditor* te::layout::DoubleSpinBoxEditorFactory::build(EditorFactoryParamsCreate params)
+te::layout::AbstractEditor* te::layout::StringListComboBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
   std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
-  DoubleSpinBoxEditor* editor = new DoubleSpinBoxEditor(index, parent);
+  StringListComboBoxEditor* editor = new StringListComboBoxEditor(index, parent);
   editor->setProperties(props);
   return editor;
 }
 
-te::layout::DoubleSpinBoxEditorFactory::DoubleSpinBoxEditorFactory() :
-  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeDouble()->getName())
+te::layout::StringListComboBoxEditorFactory::StringListComboBoxEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeStringList()->getName())
 {
 
 }
 
-te::layout::DoubleSpinBoxEditorFactory::~DoubleSpinBoxEditorFactory()
+te::layout::StringListComboBoxEditorFactory::~StringListComboBoxEditorFactory()
 {
 
 }
-

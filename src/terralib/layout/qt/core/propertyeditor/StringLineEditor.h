@@ -18,38 +18,63 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
+  \file StringLineEditor.h
    
-  \brief 
+   \brief 
 
   \ingroup layout
 */
 
+#ifndef __TERRALIB_LAYOUT_INTERNAL_STRINGLINE_EDITOR_H 
+#define __TERRALIB_LAYOUT_INTERNAL_STRINGLINE_EDITOR_H
+
 // TerraLib
+#ifndef Q_MOC_RUN
+#include "../../../core/property/Property.h"
+#include "../../../core/Config.h"
 #include "AbstractEditor.h"
+#endif
 
+// STL
+#include <vector>
 
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+// Qt
+#include <QLineEdit>
+
+namespace te
 {
-  m_dataType = type; // type
+  namespace layout
+  {
+    class View;
+
+    /*!
+    \brief 
+    
+    \ingroup layout
+    */
+    class TELAYOUTEXPORT StringLineEditor : public QLineEdit, public AbstractEditor
+    {
+      Q_OBJECT //for slots/signals
+
+      public:
+
+        StringLineEditor(const QModelIndex& index, QWidget* parent = 0);
+
+        virtual ~StringLineEditor();
+        
+        virtual QVariant getValue();
+        
+      signals:
+
+        void dataValueChanged(QWidget* widget, Property prop);
+
+      protected:
+
+        virtual void changeEditorData(const QModelIndex& index);
+    };
+  }
 }
 
-te::layout::AbstractEditor::~AbstractEditor()
-{
+#endif
 
-}
 
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}

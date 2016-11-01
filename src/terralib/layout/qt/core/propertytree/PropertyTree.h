@@ -18,15 +18,15 @@
  */
 
 /*!
-  \file PropertyDelegate.h
+  \file PropertyTree.h
    
    \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PROPERTY_DELEGATE_H 
-#define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_DELEGATE_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_PROPERTY_TREE_H 
+#define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_TREE_H
 
 // TerraLib
 #ifndef Q_MOC_RUN
@@ -38,65 +38,69 @@
 #include <vector>
 
 // Qt
-#include <QStyledItemDelegate>
+#include <QTreeWidget>
+
+class QTreeWidgetItem;
 
 namespace te
 {
   namespace layout
   {
     class View;
-    class BuildPaintCustomData;
+    class PropertyDelegate;
 
     /*!
     \brief 
     
     \ingroup layout
     */
-    class TELAYOUTEXPORT PropertyDelegate : public QStyledItemDelegate
+    class TELAYOUTEXPORT PropertyTree : public QTreeWidget
     {
       Q_OBJECT //for slots/signals
 
       public:
 
-        PropertyDelegate(QObject* parent = 0);
+        PropertyTree(View* view, PropertyDelegate* delegate = 0, QWidget* parent = 0);
 
-        virtual ~PropertyDelegate();
+        virtual ~PropertyTree();
 
         virtual void setProperties(std::vector<Property> vprops);
 
-        virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
+        virtual void load(std::vector<Property> props);
 
-        virtual void setEditorData(QWidget* editor, const QModelIndex& index) const;
+        virtual QTreeWidgetItem* createNewRow(Property prop, QTreeWidgetItem* parent = 0);
 
-        virtual void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const;
-
-        virtual void updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-
-        virtual void paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const;
+        void clearAll();
         
       signals:
 
-        void dataEditorChanged(Property & prop, int row, int column);
+        void propertiesChanged(Property prop);
 
       protected slots:
+              
+        /*!
+          \brief Goes into editing mode when a item in a column is pressed with the mouse.
+        */
+        void onCheckEdit(QTreeWidgetItem * item, int column);
 
-        void onDataValueChanged(QWidget* widget, Property prop);
+        virtual void onDataEditorChanged(Property & prop, int row, int column);
 
       protected:
 
-        virtual QWidget* createFromFactory(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
-                
+        virtual void configTree(int numberColumns);
+
+        virtual QTreeWidgetItem* findTopParent(QTreeWidgetItem* topParent, QTreeWidgetItem* root);
+
       protected:
         
+        View*                   m_view;
         std::vector<Property>   m_vprops;
-        mutable QWidget*        m_currentEditor;
-        mutable int             m_currentEditorRow;
-        mutable int             m_currentEditorColumn;
-        BuildPaintCustomData*   m_paintCustomDataType;
+        int                     m_columns;
+        int                     m_nameColumn;
+        int                     m_valueColumn;
     };
   }
 }
 
 #endif
-
 

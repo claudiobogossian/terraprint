@@ -18,38 +18,58 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
+  \file BuildTreeItem.h
    
   \brief 
 
   \ingroup layout
 */
 
-// TerraLib
-#include "AbstractEditor.h"
+#ifndef __TERRALIB_LAYOUT_INTERNAL_BUILD_TREE_ITEM_H
+#define __TERRALIB_LAYOUT_INTERNAL_BUILD_TREE_ITEM_H
 
+//TerraLib
+#include "../../../core/Config.h"
 
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+// Qt
+class QTreeWidgetItem;
+
+namespace te
 {
-  m_dataType = type; // type
+  namespace layout
+  {
+    class Property;
+    class PropertyTreeItem;
+
+    /*!
+    \brief 
+    
+      \ingroup layout
+    */
+    class TELAYOUTEXPORT BuildTreeItem
+    {
+      public:
+        /*!
+          \brief Constructor
+        */
+        BuildTreeItem();
+
+        /*!
+          \brief Destructor
+        */
+        virtual ~BuildTreeItem();
+        
+        /*!
+          \brief Method to build a editor to a property inside a cell of QTreeWidget.
+      
+          \param vprops properties
+      
+          \return new editor
+        */
+        virtual PropertyTreeItem* buildTreeItem(Property & prop, QTreeWidgetItem* parent);
+    };
+  }
 }
 
-te::layout::AbstractEditor::~AbstractEditor()
-{
+#endif
 
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}

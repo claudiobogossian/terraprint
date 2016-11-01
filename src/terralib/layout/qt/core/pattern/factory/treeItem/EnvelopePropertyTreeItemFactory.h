@@ -18,40 +18,45 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/editor/DoubleSpinBoxEditorFactory.h
+  \file terralib/layout/qt/core/pattern/factory/treeItem/EnvelopePropertyTreeItemFactory.h
 
   \brief This is the concrete factory for create editors.
  */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_DOUBLE_SPINBOX_EDITOR_FACTORY_H
-#define __TERRALIB_LAYOUT_INTERNAL_DOUBLE_SPINBOX_EDITOR_FACTORY_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ENVELOPE_PROPERTY_TREE_ITEM_FACTORY_H
+#define __TERRALIB_LAYOUT_INTERNAL_ENVELOPE_PROPERTY_TREE_ITEM_FACTORY_H
 
 // TerraLib
 #include "../../../../../core/Config.h"
-#include "EditorFactory.h"
-#include "EditorFactoryParamsCreate.h"
+#include "PropertyTreeItemFactory.h"
+#include "PropertyTreeItemFactoryParamsCreate.h"
+
+// Qt
+class QTreeWidgetItem;
 
 namespace te
 {
   namespace layout
   {
-    class AbstractLayoutTool;
+    class PropertyTreeItem;
+    class Property;
+
     /*!
-      \class DoubleSpinBoxEditorFactory
+      \class EnvelopePropertyTreeItemFactory
 
       \brief This is the concrete factory for create editors.
 
-      \sa EditorFactory, ParameterizedAbstractFactory, AbstractEditor
+      \sa PropertyTreeItemFactory, ParameterizedAbstractFactory, PropertyTreeItem
     */
-    class TELAYOUTEXPORT DoubleSpinBoxEditorFactory : public EditorFactory
+    class TELAYOUTEXPORT EnvelopePropertyTreeItemFactory : public PropertyTreeItemFactory
     {
       public:
 
         /*! It register the factory in the abstract dictionary. */
-        DoubleSpinBoxEditorFactory();
+        EnvelopePropertyTreeItemFactory();
 
         /*! \brief Destructor. */
-        ~DoubleSpinBoxEditorFactory();
+        ~EnvelopePropertyTreeItemFactory();
 
       protected:
 
@@ -60,12 +65,16 @@ namespace te
 
           \return It returns create line item tool.
         */
-        AbstractEditor* build(EditorFactoryParamsCreate params);
+        PropertyTreeItem* build(PropertyTreeItemFactoryParamsCreate params);
+
+        PropertyTreeItem* createEnvelopeDataTreeItem(Property & prop, QTreeWidgetItem* parent);
+
+        PropertyTreeItem* createDataTreeItemChild(QString name, QVariant value, QTreeWidgetItem* parent);
     };
 
   } // end namespace layout
 }   // end namespace te
 
 
-#endif  
+#endif 
 

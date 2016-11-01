@@ -17,39 +17,23 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-/*!
-  \file AbstractEditor.cpp
-   
-  \brief 
+// Layout Module Examples
+#include "PropertyEditorExample.h"
 
-  \ingroup layout
-*/
+// Examples TerraLib includes by platform
+#include "../Config.h"
 
-// TerraLib
-#include "AbstractEditor.h"
+// Qt
+#include <QApplication>
 
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+int main(int argv, char **args)
 {
-  m_dataType = type; // type
+  QApplication app(argv, args); // required to run classes with Qt
+
+  te::layout::PropertyEditorExample editor;
+  editor.run();
+  editor.show();
+    
+  return app.exec();
 }
 
-te::layout::AbstractEditor::~AbstractEditor()
-{
-
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}

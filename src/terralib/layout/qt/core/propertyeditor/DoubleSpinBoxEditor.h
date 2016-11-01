@@ -61,20 +61,16 @@ namespace te
         DoubleSpinBoxEditor(const QModelIndex& index, QWidget* parent = 0);
 
         virtual ~DoubleSpinBoxEditor();
-
-        virtual void setProperties(std::vector<Property> vprops);
-
-        virtual void setEditorData(const QModelIndex& index);
-
+        
         virtual QVariant getValue();
         
       signals:
 
-        void propertiesChanged(std::vector<Property> vprops);
+        void dataValueChanged(QWidget* widget, Property prop);
 
       protected:
-        
-        std::vector<Property>   m_vprops;
+
+        virtual void changeEditorData(const QModelIndex& index);
     };
   }
 }

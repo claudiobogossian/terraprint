@@ -29,16 +29,29 @@
 #include "PropertyDelegate.h"
 #include "AbstractEditor.h"
 #include "BuildEditor.h"
+#include "BuildPaintCustomData.h"
+
+// Qt
+#include <QApplication>
+#include <QPainter>
+#include <QDebug>
 
 te::layout::PropertyDelegate::PropertyDelegate(QObject* parent) :
-  QItemDelegate(parent)
+  QStyledItemDelegate(parent),
+  m_currentEditor(0),
+  m_currentEditorRow(-1),
+  m_currentEditorColumn(-1)
 {
-  
+  m_paintCustomDataType = new BuildPaintCustomData();
 }
 
 te::layout::PropertyDelegate::~PropertyDelegate()
 {
-
+  if (m_paintCustomDataType)
+  {
+    delete m_paintCustomDataType;
+    m_paintCustomDataType = 0;
+  }
 }
 
 void te::layout::PropertyDelegate::setProperties(std::vector<Property> vprops)
@@ -50,9 +63,18 @@ QWidget * te::layout::PropertyDelegate::createEditor(QWidget * parent, const QSt
 {
   if (index.column() == 0)
   {
-    return QItemDelegate::createEditor(parent, option, index);
+    m_currentEditor =  QStyledItemDelegate::createEditor(parent, option, index);
   }
-  return createFromFactory(parent, option, index);
+  else
+  {
+    m_currentEditor = createFromFactory(parent, option, index);
+    if (m_currentEditor != 0)
+    {
+      m_currentEditorRow = index.row();
+      m_currentEditorColumn = index.column();
+    }
+  }
+  return m_currentEditor;
 }
 
 void te::layout::PropertyDelegate::setEditorData(QWidget * editor, const QModelIndex & index) const
@@ -70,13 +92,35 @@ void te::layout::PropertyDelegate::setModelData(QWidget * editor, QAbstractItemM
   if (abstractEditor)
   {
     QVariant value = abstractEditor->getValue();
-    model->setData(index, value);
+    int role = abstractEditor->getType()->getId(); // important because this delegate is using custom data type(role) and obvious not exist in Qt default implementation
+
+    if (index.column() == 1)
+    {
+      QVariant modelData = model->data(index, role);
+      QVariant indexData = index.data(1);
+      if (modelData == indexData) 
+        return;
+    }
+    model->setData(index, value, role);
   }
 }
 
 void te::layout::PropertyDelegate::updateEditorGeometry(QWidget * editor, const QStyleOptionViewItem & option, const QModelIndex & index) const
 {
   editor->setGeometry(option.rect);
+}
+
+void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index) const
+{
+  if (index.column() == 1)
+  {
+    if (m_paintCustomDataType->paintCustomData(painter, option, index))
+    {
+      return;
+    }
+  }
+
+  QStyledItemDelegate::paint(painter, option, index);
 }
 
 QWidget* te::layout::PropertyDelegate::createFromFactory(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
@@ -88,12 +132,23 @@ QWidget* te::layout::PropertyDelegate::createFromFactory(QWidget* parent, const 
   if (abstractEditor)
   {
     editor = dynamic_cast<QWidget*>(abstractEditor);
+    if (editor)
+    {
+      // connect signal / slot
+      connect(editor, SIGNAL(dataValueChanged(QWidget* widget, Property)), this, SLOT(onDataValueChanged(QWidget* widget, Property)));
+    }
   }
 
   return editor;
 }
 
-void te::layout::PropertyDelegate::onPropertiesChanged(std::vector<Property> vprops)
+void te::layout::PropertyDelegate::onDataValueChanged(QWidget* widget, Property prop)
 {
-
+  if (widget == m_currentEditor)
+  {
+    // Signal from QItemDelegate
+    commitData(widget); // call setEditorData()
+    emit dataEditorChanged(prop, m_currentEditorRow, m_currentEditorColumn);
+  }
 }
+

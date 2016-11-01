@@ -18,38 +18,35 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
-   
-  \brief 
+  \file terralib/layout/qt/core/pattern/factory/editor/BoolCheckBoxEditorFactory.cpp
 
-  \ingroup layout
+  \brief This is the concrete factory for zoom area tools.
 */
 
 // TerraLib
-#include "AbstractEditor.h"
+#include "BoolCheckBoxEditorFactory.h"
+#include "../../../../../core/enum/Enums.h"
+#include "../../../View.h"
+#include "../../../propertyeditor/BoolCheckBoxEditor.h"
 
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+te::layout::AbstractEditor* te::layout::BoolCheckBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  m_dataType = type; // type
+  std::vector<Property> props = params.getProperties();
+  QModelIndex index = params.getModelIndex();
+  QWidget* parent = params.getParent();
+
+  BoolCheckBoxEditor* editor = new BoolCheckBoxEditor(index, parent);
+  editor->setProperties(props);
+  return editor;
 }
 
-te::layout::AbstractEditor::~AbstractEditor()
+te::layout::BoolCheckBoxEditorFactory::BoolCheckBoxEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeBool()->getName())
 {
 
 }
 
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
+te::layout::BoolCheckBoxEditorFactory::~BoolCheckBoxEditorFactory()
 {
-  m_vprops = vprops;
-}
 
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
 }

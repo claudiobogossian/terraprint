@@ -18,63 +18,67 @@
  */
 
 /*!
-  \file SpinBoxEditor.h
+  \file PropertyTreeItem.h
    
    \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_SPINBOX_EDITOR_H 
-#define __TERRALIB_LAYOUT_INTERNAL_SPINBOX_EDITOR_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_PROPERTY_TREE_ITEM_H 
+#define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_TREE_ITEM_H
 
 // TerraLib
-#ifndef Q_MOC_RUN
 #include "../../../core/property/Property.h"
 #include "../../../core/Config.h"
-#include "AbstractEditor.h"
-#endif
 
 // STL
 #include <vector>
 
 // Qt
-#include <QSpinBox>
+#include <QTreeWidgetItem>
+
+class QVariant;
+class QString;
 
 namespace te
 {
   namespace layout
   {
-    class View;
-
+    class EnumType;
     /*!
     \brief 
     
     \ingroup layout
     */
-    class TELAYOUTEXPORT SpinBoxEditor : public QSpinBox, public AbstractEditor
+    class TELAYOUTEXPORT PropertyTreeItem : public QTreeWidgetItem
     {
-      Q_OBJECT //for slots/signals
-
       public:
 
-        SpinBoxEditor(const QModelIndex& index, QWidget* parent = 0);
+        PropertyTreeItem(Property & prop, QTreeWidgetItem* parent = 0);
 
-        virtual ~SpinBoxEditor();
+        virtual ~PropertyTreeItem();
 
-        virtual void setProperties(std::vector<Property> vprops);
+        virtual void setData(int column, int role, const QVariant & value);
 
-        virtual void setEditorData(const QModelIndex& index);
+        Property getProperty();
 
-        virtual QVariant getValue();
-        
-      signals:
+        virtual void setPropertyValue(QVariant variant);
 
-        void propertiesChanged(std::vector<Property> vprops);
+        virtual void refresh(int column, int role, QString name, QVariant value, QTreeWidgetItem* childItem);
+
+        virtual void refreshChild(int column, int role, QString name, QVariant value);
+
+        int getDataRole();
 
       protected:
-        
-        std::vector<Property>   m_vprops;
+
+        virtual void setChildData(QTreeWidgetItem* childItem, int column, int role, QVariant value);
+
+      protected:
+
+        Property  m_property;
+        int       m_dataRole;
     };
   }
 }

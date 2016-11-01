@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
+  \file StringLineEditor.cpp
    
   \brief 
 
@@ -26,30 +26,37 @@
 */
 
 // TerraLib
-#include "AbstractEditor.h"
+#include "StringLineEditor.h"
+#include "../../../core/enum/Enums.h"
 
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
-{
-  m_dataType = type; // type
-}
-
-te::layout::AbstractEditor::~AbstractEditor()
-{
-
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
+te::layout::StringLineEditor::StringLineEditor(const QModelIndex& index, QWidget* parent) :
+  QLineEdit(parent),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeString())
 {
   changeEditorData(index);
 }
 
-te::layout::EnumType* te::layout::AbstractEditor::getType()
+te::layout::StringLineEditor::~StringLineEditor()
 {
-  return m_dataType;
+
 }
+
+QVariant te::layout::StringLineEditor::getValue()
+{
+  return this->text();
+}
+
+void te::layout::StringLineEditor::changeEditorData(const QModelIndex& index)
+{
+  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
+  QVariant variant = index.data(propertyData->getDataTypeString()->getId());
+  if (variant.isValid() && !variant.isNull())
+  {
+    if (variant.canConvert(QVariant::String))
+    {
+      QString newValue = variant.toString();
+      setText(newValue);
+    }
+  }
+}
+

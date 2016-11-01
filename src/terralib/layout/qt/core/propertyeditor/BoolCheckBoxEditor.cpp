@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
+  \file BoolCheckBoxEditor.cpp
    
   \brief 
 
@@ -26,30 +26,40 @@
 */
 
 // TerraLib
-#include "AbstractEditor.h"
+#include "BoolCheckBoxEditor.h"
+#include "../../../core/enum/Enums.h"
 
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
-{
-  m_dataType = type; // type
-}
-
-te::layout::AbstractEditor::~AbstractEditor()
-{
-
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
+te::layout::BoolCheckBoxEditor::BoolCheckBoxEditor(const QModelIndex& index, QWidget* parent) :
+  QCheckBox(parent),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeBool())
 {
   changeEditorData(index);
 }
 
-te::layout::EnumType* te::layout::AbstractEditor::getType()
+te::layout::BoolCheckBoxEditor::~BoolCheckBoxEditor()
 {
-  return m_dataType;
+
 }
+
+QVariant te::layout::BoolCheckBoxEditor::getValue()
+{
+  return this->text();
+}
+
+void te::layout::BoolCheckBoxEditor::changeEditorData(const QModelIndex& index)
+{
+  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
+  QVariant variant = index.data(propertyData->getDataTypeBool()->getId());
+  if (variant.isValid() && !variant.isNull())
+  {
+    if (variant.canConvert(QVariant::Bool))
+    {
+      bool newValue = variant.toBool();
+      setChecked(newValue);
+
+      QString txt = variant.toString();
+      setText(txt);
+    }
+  }
+}
+

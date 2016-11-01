@@ -17,11 +17,12 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-#include "PropertyEditorTest.h"
+#include "PropertyEditorExample.h"
 
 // Layout Module
 #include "terralib/layout/qt/core/propertytree/PropertyTree.h"
 #include "terralib/layout/qt/core/BuildGraphicsItem.h"
+#include "terralib/layout/qt/item/RectangleItem.h"
 #include "terralib/layout/core/pattern/mvc/AbstractItemView.h"
 #include "terralib/layout/core/pattern/mvc/AbstractItemController.h"
 #include "terralib/layout/core/enum/Enums.h"
@@ -40,16 +41,37 @@
 #include <QList>
 #include <QMenu>
 #include <QStatusBar>
+#include <QVBoxLayout>
 
-// Boost
-#include <boost/test/unit_test.hpp>
+te::layout::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
+  QWidget(parent),
+  m_rectItem(0),
+  m_tree(0)
+{
+  setWindowTitle(tr("Property Editor"));
+  resize(480, 320);
+}
 
-void te::layout::PropertyEditorTest::on_test_create_rectangle_item()
+te::layout::PropertyEditorExample::~PropertyEditorExample()
+{
+  if (m_rectItem)
+  {
+    delete m_rectItem;
+  }
+}
+
+void te::layout::PropertyEditorExample::run()
+{
+  createRectangleItem();
+  createPropertyTree();
+}
+
+void te::layout::PropertyEditorExample::createRectangleItem()
 {
   EnumType* itemType = Enums::getInstance().getEnumObjectType()->getRectangleItem();
   if (!itemType)
   {
-    BOOST_FAIL("FAIL: pointer to enum retangle item is null."); //throws on error
+    return;
   }
 
   te::gm::Coord2D coord(5, 5);
@@ -58,42 +80,29 @@ void te::layout::PropertyEditorTest::on_test_create_rectangle_item()
 
   if (!item)
   {
-    BOOST_FAIL("FAIL: pointer to rectangle object is null."); //throws on error
+    return;
   }
 
-  RectangleItem* rect = dynamic_cast<RectangleItem*>(item);
-  if (!rect)
-  {
-    BOOST_FAIL("FAIL: pointer to rectangle object is null."); //throws on error
-  }
-
-  m_rectItem.reset(rect);
+  m_rectItem = dynamic_cast<RectangleItem*>(item);
 }
 
-void te::layout::PropertyEditorTest::on_test_create_property_tree()
+void te::layout::PropertyEditorExample::createPropertyTree()
 {
-  if (!m_rectItem.get())
+  if (!m_rectItem)
   {
-    BOOST_FAIL("FAIL: pointer to rectangle object is null."); //throws on error
+    return;
   }
 
-  te::layout::PropertyTree* tree = new te::layout::PropertyTree(0);
+  QVBoxLayout* vlayout = new QVBoxLayout(this);
+  m_tree = new te::layout::PropertyTree(0, 0, this); // create property tree
+  vlayout->addWidget(m_tree);
+  setLayout(vlayout);
   
   std::vector<Property> props;
-  AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem.get());
+  AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem);
   Properties itemProperties = view->getController()->getProperties();
   props = itemProperties.getProperties();
 
-  tree->load(props);
-    
-  if (tree->topLevelItemCount() > 0)
-  {
-    QTreeWidgetItem* item0 = tree->topLevelItem(0);
-    tree->editItem(item0, 1); // enter edit mode, automatically call the delegate
-  }
-  else
-  {
-    QVERIFY2(tree->topLevelItemCount() == 0, "List of items is empty.");
-  }
+  m_tree->load(props); // load properties from rectangle item
 }
 

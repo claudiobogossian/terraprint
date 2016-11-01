@@ -18,35 +18,35 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/editor/SpinBoxEditorFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/editor/StringLineEditorFactory.cpp
 
   \brief This is the concrete factory for zoom area tools.
 */
 
 // TerraLib
-#include "SpinBoxEditorFactory.h"
+#include "StringLineEditorFactory.h"
 #include "../../../../../core/enum/Enums.h"
 #include "../../../View.h"
-#include "../../../propertyeditor/SpinBoxEditor.h"
+#include "../../../propertyeditor/StringLineEditor.h"
 
-te::layout::AbstractEditor* te::layout::SpinBoxEditorFactory::build(EditorFactoryParamsCreate params)
+te::layout::AbstractEditor* te::layout::StringLineEditorFactory::build(EditorFactoryParamsCreate params)
 {
   std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
-  SpinBoxEditor* editor = new SpinBoxEditor(index, parent);
+  StringLineEditor* editor = new StringLineEditor(index, parent);
   editor->setProperties(props);
   return editor;
 }
 
-te::layout::SpinBoxEditorFactory::SpinBoxEditorFactory() :
-  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeInt()->getName())
+te::layout::StringLineEditorFactory::StringLineEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeString()->getName())
 {
 
 }
 
-te::layout::SpinBoxEditorFactory::~SpinBoxEditorFactory()
+te::layout::StringLineEditorFactory::~StringLineEditorFactory()
 {
 
 }

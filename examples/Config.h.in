@@ -1,4 +1,4 @@
-/*  Copyright (C) 2008 National Institute For Space Research (INPE) - Brazil.
+/*  Copyright (C) 2008-2014 National Institute For Space Research (INPE) - Brazil.
 
     This file is part of the TerraLib - a Framework for building GIS enabled applications.
 
@@ -18,38 +18,14 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
-   
-  \brief 
+  \file unittest/Config.h.in
 
-  \ingroup layout
+  \brief Global configuration file for the TerraLib Unit Test.
 */
 
-// TerraLib
-#include "AbstractEditor.h"
+#ifndef __EXAMPLES_INTERNAL_TERRALIB_LAYOUT_EXAMPLES_CONFIG_H
+#define __EXAMPLES_INTERNAL_TERRALIB_LAYOUT_EXAMPLES_CONFIG_H
 
+#cmakedefine TERRALIB_MOD_LAYOUT_EXAMPLES_PROPERTYEDITOR_ENABLED
 
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
-{
-  m_dataType = type; // type
-}
-
-te::layout::AbstractEditor::~AbstractEditor()
-{
-
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}
+#endif  // __EXAMPLES_INTERNAL_TERRALIB_LAYOUT_EXAMPLES_CONFIG_H

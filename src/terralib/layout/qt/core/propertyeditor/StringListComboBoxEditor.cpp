@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file DoubleSpinBoxEditor.cpp
+  \file StringListComboBoxEditor.cpp
    
   \brief 
 
@@ -26,36 +26,38 @@
 */
 
 // TerraLib
-#include "DoubleSpinBoxEditor.h"
+#include "StringListComboBoxEditor.h"
 #include "../../../core/enum/Enums.h"
 
-te::layout::DoubleSpinBoxEditor::DoubleSpinBoxEditor(const QModelIndex& index, QWidget* parent) :
-  QDoubleSpinBox(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeDouble())
+#include <QStringList>
+
+te::layout::StringListComboBoxEditor::StringListComboBoxEditor(const QModelIndex& index, QWidget* parent) :
+  QComboBox(parent),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeStringList())
 {
   changeEditorData(index);
 }
 
-te::layout::DoubleSpinBoxEditor::~DoubleSpinBoxEditor()
+te::layout::StringListComboBoxEditor::~StringListComboBoxEditor()
 {
 
 }
 
-QVariant te::layout::DoubleSpinBoxEditor::getValue()
+QVariant te::layout::StringListComboBoxEditor::getValue()
 {
-  return this->value();
+  return this->currentText();
 }
 
-void te::layout::DoubleSpinBoxEditor::changeEditorData(const QModelIndex& index)
+void te::layout::StringListComboBoxEditor::changeEditorData(const QModelIndex& index)
 {
   EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeDouble()->getId());
+  QVariant variant = index.data(propertyData->getDataTypeStringList()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    if (variant.canConvert(QVariant::Double))
+    if (variant.canConvert(QVariant::StringList))
     {
-      int newValue = variant.toDouble();
-      setValue(newValue);
+      QStringList newValue = variant.toStringList();
+      addItems(newValue);
     }
   }
 }

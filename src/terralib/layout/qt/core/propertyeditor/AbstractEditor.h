@@ -43,6 +43,7 @@ namespace te
   namespace layout
   {
     class View;
+    class EnumType;
 
     /*!
     \brief 
@@ -53,19 +54,29 @@ namespace te
     {
       public:
 
-        AbstractEditor(const QModelIndex& index);
+        AbstractEditor(const QModelIndex& index, EnumType* type);
 
         virtual ~AbstractEditor();
 
         virtual void setProperties(std::vector<Property> vprops);
 
-        virtual void setEditorData(const QModelIndex& index) = 0;
+        virtual void setEditorData(const QModelIndex& index);
 
         virtual QVariant getValue() = 0;
+
+        virtual EnumType* getType();
+
+      protected:
+
+        /*
+          \brief Checks if the data type is expected and set the new value in editor.
+        */
+        virtual void changeEditorData(const QModelIndex& index) = 0;
 
       protected:
         
         std::vector<Property>   m_vprops;
+        EnumType*               m_dataType;
     };
   }
 }

@@ -17,39 +17,55 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-/*!
-  \file AbstractEditor.cpp
-   
-  \brief 
+#ifndef __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
+#define __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
 
-  \ingroup layout
-*/
+// Qt
+#include <QWidget>
 
-// TerraLib
-#include "AbstractEditor.h"
-
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+namespace te
 {
-  m_dataType = type; // type
+  namespace layout
+  {
+    class RectangleItem;
+    class PropertyTree;
+
+    /*!
+      \brief 
+    
+      \ingroup layout
+    */
+    class PropertyEditorExample : public QWidget
+    {
+      Q_OBJECT
+
+      public:
+
+        /*!
+        \brief Constructor.
+        */
+        PropertyEditorExample(QWidget *parent = 0);
+
+        /*!
+        \brief Destructor.
+        */
+        virtual ~PropertyEditorExample();
+
+        void run();
+
+      protected:
+
+        void createRectangleItem();
+        
+        void createPropertyTree();
+
+      private:
+
+        te::layout::RectangleItem* m_rectItem;
+        te::layout::PropertyTree*  m_tree;
+    };
+  }
 }
 
-te::layout::AbstractEditor::~AbstractEditor()
-{
+#endif
 
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}

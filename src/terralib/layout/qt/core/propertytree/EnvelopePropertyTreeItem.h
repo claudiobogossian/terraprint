@@ -18,76 +18,60 @@
  */
 
 /*!
-  \file PropertyTree.h
+  \file EnvelopePropertyTreeItem.h
    
    \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PROPERTY_TREE_H 
-#define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_TREE_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ENVELOPE_PROPERTY_TREE_ITEM_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ENVELOPE_PROPERTY_TREE_ITEM_H
 
 // TerraLib
-#ifndef Q_MOC_RUN
 #include "../../../core/property/Property.h"
 #include "../../../core/Config.h"
-#endif
+#include "PropertyTreeItem.h"
 
 // STL
 #include <vector>
 
 // Qt
-#include <QTreeWidget>
-
-class QTreeWidgetItem;
+#include <QString>
+class QVariant;
 
 namespace te
 {
   namespace layout
   {
-    class View;
+    class EnumType;
 
     /*!
     \brief 
     
     \ingroup layout
     */
-    class TELAYOUTEXPORT PropertyTree : public QTreeWidget
+    class TELAYOUTEXPORT EnvelopePropertyTreeItem : public PropertyTreeItem
     {
-      Q_OBJECT //for slots/signals
-
       public:
 
-        PropertyTree(View* view, QWidget* parent = 0);
+        EnvelopePropertyTreeItem(Property & prop, QTreeWidgetItem* parent = 0);
 
-        virtual ~PropertyTree();
+        virtual ~EnvelopePropertyTreeItem();
 
-        virtual void setProperties(std::vector<Property> vprops);
+        virtual void setData(int column, int role, const QVariant & value);
 
-        virtual void load(std::vector<Property> props);
-
-        virtual QTreeWidgetItem* createNewRow(Property prop, QTreeWidgetItem* parent = 0);
-
-        void clearAll();
-        
-      signals:
-
-        void propertiesChanged(std::vector<Property> vprops);
+        virtual void refresh(int column, int role, QString name, QVariant value, QTreeWidgetItem* childItem);
 
       protected:
 
-        virtual void configTree(int numberColumns);
-
-      protected:
-        
-        View*                   m_view;
-        std::vector<Property>   m_vprops;
-        int                     m_columns;
+        QString   m_x1Name;
+        QString   m_y1Name;
+        QString   m_x2Name;
+        QString   m_y2Name;
     };
   }
 }
 
 #endif
-
 

@@ -92,6 +92,8 @@ file(GLOB TERRALIB_LAYOUT_QT_FACTORY_TOOL_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR
 file(GLOB TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/factory/tool/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_FACTORY_EDITOR_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/factory/editor/*.cpp)
 file(GLOB TERRALIB_LAYOUT_QT_FACTORY_EDITOR_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/factory/editor/*.h)
+file(GLOB TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/factory/treeItem/*.cpp)
+file(GLOB TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/factory/treeItem/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_COMMAND_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/command/*.cpp)
 file(GLOB TERRALIB_LAYOUT_QT_COMMAND_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/pattern/command/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_TOOLS_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/tools/*.cpp)
@@ -100,6 +102,8 @@ file(GLOB TERRALIB_LAYOUT_QT_PROPERTYBROWSER_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_
 file(GLOB TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_PROPERTYEDITOR_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/*.cpp)
 file(GLOB TERRALIB_LAYOUT_QT_PROPERTYEDITOR_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/*.h)
+file(GLOB TERRALIB_LAYOUT_QT_PROPERTYTREE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertytree/*.cpp)
+file(GLOB TERRALIB_LAYOUT_QT_PROPERTYTREE_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertytree/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_ITEM_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/*.cpp)
 file(GLOB TERRALIB_LAYOUT_QT_ITEM_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/item/*.h)
 file(GLOB TERRALIB_LAYOUT_QT_OUTSIDE_SRC_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/*.cpp)
@@ -147,6 +151,8 @@ source_group("Source Files\\qt\\core\\pattern\\factory\\tool"  FILES ${TERRALIB_
 source_group("Header Files\\qt\\core\\pattern\\factory\\tool"  FILES ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES})
 source_group("Source Files\\qt\\core\\pattern\\factory\\editor"  FILES ${TERRALIB_LAYOUT_QT_FACTORY_EDITOR_SRC_FILES})
 source_group("Header Files\\qt\\core\\pattern\\factory\\editor"  FILES ${TERRALIB_LAYOUT_QT_FACTORY_EDITOR_HDR_FILES})
+source_group("Source Files\\qt\\core\\pattern\\factory\\treeItem"  FILES ${TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_SRC_FILES})
+source_group("Header Files\\qt\\core\\pattern\\factory\\treeItem"  FILES ${TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_HDR_FILES})
 source_group("Source Files\\qt\\core\\pattern\\command"  FILES ${TERRALIB_LAYOUT_QT_COMMAND_SRC_FILES})
 source_group("Header Files\\qt\\core\\pattern\\command"  FILES ${TERRALIB_LAYOUT_QT_COMMAND_HDR_FILES})
 source_group("Source Files\\qt\\core\\tools"  FILES ${TERRALIB_LAYOUT_QT_TOOLS_SRC_FILES})
@@ -155,6 +161,8 @@ source_group("Source Files\\qt\\core\\propertybrowser"  FILES ${TERRALIB_LAYOUT_
 source_group("Header Files\\qt\\core\\propertybrowser"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES})
 source_group("Source Files\\qt\\core\\propertyeditor"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYEDITOR_SRC_FILES})
 source_group("Header Files\\qt\\core\\propertyeditor"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYEDITOR_HDR_FILES})
+source_group("Source Files\\qt\\core\\propertytree"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYTREE_SRC_FILES})
+source_group("Header Files\\qt\\core\\propertytree"  FILES ${TERRALIB_LAYOUT_QT_PROPERTYTREE_HDR_FILES})
 source_group("Source Files\\qt\\core\\tempDataStorage" FILES ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_SRC_FILES})
 source_group("Header Files\\qt\\core\\tempDataStorage" FILES ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_HDR_FILES})
 source_group("Source Files\\qt\\item"  FILES ${TERRALIB_LAYOUT_QT_ITEM_SRC_FILES})
@@ -207,6 +215,8 @@ set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES}
 		   ${TERRALIB_LAYOUT_QT_PROPERTYEDITOR_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_PROPERTYEDITOR_HDR_FILES}
+		   ${TERRALIB_LAYOUT_QT_PROPERTYTREE_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_PROPERTYTREE_HDR_FILES}
 		   ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_TEMP_DATASTORAGE_HDR_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_ITEM_SRC_FILES}
@@ -217,6 +227,8 @@ set(TERRALIB_FILES ${TERRALIB_LAYOUT_CORE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
 		   ${TERRALIB_LAYOUT_QT_FACTORY_EDITOR_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_FACTORY_EDITOR_HDR_FILES}
+		   ${TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_SRC_FILES}
+           ${TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_HDR_FILES}
 		   ${TERRALIB_LAYOUT_QT_INSIDE_SRC_FILES}
            ${TERRALIB_LAYOUT_QT_INSIDE_HDR_FILES})
 
@@ -296,7 +308,7 @@ else()
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/BuildGraphicsItem.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/tempDataStorage/TempDataStorageEditor.h
 								 #Property Editor
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/PropertyTree.h
+								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertytree/PropertyTree.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/PropertyDelegate.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/DoubleSpinBoxEditor.h
 								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/SpinBoxEditor.h
@@ -461,6 +473,9 @@ install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_TOOL_HDR_FILES}
 		
 install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_EDITOR_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/factory/editor COMPONENT devel)
+		
+install(FILES ${TERRALIB_LAYOUT_QT_FACTORY_TREE_ITEM_HDR_FILES}
+        DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/factory/treeItem COMPONENT devel)
 
 install(FILES ${TERRALIB_LAYOUT_QT_COMMAND_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/pattern/command COMPONENT devel)
@@ -473,6 +488,9 @@ install(FILES ${TERRALIB_LAYOUT_QT_PROPERTYBROWSER_HDR_FILES}
 		
 install(FILES ${TERRALIB_LAYOUT_QT_PROPERTYEDITOR_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/propertyeditor COMPONENT devel)
+		
+install(FILES ${TERRALIB_LAYOUT_QT_PROPERTYTREE_HDR_FILES}
+        DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/core/propertytree COMPONENT devel)
 
 install(FILES ${TERRALIB_LAYOUT_QT_ITEM_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib/layout/qt/item COMPONENT devel)

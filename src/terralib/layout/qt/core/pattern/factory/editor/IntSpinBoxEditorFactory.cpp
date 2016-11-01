@@ -18,38 +18,35 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
-   
-  \brief 
+  \file terralib/layout/qt/core/pattern/factory/editor/IntSpinBoxEditorFactory.cpp
 
-  \ingroup layout
+  \brief This is the concrete factory for zoom area tools.
 */
 
 // TerraLib
-#include "AbstractEditor.h"
+#include "IntSpinBoxEditorFactory.h"
+#include "../../../../../core/enum/Enums.h"
+#include "../../../View.h"
+#include "../../../propertyeditor/IntSpinBoxEditor.h"
 
-
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+te::layout::AbstractEditor* te::layout::IntSpinBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  m_dataType = type; // type
+  std::vector<Property> props = params.getProperties();
+  QModelIndex index = params.getModelIndex();
+  QWidget* parent = params.getParent();
+
+  IntSpinBoxEditor* editor = new IntSpinBoxEditor(index, parent);
+  editor->setProperties(props);
+  return editor;
 }
 
-te::layout::AbstractEditor::~AbstractEditor()
+te::layout::IntSpinBoxEditorFactory::IntSpinBoxEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeInt()->getName())
 {
 
 }
 
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
+te::layout::IntSpinBoxEditorFactory::~IntSpinBoxEditorFactory()
 {
-  m_vprops = vprops;
-}
 
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
 }

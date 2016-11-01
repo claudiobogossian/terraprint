@@ -18,13 +18,13 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/editor/DoubleSpinBoxEditorFactory.h
+  \file terralib/layout/qt/core/pattern/factory/editor/IntSpinBoxEditorFactory.h
 
   \brief This is the concrete factory for create editors.
  */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_DOUBLE_SPINBOX_EDITOR_FACTORY_H
-#define __TERRALIB_LAYOUT_INTERNAL_DOUBLE_SPINBOX_EDITOR_FACTORY_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_BOOL_CHECKBOX_EDITOR_FACTORY_H
+#define __TERRALIB_LAYOUT_INTERNAL_BOOL_CHECKBOX_EDITOR_FACTORY_H
 
 // TerraLib
 #include "../../../../../core/Config.h"
@@ -37,21 +37,21 @@ namespace te
   {
     class AbstractLayoutTool;
     /*!
-      \class DoubleSpinBoxEditorFactory
+      \class IntSpinBoxEditorFactory
 
       \brief This is the concrete factory for create editors.
 
       \sa EditorFactory, ParameterizedAbstractFactory, AbstractEditor
     */
-    class TELAYOUTEXPORT DoubleSpinBoxEditorFactory : public EditorFactory
+    class TELAYOUTEXPORT BoolCheckBoxEditorFactory : public EditorFactory
     {
       public:
 
         /*! It register the factory in the abstract dictionary. */
-        DoubleSpinBoxEditorFactory();
+        BoolCheckBoxEditorFactory();
 
         /*! \brief Destructor. */
-        ~DoubleSpinBoxEditorFactory();
+        ~BoolCheckBoxEditorFactory();
 
       protected:
 
@@ -67,5 +67,5 @@ namespace te
 }   // end namespace te
 
 
-#endif  
+#endif 
 

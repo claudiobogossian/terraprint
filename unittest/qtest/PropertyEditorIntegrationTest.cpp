@@ -20,7 +20,7 @@
 #include "PropertyEditorIntegrationTest.h"
 
 // Layout Module
-#include "terralib/layout/qt/core/propertyeditor/PropertyTree.h"
+#include "terralib/layout/qt/core/propertytree/PropertyTree.h"
 #include "terralib/layout/qt/outside/ToolbarOutside.h"
 #include "terralib/layout/qt/core/Scene.h"
 #include "terralib/layout/core/pattern/mvc/AbstractItemView.h"
@@ -106,7 +106,7 @@ void te::layout::PropertyEditorIntegrationTest::on_test_click_rectangle_item()
 
 void te::layout::PropertyEditorIntegrationTest::on_test_create_property_tree()
 {
-  te::layout::PropertyTree* tree = new te::layout::PropertyTree(m_view.get(), m_view->viewport());
+  te::layout::PropertyTree* tree = new te::layout::PropertyTree(m_view.get(), 0, m_view->viewport());
   QVERIFY2(m_view.get() != 0, "Could not create a PropertyTree object.");
 
   QList<QGraphicsItem*> graphicsItems = m_view->scene()->selectedItems();

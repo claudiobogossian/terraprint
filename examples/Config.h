@@ -18,38 +18,19 @@
  */
 
 /*!
-  \file AbstractEditor.cpp
-   
-  \brief 
+  \file examples/Config.h
 
-  \ingroup layout
-*/
+  \brief Proxy file for the real global configuration of TerraLib Layout Examples.
+ */
+
+#ifndef __TERRALIB__LAYOUT_EXAMPLES_INTERNAL_CONFIG_H
+#define __TERRALIB__LAYOUT_EXAMPLES_INTERNAL_CONFIG_H
 
 // TerraLib
-#include "AbstractEditor.h"
+#include <terralib/BuildConfig.h>
+
+// Examples
+#include "terralib_examples_config.h"
 
 
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
-{
-  m_dataType = type; // type
-}
-
-te::layout::AbstractEditor::~AbstractEditor()
-{
-
-}
-
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
-{
-  m_vprops = vprops;
-}
-
-void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
-{
-  changeEditorData(index);
-}
-
-te::layout::EnumType* te::layout::AbstractEditor::getType()
-{
-  return m_dataType;
-}
+#endif  // __TERRALIB__LAYOUT_EXAMPLES_INTERNAL_CONFIG_H

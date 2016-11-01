@@ -895,8 +895,16 @@ QVariant te::layout::Variant::toQVariant() const
   }
   else if (m_type == dataType->getDataTypeStringList())
   {
-    QString svalue = ItemUtils::convert2QString(m_sValue);
-    value = QVariant(svalue);
+    QStringList sList;
+
+    std::vector<std::string>::const_iterator it;
+    for (it = m_vString.begin(); it != m_vString.end(); ++it)
+    {
+      std::string newValue = (*it);
+      QString svalue = ItemUtils::convert2QString(newValue);
+      sList.append(svalue);
+    }
+    value = QVariant(sList);
   }
   else if (m_type == dataType->getDataTypeDouble())
   {
@@ -954,7 +962,8 @@ QVariant te::layout::Variant::toQVariant() const
     std::vector<std::string>::const_iterator it;
     for (it = m_vString.begin(); it != m_vString.end(); ++it)
     {
-      QString svalue = ItemUtils::convert2QString(m_sValue);
+      std::string newValue = (*it);
+      QString svalue = ItemUtils::convert2QString(newValue);
       qvString.append(svalue);
     }
     value = QVariant(qvString);
