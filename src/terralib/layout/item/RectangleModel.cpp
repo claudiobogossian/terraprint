@@ -38,6 +38,8 @@ te::layout::RectangleModel::RectangleModel()
   te::color::RGBAColor fillColor(255, 255, 255, 255);
   te::color::RGBAColor contourColor(0, 0, 0, 255);
 
+  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getRectangleItem());
+  
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
 //adding properties
@@ -88,8 +90,15 @@ te::layout::RectangleModel::RectangleModel()
     property.setMenu(true);
     m_properties.addProperty(property);
   }
-  
-  reparentProperties(Enums::getInstance().getEnumObjectType()->getRectangleItem());
+
+  {
+    te::gm::Envelope worldBox;
+    Property property(0);
+    property.setName("world_box");
+    property.setLabel(TR_LAYOUT("World Box"));
+    property.setValue(worldBox, dataType->getDataTypeEnvelope());
+    m_properties.addProperty(property);
+  }
 }
 
 te::layout::RectangleModel::~RectangleModel()

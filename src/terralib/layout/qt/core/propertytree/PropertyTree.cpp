@@ -189,7 +189,8 @@ QTreeWidgetItem* te::layout::PropertyTree::findTopParent(QTreeWidgetItem* topPar
     {
       return topParent;
     }
-  }  
+  }
+  
   return topParent;
 }
 
