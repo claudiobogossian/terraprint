@@ -119,7 +119,6 @@ void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionV
       return;
     }
   }
-
   QStyledItemDelegate::paint(painter, option, index);
 }
 
@@ -135,10 +134,9 @@ QWidget* te::layout::PropertyDelegate::createFromFactory(QWidget* parent, const 
     if (editor)
     {
       // connect signal / slot
-      connect(editor, SIGNAL(dataValueChanged(QWidget* widget, Property)), this, SLOT(onDataValueChanged(QWidget* widget, Property)));
+      connect(editor, SIGNAL(dataValueChanged(QWidget*, Property)), this, SLOT(onDataValueChanged(QWidget*, Property)));
     }
   }
-
   return editor;
 }
 

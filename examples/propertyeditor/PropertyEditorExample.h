@@ -54,7 +54,7 @@ namespace te
         void run();
 
       protected:
-
+        
         void createRectangleItem();
         
         void createPropertyTree();

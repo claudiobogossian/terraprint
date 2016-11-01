@@ -17,25 +17,36 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// Layout Module Examples
-#include "PropertyEditorExample.h"
+/*!
+  \file terralib/layout/qt/core/pattern/factory/editor/FontEditorFactory.cpp
 
-// Examples TerraLib includes by platform
-#include "../Config.h"
+  \brief This is the concrete factory for tree items.
+*/
 
-// Qt
-#include <QApplication>
-#include <QWidget>
-#include <QDebug>
+// TerraLib
+#include "FontEditorFactory.h"
+#include "../../../../../core/enum/Enums.h"
+#include "../../../View.h"
+#include "../../../propertyeditor/FontEditor.h"
 
-int main(int argc, char *argv[])
+te::layout::AbstractEditor* te::layout::FontEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  QApplication app(argc, argv); // required to run classes with Qt
+  std::vector<Property> props = params.getProperties();
+  QModelIndex index = params.getModelIndex();
+  QWidget* parent = params.getParent();
 
-  te::layout::PropertyEditorExample editor;
-  editor.run();
-  editor.show();
-    
-  return app.exec();
+  FontEditor* editor = new FontEditor(index, parent);
+  editor->setProperties(props);
+  return editor;
 }
 
+te::layout::FontEditorFactory::FontEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeFont()->getName())
+{
+
+}
+
+te::layout::FontEditorFactory::~FontEditorFactory()
+{
+
+}

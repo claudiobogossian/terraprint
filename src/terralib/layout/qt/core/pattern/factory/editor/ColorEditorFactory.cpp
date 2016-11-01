@@ -17,25 +17,37 @@
     TerraLib Team at <terralib-team@terralib.org>.
  */
 
-// Layout Module Examples
-#include "PropertyEditorExample.h"
+/*!
+  \file terralib/layout/qt/core/pattern/factory/editor/ColorEditorFactory.cpp
 
-// Examples TerraLib includes by platform
-#include "../Config.h"
+  \brief This is the concrete factory for color editors.
+*/
 
-// Qt
-#include <QApplication>
-#include <QWidget>
-#include <QDebug>
+// TerraLib
+#include "ColorEditorFactory.h"
+#include "../../../../../core/enum/Enums.h"
+#include "../../../View.h"
+#include "../../../propertyeditor/ColorEditor.h"
 
-int main(int argc, char *argv[])
+te::layout::AbstractEditor* te::layout::ColorEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  QApplication app(argc, argv); // required to run classes with Qt
+  std::vector<Property> props = params.getProperties();
+  QModelIndex index = params.getModelIndex();
+  QWidget* parent = params.getParent();
 
-  te::layout::PropertyEditorExample editor;
-  editor.run();
-  editor.show();
-    
-  return app.exec();
+  ColorEditor* editor = new ColorEditor(index, parent);
+  editor->setProperties(props);
+  return editor;
+}
+
+te::layout::ColorEditorFactory::ColorEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeColor()->getName())
+{
+
+}
+
+te::layout::ColorEditorFactory::~ColorEditorFactory()
+{
+
 }
 

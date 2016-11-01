@@ -55,6 +55,11 @@ te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::creat
   EnvelopePropertyTreeItem* envelopePropertyTreeItem = new EnvelopePropertyTreeItem(prop, parent);
   te::gm::Envelope env = prop.getValue().toEnvelope();
 
+  if (!env.isValid())
+  {
+    env = te::gm::Envelope(0, 0, 0, 0);
+  }
+
   QString firstChildName("x1");
   QVariant  childValue(env.getLowerLeftX());
   createDataTreeItemChild(firstChildName, childValue, envelopePropertyTreeItem);

@@ -84,6 +84,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../core/pattern/factory/editor/BoolCheckBoxEditorFactory.h"
 #include "../core/pattern/factory/editor/StringLineEditorFactory.h"
 #include "../core/pattern/factory/editor/StringListComboBoxEditorFactory.h"
+#include "../core/pattern/factory/editor/FontEditorFactory.h"
+#include "../core/pattern/factory/editor/ColorEditorFactory.h"
 
 // Tree Items
 #include "../core/pattern/factory/treeItem/EnvelopePropertyTreeItemFactory.h"
@@ -191,6 +193,8 @@ namespace te
         static BoolCheckBoxEditorFactory BoolCheckBoxEditorFactory_instance;
         static StringLineEditorFactory StringLineEditorFactory_instance;
         static StringListComboBoxEditorFactory StringListComboBoxEditorFactory_instance;
+        static FontEditorFactory FontEditorFactory_instance;
+        static ColorEditorFactory ColorEditorFactory_instance;
       }
     }
 
