@@ -23,6 +23,8 @@
 // Qt
 #include <QWidget>
 
+class QComboBox;
+
 namespace te
 {
   namespace layout
@@ -59,10 +61,15 @@ namespace te
         
         void createPropertyTree();
 
+        void createLayout();
+
+        void loadComboboxNames();
+
       private:
 
-        te::layout::RectangleItem* m_rectItem;
-        te::layout::PropertyTree*  m_tree;
+        te::layout::RectangleItem*  m_rectItem;
+        te::layout::PropertyTree*   m_tree;
+        QComboBox*                  m_combobox;
     };
   }
 }

@@ -94,6 +94,8 @@ namespace te
 
         void setupTreeViewEditorMargin(QLayout* layout);
 
+        virtual QColor configColor(QWidget* widget);
+
       protected:
 
         QColor          m_color;

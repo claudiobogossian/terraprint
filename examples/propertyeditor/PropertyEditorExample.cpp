@@ -42,11 +42,14 @@
 #include <QMenu>
 #include <QStatusBar>
 #include <QVBoxLayout>
+#include <QComboBox>
+#include <QStringList>
 
 te::layout::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
   QWidget(parent),
   m_rectItem(0),
-  m_tree(0)
+  m_tree(0),
+  m_combobox(0)
 {
   setWindowTitle(tr("Property Editor"));
   resize(480, 320);
@@ -93,10 +96,8 @@ void te::layout::PropertyEditorExample::createPropertyTree()
     return;
   }
 
-  QVBoxLayout* vlayout = new QVBoxLayout(this);
   m_tree = new te::layout::PropertyTree(0, 0, this); // create property tree
-  vlayout->addWidget(m_tree);
-  setLayout(vlayout);
+  createLayout();
   
   std::vector<Property> props;
   AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem);
@@ -104,5 +105,38 @@ void te::layout::PropertyEditorExample::createPropertyTree()
   props = itemProperties.getProperties();
 
   m_tree->load(props); // load properties from rectangle item
+}
+
+void te::layout::PropertyEditorExample::createLayout()
+{
+  //Layout
+
+  if (!m_tree)
+    return;
+
+  QVBoxLayout* layout = new QVBoxLayout(this);
+  layout->setMargin(0);
+  
+  m_combobox = new QComboBox(this);
+  m_combobox->setBaseSize(QSize(16, 16));
+  m_combobox->setVisible(true);
+
+  loadComboboxNames();
+
+  layout->addWidget(m_combobox);
+  layout->addWidget(m_tree);
+  
+  setLayout(layout);
+}
+
+void te::layout::PropertyEditorExample::loadComboboxNames()
+{
+  QStringList list;
+
+  // add rect item name
+  const te::layout::Property rectProp = m_rectItem->getController()->getProperty("name");
+  list.append(rectProp.getValue().toQVariant().toString());
+
+  m_combobox->addItems(list);
 }
 

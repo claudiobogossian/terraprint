@@ -31,7 +31,7 @@
 #include "../pattern/factory/treeItem/PropertyTreeItemFactoryParamsCreate.h"
 #include "PropertyTreeItem.h"
 
-#include <terralib/common/AbstractFactory.h>
+#include <terralib/common/ParameterizedAbstractFactory.h>
 
 // STL
 #include <string>
@@ -53,8 +53,8 @@ te::layout::PropertyTreeItem* te::layout::BuildTreeItem::buildTreeItem(Property 
   EnumType* type = prop.getType();
   std::string editorName = type->getName();    
 
-  te::common::AbstractFactory<PropertyTreeItem*, std::string>::dictionary_type& d = te::common::AbstractFactory<PropertyTreeItem*, std::string>::getDictionary();
-  
+  te::common::ParameterizedAbstractFactory<PropertyTreeItem, std::string, PropertyTreeItemFactoryParamsCreate>::dictionary_type& d = te::common::ParameterizedAbstractFactory<PropertyTreeItem, std::string, PropertyTreeItemFactoryParamsCreate>::getDictionary();
+
   PropertyTreeItemFactory* fact = dynamic_cast<PropertyTreeItemFactory*>(d.find(editorName));
   PropertyTreeItem* treeItem = 0;
   if (fact)

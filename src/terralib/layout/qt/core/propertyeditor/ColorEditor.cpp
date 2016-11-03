@@ -89,6 +89,7 @@ void te::layout::ColorEditor::createGroupBox()
 
   QColor color(255, 255, 255);
   m_textLabel->setPalette(QPalette(color));
+  m_textLabel->setAutoFillBackground(true);
 
   m_button = new QToolButton(this);
   m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
@@ -148,14 +149,7 @@ void te::layout::ColorEditor::onButtonClicked(bool checked)
 
 void te::layout::ColorEditor::getColor()
 {
-  QColor color;
-  color = QColorDialog::getColor(Qt::green, this, "Select Color");
-
-  if (color.isValid()) {
-    m_textLabel->setText(color.name());
-    m_textLabel->setPalette(QPalette(color));
-    m_textLabel->setAutoFillBackground(true);
-  }
+  QColor color = configColor(m_textLabel);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -179,5 +173,23 @@ void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
   {
     layout->setContentsMargins(0, 0, decorationMargin, 0);
   }
+}
+
+QColor te::layout::ColorEditor::configColor(QWidget* widget)
+{
+  QPalette ptt(widget->palette());
+  QBrush brush = ptt.brush(widget->backgroundRole());
+  
+  QColor color = QColorDialog::getColor(brush.color(), this, tr("Select Color"));
+
+  if (color.isValid())
+  {
+    QPalette paltt(widget->palette());
+    paltt.setColor(widget->backgroundRole(), color);
+    widget->setPalette(paltt);
+    widget->setAutoFillBackground(true);
+  }
+  
+  return color;
 }
 
