@@ -100,10 +100,10 @@ QRectF te::layout::TextItem::boundingRect() const
   }
 
   const Property& pDx = m_controller->getProperty("dx");
-  double dx = pDx.getValue().toDouble();
+  double dx = te::layout::Property::GetValueAs<double>(pDx);
 
   const Property& pDy = m_controller->getProperty("dy");
-  double dy = pDy.getValue().toDouble();
+  double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   Utils utils = myScene->getUtils();
 
@@ -167,10 +167,10 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   painter->setRenderHint(QPainter::Antialiasing, true);
 
   const Property& pDx = textController->getProperty("dx");
-  double dx = pDx.getValue().toDouble();
+  double dx = te::layout::Property::GetValueAs<double>(pDx);
 
   const Property& pDy = textController->getProperty("dy");
-  double dy = pDy.getValue().toDouble();
+  double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   double dxPixels = dx / (dpiFactor * conversionfactor);
   double dyPixels = dy / (dpiFactor * conversionfactor);
@@ -211,10 +211,10 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 
   //me must consider the optional displacement
   const Property& pDx = m_controller->getProperty("dx");
-  double dx = pDx.getValue().toDouble();
+  double dx = te::layout::Property::GetValueAs<double>(pDx);
 
   const Property& pDy = m_controller->getProperty("dy");
-  double dy = pDy.getValue().toDouble();
+  double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   double xPosMM = event->pos().x() - dx;
   double yPosMM = boundingRect().height() - event->pos().y() + dy;

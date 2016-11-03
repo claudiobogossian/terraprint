@@ -39,10 +39,7 @@ te::layout::LineModel::LineModel()
 {
   te::color::RGBAColor color(0, 0, 0, 255);
   te::gm::LineString* lineString = new te::gm::LineString(0, te::gm::LineStringType);
-  te::gm::GeometryShrPtr line(lineString);
   double lineWidth = Utils::getLineWidthMinimumValue();
-
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getLineItem());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -97,7 +94,7 @@ te::layout::LineModel::LineModel()
     property.setName("geometry");
     property.setLabel(TR_LAYOUT("Geometry"));
     property.setVisible(false);
-    property.setValue(line, dataType->getDataTypeGeometry());
+    property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
     this->m_properties.addProperty(property);
   }
 
@@ -105,9 +102,11 @@ te::layout::LineModel::LineModel()
     Property property(0);
     property.setName("resizable");
     property.setLabel(TR_LAYOUT("Resizable"));
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getLineItem());
 }
 
 te::layout::LineModel::~LineModel()
@@ -133,9 +132,8 @@ void te::layout::LineModel::updateProperties( const Property& property, Properti
 {
   if ((property.getName() == "geometry"))
   {
-    const te::gm::GeometryShrPtr geometryPtr = property.getValue().toGeometry();
-    te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr.get());
-    const te::gm::Envelope* env = lineString->getMBR();
+    te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(property);
+    const te::gm::Envelope* env = geometryPtr->getMBR();
     double width = env->getWidth();
     double height = env->getHeight();
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();

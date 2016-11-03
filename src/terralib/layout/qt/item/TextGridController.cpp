@@ -66,7 +66,7 @@ void te::layout::TextGridController::setProperties(const te::layout::Properties&
   if (properties.contains("text_matrix") == true && (properties.contains("num_rows") == false || properties.contains("num_columns") == false))
   {
     const Property& pTextMatrix = properties.getProperty("text_matrix");
-    std::vector< std::vector< std::string > > textMatrix = pTextMatrix.getValue().toStringMatrix(); //we copy the matrix
+    std::vector< std::vector< std::string > > textMatrix = te::layout::Property::GetValueAs< std::vector< std::vector< std::string > > >(pTextMatrix); //we copy the matrix
 
     //if the matrix is not empty, we must update the properties num_rows and num_columns
     //if the matrix is empty, we must initialize it with the default values
@@ -76,8 +76,8 @@ void te::layout::TextGridController::setProperties(const te::layout::Properties&
     }
 
     //here we analyse the matrix the get the number of rows and the number of columns
-    std::size_t numRows = textMatrix.size();
-    std::size_t numColumns = textMatrix[0].size();
+    int numRows = (int)textMatrix.size();
+    int numColumns = (int)textMatrix[0].size();
 
     Properties propertiesCopy(properties);
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -120,9 +120,9 @@ void te::layout::TextGridController::setProperties(const te::layout::Properties&
 
     Property pTextMatrix = this->getProperty("text_matrix");
     
-    int numRows = pNumRows.getValue().toInt();
-    int numColumns = pNumColumns.getValue().toInt();
-    std::vector< std::vector< std::string > > textMatrix = pTextMatrix.getValue().toStringMatrix(); //we copy the matrix
+    int numRows = te::layout::Property::GetValueAs<int>(pNumRows);
+    int numColumns = te::layout::Property::GetValueAs<int>(pNumColumns);
+    std::vector< std::vector< std::string > > textMatrix = te::layout::Property::GetValueAs< std::vector< std::vector< std::string > > >(pTextMatrix); //we copy the matrix
 
     //here we resize the text matrix according to the new given size
     textMatrix.resize(numRows);
@@ -151,7 +151,7 @@ QTextDocument* te::layout::TextGridController::createTextDocument(const te::layo
     pTextMatrix = this->getProperty("text_matrix");
   }
 
-  const std::vector< std::vector<std::string> >& textMatrix = pTextMatrix.getValue().toStringMatrix();
+  const std::vector< std::vector<std::string> >& textMatrix = te::layout::Property::GetValueAs< std::vector< std::vector<std::string> > >(pTextMatrix);
   if (textMatrix.empty())
   {
     return textDocument;

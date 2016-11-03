@@ -63,7 +63,7 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
   const Property& pNewHeight = subjectModel->getProperty("height");
   const Property& pNewWorldBox = subjectModel->getProperty("world_box");
   const Property& pNewSrid = subjectModel->getProperty("srid");
-  const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
+  //const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
 
   const Property& pNewVerticalGap = subjectModel->getProperty(settingsGridConfig.getLneVrtGap());
   const Property& pNewHorizontalGap = subjectModel->getProperty(settingsGridConfig.getLneHrzGap());
@@ -72,16 +72,16 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
   const Property& pCurrentWidth = this->getProperty("width");
   const Property& pCurrentHeight = this->getProperty("height");
   const Property& pCurrentGeographicBox = this->getProperty("geographic_box");
-  const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
+  //const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
 
   const Property& pCurrentVerticalGap = this->getProperty(settingsGridConfig.getLneVrtGap());
   const Property& pCurrentHorizontalGap = this->getProperty(settingsGridConfig.getLneHrzGap());
 
   //new values
-  double newWidth = pNewWidth.getValue().toDouble();
-  double newHeight = pNewHeight.getValue().toDouble();
-  int newSrid = pNewSrid.getValue().toInt();
-  const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
+  double newWidth = te::layout::Property::GetValueAs<double>(pNewWidth);
+  double newHeight = te::layout::Property::GetValueAs<double>(pNewHeight);
+  int newSrid = te::layout::Property::GetValueAs<int>(pNewSrid);
+  const te::gm::Envelope& newWorldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pNewWorldBox);
   if (newWorldBox.isValid() == false)
   {
     Properties properties("");
@@ -93,14 +93,14 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
   }
 
   te::gm::Envelope newGeographicBox = getWorldBoxInGeographic(newWorldBox, newSrid);
-  std::string newItemObservable = pNewItemObserver.getValue().toString();
+  //std::string newItemObservable = te::layout::Property::GetValueAs<std::string>(pNewItemObserver);
 
 
   //current values
-  double currentWidth = pCurrentWidth.getValue().toDouble();
-  double currentHeight = pCurrentHeight.getValue().toDouble();
-  te::gm::Envelope currentGeographicBox = pCurrentGeographicBox.getValue().toEnvelope();
-  std::string currentItemObservable = pCurrentItemObserver.getValue().toString();
+  double currentWidth = te::layout::Property::GetValueAs<double>(pCurrentWidth);
+  double currentHeight = te::layout::Property::GetValueAs<double>(pCurrentHeight);
+  te::gm::Envelope currentGeographicBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pCurrentGeographicBox);
+  //std::string currentItemObservable = te::layout::Property::GetValueAs<std::string>(pCurrentItemObserver);
 
   bool doUpdate = false;
   if (newWidth != currentWidth)
@@ -112,18 +112,6 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
     doUpdate = true;
   }
   else if (newGeographicBox.equals(currentGeographicBox) == false)
-  {
-    doUpdate = true;
-  }
-  else if (!currentItemObservable.empty() && !newItemObservable.empty())
-  {
-    if (newItemObservable.compare(currentItemObservable) != 0)
-    {
-      doUpdate = true;
-    }
-  }
-  else if ((newItemObservable.empty() && !currentItemObservable.empty())
-    || (!newItemObservable.empty() && currentItemObservable.empty()))
   {
     doUpdate = true;
   }
@@ -199,11 +187,11 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
         const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
         const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
 
-        double gapVrt = pGapVrt.getValue().toDouble();
-        double gapHrz = pGapHrz.getValue().toDouble();
+        double gapVrt = te::layout::Property::GetValueAs<double>(pGapVrt);
+        double gapHrz = te::layout::Property::GetValueAs<double>(pGapHrz);
 
-        double initialX = pInitialX.getValue().toDouble();
-        double initialY = pInitialY.getValue().toDouble();
+        double initialX = te::layout::Property::GetValueAs<double>(pInitialX);
+        double initialY = te::layout::Property::GetValueAs<double>(pInitialY);
 
         double distance = newGeographicBox.getWidth();
 

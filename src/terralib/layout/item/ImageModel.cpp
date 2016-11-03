@@ -42,12 +42,9 @@ te::layout::ImageModel::ImageModel()
   te::gm::Envelope box(0., 0., 90., 90.);
   double lineWidth = Utils::getLineWidthMinimumValue();
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getImageItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //adding properties
-
   {
     Property property(0);
     property.setName("line_width");
@@ -70,9 +67,11 @@ te::layout::ImageModel::ImageModel()
   {
     Property property(0);
     property.setName("show_frame");
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getImageItem());
 }
 
 te::layout::ImageModel::~ImageModel()

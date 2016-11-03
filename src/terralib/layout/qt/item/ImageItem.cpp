@@ -67,11 +67,11 @@ void te::layout::ImageItem::setFileName(const std::string& fileName)
 void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
   const Property& pFrameColor = m_controller->getProperty("frame_color");
-  const te::color::RGBAColor& framwColor = pFrameColor.getValue().toColor();
+  const te::color::RGBAColor& framwColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
   QColor qContourColor(framwColor.getRed(), framwColor.getGreen(), framwColor.getBlue(), framwColor.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(qContourColor, lnew, Qt::SolidLine);
 
@@ -110,12 +110,12 @@ void te::layout::ImageItem::adjustSize()
   double factor = width / height;
   if (factor < 1)
   {
-    height = m_controller->getProperty("height").getValue().toDouble();
+    height = te::layout::Property::GetValueAs<double>(m_controller->getProperty("height"));
     width = height * factor;
   }
   else
   {
-    width = m_controller->getProperty("width").getValue().toDouble();
+    width = te::layout::Property::GetValueAs<double>(m_controller->getProperty("width"));
     height = width / factor;
   }
 
@@ -124,14 +124,14 @@ void te::layout::ImageItem::adjustSize()
   {
     Property property(0);
     property.setName("width");
-    property.setValue((double)width, dataType->getDataTypeDouble());
+    property.setValue(width, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
 
   {
     Property property(0);
     property.setName("height");
-    property.setValue((double)height, dataType->getDataTypeDouble());
+    property.setValue(height, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
   m_controller->setProperties(properties);

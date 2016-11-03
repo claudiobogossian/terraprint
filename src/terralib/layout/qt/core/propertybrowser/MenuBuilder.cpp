@@ -163,7 +163,7 @@ void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
     if(prop.getType() == dataType->getDataTypeBool())
     {
       action->setCheckable(true);
-      action->setChecked(prop.getValue().toBool());
+      action->setChecked(te::layout::Property::GetValueAs<bool>(prop));
     }
   }
 }

@@ -45,9 +45,33 @@ te::layout::Property::Property( int parentItemHashCode ) :
   m_required(false),
   m_composeWidget(false),
   m_public(false),
-  m_serializable(true)
+  m_serializable(true),
+  m_usePrecision(false),
+  m_precisionValue(2)
 {
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
+}
+
+te::layout::Property::Property(const std::string& propertyName, te::dt::AbstractData* data, EnumType* type)
+  : m_parentItemHashCode(0)
+  , m_name(propertyName)
+  , m_type(type)
+  , m_editable(true)
+  , m_label("")
+  , m_menu(false)
+  , m_icon("")
+  , m_visible(true)
+  , m_required(false)
+  , m_composeWidget(false)
+  , m_public(false)
+  , m_serializable(true)
+  , m_data(data)
+{
+}
+
+te::layout::Property::Property(const te::layout::Property& rhs)
+{
+  *this = rhs;
 }
 
 te::layout::Property::~Property()
@@ -70,9 +94,18 @@ te::layout::EnumType* te::layout::Property::getType() const
   return m_type;
 }
 
-const te::layout::Variant& te::layout::Property::getValue() const
+void te::layout::Property::setValue(te::dt::AbstractData* data, EnumType* type, bool usePrecision, int precisionValue)
 {
-  return m_value;
+  m_data.reset(data);
+  m_type = type;
+
+  setUsePrecision(usePrecision);
+  setPrecision(precisionValue);
+}
+
+const te::dt::AbstractData* te::layout::Property::getValue() const
+{
+  return m_data.get();
 }
 
 void te::layout::Property::addOption(const Variant& variant)
@@ -213,7 +246,7 @@ bool te::layout::Property::updateSubProperty(const Property& property)
   {
     if ((*it) == property)
     {
-      it->setValue(property.getValue());
+      it->setValue(property.getValue()->clone(), property.getType());
       it->setOptionChoice(property.getOptionByCurrentChoice());
       result = true;
     }
@@ -234,7 +267,7 @@ bool te::layout::Property::completelyUpdateSubProperty(const Property& property)
   {
     if ((*it) == property)
     {
-      it->setValue(property.getValue());
+      it->setValue(property.getValue()->clone(), property.getType());
       it->setOptionChoice(property.getOptionByCurrentChoice());
       it->setEditable(property.isEditable());
       it->setLabel(property.getLabel());
@@ -258,8 +291,17 @@ bool te::layout::Property::completelyUpdateSubProperty(const Property& property)
 
 bool te::layout::Property::isNull() const
 {
-  bool result = true;
+  //bool result = true;
 
+  if (m_data.get() == 0)
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+  /*
   if(m_value.isNull())
   {
     if(!m_options.empty())
@@ -272,7 +314,7 @@ bool te::layout::Property::isNull() const
     result = false;
   }
 
-  return result;
+  return result;*/
 }
 
 bool te::layout::Property::containsSubProperty( const Property& subProperty ) const
@@ -345,7 +387,6 @@ void te::layout::Property::clear()
   m_name = "unknown";
   m_editable = true;
   m_type = dataType->getDataTypeNone();
-  m_value.clear();
   m_currentChoice.clear();
   m_options.clear();
   m_subProperty.clear();
@@ -354,18 +395,7 @@ void te::layout::Property::clear()
   m_required = false;
   m_composeWidget = false;
   m_label = "";
-}
-
-void te::layout::Property::setValue(const Variant& variant, bool usePrecision, int precisionValue)
-{
-  m_value = variant;
-  if (usePrecision){
-
-    m_value.setPrecision(precisionValue);
-    m_value.usePrecision(usePrecision);
-
-  }
-    m_type = variant.getType();
+  m_data.reset();
 }
 
 void te::layout::Property::setLabel( std::string label )
@@ -396,11 +426,6 @@ void te::layout::Property::setIcon( const std::string& icon )
 const std::string& te::layout::Property::getIcon() const
 {
   return m_icon;
-}
-
-bool te::layout::Property::isComplex() const
-{
-  return m_value.isComplex();
 }
 
 void te::layout::Property::setVisible( bool visible )
@@ -485,4 +510,24 @@ void te::layout::Property::setParent(const std::string& parentClass)
   {
     it->setParent(parentClass);
   }
+}
+
+bool te::layout::Property::getUsePrecision() const
+{
+  return m_usePrecision;
+}
+
+void te::layout::Property::setUsePrecision(bool usePrecision)
+{
+  m_usePrecision = usePrecision;
+}
+
+int te::layout::Property::getPrecision() const
+{
+  return m_precisionValue;
+}
+
+void te::layout::Property::setPrecision(int precision)
+{
+  m_precisionValue = precision;
 }

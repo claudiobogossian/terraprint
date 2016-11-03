@@ -42,8 +42,6 @@ te::layout::PointModel::PointModel()
   te::color::RGBAColor backgroundColor(255, 0, 0, 255);
   double lineWidth = Utils::getLineWidthMinimumValue();
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getPointItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //adding properties
@@ -102,6 +100,8 @@ te::layout::PointModel::PointModel()
     property.setMenu(true);
     m_properties.addProperty(property);
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getPointItem());
 }
 
 te::layout::PointModel::~PointModel()

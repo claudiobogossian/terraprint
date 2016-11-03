@@ -54,9 +54,9 @@ void te::layout::LineController::verifyPolygon()
     return;
   }
 
-  te::gm::GeometryShrPtr line = getGeometry();;
+  te::gm::Geometry* line = getGeometry();;
 
-  if (line.get()->getNPoints() <= 0)
+  if (line->getNPoints() <= 0)
   {
     return;
   }
@@ -66,22 +66,21 @@ void te::layout::LineController::verifyPolygon()
   
   Property property;
   property.setName("geometry");
-  property.setValue(line, dataType->getDataTypeGeometry());
+  property.setValue<te::gm::Geometry*>(line, dataType->getDataTypeGeometry());
   m_model->setProperty(property);
 }
 
-te::gm::GeometryShrPtr te::layout::LineController::getGeometry()
+te::gm::Geometry* te::layout::LineController::getGeometry()
 {
   QPolygonF poly = recalculatePolygon();
   
   int polySize = poly.size();
 
   te::gm::LineString* lineString = new te::gm::LineString(polySize, te::gm::LineStringType);
-  te::gm::GeometryShrPtr line(lineString);
 
   if (poly.empty())
   {
-    return line;
+    return lineString;
   }
 
   double x = 0;
@@ -95,7 +94,7 @@ te::gm::GeometryShrPtr te::layout::LineController::getGeometry()
     ++count;
   }
 
-  return line;
+  return lineString;
 }
 
 QPolygonF te::layout::LineController::getQPolygon()
@@ -107,9 +106,9 @@ QPolygonF te::layout::LineController::getQPolygon()
   if (pLine.isNull())
     return poly;
 
-  const te::gm::GeometryShrPtr geometryPtr = pLine.getValue().toGeometry();
+  const te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(pLine);
 
-  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr.get());
+  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr);
   std::size_t nPoints = lineString->size();
   te::gm::Coord2D const* coordsPtr = lineString->getCoordinates();
   for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
@@ -133,8 +132,8 @@ QPolygonF te::layout::LineController::recalculatePolygon()
   const Property& pWidth = m_model->getProperty("width");
   const Property& pHeight = m_model->getProperty("height");
 
-  double width = pWidth.getValue().toDouble();
-  double height = pHeight.getValue().toDouble();
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
 
   if ((width == polygonRect.width()) && (height == polygonRect.height()))
   {
@@ -166,8 +165,8 @@ bool te::layout::LineController::isGeometrySizeChange()
   const Property& pWidth = m_model->getProperty("width");
   const Property& pHeight = m_model->getProperty("height");
 
-  double width = pWidth.getValue().toDouble();
-  double height = pHeight.getValue().toDouble();
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
 
   if ((width == polygonRect.width()) && (height == polygonRect.height()))
   {

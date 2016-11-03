@@ -275,7 +275,7 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
     {
       Property prop = abstractItem->getController()->getProperty("file_name");
 
-      if (prop.getValue().toString().compare("") != 0)
+      if (prop.getValue()->toString().compare("") != 0)
         return;
 
       QList<QGraphicsItem*> imageItemList;

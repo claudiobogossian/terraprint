@@ -36,9 +36,9 @@ te::layout::SVGController::~SVGController()
 void te::layout::SVGController::setProperties(const te::layout::Properties& properties)
 {
   Property pName =  properties.getProperty("file_name");
-  if ((!pName.isNull()) && (pName.getValue().toString() != getProperty("file_name").getValue().toString()))
+  if ((!pName.isNull()) && (te::layout::Property::GetValueAs<std::string>(pName) != te::layout::Property::GetValueAs<std::string>(getProperty("file_name"))))
   {
-    QString fileName = ItemUtils::convert2QString(pName.getValue().toString());
+    QString fileName = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(pName));
     calculateSVGRect(fileName);
     AbstractItemController::setProperties(properties);
 

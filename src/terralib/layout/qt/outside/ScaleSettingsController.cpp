@@ -79,7 +79,7 @@ QStringList te::layout::ScaleSettingsController::getItemNames(QStringList list, 
       {
         const Property& prop_name = view->getController()->getProperty("name");
 
-        std::string value = prop_name.getValue().toString();
+        std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
         const Properties& prop_type = view->getController()->getProperties();

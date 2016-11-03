@@ -82,10 +82,9 @@ std::vector<std::string> te::layout::SVGDialogModel::getPaths()
     return pathsName;
 
   const Property& pro_paths = props[0];
+  const std::vector<std::string>& vecString = te::layout::Property::GetValueAs< std::vector<std::string> >(pro_paths);
 
-  const GenericVariant& variant = pro_paths.getValue().toGenericVariant();
-
-  return variant.toStringVector();
+  return vecString;
 }
 
 te::layout::Property te::layout::SVGDialogModel::containsOutsideSubProperty(std::string name)

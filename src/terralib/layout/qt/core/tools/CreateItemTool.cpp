@@ -155,7 +155,7 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
       continue;
     }
 
-    itemName = mapItem->getController()->getProperty("name").getValue().toString();
+    itemName = te::layout::Property::GetValueAs<std::string>(mapItem->getController()->getProperty("name"));
 
     //we do not break in order to find the last Map on the list
   }

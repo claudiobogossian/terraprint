@@ -42,12 +42,9 @@ te::layout::EllipseModel::EllipseModel()
   double height = 20.;
   double lineWidth = Utils::getLineWidthMinimumValue();
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getEllipseItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //adding properties
-
   {
     Property property(0);
     property.setName("line_width");
@@ -89,6 +86,8 @@ te::layout::EllipseModel::EllipseModel()
     property.setValue(height, dataType->getDataTypeDouble());
     this->m_properties.updateProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getEllipseItem());
 }
 
 te::layout::EllipseModel::~EllipseModel()

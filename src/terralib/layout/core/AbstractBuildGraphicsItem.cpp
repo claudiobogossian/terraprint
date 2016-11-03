@@ -56,14 +56,14 @@ te::gm::Coord2D te::layout::AbstractBuildGraphicsItem::findCoordinate( te::layou
 
   if(!pro_x1.isNull())
   {
-    x1 = pro_x1.getValue().toDouble();
+    x1 = te::layout::Property::GetValueAs<double>(pro_x1);
   }
 
   Property pro_y1 = props.getProperty("y");
 
   if(!pro_y1.isNull())
   {
-    y1 = pro_y1.getValue().toDouble();
+    y1 = te::layout::Property::GetValueAs<double>(pro_y1);
   }
 
   te::gm::Coord2D coord(x1, y1);
@@ -78,7 +78,7 @@ int te::layout::AbstractBuildGraphicsItem::findZValue( te::layout::Properties pr
 
   if(!pro_zValue.isNull())
   {
-    zValue = pro_zValue.getValue().toInt();
+    zValue = te::layout::Property::GetValueAs<int>(pro_zValue);
   }
 
   return zValue;
@@ -90,7 +90,7 @@ std::string te::layout::AbstractBuildGraphicsItem::findName(te::layout::Properti
   Property pro_name = props.getProperty("name");
   if (!pro_name.isNull())
   {
-    name = pro_name.getValue().toString();
+    name = te::layout::Property::GetValueAs<std::string>(pro_name);
   }
   return name;
 }
@@ -102,7 +102,7 @@ double te::layout::AbstractBuildGraphicsItem::findWidth(const te::layout::Proper
   Property property = props.getProperty("width");
   if (!property.isNull())
   {
-    width = property.getValue().toDouble();
+    width = te::layout::Property::GetValueAs<double>(property);
   }
 
   return width;
@@ -115,7 +115,7 @@ double te::layout::AbstractBuildGraphicsItem::findHeight(const te::layout::Prope
   Property property = props.getProperty("height");
   if (!property.isNull())
   {
-    height = property.getValue().toDouble();
+    height = te::layout::Property::GetValueAs<double>(property);
   }
 
   return height;

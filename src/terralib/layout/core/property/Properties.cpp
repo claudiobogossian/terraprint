@@ -89,7 +89,7 @@ bool te::layout::Properties::updateProperty(const te::layout::Property& property
   {
     if (it->getName().compare(property.getName()) == 0)
     {
-      it->setValue(property.getValue());
+      it->setValue(property.getValue()->clone(), property.getType());
       it->setOptionChoice(property.getOptionByCurrentChoice());
 
       //if this property has subproperties, we must update them too
@@ -117,7 +117,7 @@ bool te::layout::Properties::completelyUpdateProperty(const te::layout::Property
   {
     if (it->getName().compare(property.getName()) == 0)
     {
-      it->setValue(property.getValue());
+      it->setValue(property.getValue()->clone(), property.getType());
       it->setOptionChoice(property.getOptionByCurrentChoice());
       it->setEditable(property.isEditable());
       it->setLabel(property.getLabel());

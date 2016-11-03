@@ -232,7 +232,7 @@ QtProperty* te::layout::DialogPropertiesBrowser::addProperty( const Property& pr
 
   QString label = ItemUtils::convert2QString(stdLabel);
 
-  std::string stdValue = property.getValue().toString();
+  std::string stdValue = te::layout::Property::GetValueAs<std::string>(property);
   QString value = ItemUtils::convert2QString(stdValue);
 
   std::string name = property.getName();
@@ -381,7 +381,7 @@ void te::layout::DialogPropertiesBrowser::onShowImageDlg()
     Property prop = m_currentPropertyClicked;
     prop.setValue(stdPath, dataType->getDataTypeImage());
 
-    std::string label = prop.getValue().toString();
+    std::string label = te::layout::Property::GetValueAs<std::string>(prop);
     QString qLabel = ItemUtils::convert2QString(label);
 
     QVariant v(path);
@@ -417,7 +417,7 @@ void te::layout::DialogPropertiesBrowser::onShowFontDlg()
   std::string fontName = font.getFamily();
   QString qFontName = ItemUtils::convert2QString(fontName);
 
-  font = property.getValue().toFont();
+  font = te::layout::Property::GetValueAs<Font>(property);
   qFont.setFamily(qFontName);
   qFont.setPointSize(font.getPointSize());
   qFont.setBold(font.isBold());

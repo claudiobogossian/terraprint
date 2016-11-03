@@ -51,8 +51,8 @@ void te::layout::ItemGroupController::itemAdded()
   const Property& pCurrentWidth = getProperty("width");
   const Property& pCurrentHeight = getProperty("height");
 
-  double currentWidth = pCurrentWidth.getValue().toDouble();
-  double currentHeight = pCurrentHeight.getValue().toDouble();
+  double currentWidth = te::layout::Property::GetValueAs<double>(pCurrentWidth);
+  double currentHeight = te::layout::Property::GetValueAs<double>(pCurrentHeight);
 
   if(newWidth != currentWidth ||  newHeight != currentHeight)
   {

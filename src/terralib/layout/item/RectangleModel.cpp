@@ -38,8 +38,6 @@ te::layout::RectangleModel::RectangleModel()
   te::color::RGBAColor fillColor(255, 255, 255, 255);
   te::color::RGBAColor contourColor(0, 0, 0, 255);
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getRectangleItem());
-  
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
 //adding properties
@@ -90,6 +88,8 @@ te::layout::RectangleModel::RectangleModel()
     property.setMenu(true);
     m_properties.addProperty(property);
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getRectangleItem());
 }
 
 te::layout::RectangleModel::~RectangleModel()

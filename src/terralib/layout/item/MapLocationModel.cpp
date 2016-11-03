@@ -34,8 +34,6 @@
 te::layout::MapLocationModel::MapLocationModel() 
   : MapModel()
 {
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getMapLocationItem());
-
   SharedProperties sharedProps;
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -99,6 +97,8 @@ te::layout::MapLocationModel::MapLocationModel()
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getMapLocationItem());
 }
 
 te::layout::MapLocationModel::~MapLocationModel()

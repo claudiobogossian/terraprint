@@ -27,19 +27,12 @@
 
 // TerraLib
 #include "SVGModel.h"
-#include "../core/ContextItem.h"
-#include "terralib/geometry/Envelope.h"
-#include "terralib/color/RGBAColor.h"
-#include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
-#include "../core/pattern/mvc/AbstractItemModel.h"
 
 te::layout::SVGModel::SVGModel()
   : AbstractItemModel()
 {
-
   std::string fileName("");
-
   std::string fileDir("");
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -67,14 +60,14 @@ te::layout::SVGModel::SVGModel()
   {
     Property property(0);
     property.setName("show_frame");
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
   {
     Property property(0);
     property.setName("keep_aspect");
     property.setLabel(TR_LAYOUT("Keep Aspect"));
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     property.setVisible(true);
     m_properties.completelyUpdateProperty(property);
   }
@@ -90,7 +83,6 @@ te::layout::SVGModel::SVGModel()
     m_properties.addProperty(property);
   }
 
-
   this->reparentProperties(Enums::getInstance().getEnumObjectType()->getSVGItem());
 }
 
@@ -98,68 +90,3 @@ te::layout::SVGModel::~SVGModel()
 {
   
 }
-
-//te::layout::Properties* te::layout::SVGModel::getProperties() const
-//{
-//  ItemModelObservable::getProperties();
-//
-//  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-//
-//  if(!dataType)
-//    return m_properties;
-//
-//  std::string name = "Choice";
-//
-//  Property pro_svgchoice(m_hashCode);
-//  pro_svgchoice.setName("sgvChoice");
-//  pro_svgchoice.setValue(name, dataType->getDataTypeSVGView());
-//  pro_svgchoice.setMenu(true);
-//  
-//  Property pro_svgPaths = getSVGPathsProperty();
-//  pro_svgchoice.addSubProperty(pro_svgPaths);
-//  
-//  m_properties->addProperty(pro_svgchoice);
-//
-//  return m_properties;
-//}
-//
-//void te::layout::SVGModel::updateProperties( te::layout::Properties* properties, bool notify )
-//{
-//  ItemModelObservable::updateProperties(properties, false);
-//
-//  Properties* vectorProps = const_cast<Properties*>(properties);  
-//
-//  //updateVisitors();
-//
-//  if(notify)
-//  {
-//    ContextItem context;
-//    notifyAll(context);
-//  }  
-//}
-//
-//
-//te::layout::Property te::layout::SVGModel::getSVGPathsProperty() const
-//{
-//  Property prop;
-//  prop.setName("paths");
-//
-//  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-//
-//  GenericVariant gv;
-//
-//  gv.setVector(m_pathsName, dataType->getDataTypeStringVector());
-//
-//  prop.setValue(gv, dataType->getDataTypeGenericVariant());
-//
-//  prop.setEditable(false);
-//  prop.setVisible(false);
-//  return prop;
-//}
-//
-//void te::layout::SVGModel::setPathsName( std::vector<std::string> pathVector )
-//{
-//  m_pathsName = pathVector;
-//}
-//
-//

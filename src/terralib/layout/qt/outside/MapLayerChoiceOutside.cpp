@@ -261,11 +261,8 @@ void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished(){
       widthSize = cm2mm(widthSize);
     }
 
-    Variant variant;
-    variant.setValue(widthSize, dataType->getDataTypeDouble());
-
     Property prop = controller->getProperty("width");
-    prop.setValue(variant);
+    prop.setValue(widthSize, dataType->getDataTypeDouble());
 
     emit updateWidgetProperty(prop);
   }
@@ -286,11 +283,8 @@ void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
       heightSize = cm2mm(heightSize);
     }
 
-    Variant variant;
-    variant.setValue(heightSize, dataType->getDataTypeDouble());
-
     Property prop = controller->getProperty("height");
-    prop.setValue(variant);
+    prop.setValue(heightSize, dataType->getDataTypeDouble());
     emit updateWidgetProperty(prop);
   }
 }
@@ -303,7 +297,7 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
 
   QString copyText = text;
   copyText.remove('.');
-  int inputValue = copyText.remove('.').toInt();
+  double inputValue = (double)copyText.remove('.').toInt();
 
   if (inputValue > 0.0)
   {
@@ -318,10 +312,7 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
       Property prop = controller->getProperty("scale");
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-      Variant variant;
-
-      variant.setValue((double)inputValue, dataType->getDataTypeDouble());
-      prop.setValue(variant);
+      prop.setValue(inputValue, dataType->getDataTypeDouble());
 
       emit updateWidgetProperty(prop);
     }
@@ -338,9 +329,7 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
         return;
       }
 
-      Variant variant;
-      variant.setValue(selectedValue, dataType->getDataTypeDouble());
-      prop.setValue(variant);
+      prop.setValue(selectedValue.toDouble(), dataType->getDataTypeDouble());
 
       emit updateWidgetProperty(prop);
 
@@ -385,7 +374,7 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
     Variant variant;
     variant.setValue(selectedUnit, dataType->getDataTypeStringList());
 
-    prop.setValue(variant);
+    prop.setValue(selectedUnit, dataType->getDataTypeStringList());
     prop.setOptionChoice(variant);
 
     emit updateWidgetProperty(prop);
@@ -401,10 +390,8 @@ void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked(){
 
     bool isBlocked = m_ui->ckbFixedScale->isChecked();
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(isBlocked, dataType->getDataTypeBool());
 
-    prop.setValue(variant);
+    prop.setValue(isBlocked, dataType->getDataTypeBool());
 
     emit updateWidgetProperty(prop);
   }
@@ -461,14 +448,14 @@ void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string 
   if ((nameComponent == "height" || nameComponent == "width") && unit == "Centimeter")
   {
     Property prop = controller->getProperty(nameComponent);
-    double number = prop.getValue().toDouble();
+    double number = te::layout::Property::GetValueAs<double>(prop);
     double convertedNumber = mm2cm(number);
     convert << convertedNumber;
   }
   else
   {
     Property prop = controller->getProperty(nameComponent);
-    double number = prop.getValue().toDouble();
+    double number = te::layout::Property::GetValueAs<double>(prop);
     convert << number;
   }
 
@@ -499,15 +486,15 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
 
   if (prop.getType() == dataType->getDataTypeDouble())
   {
-    variant.setValue(prop.getValue().toDouble());
+    variant.setValue(te::layout::Property::GetValueAs<double>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeInt())
   {
-    variant.setValue(prop.getValue().toInt());
+    variant.setValue(te::layout::Property::GetValueAs<int>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeString())
   {
-    std::string txt = prop.getValue().toString();
+    std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
     QString qText = ItemUtils::convert2QString(txt);
 
     variant.setValue(qText);
@@ -560,13 +547,13 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
 
     Property initialProp = controller->getProperty("scale");
 
-    int currentScale = (int)initialProp.getValue().toDouble();
+    int currentScale = (int)te::layout::Property::GetValueAs<double>(initialProp);
 
     std::string stringValue = formatScaleValue(boost::lexical_cast<std::string>(currentScale));
 
     Property scaleValue = controller->getProperty("scale");
 
-    double dValue = scaleValue.getValue().toDouble();
+    double dValue = te::layout::Property::GetValueAs<double>(scaleValue);
 
     QVariant vScale = dValue;
 
@@ -620,7 +607,7 @@ void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string na
 
   if (chk)
   {
-    chk->setChecked(prop.getValue().toBool());
+    chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
   }
 }
 

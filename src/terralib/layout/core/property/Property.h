@@ -29,10 +29,16 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_PROPERTY_H 
 #define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_H
 
-// TerraLib
+// TerraPrint
 #include "Variant.h"
+#include "DataTypes.h"
+#include "DataTypesUtils.h"
+#include "LayoutData.h"
 #include "../enum/EnumType.h"
 #include "../Config.h"
+
+//Terralib
+#include <terralib/datatype/AbstractData.h>
 
 // boost
 #include <boost/shared_ptr.hpp>
@@ -57,6 +63,16 @@ namespace te
           \brief Constructor
         */ 
         Property(int parentItemHashCode = 0);
+
+        /*!
+        \brief Constructor
+        */
+        Property(const std::string& propertyName, te::dt::AbstractData* data, EnumType* type);
+
+        /*!
+        \brief Copy Constructor
+        */
+        Property(const te::layout::Property& rhs);
 
         /*!
           \brief Destructor
@@ -91,28 +107,18 @@ namespace te
           corresponding type and pass it as the method parameter.
         */
 
-        /*!
-          \brief Stores a copy of value.
-
-          \param value copies the value to be stored
-          \param type data type
-        */
-        template <typename ValueType>
-        void setValue(ValueType value, EnumType* type, bool usePrecision = false, int precisionValue = 2);
 
         /*!
           \brief Stores a copy of value.
 
           \param te::layout::Variant object
         */
-        void setValue(const Variant& variant, bool usePrecision = false, int precisionValue = 2);
+        void setValue(te::dt::AbstractData* data, EnumType* type, bool usePrecision = false, int precisionValue = 2);
 
-        /*!
-          \brief Returns stored value
+        template <typename T>
+        void setValue(const T& value, EnumType* type, bool usePrecision = false, int precisionValue = 2);
 
-          \return te::layout::Variant object
-        */
-        const Variant& getValue() const;
+        const te::dt::AbstractData* getValue() const;
 
         /*!
           \brief Returns true if property is editable, false otherwise. 
@@ -202,13 +208,6 @@ namespace te
         virtual void setIcon(const std::string& icon);
 
         virtual const std::string& getIcon() const;
-
-        /*!
-          \brief Return true if value is not of common C++ data type, false otherwise.
-
-          \return true if value is not of common C++ data type, false otherwise  
-        */
-        virtual bool isComplex() const;
 
         /*!
           \brief Sets the visibility of this property.
@@ -302,15 +301,26 @@ namespace te
       
         bool operator ==(const Property& other) const;
 
+        Property& operator =(const Property& other);
+
         const std::string& getParent() const;
         void setParent(const std::string& parentClass);
+
+        bool getUsePrecision() const;
+
+        void setUsePrecision(bool usePrecision);
+
+        int getPrecision() const;
+
+        void setPrecision(int precision);
+
+        template<typename T> static const T& GetValueAs(const te::layout::Property& property);
 
     protected:
 
       int                                 m_parentItemHashCode; //!< hashcode of the object that owns this property
       std::string                         m_name; //!< name of this property
       EnumType*                           m_type; //!< data type of this property
-      Variant                             m_value; //!<
       Variant                             m_currentChoice; //!<
       bool                                m_editable; //!<
       std::vector<Variant>                m_options; //!<
@@ -325,22 +335,13 @@ namespace te
       mutable Property::Ptr               m_nullProperty; //!< Represents a null property
       bool                                m_serializable; //!< if true the property can be serialized in file or database
       std::string                         m_parentClass;
+
+      bool                                m_usePrecision; //temporary
+      int                                 m_precisionValue; //temporary
+      te::dt::AbstractDataShrPtr          m_data; //!< The data inside this property
+      
+
     };
-
-    template <typename ValueType>
-    inline void te::layout::Property::setValue(ValueType value, EnumType* type, bool usePrecision, int precisionValue)
-    {
-      //Use the information type?
-      Variant v;
-      v.setValue(value, type);
-      if (usePrecision){
-        v.usePrecision(usePrecision);
-        v.setPrecision(precisionValue);
-      }
-
-      m_value = v;
-      m_type = type;
-    }
 
     inline bool te::layout::Property::operator ==(const Property& other) const
     { 
@@ -350,6 +351,47 @@ namespace te
       }
 
       return false;
+    }
+
+    inline Property& te::layout::Property::operator =(const Property& other)
+    {
+      this->m_parentItemHashCode = other.m_parentItemHashCode;
+      this->m_name = other.m_name;
+      this->m_type = other.m_type;
+      this->m_currentChoice = other.m_currentChoice;
+      this->m_editable = other.m_editable;
+      this->m_options = other.m_options;
+      this->m_subProperty = other.m_subProperty;
+      this->m_label = other.m_label;
+      this->m_menu = other.m_menu;
+      this->m_icon = other.m_icon;
+      this->m_visible = other.m_visible;
+      this->m_required = other.m_required;
+      this->m_composeWidget = other.m_composeWidget;
+      this->m_public = other.m_public;
+      this->m_nullProperty = other.m_nullProperty;
+      this->m_serializable = other.m_serializable;
+      this->m_parentClass = other.m_parentClass;
+      if (other.m_data.get() != 0)
+      {
+        this->m_data.reset(other.m_data->clone());
+      }
+
+      return *this;
+    }
+
+    template<typename T>
+    const T& te::layout::Property::GetValueAs(const te::layout::Property& property)
+    {
+      const te::dt::AbstractData* absData = property.getValue();
+      return te::layout::GetValueAs<T>(absData);
+    }
+
+    template <typename T>
+    void te::layout::Property::setValue(const T& value, EnumType* type, bool usePrecision, int precisionValue)
+    {
+      te::dt::AbstractData* absData = CreateData<T>(value);
+      setValue(absData, type, usePrecision, precisionValue);
     }
   }
 }

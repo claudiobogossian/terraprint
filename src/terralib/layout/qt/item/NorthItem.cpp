@@ -82,7 +82,7 @@ void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
   northLetter.translate(northLetterX, northLetterY);
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -116,7 +116,7 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
   northLetter.translate(northLetterX, northLetterY);
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -159,7 +159,7 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
   northLetter.translate(northLetterX, northLetterY);
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -198,7 +198,7 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
 QColor te::layout::NorthItem::setBrush(QPainter* painter)
 {
   const Property& colorProperty = m_controller->getProperty("color");
-  const te::color::RGBAColor& color = colorProperty.getValue().toColor();
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(colorProperty);
   QColor brushColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   painter->setBrush(QBrush(brushColor));
   return brushColor;

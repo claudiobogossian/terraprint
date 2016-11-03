@@ -49,8 +49,6 @@
 te::layout::LegendModel::LegendModel()
   : AbstractItemModel()
 {
-  m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getLegendItem());
-
   std::string name = "";
   std::string mapName = "";
   std::string legendBody = "";
@@ -224,9 +222,11 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("show_frame");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getLegendItem());
 }
 
 te::layout::LegendModel::~LegendModel()
