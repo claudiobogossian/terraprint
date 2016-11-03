@@ -64,11 +64,11 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
   }
 
   const Property& pColor = m_controller->getProperty("color");
-  const te::color::RGBAColor& color = pColor.getValue().toColor();
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(pColor);
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   QPen penStyle = searchStyle();

@@ -38,8 +38,8 @@ te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryPar
   AbstractItemController* controller = new ImageController(model);
   ImageItem* view = new ImageItem(controller);
 
-  double width = model->getProperty("width").getValue().toDouble();
-  double height = model->getProperty("height").getValue().toDouble();
+  double width = te::layout::Property::GetValueAs<double>(model->getProperty("width"));
+  double height = te::layout::Property::GetValueAs<double>(model->getProperty("height"));
   view->setPos(params.getCoord().getX() - width / 2, params.getCoord().getY() - height / 2);
   controller->setView(view);
 

@@ -35,6 +35,11 @@
 
 namespace te
 {
+  namespace dt
+  {
+    class AbstractData;
+  }
+
   namespace layout
   {
     class AbstractOutsideModel;
@@ -49,7 +54,7 @@ namespace te
 
         virtual Property updateProperty();
 
-        virtual void addUpdateProperty(std::string name, Variant variant);
+        virtual void addUpdateProperty(std::string name, te::dt::AbstractData* absData, te::layout::EnumType* dataType);
 
         virtual void addUpdateTextGridProperty(Property subProperty);
         

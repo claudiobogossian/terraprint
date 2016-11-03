@@ -111,11 +111,10 @@ void te::layout::CreateLineItemTool::setGeometry()
   {
     lineString->setPointN(i, m_coords[i]);
   }
-  te::gm::GeometryShrPtr line(lineString);
-  te::gm::Coord2D lowerLeft = line->getMBR()->getLowerLeft();
+  te::gm::Coord2D lowerLeft = lineString->getMBR()->getLowerLeft();
   m_item->setPos(lowerLeft.getX(), lowerLeft.getY());
   
-  // atualiza posi��o dos pontos de acordo com a nova posi��o do item
+  // atualiza posicao dos pontos de acordo com a nova posi��o do item
   for (unsigned int i = 0; i < m_coords.size(); i++)
   {
     QPointF point(m_coords[i].getX(), m_coords[i].getY());
@@ -126,9 +125,7 @@ void te::layout::CreateLineItemTool::setGeometry()
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Property property(0);
   property.setName("geometry");
-  property.setLabel("geometry");
-  property.setVisible(false);
-  property.setValue(line, dataType->getDataTypeGeometry());
+  property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
   m_controller->setProperty(property);
 }
 

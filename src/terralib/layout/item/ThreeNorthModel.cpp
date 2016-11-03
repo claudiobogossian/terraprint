@@ -47,7 +47,6 @@
 te::layout::ThreeNorthModel::ThreeNorthModel()
 : AbstractItemModel()
 {
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getThreeNorthItem());
   te::gm::Envelope wbox;
   int srid = 0;
   te::color::RGBAColor color(0, 0, 0, 255);
@@ -105,7 +104,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
       Property property(0);
       property.setName("meridian_convergence");
       property.setLabel(TR_LAYOUT("Meridian Convergence"));
-      property.setValue(true, dataType->getDataTypeBool());
+      property.setValue<bool>(true, dataType->getDataTypeBool());
       property.setMenu(true);
       this->m_properties.addProperty(property);
     }
@@ -141,14 +140,14 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("width");
-      property.setValue(110., dataType->getDataTypeDouble());
+      property.setValue<double>(110., dataType->getDataTypeDouble());
       m_properties.updateProperty(property);
     }
 
     {
       Property property(0);
       property.setName("keep_aspect");
-      property.setValue(true, dataType->getDataTypeBool());
+      property.setValue<bool>(true, dataType->getDataTypeBool());
       property.setVisible(false);
       m_properties.completelyUpdateProperty(property);
    }
@@ -179,6 +178,8 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
       m_properties.addProperty(property);
     }
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getThreeNorthItem());
 }
 
 te::layout::ThreeNorthModel::~ThreeNorthModel()
@@ -271,8 +272,8 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     }
 
     Utils utils(0);
-    int newSrid = pNewSrid.getValue().toInt();
-    const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
+    int newSrid = te::layout::Property::GetValueAs<int>(pNewSrid);
+    const te::gm::Envelope& newWorldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pNewWorldBox);
 
     if (newSrid <= 0 && !newWorldBox.isValid())
     {
@@ -313,7 +314,7 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     double D = 0.;
     double I = 0.;
 
-    int date = getProperty("date").getValue().toInt();
+    int date = te::layout::Property::GetValueAs<int>(getProperty("date"));
     Property pDateNew;
     pDateNew.setName("date");
     pDateNew.setValue(date, dataType->getDataTypeInt());
@@ -324,8 +325,8 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     }
 
     const Property& pdateCurrent = this->getProperty("date");
-    int dateNew = pDateNew.getValue().toInt();
-    int dateCurrent = pdateCurrent.getValue().toInt();
+    int dateNew = te::layout::Property::GetValueAs<int>(pDateNew);
+    int dateCurrent = te::layout::Property::GetValueAs<int>(pdateCurrent);
 
     /*if (dateNew != dateCurrent)
     {
@@ -355,8 +356,8 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     pMeridianConvergenceNew.setValue(meridianconvergence, dataType->getDataTypeDouble());
 
     const Property& pMeridianConvergenceCurrent = this->getProperty("angle_meridian_convergence");
-    double meridianConvergenceNew = pMeridianConvergenceNew.getValue().toDouble();
-    double meridianConvergenceCurrent = pMeridianConvergenceCurrent.getValue().toDouble();
+    double meridianConvergenceNew = te::layout::Property::GetValueAs<double>(pMeridianConvergenceNew);
+    double meridianConvergenceCurrent = te::layout::Property::GetValueAs<double>(pMeridianConvergenceCurrent);
 
 
     if (meridianConvergenceNew != meridianConvergenceCurrent)
@@ -370,8 +371,8 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     pMagneticDeclinationNew.setValue(magneticDeclination, dataType->getDataTypeDouble());
 
     const Property& pMagneticDeclinationCurrent = this->getProperty("angle_magnetic_north");
-    double magneticDeclinationNew = pMagneticDeclinationNew.getValue().toDouble();
-    double magneticDeclinationCurrent = pMagneticDeclinationCurrent.getValue().toDouble();
+    double magneticDeclinationNew = te::layout::Property::GetValueAs<double>(pMagneticDeclinationNew);
+    double magneticDeclinationCurrent = te::layout::Property::GetValueAs<double>(pMagneticDeclinationCurrent);
 
     if (magneticDeclinationNew != magneticDeclinationCurrent)
     {

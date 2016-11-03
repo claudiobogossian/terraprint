@@ -72,7 +72,7 @@ te::layout::AbstractItemView* te::layout::MapCompositionItem::getGeodesicGridIte
 void te::layout::MapCompositionItem::initItems()
 {
   const Property& pName = this->getController()->getProperty("name");
-  const std::string& parentName = pName.getValue().toString();
+  const std::string& parentName = te::layout::Property::GetValueAs<std::string>(pName);
 
   std::string mapName = parentName + "_Map";
   {
@@ -210,7 +210,7 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
         const Property& pOldMapItem = childAbstractView->getController()->getProperty(sharedProps.getItemObserver());
         if (!pOldMapItem.isNull())
         {
-          if (pOldMapItem.getValue().toString().compare("") != 0)
+          if (te::layout::Property::GetValueAs<std::string>(pOldMapItem).compare("") != 0)
           {
             // Dissociate
             Property prop(pOldMapItem);
@@ -221,7 +221,7 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
             // Active resizable
             Property property(0);
             property.setName("resizable");
-            property.setValue(true, dataType->getDataTypeBool());
+            property.setValue<bool>(true, dataType->getDataTypeBool());
             childAbstractView->getController()->setProperty(property);
           }
         }

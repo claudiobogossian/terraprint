@@ -2064,12 +2064,12 @@ nononon</source>
         <translation>Camada Selecionada</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="439"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="426"/>
         <source>Map Settings</source>
         <translation type="unfinished">Configurações do Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="439"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="426"/>
         <source>Set Width and Height.</source>
         <translation type="unfinished">Configure Largura e Altura.</translation>
     </message>
@@ -2405,7 +2405,7 @@ nononon</source>
 <context>
     <name>te::layout::SVGDialogOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="229"/>
+        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="221"/>
         <source>Open Directory</source>
         <translation type="unfinished">Abrir Diretório</translation>
     </message>
@@ -2759,43 +2759,43 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1320"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1301"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1321"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1369"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1302"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1350"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1345"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1326"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1350"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1331"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1368"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1349"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1397"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1378"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1404"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1385"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1415"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1396"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

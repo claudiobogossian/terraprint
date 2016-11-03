@@ -77,8 +77,8 @@ void te::layout::SVGDialogOutside::init()
   Property pWidth = controller->getProperty("width");
   Property pHeight = controller->getProperty("height");
 
-  m_svgWidth = pWidth.getValue().toDouble();
-  m_svgHeight = pHeight.getValue().toDouble();
+  m_svgWidth = te::layout::Property::GetValueAs<double>(pWidth);
+  m_svgHeight = te::layout::Property::GetValueAs<double>(pHeight);
 
   Property pX = controller->getProperty("x");
   Property pY = controller->getProperty("y");
@@ -110,19 +110,15 @@ void te::layout::SVGDialogOutside::onOkPushButtonClicked()
 
   Property propDir = controller->getProperty("file_dir");
 
-  std::string selectedFile = propDir.getValue().toString() + "\\" + ItemUtils::convert2StdString(txt);
+  std::string selectedFile = te::layout::Property::GetValueAs<std::string>(propDir) + "\\" + ItemUtils::convert2StdString(txt);
 
   if (m_currentFile == selectedFile){
     reject();
     return;
   }
 
-  Variant variant;
-  variant.setValue(selectedFile, dataType->getDataTypeString());
-
   Property propFileName = controller->getProperty("file_name");
-  propFileName.setValue(variant);
-
+  propFileName.setValue(selectedFile, dataType->getDataTypeString());
 
   Property pWidth = controller->getProperty("width");
   Property pHeight = controller->getProperty("height");
@@ -187,18 +183,14 @@ void te::layout::SVGDialogOutside::on_m_listWidget_itemDoubleClicked(QListWidget
 
   Property propDir = controller->getProperty("file_dir");
 
-  std::string selectedFile = propDir.getValue().toString() + "\\" + ItemUtils::convert2StdString(txt);
+  std::string selectedFile = te::layout::Property::GetValueAs<std::string>(propDir) + "\\" + ItemUtils::convert2StdString(txt);
 
   if (m_currentFile == selectedFile){
     return;
   }
 
-  Variant variant;
-  variant.setValue(selectedFile, dataType->getDataTypeString());
-
   Property propFileName = controller->getProperty("file_name");
-  propFileName.setValue(variant);
-
+  propFileName.setValue(selectedFile, dataType->getDataTypeString());
 
   Property pWidth = controller->getProperty("width");
   Property pHeight = controller->getProperty("height");
@@ -258,13 +250,13 @@ void te::layout::SVGDialogOutside::loadSvgImages()
   m_ui->m_listWidget->clear();
 
   Property propDir = controller->getProperty("file_dir");
-  QString labelPath = ItemUtils::convert2QString(propDir.getValue().toString());
+  QString labelPath = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(propDir));
   if (labelPath.isEmpty()){
     return;
   }
   m_ui->lblPath->setText(labelPath);
 
-  QString directory = ItemUtils::convert2QString(propDir.getValue().toString());
+  QString directory = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(propDir));
   QDir svgDir(directory);
   svgDir.setNameFilters(QStringList() << "*.svg");
   QStringList fileList = svgDir.entryList();
@@ -291,6 +283,4 @@ void te::layout::SVGDialogOutside::loadSvgImages()
 
     m_ui->m_listWidget->insertItem(i, item);
   }
-
-
 }

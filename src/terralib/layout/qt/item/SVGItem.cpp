@@ -77,14 +77,14 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
   Property pFileName = svgController->getProperty("file_name");
 
 
-  if (pFileName.getValue().toString() == ""){
+  if (te::layout::Property::GetValueAs<std::string>(pFileName) == ""){
    
     painter->drawPolygon(boundRect);
     painter->restore();
     return;
   }
 
-  const QString fileName = ItemUtils::convert2QString(pFileName.getValue().toString());
+  const QString fileName = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(pFileName));
 
   QSvgRenderer renderer(fileName);
 

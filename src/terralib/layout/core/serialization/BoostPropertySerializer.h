@@ -60,12 +60,8 @@ namespace te
       public:
 
         BoostPropertySerializer();
-        
-        virtual ~BoostPropertySerializer();
-        
-        virtual boost::property_tree::ptree retrievePTree();
 
-        virtual std::vector<te::layout::Properties> retrieve();
+        virtual ~BoostPropertySerializer();
 
         virtual bool isEmpty();
 
@@ -84,8 +80,6 @@ namespace te
       protected:
 
         virtual void searchProperty(const Property& property, boost::property_tree::ptree& array, boost::property_tree::ptree& child);
-
-        virtual void retrieveSubPTree(boost::property_tree::ptree subTree, Property& prop);
 
         /*!
         \brief Encodes the given vector of Property to a Boost Property Tree container

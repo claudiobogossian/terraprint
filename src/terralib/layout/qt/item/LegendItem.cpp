@@ -121,7 +121,7 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
   painter->save();
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(m_qFontTitleColor, lnew, Qt::SolidLine);
   painter->setPen(pen);
@@ -297,7 +297,7 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont f
   painter->save();
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(fontColor, lnew, Qt::SolidLine);
   painter->setPen(pen);
@@ -414,17 +414,17 @@ void te::layout::LegendItem::refreshLegendProperties()
   const Property& pRows = m_controller->getProperty("rows");
   const Property& pOffsetBetweenColumns = m_controller->getProperty("offset_between_columns");
 
-  const te::color::RGBAColor& fontLegendColor = pFontColor.getValue().toColor();
-  const Font& fontLegend = pLegendFont.getValue().toFont();
-  m_displacementBetweenSymbols = pDisplacementBetweenSymbols.getValue().toDouble();
-  m_displacementBetweenSymbolsAndText = pDisplacementBetweenSymbolsAndText.getValue().toDouble();
-  m_symbolSize = pSymbolSize.getValue().toDouble();
-  m_borderDisplacement = pBorderDisplacement.getValue().toDouble();
-  m_dispBetweenTitleAndSymbols = pDispBetweenTitleAndSymbols.getValue().toDouble();
-  const te::color::RGBAColor& fontTitleColor = pFontTitleColor.getValue().toColor();
-  const Font& fontTitle = pTitleFont.getValue().toFont();
-  m_rows = pRows.getValue().toInt();
-  m_offsetBetweenColumns = pOffsetBetweenColumns.getValue().toDouble();
+  const te::color::RGBAColor& fontLegendColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFontColor);
+  const Font& fontLegend = te::layout::Property::GetValueAs<Font>(pLegendFont);
+  m_displacementBetweenSymbols = te::layout::Property::GetValueAs<double>(pDisplacementBetweenSymbols);
+  m_displacementBetweenSymbolsAndText = te::layout::Property::GetValueAs<double>(pDisplacementBetweenSymbolsAndText);
+  m_symbolSize = te::layout::Property::GetValueAs<double>(pSymbolSize);
+  m_borderDisplacement = te::layout::Property::GetValueAs<double>(pBorderDisplacement);
+  m_dispBetweenTitleAndSymbols = te::layout::Property::GetValueAs<double>(pDispBetweenTitleAndSymbols);
+  const te::color::RGBAColor& fontTitleColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFontTitleColor);
+  const Font& fontTitle = te::layout::Property::GetValueAs<Font>(pTitleFont);
+  m_rows = te::layout::Property::GetValueAs<int>(pRows);
+  m_offsetBetweenColumns = te::layout::Property::GetValueAs<double>(pOffsetBetweenColumns);
 
   m_qFontLegendColor.setRgb(fontLegendColor.getRed(), fontLegendColor.getGreen(), fontLegendColor.getBlue(), fontLegendColor.getAlpha());
   m_qFontLegend = utils.convertToQfont(fontLegend);

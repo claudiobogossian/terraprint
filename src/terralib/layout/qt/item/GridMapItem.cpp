@@ -56,6 +56,7 @@ te::layout::GridMapItem::~GridMapItem()
 
 void te::layout::GridMapItem::refresh()
 {
+  m_screenGreaterCache = QPixmap();
   m_screenCache = QPixmap();
   AbstractItem::refresh();
 }
@@ -83,7 +84,7 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
   GridSettingsConfigProperties settingsConfig;
 
   const Property& pVisible = pGridSettings.containsSubProperty(settingsConfig.getVisible());
-  bool visible = pVisible.getValue().toBool();
+  bool visible = te::layout::Property::GetValueAs<bool>(pVisible);
 
   if (visible == false)
   {
@@ -111,28 +112,33 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
 
     //if for any reason the size has been changed, we recreate the screen pixmap
     QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
-    if (m_screenCache.size() != sizeInPixels)
+    if (m_screenGreaterCache.size() != sizeInPixels)
     {
-      const Property& property = m_controller->getProperty("background_color");
-      const te::color::RGBAColor& color = property.getValue().toColor();
-      QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+      if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
+      {
+        const Property& property = m_controller->getProperty("background_color");
+        const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
+        QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-      m_screenCache = QPixmap(sizeInPixels);
-      m_screenCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+        m_screenGreaterCache = QPixmap(sizeInPixels);
+        m_screenGreaterCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
 
-      double xFactor = sizeInPixels.width() / boxMM.width();
-      double yFactor = sizeInPixels.height() / boxMM.height();
+        double xFactor = sizeInPixels.width() / boxMM.width();
+        double yFactor = sizeInPixels.height() / boxMM.height();
 
-      QTransform transform;
-      transform.scale(xFactor, -yFactor);
-      transform.translate(-boxMM.x(), -boxMM.height() - boxMM.y());
+        QTransform transform;
+        transform.scale(xFactor, -yFactor);
+        transform.translate(-boxMM.x(), -boxMM.height() - boxMM.y());
 
-      QPainter cachePainter;
-      cachePainter.begin(&m_screenCache);
+        QPainter cachePainter;
+        cachePainter.begin(&m_screenGreaterCache);
 
-      cachePainter.setTransform(transform);
+        cachePainter.setTransform(transform);
 
-      drawGridOnDevice(&cachePainter);
+        drawGridOnDevice(&cachePainter);
+      }
+
+      m_screenCache = m_screenGreaterCache.scaled(sizeInPixels, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
 
     te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
@@ -178,8 +184,8 @@ void te::layout::GridMapItem::configPainter( QPainter* painter )
   const Property& pLineWidth = pGridSettings.containsSubProperty(settingsConfig.getLineWidth());
 
   const std::string& lineStyleName = pLineStyle.getOptionByCurrentChoice().toString();
-  const te::color::RGBAColor& lineColor = pLineColor.getValue().toColor();
-  double lineWidth = pLineWidth.getValue().toDouble();
+  const te::color::RGBAColor& lineColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pLineColor);
+  double lineWidth = te::layout::Property::GetValueAs<double>(pLineWidth);
 
   EnumLineStyleType* lineStyle = Enums::getInstance().getEnumLineStyleType();
   EnumType* currentLineStyle = Enums::getInstance().getEnumLineStyleType()->getEnum(lineStyleName);
@@ -230,8 +236,8 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
   const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
   const Property& pTextColor = pGridSettings.containsSubProperty(settingsConfig.getTextColor());
 
-  Font txtFont =  pTextFontFamily.getValue().toFont();
-  const te::color::RGBAColor& textColor = pTextColor.getValue().toColor();
+  Font txtFont = te::layout::Property::GetValueAs<Font>(pTextFontFamily);
+  const te::color::RGBAColor& textColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pTextColor);
 
   QColor clrText(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), textColor.getAlpha());
 
@@ -283,11 +289,11 @@ void te::layout::GridMapItem::calculateTexts()
   const Property& pTopText = pGridSettings.containsSubProperty(settingsConfig.getTopText());
   const Property& pBottomText = pGridSettings.containsSubProperty(settingsConfig.getBottomText());
 
-  bool visibleAllTexts = pVisibleAllTexts.getValue().toBool();
-  bool leftText = pLeftText.getValue().toBool();
-  bool rightText = pRightText.getValue().toBool();
-  bool topText = pTopText.getValue().toBool();
-  bool bottomText = pBottomText.getValue().toBool();
+  bool visibleAllTexts = te::layout::Property::GetValueAs<bool>(pVisibleAllTexts);
+  bool leftText = te::layout::Property::GetValueAs<bool>(pLeftText);
+  bool rightText = te::layout::Property::GetValueAs<bool>(pRightText);
+  bool topText = te::layout::Property::GetValueAs<bool>(pTopText);
+  bool bottomText = te::layout::Property::GetValueAs<bool>(pBottomText);
 
   if(visibleAllTexts == false)
   {
@@ -326,8 +332,8 @@ void te::layout::GridMapItem::calculateTopTexts()
   const Property& pTopRotateText = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
-  bool bRotate = pTopRotateText.getValue().toBool();
-  const Font& font = pFont.getValue().toFont();
+  bool bRotate = te::layout::Property::GetValueAs<bool>(pTopRotateText);
+  const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
 
   QFont qFont = ItemUtils::convertToQfont(font);
 
@@ -341,7 +347,7 @@ void te::layout::GridMapItem::calculateTopTexts()
 
 
   const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
-  bool useSuperScript = pSuperscript.getValue().toBool();
+  bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
   for( ; it != m_topTexts.end() ; ++it )
   {
@@ -418,8 +424,8 @@ void te::layout::GridMapItem::calculateBottomTexts()
   const Property& pBottomRotateText = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
   const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
-  bool bRotate = pBottomRotateText.getValue().toBool();
-  const Font& font = pFont.getValue().toFont();
+  bool bRotate = te::layout::Property::GetValueAs<bool>(pBottomRotateText);
+  const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
 
   QFont qFont = ItemUtils::convertToQfont(font);
 
@@ -433,7 +439,7 @@ void te::layout::GridMapItem::calculateBottomTexts()
 
 
   const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
-  bool useSuperScript = pSuperscript.getValue().toBool();
+  bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
   for( ; it != m_bottomTexts.end() ; ++it )
   {
@@ -464,8 +470,8 @@ void te::layout::GridMapItem::calculateLeftTexts()
   const Property& pLeftRotateText = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
   const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
-  bool bRotate = pLeftRotateText.getValue().toBool();
-  const Font& font = pFont.getValue().toFont();
+  bool bRotate = te::layout::Property::GetValueAs<bool>(pLeftRotateText);
+  const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
 
   QFont qFont = ItemUtils::convertToQfont(font);
 
@@ -481,7 +487,7 @@ void te::layout::GridMapItem::calculateLeftTexts()
   std::vector<TextPosition>::iterator it = m_leftTexts.begin();
 
   const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
-  bool useSuperScript = pSuperscript.getValue().toBool();
+  bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
 
   for( ; it != m_leftTexts.end() ; ++it )
@@ -515,13 +521,13 @@ void te::layout::GridMapItem::calculateRightTexts()
   const Property& pRightRotateText = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
   const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
 
-  bool bRotate = pRightRotateText.getValue().toBool();
-  const Font& font = pFont.getValue().toFont();
+  bool bRotate = te::layout::Property::GetValueAs<bool>(pRightRotateText);
+  const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
 
   QFont qFont = ItemUtils::convertToQfont(font);
 
   const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
-  bool useSuperScript = pSuperscript.getValue().toBool();
+  bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
   int iRotate = 0;
   if (bRotate)
@@ -572,11 +578,11 @@ void te::layout::GridMapItem::calculateCrossLines()
   GridSettingsConfigProperties settingsConfig;
 
   const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
-  double crossOffSet = pCrossOffset.getValue().toDouble();
+  double crossOffSet = te::layout::Property::GetValueAs<double>(pCrossOffset);
 
   
   const Property& pUseBouderIntersection = pGridSettings.containsSubProperty(settingsConfig.getBouderIntersections());
-  bool useBouderItersection = pUseBouderIntersection.getValue().toBool();
+  bool useBouderItersection = te::layout::Property::GetValueAs<bool>(pUseBouderIntersection);
 
   QList<te::gm::LineString>::iterator itv = m_verticalLines.begin();
   for( ; itv != m_verticalLines.end() ; ++itv )
@@ -646,8 +652,8 @@ void te::layout::GridMapItem::calculateBoldersSegments(double crossOffSet){
   const Property& pWidth = m_controller->getProperty("width");
   const Property& pHeight = m_controller->getProperty("height");
 
-  double width = pWidth.getValue().toDouble();
-  double height = pHeight.getValue().toDouble();
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
 
   te::gm::Envelope boxMM(0, 0, width, height);
 
@@ -865,9 +871,9 @@ bool te::layout::GridMapItem::calculateCrossIntersectMapBorder( QLineF vrt, QLin
   const Property& pHeight = m_controller->getProperty("height");
   const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
 
-  double width = pWidth.getValue().toDouble();
-  double height = pHeight.getValue().toDouble();
-  double crossOffSet = pCrossOffset.getValue().toDouble();
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
+  double crossOffSet = te::layout::Property::GetValueAs<double>(pCrossOffset);
 
   //if the cross intersects the border of the reference rect, a line must be drawn instead of the cross
   te::gm::Envelope boxMM(0, 0, width, height);

@@ -95,7 +95,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getVisible());
     property.setLabel(TR_LAYOUT("Visible"));
     property.setComposeWidget(true);
-    property.setValue(visible, dataType->getDataTypeBool());  
+    property.setValue(visible, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
   }
   {
@@ -119,7 +119,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getInitialGridPointX());
     property.setLabel(TR_LAYOUT("Initial Point X"));
     property.setComposeWidget(true);
-    property.setValue(m_initialGridPointX, dataType->getDataTypeDouble());  
+    property.setValue(m_initialGridPointX, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
   }
   {
@@ -127,7 +127,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getInitialGridPointY());
     property.setLabel(TR_LAYOUT("Initial Point Y"));
     property.setComposeWidget(true);
-    property.setValue(m_initialGridPointY, dataType->getDataTypeDouble());  
+    property.setValue(m_initialGridPointY, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
   }
 
@@ -288,7 +288,7 @@ te::layout::GridMapModel::GridMapModel()
     property.setName(settingsConfig.getLeftText());
     property.setLabel(TR_LAYOUT("Left Text Visible"));
     property.setComposeWidget(true);
-    property.setValue(leftText, dataType->getDataTypeBool());  
+    property.setValue(leftText, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
   }
   {
@@ -355,7 +355,7 @@ te::layout::GridMapModel::GridMapModel()
   {
     Property property(0);
     property.setName("connect_item_position");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
 

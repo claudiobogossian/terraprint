@@ -57,7 +57,7 @@ bool te::layout::GridMapController::syncItemAssociation(Properties& properties)
 
   Property propObserv = properties.getProperty(sharedProps.getItemObserver());
 
-  if (propObserv.getValue().isNull())
+  if (propObserv.isNull())
   {
     return false;
   }
@@ -65,7 +65,7 @@ bool te::layout::GridMapController::syncItemAssociation(Properties& properties)
   Property propertyHeigh = prop.getProperty("height");
   Property propertyWidth = prop.getProperty("width");
 
-  std::string itemObservable = propObserv.getValue().toString();
+  std::string itemObservable = te::layout::Property::GetValueAs<std::string>(propObserv);
 
   if (!itemObservable.empty())
   {

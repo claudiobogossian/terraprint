@@ -66,13 +66,13 @@ void te::layout::GridPlanarItem::calculateGrid()
   const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
   const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
 
-  double initalX = pInitialX.getValue().toDouble();
-  double initalY = pInitialY.getValue().toDouble();
+  double initalX = te::layout::Property::GetValueAs<double>(pInitialX);
+  double initalY = te::layout::Property::GetValueAs<double>(pInitialY);
 
-  const te::gm::Envelope& planarBox = pPlanarBox.getValue().toEnvelope();
-  double width = pWidth.getValue().toDouble();
-  double height = pHeight.getValue().toDouble();
-  double frameThickness = pFrameThickness.getValue().toDouble();
+  const te::gm::Envelope& planarBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pPlanarBox);
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
   te::gm::Envelope referenceBoxMM(0, 0, width, height);
 
@@ -81,12 +81,12 @@ void te::layout::GridPlanarItem::calculateGrid()
   
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
 
-  double verticalGap = pVerticalGap.getValue().toDouble();
+  double verticalGap = te::layout::Property::GetValueAs<double>(pVerticalGap);
 
 
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
 
-  double horizontalGap = pHorizontalGap.getValue().toDouble();
+  double horizontalGap = te::layout::Property::GetValueAs<double>(pHorizontalGap);
 
   if (validateVrtGap(planarBox, verticalGap))
   {
@@ -141,16 +141,16 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
   const Property& pRightRotate = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
 
   const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
-  Font txtFont = pTextFontFamily.getValue().toFont();
+  Font txtFont = te::layout::Property::GetValueAs<Font>(pTextFontFamily);
   
-  double verticalGap = pVerticalGap.getValue().toDouble();
-  double verticalDisplacement = pVerticalDisplacement.getValue().toDouble();
+  double verticalGap = te::layout::Property::GetValueAs<double>(pVerticalGap);
+  double verticalDisplacement = te::layout::Property::GetValueAs<double>(pVerticalDisplacement);
   
   string strUnit = pUnit.getOptionByCurrentChoice().toString();
   double unitV = getUnit(strUnit);
 
-  bool bLeftRotate = pLeftRotate.getValue().toBool();
-  bool bRightRotate = pRightRotate.getValue().toBool();
+  bool bLeftRotate = te::layout::Property::GetValueAs<bool>(pLeftRotate);
+  bool bRightRotate = te::layout::Property::GetValueAs<bool>(pRightRotate);
 
   if (this->scene() == 0)
   {
@@ -200,7 +200,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     std::string text = convert.toStdString();
 
     const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
-    bool useSuperScript = pSuperscript.getValue().toBool();
+    bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
     QPainterPath textObject;
 
@@ -269,16 +269,16 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
   const Property& pTopRotate = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
   const Property& pBottomRotate = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
 
-  Font txtFont = pTextFontFamily.getValue().toFont();
+  Font txtFont = te::layout::Property::GetValueAs<Font>(pTextFontFamily);
  
-  double horizontalGap = pHorizontalGap.getValue().toDouble();
-  double horizontalDisplacement = pHorizontalDisplacement.getValue().toDouble();
+  double horizontalGap = te::layout::Property::GetValueAs<double>(pHorizontalGap);
+  double horizontalDisplacement = te::layout::Property::GetValueAs<double>(pHorizontalDisplacement);
 
   string unitStr = pUnit.getOptionByCurrentChoice().toString();
   double unitH = getUnit(unitStr);
 
-  bool bTopRotate = pTopRotate.getValue().toBool();
-  bool bBottomRotate = pBottomRotate.getValue().toBool();
+  bool bTopRotate = te::layout::Property::GetValueAs<bool>(pTopRotate);
+  bool bBottomRotate = te::layout::Property::GetValueAs<bool>(pBottomRotate);
 
   if (this->scene() == 0)
   {
@@ -333,7 +333,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     std::string text = convert.toStdString();
 
     const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
-    bool useSuperScript = pSuperscript.getValue().toBool();
+    bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
     QPainterPath textObject;
 
@@ -393,8 +393,8 @@ double te::layout::GridPlanarItem::initVerticalLines( const te::gm::Envelope& ge
   const Property& pInitialGridPointY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
   const Property& pVerticalGap = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
 
-  double initialGridPointY = pInitialGridPointY.getValue().toDouble();
-  double verticalGap = pVerticalGap.getValue().toDouble();
+  double initialGridPointY = te::layout::Property::GetValueAs<double>(pInitialGridPointY);
+  double verticalGap = te::layout::Property::GetValueAs<double>(pVerticalGap);
 
   double yInit = initialGridPointY;
   if(yInit < geoBox.getLowerLeftY())
@@ -425,8 +425,8 @@ double te::layout::GridPlanarItem::initHorizontalLines( const te::gm::Envelope& 
   const Property& pInitialGridPointX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
   const Property& pHorizontalGap = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
 
-  double initialGridPointX = pInitialGridPointX.getValue().toDouble();
-  double horizontalGap = pHorizontalGap.getValue().toDouble();
+  double initialGridPointX = te::layout::Property::GetValueAs<double>(pInitialGridPointX);
+  double horizontalGap = te::layout::Property::GetValueAs<double>(pHorizontalGap);
 
   double xInit = initialGridPointX;
   if(xInit < geoBox.getLowerLeftX())

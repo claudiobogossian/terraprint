@@ -40,8 +40,6 @@ te::layout::NorthModel::NorthModel()
   std::string name = TR_LAYOUT("Settings");
   double lineWidth = Utils::getLineWidthMinimumValue();
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getNorthItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //adding properties
@@ -97,10 +95,10 @@ te::layout::NorthModel::NorthModel()
   prop_northsettings.setName("NorthSettings");
   prop_northsettings.setLabel(TR_LAYOUT("North Settings"));
   prop_northsettings.setMenu(true);
-  //prop_northsettings.setPublic(true);
   prop_northsettings.setValue(name, dataType->getDataTypeNorthSettings());
   this->m_properties.addProperty(prop_northsettings);
 
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getNorthItem());
 }
 
 te::layout::NorthModel::~NorthModel()

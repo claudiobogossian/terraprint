@@ -46,7 +46,7 @@ te::layout::Property te::layout::TextGridSettingsController::updateProperty()
   return m_update;
 }
 
-void te::layout::TextGridSettingsController::addUpdateProperty( std::string name, Variant variant )
+void te::layout::TextGridSettingsController::addUpdateProperty( std::string name, te::dt::AbstractData* absData, te::layout::EnumType* dataType)
 {
   TextGridSettingsModel* outsideModel = 0;
 
@@ -66,7 +66,7 @@ void te::layout::TextGridSettingsController::addUpdateProperty( std::string name
     m_update.setEditable(prop.isEditable());
 
     m_update.setName(prop.getName());
-    m_update.setValue(prop.getValue());
+    m_update.setValue(prop.getValue()->clone(), prop.getType());
   }
 
   Property property = outsideModel->containsOutsideSubProperty(name);
@@ -75,9 +75,9 @@ void te::layout::TextGridSettingsController::addUpdateProperty( std::string name
   {
     if(property.getOptionChoices().empty())
     {
-      if(property.getValue() != variant)
+      if(property.getValue()->toString() != absData->toString())
       {
-        property.setValue(variant);
+        property.setValue(absData, dataType);
         outsideModel->updateOutsideSubProperty(property);
       }
       else
@@ -87,8 +87,10 @@ void te::layout::TextGridSettingsController::addUpdateProperty( std::string name
     }
     else
     {
-      if(property.getOptionByCurrentChoice() != variant)
+      if(property.getOptionByCurrentChoice().toString() != absData->toString())
       {
+        Variant variant;
+        variant.setValue(absData->toString(), dataType);
         property.setOptionChoice(variant);
         outsideModel->updateOutsideSubProperty(property);
       }
@@ -121,7 +123,7 @@ void te::layout::TextGridSettingsController::addUpdateTextGridProperty( Property
     m_textGridSettings.setEditable(prop.isEditable());
 
     m_textGridSettings.setName(prop.getName());
-    m_textGridSettings.setValue(prop.getValue());
+    m_textGridSettings.setValue(prop.getValue()->clone(), prop.getType());
   }
 
   if(!subProperty.isNull())

@@ -137,10 +137,8 @@ void te::layout::ScaleSettingsOutside::on_pbtnFont_clicked()
   if (controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(font, dataType->getDataTypeFont());
     Property prop = controller->getScaleProperty("font");
-    prop.setValue(variant);
+    prop.setValue(font, dataType->getDataTypeFont());
     emit updateProperty(prop);
     initTextEdit(m_ui->txtFont, "font");
   }
@@ -159,7 +157,7 @@ void te::layout::ScaleSettingsOutside::on_cmbConnectedTo_currentIndexChanged(con
 
     variant.setValue(stdText, dataType->getDataTypeItemObserver());
     Property prop = controller->getScaleProperty(sharedProps.getItemObserver());
-    prop.setValue(variant);
+    prop.setValue(stdText, dataType->getDataTypeItemObserver());
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
     initDouble(m_ui->txtScale, "scale");
@@ -178,7 +176,7 @@ void te::layout::ScaleSettingsOutside::on_cmbType_currentIndexChanged(const QStr
 
     variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getScaleProperty("scale_type");
-    prop.setValue(variant);
+    prop.setValue(stdText, dataType->getDataTypeStringList());
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
@@ -204,7 +202,7 @@ void te::layout::ScaleSettingsOutside::on_cmbUnit_currentIndexChanged(const QStr
 
     variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getScaleProperty("Unit");
-    prop.setValue(variant);
+    prop.setValue(stdText, dataType->getDataTypeStringList());
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
     initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
@@ -217,10 +215,8 @@ void te::layout::ScaleSettingsOutside::on_chkOnlyFirstAndLastValue_clicked()
   if (controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->chkOnlyFirstAndLastValue->isChecked(), dataType->getDataTypeBool());
     Property prop = controller->getScaleProperty("only_first_and_last_value");
-    prop.setValue(variant);
+    prop.setValue(m_ui->chkOnlyFirstAndLastValue->isChecked(), dataType->getDataTypeBool());
     emit updateProperty(prop);
   }
 }
@@ -233,22 +229,20 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
     double scaleGapXInUnit = m_ui->txtScaleGapXInUnit->text().toDouble();
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(scaleGapXInUnit, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_in_unit_width_rect_gap");
     
     std::string unitStr = ItemUtils::convert2StdString(m_ui->cmbUnit->currentText());
 
     if (m_ui->txtScaleGapXInUnit->text().compare("") == 0
-      || scaleGapXInUnit == prop.getValue().toDouble())
+      || scaleGapXInUnit == te::layout::Property::GetValueAs<double>(prop))
     {
 
       if (unitStr == "(m)" || unitStr == "m"){
-        QString qScaleGapXInUnit = QString::number(prop.getValue().toInt());
+        QString qScaleGapXInUnit = QString::number(te::layout::Property::GetValueAs<double>(prop));
         m_ui->txtScaleGapXInUnit->setText(qScaleGapXInUnit);
       }
       else{
-        QString qScaleGapXInUnit = QString::number(prop.getValue().toDouble());
+        QString qScaleGapXInUnit = QString::number(te::layout::Property::GetValueAs<double>(prop));
         m_ui->txtScaleGapXInUnit->setText(qScaleGapXInUnit);
       }
 
@@ -258,10 +252,10 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
 
 
     if (unitStr == "(m)" || unitStr == "m"){
-      prop.setValue(variant, true, 0);
+      prop.setValue(scaleGapXInUnit, dataType->getDataTypeDouble(), true, 0);
     }
     else{
-      prop.setValue(variant, true, 1);
+      prop.setValue(scaleGapXInUnit, dataType->getDataTypeDouble(), true, 1);
     }
 
     emit updateProperty(prop);
@@ -277,19 +271,17 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapX_editingFinished()
     double scaleGapX = m_ui->txtScaleGapX->text().toDouble();
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(scaleGapX, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_width_rect_gap");
 
     if (m_ui->txtScaleGapX->text().compare("") == 0
-      || scaleGapX == prop.getValue().toDouble())
+      || scaleGapX == te::layout::Property::GetValueAs<double>(prop))
     {
-      QString qScaleGapX = QString::number(prop.getValue().toDouble());
+      QString qScaleGapX = QString::number(te::layout::Property::GetValueAs<double>(prop));
       m_ui->txtScaleGapX->setText(qScaleGapX);
       return;
     }
 
-    prop.setValue(variant);
+    prop.setValue(scaleGapX, dataType->getDataTypeDouble());
     emit updateProperty(prop);
     initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
   }
@@ -303,19 +295,17 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapY_editingFinished()
     double scaleGapY = m_ui->txtScaleGapY->text().toDouble();
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(scaleGapY, dataType->getDataTypeDouble());
     Property prop = controller->getScaleProperty("scale_height_rect_gap");
 
     if (m_ui->txtScaleGapY->text().compare("") == 0
-      || scaleGapY == prop.getValue().toDouble())
+      || scaleGapY == te::layout::Property::GetValueAs<double>(prop))
     {
-      QString qScaleGapY = QString::number(prop.getValue().toDouble());
+      QString qScaleGapY = QString::number(te::layout::Property::GetValueAs<double>(prop));
       m_ui->txtScaleGapY->setText(qScaleGapY);
       return;
     }
 
-    prop.setValue(variant);
+    prop.setValue(scaleGapY, dataType->getDataTypeDouble());
     emit updateProperty(prop);
   }
 }
@@ -328,19 +318,17 @@ void te::layout::ScaleSettingsOutside::on_txtNumberOfBreaks_editingFinished()
     int numberOfBreaks = m_ui->txtNumberOfBreaks->text().toInt();
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(numberOfBreaks, dataType->getDataTypeInt());
     Property prop = controller->getScaleProperty("number_of_breaks");
 
     if (m_ui->txtNumberOfBreaks->text().compare("") == 0
-      || numberOfBreaks == prop.getValue().toInt())
+      || numberOfBreaks == te::layout::Property::GetValueAs<int>(prop))
     {
-      QString qNumberOfBreaks = QString::number(prop.getValue().toInt());
+      QString qNumberOfBreaks = QString::number(te::layout::Property::GetValueAs<int>(prop));
       m_ui->txtNumberOfBreaks->setText(qNumberOfBreaks);
       return;
     }
 
-    prop.setValue(variant);
+    prop.setValue(numberOfBreaks, dataType->getDataTypeInt());
     emit updateProperty(prop);
   }
 }
@@ -353,10 +341,8 @@ void te::layout::ScaleSettingsOutside::on_chkByBreaks_clicked()
     bool byBreaks = m_ui->chkByBreaks->isChecked();
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(byBreaks, dataType->getDataTypeBool());
     Property prop = controller->getScaleProperty("by_breaks");
-    prop.setValue(variant);
+    prop.setValue(byBreaks, dataType->getDataTypeBool());
     emit updateProperty(prop);
 
     m_ui->txtNumberOfBreaks->setEnabled(byBreaks);
@@ -374,7 +360,7 @@ void te::layout::ScaleSettingsOutside::initString(QWidget* widget, std::string n
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if (edit)
   {
-    std::string txt = prop.getValue().toString();
+    std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
     QString qText = ItemUtils::convert2QString(txt);
 
     edit->setText(qText);
@@ -390,7 +376,7 @@ void te::layout::ScaleSettingsOutside::initInt(QWidget* widget, std::string name
 
   std::ostringstream convert;
   Property prop = controller->getScaleProperty(nameComponent);
-  convert << prop.getValue().toInt();
+  convert << te::layout::Property::GetValueAs<int>(prop);
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if (edit)
@@ -410,7 +396,7 @@ void te::layout::ScaleSettingsOutside::initDouble(QWidget* widget, std::string n
   std::ostringstream convert;
   convert.precision(15);
   Property prop = controller->getScaleProperty(nameComponent);
-  double number = prop.getValue().toDouble();
+  double number = te::layout::Property::GetValueAs<double>(prop);
   convert << number;
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
@@ -434,7 +420,7 @@ void te::layout::ScaleSettingsOutside::initBool(QWidget* widget, std::string nam
 
   if (chk)
   {
-    chk->setChecked(prop.getValue().toBool());
+    chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
   }
 }
 
@@ -460,19 +446,19 @@ void te::layout::ScaleSettingsOutside::initCombo(QWidget* widget, std::string na
 
   if (prop.getType() == dataType->getDataTypeBool())
   {
-    variant.setValue(prop.getValue().toBool());
+    variant.setValue(te::layout::Property::GetValueAs<bool>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeDouble())
   {
-    variant.setValue(prop.getValue().toDouble());
+    variant.setValue(te::layout::Property::GetValueAs<double>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeInt())
   {
-    variant.setValue(prop.getValue().toInt());
+    variant.setValue(te::layout::Property::GetValueAs<int>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeString())
   {
-    std::string txt = prop.getValue().toString();
+    std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
     QString qText = ItemUtils::convert2QString(txt);
     variant.setValue(qText);
   }
@@ -494,7 +480,7 @@ void te::layout::ScaleSettingsOutside::initCombo(QWidget* widget, std::string na
     list = controller->getItemNames(list, dataTypeObj->getMapItem());
     combo->addItems(list);
 
-    std::string txt = prop.getValue().toString();
+    std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
     QString qText = ItemUtils::convert2QString(txt);
     variant.setValue(qText);
   }
@@ -545,7 +531,7 @@ void te::layout::ScaleSettingsOutside::initTextEdit(QWidget* widget, std::string
     }
     else
     {
-      std::string txt = prop.getValue().toString();
+      std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
       QString qText = ItemUtils::convert2QString(txt);
       edit->setText(qText);
     }
@@ -574,8 +560,8 @@ QString te::layout::ScaleSettingsOutside::fontHTML(const Property& prop)
 
   Property prop_font_color = controller->getScaleProperty("font_color");
 
-  int pointSize = prop.getValue().toFont().getPointSize();
-  std::string family = prop.getValue().toFont().getFamily();
+  int pointSize = te::layout::Property::GetValueAs<Font>(prop).getPointSize();
+  std::string family = te::layout::Property::GetValueAs<Font>(prop).getFamily();
 
   QString qPointSize = QString::number(pointSize);
   QString qFamily = ItemUtils::convert2QString(family);
@@ -605,7 +591,7 @@ te::layout::Font te::layout::ScaleSettingsOutside::configFont(QWidget* widget)
 
   Property prop = controller->getScaleProperty("font");
 
-  font = prop.getValue().toFont();
+  font = te::layout::Property::GetValueAs<Font>(prop);
   QFont qFont = font2QFont(font);
 
   bool ok = false;

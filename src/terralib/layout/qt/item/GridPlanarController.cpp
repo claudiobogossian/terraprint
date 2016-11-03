@@ -62,22 +62,22 @@ void te::layout::GridPlanarController::update(const Subject* subject)
   const Property& pNewWorldBox = subjectModel->getProperty("world_box");
   const Property& pNewSrid = subjectModel->getProperty("srid");
   const Property& pNewScale = subjectModel->getProperty("scale");
-  const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
+  //const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
 
   //current properties
   const Property& pCurrentWidth = this->getProperty("width");
   const Property& pCurrentHeight = this->getProperty("height");
   const Property& pCurrentPlanarBox = this->getProperty("planar_box");
-  const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
+  //const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
 
   //new values
-  double newWidth = pNewWidth.getValue().toDouble();
-  double newHeight = pNewHeight.getValue().toDouble();
-  int newSrid = pNewSrid.getValue().toInt();
-  const te::gm::Envelope& newWorldBox = pNewWorldBox.getValue().toEnvelope();
+  double newWidth = te::layout::Property::GetValueAs<double>(pNewWidth);
+  double newHeight = te::layout::Property::GetValueAs<double>(pNewHeight);
+  int newSrid = te::layout::Property::GetValueAs<int>(pNewSrid);
+  const te::gm::Envelope& newWorldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pNewWorldBox);
   te::gm::Envelope newPlanarBox = te::map::GetWorldBoxInPlanar(newWorldBox, newSrid);
-  double newScale = pNewScale.getValue().toDouble();
-  std::string newItemObservable = pNewItemObserver.getValue().toString();
+  double newScale = te::layout::Property::GetValueAs<double>(pNewScale);
+  //std::string newItemObservable = te::layout::Property::GetValueAs<std::string>(pNewItemObserver);
 
   if (newScale == 0)
   {
@@ -85,10 +85,10 @@ void te::layout::GridPlanarController::update(const Subject* subject)
   }
 
   //current values
-  double currentWidth = pCurrentWidth.getValue().toDouble();
-  double currentHeight = pCurrentHeight.getValue().toDouble();
-  te::gm::Envelope currentPlanarBox = pCurrentPlanarBox.getValue().toEnvelope();
-  const std::string currentItemObservable = pCurrentItemObserver.getValue().toString();
+  double currentWidth = te::layout::Property::GetValueAs<double>(pCurrentWidth);
+  double currentHeight = te::layout::Property::GetValueAs<double>(pCurrentHeight);
+  te::gm::Envelope currentPlanarBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pCurrentPlanarBox);
+  //const std::string currentItemObservable = te::layout::Property::GetValueAs<std::string>(pCurrentItemObserver);
 
   bool doUpdate = false;
   if (newWidth != currentWidth)
@@ -103,18 +103,7 @@ void te::layout::GridPlanarController::update(const Subject* subject)
   {
     doUpdate = true;
   }
-  else if (!currentItemObservable.empty() && !newItemObservable.empty())
-  {
-    if (newItemObservable.compare(currentItemObservable) != 0)
-    {
-      doUpdate = true;
-    }
-  }
-  else if ((newItemObservable.empty() && !currentItemObservable.empty())
-    || (!newItemObservable.empty() && currentItemObservable.empty()))
-  {
-    doUpdate = true;
-  }
+
 
   if (doUpdate == true)
   {
@@ -198,11 +187,11 @@ void te::layout::GridPlanarController::update(const Subject* subject)
       const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
       const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
 
-      double gapVrt = pGapVrt.getValue().toDouble();
-      double gapHrz = pGapHrz.getValue().toDouble();
+      double gapVrt = te::layout::Property::GetValueAs<double>(pGapVrt);
+      double gapHrz = te::layout::Property::GetValueAs<double>(pGapHrz);
 
-      double initialX = pInitialX.getValue().toDouble();
-      double initialY = pInitialY.getValue().toDouble();
+      double initialX = te::layout::Property::GetValueAs<double>(pInitialX);
+      double initialY = te::layout::Property::GetValueAs<double>(pInitialY);
 
       double distance = newPlanarBox.getWidth();
 

@@ -266,6 +266,8 @@ namespace te
 
         static double calculateAngle(QPointF p1, QPointF p2);
 
+        static std::vector<std::string> Tokenize(const std::string& value, const std::string& separator);
+
       protected:
         
         /*!

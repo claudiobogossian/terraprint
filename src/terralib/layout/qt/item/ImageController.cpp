@@ -50,7 +50,7 @@ void te::layout::ImageController::setProperties(const Properties& properties)
     return;
   }
 
-  const std::string& newFileName = pNewFileName.getValue().toString();
+  const std::string& newFileName = te::layout::Property::GetValueAs<std::string>(pNewFileName);
   const std::string& currentFileName = imageItem->getFileName();
 
   if (newFileName != currentFileName)

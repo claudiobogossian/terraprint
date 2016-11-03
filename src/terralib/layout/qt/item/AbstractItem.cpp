@@ -36,8 +36,8 @@ QRectF te::layout::AbstractItem::boundingRect() const
   }
 
   //models stores size information in item CS. 
-  double width = m_controller->getProperty("width").getValue().toDouble();
-  double height = m_controller->getProperty("height").getValue().toDouble();
+  double width = te::layout::Property::GetValueAs<double>(m_controller->getProperty("width"));
+  double height = te::layout::Property::GetValueAs<double>(m_controller->getProperty("height"));
 
   QRectF boundingRect(0, 0, width, height);
   return boundingRect;
@@ -186,7 +186,7 @@ void te::layout::AbstractItem::drawBackground(QPainter * painter)
   }
 
   const Property& pBackgroundColor = m_controller->getProperty("background_color");
-  const te::color::RGBAColor& backgroundColor = pBackgroundColor.getValue().toColor();
+  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pBackgroundColor);
   QColor qBackgroundColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   painter->save();
@@ -211,15 +211,15 @@ void te::layout::AbstractItem::drawFrame(QPainter * painter)
     return;
   }
 
-  if (m_controller->getProperty("show_frame").getValue().toBool() == false)
+  if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("show_frame")) == false)
   {
     return;
   }
 
   const Property& pFrameColor = m_controller->getProperty("frame_color");
   const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
-  const te::color::RGBAColor& frameColor = pFrameColor.getValue().toColor();
-  double frameThickness = pFrameThickness.getValue().toDouble();
+  const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
   QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
 
@@ -267,7 +267,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   //if the rect is too small to fit two hot points in the same axis plus a gap between them, we do not draw the hot points
   bool drawHotPoints = true;
   const Property& pResizable = m_controller->getProperty("resizable");
-  if (pResizable.getValue().toBool() == false)
+  if (te::layout::Property::GetValueAs<bool>(pResizable) == false)
   {
     drawHotPoints = false;
   }
@@ -381,7 +381,7 @@ QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange 
 
 void te::layout::AbstractItem::hoverMoveEvent(QGraphicsSceneHoverEvent * event)
 {
-  if (isEditionMode() == false && m_controller->getProperty("resizable").getValue().toBool())
+  if (isEditionMode() == false && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("resizable")))
   {
     if (isZoomAdequateForResize())
     {
@@ -631,7 +631,7 @@ bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double&
   else
   {
     const Property& pKeepAspect = m_controller->getProperty("keep_aspect");
-    bool keepAspect = pKeepAspect.getValue().toBool();
+    bool keepAspect = te::layout::Property::GetValueAs<bool>(pKeepAspect);
     if (keepAspect == false)
     {
       if (hitsTop)
@@ -696,7 +696,7 @@ void te::layout::AbstractItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
   //checks if the item is resizable.
   const Property& property = m_controller->getProperty("resizable");
-  if (property.getValue().toBool() == true && isZoomAdequateForResize())
+  if (te::layout::Property::GetValueAs<bool>(property) == true && isZoomAdequateForResize())
   {
     //If so, checks if the resize operation must be started
     bool startResizing = checkTouchesCorner(event->pos().x(), event->pos().y());

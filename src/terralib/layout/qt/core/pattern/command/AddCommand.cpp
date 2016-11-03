@@ -72,7 +72,7 @@ void te::layout::AddCommand::undo()
     return;
 
   const Property& pName = abstractItem->getController()->getProperty("name");
-  std::string nameItem = pName.getValue().toString();
+  std::string nameItem = te::layout::Property::GetValueAs<std::string>(pName);
 
   m_scene->removeItem(m_item);
     

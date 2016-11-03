@@ -47,6 +47,9 @@
 #include "../qt/core/Scene.h"
 #include "terralib/common/StringUtils.h"
 
+//boost
+#include <boost/tokenizer.hpp>
+
 // STL
 #include <math.h> 
 #include <string>
@@ -530,13 +533,13 @@ te::layout::Properties te::layout::Utils::convertToProperties(const te::layout::
   {
     Property property(0);
     property.setName("paper_type");
-    property.setValue((int)paperType, dataType->getDataTypeInt());
+    property.setValue<int>((int)paperType, dataType->getDataTypeInt());
     properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_orientation");
-    property.setValue((int)paperOrientation, dataType->getDataTypeInt());
+    property.setValue<int>((int)paperOrientation, dataType->getDataTypeInt());
     properties.addProperty(property);
   }
 
@@ -550,10 +553,10 @@ te::layout::PaperConfig te::layout::Utils::convertToPaperConfig(const te::layout
   const Property& pPaperType = properties.getProperty("paper_type");
   const Property& pPaperOrientation = properties.getProperty("paper_orientation");
 
-  double paperWidth = pPaperWidth.getValue().toDouble();
-  double paperHeight = pPaperHeight.getValue().toDouble();
-  LayoutAbstractPaperType paperType = (LayoutAbstractPaperType)pPaperType.getValue().toInt();
-  LayoutOrientationType paperOrientation = (LayoutOrientationType)pPaperOrientation.getValue().toInt();
+  double paperWidth = te::layout::Property::GetValueAs<double>(pPaperWidth);
+  double paperHeight = te::layout::Property::GetValueAs<double>(pPaperHeight);
+  LayoutAbstractPaperType paperType = (LayoutAbstractPaperType)te::layout::Property::GetValueAs<int>(pPaperType);
+  LayoutOrientationType paperOrientation = (LayoutOrientationType)te::layout::Property::GetValueAs<int>(pPaperOrientation);
 
   PaperConfig paperConfig;
   paperConfig.setPaperSizeCustom(paperWidth, paperHeight);
@@ -613,4 +616,20 @@ double te::layout::Utils::calculateAngle(QPointF p1, QPointF p2)
   double angle = std::atan2(p1.y() - p2.y(), p1.x() - p2.x());
 
   return (angle * 180) / 3.14159265;
+}
+
+std::vector<std::string> te::layout::Utils::Tokenize(const std::string& value, const std::string& separator)
+{
+  std::vector<std::string> vecString;
+
+  //here we need to ensure some additional precision
+  typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
+  boost::char_separator<char> boostSeparator{ separator.c_str(), "", boost::keep_empty_tokens };
+  tokenizer tokenizerStr{ value, boostSeparator };
+  for (tokenizer::iterator it = tokenizerStr.begin(); it != tokenizerStr.end(); ++it)
+  {
+    vecString.push_back(*it);
+  }
+
+  return vecString;
 }

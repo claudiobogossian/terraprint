@@ -50,7 +50,7 @@ te::layout::ItemGroup::~ItemGroup()
 
 QRectF te::layout::ItemGroup::boundingRect() const
 {
-  bool resizable = m_controller->getProperty("resizable").getValue().toBool();
+  bool resizable = te::layout::Property::GetValueAs<bool>(m_controller->getProperty("resizable"));
   if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
   {
     return AbstractItem::boundingRect();

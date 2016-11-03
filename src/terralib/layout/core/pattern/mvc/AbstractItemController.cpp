@@ -49,7 +49,7 @@ te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* mo
   const Property& pResizable = m_model->getProperty("resizable");
   if (pResizable.isNull() == false)
   {
-    m_resizableDefaultState = pResizable.getValue().toBool();
+    m_resizableDefaultState = te::layout::Property::GetValueAs<bool>(pResizable);
   }
 }
 
@@ -99,8 +99,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   bool hasWidth = !propertiesCopy.getProperty("width").isNull();
   if (hasWidth)
   {
-    double newWidth = propertiesCopy.getProperty("width").getValue().toDouble();
-    double currentWidth = getProperty("width").getValue().toDouble();
+    double newWidth = te::layout::Property::GetValueAs<double>(propertiesCopy.getProperty("width"));
+    double currentWidth = te::layout::Property::GetValueAs<double>(getProperty("width"));
     if (newWidth != currentWidth)
     {
       hasGeometryChanged = true;
@@ -109,8 +109,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   bool hasHeight = !propertiesCopy.getProperty("height").isNull();
   if (hasHeight)
   {
-    double newHeight = propertiesCopy.getProperty("height").getValue().toDouble();
-    double currentHeight = getProperty("height").getValue().toDouble();
+    double newHeight = te::layout::Property::GetValueAs<double>(propertiesCopy.getProperty("height"));
+    double currentHeight = te::layout::Property::GetValueAs<double>(getProperty("height"));
     if (newHeight != currentHeight)
     {
       hasGeometryChanged = true;
@@ -119,8 +119,8 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   bool hasRotation = !propertiesCopy.getProperty("rotation").isNull();
   if (hasRotation)
   {
-      double newRotation = propertiesCopy.getProperty("rotation").getValue().toDouble();
-      double currentRotation = getProperty("rotation").getValue().toDouble();
+      double newRotation = te::layout::Property::GetValueAs<double>(propertiesCopy.getProperty("rotation"));
+      double currentRotation = te::layout::Property::GetValueAs<double>(getProperty("rotation"));
 
       bool enableResize = m_resizableDefaultState;
       if (newRotation != 0.0)
@@ -188,9 +188,9 @@ void te::layout::AbstractItemController::update(const te::layout::Subject* subje
   }
 
   const Property& property = m_model->getProperty("rotation");
-  if(property.getValue().toDouble() != m_view->getItemRotation())
+  if(te::layout::Property::GetValueAs<double>(property) != m_view->getItemRotation())
   {
-    m_view->setItemRotation(property.getValue().toDouble());
+    m_view->setItemRotation(te::layout::Property::GetValueAs<double>(property));
   }
 
   refresh();
@@ -317,8 +317,8 @@ bool te::layout::AbstractItemController::syncItemPos(Properties& properties)
     prop_y = m_model->getProperty("y");
   }
 
-  double x = prop_x.getValue().toDouble();
-  double y = prop_y.getValue().toDouble();
+  double x = te::layout::Property::GetValueAs<double>(prop_x);
+  double y = te::layout::Property::GetValueAs<double>(prop_y);
   QPointF newPos(x, y);
 
   QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_view);
@@ -348,7 +348,7 @@ bool te::layout::AbstractItemController::syncZValue(Properties& properties)
     return false;
   }
 
-  double zValue = (double)pZValue.getValue().toInt();
+  double zValue = (double)te::layout::Property::GetValueAs<int>(pZValue);
   
   QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_view);
   if (gItem != 0)
@@ -385,8 +385,8 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
     return false;
   }
 
-  std::string strNewObserver = pNewObserver.getValue().toString();
-  std::string strCurrentObserver = pCurrentObserver.getValue().toString();
+  std::string strNewObserver = te::layout::Property::GetValueAs<std::string>(pNewObserver);
+  std::string strCurrentObserver = te::layout::Property::GetValueAs<std::string>(pCurrentObserver);
   if (strNewObserver == strCurrentObserver)
   {
     return false;
@@ -541,7 +541,7 @@ QRectF te::layout::AbstractItemController::calculateResize(te::layout::LayoutAli
 
   double width = oldRect.width();
   double height = oldRect.height();
-  bool keepAspect = getProperty("keep_aspect").getValue().toBool();
+  bool keepAspect = te::layout::Property::GetValueAs<bool>(getProperty("keep_aspect"));
   double factor = width / height;
   
   double dx = finalCoord.x() - initialCoord.x();

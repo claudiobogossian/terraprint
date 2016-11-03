@@ -40,10 +40,8 @@ te::layout::ArrowModel::ArrowModel()
   te::color::RGBAColor contourColor(0, 0, 0, 255);
   double lineWidth = Utils::getLineWidthMinimumValue();
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getArrowItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  
+
 //adding properties
   {
     EnumArrowType arrowType;
@@ -100,6 +98,8 @@ te::layout::ArrowModel::ArrowModel()
     property.setMenu(true);
     m_properties.addProperty(property);
   }
+
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getArrowItem());
 }
 
 te::layout::ArrowModel::~ArrowModel()

@@ -122,10 +122,10 @@ void te::layout::NorthSettingsOutside::on_rdbMillimeters_clicked()
   if (controller)
   {
     Property propW = controller->getNorthProperty("width");
-    double numberW = propW.getValue().toDouble();
+    double numberW = te::layout::Property::GetValueAs<double>(propW);
 
     Property propH = controller->getNorthProperty("height");
-    double numberH = propW.getValue().toDouble();
+    double numberH = te::layout::Property::GetValueAs<double>(propH);
 
     m_ui->lineEditNorthWidth->setText(QString::number(numberW));
     m_ui->lineEditNorthHeight->setText(QString::number(numberH));
@@ -138,11 +138,11 @@ void te::layout::NorthSettingsOutside::on_rdbCentimeters_clicked()
   if (controller)
   {
     Property propW = controller->getNorthProperty("width");
-    double numberW = propW.getValue().toDouble();
+    double numberW = te::layout::Property::GetValueAs<double>(propW);
     numberW = numberW / 10.; //convert to cm
 
     Property propH = controller->getNorthProperty("height");
-    double numberH = propW.getValue().toDouble();
+    double numberH = te::layout::Property::GetValueAs<double>(propH);
     numberH = numberH / 10.; //convert to cm
 
     m_ui->lineEditNorthWidth->setText(QString::number(numberW));
@@ -162,7 +162,7 @@ void te::layout::NorthSettingsOutside::on_cbNorth_currentIndexChanged(const QStr
 
     variant.setValue(stdText, dataType->getDataTypeStringList());
     Property prop = controller->getNorthProperty("northArrow_type");
-    prop.setValue(variant);
+    prop.setValue(stdText, dataType->getDataTypeStringList());
     prop.setOptionChoice(variant);
     emit updateProperty(prop);
   }
@@ -186,10 +186,8 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthWidth_editingFinished()
     }
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(width, dataType->getDataTypeDouble());
     Property prop = controller->getNorthProperty("width");
-    prop.setValue(variant);
+    prop.setValue(width, dataType->getDataTypeDouble());
     emit updateProperty(prop);
   }
 }
@@ -212,10 +210,8 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthHeight_editingFinished()
     }
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(height, dataType->getDataTypeDouble());
     Property prop = controller->getNorthProperty("height");
-    prop.setValue(variant);
+    prop.setValue(height, dataType->getDataTypeDouble());
     emit updateProperty(prop);
   }
 }
@@ -227,10 +223,8 @@ void te::layout::NorthSettingsOutside::on_btnColor_clicked()
   if (controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(color, dataType->getDataTypeColor());
     Property prop = controller->getNorthProperty("color");
-    prop.setValue(variant);
+    prop.setValue(color, dataType->getDataTypeColor());
     emit updateProperty(prop);
   }
 }
@@ -263,7 +257,7 @@ void te::layout::NorthSettingsOutside::initDouble(QWidget* widget, std::string n
   std::ostringstream convert;
   convert.precision(15);
   Property prop = controller->getNorthProperty(nameComponent);
-  double number = prop.getValue().toDouble();
+  double number = te::layout::Property::GetValueAs<double>(prop);
   convert << number;
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
@@ -287,7 +281,7 @@ void te::layout::NorthSettingsOutside::initBool(QWidget* widget, std::string nam
 
   if (chk)
   {
-    chk->setChecked(prop.getValue().toBool());
+    chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
   }
 }
 
@@ -299,7 +293,7 @@ void te::layout::NorthSettingsOutside::initColor(QWidget* widget, std::string na
 
   Property prop = controller->getNorthProperty(nameComponent);
 
-  te::color::RGBAColor color = prop.getValue().toColor();
+  te::color::RGBAColor color = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
   QColor qcolor(color.getRed(), color.getGreen(), color.getBlue());
 
   if (!qcolor.isValid())

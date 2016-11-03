@@ -158,7 +158,7 @@ te::layout::MapModel::MapModel()
   {
     Property property(0);
     property.setName("show_frame");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
 
@@ -178,7 +178,7 @@ te::layout::MapModel::MapModel()
   {
     Property property(0);
     property.setName("editable");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
   reparentProperties(Enums::getInstance().getEnumObjectType()->getMapItem());

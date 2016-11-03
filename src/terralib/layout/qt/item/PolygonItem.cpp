@@ -67,14 +67,14 @@ void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGr
   const Property& pColor = m_controller->getProperty("contour_color");
   const Property& pFillColor = m_controller->getProperty("fill_color");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& color = pColor.getValue().toColor();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(pColor);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QBrush brush(qFillColor);
   QPen pen(qColor, lnew, Qt::SolidLine);
