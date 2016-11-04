@@ -28,6 +28,9 @@
 // TerraLib
 #include "BuildPaintCustomData.h"
 #include "../../../core/enum/Enums.h"
+#include <terralib/layout/core/property/Property.h>
+#include <terralib/datatype/AbstractData.h>
+#include <terralib/layout/qt/core/ItemUtils.h>
 
 #include <QString>
 #include <QVariant>
@@ -99,7 +102,7 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
   variant = index.data(dataType->getDataTypeEnvelope()->getId());
   if (variant.isValid())
   {
-    QString value = rectToString(variant);
+    QString value = envelopeToString(variant);
     painter->drawText(option.rect, Qt::AlignLeft, value);
     return true;
   }
@@ -108,43 +111,55 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
 
 QString te::layout::BuildPaintCustomData::intToString(QVariant& value)
 {
-  int val = value.toInt();
-  return QString::number(val);
+  return propertyToQString(value);
 }
 
 QString te::layout::BuildPaintCustomData::doubleToString(QVariant& value)
 {
-  double val = value.toDouble();
-  return QString::number(val);
+  return propertyToQString(value);
 }
 
 QString te::layout::BuildPaintCustomData::stringToString(QVariant& value)
 {
-  return value.toString();
+  return propertyToQString(value);
 }
 
 QString te::layout::BuildPaintCustomData::boolToString(QVariant& value)
 {
-  return value.toString();
+  return propertyToQString(value);
 }
 
 QString te::layout::BuildPaintCustomData::fontToString(QVariant& value)
 {
-  return value.toString();
+  return propertyToQString(value);
 }
 
-QString te::layout::BuildPaintCustomData::rectToString(QVariant& value)
+QString te::layout::BuildPaintCustomData::envelopeToString(QVariant& value)
 {
-  QRectF rect = value.toRectF();
-
-  return QString("[(%1, %2), %3 x %4]").arg(QString::number(rect.x()))\
-    .arg(QString::number(rect.y()))
-    .arg(QString::number(rect.width()))
-    .arg(QString::number(rect.height()));
+  te::layout::Property prop = qvariant_cast<te::layout::Property>(value);
+  te::gm::Envelope env = te::layout::Property::GetValueAs<te::gm::Envelope>(prop);
+  
+  return QString("[(%1, %2), %3 x %4]").arg(QString::number(env.getLowerLeftX()))\
+    .arg(QString::number(env.getLowerLeftY()))
+    .arg(QString::number(env.getUpperRightX()))
+    .arg(QString::number(env.getUpperRightY()));
 }
 
 QString te::layout::BuildPaintCustomData::colorToString(QVariant& value)
 {
-  return value.toString();
+  return propertyToQString(value);
 }
 
+QString te::layout::BuildPaintCustomData::propertyToQString(QVariant& value)
+{
+  te::layout::Property prop = qvariant_cast<te::layout::Property>(value);
+  const te::dt::AbstractData* absData = prop.getValue();
+
+  QString qValue;
+  if (absData)
+  {
+    std::string svalue = absData->toString();
+    qValue = QString(te::layout::ItemUtils::convert2QString(svalue));
+  }
+  return qValue;
+}

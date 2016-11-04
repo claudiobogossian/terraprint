@@ -52,11 +52,9 @@ void te::layout::IntSpinBoxEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyData->getDataTypeInt()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    if (variant.canConvert(QVariant::Int))
-    {
-      int newValue = variant.toInt();
-      setValue(newValue);
-    }
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    int newValue = te::layout::Property::GetValueAs<int>(prop);
+    setValue(newValue);
   }
 }
 

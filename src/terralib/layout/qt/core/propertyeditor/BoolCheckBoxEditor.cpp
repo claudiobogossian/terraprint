@@ -52,14 +52,12 @@ void te::layout::BoolCheckBoxEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyData->getDataTypeBool()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    if (variant.canConvert(QVariant::Bool))
-    {
-      bool newValue = variant.toBool();
-      setChecked(newValue);
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    bool newValue = te::layout::Property::GetValueAs<bool>(prop);
+    setChecked(newValue);
 
-      QString txt = variant.toString();
-      setText(txt);
-    }
+    QString txt = variant.toString();
+    setText(txt);
   }
 }
 

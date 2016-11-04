@@ -56,9 +56,6 @@
 #include <vector>
 #include <iostream>
 
-// Qt
-class QVariant;
-
 // Boost
 #include <boost/property_tree/ptree.hpp>
 
@@ -253,9 +250,7 @@ namespace te
         bool operator ==(const Variant& other) const;
         bool operator !=(const Variant& other) const;
         Variant& operator=(const Variant& properties);
-
-        virtual QVariant toQVariant() const;
-
+        
     protected:
 
       /*!

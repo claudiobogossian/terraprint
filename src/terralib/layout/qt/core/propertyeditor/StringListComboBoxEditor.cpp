@@ -28,6 +28,7 @@
 // TerraLib
 #include "StringListComboBoxEditor.h"
 #include "../../../core/enum/Enums.h"
+#include <terralib/layout/qt/core/ItemUtils.h>
 
 #include <QStringList>
 
@@ -54,11 +55,45 @@ void te::layout::StringListComboBoxEditor::changeEditorData(const QModelIndex& i
   QVariant variant = index.data(propertyData->getDataTypeStringList()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    if (variant.canConvert(QVariant::StringList))
-    {
-      QStringList newValue = variant.toStringList();
-      addItems(newValue);
-    }
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(prop);
+
+    std::vector<te::layout::Variant> options = prop.getOptionChoices();
+    addComboOptions(options);
   }
 }
 
+void te::layout::StringListComboBoxEditor::addComboOptions(std::vector<te::layout::Variant> options)
+{
+  clear();
+
+  QStringList list;
+  for (std::vector<Variant>::iterator it = options.begin(); it != options.end(); ++it)
+  {
+    std::string value = (*it).toString();
+    QString qValue = te::layout::ItemUtils::convert2QString(value);
+    list.append(qValue);
+  }
+  addItems(list);
+
+  int index = -1;
+  QVariant variant;
+
+  //When the value is not a QString
+  QString value = variant.toString();
+  variant.setValue(value);
+
+  index = findData(variant, Qt::DisplayRole);
+  if (index == -1)
+  {
+    index = findText(value);
+    if (index != -1)
+    {
+      setCurrentIndex(index);
+    }
+  }
+  else
+  {
+    setCurrentIndex(index);
+  }
+}

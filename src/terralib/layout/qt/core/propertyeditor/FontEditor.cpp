@@ -29,6 +29,7 @@
 #include "FontEditor.h"
 #include "../../../core/enum/Enums.h"
 #include "../../../core/property/Property.h"
+#include <terralib/layout/qt/core/ItemUtils.h>
 
 // Qt
 #include <QString>
@@ -72,7 +73,10 @@ void te::layout::FontEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyData->getDataTypeFont()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    m_font = qvariant_cast<QFont>(variant); // cast to custom type
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    te::layout::Font newValue = te::layout::Property::GetValueAs<te::layout::Font>(prop);
+    
+    m_font = ItemUtils::convertToQfont(newValue);
     if (m_textLabel)
     {
       m_textLabel->setText(m_font.family());

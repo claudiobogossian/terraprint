@@ -68,7 +68,7 @@ te::layout::PropertyTree::~PropertyTree()
 
 }
 
-void te::layout::PropertyTree::setProperties(std::vector<Property> vprops)
+void te::layout::PropertyTree::setProperties(std::vector<te::layout::Property> vprops)
 {
   m_vprops = vprops;
 }
@@ -89,7 +89,7 @@ void te::layout::PropertyTree::configTree(int numberColumns)
   setEditTriggers(QAbstractItemView::NoEditTriggers); 
 }
 
-void te::layout::PropertyTree::load(std::vector<Property> props)
+void te::layout::PropertyTree::load(std::vector<te::layout::Property> props)
 {
   m_vprops = props;
   clearAll();
@@ -108,7 +108,7 @@ void te::layout::PropertyTree::load(std::vector<Property> props)
   }
 }
 
-QTreeWidgetItem* te::layout::PropertyTree::createNewRow(Property prop, QTreeWidgetItem* parent)
+QTreeWidgetItem* te::layout::PropertyTree::createNewRow(te::layout::Property prop, QTreeWidgetItem* parent)
 {
   QString propertyName = ItemUtils::convert2QString(prop.getName());
 
@@ -120,8 +120,8 @@ QTreeWidgetItem* te::layout::PropertyTree::createNewRow(Property prop, QTreeWidg
   newItem->setText(m_nameColumn, propertyName); // First Column (Property Name)
   newItem->setData(m_nameColumn, Qt::UserRole, QVariant(propertyName)); // First Column(Property Name)
 
-  // AbstractData* to QVariant (Wrapper)
-  QVariant variant(prop.getValue());
+  // te::layout::Property to QVariant (Wrapper)
+  QVariant variant = QVariant::fromValue<te::layout::Property>(prop);
   // Second Column (Value)
   newItem->setData(m_valueColumn, prop.getType()->getId(), variant); // Property Value
   
@@ -152,7 +152,7 @@ void te::layout::PropertyTree::onCheckEdit(QTreeWidgetItem * item, int column)
   }
 }
 
-void te::layout::PropertyTree::onDataEditorChanged(Property & prop, int row, int column)
+void te::layout::PropertyTree::onDataEditorChanged(te::layout::Property & prop, int row, int column)
 {
   QTreeWidgetItem* item = currentItem();
 

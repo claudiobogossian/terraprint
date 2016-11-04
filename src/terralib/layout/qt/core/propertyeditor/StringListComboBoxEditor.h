@@ -71,6 +71,8 @@ namespace te
       protected:
 
         virtual void changeEditorData(const QModelIndex& index);
+
+        virtual void addComboOptions(std::vector<te::layout::Variant> options);
     };
   }
 }

@@ -28,6 +28,7 @@
 // TerraLib
 #include "StringLineEditor.h"
 #include "../../../core/enum/Enums.h"
+#include <terralib/layout/qt/core/ItemUtils.h>
 
 te::layout::StringLineEditor::StringLineEditor(const QModelIndex& index, QWidget* parent) :
   QLineEdit(parent),
@@ -52,11 +53,11 @@ void te::layout::StringLineEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyData->getDataTypeString()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    if (variant.canConvert(QVariant::String))
-    {
-      QString newValue = variant.toString();
-      setText(newValue);
-    }
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(prop);
+
+    QString qValue = ItemUtils::convert2QString(newValue);
+    setText(qValue);
   }
 }
 

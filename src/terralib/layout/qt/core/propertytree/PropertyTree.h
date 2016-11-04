@@ -64,17 +64,17 @@ namespace te
 
         virtual ~PropertyTree();
 
-        virtual void setProperties(std::vector<Property> vprops);
+        virtual void setProperties(std::vector<te::layout::Property> vprops);
 
-        virtual void load(std::vector<Property> props);
+        virtual void load(std::vector<te::layout::Property> props);
 
-        virtual QTreeWidgetItem* createNewRow(Property prop, QTreeWidgetItem* parent = 0);
+        virtual QTreeWidgetItem* createNewRow(te::layout::Property prop, QTreeWidgetItem* parent = 0);
 
         void clearAll();
         
       signals:
 
-        void propertiesChanged(Property prop);
+        void propertiesChanged(te::layout::Property prop);
 
       protected slots:
               
@@ -83,7 +83,7 @@ namespace te
         */
         void onCheckEdit(QTreeWidgetItem * item, int column);
 
-        virtual void onDataEditorChanged(Property & prop, int row, int column);
+        virtual void onDataEditorChanged(te::layout::Property & prop, int row, int column);
 
       protected:
 
@@ -93,11 +93,11 @@ namespace te
 
       protected:
         
-        View*                   m_view;
-        std::vector<Property>   m_vprops;
-        int                     m_columns;
-        int                     m_nameColumn;
-        int                     m_valueColumn;
+        View*                               m_view;
+        std::vector<te::layout::Property>   m_vprops;
+        int                                 m_columns;
+        int                                 m_nameColumn;
+        int                                 m_valueColumn;
     };
   }
 }

@@ -52,11 +52,9 @@ void te::layout::DoubleSpinBoxEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyData->getDataTypeDouble()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    if (variant.canConvert(QVariant::Double))
-    {
-      int newValue = variant.toDouble();
-      setValue(newValue);
-    }
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    double newValue = te::layout::Property::GetValueAs<double>(prop);
+    setValue(newValue);
   }
 }
 

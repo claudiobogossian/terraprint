@@ -72,10 +72,15 @@ void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyData->getDataTypeFont()->getId());
   if (variant.isValid() && !variant.isNull())
   {
-    m_color = qvariant_cast<QColor>(variant); // cast to custom type
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    te::color::RGBAColor newValue = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
+
+    m_color = QColor(newValue.getRed(), newValue.getGreen(), newValue.getBlue(), newValue.getAlpha());
     if (m_textLabel)
     {
       m_textLabel->setText(m_color.name());
+      m_textLabel->setPalette(QPalette(m_color));
+      m_textLabel->setAutoFillBackground(true);
     }
   }
 }

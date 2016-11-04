@@ -85,9 +85,11 @@ namespace te
 
         QString fontToString(QVariant& value);
 
-        QString rectToString(QVariant& value);
+        QString envelopeToString(QVariant& value);
 
         QString colorToString(QVariant& value);
+
+        QString propertyToQString(QVariant& value);
     };
   }
 }
