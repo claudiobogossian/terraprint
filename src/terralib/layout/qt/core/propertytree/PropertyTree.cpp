@@ -120,11 +120,10 @@ QTreeWidgetItem* te::layout::PropertyTree::createNewRow(Property prop, QTreeWidg
   newItem->setText(m_nameColumn, propertyName); // First Column (Property Name)
   newItem->setData(m_nameColumn, Qt::UserRole, QVariant(propertyName)); // First Column(Property Name)
 
-  QVariant variant = prop.getValue().toQVariant();
-
+  // AbstractData* to QVariant (Wrapper)
+  QVariant variant(prop.getValue());
   // Second Column (Value)
-  //newItem->setText(m_valueColumn, variant.toString()); // Second Column (Property Value)
-  newItem->setData(m_valueColumn, prop.getValue().getType()->getId(), variant); // Property Value
+  newItem->setData(m_valueColumn, prop.getType()->getId(), variant); // Property Value
   
   // find child
   if (!prop.getSubProperty().empty())

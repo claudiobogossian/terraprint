@@ -71,7 +71,7 @@ void te::layout::EnvelopePropertyTreeItem::refresh(int column, int role, QString
     {
       if (itemChild->data(0, Qt::UserRole) == name)
       {
-        te::gm::Envelope env = m_property.getValue().toEnvelope();
+        te::gm::Envelope env = te::layout::Property::GetValueAs<te::gm::Envelope>(m_property);
         if (name == m_x1Name)
           env = te::gm::Envelope(doubleValue, dataRect.y(), dataRect.width(), dataRect.height());
         if (name == m_y1Name) 

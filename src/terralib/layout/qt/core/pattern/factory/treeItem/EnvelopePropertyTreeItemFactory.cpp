@@ -53,8 +53,8 @@ te::layout::EnvelopePropertyTreeItemFactory::~EnvelopePropertyTreeItemFactory()
 te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::createEnvelopeDataTreeItem(Property & prop, QTreeWidgetItem* parent)
 {
   EnvelopePropertyTreeItem* envelopePropertyTreeItem = new EnvelopePropertyTreeItem(prop, parent);
-  te::gm::Envelope env = prop.getValue().toEnvelope();
 
+  te::gm::Envelope env = te::layout::Property::GetValueAs<te::gm::Envelope>(prop);
   if (!env.isValid())
   {
     env = te::gm::Envelope(0, 0, 0, 0);

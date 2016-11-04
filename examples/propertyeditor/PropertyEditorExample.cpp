@@ -26,6 +26,7 @@
 #include "terralib/layout/core/pattern/mvc/AbstractItemView.h"
 #include "terralib/layout/core/pattern/mvc/AbstractItemController.h"
 #include "terralib/layout/core/enum/Enums.h"
+#include "terralib/layout/core/property/Property.h"
 
 // STL
 #include <vector>
@@ -135,7 +136,10 @@ void te::layout::PropertyEditorExample::loadComboboxNames()
 
   // add rect item name
   const te::layout::Property rectProp = m_rectItem->getController()->getProperty("name");
-  list.append(rectProp.getValue().toQVariant().toString());
+
+  std::string name = te::layout::Property::GetValueAs<std::string>(rectProp);
+
+  list.append(name.c_str());
 
   m_combobox->addItems(list);
 }
