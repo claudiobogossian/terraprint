@@ -56,7 +56,6 @@ te::layout::Module::Module()
   te::layout::initEditorFactories(); // init all editors factories
   te::layout::initTreeItemFactories(); // init all tree items factories
 
-  //registrar todos os tipos de dados
   te::layout::RegisterLayoutTypes();
 }
 
