@@ -1968,7 +1968,7 @@ nononon</source>
 <context>
     <name>te::layout::ColorEditor</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertyeditor/ColorEditor.cpp" line="188"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertyeditor/ColorEditor.cpp" line="189"/>
         <source>Select Color</source>
         <translation type="unfinished"></translation>
     </message>

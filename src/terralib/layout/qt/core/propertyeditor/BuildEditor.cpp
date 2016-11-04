@@ -30,6 +30,9 @@
 #include "../../../core/enum/Enums.h"
 #include "../../core/pattern/factory/editor/EditorFactory.h"
 
+// Qt
+#include <QMetaType>
+
 te::layout::BuildEditor::BuildEditor()
 {
   
@@ -44,24 +47,17 @@ te::layout::AbstractEditor* te::layout::BuildEditor::buildEditor(std::vector<Pro
 {
   EditorFactoryParamsCreate params(index, vprops, parent);
 
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
 
+  AbstractEditor* editor = 0;
   std::string editorName = "";
-  int maxId = propertyData->maxId();
-  int minId = propertyData->minId();
-
-  for (int i = minId; i <= maxId; ++i)
+  if (variant.isValid() && !variant.isNull())
   {
-    QVariant variant = index.data(i);
-    if (variant.isValid() && !variant.isNull())
-    {
-      EnumType* type = propertyData->getEnum(i);
-      editorName = type->getName();
-      break;
-    }
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    editorName = prop.getType()->getName();
+    editor = te::layout::EditorFactory::make(editorName, params);
   }
-    
-  AbstractEditor* editor = te::layout::EditorFactory::make(editorName, params);
   return editor;
 }
 

@@ -56,10 +56,9 @@ void te::layout::BuildPaintCustomData::build()
 
 bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index)
 {
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
 
-  QVariant variant;
-  variant = index.data(dataType->getDataTypeInt()->getId());
   if (variant.isValid())
   {
     QString value = intToString(variant);
@@ -67,7 +66,6 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
     return true;
   }
 
-  variant = index.data(dataType->getDataTypeDouble()->getId());
   if (variant.isValid())
   {
     QString value = doubleToString(variant);
@@ -75,7 +73,6 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
     return true;
   }
 
-  variant = index.data(dataType->getDataTypeString()->getId());
   if (variant.isValid())
   {
     QString value = stringToString(variant);
@@ -83,7 +80,6 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
     return true;
   }
 
-  variant = index.data(dataType->getDataTypeBool()->getId());
   if (variant.isValid())
   {
     QString value = boolToString(variant);
@@ -91,7 +87,6 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
     return true;
   }
 
-  variant = index.data(dataType->getDataTypeFont()->getId());
   if (variant.isValid())
   {
     QString value = fontToString(variant);
@@ -99,7 +94,6 @@ bool te::layout::BuildPaintCustomData::paintCustomData(QPainter * painter, const
     return true;
   }
 
-  variant = index.data(dataType->getDataTypeEnvelope()->getId());
   if (variant.isValid())
   {
     QString value = envelopeToString(variant);

@@ -30,6 +30,8 @@
 #include "../../../core/enum/Enums.h"
 #include <terralib/layout/qt/core/ItemUtils.h>
 
+//Qt
+#include <QMetaType>
 #include <QStringList>
 
 te::layout::StringListComboBoxEditor::StringListComboBoxEditor(const QModelIndex& index, QWidget* parent) :
@@ -51,8 +53,8 @@ QVariant te::layout::StringListComboBoxEditor::getValue()
 
 void te::layout::StringListComboBoxEditor::changeEditorData(const QModelIndex& index)
 {
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeStringList()->getId());
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);

@@ -29,6 +29,9 @@
 #include "DoubleSpinBoxEditor.h"
 #include "../../../core/enum/Enums.h"
 
+//Qt
+#include <QMetaType>
+
 te::layout::DoubleSpinBoxEditor::DoubleSpinBoxEditor(const QModelIndex& index, QWidget* parent) :
   QDoubleSpinBox(parent),
   AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeDouble())
@@ -48,8 +51,8 @@ QVariant te::layout::DoubleSpinBoxEditor::getValue()
 
 void te::layout::DoubleSpinBoxEditor::changeEditorData(const QModelIndex& index)
 {
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeDouble()->getId());
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);

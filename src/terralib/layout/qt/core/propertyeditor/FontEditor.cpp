@@ -31,7 +31,8 @@
 #include "../../../core/property/Property.h"
 #include <terralib/layout/qt/core/ItemUtils.h>
 
-// Qt
+//Qt
+#include <QMetaType>
 #include <QString>
 #include <QVariant>
 #include <QLabel>
@@ -69,8 +70,8 @@ QVariant te::layout::FontEditor::getValue()
 
 void te::layout::FontEditor::changeEditorData(const QModelIndex& index)
 {
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeFont()->getId());
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);

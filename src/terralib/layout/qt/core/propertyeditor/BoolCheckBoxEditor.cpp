@@ -29,6 +29,9 @@
 #include "BoolCheckBoxEditor.h"
 #include "../../../core/enum/Enums.h"
 
+//Qt
+#include <QMetaType>
+
 te::layout::BoolCheckBoxEditor::BoolCheckBoxEditor(const QModelIndex& index, QWidget* parent) :
   QCheckBox(parent),
   AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeBool())
@@ -48,8 +51,8 @@ QVariant te::layout::BoolCheckBoxEditor::getValue()
 
 void te::layout::BoolCheckBoxEditor::changeEditorData(const QModelIndex& index)
 {
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeBool()->getId());
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);

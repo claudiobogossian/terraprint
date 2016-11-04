@@ -30,6 +30,9 @@
 #include "../../../core/enum/Enums.h"
 #include <terralib/layout/qt/core/ItemUtils.h>
 
+// Qt
+#include <QMetaType>
+
 te::layout::StringLineEditor::StringLineEditor(const QModelIndex& index, QWidget* parent) :
   QLineEdit(parent),
   AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeString())
@@ -49,8 +52,8 @@ QVariant te::layout::StringLineEditor::getValue()
 
 void te::layout::StringLineEditor::changeEditorData(const QModelIndex& index)
 {
-  EnumDataType* propertyData = Enums::getInstance().getEnumDataType();
-  QVariant variant = index.data(propertyData->getDataTypeString()->getId());
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
