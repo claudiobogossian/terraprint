@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 {
   QApplication app(argc, argv); // required to run classes with Qt
 
-  te::layout::PropertyEditorExample editor;
+  te::layout::example::propertyeditor::PropertyEditorExample editor;
   editor.run();
   editor.show();
     

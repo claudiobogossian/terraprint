@@ -33,25 +33,28 @@ namespace te
 {
   namespace layout
   {
-    /*!
-      \brief 
-    
-      \ingroup layout
-    */
-    class PropertyEditorTest : public QObject
+    namespace qtest
     {
-      Q_OBJECT
+      /*!
+        \brief
 
-      private slots:
+        \ingroup layout
+        */
+      class PropertyEditorTest : public QObject
+      {
+        Q_OBJECT
+
+        private slots:
 
         void on_test_create_rectangle_item();
-        
+
         void on_test_create_property_tree();
 
       private:
 
         std::unique_ptr<te::layout::RectangleItem> m_rectItem;
-    };
+      };
+    }
   }
 }
 

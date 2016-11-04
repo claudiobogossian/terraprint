@@ -44,7 +44,7 @@
 // Boost
 #include <boost/test/unit_test.hpp>
 
-void te::layout::PropertyEditorTest::on_test_create_rectangle_item()
+void te::layout::qtest::PropertyEditorTest::on_test_create_rectangle_item()
 {
   EnumType* itemType = Enums::getInstance().getEnumObjectType()->getRectangleItem();
   if (!itemType)
@@ -70,7 +70,7 @@ void te::layout::PropertyEditorTest::on_test_create_rectangle_item()
   m_rectItem.reset(rect);
 }
 
-void te::layout::PropertyEditorTest::on_test_create_property_tree()
+void te::layout::qtest::PropertyEditorTest::on_test_create_property_tree()
 {
   if (!m_rectItem.get())
   {

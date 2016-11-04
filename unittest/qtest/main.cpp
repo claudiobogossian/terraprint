@@ -34,16 +34,16 @@ int main(int argv, char **args)
 
   int result = 0;
   {
-    te::layout::ViewTest viewTest;
+    te::layout::qtest::ViewTest viewTest;
     result |= QTest::qExec(&viewTest, argv, args);
   }
   {
-    te::layout::PropertyEditorTest propertyEditorTest;
+    te::layout::qtest::PropertyEditorTest propertyEditorTest;
     result |= QTest::qExec(&propertyEditorTest, argv, args);
 
   }
   {
-    te::layout::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
+    te::layout::qtest::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
     result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
   }
   return result;

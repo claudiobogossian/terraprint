@@ -46,7 +46,7 @@
 #include <QComboBox>
 #include <QStringList>
 
-te::layout::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
+te::layout::example::propertyeditor::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
   QWidget(parent),
   m_rectItem(0),
   m_tree(0),
@@ -56,7 +56,7 @@ te::layout::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
   resize(480, 320);
 }
 
-te::layout::PropertyEditorExample::~PropertyEditorExample()
+te::layout::example::propertyeditor::PropertyEditorExample::~PropertyEditorExample()
 {
   if (m_rectItem)
   {
@@ -64,13 +64,13 @@ te::layout::PropertyEditorExample::~PropertyEditorExample()
   }
 }
 
-void te::layout::PropertyEditorExample::run()
+void te::layout::example::propertyeditor::PropertyEditorExample::run()
 {
   createRectangleItem();
   createPropertyTree();
 }
 
-void te::layout::PropertyEditorExample::createRectangleItem()
+void te::layout::example::propertyeditor::PropertyEditorExample::createRectangleItem()
 {
   EnumType* itemType = Enums::getInstance().getEnumObjectType()->getRectangleItem();
   if (!itemType)
@@ -90,7 +90,7 @@ void te::layout::PropertyEditorExample::createRectangleItem()
   m_rectItem = dynamic_cast<RectangleItem*>(item);
 }
 
-void te::layout::PropertyEditorExample::createPropertyTree()
+void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyTree()
 {
   if (!m_rectItem)
   {
@@ -108,7 +108,7 @@ void te::layout::PropertyEditorExample::createPropertyTree()
   m_tree->load(props); // load properties from rectangle item
 }
 
-void te::layout::PropertyEditorExample::createLayout()
+void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
 {
   //Layout
 
@@ -130,7 +130,7 @@ void te::layout::PropertyEditorExample::createLayout()
   setLayout(layout);
 }
 
-void te::layout::PropertyEditorExample::loadComboboxNames()
+void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNames()
 {
   QStringList list;
 

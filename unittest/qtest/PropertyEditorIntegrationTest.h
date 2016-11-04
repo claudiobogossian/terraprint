@@ -34,16 +34,18 @@ namespace te
 {
   namespace layout
   {
-    /*!
-      \brief 
-    
-      \ingroup layout
-    */
-    class PropertyEditorIntegrationTest : public QObject
+    namespace qtest
     {
-      Q_OBJECT
+      /*!
+        \brief
 
-      private slots:
+        \ingroup layout
+        */
+      class PropertyEditorIntegrationTest : public QObject
+      {
+        Q_OBJECT
+
+        private slots:
 
         void on_test_create_view();
 
@@ -61,7 +63,8 @@ namespace te
 
         std::unique_ptr<te::layout::View>         m_view;
         std::unique_ptr<te::layout::OutsideArea>  m_outsideArea;
-    };
+      };
+    }
   }
 }
 

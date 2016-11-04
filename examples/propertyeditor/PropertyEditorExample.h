@@ -32,45 +32,52 @@ namespace te
     class RectangleItem;
     class PropertyTree;
 
-    /*!
-      \brief 
-    
-      \ingroup layout
-    */
-    class PropertyEditorExample : public QWidget
+    namespace example
     {
-      Q_OBJECT
-
-      public:
-
-        /*!
-        \brief Constructor.
-        */
-        PropertyEditorExample(QWidget *parent = 0);
+      namespace propertyeditor
+      {
 
         /*!
-        \brief Destructor.
-        */
-        virtual ~PropertyEditorExample();
+          \brief
 
-        void run();
+          \ingroup layout
+          */
+        class PropertyEditorExample : public QWidget
+        {
+          Q_OBJECT
 
-      protected:
-        
-        void createRectangleItem();
-        
-        void createPropertyTree();
+        public:
 
-        void createLayout();
+          /*!
+          \brief Constructor.
+          */
+          PropertyEditorExample(QWidget *parent = 0);
 
-        void loadComboboxNames();
+          /*!
+          \brief Destructor.
+          */
+          virtual ~PropertyEditorExample();
 
-      private:
+          void run();
 
-        te::layout::RectangleItem*  m_rectItem;
-        te::layout::PropertyTree*   m_tree;
-        QComboBox*                  m_combobox;
-    };
+        protected:
+
+          void createRectangleItem();
+
+          void createPropertyTree();
+
+          void createLayout();
+
+          void loadComboboxNames();
+
+        private:
+
+          te::layout::RectangleItem*  m_rectItem;
+          te::layout::PropertyTree*   m_tree;
+          QComboBox*                  m_combobox;
+        };
+      }
+    }
   }
 }
 
