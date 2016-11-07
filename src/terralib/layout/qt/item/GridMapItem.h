@@ -171,6 +171,7 @@ namespace te
         QPainterPath                    m_gridLines;
         QPainterPath                    m_gridCrosses;
         QPainterPath                    m_gridText;
+        QPixmap                         m_screenGreaterCache;
         QPixmap                         m_screenCache; //!< A cache to avoid unnecessary full redraw
     };
   }

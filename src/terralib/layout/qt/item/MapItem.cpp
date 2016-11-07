@@ -84,20 +84,25 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
     QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
     if (m_screenCache.size() != sizeInPixels)
     {
-      const Property& property = m_controller->getProperty("background_color");
-      const te::color::RGBAColor& color = property.getValue().toColor();
-      QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+      if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
+      {
+        const Property& property = m_controller->getProperty("background_color");
+        const te::color::RGBAColor& color = property.getValue().toColor();;
+        QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-      m_screenCache = QPixmap(sizeInPixels);
-      m_screenCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
+        m_screenGreaterCache = QPixmap(sizeInPixels);
+        m_screenGreaterCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
 
-      drawMapOnDevice(&m_screenCache);
+        drawMapOnDevice(&m_screenGreaterCache);
+      }
+
+      m_screenCache = m_screenGreaterCache.scaled(sizeInPixels, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
-    
-    te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
+
+    te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenCache);
     if (m_screenDraft.isNull() == false)
     {
-      te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenDraft);
+      te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenDraft);
     }
   }
 }
@@ -466,6 +471,7 @@ void te::layout::MapItem::leaveEditionMode()
 
 void te::layout::MapItem::refresh()
 {
+  m_screenGreaterCache = QPixmap();
   m_screenCache = QPixmap();
 }
 

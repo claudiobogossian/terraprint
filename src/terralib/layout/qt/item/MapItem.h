@@ -176,6 +176,7 @@ namespace te
       protected:
 
         EnumType*                       m_currentEditionMode; //!< The current edition mode of the item
+        QPixmap                         m_screenGreaterCache;
         QPixmap                         m_screenCache; //!< A double buffer to cache the drawings, avoiding the need of a full redraw of the item when paint is called
         QPixmap                         m_screenDraft; //!< A pixmap to be used as a draft during the edition of the item. Used by pan and zoom area
         te::gm::Point                   m_clickedPointMM; //!< The current clicked coord. Is valid only during the mouse click. When the mouse button is released, it is reset to its default value
