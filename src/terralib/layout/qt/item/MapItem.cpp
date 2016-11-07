@@ -82,7 +82,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
 
     //if for any reason the size has been changed, we recreate the screen pixmap
     QSize sizeInPixels(qRound(boxViewport.getWidth()), qRound(boxViewport.getHeight()));
-    if (m_screenGreaterCache.size() != sizeInPixels)
+    if (m_screenCache.size() != sizeInPixels)
     {
       if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
       {
@@ -99,10 +99,10 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
       m_screenCache = m_screenGreaterCache.scaled(sizeInPixels, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
     
-    te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenCache);
+    te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenCache);
     if (m_screenDraft.isNull() == false)
     {
-      te::layout::ItemUtils::drawPixmap(this->getAdjustedBoundingRect(painter), painter, m_screenDraft);
+      te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenDraft);
     }
   }
 }
