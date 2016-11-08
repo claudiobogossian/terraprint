@@ -7,9 +7,9 @@
 #include <terralib/common/Exception.h>
 #include <terralib/datatype/DataConverterManager.h>
 
-void te::layout::TypeManager::registerType(const std::string& typeName, int typeCode, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString)
+void te::layout::TypeManager::registerTypeImpl(int typeCode, const std::string& typeName, const std::string& cTypeName, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString)
 {
-  if (m_mapNames.find(typeName) != m_mapNames.end())
+  if (m_mapTypeNames.find(typeName) != m_mapTypeNames.end())
   {
     throw te::common::Exception("TypeManager::Type code already registered");
   }
@@ -19,8 +19,14 @@ void te::layout::TypeManager::registerType(const std::string& typeName, int type
     throw te::common::Exception("TypeManager::Type name already registered");
   }
 
-  m_mapNames[typeName] = typeCode;
+  if (m_mapCTypeNames.find(cTypeName) != m_mapCTypeNames.end())
+  {
+    throw te::common::Exception("TypeManager::Type name already registered");
+  }
+
+  m_mapTypeNames[typeName] = typeCode;
   m_mapTypeCodes[typeCode] = typeName;
+  m_mapCTypeNames[cTypeName] = typeName;
 
   //then we register the converters in DataConverterManager
   //as there is not way to check if the converter is already added, we handle the exception
@@ -62,8 +68,8 @@ te::dt::AbstractData* te::layout::TypeManager::convertTo(te::dt::AbstractData* d
 
 int te::layout::TypeManager::getTypeCode(const std::string& typeName) const
 {
-  std::map<std::string, int>::const_iterator it = m_mapNames.find(typeName);
-  if (it == m_mapNames.end())
+  std::map<std::string, int>::const_iterator it = m_mapTypeNames.find(typeName);
+  if (it == m_mapTypeNames.end())
   {
     throw te::common::Exception("TypeManager::Invalid type code");
   }

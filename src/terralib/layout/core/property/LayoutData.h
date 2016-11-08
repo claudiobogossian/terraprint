@@ -32,7 +32,6 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 //STL
 #include <memory>
-#include <typeinfo>
 
 namespace te
 {
@@ -98,9 +97,7 @@ namespace te
       , m_typeCode(0)
       , m_value(new T(value))
     {
-      const std::type_info& typeInfo = typeid(T);
-      std::string typeName = typeInfo.name();
-      m_typeCode = typeManager.getTypeCode(typeName);
+      m_typeCode = typeManager.getTypeCode<T>();
       m_converterToString = typeManager.getConverter(m_typeCode, (int)te::layout::LayoutTypes::STRING_TYPE);
     }
 

@@ -45,9 +45,8 @@ namespace te
 
       public:
 
-        template <typename T> void registerType(int typeCode, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString);
-
-        void registerType(const std::string& typeName, int typeCode, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString);
+        template <typename T> 
+        void registerType(int typeCode, const std::string& typeName, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString);
 
         //!< Returns the converted FROM fromTypeCode TO toTypeCode
         const te::dt::DataTypeConverter& getConverter(int fromTypeCode, int toTypeCode) const;
@@ -57,6 +56,10 @@ namespace te
 
         //!< Returns the typeCode from a given typeName
         int getTypeCode(const std::string& typeName) const;
+
+        //!< Returns the typeCode from a given typeName
+        template <typename T> 
+        int getTypeCode() const;
 
         //!< Returns the typeName from a given typeCode
         std::string getName(int typeCode) const;
@@ -69,18 +72,37 @@ namespace te
       /*! \brief Destructor for singletons is protected. */
       virtual ~TypeManager();
 
+      void registerTypeImpl(int typeCode, const std::string& typeName, const std::string& cTypeName, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString);
+
     protected:
 
-      std::map<std::string, int> m_mapNames;
+      std::map<std::string, int> m_mapTypeNames;
       std::map<int, std::string> m_mapTypeCodes;
+
+      std::map<std::string, std::string> m_mapCTypeNames; //!< Maps the C++ names to the alias given during Type registration <cTypeName, typeName>
     };
+
+    template <typename T>
+    int te::layout::TypeManager::getTypeCode() const
+    {
+      std::string cTypeName = typeid(T).name();
+
+      std::map<std::string, std::string>::const_iterator itCTypeName = m_mapCTypeNames.find(cTypeName);
+      if (itCTypeName == m_mapCTypeNames.end())
+      {
+        throw te::common::Exception("TypeManager::Invalid type code");
+      }
+
+      std::string typeName = itCTypeName->second;
+      return getTypeCode(typeName);
+    }
 
     //implementation of the template function
     template <typename T>
-    void te::layout::TypeManager::registerType(int typeCode, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString)
+    void te::layout::TypeManager::registerType(int typeCode, const std::string& typeName, const te::dt::DataTypeConverter& converterFromString, const te::dt::DataTypeConverter& converterToString)
     {
-      std::string name = typeid(T).name();
-      registerType(name, typeCode, converterFromString, converterToString);
+      std::string cTypeName = typeid(T).name();
+      registerTypeImpl(typeCode, typeName, cTypeName, converterFromString, converterToString);
     }
   }
 }
