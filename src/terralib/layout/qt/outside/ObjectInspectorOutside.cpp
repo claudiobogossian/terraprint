@@ -27,6 +27,8 @@
 
 // TerraLib
 #include "ObjectInspectorOutside.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"

@@ -65,7 +65,7 @@ namespace te
       public:
 
         /*! \brief Constructor. */
-        MainLayout(AbstractProxyProject* proxyProject);
+        explicit MainLayout(AbstractProxyProject* proxyProject);
 
         //! Destructor.
         ~MainLayout();

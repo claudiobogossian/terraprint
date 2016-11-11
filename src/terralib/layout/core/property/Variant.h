@@ -32,7 +32,6 @@
     - bool 
     - te::color::RGBAColor 
     - te::layout::Font 
-    - te::layout::GenericVariant
 
   \ingroup layout
 */
@@ -46,7 +45,6 @@
 #include "../Font.h"
 #include "../enum/EnumType.h"
 #include "../Config.h"
-#include "GenericVariant.h"
 #include "terralib/geometry/Geometry.h"
 #include "terralib/maptools/AbstractLayer.h"
 
@@ -78,7 +76,6 @@ namespace te
         - bool 
         - te::color::RGBAColor 
         - te::layout::Font 
-        - te::layout::GenericVariant
     
       \ingroup layout
     */
@@ -192,13 +189,6 @@ namespace te
           \return value of te::layout::Font type
         */
         const te::gm::Envelope& toEnvelope() const;
-
-        /*!
-          \brief Returns the value of te::layout::GenericVariant type. (The setValue method received a te::layout::GenericVariant). Complex type.
-
-          \return value of te::layout::Font type
-        */
-        const GenericVariant& toGenericVariant() const;
 
         /*!
           \brief Returns the shared pointer of te::gm::Geometry type. (The setValue method received a shared pointer of te::gm::Geometry).
@@ -348,7 +338,6 @@ namespace te
       EnumType*                             m_type; //!< data type of this object
       bool                                  m_null; //!< true if no value has been set, false otherwise
       bool                                  m_complex; //!< true if value is not of common C++ data type, false otherwise
-      GenericVariant                        m_generic; //!< value of te::layout::GenericVariant type
       te::gm::GeometryShrPtr                m_geometryPtr; //!< shared pointer of te::gm::Geometry type
       std::vector<std::string>              m_vString; //!< value of string vector type
       std::vector< std::vector<std::string> > m_stringMatrix; //!< value vector of string vector type

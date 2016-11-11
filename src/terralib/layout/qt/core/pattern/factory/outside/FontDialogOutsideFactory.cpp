@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "FontDialogOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/FontDialogModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/FontDialogOutside.h"

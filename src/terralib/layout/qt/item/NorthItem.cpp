@@ -46,25 +46,22 @@ te::layout::NorthItem::~NorthItem()
 void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("northArrow_type");
-  if(property.isNull() == false)
+  EnumNorthArrowType enumNorthArrowType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentNorthArrowType = enumNorthArrowType.searchLabel(label);
+
+  if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType1())
   {
-    EnumNorthArrowType enumNorthArrowType;
-
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentNorthArrowType = enumNorthArrowType.searchLabel(label);
-
-    if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType1())
-    {
-      drawNorthArrow1(painter);
-    }
-    else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType2())
-    {
-      drawNorthArrow2(painter);
-    }
-    else if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
-    {
-      drawNorthArrow3(painter);
-    }
+    drawNorthArrow1(painter);
+  }
+  else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType2())
+  {
+    drawNorthArrow2(painter);
+  }
+  else if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
+  {
+    drawNorthArrow3(painter);
   }
 }
 

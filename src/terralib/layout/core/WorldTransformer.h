@@ -323,7 +323,7 @@ namespace te
 
       if(m_mirroring)
       {
-        dy = m_s2Height - 1 - dyCopy; // mirror
+        dyCopy = m_s2Height - 1 - dyCopy; // mirror
       }
 
       wx = (dx - m_translateX) / m_scaleX;

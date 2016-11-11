@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "PropertiesOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/PropertiesModel.h"
 #include "../../../../../outside/PropertiesController.h"
 #include "../../../../outside/PropertiesOutside.h"

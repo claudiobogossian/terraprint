@@ -56,7 +56,7 @@ namespace te
 
           \param paperType paper type. Ex.: A4
         */ 
-        PaperConfig(LayoutAbstractPaperType paperType);
+        explicit PaperConfig(LayoutAbstractPaperType paperType);
 
         /*!
           \brief Destructor

@@ -81,13 +81,13 @@ namespace te
           \brief Click on the context menu for an item, the user choose to open a window.
           \param prop corresponding property choice
         */
-        void menuPropertyClicked(Property prop);
+        void menuPropertyClicked(const Property& prop);
 
       protected slots:
 
         virtual void onMenuTriggered(QAction* action);
 
-        virtual void onChangeDlgProperty(Property property);
+        virtual void onChangeDlgProperty(const Property& property);
 
         virtual void onShowPageSetupDlg();
                 
@@ -95,7 +95,7 @@ namespace te
             
         virtual QAction* createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip = "");
       
-        virtual void changePropertyValue(Property property);
+        virtual void changePropertyValue(const Property& property);
 
         virtual Property findMnuProperty(EnumType* dataType);
 

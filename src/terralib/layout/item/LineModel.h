@@ -53,10 +53,6 @@ namespace te
         virtual void setProperty(const Property& property);
 
         virtual void setProperties(const Properties& properties);
-
-      protected:
-
-        virtual void updateProperties( const Property &property, Properties &properties );
     };
   }
 }

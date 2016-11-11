@@ -27,6 +27,8 @@
 #include "LegendChoiceOutside.h"
 #include "ui_LegendChoice.h"
 #include "../../outside/LegendChoiceModel.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/ItemUtils.h"

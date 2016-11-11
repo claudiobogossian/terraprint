@@ -53,8 +53,8 @@ void te::layout::MapLocationController::update(const Subject* subject)
 
   Property pBoxNew = subjectModel->getProperty("world_box");
   const Property& pBoxCurrent = this->getProperty("reference_box");
-  te::gm::Envelope boxNew = te::layout::Property::GetValueAs<te::gm::Envelope>(pBoxNew);
-  te::gm::Envelope boxCurrent = te::layout::Property::GetValueAs<te::gm::Envelope>(pBoxCurrent);
+  const te::gm::Envelope& boxNew = te::layout::Property::GetValueAs<te::gm::Envelope>(pBoxNew);
+  const te::gm::Envelope& boxCurrent = te::layout::Property::GetValueAs<te::gm::Envelope>(pBoxCurrent);
 
   Property pSridNew = subjectModel->getProperty("srid");
   const Property& pSridCurrent = this->getProperty("reference_srid");

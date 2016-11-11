@@ -43,7 +43,6 @@ te::layout::SVGModel::SVGModel()
     property.setLabel(TR_LAYOUT("File Name"));
     property.setValue(fileName, dataType->getDataTypeString());
     property.setEditable(false);
-    property.setMenu(true);
     m_properties.addProperty(property);
   }
 
@@ -52,7 +51,6 @@ te::layout::SVGModel::SVGModel()
     Property property(0);
     property.setName("file_dir");
     property.setValue(fileDir, dataType->getDataTypePath());
-    property.setMenu(false);
     property.setVisible(false);
     m_properties.addProperty(property);
   }

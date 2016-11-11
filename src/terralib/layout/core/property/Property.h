@@ -40,8 +40,8 @@
 //Terralib
 #include <terralib/datatype/AbstractData.h>
 
-// boost
-#include <boost/shared_ptr.hpp>
+//STL
+#include <memory>
 
 namespace te
 {
@@ -57,12 +57,12 @@ namespace te
     {
       public:
 
-        typedef boost::shared_ptr<Property> Ptr;
+        typedef std::unique_ptr<Property> Ptr;
         
         /*!
           \brief Constructor
         */ 
-        Property(int parentItemHashCode = 0);
+         explicit Property(int parentItemHashCode = 0);
 
         /*!
         \brief Constructor
@@ -187,9 +187,14 @@ namespace te
         */
         virtual const std::string& getLabel() const;
 
-        virtual bool containsSubProperty( const Property& subProperty ) const;
+        /*!
+        \brief Checks if the given property name exists on the subproperty list.
 
-        virtual const te::layout::Property& containsSubProperty( const std::string& name ) const;
+        \return TRUE if it exists. FALSE otherwise
+        */
+        virtual bool containsSubProperty(const std::string& name) const;
+
+        virtual const te::layout::Property& getSubProperty( const std::string& name ) const;
         
         /*!
           \brief Sets true if property will be used in a menu, false otherwise.
@@ -300,6 +305,7 @@ namespace te
         void setSerializable(bool serializable);
       
         bool operator ==(const Property& other) const;
+        bool operator ==(const std::string& name) const;
 
         Property& operator =(const Property& other);
 
@@ -338,7 +344,7 @@ namespace te
 
       bool                                m_usePrecision; //temporary
       int                                 m_precisionValue; //temporary
-      te::dt::AbstractDataShrPtr          m_data; //!< The data inside this property
+      std::unique_ptr<te::dt::AbstractData> m_data; //!< The data inside this property
       
 
     };
@@ -346,6 +352,16 @@ namespace te
     inline bool te::layout::Property::operator ==(const Property& other) const
     { 
       if(getName().compare(other.getName()) == 0)
+      {
+        return true;
+      }
+
+      return false;
+    }
+
+    inline bool te::layout::Property::operator ==(const std::string& name) const
+    {
+      if (getName().compare(name) == 0)
       {
         return true;
       }
@@ -369,9 +385,10 @@ namespace te
       this->m_required = other.m_required;
       this->m_composeWidget = other.m_composeWidget;
       this->m_public = other.m_public;
-      this->m_nullProperty = other.m_nullProperty;
       this->m_serializable = other.m_serializable;
       this->m_parentClass = other.m_parentClass;
+      this->m_usePrecision = other.m_usePrecision;
+      this->m_precisionValue = other.m_precisionValue;
       if (other.m_data.get() != 0)
       {
         this->m_data.reset(other.m_data->clone());

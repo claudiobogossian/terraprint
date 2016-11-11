@@ -27,6 +27,9 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "ImageItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
 

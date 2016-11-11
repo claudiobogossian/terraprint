@@ -27,6 +27,11 @@
 
 // TerraLib
 #include "BuildGraphicsItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
+
+
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "pattern/factory/item/ItemFactory.h"

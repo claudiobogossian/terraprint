@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "MapLocationSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/MapLocationSettingsModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/MapLocationSettingsOutside.h"

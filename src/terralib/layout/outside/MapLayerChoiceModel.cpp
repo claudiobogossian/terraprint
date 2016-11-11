@@ -28,7 +28,6 @@
 // TerraLib
 #include "MapLayerChoiceModel.h"
 #include "../core/enum/Enums.h"
-#include "../core/property/GenericVariant.h"
 
 // STL
 #include <algorithm>
@@ -98,14 +97,13 @@ std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceModel::searchLaye
 
   for( ; itProp != m_mapProperties.end() ; ++itProp)
   {
-    Properties prop = (*itProp);
-    Property pp = prop.getProperty("layers");
-
-    if(pp.isNull())
+    const Properties& prop = (*itProp);
+    if (prop.contains("layers") == false)
     {
       continue;
     }
 
+    const Property& pp = prop.getProperty("layers");
     m_layerProperties.push_back(pp);
     
     const std::list<te::map::AbstractLayerPtr>& currentLayers = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pp);

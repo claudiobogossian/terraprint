@@ -75,7 +75,7 @@ te::layout::MenuBuilder::MenuBuilder(Scene* scene, AbstractProxyProject* proxyPr
   m_propUtils(0)
 {
   m_propUtils = new PropertiesUtils; 
-  connect(this, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeDlgProperty(Property)));
+  connect(this, SIGNAL(changeDlgProperty(const Property&)), this, SLOT(onChangeDlgProperty(const Property&)));
 }
 
 te::layout::MenuBuilder::~MenuBuilder()
@@ -239,12 +239,12 @@ void te::layout::MenuBuilder::checkedBool( bool checked )
   changePropertyValue(property);
 }
 
-void te::layout::MenuBuilder::onChangeDlgProperty( Property property )
+void te::layout::MenuBuilder::onChangeDlgProperty( const Property& property )
 {
   changePropertyValue(property);
 }
 
-void te::layout::MenuBuilder::changePropertyValue( Property property )
+void te::layout::MenuBuilder::changePropertyValue( const Property& property )
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 

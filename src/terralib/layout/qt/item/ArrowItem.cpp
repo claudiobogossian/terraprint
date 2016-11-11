@@ -48,25 +48,22 @@ te::layout::ArrowItem::~ArrowItem()
 void te::layout::ArrowItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("arrow_type");
-  if(property.isNull() == false)
+  EnumArrowType enumArrowType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentArrowType = enumArrowType.searchLabel(label);
+
+  if(currentArrowType == enumArrowType.getDoubleArrowType())
   {
-    EnumArrowType enumArrowType;
-
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentArrowType = enumArrowType.searchLabel(label);
-
-    if(currentArrowType == enumArrowType.getDoubleArrowType())
-    {
-      drawDoubleArrow(painter);
-    }
-    if(currentArrowType == enumArrowType.getRightArrowType())
-    {
-      drawRightArrow(painter);
-    }
-    if(currentArrowType == enumArrowType.getLeftArrowType())
-    {
-      drawLeftArrow(painter);
-    }
+    drawDoubleArrow(painter);
+  }
+  if(currentArrowType == enumArrowType.getRightArrowType())
+  {
+    drawRightArrow(painter);
+  }
+  if(currentArrowType == enumArrowType.getLeftArrowType())
+  {
+    drawLeftArrow(painter);
   }
 }
 

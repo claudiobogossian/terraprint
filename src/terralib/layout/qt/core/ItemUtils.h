@@ -83,7 +83,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        ItemUtils( QGraphicsScene* scene );
+        explicit ItemUtils( QGraphicsScene* scene );
 
         /*!
           \brief Destructor

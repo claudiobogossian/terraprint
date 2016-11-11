@@ -28,6 +28,10 @@
 // TerraLib
 #include "GridPlanarModel.h"
 
+#include "../core/enum/EnumDataType.h"
+#include "../core/enum/Enums.h"
+
+
 #include "../core/property/GridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
 #include "../core/property/Properties.h"

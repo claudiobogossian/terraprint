@@ -20,6 +20,9 @@
 // TerraLib
 #include "ThreeNorthController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
+
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "ThreeNorthItem.h"
 

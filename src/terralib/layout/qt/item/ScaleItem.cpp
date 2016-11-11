@@ -80,30 +80,28 @@ bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)
 void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("scale_type");
-  if(property.isNull() == false)
+
+  EnumScaleType enumScale;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentScaleType = enumScale.searchLabel(label);
+
+  if (validateGaps() == false)
   {
-    EnumScaleType enumScale;
+    return;
+  }
 
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentScaleType = enumScale.searchLabel(label);
-
-    if (validateGaps() == false)
-    {
-      return;
-    }
-
-    if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
-    {
-      drawDoubleAlternatingScaleBar(painter);
-    }
-    if(currentScaleType == enumScale.getAlternatingScaleBarType())
-    {
-      drawAlternatingScaleBar(painter);
-    }
-    if(currentScaleType == enumScale.getHollowScaleBarType())
-    {
-      drawHollowScaleBar(painter);
-    }
+  if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
+  {
+    drawDoubleAlternatingScaleBar(painter);
+  }
+  if(currentScaleType == enumScale.getAlternatingScaleBarType())
+  {
+    drawAlternatingScaleBar(painter);
+  }
+  if(currentScaleType == enumScale.getHollowScaleBarType())
+  {
+    drawHollowScaleBar(painter);
   }
 }
 

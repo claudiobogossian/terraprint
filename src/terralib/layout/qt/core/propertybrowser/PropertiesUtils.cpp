@@ -136,8 +136,7 @@ te::layout::Properties te::layout::PropertiesUtils::sameProperties( const QList<
 
 void te::layout::PropertiesUtils::contains( std::vector<Properties>::iterator itend, std::vector<Properties>::iterator it, std::string name, bool& result )
 {
-  Property prop = (*it).getProperty(name);
-  if(prop.isNull())
+  if(it->contains(name) == false)
   {
     result = false;
     return;

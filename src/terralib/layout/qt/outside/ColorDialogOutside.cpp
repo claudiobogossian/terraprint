@@ -29,6 +29,8 @@
 #include "ColorDialogOutside.h"
 #include "../../outside/ColorDialogModel.h"
 #include "terralib/color/RGBAColor.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 

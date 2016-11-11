@@ -20,6 +20,9 @@
 // TerraLib
 #include "GridGeodesicController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
+
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../../core/property/SharedProperties.h"
@@ -63,16 +66,11 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
   const Property& pNewHeight = subjectModel->getProperty("height");
   const Property& pNewWorldBox = subjectModel->getProperty("world_box");
   const Property& pNewSrid = subjectModel->getProperty("srid");
-  //const Property& pNewItemObserver = subjectModel->getProperty(sharedPropertiesName.getItemObserver()); //associate / dissociate observer
-
-  const Property& pNewVerticalGap = subjectModel->getProperty(settingsGridConfig.getLneVrtGap());
-  const Property& pNewHorizontalGap = subjectModel->getProperty(settingsGridConfig.getLneHrzGap());
 
   //current properties
   const Property& pCurrentWidth = this->getProperty("width");
   const Property& pCurrentHeight = this->getProperty("height");
   const Property& pCurrentGeographicBox = this->getProperty("geographic_box");
-  //const Property& pCurrentItemObserver = this->getProperty(sharedPropertiesName.getItemObserver());
 
   const Property& pCurrentVerticalGap = this->getProperty(settingsGridConfig.getLneVrtGap());
   const Property& pCurrentHorizontalGap = this->getProperty(settingsGridConfig.getLneHrzGap());
@@ -181,11 +179,11 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
       else {
 
         const Property& pGridSettings = this->getProperty("GridSettings");
-        const Property& pGapVrt = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
-        const Property& pGapHrz = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+        const Property& pGapVrt = pGridSettings.getSubProperty(settingsConfig.getLneVrtGap());
+        const Property& pGapHrz = pGridSettings.getSubProperty(settingsConfig.getLneHrzGap());
 
-        const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
-        const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
+        const Property& pInitialX = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointX());
+        const Property& pInitialY = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointY());
 
         double gapVrt = te::layout::Property::GetValueAs<double>(pGapVrt);
         double gapHrz = te::layout::Property::GetValueAs<double>(pGapHrz);

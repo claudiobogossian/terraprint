@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "GridSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/GridSettingsModel.h"
 #include "../../../../outside/GridSettingsController.h"
 #include "../../../../outside/GridSettingsOutside.h"

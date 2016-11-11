@@ -79,10 +79,13 @@ te::dt::AbstractData* te::layout::ConvertEnvelopeToString(te::dt::AbstractData* 
   std::ostringstream convert;
   convert.precision(15);
 
-  convert << envelope.getLowerLeftX();
-  convert << "," << envelope.getLowerLeftY();
-  convert << "," << envelope.getUpperRightX();
-  convert << "," << envelope.getUpperRightY();
+  if (envelope.isValid())
+  {
+    convert << envelope.getLowerLeftX();
+    convert << "," << envelope.getLowerLeftY();
+    convert << "," << envelope.getUpperRightX();
+    convert << "," << envelope.getUpperRightY();
+  }
   
   return CreateData<std::string>(convert.str());
 }
@@ -90,6 +93,12 @@ te::dt::AbstractData* te::layout::ConvertEnvelopeToString(te::dt::AbstractData* 
 te::dt::AbstractData* te::layout::ConvertStringToEnvelope(te::dt::AbstractData* abstractData)
 {
   const std::string& strValue = GetValueAs<std::string>(abstractData);
+  if (strValue.empty())
+  {
+    te::gm::Envelope envelope;
+    return CreateData<te::gm::Envelope>(envelope);
+  }
+
   std::vector<std::string> vecTokens = te::layout::Utils::Tokenize(strValue, ",");
   if (vecTokens.size() != 4)
   {

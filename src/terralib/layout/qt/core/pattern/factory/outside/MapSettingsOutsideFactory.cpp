@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "MapSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/MapSettingsModel.h"
 #include "../../../../outside/MapSettingsController.h"
 #include "../../../../outside/MapSettingsOutside.h"

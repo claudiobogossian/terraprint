@@ -19,6 +19,9 @@
 
 // TerraLib
 #include "CreateItemTool.h"
+
+#include "../../../core/enum/EnumDataType.h"
+#include "../../../core/enum/Enums.h"
 #include "../View.h"
 #include "../Scene.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
@@ -138,8 +141,7 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
 {
   SharedProperties sharedProps;
   AbstractItemView* itemView = dynamic_cast<AbstractItemView*> (item);
-  Property itemObserverProperty = itemView->getController()->getProperty(sharedProps.getItemObserver());
-  if (itemObserverProperty.isNull())
+  if(itemView->getController()->getProperties().contains(sharedProps.getItemObserver()) == false)
   {
     return;
   }

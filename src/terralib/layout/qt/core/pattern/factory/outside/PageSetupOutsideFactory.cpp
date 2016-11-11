@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "PageSetupOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/PageSetupModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/PageSetupOutside.h"

@@ -1,5 +1,7 @@
 #include "AbstractItem.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/Utils.h"
 #include "../core/Scene.h"

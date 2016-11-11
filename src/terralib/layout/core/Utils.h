@@ -74,7 +74,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        Utils(Scene* scene);
+        explicit Utils(Scene* scene);
 
         /*!
           \brief Destructor

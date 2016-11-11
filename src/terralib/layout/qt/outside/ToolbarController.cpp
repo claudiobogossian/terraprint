@@ -27,6 +27,8 @@
 
 // TerraLib
 #include "../core/Scene.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../core/View.h"
 #include "ToolbarController.h"

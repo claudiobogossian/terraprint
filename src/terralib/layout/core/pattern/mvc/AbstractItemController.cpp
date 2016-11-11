@@ -20,12 +20,13 @@
 // TerraLib
 #include "AbstractItemController.h"
 
+#include "../../enum/EnumDataType.h"
+#include "../../enum/Enums.h"
 #include "AbstractItemModel.h"
 #include "AbstractItemView.h"
 #include "../factory/ItemParamsCreate.h"
 #include "../factory/AbstractItemFactory.h"
 #include "../../property/SharedProperties.h"
-#include "../../property/GenericVariant.h"
 #include "../../AbstractScene.h"
 #include "../../../qt/core/ItemUtils.h"
 #include "../../WarningManager.h"
@@ -47,10 +48,7 @@ te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* mo
   }
 
   const Property& pResizable = m_model->getProperty("resizable");
-  if (pResizable.isNull() == false)
-  {
-    m_resizableDefaultState = te::layout::Property::GetValueAs<bool>(pResizable);
-  }
+  m_resizableDefaultState = te::layout::Property::GetValueAs<bool>(pResizable);
 }
 
 te::layout::AbstractItemController::~AbstractItemController()
@@ -71,6 +69,19 @@ const te::layout::Property& te::layout::AbstractItemController::getProperty(cons
 {
   return m_model->getProperty(propertyName);
 }
+
+const te::layout::Property& te::layout::AbstractItemController::getProperty(const std::string& propertyName, const te::layout::Properties& properties) const
+{
+  //we first try to find the given 'propertyName' in the given 'properties' container
+  if (properties.contains(propertyName))
+  {
+    return properties.getProperty(propertyName);
+  }
+
+  //then we try to find in in the model
+  return this->getProperty(propertyName);
+}
+
 
 void te::layout::AbstractItemController::setProperty(const te::layout::Property& property)
 {  
@@ -96,8 +107,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   syncItemAssociation(propertiesCopy);
 
   bool hasGeometryChanged = false;
-  bool hasWidth = !propertiesCopy.getProperty("width").isNull();
-  if (hasWidth)
+  if (propertiesCopy.contains("width"))
   {
     double newWidth = te::layout::Property::GetValueAs<double>(propertiesCopy.getProperty("width"));
     double currentWidth = te::layout::Property::GetValueAs<double>(getProperty("width"));
@@ -106,8 +116,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       hasGeometryChanged = true;
     }
   }
-  bool hasHeight = !propertiesCopy.getProperty("height").isNull();
-  if (hasHeight)
+  if (propertiesCopy.contains("height"))
   {
     double newHeight = te::layout::Property::GetValueAs<double>(propertiesCopy.getProperty("height"));
     double currentHeight = te::layout::Property::GetValueAs<double>(getProperty("height"));
@@ -116,8 +125,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       hasGeometryChanged = true;
     }
   }
-  bool hasRotation = !propertiesCopy.getProperty("rotation").isNull();
-  if (hasRotation)
+  if (propertiesCopy.contains("rotation"))
   {
       double newRotation = te::layout::Property::GetValueAs<double>(propertiesCopy.getProperty("rotation"));
       double currentRotation = te::layout::Property::GetValueAs<double>(getProperty("rotation"));
@@ -299,22 +307,21 @@ bool te::layout::AbstractItemController::syncItemPos(Properties& properties)
     return false;
   }
 
-  Property prop_x = properties.getProperty("x");
-  Property prop_y = properties.getProperty("y");
-
-  if (prop_x.isNull() && prop_y.isNull())
+  if (properties.contains("x") == false && properties.contains("y") == false)
   {
     return false;
   }
 
-  if (prop_x.isNull())
+  Property prop_x = m_model->getProperty("x");
+  if (properties.contains("x"))
   {
-    prop_x = m_model->getProperty("x");
+    prop_x = properties.getProperty("x");
   }
 
-  if (prop_y.isNull())
+  Property prop_y = m_model->getProperty("y");
+  if (properties.contains("y"))
   {
-    prop_y = m_model->getProperty("y");
+    prop_y = properties.getProperty("y");
   }
 
   double x = te::layout::Property::GetValueAs<double>(prop_x);
@@ -341,13 +348,12 @@ bool te::layout::AbstractItemController::syncZValue(Properties& properties)
     return false;
   }
 
-  Property pZValue = properties.getProperty("zValue");
-
-  if (pZValue.isNull() == true)
+  if (properties.contains("zValue") == false)
   {
     return false;
   }
 
+  const Property& pZValue = properties.getProperty("zValue");
   double zValue = (double)te::layout::Property::GetValueAs<int>(pZValue);
   
   QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_view);
@@ -367,17 +373,14 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
 {
   SharedProperties sharedPropertiesName;
   //we first check if there the property that associated two items is being set  
-  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
+  // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.  
+  if (properties.contains(sharedPropertiesName.getItemObserver()) == false)
+  {
+    return false;
+  }
+
   const Property& pNewObserver = properties.getProperty(sharedPropertiesName.getItemObserver());
   const Property& pCurrentObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
-  if (pNewObserver.isNull() == true)
-  {
-    return false;
-  }
-  if (pCurrentObserver.isNull() == true)
-  {
-    return false;
-  }
 
   AbstractScene* scene = m_view->getScene();
   if (scene == 0)

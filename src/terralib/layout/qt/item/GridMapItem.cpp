@@ -28,6 +28,8 @@
 // TerraLib
 #include "GridMapItem.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../core/ItemUtils.h"
@@ -78,12 +80,10 @@ void te::layout::GridMapItem::addGridLinesToPath()
 void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pVisible = pGridSettings.containsSubProperty(settingsConfig.getVisible());
+  const Property& pVisible = pGridSettings.getSubProperty(settingsConfig.getVisible());
   bool visible = te::layout::Property::GetValueAs<bool>(pVisible);
 
   if (visible == false)
@@ -174,14 +174,12 @@ void te::layout::GridMapItem::drawGridOnDevice( QPainter* painter )
 void te::layout::GridMapItem::configPainter( QPainter* painter )
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pLineStyle = pGridSettings.containsSubProperty(settingsConfig.getLineStyle());
-  const Property& pLineColor = pGridSettings.containsSubProperty(settingsConfig.getLineColor());
-  const Property& pLineWidth = pGridSettings.containsSubProperty(settingsConfig.getLineWidth());
+  const Property& pLineStyle = pGridSettings.getSubProperty(settingsConfig.getLineStyle());
+  const Property& pLineColor = pGridSettings.getSubProperty(settingsConfig.getLineColor());
+  const Property& pLineWidth = pGridSettings.getSubProperty(settingsConfig.getLineWidth());
 
   const std::string& lineStyleName = pLineStyle.getOptionByCurrentChoice().toString();
   const te::color::RGBAColor& lineColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pLineColor);
@@ -228,13 +226,11 @@ void te::layout::GridMapItem::configPainter( QPainter* painter )
 void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pTextFontFamily = pGridSettings.containsSubProperty(settingsConfig.getFont());
-  const Property& pTextColor = pGridSettings.containsSubProperty(settingsConfig.getTextColor());
+  const Property& pTextFontFamily = pGridSettings.getSubProperty(settingsConfig.getFont());
+  const Property& pTextColor = pGridSettings.getSubProperty(settingsConfig.getTextColor());
 
   Font txtFont = te::layout::Property::GetValueAs<Font>(pTextFontFamily);
   const te::color::RGBAColor& textColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pTextColor);
@@ -278,16 +274,14 @@ void te::layout::GridMapItem::clearLines()
 void te::layout::GridMapItem::calculateTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pVisibleAllTexts = pGridSettings.containsSubProperty(settingsConfig.getVisibleAllTexts());
-  const Property& pLeftText = pGridSettings.containsSubProperty(settingsConfig.getLeftText());
-  const Property& pRightText = pGridSettings.containsSubProperty(settingsConfig.getRightText());
-  const Property& pTopText = pGridSettings.containsSubProperty(settingsConfig.getTopText());
-  const Property& pBottomText = pGridSettings.containsSubProperty(settingsConfig.getBottomText());
+  const Property& pVisibleAllTexts = pGridSettings.getSubProperty(settingsConfig.getVisibleAllTexts());
+  const Property& pLeftText = pGridSettings.getSubProperty(settingsConfig.getLeftText());
+  const Property& pRightText = pGridSettings.getSubProperty(settingsConfig.getRightText());
+  const Property& pTopText = pGridSettings.getSubProperty(settingsConfig.getTopText());
+  const Property& pBottomText = pGridSettings.getSubProperty(settingsConfig.getBottomText());
 
   bool visibleAllTexts = te::layout::Property::GetValueAs<bool>(pVisibleAllTexts);
   bool leftText = te::layout::Property::GetValueAs<bool>(pLeftText);
@@ -325,12 +319,10 @@ void te::layout::GridMapItem::calculateTexts()
 void te::layout::GridMapItem::calculateTopTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
-  const Property& pTopRotateText = pGridSettings.containsSubProperty(settingsConfig.getTopRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
+  const Property& pTopRotateText = pGridSettings.getSubProperty(settingsConfig.getTopRotateText());
+  const Property& pFont = pGridSettings.getSubProperty(settingsConfig.getFont());
 
   bool bRotate = te::layout::Property::GetValueAs<bool>(pTopRotateText);
   const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
@@ -417,12 +409,10 @@ void te::layout::GridMapItem::calculateSuperScriptText(const QPointF& point, con
 void te::layout::GridMapItem::calculateBottomTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
-  const Property& pBottomRotateText = pGridSettings.containsSubProperty(settingsConfig.getBottomRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
+  const Property& pBottomRotateText = pGridSettings.getSubProperty(settingsConfig.getBottomRotateText());
+  const Property& pFont = pGridSettings.getSubProperty(settingsConfig.getFont());
 
   bool bRotate = te::layout::Property::GetValueAs<bool>(pBottomRotateText);
   const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
@@ -463,12 +453,10 @@ void te::layout::GridMapItem::calculateBottomTexts()
 void te::layout::GridMapItem::calculateLeftTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
-  const Property& pLeftRotateText = pGridSettings.containsSubProperty(settingsConfig.getLeftRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
+  const Property& pLeftRotateText = pGridSettings.getSubProperty(settingsConfig.getLeftRotateText());
+  const Property& pFont = pGridSettings.getSubProperty(settingsConfig.getFont());
 
   bool bRotate = te::layout::Property::GetValueAs<bool>(pLeftRotateText);
   const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
@@ -514,12 +502,10 @@ void te::layout::GridMapItem::calculateLeftTexts()
 void te::layout::GridMapItem::calculateRightTexts()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
-  const Property& pRightRotateText = pGridSettings.containsSubProperty(settingsConfig.getRightRotateText());
-  const Property& pFont = pGridSettings.containsSubProperty(settingsConfig.getFont());
+  const Property& pRightRotateText = pGridSettings.getSubProperty(settingsConfig.getRightRotateText());
+  const Property& pFont = pGridSettings.getSubProperty(settingsConfig.getFont());
 
   bool bRotate = te::layout::Property::GetValueAs<bool>(pRightRotateText);
   const Font& font = te::layout::Property::GetValueAs<Font>(pFont);
@@ -572,16 +558,14 @@ QRectF te::layout::GridMapItem::boundingRect() const
 void te::layout::GridMapItem::calculateCrossLines()
 {
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
+  const Property& pCrossOffset = pGridSettings.getSubProperty(settingsConfig.getCrossOffset());
   double crossOffSet = te::layout::Property::GetValueAs<double>(pCrossOffset);
 
   
-  const Property& pUseBouderIntersection = pGridSettings.containsSubProperty(settingsConfig.getBouderIntersections());
+  const Property& pUseBouderIntersection = pGridSettings.getSubProperty(settingsConfig.getBouderIntersections());
   bool useBouderItersection = te::layout::Property::GetValueAs<bool>(pUseBouderIntersection);
 
   QList<te::gm::LineString>::iterator itv = m_verticalLines.begin();
@@ -862,14 +846,12 @@ bool te::layout::GridMapItem::calculateCrossIntersectMapBorder( QLineF vrt, QLin
   bool result = false;
 
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return result;
 
   GridSettingsConfigProperties settingsConfig;
 
   const Property& pWidth = m_controller->getProperty("width");
   const Property& pHeight = m_controller->getProperty("height");
-  const Property& pCrossOffset = pGridSettings.containsSubProperty(settingsConfig.getCrossOffset());
+  const Property& pCrossOffset = pGridSettings.getSubProperty(settingsConfig.getCrossOffset());
 
   double width = te::layout::Property::GetValueAs<double>(pWidth);
   double height = te::layout::Property::GetValueAs<double>(pHeight);
@@ -945,8 +927,6 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
   }
 
   const Property& pGridSettings = m_controller->getProperty("GridSettings");
-  if (pGridSettings.isNull() || pGridSettings.getSubProperty().empty())
-    return;
 
   QString qText = ItemUtils::convert2QString(text);
 

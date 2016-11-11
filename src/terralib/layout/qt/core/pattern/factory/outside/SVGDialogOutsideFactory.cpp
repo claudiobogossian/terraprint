@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "SVGDialogOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/SVGDialogModel.h"
 #include "../../../../../outside/SVGDialogController.h"
 #include "../../../../outside/SVGDialogOutside.h"

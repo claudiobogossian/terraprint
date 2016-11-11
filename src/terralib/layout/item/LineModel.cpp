@@ -118,20 +118,16 @@ void te::layout::LineModel::setProperty(const Property& property)
 {
   Properties properties("");
   properties.addProperty(property);
-  updateProperties(property, properties);
+  setProperties(properties);
 }
 
 void te::layout::LineModel::setProperties(const Properties& props)
 {
-  Properties properties = props;
-  Property property = properties.getProperty("geometry");
-  updateProperties(property, properties);
-}
-
-void te::layout::LineModel::updateProperties( const Property& property, Properties& properties )
-{
-  if ((property.getName() == "geometry"))
+  Properties propertiesCopy(props);
+  if (propertiesCopy.contains("geometry"))
   {
+    const Property& property = propertiesCopy.getProperty("geometry");
+
     te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(property);
     const te::gm::Envelope* env = geometryPtr->getMBR();
     double width = env->getWidth();
@@ -141,14 +137,14 @@ void te::layout::LineModel::updateProperties( const Property& property, Properti
       Property property(0);
       property.setName("width");
       property.setValue(width, dataType->getDataTypeDouble());
-      properties.addProperty(property);
+      propertiesCopy.addProperty(property);
     }
     {
       Property property(0);
       property.setName("height");
       property.setValue(height, dataType->getDataTypeDouble());
-      properties.addProperty(property);
+      propertiesCopy.addProperty(property);
     }
   }
-  AbstractItemModel::setProperties(properties);
+  AbstractItemModel::setProperties(propertiesCopy);
 }

@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "PaperItemFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../item/PaperModel.h"
 #include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../../core/property/Properties.h"

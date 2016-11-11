@@ -564,22 +564,21 @@ void te::layout::View::paste()
       prop.updateProperty(pY);
 
     }
-    
 
     SharedProperties sharedProps;
-    Property connect = prop.getProperty(sharedProps.getItemObserver());
+    if (prop.contains(sharedProps.getItemObserver()))
+    {
+      Property connect = prop.getProperty(sharedProps.getItemObserver());
 
-    std::string currentNameConnect = te::layout::Property::GetValueAs<std::string>(connect);
-    currentNameConnect = currentNameConnect.substr(0, currentNameConnect.find("_Map"));
-    std::string nameConnect = newNames[currentNameConnect];
-    connect.setValue(nameConnect + "_Map", dataType->getDataTypeItemObserver());
-    prop.updateProperty(connect);
+      std::string currentNameConnect = te::layout::Property::GetValueAs<std::string>(connect);
+      currentNameConnect = currentNameConnect.substr(0, currentNameConnect.find("_Map"));
+      std::string nameConnect = newNames[currentNameConnect];
+      connect.setValue(nameConnect + "_Map", dataType->getDataTypeItemObserver());
+      prop.updateProperty(connect);
+    }
 
-    std::string oldName;
-    int oldId;
-
-    oldName = te::layout::Property::GetValueAs<std::string>(pro_name);
-    oldId = te::layout::Property::GetValueAs<int>(pro_id);
+    const std::string& oldName = te::layout::Property::GetValueAs<std::string>(pro_name);
+    int oldId = te::layout::Property::GetValueAs<int>(pro_id);
 
     pro_name.setValue<std::string>("", dataType->getDataTypeString());
     prop.updateProperty(pro_name);
@@ -1671,7 +1670,7 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
   }
   catch (...)
   {
-
+    int a = 0;
   }
 
   emit endedPerformingIO();

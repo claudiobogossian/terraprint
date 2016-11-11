@@ -20,6 +20,8 @@
 // TerraLib
 #include "GridPlanarController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../../core/property/SharedProperties.h"
@@ -181,11 +183,11 @@ void te::layout::GridPlanarController::update(const Subject* subject)
     else {
 
       const Property& pGridSettings = this->getProperty("GridSettings");
-      const Property& pGapVrt = pGridSettings.containsSubProperty(settingsConfig.getLneVrtGap());
-      const Property& pGapHrz = pGridSettings.containsSubProperty(settingsConfig.getLneHrzGap());
+      const Property& pGapVrt = pGridSettings.getSubProperty(settingsConfig.getLneVrtGap());
+      const Property& pGapHrz = pGridSettings.getSubProperty(settingsConfig.getLneHrzGap());
 
-      const Property& pInitialX = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointX());
-      const Property& pInitialY = pGridSettings.containsSubProperty(settingsConfig.getInitialGridPointY());
+      const Property& pInitialX = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointX());
+      const Property& pInitialY = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointY());
 
       double gapVrt = te::layout::Property::GetValueAs<double>(pGapVrt);
       double gapHrz = te::layout::Property::GetValueAs<double>(pGapHrz);

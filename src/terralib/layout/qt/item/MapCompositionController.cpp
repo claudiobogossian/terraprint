@@ -54,10 +54,6 @@ const te::layout::Properties& te::layout::MapCompositionController::getPropertie
   if (planarGridItem != 0)
   {
     Property pGridSettings = planarGridItem->getController()->getProperty("GridSettings");
-    if (pGridSettings.isNull() == true)
-    {
-      return ItemGroupController::getProperties();
-    }
 
     hideProperties(pGridSettings);
 
@@ -70,10 +66,6 @@ const te::layout::Properties& te::layout::MapCompositionController::getPropertie
   if (planarGridItem != 0)
   {
     Property pGridSettings = geodesicGridItem->getController()->getProperty("GridSettings");
-    if (pGridSettings.isNull() == true)
-    {
-      return ItemGroupController::getProperties();
-    }
 
     hideProperties(pGridSettings);
 
@@ -84,11 +76,7 @@ const te::layout::Properties& te::layout::MapCompositionController::getPropertie
   AbstractItemView* mapItem = mapCompositionItem->getMapItem();
   if (planarGridItem != 0)
   {
-    Property pMapSettings = mapItem->getController()->getProperty("mapSettings");
-    if (pMapSettings.isNull() == true)
-    {
-      return ItemGroupController::getProperties();
-    }
+    const Property& pMapSettings = mapItem->getController()->getProperty("mapSettings");
     m_propertiesFullReference.addProperty(pMapSettings);
   }
 

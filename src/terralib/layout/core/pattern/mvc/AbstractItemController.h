@@ -67,7 +67,7 @@ namespace te
         /*
           \brief Constructor
         */ 
-        AbstractItemController(AbstractItemModel* model);
+        explicit AbstractItemController(AbstractItemModel* model);
         
         virtual ~AbstractItemController();
 
@@ -82,6 +82,11 @@ namespace te
           \brief Gets the given property
         */
         virtual const Property& getProperty(const std::string& propertyName) const;
+
+        /*!
+        \brief Gets the given property. First, it will search the given 'propertyName' in the given 'properties'. If the property is not there, it will search for it in the model
+        */
+        virtual const Property& getProperty(const std::string& propertyName, const Properties& properties) const;
 
         /*!
           \brief Sets the new value of the given property
