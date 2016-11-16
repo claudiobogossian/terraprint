@@ -20,6 +20,8 @@
 // TerraLib
 #include "TextGridController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../qt/core/Scene.h"
 #include "../../qt/item/AbstractItem.h"
@@ -106,18 +108,8 @@ void te::layout::TextGridController::setProperties(const te::layout::Properties&
     Properties propertiesCopy(properties);
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-    Property pNumRows = properties.getProperty("num_rows");
-    if (pNumRows.isNull())
-    {
-      pNumRows = this->getProperty("num_rows");
-    }
-
-    Property pNumColumns = properties.getProperty("num_columns");
-    if (pNumColumns.isNull())
-    {
-      pNumColumns = this->getProperty("num_columns");
-    }
-
+    const Property& pNumRows = getProperty("num_rows", properties);
+    const Property& pNumColumns = getProperty("num_columns", properties);
     Property pTextMatrix = this->getProperty("text_matrix");
     
     int numRows = te::layout::Property::GetValueAs<int>(pNumRows);
@@ -145,12 +137,7 @@ QTextDocument* te::layout::TextGridController::createTextDocument(const te::layo
 {
   QTextDocument* textDocument = TextController::createTextDocument(properties);
 
-  Property pTextMatrix = properties.getProperty("text_matrix");
-  if (pTextMatrix.isNull())
-  {
-    pTextMatrix = this->getProperty("text_matrix");
-  }
-
+  const Property& pTextMatrix = getProperty("text_matrix", properties);
   const std::vector< std::vector<std::string> >& textMatrix = te::layout::Property::GetValueAs< std::vector< std::vector<std::string> > >(pTextMatrix);
   if (textMatrix.empty())
   {

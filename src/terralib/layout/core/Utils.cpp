@@ -28,6 +28,9 @@
 // TerraLib
 #include "Utils.h"
 
+#include "enum/EnumDataType.h"
+#include "enum/Enums.h"
+
 #include "WorldTransformer.h"
 #include "terralib/geometry/Polygon.h"
 #include "terralib/geometry/Enums.h"

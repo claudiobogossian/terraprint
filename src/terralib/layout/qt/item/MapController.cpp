@@ -20,6 +20,9 @@
 // TerraLib
 #include "MapController.h"
 #include "MapItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../core/Value.h"
@@ -282,17 +285,19 @@ bool te::layout::MapController::syncLayersProperties(Properties& properties)
 {
   //if the property 'layers_uri' is set, we must try to initialize the 'layers' property based on it
   //we also check the opposite
-  const Property& pUri = properties.getProperty("layers_uri");
-  const Property& pLayers = properties.getProperty("layers");
+  bool containsUri = properties.contains("layers_uri");
+  bool containsLayers = properties.contains("layers");
 
   //we first check if only one of the properties related to the layers are set. If so, we sinchronize both values
   Property propertyToUpdate;
-  if (pUri.isNull() == false && pLayers.isNull() == true)
+  if (containsUri == true && containsLayers == false)
   {
+    const Property& pUri = properties.getProperty("layers_uri");
     propertyToUpdate = syncLayersFromURIs(pUri);
   }
-  else if (pUri.isNull() == true && pLayers.isNull() == false)
+  else if (containsUri == false && containsLayers == true)
   {
+    const Property& pLayers = properties.getProperty("layers");
     propertyToUpdate = syncURIsFromLayers(pLayers);
   }
 
@@ -312,13 +317,14 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
 {
   //if the new layer list does not have any intersection to the current layer list, we must also ensure that "srid" and "world_box" properties are initialized
   const Property& pCurrentLayerList = this->getProperty("layers");
-  const Property& pNewLayerList = properties.getProperty("layers");
 
   //if the list of layers has not been changed, there is nothing to do
-  if (pNewLayerList.isNull() == true)
+  if (properties.contains("layers") == false)
   {
     return false;
   }
+
+  const Property& pNewLayerList = properties.getProperty("layers");
 
   const std::list<te::map::AbstractLayerPtr>& currentLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pCurrentLayerList);
   const std::list<te::map::AbstractLayerPtr>& newLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pNewLayerList);
@@ -332,12 +338,10 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
   }
 
   //if the list is entirely new, we must ensure that the "srid" and "world_box" properties will be initialized
-  //if both values are set, we do nothing  
-  const Property& pSrid = properties.getProperty("srid");
-  const Property& pWorldBox = properties.getProperty("world_box");
-  if (pSrid.isNull() == false && pWorldBox.isNull() == false)
+  //if both values are set, we do nothing
+  if(properties.contains("srid") == true && properties.contains("world_box") == true)
   {
-    //there is nothing to update
+    //there is nothing to calculate
     return false;
   }
 
@@ -386,47 +390,26 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
 bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
 {
   //here we sync all properties related to the map
-  Property pWorldBox = properties.getProperty("world_box");
-  Property pSrid = properties.getProperty("srid");
-  Property pWidth = properties.getProperty("width");
-  Property pHeight = properties.getProperty("height");
-  Property pScale = properties.getProperty("scale");
-  Property pFixedScale = properties.getProperty("fixed_scale");
+  bool containsWorldBox = properties.contains("world_box");
+  bool containsWidth = properties.contains("width");
+  bool containsHeight = properties.contains("height");
 
   //if there were no chances, we dont need to do nothing
-  if (pWorldBox.isNull() && pWidth.isNull() && pHeight.isNull())
+  if (containsWorldBox == false && containsWidth == false && containsHeight == false)
   {
     //there is nothing to update
     return false;
   }
 
   //if the size is not being set, we must consider the current size of the item
-  if (pWidth.isNull() == true)
-  {
-    pWidth = this->getProperty("width");
-  }
-  if (pHeight.isNull() == true)
-  {
-    pHeight = this->getProperty("height");
-  }
+  const Property& pWidth = getProperty("width", properties);
+  const Property& pHeight = getProperty("height", properties);
 
   //if the world_box is not being set, we must consider the current world_box of the item
-  if (pWorldBox.isNull() == true)
-  {
-    pWorldBox = this->getProperty("world_box");
-  }
-  if (pSrid.isNull() == true)
-  {
-    pSrid = this->getProperty("srid");
-  }
-  if (pFixedScale.isNull() == true)
-  {
-    pFixedScale = this->getProperty("fixed_scale");
-  }
-  if (pScale.isNull() == true)
-  {
-    pScale = this->getProperty("scale");
-  }
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const Property& pSrid = getProperty("srid", properties);
+  const Property& pScale = getProperty("scale", properties);
+  const Property& pFixedScale = getProperty("fixed_scale", properties);
 
   //so we must ensure that the aspect of the world box is proportional to the width and height
   double widthMM = te::layout::Property::GetValueAs<double>(pWidth);
@@ -435,6 +418,11 @@ bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
   bool fixedScale = te::layout::Property::GetValueAs<bool>(pFixedScale);
   double scale = te::layout::Property::GetValueAs<double>(pScale);
+
+  if (worldBox.isValid() == false)
+  {
+    return false;
+  }
 
   //if the scale is fixed, we must ensure that it will not be changed
   if (fixedScale == true)
@@ -451,48 +439,38 @@ bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  pWorldBox.setValue(worldBox, dataType->getDataTypeEnvelope());
+  Property pNewWorldBox(pWorldBox);
+  pNewWorldBox.setValue(worldBox, dataType->getDataTypeEnvelope());
 
-  ItemUtils::addOrUpdateProperty(pWorldBox, properties);
+  ItemUtils::addOrUpdateProperty(pNewWorldBox, properties);
 
   return true;
 }
 
 bool te::layout::MapController::syncMapScaleProperties(Properties& properties)
 {
+
   //here we sync all properties related to the map
-  Property pWorldBox = properties.getProperty("world_box");
-  Property pSrid = properties.getProperty("srid");
-  Property pScale = properties.getProperty("scale");
-  Property pWidth = properties.getProperty("width");
-  Property pHeight = properties.getProperty("height");
+  bool containsWorldBox = properties.contains("world_box");
+  bool containsWidth = properties.contains("width");
+  bool containsHeight = properties.contains("height");
+  bool containsScale = properties.contains("scale");
 
   //if there were no chances, we dont need to do nothing
-  if (pWorldBox.isNull() && pWidth.isNull() && pHeight.isNull() && pScale.isNull())
+  if (containsWorldBox == false && containsWidth == false && containsHeight == false && containsScale == false)
   {
     //there is nothing to update
     return false;
   }
 
   //if the size is not being set, we must consider the current size of the item
-  if (pWidth.isNull() == true)
-  {
-    pWidth = this->getProperty("width");
-  }
-  if (pHeight.isNull() == true)
-  {
-    pHeight = this->getProperty("height");
-  }
+  const Property& pWidth = getProperty("width", properties);
+  const Property& pHeight = getProperty("height", properties);
 
   //if the world_box is not being set, we must consider the current world_box of the item
-  if (pWorldBox.isNull() == true)
-  {
-    pWorldBox = this->getProperty("world_box");
-  }
-  if (pSrid.isNull() == true)
-  {
-    pSrid = this->getProperty("srid");
-  }
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const Property& pSrid = getProperty("srid", properties);
+  const Property& pScale = getProperty("scale", properties);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -501,9 +479,14 @@ bool te::layout::MapController::syncMapScaleProperties(Properties& properties)
   te::gm::Envelope worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
 
+  if (worldBox.isValid() == false)
+  {
+    return false;
+  }
+
   //if the scale is NOT being set, we must compute its value
   //(else) if the scale is being set, we must recompute the world_box
-  if (pScale.isNull() == true)
+  if (containsScale == false)
   {
     //here we calculate the current scale
     double scale = ItemUtils::calculateScaleFromBox(widthMM, heightMM, srid, worldBox);

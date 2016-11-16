@@ -27,6 +27,9 @@
 
 // TerraLib
 #include "SVGItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/AbstractScene.h"
 #include "terralib/color/RGBAColor.h"
 #include "terralib/qt/widgets/Utils.h"
@@ -74,9 +77,7 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
 
   painter->setTransform(transform, true);
 
-  Property pFileName = svgController->getProperty("file_name");
-
-
+  const Property& pFileName = svgController->getProperty("file_name");
   if (te::layout::Property::GetValueAs<std::string>(pFileName) == ""){
    
     painter->drawPolygon(boundRect);

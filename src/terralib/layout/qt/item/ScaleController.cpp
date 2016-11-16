@@ -20,6 +20,9 @@
 // TerraLib
 #include "ScaleController.h"
 #include "ScaleItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../core/Value.h"
@@ -276,13 +279,7 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
   calculateNewRectSize(propertiesCopy);
 
-  const Property& pScaleInUnit = propertiesCopy.getProperty("scale_in_unit_width_rect_gap");
-
-  Property scaleinUnit(pScaleInUnit);
-  if (scaleinUnit.isNull())
-  {
-    scaleinUnit = this->getProperty("scale_in_unit_width_rect_gap");
-  }
+  Property pScaleInUnit = getProperty("scale_in_unit_width_rect_gap", propertiesCopy);
 
   Property newProperty = checkScaleWidthAndUnit(propertiesCopy);
   if (!newProperty.isNull())
@@ -298,21 +295,21 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
   Property prop;
 
-  if (!scaleinUnit.getUsePrecision() )
+  if (!pScaleInUnit.getUsePrecision() )
   {
-    scaleinUnit.setUsePrecision(true);
+    pScaleInUnit.setUsePrecision(true);
 
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
     if (unit == "(m)" || unit == "m"){
-      scaleinUnit.setPrecision(0);
+      pScaleInUnit.setPrecision(0);
       prop.setName("scale_in_unit_width_rect_gap");
-      prop.setValue(scaleinUnit.getValue()->clone(), dataType->getDataTypeDouble(), true, 0);
+      prop.setValue(pScaleInUnit.getValue()->clone(), dataType->getDataTypeDouble(), true, 0);
     }
     else{
-      scaleinUnit.setPrecision(0);
+      pScaleInUnit.setPrecision(0);
       prop.setName("scale_in_unit_width_rect_gap");
-      prop.setValue(scaleinUnit.getValue()->clone(), dataType->getDataTypeDouble(), true, 1);
+      prop.setValue(pScaleInUnit.getValue()->clone(), dataType->getDataTypeDouble(), true, 1);
     }
     newProperties.completelyUpdateProperty(prop);
     newProperties.addProperty(prop);
@@ -334,23 +331,19 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
 te::layout::Property te::layout::ScaleController::checkScaleWidthAndUnit(const Properties& properties)
 {
-  const Property& pScaleWidth = properties.getProperty("scale_width_rect_gap");
-  const Property& pScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
-  const Property& pScaleInUnitFromModel = m_model->getProperty("scale_in_unit_width_rect_gap");
-  const Property& pScale = m_model->getProperty("scale");
-  const Property& pNewUnit = properties.getProperty("Unit");
-
   Property newProperty;
 
   // If both are being updated, so no calculation will be made
-  if (!pScaleWidth.isNull() && !pScaleInUnit.isNull())
+  if (properties.contains("scale_width_rect_gap") && properties.contains("scale_in_unit_width_rect_gap"))
   {
     return newProperty;
   }
 
-
-  if (!pScaleInUnit.isNull())
+  if (properties.contains("scale_in_unit_width_rect_gap"))
   {
+    const Property& pScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
+    const Property& pScaleInUnitFromModel = m_model->getProperty("scale_in_unit_width_rect_gap");
+
     double scaleInUnit = te::layout::Property::GetValueAs<double>(pScaleInUnit);
     double scaleInUnitFromModel = te::layout::Property::GetValueAs<double>(pScaleInUnitFromModel);
     if (scaleInUnit != scaleInUnitFromModel)
@@ -358,11 +351,11 @@ te::layout::Property te::layout::ScaleController::checkScaleWidthAndUnit(const P
       newProperty = calculateScaleWidthInMM(properties);
     }
   }
-  else if(!pNewUnit.isNull())
+  else if(properties.contains("Unit"))
   {
     newProperty = calculateScaleUnit(properties);
   }
-  else if (!pScaleWidth.isNull())
+  else if (properties.contains("scale_width_rect_gap"))
   {
     newProperty = calculateScaleWidthInUnit(properties);
   }
@@ -374,14 +367,13 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInMM(const 
 {
   Property prop;
 
-  const Property& pScaleWidth = properties.getProperty("scale_width_rect_gap");
-  const Property& pScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
-
   // If both are being updated, so no calculation will be made
-  if (!pScaleWidth.isNull() && !pScaleInUnit.isNull())
+  if (properties.contains("scale_width_rect_gap") && properties.contains("scale_in_unit_width_rect_gap"))
   {
     return prop;
   }
+
+  const Property& pScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   const Property& pScale = m_model->getProperty("scale");
@@ -406,11 +398,8 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
 {
   Property prop;
 
-  const Property& pScaleWidth = properties.getProperty("scale_width_rect_gap");
-  const Property& pScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
-
   // If both are being updated, so no calculation will be made
-  if (!pScaleWidth.isNull() && !pScaleInUnit.isNull())
+  if (properties.contains("scale_width_rect_gap") && properties.contains("scale_in_unit_width_rect_gap"))
   {
     return prop;
   }
@@ -452,17 +441,18 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
 te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Properties& properties)
 {
   Property prop;
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  const Property& pScaleInUnit = m_model->getProperty("scale_in_unit_width_rect_gap");
-  const Property& pNewUnit = properties.getProperty("Unit");
-  const Property& pUnit = m_model->getProperty("Unit");
-
-  if (pNewUnit.isNull())
+  if (properties.contains("Unit") == false)
   {
     return prop;
   }
+
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+
+  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
+  const Property& pNewUnit = properties.getProperty("Unit");
+  const Property& pUnit = getProperty("Unit");
 
   double scaleInUnit = te::layout::Property::GetValueAs<double>(pScaleInUnit);
 
@@ -527,25 +517,9 @@ bool te::layout::ScaleController::changeScaleWidthAfterConnection()
 
   SharedProperties sharedProps;
   const Property& pConnection = getProperty(sharedProps.getItemObserver());
-  if (pConnection.isNull())
-  {
-    return change;
-  }
-
   const Property& pScaleWidth = getProperty("scale_width_rect_gap");
-  if (pScaleWidth.isNull()){
-    return change;
-  }
-
   const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
-  if (pScaleInUnit.isNull()){
-    return change;
-  }
-
   const Property& pScale = getProperty("scale");
-  if (pScale.isNull()){
-    return change;
-  }
 
   double scale = te::layout::Property::GetValueAs<double>(pScale);
   double scaleInUnit = te::layout::Property::GetValueAs<double>(pScaleInUnit);
@@ -596,27 +570,27 @@ te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properti
 {
   Properties props;
   
-  const Property& pNewNumberOfBreaks = properties.getProperty("number_of_breaks");
-  const Property& pNumberOfBreaks = getProperty("number_of_breaks");
-  const Property& pNewByBreaks = properties.getProperty("by_breaks");
-  const Property& pByBreaks = getProperty("by_breaks");
-  const Property& pNewScaleWidth = properties.getProperty("scale_width_rect_gap");
-  const Property& pScaleWidth = getProperty("scale_width_rect_gap");
-  const Property& pNewScaleInUnit = properties.getProperty("scale_in_unit_width_rect_gap");
-  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
-  const Property& pNewTextFont = properties.getProperty("font");
-  const Property& pTextFont = getProperty("font");
-  const Property& pNewUnit = properties.getProperty("Unit");
-  const Property& pUnit = getProperty("Unit");
-  Property pCurrentWidth = getProperty("width");
-  Property pResizable = getProperty("resizable");
+  bool hasNewNumberOfBreaks = properties.contains("number_of_breaks");
+  bool hasNewByBreaks = properties.contains("by_breaks");
+  bool hasNewScaleWidth = properties.contains("scale_width_rect_gap");
+  bool hasNewScaleInUnit = properties.contains("scale_in_unit_width_rect_gap");
+  bool hasNewTextFont = properties.contains("font");
 
-  if (pNewNumberOfBreaks.isNull() && pNewByBreaks.isNull()
-      && pNewScaleWidth.isNull() && pNewScaleInUnit.isNull()
-      && pNewTextFont.isNull())
+  if (hasNewNumberOfBreaks == false && hasNewByBreaks == false
+      && hasNewScaleWidth == false && hasNewScaleInUnit == false
+      && hasNewTextFont == false)
   {
     return props;
   }
+
+  const Property& pNumberOfBreaks = getProperty("number_of_breaks", properties);
+  const Property& pByBreaks = getProperty("by_breaks", properties);
+  const Property& pScaleWidth = getProperty("scale_width_rect_gap", properties);
+  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap", properties);
+  const Property& pTextFont = getProperty("font", properties);
+  const Property& pUnit = getProperty("Unit", properties);
+  Property pCurrentWidth = getProperty("width");
+  Property pResizable = getProperty("resizable");
 
   int numberOfBreaks = te::layout::Property::GetValueAs<int>(pNumberOfBreaks);
   bool byBreaks = te::layout::Property::GetValueAs<bool>(pByBreaks);
@@ -628,31 +602,6 @@ te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properti
 
   bool resizable = te::layout::Property::GetValueAs<bool>(pResizable);
   double width = 0;
-
-  if (!pNewNumberOfBreaks.isNull())
-  {
-    numberOfBreaks = te::layout::Property::GetValueAs<int>(pNewNumberOfBreaks);
-  }
-  if (!pNewByBreaks.isNull())
-  {
-    byBreaks = te::layout::Property::GetValueAs<bool>(pNewByBreaks);
-  }
-  if (!pNewScaleWidth.isNull())
-  {
-    scaleWidth = te::layout::Property::GetValueAs<double>(pNewScaleWidth);
-  }
-  if (!pNewScaleInUnit.isNull())
-  {
-    scaleInUnit = te::layout::Property::GetValueAs<double>(pNewScaleInUnit);
-  }
-  if (!pNewTextFont.isNull())
-  {
-    font = te::layout::Property::GetValueAs<Font>(pNewTextFont);
-  }
-  if (!pNewUnit.isNull())
-  {
-    strUnit = te::layout::Property::GetValueAs<std::string>(pNewUnit);
-  }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 

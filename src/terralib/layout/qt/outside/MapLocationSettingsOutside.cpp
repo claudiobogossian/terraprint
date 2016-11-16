@@ -26,6 +26,8 @@
 // TerraLib
 #include "MapLocationSettingsOutside.h"
 #include "MapLayerChoiceOutside.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/ItemUtils.h"
 #include "../../core/property/SharedProperties.h"

@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "ColorDialogOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/ColorDialogModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/ColorDialogOutside.h"

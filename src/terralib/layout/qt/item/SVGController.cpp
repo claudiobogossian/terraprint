@@ -19,6 +19,9 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "SVGController.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "SVGItem.h"
 #include <QtSvg/QSvgRenderer>
 
@@ -35,19 +38,23 @@ te::layout::SVGController::~SVGController()
 
 void te::layout::SVGController::setProperties(const te::layout::Properties& properties)
 {
-  Property pName =  properties.getProperty("file_name");
-  if ((!pName.isNull()) && (te::layout::Property::GetValueAs<std::string>(pName) != te::layout::Property::GetValueAs<std::string>(getProperty("file_name"))))
+  if (properties.contains("file_name") == false)
+  {
+    AbstractItemController::setProperties(properties);
+    return;
+  }
+
+  const Property& pName = properties.getProperty("file_name");
+  if(te::layout::Property::GetValueAs<std::string>(pName) != te::layout::Property::GetValueAs<std::string>(getProperty("file_name")))
   {
     QString fileName = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(pName));
     calculateSVGRect(fileName);
     AbstractItemController::setProperties(properties);
-
   }
   else
   {
     AbstractItemController::setProperties(properties);
   }
-  
 }
 
 void te::layout::SVGController::calculateSVGRect(QString& fileName)

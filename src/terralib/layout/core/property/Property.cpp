@@ -29,6 +29,8 @@
 #include "../enum/Enums.h"
 #include "Property.h"
 
+#include <terralib/common/Exception.h>
+
 // STL
 #include <vector>
 #include <algorithm>
@@ -65,6 +67,8 @@ te::layout::Property::Property(const std::string& propertyName, te::dt::Abstract
   , m_composeWidget(false)
   , m_public(false)
   , m_serializable(true)
+  , m_usePrecision(false)
+  , m_precisionValue(2)
   , m_data(data)
 {
 }
@@ -291,63 +295,44 @@ bool te::layout::Property::completelyUpdateSubProperty(const Property& property)
 
 bool te::layout::Property::isNull() const
 {
-  //bool result = true;
-
   if (m_data.get() == 0)
+  {
+    return true;
+  }
+
+  return false;
+}
+
+bool te::layout::Property::containsSubProperty(const std::string& name) const
+{
+  if (m_subProperty.empty())
+  {
+    return false;
+  }
+
+  if (std::find(m_subProperty.begin(), m_subProperty.end(), name) != m_subProperty.end())
   {
     return true;
   }
   else
   {
-    return false;
-  }
-  /*
-  if(m_value.isNull())
-  {
-    if(!m_options.empty())
-    {
-      result = false;
-    }
-  }
-  else
-  {
-    result = false;
-  }
-
-  return result;*/
-}
-
-bool te::layout::Property::containsSubProperty( const Property& subProperty ) const
-{
-  bool is_present = false;
-
-  if (m_subProperty.empty())
-    return is_present;
-
-  if (std::find(m_subProperty.begin(), m_subProperty.end(), subProperty) != m_subProperty.end())
-  {
-    is_present = true;
-  }
-  else
-  {
     for (std::vector<Property>::const_iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
     {
-      is_present = itSub->containsSubProperty(subProperty);
-      if (is_present)
+      if(itSub->containsSubProperty(name))
       {
-        break;
+        return true;
       }
     }
   }
 
-  return is_present;
+  return false;
 }
 
-const te::layout::Property& te::layout::Property::containsSubProperty( const std::string& name ) const
+const te::layout::Property& te::layout::Property::getSubProperty( const std::string& name ) const
 {
-  if (!m_nullProperty)
+  if (m_nullProperty.get() == 0)
   {
-    m_nullProperty = Property::Ptr(new Property);
+    m_nullProperty.reset(new Property);
   }
 
   if (m_subProperty.empty())
@@ -356,28 +341,24 @@ const te::layout::Property& te::layout::Property::containsSubProperty( const std
     return *p;
   }
 
-  Property property;
-  property.setName(name);
-
-  if(std::find(m_subProperty.begin(), m_subProperty.end(), property) != m_subProperty.end())
+  if(std::find(m_subProperty.begin(), m_subProperty.end(), name) != m_subProperty.end())
   {
-    std::vector<Property>::const_iterator it = std::find(m_subProperty.begin(), m_subProperty.end(), property);
+    std::vector<Property>::const_iterator it = std::find(m_subProperty.begin(), m_subProperty.end(), name);
     return (*it);
   }
   else
   {
     for (std::vector<Property>::const_iterator itSub = m_subProperty.begin(); itSub != m_subProperty.end(); ++itSub)
     {
-      const Property& prop = itSub->containsSubProperty(name);
-      if (prop.getName().compare(name) == 0)
+      if (itSub->containsSubProperty(name) == 0)
       {
+        const Property& prop = itSub->getSubProperty(name);
         return prop;
       }
     }
   }
   
-  Property* p = m_nullProperty.get();
-  return *p;
+  throw te::common::Exception("Property::The given sub property name was not found in the sub property list");
 }
 
 void te::layout::Property::clear()

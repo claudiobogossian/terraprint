@@ -30,6 +30,8 @@
 #include "TextController.h"
 #include "../../qt/core/Scene.h"
 #include "../core/ItemUtils.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../core/pattern/singleton/Context.h"
 

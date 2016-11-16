@@ -866,7 +866,7 @@ bool te::layout::DialogPropertiesBrowser::hasOpenWindows()
   return result;
 }
 
-void te::layout::DialogPropertiesBrowser::directlyShowWindow(Property prop)
+void te::layout::DialogPropertiesBrowser::directlyShowWindow(const Property& prop)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 

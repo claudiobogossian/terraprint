@@ -28,6 +28,10 @@
 // TerraLib
 #include "MapCompositionModel.h"
 
+#include "../core/enum/EnumDataType.h"
+#include "../core/enum/Enums.h"
+
+
 te::layout::MapCompositionModel::MapCompositionModel()
   : ItemGroupModel()
 {

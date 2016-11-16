@@ -20,6 +20,8 @@
 // TerraLib
 #include "ItemGroupController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "ItemGroup.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 

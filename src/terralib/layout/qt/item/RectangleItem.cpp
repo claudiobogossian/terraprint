@@ -51,27 +51,23 @@ te::layout::RectangleItem::~RectangleItem()
 void te::layout::RectangleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("rectangle_type");
-  if(property.isNull() == false)
+  EnumRectangleType enumRectangleType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentRectangleType = enumRectangleType.searchLabel(label);
+
+  if(currentRectangleType == enumRectangleType.getSimpleRectangleType())
   {
-    EnumRectangleType enumRectangleType;
+    drawRectangle(painter);
+  }
+  if(currentRectangleType == enumRectangleType.getRoundedRetangleType())
+  {
+    drawRoundedRectangle(painter);
+  }
 
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentRectangleType = enumRectangleType.searchLabel(label);
-
-    if(currentRectangleType == enumRectangleType.getSimpleRectangleType())
-    {
-      drawRectangle(painter);
-    }
-    if(currentRectangleType == enumRectangleType.getRoundedRetangleType())
-    {
-      drawRoundedRectangle(painter);
-    }
-
-    if(currentRectangleType == enumRectangleType.getSingleCornerTrimmedRectangleType())
-    {
-      drawSingleCornerTrimmedRectangle(painter);
-    }
-
+  if(currentRectangleType == enumRectangleType.getSingleCornerTrimmedRectangleType())
+  {
+    drawSingleCornerTrimmedRectangle(painter);
   }
 }
 

@@ -196,14 +196,14 @@ void te::layout::PaperModel::setProperties(const Properties& properties)
     double newPaperWidth = currentPaperWidth;
     double newPaperHeight = currentPaperHeight;
 
-    const Property& pNewPaperWidth = properties.getProperty("paper_width");
-    if(pNewPaperWidth.isNull() == false)
+    if(properties.contains("paper_width"))
     {
+      const Property& pNewPaperWidth = properties.getProperty("paper_width");
       newPaperWidth = te::layout::Property::GetValueAs<double>(pNewPaperWidth);
     }
-    const Property& pNewPaperHeight = properties.getProperty("paper_height");
-    if(pNewPaperHeight.isNull() == false)
+    if(properties.contains("paper_height"))
     {
+      const Property& pNewPaperHeight = properties.getProperty("paper_height");
       newPaperHeight = te::layout::Property::GetValueAs<double>(pNewPaperHeight);
     }
 

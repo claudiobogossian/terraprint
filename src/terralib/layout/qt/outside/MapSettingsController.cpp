@@ -26,6 +26,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "MapSettingsController.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../outside/MapSettingsModel.h"

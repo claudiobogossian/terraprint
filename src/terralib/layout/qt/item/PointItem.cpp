@@ -54,49 +54,47 @@ te::layout::PointItem::~PointItem()
 void te::layout::PointItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("point_type");
-  if(property.isNull() == false)
+
+  EnumPointType enumPointType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentPointType = enumPointType.searchLabel(label);
+
+  if(currentPointType == enumPointType.getStar1Type())
   {
-    EnumPointType enumPointType;
-
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentPointType = enumPointType.searchLabel(label);
-
-    if(currentPointType == enumPointType.getStar1Type())
-    {
-      drawStar1(painter);
-    }
-    if(currentPointType == enumPointType.getStar2Type())
-    {
-      drawStar2(painter);
-    }
-    if(currentPointType == enumPointType.getStar3Type())
-    {
-      drawStar3(painter);
-    }
-    if(currentPointType == enumPointType.getStar4Type())
-    {
-      drawStar4(painter);
-    }
-    if(currentPointType == enumPointType.getCircleType())
-    {
-      drawCircle(painter);
-    }
-    if(currentPointType == enumPointType.getCrossType())
-    {
-      drawCross(painter);
-    }
-    if(currentPointType == enumPointType.getRhombusType())
-    {
-      drawRhombus(painter);
-    }
-    if(currentPointType == enumPointType.getSquareType())
-    {
-      drawSquare(painter);
-    }
-    if(currentPointType == enumPointType.getXType())
-    {
-      drawX(painter);
-    }
+    drawStar1(painter);
+  }
+  if(currentPointType == enumPointType.getStar2Type())
+  {
+    drawStar2(painter);
+  }
+  if(currentPointType == enumPointType.getStar3Type())
+  {
+    drawStar3(painter);
+  }
+  if(currentPointType == enumPointType.getStar4Type())
+  {
+    drawStar4(painter);
+  }
+  if(currentPointType == enumPointType.getCircleType())
+  {
+    drawCircle(painter);
+  }
+  if(currentPointType == enumPointType.getCrossType())
+  {
+    drawCross(painter);
+  }
+  if(currentPointType == enumPointType.getRhombusType())
+  {
+    drawRhombus(painter);
+  }
+  if(currentPointType == enumPointType.getSquareType())
+  {
+    drawSquare(painter);
+  }
+  if(currentPointType == enumPointType.getXType())
+  {
+    drawX(painter);
   }
 }
 

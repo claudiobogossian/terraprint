@@ -19,6 +19,9 @@
 
 // TerraLib
 #include "LineController.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "terralib/geometry/LineString.h"
 #include "terralib/geometry/Coord2D.h"
@@ -102,10 +105,6 @@ QPolygonF te::layout::LineController::getQPolygon()
   QPolygonF poly;
 
   const Property& pLine = m_model->getProperty("geometry");
-
-  if (pLine.isNull())
-    return poly;
-
   const te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(pLine);
 
   te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr);

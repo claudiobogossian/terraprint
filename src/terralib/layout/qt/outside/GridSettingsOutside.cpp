@@ -393,47 +393,47 @@ void te::layout::GridSettingsOutside::load()
 
   initBool(m_ui->chkVisibleTextsGeoText, m_geodesicGridSettings->getVisibleAllTexts(), m_geodesicType);
 
-  initCombo(m_ui->cmbCornerGeoFont, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
+  //initCombo(m_ui->cmbCornerGeoFont, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
 
-  initCombo(m_ui->cmbCornerGeoTextSize, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
+  //initCombo(m_ui->cmbCornerGeoTextSize, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
   
-  initColor(m_ui->fraCornerTextGeoColor, m_geodesicGridSettings->getTextColorCorner(), m_geodesicType);
+  //initColor(m_ui->fraCornerTextGeoColor, m_geodesicGridSettings->getTextColorCorner(), m_geodesicType);
   
-  initDouble(m_ui->lneCornerHrzGeoDisplacement, m_geodesicGridSettings->getLneCornerHrzDisplacement(), m_geodesicType);
+  //initDouble(m_ui->lneCornerHrzGeoDisplacement, m_geodesicGridSettings->getLneCornerHrzDisplacement(), m_geodesicType);
 
-  initDouble(m_ui->lneCornerVrtGeoDisplacement, m_geodesicGridSettings->getLneCornerVrtDisplacement(), m_geodesicType);
+  //initDouble(m_ui->lneCornerVrtGeoDisplacement, m_geodesicGridSettings->getLneCornerVrtDisplacement(), m_geodesicType);
   
-  initBool(m_ui->chkLowerRightCornerGeoText, m_geodesicGridSettings->getLowerRightCornerText(), m_geodesicType);
+  //initBool(m_ui->chkLowerRightCornerGeoText, m_geodesicGridSettings->getLowerRightCornerText(), m_geodesicType);
 
-  initBool(m_ui->chkUpperRightCornerGeoText, m_geodesicGridSettings->getUpperRightCornerText(), m_geodesicType);
+  //initBool(m_ui->chkUpperRightCornerGeoText, m_geodesicGridSettings->getUpperRightCornerText(), m_geodesicType);
 
-  initBool(m_ui->chkLowerLeftCornerGeoText, m_geodesicGridSettings->getLowerLeftCornerText(), m_geodesicType);
+  //initBool(m_ui->chkLowerLeftCornerGeoText, m_geodesicGridSettings->getLowerLeftCornerText(), m_geodesicType);
 
-  initBool(m_ui->chkUpperLeftCornerGeoText, m_geodesicGridSettings->getUpperLeftCornerText(), m_geodesicType);
+  //initBool(m_ui->chkUpperLeftCornerGeoText, m_geodesicGridSettings->getUpperLeftCornerText(), m_geodesicType);
   
   /*Geodesic: Topographic Map*/
   
-  initBool(m_ui->ckDefineScale, m_geodesicGridSettings->getDefineScale(), m_geodesicType);
+  //initBool(m_ui->ckDefineScale, m_geodesicGridSettings->getDefineScale(), m_geodesicType);
 
-  initCombo(m_ui->cmbScale, m_geodesicGridSettings->getScale(), m_geodesicType);
+  //initCombo(m_ui->cmbScale, m_geodesicGridSettings->getScale(), m_geodesicType);
 
-  initBool(m_ui->ckbClip, m_geodesicGridSettings->getClip(), m_geodesicType);
+  //initBool(m_ui->ckbClip, m_geodesicGridSettings->getClip(), m_geodesicType);
 
-  initDouble(m_ui->lneX1, m_geodesicGridSettings->getLneX1(), m_geodesicType);
+  //initDouble(m_ui->lneX1, m_geodesicGridSettings->getLneX1(), m_geodesicType);
 
-  initDouble(m_ui->lneX2, m_geodesicGridSettings->getLneX2(), m_geodesicType);
+  //initDouble(m_ui->lneX2, m_geodesicGridSettings->getLneX2(), m_geodesicType);
 
-  initDouble(m_ui->lneY1, m_geodesicGridSettings->getLneY1(), m_geodesicType);
+  //initDouble(m_ui->lneY1, m_geodesicGridSettings->getLneY1(), m_geodesicType);
 
-  initDouble(m_ui->lneY2, m_geodesicGridSettings->getLneY2(), m_geodesicType);
+  //initDouble(m_ui->lneY2, m_geodesicGridSettings->getLneY2(), m_geodesicType);
 
-  initDouble(m_ui->lneX3, m_geodesicGridSettings->getLneX3(), m_geodesicType);
+  //initDouble(m_ui->lneX3, m_geodesicGridSettings->getLneX3(), m_geodesicType);
 
-  initDouble(m_ui->lneX4, m_geodesicGridSettings->getLneX4(), m_geodesicType);
+  //initDouble(m_ui->lneX4, m_geodesicGridSettings->getLneX4(), m_geodesicType);
 
-  initDouble(m_ui->lneY3, m_geodesicGridSettings->getLneY3(), m_geodesicType);
+  //initDouble(m_ui->lneY3, m_geodesicGridSettings->getLneY3(), m_geodesicType);
 
-  initDouble(m_ui->lneY4, m_geodesicGridSettings->getLneY4(), m_geodesicType);
+  //initDouble(m_ui->lneY4, m_geodesicGridSettings->getLneY4(), m_geodesicType);
 
   m_ui->chkDegreesGeoText->setChecked(true);
   setGeodesicValues();

@@ -20,6 +20,8 @@
 // TerraLib
 #include "TextController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../qt/core/Scene.h"
 #include "../../qt/item/AbstractItem.h"
@@ -121,23 +123,9 @@ double te::layout::TextController::getDpiForCalculation() const
 
 QTextDocument* te::layout::TextController::createTextDocument(const te::layout::Properties& properties)
 {
-  te::layout::Property pText = properties.getProperty("text");
-  if (pText.isNull())
-  {
-    pText = this->getProperty("text");
-  }
-
-  te::layout::Property pFont = properties.getProperty("font");
-  if (pFont.isNull())
-  {
-    pFont = this->getProperty("font");
-  }
-
-  Property pAligment = properties.getProperty("alignment");
-  if (pAligment.isNull())
-  {
-    pAligment = this->getProperty("alignment");
-  }
+  const te::layout::Property& pText = getProperty("text", properties);
+  const te::layout::Property& pFont = getProperty("font", properties);
+  const te::layout::Property& pAligment = getProperty("alignment", properties);
 
   QString qText = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(pText));
   QFont qFont = ItemUtils::convertToQfont(te::layout::Property::GetValueAs<Font>(pFont));

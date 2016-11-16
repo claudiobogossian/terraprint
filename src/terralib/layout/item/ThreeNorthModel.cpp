@@ -342,9 +342,10 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
       GeographicLib::MagneticModel::FieldComponents(Bx, By, Bz, H, F, D, I);
     }
 
-    catch (const exception& /*e*/)
+    catch (const std::exception& e)
     {
-      
+      std::string what = e.what();
+      int a = 0;
     }
 #endif
 

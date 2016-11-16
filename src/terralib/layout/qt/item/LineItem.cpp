@@ -27,6 +27,9 @@
 
 // TerraLib
 #include "LineItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/property/Property.h"
 #include "LineController.h"
 // STL
@@ -88,38 +91,36 @@ QPen te::layout::LineItem::searchStyle()
   const Property& pLineStyle = m_controller->getProperty("line_style_type");
   QPen penStyle;
 
-  if(pLineStyle.isNull() == false)
+  EnumLineStyleType lineStyle;
+
+  const std::string& label = pLineStyle.getOptionByCurrentChoice().toString();
+  EnumType* currentLineStyle = lineStyle.searchLabel(label);
+
+  if(currentLineStyle == lineStyle.getStyleSolid())
   {
-    EnumLineStyleType lineStyle;
-
-    const std::string& label = pLineStyle.getOptionByCurrentChoice().toString();
-    EnumType* currentLineStyle = lineStyle.searchLabel(label);
-
-    if(currentLineStyle == lineStyle.getStyleSolid())
-    {
-      penStyle.setStyle(Qt::SolidLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDash())
-    {
-      penStyle.setStyle(Qt::DashLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDot())
-    {
-      penStyle.setStyle(Qt::DotLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDashDot())
-    {
-      penStyle.setStyle(Qt::DashDotLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDashDotDot())
-    {
-      penStyle.setStyle(Qt::DashDotDotLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleCustomDash())
-    {
-      penStyle.setStyle(Qt::CustomDashLine);
-    }
+    penStyle.setStyle(Qt::SolidLine);
   }
+  if(currentLineStyle == lineStyle.getStyleDash())
+  {
+    penStyle.setStyle(Qt::DashLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleDot())
+  {
+    penStyle.setStyle(Qt::DotLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleDashDot())
+  {
+    penStyle.setStyle(Qt::DashDotLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleDashDotDot())
+  {
+    penStyle.setStyle(Qt::DashDotDotLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleCustomDash())
+  {
+    penStyle.setStyle(Qt::CustomDashLine);
+  }
+
   return penStyle;
 }
 

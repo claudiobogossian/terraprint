@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "LegendChoiceOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/LegendChoiceModel.h"
 #include "../../../../../outside/LegendChoiceController.h"
 #include "../../../../outside/LegendChoiceOutside.h"

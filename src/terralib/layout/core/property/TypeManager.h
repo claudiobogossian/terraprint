@@ -21,6 +21,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #ifndef __TERRALIB_LAYOUT_INTERNAL_TYPEMANAGER_H 
 #define __TERRALIB_LAYOUT_INTERNAL_TYPEMANAGER_H 
 
+#include "../Config.h"
+
 // TerraLib
 #include <terralib/common/Singleton.h>
 #include <terralib/datatype/DataTypeConverter.h>
@@ -39,7 +41,7 @@ namespace te
   namespace layout
   {
     
-    class TypeManager : public te::common::Singleton<TypeManager>
+    class TELAYOUTEXPORT TypeManager : public te::common::Singleton<TypeManager>
     {
       friend class te::common::Singleton<TypeManager>;
 

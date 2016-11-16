@@ -134,7 +134,7 @@ void te::layout::MainLayout::postInit()
        m_outsideArea->getPropertiesCentralController()->setMenuBuilder(menu);
        PropertiesDock* dock = m_outsideArea->getPropertiesDock();
        PropertiesOutside* propOut = dock->getPropertiesOutside();
-       propOut->connect(menu, SIGNAL(menuPropertyClicked(Property)), propOut, SLOT(onMenuPropertyClicked(Property)));
+       propOut->connect(menu, SIGNAL(menuPropertyClicked(const Property&)), propOut, SLOT(onMenuPropertyClicked(const Property&)));
      }
    }
 

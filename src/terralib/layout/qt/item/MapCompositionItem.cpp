@@ -27,6 +27,9 @@
 
 // TerraLib
 #include "MapCompositionItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../core/pattern/factory/item/ItemFactory.h"
@@ -208,22 +211,19 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
       {
         SharedProperties sharedProps;
         const Property& pOldMapItem = childAbstractView->getController()->getProperty(sharedProps.getItemObserver());
-        if (!pOldMapItem.isNull())
+        if (te::layout::Property::GetValueAs<std::string>(pOldMapItem).compare("") != 0)
         {
-          if (te::layout::Property::GetValueAs<std::string>(pOldMapItem).compare("") != 0)
-          {
-            // Dissociate
-            Property prop(pOldMapItem);
-            std::string itemName = "";
-            prop.setValue(itemName, dataType->getDataTypeItemObserver());
-            childAbstractView->getController()->setProperty(prop);
+          // Dissociate
+          Property prop(pOldMapItem);
+          std::string itemName = "";
+          prop.setValue(itemName, dataType->getDataTypeItemObserver());
+          childAbstractView->getController()->setProperty(prop);
 
-            // Active resizable
-            Property property(0);
-            property.setName("resizable");
-            property.setValue<bool>(true, dataType->getDataTypeBool());
-            childAbstractView->getController()->setProperty(property);
-          }
+          // Active resizable
+          Property property(0);
+          property.setName("resizable");
+          property.setValue<bool>(true, dataType->getDataTypeBool());
+          childAbstractView->getController()->setProperty(property);
         }
       }
     }

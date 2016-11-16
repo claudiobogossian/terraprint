@@ -128,13 +128,13 @@ void te::layout::TextGridSettingsController::addUpdateTextGridProperty( Property
 
   if(!subProperty.isNull())
   {
-    if(m_textGridSettings.containsSubProperty(subProperty))
+    if(m_textGridSettings.containsSubProperty(subProperty.getName()))
     {
       m_textGridSettings.removeSubProperty(subProperty);
     }
     m_textGridSettings.addSubProperty(subProperty);
 
-    if(m_update.containsSubProperty(subProperty))
+    if(m_update.containsSubProperty(subProperty.getName()))
     {
       m_update.removeSubProperty(subProperty);
     }

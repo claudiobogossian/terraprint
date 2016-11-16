@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "EditTemplateOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/EditTemplateModel.h"
 #include "../../../../../outside/EditTemplateController.h"
 #include "../../../../outside/EditTemplateOutside.h"

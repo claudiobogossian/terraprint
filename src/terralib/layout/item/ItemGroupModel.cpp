@@ -28,6 +28,10 @@
 // TerraLib
 #include "ItemGroupModel.h"
 
+#include "../core/enum/EnumDataType.h"
+#include "../core/enum/Enums.h"
+
+
 te::layout::ItemGroupModel::ItemGroupModel()
   : AbstractItemModel()
 {

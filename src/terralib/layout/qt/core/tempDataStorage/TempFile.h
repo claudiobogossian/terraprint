@@ -49,7 +49,7 @@ namespace te
     {
       public:
 
-        TempFile(AbstractTempDataStorageInfo* info);
+        explicit TempFile(AbstractTempDataStorageInfo* info);
 
         virtual ~TempFile();
 

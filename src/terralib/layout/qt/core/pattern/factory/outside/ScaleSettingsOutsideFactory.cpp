@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "ScaleSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/ScaleSettingsModel.h"
 #include "../../../../outside/ScaleSettingsController.h"
 #include "../../../../outside/ScaleSettingsOutside.h"

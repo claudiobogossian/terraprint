@@ -184,8 +184,10 @@ void te::layout::ThreeNorthItem::drawTrueNorth(QPainter * painter)
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0,0,0);
   QPen pn(cpen, lnew, Qt::SolidLine);
+  
   painter->setPen(pn);
 
   QString qStrUnit("NQ");
@@ -223,6 +225,7 @@ void te::layout::ThreeNorthItem::drawMagneticNorth(QPainter * painter, double an
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0, 0, 0);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
@@ -274,6 +277,7 @@ void te::layout::ThreeNorthItem::drawMeridianConvergence(QPainter * painter, dou
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0, 0, 0);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
@@ -335,6 +339,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0, 0, 0);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);

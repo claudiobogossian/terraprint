@@ -55,13 +55,12 @@ bool te::layout::GridMapController::syncItemAssociation(Properties& properties)
 
   Properties prop = m_model->getProperties();
 
-  Property propObserv = properties.getProperty(sharedProps.getItemObserver());
-
-  if (propObserv.isNull())
+  if (properties.contains(sharedProps.getItemObserver()) == false)
   {
     return false;
   }
 
+  const Property& propObserv = properties.getProperty(sharedProps.getItemObserver());
   Property propertyHeigh = prop.getProperty("height");
   Property propertyWidth = prop.getProperty("width");
 

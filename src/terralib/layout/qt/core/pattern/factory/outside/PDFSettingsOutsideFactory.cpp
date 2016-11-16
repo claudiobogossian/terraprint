@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "PDFSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/PDFSettingsModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/PDFSettingsOutside.h"

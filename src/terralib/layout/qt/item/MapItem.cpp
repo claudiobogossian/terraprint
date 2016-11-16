@@ -29,6 +29,8 @@
 #include "MapItem.h"
 #include "MapController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../core/ItemUtils.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/pattern/singleton/Context.h"

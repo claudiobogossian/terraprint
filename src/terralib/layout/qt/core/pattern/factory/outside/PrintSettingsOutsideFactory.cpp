@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "PrintSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/PrintSettingsModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/PrintSettingsOutside.h"

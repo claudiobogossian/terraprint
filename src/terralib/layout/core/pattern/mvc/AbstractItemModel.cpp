@@ -1,6 +1,8 @@
 #include "AbstractItemModel.h"
 
 #include "../../property/Property.h"
+#include "../../enum/EnumDataType.h"
+#include "../../enum/Enums.h"
 
 te::layout::AbstractItemModel::AbstractItemModel()
 : Subject()
@@ -101,7 +103,6 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("show_frame");
     property.setLabel(TR_LAYOUT("Show Frame"));
     property.setValue<bool>(false, dataType->getDataTypeBool());
-    property.setMenu(true);
     this->m_properties.addProperty(property);
   }
 
