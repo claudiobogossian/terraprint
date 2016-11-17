@@ -330,7 +330,7 @@ te::layout::Property te::layout::MenuBuilder::findMnuProperty( std::string name 
   return prop;
 }
 
-void te::layout::MenuBuilder::menuExec( int x /*= 0*/, int y /*= 0*/ )
+void te::layout::MenuBuilder::menuExec( int x, int y )
 { 
   if(!m_menu)
     return;

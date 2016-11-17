@@ -40,7 +40,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsItemGroup>
 
-te::layout::ItemObserverManager::ItemObserverManager(Scene* scene, QObject *parent /*= 0*/)
+te::layout::ItemObserverManager::ItemObserverManager(Scene* scene, QObject *parent )
   : QtAbstractPropertyManager(parent)
   , m_scene(scene)
 {

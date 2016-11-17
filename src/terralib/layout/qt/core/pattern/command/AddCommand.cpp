@@ -38,7 +38,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-te::layout::AddCommand::AddCommand( QGraphicsItem* item, QUndoCommand *parent /*= 0*/ ) :
+te::layout::AddCommand::AddCommand( QGraphicsItem* item, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_scene(0),
   m_item(item)
@@ -120,6 +120,3 @@ QString te::layout::AddCommand::createCommandString( QGraphicsItem* item, const 
     .arg(qName)
     .arg(pos.x()).arg(pos.y());
 }
-
-
-

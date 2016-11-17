@@ -19,7 +19,7 @@
 #include <list>
 
 
-void te::layout::RegisterLayoutTypes()
+void te::layout::registerLayoutTypes()
 {
   TypeManager::getInstance().registerType<bool>((int)te::layout::LayoutTypes::BOOLEAN_TYPE, "bool", ConvertStringToBool, ConvertBoolToString);
   TypeManager::getInstance().registerType<te::color::RGBAColor>((int)te::layout::LayoutTypes::COLOR_TYPE, "color", ConvertStringToColor, ConvertColorToString);

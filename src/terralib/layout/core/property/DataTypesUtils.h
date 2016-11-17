@@ -38,7 +38,7 @@ namespace te
 {
   namespace layout
   {
-    void RegisterLayoutTypes();
+    void registerLayoutTypes();
 
     template<typename T> 
     te::dt::AbstractData* CreateData(const T& value)
