@@ -31,7 +31,6 @@
 #include "../../../core/enum/Enums.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
-#include "../../../core/property/GenericVariant.h"
 #include "../../core/ItemUtils.h"
 #include "../../core/Scene.h"
 #include "DialogPropertiesBrowser.h"
@@ -105,7 +104,7 @@ void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProj
 
   // Dialog properties
   m_dialogPropertiesBrowser = new DialogPropertiesBrowser(scene, proxyProject, this->parent());
-  connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(Property)), this, SLOT(onChangeDlgProperty(Property)));
+  connect(m_dialogPropertiesBrowser, SIGNAL(changeDlgProperty(const Property&)), this, SLOT(onChangeDlgProperty(const Property&)));
 
   // Item Observer properties
   m_itemObserverManager = new ItemObserverManager(scene);
@@ -161,7 +160,7 @@ void te::layout::PropertyBrowser::propertyEditorValueChanged( QtProperty *proper
   m_ignoreExternalUpdates = false;
 }
 
-void te::layout::PropertyBrowser::onChangeDlgProperty( Property property )
+void te::layout::PropertyBrowser::onChangeDlgProperty( const Property& property )
 {
   if(m_changeQtPropertyVariantValue)
   {
@@ -375,11 +374,11 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
   QString val("");
   if (!property.isNull())
   {
-    const AbstractItemView* view = m_scene->getItem(property.getValue().toString());
+    const AbstractItemView* view = m_scene->getItem(te::layout::Property::GetValueAs<std::string>(property));
     if (view)
     {
       const Property& property = view->getController()->getProperty("name");
-      std::string value = property.getValue().toString();
+      std::string value = te::layout::Property::GetValueAs<std::string>(property);
 
       val = ItemUtils::convert2QString(value);
     }

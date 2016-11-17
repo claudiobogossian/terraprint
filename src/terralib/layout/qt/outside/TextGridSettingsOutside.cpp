@@ -238,12 +238,10 @@ void te::layout::TextGridSettingsOutside::on_cmbColumnsWidthConstraints_currentI
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    controller->addUpdateProperty(m_propertiesNames->getColumnWidthConstraints(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getColumnWidthConstraints(), CreateData(stdText), dataType->getDataTypeString());
   }
 }
 
@@ -253,12 +251,10 @@ void te::layout::TextGridSettingsOutside::on_cmbTableWidthConstraints_currentInd
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    controller->addUpdateProperty(m_propertiesNames->getWidthConstraints(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getWidthConstraints(), CreateData(stdText), dataType->getDataTypeString());
   }
 }
 
@@ -268,12 +264,10 @@ void te::layout::TextGridSettingsOutside::on_cmbHeaderAlign_currentIndexChanged(
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    controller->addUpdateProperty(m_propertiesNames->getHeaderAlignment(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getHeaderAlignment(), CreateData(stdText), dataType->getDataTypeString());
   }
 }
 
@@ -283,12 +277,10 @@ void te::layout::TextGridSettingsOutside::on_cmbBorderStyle_currentIndexChanged(
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    controller->addUpdateProperty(m_propertiesNames->getBorderStyle(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getBorderStyle(), CreateData(stdText), dataType->getDataTypeString());
   }
 }
 
@@ -298,12 +290,10 @@ void te::layout::TextGridSettingsOutside::on_cmbCellAlign_currentIndexChanged( c
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
 
     std::string stdText = ItemUtils::convert2StdString(text);
 
-    variant.setValue(stdText, dataType->getDataTypeString());
-    controller->addUpdateProperty(m_propertiesNames->getCellAlignment(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getCellAlignment(), CreateData(stdText), dataType->getDataTypeString());
   }
 }
 
@@ -313,9 +303,8 @@ void te::layout::TextGridSettingsOutside::on_lneEdtBorderWidth_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtBorderWidth->text().toDouble(), dataType->getDataTypeDouble());
-    controller->addUpdateProperty(m_propertiesNames->getBorderWidth(), variant);
+
+    controller->addUpdateProperty(m_propertiesNames->getBorderWidth(), CreateData(m_ui->lneEdtBorderWidth->text().toDouble()), dataType->getDataTypeDouble());
   }
 }
 
@@ -325,9 +314,7 @@ void te::layout::TextGridSettingsOutside::on_lneEdtColumnsNumber_editingFinished
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtColumnsNumber->text().toInt(), dataType->getDataTypeInt());
-    controller->addUpdateProperty(m_propertiesNames->getColumnNumber(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getColumnNumber(), CreateData(m_ui->lneEdtColumnsNumber->text().toInt()), dataType->getDataTypeInt());
   }
 }
 
@@ -337,9 +324,7 @@ void te::layout::TextGridSettingsOutside::on_lneEdtColumnsWidth_editingFinished(
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtColumnsWidth->text().toDouble(), dataType->getDataTypeDouble());
-    controller->addUpdateProperty(m_propertiesNames->getColumnWidth(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getColumnWidth(), CreateData(m_ui->lneEdtColumnsWidth->text().toDouble()), dataType->getDataTypeDouble());
   }
 }
 
@@ -349,9 +334,7 @@ void te::layout::TextGridSettingsOutside::on_lneEdtRowsNumber_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtRowsNumber->text().toInt(), dataType->getDataTypeInt());
-    controller->addUpdateProperty(m_propertiesNames->getRowNumber(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getRowNumber(), CreateData(m_ui->lneEdtRowsNumber->text().toInt()), dataType->getDataTypeInt());
   }
 }
 
@@ -361,9 +344,7 @@ void te::layout::TextGridSettingsOutside::on_lneEdtTablePadding_editingFinished(
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtTablePadding->text().toDouble(), dataType->getDataTypeDouble());
-    controller->addUpdateProperty(m_propertiesNames->getPadding(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getPadding(), CreateData(m_ui->lneEdtTablePadding->text().toDouble()), dataType->getDataTypeDouble());
   }
 }
 
@@ -373,9 +354,7 @@ void te::layout::TextGridSettingsOutside::on_lneEdtTableSpacing_editingFinished(
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtTableSpacing->text().toDouble(), dataType->getDataTypeDouble());
-    controller->addUpdateProperty(m_propertiesNames->getSpacing(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getSpacing(), CreateData(m_ui->lneEdtTableSpacing->text().toDouble()), dataType->getDataTypeDouble());
   }
 }
 
@@ -385,9 +364,7 @@ void te::layout::TextGridSettingsOutside::on_lneEdtTableWidth_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(m_ui->lneEdtTableWidth->text().toDouble(), dataType->getDataTypeDouble());
-    controller->addUpdateProperty(m_propertiesNames->getWidth(), variant);
+    controller->addUpdateProperty(m_propertiesNames->getWidth(), CreateData(m_ui->lneEdtTableWidth->text().toDouble()), dataType->getDataTypeDouble());
   }
 }
 
@@ -402,7 +379,7 @@ void te::layout::TextGridSettingsOutside::initString( QWidget* widget, std::stri
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
   {
-    std::string value = prop.getValue().toString();
+    std::string value = te::layout::Property::GetValueAs<std::string>(prop);
     QString qValue = ItemUtils::convert2QString(value);
     edit->setText(qValue);
     return;
@@ -417,7 +394,7 @@ void te::layout::TextGridSettingsOutside::initInt( QWidget* widget, std::string 
 
   std::ostringstream convert;
   Property prop = controller->getProperty(nameComponent);
-  convert << prop.getValue().toInt();
+  convert << te::layout::Property::GetValueAs<int>(prop);
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if(edit)
@@ -437,7 +414,7 @@ void te::layout::TextGridSettingsOutside::initDouble( QWidget* widget, std::stri
   std::ostringstream convert;
   convert.precision(15);
   Property prop = controller->getProperty(nameComponent);
-  double number = prop.getValue().toDouble();
+  double number = te::layout::Property::GetValueAs<double>(prop);
   convert << number;
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
@@ -461,7 +438,7 @@ void te::layout::TextGridSettingsOutside::initBool( QWidget* widget, std::string
 
   if(chk)
   {
-    chk->setChecked(prop.getValue().toBool());
+    chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
   }
 }
 
@@ -473,7 +450,7 @@ void te::layout::TextGridSettingsOutside::initColor( QWidget* widget, std::strin
 
   Property prop = controller->getProperty(nameComponent);
 
-  te::color::RGBAColor color = prop.getValue().toColor();
+  te::color::RGBAColor color = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
   QColor qcolor(color.getRed(), color.getGreen(), color.getBlue());
 
   if(!qcolor.isValid())  
@@ -508,19 +485,19 @@ void te::layout::TextGridSettingsOutside::initCombo( QWidget* widget, std::strin
 
   if(prop.getType() == dataType->getDataTypeBool())
   {
-    variant.setValue(prop.getValue().toBool());
+    variant.setValue(te::layout::Property::GetValueAs<bool>(prop));
   }
   else if(prop.getType() == dataType->getDataTypeDouble())
   {
-    variant.setValue(prop.getValue().toDouble());
+    variant.setValue(te::layout::Property::GetValueAs<double>(prop));
   }
   else if(prop.getType() == dataType->getDataTypeInt())
   {
-    variant.setValue(prop.getValue().toInt());
+    variant.setValue(te::layout::Property::GetValueAs<int>(prop));
   }
   else if(prop.getType() == dataType->getDataTypeString())
   {
-    std::string value = prop.getValue().toString();
+    std::string value = te::layout::Property::GetValueAs<std::string>(prop);
     QString qValue = ItemUtils::convert2QString(value);
     variant.setValue(qValue);
   }
@@ -579,9 +556,7 @@ bool te::layout::TextGridSettingsOutside::eventFilter( QObject * watched, QEvent
     if(controller)
     {
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-      Variant variant;
-      variant.setValue(color, dataType->getDataTypeColor());
-      controller->addUpdateProperty(name, variant);
+      controller->addUpdateProperty(name, CreateData(color), dataType->getDataTypeColor());
     }
   }
 

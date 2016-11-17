@@ -25,6 +25,10 @@
 
 // TerraLib
 #include "RectangleItemFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
+
 #include "../../../../../item/RectangleModel.h"
 #include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../../core/property/Properties.h"

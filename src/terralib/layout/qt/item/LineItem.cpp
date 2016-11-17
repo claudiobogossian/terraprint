@@ -27,6 +27,9 @@
 
 // TerraLib
 #include "LineItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/property/Property.h"
 #include "LineController.h"
 // STL
@@ -64,11 +67,11 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
   }
 
   const Property& pColor = m_controller->getProperty("color");
-  const te::color::RGBAColor& color = pColor.getValue().toColor();
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(pColor);
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   QPen penStyle = searchStyle();
@@ -88,38 +91,36 @@ QPen te::layout::LineItem::searchStyle()
   const Property& pLineStyle = m_controller->getProperty("line_style_type");
   QPen penStyle;
 
-  if(pLineStyle.isNull() == false)
+  EnumLineStyleType lineStyle;
+
+  const std::string& label = pLineStyle.getOptionByCurrentChoice().toString();
+  EnumType* currentLineStyle = lineStyle.searchLabel(label);
+
+  if(currentLineStyle == lineStyle.getStyleSolid())
   {
-    EnumLineStyleType lineStyle;
-
-    const std::string& label = pLineStyle.getOptionByCurrentChoice().toString();
-    EnumType* currentLineStyle = lineStyle.searchLabel(label);
-
-    if(currentLineStyle == lineStyle.getStyleSolid())
-    {
-      penStyle.setStyle(Qt::SolidLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDash())
-    {
-      penStyle.setStyle(Qt::DashLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDot())
-    {
-      penStyle.setStyle(Qt::DotLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDashDot())
-    {
-      penStyle.setStyle(Qt::DashDotLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleDashDotDot())
-    {
-      penStyle.setStyle(Qt::DashDotDotLine);
-    }
-    if(currentLineStyle == lineStyle.getStyleCustomDash())
-    {
-      penStyle.setStyle(Qt::CustomDashLine);
-    }
+    penStyle.setStyle(Qt::SolidLine);
   }
+  if(currentLineStyle == lineStyle.getStyleDash())
+  {
+    penStyle.setStyle(Qt::DashLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleDot())
+  {
+    penStyle.setStyle(Qt::DotLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleDashDot())
+  {
+    penStyle.setStyle(Qt::DashDotLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleDashDotDot())
+  {
+    penStyle.setStyle(Qt::DashDotDotLine);
+  }
+  if(currentLineStyle == lineStyle.getStyleCustomDash())
+  {
+    penStyle.setStyle(Qt::CustomDashLine);
+  }
+
   return penStyle;
 }
 

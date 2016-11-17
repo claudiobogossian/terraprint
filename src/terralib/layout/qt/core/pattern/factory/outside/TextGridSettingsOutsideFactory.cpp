@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "TextGridSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/TextGridSettingsModel.h"
 #include "../../../../../outside/TextGridSettingsController.h"
 #include "../../../../outside/TextGridSettingsOutside.h"

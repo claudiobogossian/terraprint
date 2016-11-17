@@ -27,6 +27,8 @@
 
 // TerraLib
 #include "ObjectInspectorOutside.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
@@ -142,7 +144,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
     AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(parentItem);
 
     const Property& pParentName = absParentItem->getController()->getProperty("name");
-    const std::string& parentName = pParentName.getValue().toString();
+    const std::string& parentName = te::layout::Property::GetValueAs<std::string>(pParentName);
     std::string parentTypeName = absParentItem->getController()->getProperties().getTypeObj()->getName();
 
     QString qParentName = ItemUtils::convert2QString(parentName);
@@ -172,7 +174,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
         AbstractItemView* absChildItem = dynamic_cast<AbstractItemView*>(childItem);
 
         const Property& pChildName = absChildItem->getController()->getProperty("name");
-        const std::string& childName = pChildName.getValue().toString();
+        const std::string& childName = te::layout::Property::GetValueAs<std::string>(pChildName);
         std::string childTypeName = absChildItem->getController()->getProperties().getTypeObj()->getName();
 
         QString qChildName = ItemUtils::convert2QString(childName);
@@ -231,7 +233,7 @@ void te::layout::ObjectInspectorOutside::selectItems( QList<QGraphicsItem*> grap
     }
 
     const Property& pName = parentItem->getController()->getProperty("name");
-    std::string name = pName.getValue().toString();
+    std::string name = te::layout::Property::GetValueAs<std::string>(pName);
 
     QString qName = ItemUtils::convert2QString(name);
     
@@ -276,7 +278,7 @@ void te::layout::ObjectInspectorOutside::itemSelectionChanged()
       }
 
       const Property& pName = absItemView->getController()->getProperty("name");
-      std::string name = pName.getValue().toString();
+      std::string name = te::layout::Property::GetValueAs<std::string>(pName);
 
       if(name == treeItemName)
       {

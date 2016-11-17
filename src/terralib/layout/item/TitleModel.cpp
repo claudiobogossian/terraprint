@@ -60,8 +60,6 @@ te::layout::TitleModel::TitleModel()
   te::color::RGBAColor evenRow;
   te::color::RGBAColor oddRow;
 
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getTitleItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
 //adding properties
@@ -196,6 +194,8 @@ te::layout::TitleModel::TitleModel()
     property.setValue(item_height, dataType->getDataTypeDouble());
     m_properties.updateProperty(property);
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getTitleItem());
 }
 
 te::layout::TitleModel::~TitleModel()

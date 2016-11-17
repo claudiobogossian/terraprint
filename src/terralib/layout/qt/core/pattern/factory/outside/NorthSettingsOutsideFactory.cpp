@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "NorthSettingsOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/NorthSettingsModel.h"
 #include "../../../../../qt/outside/NorthSettingsController.h"
 #include "../../../../outside/NorthSettingsOutside.h"

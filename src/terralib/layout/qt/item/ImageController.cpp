@@ -43,14 +43,14 @@ void te::layout::ImageController::setProperties(const Properties& properties)
     return;
   }
 
-  const Property& pNewFileName = properties.getProperty("file_name");
-  if (pNewFileName.isNull())
+  if (properties.contains("file_name") == false)
   {
     AbstractItemController::setProperties(properties);
     return;
   }
 
-  const std::string& newFileName = pNewFileName.getValue().toString();
+  const Property& pNewFileName = properties.getProperty("file_name");
+  const std::string& newFileName = te::layout::Property::GetValueAs<std::string>(pNewFileName);
   const std::string& currentFileName = imageItem->getFileName();
 
   if (newFileName != currentFileName)

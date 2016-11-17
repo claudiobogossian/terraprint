@@ -68,12 +68,12 @@ void te::layout::ThreeNorthItem::drawItem(QPainter * painter, const QStyleOption
     getAngles(angleMN, angleMC);
 
 
-    if (m_controller->getProperty("magnetic_north").getValue().toBool() == true){
+    if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("magnetic_north")) == true){
       drawMagneticNorth(painter, angleMN);
   }
 
 
-    if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true)
+    if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("meridian_convergence")) == true)
     {
       drawMeridianConvergence(painter, angleMC);
     }
@@ -81,10 +81,10 @@ void te::layout::ThreeNorthItem::drawItem(QPainter * painter, const QStyleOption
 
 void te::layout::ThreeNorthItem::getAngles(double &angleMN, double &angleMC){
 
-    double angle_magnetic = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
-    double angle_meridian = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
+    double angle_magnetic = te::layout::Property::GetValueAs<double>(m_controller->getProperty("angle_magnetic_north"));
+    double angle_meridian = te::layout::Property::GetValueAs<double>(m_controller->getProperty("angle_meridian_convergence"));
 
-    if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == true){
+    if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("meridian_convergence")) == true && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("magnetic_north")) == true){
       if (angle_meridian == 0 && angle_magnetic == 0)
       {
         return;
@@ -159,7 +159,7 @@ void te::layout::ThreeNorthItem::getAngles(double &angleMN, double &angleMC){
     
     //Convergencia
 
-    else if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == false){
+    else if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("meridian_convergence")) == true && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("magnetic_north")) == false){
       angle_magnetic = 0;
       if (angle_meridian == 0) {
         return;
@@ -181,11 +181,13 @@ void te::layout::ThreeNorthItem::getAngles(double &angleMN, double &angleMC){
 void te::layout::ThreeNorthItem::drawTrueNorth(QPainter * painter)
 {
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0,0,0);
   QPen pn(cpen, lnew, Qt::SolidLine);
+  
   painter->setPen(pn);
 
   QString qStrUnit("NQ");
@@ -220,9 +222,10 @@ void te::layout::ThreeNorthItem::drawTrueNorth(QPainter * painter)
 void te::layout::ThreeNorthItem::drawMagneticNorth(QPainter * painter, double angleMN)
 {
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0, 0, 0);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
@@ -271,9 +274,10 @@ void te::layout::ThreeNorthItem::drawMagneticNorth(QPainter * painter, double an
 void te::layout::ThreeNorthItem::drawMeridianConvergence(QPainter * painter, double angleMC)
 {
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0, 0, 0);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
@@ -332,9 +336,10 @@ void te::layout::ThreeNorthItem::drawMeridianConvergence(QPainter * painter, dou
 void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
 {
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
   QColor cpen(0, 0, 0);
   QPen pn(cpen, lnew, Qt::SolidLine);
   painter->setPen(pn);
@@ -370,8 +375,8 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
 
   //Set text 
 
-  double angleMerC = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
-  double angleMagN = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
+  double angleMerC = te::layout::Property::GetValueAs<double>(m_controller->getProperty("angle_meridian_convergence"));
+  double angleMagN = te::layout::Property::GetValueAs<double>(m_controller->getProperty("angle_magnetic_north"));
   stringstream ssM;
   ssM << angleMerC;
   string strangleMerC = ssM.str();
@@ -388,8 +393,8 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
 
   // Get angles of Model Properties
 
-  double angle_magnetic = m_controller->getProperty("angle_magnetic_north").getValue().toDouble();
-  double angle_meridian = m_controller->getProperty("angle_meridian_convergence").getValue().toDouble();
+  double angle_magnetic = te::layout::Property::GetValueAs<double>(m_controller->getProperty("angle_magnetic_north"));
+  double angle_meridian = te::layout::Property::GetValueAs<double>(m_controller->getProperty("angle_meridian_convergence"));
 
   //Convert to degree, minute and second
 
@@ -412,7 +417,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
     dpi = myScene->getContext().getDpiY();
   }
 
-  if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == true){
+  if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("meridian_convergence")) == true && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("magnetic_north")) == true){
 
     double distance = boundingRect().height() / 2 + boundingRect().height() / 9.4;
     double cosineMeridianConver = std::cos(TeCDR * (90. + angleMC)) * distance;
@@ -567,7 +572,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
     painter->drawPath(anglePathMagN);
   }
 
-  else if (m_controller->getProperty("meridian_convergence").getValue().toBool() == true && m_controller->getProperty("magnetic_north").getValue().toBool() == false){
+  else if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("meridian_convergence")) == true && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("magnetic_north")) == false){
 
     angle_magnetic = 0;
     double distance = boundingRect().height() / 2 + boundingRect().height() / 9.4;
@@ -635,7 +640,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
 void te::layout::ThreeNorthItem::setBrush(QPainter* painter)
 {
   const Property& colorProperty = m_controller->getProperty("color");
-  const te::color::RGBAColor& color = colorProperty.getValue().toColor();
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(colorProperty);
   QColor brushColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   painter->setBrush(QBrush(brushColor));
 }

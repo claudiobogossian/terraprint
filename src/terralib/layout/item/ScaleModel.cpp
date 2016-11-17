@@ -39,8 +39,6 @@
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
 {
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getScaleItem());
-
   double width = 70.;
   double height = 30.;
   double scale = 250000.;
@@ -225,6 +223,7 @@ te::layout::ScaleModel::ScaleModel()
     this->m_properties.updateProperty(property);
   }
 
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getScaleItem());
 }
 
 te::layout::ScaleModel::~ScaleModel()

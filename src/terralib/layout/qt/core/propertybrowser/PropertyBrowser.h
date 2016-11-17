@@ -122,11 +122,11 @@ namespace te
 
         void onChangeFilter(const QString& filter);
 
-        virtual void onChangeDlgProperty(Property property);
+        virtual void onChangeDlgProperty(const Property& property);
 
       signals:
 
-        void changePropertyValue(Property property);
+        void changePropertyValue(const Property& property);
 
       protected:
 

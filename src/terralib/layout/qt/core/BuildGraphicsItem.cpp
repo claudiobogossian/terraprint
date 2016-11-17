@@ -27,6 +27,11 @@
 
 // TerraLib
 #include "BuildGraphicsItem.h"
+
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
+
+
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "pattern/factory/item/ItemFactory.h"
@@ -275,7 +280,7 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
     {
       Property prop = abstractItem->getController()->getProperty("file_name");
 
-      if (prop.getValue().toString().compare("") != 0)
+      if (prop.getValue()->toString().compare("") != 0)
         return;
 
       QList<QGraphicsItem*> imageItemList;

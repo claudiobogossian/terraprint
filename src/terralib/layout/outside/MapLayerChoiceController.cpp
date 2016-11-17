@@ -86,8 +86,8 @@ std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::searc
   std::string nameProp = "layers";
   Property prop = getProperty(nameProp);
 
-  std::list<te::map::AbstractLayerPtr> currentLayers = prop.getValue().toLayerList();
-  std::list<te::map::AbstractLayerPtr>::iterator itLayers = currentLayers.begin();
+  const std::list<te::map::AbstractLayerPtr>& currentLayers = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> > (prop);
+  std::list<te::map::AbstractLayerPtr>::const_iterator itLayers = currentLayers.begin();
   while (itLayers != currentLayers.end())
   {
     layers.push_back(*itLayers);

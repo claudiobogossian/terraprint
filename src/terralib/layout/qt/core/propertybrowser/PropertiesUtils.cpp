@@ -136,8 +136,7 @@ te::layout::Properties te::layout::PropertiesUtils::sameProperties( const QList<
 
 void te::layout::PropertiesUtils::contains( std::vector<Properties>::iterator itend, std::vector<Properties>::iterator it, std::string name, bool& result )
 {
-  Property prop = (*it).getProperty(name);
-  if(prop.isNull())
+  if(it->contains(name) == false)
   {
     result = false;
     return;
@@ -210,7 +209,7 @@ void te::layout::PropertiesUtils::checkDynamicProperty( Property& property, cons
 
 void te::layout::PropertiesUtils::mapNameDynamicProperty( Property& property, const QList<QGraphicsItem*>& graphicsItems )
 {
-  std::string currentName = property.getValue().toString();
+  std::string currentName = te::layout::Property::GetValueAs<std::string>(property);
 
   if(currentName.compare("") == 0)
   {

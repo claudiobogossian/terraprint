@@ -32,8 +32,8 @@
 te::layout::TextGridModel::TextGridModel()
   : TextModel()
 {
-  std::size_t numRows = 1;
-  std::size_t numColumns = 1;
+  int numRows = 1;
+  int numColumns = 1;
 
   std::vector< std::vector<std::string> > textMatrix;
   textMatrix.resize(numRows);

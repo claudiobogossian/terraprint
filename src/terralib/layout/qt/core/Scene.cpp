@@ -303,7 +303,7 @@ void te::layout::Scene::removeSelectedItems()
         if (abstractItem->getController())
         {
           const Property& pName = abstractItem->getController()->getProperty("name");
-          names.push_back(pName.getValue().toString());
+          names.push_back(pName.getValue()->toString());
         }
       }
     }
@@ -332,7 +332,7 @@ bool te::layout::Scene::removeItemByName(std::string name)
     if (abstractItem->getController())
     {
       const Property& pName = abstractItem->getController()->getProperty("name");
-      names.push_back(pName.getValue().toString());
+      names.push_back(pName.getValue()->toString());
       result = true;
     }
   }
@@ -495,7 +495,7 @@ void te::layout::Scene::destroyItemGroup(te::layout::ItemGroup* group )
     if (abstractItem->getController())
     {
       const Property& pName = abstractItem->getController()->getProperty("name");
-      vecNames.push_back(pName.getValue().toString());
+      vecNames.push_back(pName.getValue()->toString());
     }
   }
 
@@ -598,7 +598,7 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
     //I am inside a group
     if (qItem->parentItem() != 0)
     {
-      const std::string& absItemName = absItem->getController()->getProperty("name").getValue().toString();
+      const std::string& absItemName = absItem->getController()->getProperty("name").getValue()->toString();
 
       AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(qItem->parentItem());
       if (absParentItem == 0)
@@ -610,7 +610,7 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
       std::string objectTypeName = absParentItem->getController()->getProperties().getTypeObj()->getName();
       if (objectTypeName == objectType->getItemGroup()->getName())
       {
-        const std::string& absParentName = absParentItem->getController()->getProperty("name").getValue().toString();
+        const std::string& absParentName = absParentItem->getController()->getProperty("name").getValue()->toString();
         mapGroups[absParentName].push_back(absItemName);
       }
       else
@@ -625,7 +625,7 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
     if(lItem)
     {
       const Property& pIsPrintable = lItem->getController()->getProperty("printable");
-      if(pIsPrintable.getValue().toBool() == false)
+      if(te::layout::Property::GetValueAs<bool>(pIsPrintable) == false)
         continue;
         
       properties.push_back(lItem->getController()->getProperties());
@@ -651,7 +651,7 @@ QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGrap
       continue;
     }
 
-    const std::string& absItemName = absItem->getController()->getProperty("name").getValue().toString();
+    const std::string& absItemName = te::layout::Property::GetValueAs<std::string>(absItem->getController()->getProperty("name"));
 
     mapItems[absItemName] = qItem;
 
@@ -663,7 +663,7 @@ QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGrap
       const Property& property = vecProperty[i];
       if (property.getType() == dataType->getDataTypeItemObserver())
       {
-        const std::string& parentItemName = property.getValue().toString();
+        const std::string& parentItemName = te::layout::Property::GetValueAs<std::string>(property);
         mapDependency[absItemName] = parentItemName;
       }
     }
@@ -755,7 +755,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
     if (proper.getTypeObj() == groupType)
     {
-      mapProperties[proper.getProperty("name").getValue().toString()] = proper;
+      mapProperties[te::layout::Property::GetValueAs<std::string>(proper.getProperty("name"))] = proper;
       continue;
     }
     
@@ -1110,7 +1110,7 @@ void te::layout::Scene::selectItem(std::string name)
         }
 
         const Property& pItemName = it->getController()->getProperty("name");
-        const std::string& itemName = pItemName.getValue().toString();
+        const std::string& itemName = te::layout::Property::GetValueAs<std::string>(pItemName);
         if(itemName.compare(name) == 0)
         {
           item->setSelected(true);
@@ -1159,7 +1159,7 @@ void te::layout::Scene::redrawItems()
       if(it)
       {
         const Property& pIsPrintable = it->getController()->getProperty("printable");
-        if(pIsPrintable.getValue().toBool() == true)
+        if(te::layout::Property::GetValueAs<bool>(pIsPrintable) == true)
         {
           it->refresh();
         }
@@ -1324,25 +1324,21 @@ void te::layout::Scene::updateBoxFromProperties(te::gm::Envelope box, AbstractIt
   Property pro_x;
   pro_x.setName("x");
   pro_x.setValue(x, dataType->getDataTypeDouble());
-  pro_x.setEditable(false);
   props.addProperty(pro_x);
 
   Property pro_y;
   pro_y.setName("y");
   pro_y.setValue(y, dataType->getDataTypeDouble());
-  pro_y.setEditable(false);
   props.addProperty(pro_y);
 
   Property pro_width;
   pro_width.setName("width");
   pro_width.setValue(width, dataType->getDataTypeDouble());
-  pro_width.setEditable(false);
   props.addProperty(pro_width);
 
   Property pro_height;
   pro_height.setName("height");
   pro_height.setValue(height, dataType->getDataTypeDouble());
-  pro_height.setEditable(false);
   props.addProperty(pro_height);
 
   controller->setProperties(props);
@@ -1485,7 +1481,7 @@ bool te::layout::Scene::enterEditionMode()
     return false;
 
   const Property& property = absItem->getController()->getProperty("editable");
-  if (property.getValue().toBool() == false)
+  if (te::layout::Property::GetValueAs<bool>(property) == false)
   {
     return false;
   }
@@ -1568,7 +1564,7 @@ te::layout::AbstractItemView* te::layout::Scene::getItem(const std::string& name
       if (it)
       {
         const Property& property = it->getController()->getProperty("name");
-        if (name.compare(property.getValue().toString()) == 0)
+        if (name.compare(te::layout::Property::GetValueAs<std::string>(property)) == 0)
         {
           abstractItem = it;
           break;

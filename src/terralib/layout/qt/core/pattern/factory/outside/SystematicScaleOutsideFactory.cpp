@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "SystematicScaleOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/SystematicScaleModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../../../outside/SystematicScaleOutside.h"

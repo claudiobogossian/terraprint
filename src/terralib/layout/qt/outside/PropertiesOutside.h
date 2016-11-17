@@ -105,11 +105,11 @@ namespace te
           \brief Click on the context menu for an item, the user choose to open a window.
           \param prop corresponding property choice
         */
-        virtual void onMenuPropertyClicked(Property prop);
+        virtual void onMenuPropertyClicked(const Property& prop);
 
       private slots:
 
-        void onChangePropertyValue(Property property);
+        void onChangePropertyValue(const Property& property);
 
       protected:
 

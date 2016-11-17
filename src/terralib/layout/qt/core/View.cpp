@@ -483,18 +483,13 @@ void te::layout::View::paste()
     Property pX = prop.getProperty("x");
     Property pY = prop.getProperty("y");
 
-    double x = pX.getValue().toDouble();
-    double y = pY.getValue().toDouble();
+    double x = te::layout::Property::GetValueAs<double>(pX);
+    double y = te::layout::Property::GetValueAs<double>(pY);
 
-    Variant varX;
-    Variant varY;
-
-    varX.setValue(x + 20.0, dataType->getDataTypeDouble());
-    pX.setValue(varX);
+    pX.setValue(x + 20.0, dataType->getDataTypeDouble());
     prop.updateProperty(pX);
 
-    varY.setValue(y - 20.0, dataType->getDataTypeDouble());
-    pY.setValue(varY);
+    pY.setValue(y - 20.0, dataType->getDataTypeDouble());
     prop.updateProperty(pY);
 
 
@@ -514,18 +509,13 @@ void te::layout::View::paste()
       Property pX = prop.getProperty("x");
       Property pY = prop.getProperty("y");
 
-      double x = pX.getValue().toDouble();
-      double y = pY.getValue().toDouble();
+      double x = te::layout::Property::GetValueAs<double>(pX);
+      double y = te::layout::Property::GetValueAs<double>(pY);
 
-      Variant varX;
-      Variant varY;
-
-      varX.setValue(x + 20.0, dataType->getDataTypeDouble());
-      pX.setValue(varX);
+      pX.setValue(x + 20.0, dataType->getDataTypeDouble());
       prop.updateProperty(pX);
 
-      varY.setValue(y - 20.0, dataType->getDataTypeDouble());
-      pY.setValue(varY);
+      pY.setValue(y - 20.0, dataType->getDataTypeDouble());
       prop.updateProperty(pY);
 
     }
@@ -536,11 +526,10 @@ void te::layout::View::paste()
     std::string oldName;
     int oldId;
 
-    oldName = pro_name.getValue().toString();
-    oldId = pro_id.getValue().toInt();
+    oldName = te::layout::Property::GetValueAs<std::string>(pro_name);
+    oldId = te::layout::Property::GetValueAs<int>(pro_id);
 
-    Variant var;
-    pro_name.setValue(var);
+    pro_name.setValue<std::string>("", dataType->getDataTypeString());
     prop.updateProperty(pro_name);
     std::string newName;
 
@@ -565,42 +554,33 @@ void te::layout::View::paste()
       Property pX = prop.getProperty("x");
       Property pY = prop.getProperty("y");
 
-      double x = pX.getValue().toDouble();
-      double y = pY.getValue().toDouble();
+      double x = te::layout::Property::GetValueAs<double>(pX);
+      double y = te::layout::Property::GetValueAs<double>(pY);
 
-      Variant varX;
-      Variant varY;
-
-      varX.setValue(x + 5.0, dataType->getDataTypeDouble());
-      pX.setValue(varX);
+      pX.setValue(x + 5.0, dataType->getDataTypeDouble());
       prop.updateProperty(pX);
 
-      varY.setValue(y - 5.0, dataType->getDataTypeDouble());
-      pY.setValue(varY);
+      pY.setValue(y - 5.0, dataType->getDataTypeDouble());
       prop.updateProperty(pY);
 
     }
-    
 
     SharedProperties sharedProps;
-    Property connect = prop.getProperty(sharedProps.getItemObserver());
+    if (prop.contains(sharedProps.getItemObserver()))
+    {
+      Property connect = prop.getProperty(sharedProps.getItemObserver());
 
-    Variant varConnect;
-    std::string currentNameConnect = connect.getValue().toString();
-    currentNameConnect = currentNameConnect.substr(0, currentNameConnect.find("_Map"));
-    std::string nameConnect = newNames[currentNameConnect];
-    varConnect.setValue(nameConnect + "_Map", dataType->getDataTypeItemObserver());
-    connect.setValue(varConnect);
-    prop.updateProperty(connect);
+      std::string currentNameConnect = te::layout::Property::GetValueAs<std::string>(connect);
+      currentNameConnect = currentNameConnect.substr(0, currentNameConnect.find("_Map"));
+      std::string nameConnect = newNames[currentNameConnect];
+      connect.setValue(nameConnect + "_Map", dataType->getDataTypeItemObserver());
+      prop.updateProperty(connect);
+    }
 
-    std::string oldName;
-    int oldId;
+    const std::string& oldName = te::layout::Property::GetValueAs<std::string>(pro_name);
+    int oldId = te::layout::Property::GetValueAs<int>(pro_id);
 
-    oldName = pro_name.getValue().toString();
-    oldId = pro_id.getValue().toInt();
-
-    Variant var;
-    pro_name.setValue(var);
+    pro_name.setValue<std::string>("", dataType->getDataTypeString());
     prop.updateProperty(pro_name);
     std::string newName;
 
@@ -1690,7 +1670,7 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
   }
   catch (...)
   {
-
+    int a = 0;
   }
 
   emit endedPerformingIO();

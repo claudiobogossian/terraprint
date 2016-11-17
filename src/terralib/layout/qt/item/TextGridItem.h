@@ -73,10 +73,6 @@ namespace te
         void documentEditionFinished();
 
         virtual void updateBlockEditionRange();
-
-    protected:
-
-        int         m_lastCursorPosition;
     };
   }
 }

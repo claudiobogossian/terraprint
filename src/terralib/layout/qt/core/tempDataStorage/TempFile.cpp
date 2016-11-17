@@ -72,7 +72,7 @@ bool te::layout::TempFile::save()
     return result;
 
   //to make this funcion thread safe, we must copy the properties before stating to process it
-  std::vector<te::layout::Properties> vecPropertiesCopy(m_properties);
+  std::vector<te::layout::Properties> vecPropertiesCopy = m_properties;
 
   if (vecPropertiesCopy.empty())
     return result;
@@ -93,6 +93,11 @@ void te::layout::TempFile::readProperties()
   Scene* scene = tempFileInfo->getScene();
   m_properties.clear();
   m_mapGroups.clear();
-  scene->getItemsProperties(m_properties, m_mapGroups);
+
+  std::vector<Properties> vecProperties;
+  scene->getItemsProperties(vecProperties, m_mapGroups);
+
+  //to make the save function thread safe, we must copy the properties before stating to process it
+  m_properties = vecProperties;
 }
 

@@ -29,6 +29,8 @@
 #include "MapItem.h"
 #include "MapController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../core/ItemUtils.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/pattern/singleton/Context.h"
@@ -87,7 +89,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
       if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
       {
         const Property& property = m_controller->getProperty("background_color");
-        const te::color::RGBAColor& color = property.getValue().toColor();;
+        const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
         QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
         m_screenGreaterCache = QPixmap(sizeInPixels);
@@ -98,7 +100,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
 
       m_screenCache = m_screenGreaterCache.scaled(sizeInPixels, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
-
+    
     te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenCache);
     if (m_screenDraft.isNull() == false)
     {
@@ -114,10 +116,10 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
   const Property& pScale = m_controller->getProperty("scale");
   const Property& property = m_controller->getProperty("background_color");
 
-  int srid = pSrid.getValue().toInt();;
-  const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
-  double scale = pScale.getValue().toDouble();
-  const te::color::RGBAColor& color = property.getValue().toColor();
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  double scale = te::layout::Property::GetValueAs<double>(pScale);
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
 
   //here we render the layers on the given device
   te::qt::widgets::Canvas canvas(device);
@@ -133,8 +135,8 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   const Property& pWorldBox = m_controller->getProperty("world_box");
   const Property& property = m_controller->getProperty("background_color");
 
-  const te::gm::Envelope& envelope = pWorldBox.getValue().toEnvelope();
-  const te::color::RGBAColor& color = property.getValue().toColor();
+  const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
 
   //here we render the layers on the given device
   painter->save();
@@ -173,9 +175,9 @@ void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::
   const Property& pScale = m_controller->getProperty("scale");
   const Property& pLayerList = m_controller->getProperty("layers");
   
-  int srid = pSrid.getValue().toInt();
-  double scale = pScale.getValue().toDouble();
-  const std::list<te::map::AbstractLayerPtr>& layerList = pLayerList.getValue().toLayerList();
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  double scale = te::layout::Property::GetValueAs<double>(pScale);
+  const std::list<te::map::AbstractLayerPtr>& layerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pLayerList);
 
   bool cancel = false;
   std::list<te::map::AbstractLayerPtr>::const_reverse_iterator it;
@@ -299,7 +301,7 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
   }
 
   const Property& pWorldBox = m_controller->getProperty("world_box");
-  const te::gm::Envelope& worldBox = pWorldBox.getValue().toEnvelope();
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
 
   te::gm::Coord2D m_clickedCoordMM(m_clickedPointMM.getX(), m_clickedPointMM.getY());
   te::gm::Coord2D currentCoordMM(event->pos().x(), event->pos().y());
@@ -433,7 +435,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
   }
 
   const Property& pWorldBox = m_controller->getProperty("world_box");
-  const te::gm::Envelope& worldBox = pWorldBox.getValue().toEnvelope();
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
 
   te::gm::Coord2D coordMM(event->pos().x(), event->pos().y());
   te::gm::Envelope boxMM(0, 0, boundingRect().width(), boundingRect().height());
@@ -481,7 +483,7 @@ bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
   //this modes are used in the edition mode
 
   const Property& pFixedScale = m_controller->getProperty("fixed_scale");
-  bool fixedScale = pFixedScale.getValue().toBool();
+  bool fixedScale = te::layout::Property::GetValueAs<bool>(pFixedScale);
 
   EnumModeType* mode = Enums::getInstance().getEnumModeType();
 

@@ -66,8 +66,6 @@ namespace te
 
         virtual std::string getLoadPath();
 
-        virtual std::vector<te::layout::Properties> retrieve() = 0;
-
         virtual bool isEmpty() = 0;
 
         virtual void setRootKey(std::string rootKey);

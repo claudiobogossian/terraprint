@@ -147,7 +147,7 @@ te::layout::BalloonModel::BalloonModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
   {
@@ -173,7 +173,6 @@ te::layout::BalloonModel::BalloonModel()
     property.setName("contour_thickness");
     property.setLabel(TR_LAYOUT("Contour Thickness"));
     property.setValue(contourThickness, dataType->getDataTypeDouble());
-    property.setMenu(true);
     m_properties.addProperty(property);
   }
 
@@ -184,5 +183,3 @@ te::layout::BalloonModel::~BalloonModel()
 {
 
 }
-
-

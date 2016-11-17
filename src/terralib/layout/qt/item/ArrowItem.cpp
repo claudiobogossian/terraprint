@@ -48,25 +48,22 @@ te::layout::ArrowItem::~ArrowItem()
 void te::layout::ArrowItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("arrow_type");
-  if(property.isNull() == false)
+  EnumArrowType enumArrowType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentArrowType = enumArrowType.searchLabel(label);
+
+  if(currentArrowType == enumArrowType.getDoubleArrowType())
   {
-    EnumArrowType enumArrowType;
-
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentArrowType = enumArrowType.searchLabel(label);
-
-    if(currentArrowType == enumArrowType.getDoubleArrowType())
-    {
-      drawDoubleArrow(painter);
-    }
-    if(currentArrowType == enumArrowType.getRightArrowType())
-    {
-      drawRightArrow(painter);
-    }
-    if(currentArrowType == enumArrowType.getLeftArrowType())
-    {
-      drawLeftArrow(painter);
-    }
+    drawDoubleArrow(painter);
+  }
+  if(currentArrowType == enumArrowType.getRightArrowType())
+  {
+    drawRightArrow(painter);
+  }
+  if(currentArrowType == enumArrowType.getLeftArrowType())
+  {
+    drawLeftArrow(painter);
   }
 }
 
@@ -77,14 +74,14 @@ void te::layout::ArrowItem::drawRightArrow( QPainter * painter )
   const Property& pFillColor = m_controller->getProperty("fill_color");
   const Property& pContourColor = m_controller->getProperty("contour_color");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QBrush brush(qFillColor);
   QPen pen(qContourColor, lnew, Qt::SolidLine);
@@ -129,14 +126,14 @@ void te::layout::ArrowItem::drawLeftArrow(QPainter * painter)
   const Property& pFillColor = m_controller->getProperty("fill_color");
   const Property& pContourColor = m_controller->getProperty("contour_color");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QBrush brush(qFillColor);
   QPen pen(qContourColor, lnew, Qt::SolidLine);
@@ -181,14 +178,14 @@ void te::layout::ArrowItem::drawDoubleArrow(QPainter * painter)
   const Property& pFillColor = m_controller->getProperty("fill_color");
   const Property& pContourColor = m_controller->getProperty("contour_color");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QBrush brush(qFillColor);
   QPen pen(qContourColor, lnew, Qt::SolidLine);

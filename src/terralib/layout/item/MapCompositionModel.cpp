@@ -28,16 +28,19 @@
 // TerraLib
 #include "MapCompositionModel.h"
 
+#include "../core/enum/EnumDataType.h"
+#include "../core/enum/Enums.h"
+
+
 te::layout::MapCompositionModel::MapCompositionModel()
   : ItemGroupModel()
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  double thickness = 1.0;
 
   {
     Property property(0);
     property.setName("show_frame");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }
 
@@ -52,14 +55,14 @@ te::layout::MapCompositionModel::MapCompositionModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
 
   {
     Property property(0);
     property.setName("editable");
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }
 

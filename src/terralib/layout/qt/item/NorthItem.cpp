@@ -46,25 +46,22 @@ te::layout::NorthItem::~NorthItem()
 void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("northArrow_type");
-  if(property.isNull() == false)
+  EnumNorthArrowType enumNorthArrowType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentNorthArrowType = enumNorthArrowType.searchLabel(label);
+
+  if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType1())
   {
-    EnumNorthArrowType enumNorthArrowType;
-
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentNorthArrowType = enumNorthArrowType.searchLabel(label);
-
-    if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType1())
-    {
-      drawNorthArrow1(painter);
-    }
-    else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType2())
-    {
-      drawNorthArrow2(painter);
-    }
-    else if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
-    {
-      drawNorthArrow3(painter);
-    }
+    drawNorthArrow1(painter);
+  }
+  else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType2())
+  {
+    drawNorthArrow2(painter);
+  }
+  else if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
+  {
+    drawNorthArrow3(painter);
   }
 }
 
@@ -82,7 +79,7 @@ void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
   northLetter.translate(northLetterX, northLetterY);
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -116,7 +113,7 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
   northLetter.translate(northLetterX, northLetterY);
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -159,7 +156,7 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
   northLetter.translate(northLetterX, northLetterY);
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   painter->setRenderHint(QPainter::Antialiasing, true);
@@ -198,7 +195,7 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
 QColor te::layout::NorthItem::setBrush(QPainter* painter)
 {
   const Property& colorProperty = m_controller->getProperty("color");
-  const te::color::RGBAColor& color = colorProperty.getValue().toColor();
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(colorProperty);
   QColor brushColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   painter->setBrush(QBrush(brushColor));
   return brushColor;

@@ -51,27 +51,23 @@ te::layout::RectangleItem::~RectangleItem()
 void te::layout::RectangleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("rectangle_type");
-  if(property.isNull() == false)
+  EnumRectangleType enumRectangleType;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentRectangleType = enumRectangleType.searchLabel(label);
+
+  if(currentRectangleType == enumRectangleType.getSimpleRectangleType())
   {
-    EnumRectangleType enumRectangleType;
+    drawRectangle(painter);
+  }
+  if(currentRectangleType == enumRectangleType.getRoundedRetangleType())
+  {
+    drawRoundedRectangle(painter);
+  }
 
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentRectangleType = enumRectangleType.searchLabel(label);
-
-    if(currentRectangleType == enumRectangleType.getSimpleRectangleType())
-    {
-      drawRectangle(painter);
-    }
-    if(currentRectangleType == enumRectangleType.getRoundedRetangleType())
-    {
-      drawRoundedRectangle(painter);
-    }
-
-    if(currentRectangleType == enumRectangleType.getSingleCornerTrimmedRectangleType())
-    {
-      drawSingleCornerTrimmedRectangle(painter);
-    }
-
+  if(currentRectangleType == enumRectangleType.getSingleCornerTrimmedRectangleType())
+  {
+    drawSingleCornerTrimmedRectangle(painter);
   }
 }
 
@@ -83,9 +79,9 @@ void te::layout::RectangleItem::drawRectangle( QPainter * painter )
   const Property& pContourColor = m_controller->getProperty("contour_color");
   const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
-  double frameThickness = pFrameThickness.getValue().toDouble();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
@@ -117,9 +113,9 @@ void te::layout::RectangleItem::drawRoundedRectangle(QPainter * painter)
   const Property& pContourColor = m_controller->getProperty("contour_color");
   const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
-  double frameThickness = pFrameThickness.getValue().toDouble();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
@@ -151,9 +147,9 @@ void te::layout::RectangleItem::drawSingleCornerTrimmedRectangle(QPainter * pain
   const Property& pContourColor = m_controller->getProperty("contour_color");
   const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
 
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
-  double frameThickness = pFrameThickness.getValue().toDouble();
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());

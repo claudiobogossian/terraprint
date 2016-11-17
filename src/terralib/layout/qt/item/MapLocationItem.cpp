@@ -55,11 +55,11 @@ void te::layout::MapLocationItem::drawLayers(te::qt::widgets::Canvas* canvas, co
   const Property& pFillColor = m_controller->getProperty("reference_box_fill_color");
   const Property& pContourColor = m_controller->getProperty("reference_box_contour_color");
 
-  int srid = pSrid.getValue().toInt();
-  int referenceSrid = pReferenceSrid.getValue().toInt();
-  te::gm::Envelope referenceBox = pReferenceBox.getValue().toEnvelope();
-  const te::color::RGBAColor& fillColor = pFillColor.getValue().toColor();
-  const te::color::RGBAColor& contourColor = pContourColor.getValue().toColor();
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  int referenceSrid = te::layout::Property::GetValueAs<int>(pReferenceSrid);
+  te::gm::Envelope referenceBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pReferenceBox);
+  const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
+  const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
 
   if (referenceSrid <= 0 || referenceBox.isValid() == false)
   {

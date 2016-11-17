@@ -29,6 +29,8 @@
 #include "ColorDialogOutside.h"
 #include "../../outside/ColorDialogModel.h"
 #include "terralib/color/RGBAColor.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 
@@ -57,7 +59,7 @@ void te::layout::ColorDialogOutside::init()
 
   Property prop_color = model->getColorProperty();
 
-  te::color::RGBAColor rgbColor = prop_color.getValue().toColor();
+  te::color::RGBAColor rgbColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_color);
 
   QColor color;
   color.setRed(rgbColor.getRed());
@@ -98,7 +100,7 @@ void te::layout::ColorDialogOutside::accept()
 
   Property prop_color = model->getColorProperty();
 
-  te::color::RGBAColor rgbColor = prop_color.getValue().toColor();
+  te::color::RGBAColor rgbColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_color);
 
   QColor color;
   color.setRed(rgbColor.getRed());
@@ -113,7 +115,8 @@ void te::layout::ColorDialogOutside::accept()
 
   rgbColor.setColor(m_currentColor.red(), m_currentColor.green(), m_currentColor.blue(), m_currentColor.alpha());
 
-  prop_color.setValue(rgbColor, prop_color.getType());
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  prop_color.setValue(rgbColor, dataType->getDataTypeColor());
 
   model->setColorProperty(prop_color); // refresh property value
 

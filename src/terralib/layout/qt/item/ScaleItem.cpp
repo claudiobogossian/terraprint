@@ -80,30 +80,28 @@ bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)
 void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   const Property& property = m_controller->getProperty("scale_type");
-  if(property.isNull() == false)
+
+  EnumScaleType enumScale;
+
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+  EnumType* currentScaleType = enumScale.searchLabel(label);
+
+  if (validateGaps() == false)
   {
-    EnumScaleType enumScale;
+    return;
+  }
 
-    const std::string& label = property.getOptionByCurrentChoice().toString();
-    EnumType* currentScaleType = enumScale.searchLabel(label);
-
-    if (validateGaps() == false)
-    {
-      return;
-    }
-
-    if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
-    {
-      drawDoubleAlternatingScaleBar(painter);
-    }
-    if(currentScaleType == enumScale.getAlternatingScaleBarType())
-    {
-      drawAlternatingScaleBar(painter);
-    }
-    if(currentScaleType == enumScale.getHollowScaleBarType())
-    {
-      drawHollowScaleBar(painter);
-    }
+  if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
+  {
+    drawDoubleAlternatingScaleBar(painter);
+  }
+  if(currentScaleType == enumScale.getAlternatingScaleBarType())
+  {
+    drawAlternatingScaleBar(painter);
+  }
+  if(currentScaleType == enumScale.getHollowScaleBarType())
+  {
+    drawHollowScaleBar(painter);
   }
 }
 
@@ -138,14 +136,14 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   QColor changeColor;
 
   const Property& prop_only_first = m_controller->getProperty("only_first_and_last_value");
-  bool only_first_and_last = prop_only_first.getValue().toBool();
+  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
 
   const Property& prop_font_color = m_controller->getProperty("font_color");
-  const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
+  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   double displacementBetweenScaleAndText = 2.;
   
@@ -286,14 +284,14 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QColor changeColor;
   
   const Property& prop_only_first = m_controller->getProperty("only_first_and_last_value");
-  bool only_first_and_last = prop_only_first.getValue().toBool();
+  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
 
   const Property& prop_font_color = m_controller->getProperty("font_color");
-  const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
+  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QFont qFont = ItemUtils::convertToQfont(m_font);
 
@@ -422,16 +420,16 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   QColor changeColor;
   
   const Property& prop_only_first = m_controller->getProperty("only_first_and_last_value");
-  bool only_first_and_last = prop_only_first.getValue().toBool();
+  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
 
   const Property& prop_font_color = m_controller->getProperty("font_color");
-  const te::color::RGBAColor& backgroundColor = prop_font_color.getValue().toColor();
+  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   double displacementBetweenScaleAndText = 2.;
 
   const Property& lineWidth = m_controller->getProperty("line_width");
-  double lnew = lineWidth.getValue().toDouble();
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QFont qFont = ItemUtils::convertToQfont(m_font);
 
@@ -547,11 +545,11 @@ void te::layout::ScaleItem::refreshScaleProperties()
   const Property& pTextFont = m_controller->getProperty("font");
   const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
 
-  m_scale = pScale.getValue().toDouble();
-  m_gapX = pScaleGapX.getValue().toDouble();
-  m_gapY = pScaleGapY.getValue().toDouble();
-  m_font = pTextFont.getValue().toFont();
-  m_scaleUnitGapX = pScaleUnitGapX.getValue().toDouble();
+  m_scale = te::layout::Property::GetValueAs<double>(pScale);
+  m_gapX = te::layout::Property::GetValueAs<double>(pScaleGapX);
+  m_gapY = te::layout::Property::GetValueAs<double>(pScaleGapY);
+  m_font = te::layout::Property::GetValueAs<Font>(pTextFont);
+  m_scaleUnitGapX = te::layout::Property::GetValueAs<double>(pScaleUnitGapX);
 }
 
 
@@ -562,9 +560,9 @@ bool te::layout::ScaleItem::validateGaps()
   const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
   const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
 
-  m_gapX = pScaleGapX.getValue().toDouble();
-  m_gapY = pScaleGapY.getValue().toDouble();
-  m_scaleUnitGapX = pScaleUnitGapX.getValue().toDouble();
+  m_gapX = te::layout::Property::GetValueAs<double>(pScaleGapX);
+  m_gapY = te::layout::Property::GetValueAs<double>(pScaleGapY);
+  m_scaleUnitGapX = te::layout::Property::GetValueAs<double>(pScaleUnitGapX);
 
   QRectF boundRect = boundingRect();
 

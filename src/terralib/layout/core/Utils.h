@@ -74,7 +74,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        Utils(Scene* scene);
+        explicit Utils(Scene* scene);
 
         /*!
           \brief Destructor
@@ -265,6 +265,8 @@ namespace te
         static double round(double n, double precision);
 
         static double calculateAngle(QPointF p1, QPointF p2);
+
+        static std::vector<std::string> Tokenize(const std::string& value, const std::string& separator);
 
       protected:
         

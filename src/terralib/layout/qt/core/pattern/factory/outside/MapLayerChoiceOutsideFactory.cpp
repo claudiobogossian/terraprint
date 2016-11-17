@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "MapLayerChoiceOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/MapLayerChoiceModel.h"
 #include "../../../../../outside/MapLayerChoiceController.h"
 #include "../../../../outside/MapLayerChoiceOutside.h"

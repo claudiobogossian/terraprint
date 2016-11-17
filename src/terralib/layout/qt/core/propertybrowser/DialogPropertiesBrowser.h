@@ -97,7 +97,7 @@ namespace te
             Example usage: Click on the context menu for an item, the user choose to open a window.
           \param prop corresponding property choice
         */
-        virtual void directlyShowWindow(Property prop);
+        virtual void directlyShowWindow(const Property& prop);
             
       protected slots:
 

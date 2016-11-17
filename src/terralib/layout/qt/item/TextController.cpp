@@ -20,6 +20,8 @@
 // TerraLib
 #include "TextController.h"
 
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../qt/core/Scene.h"
 #include "../../qt/item/AbstractItem.h"
@@ -65,11 +67,11 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
 
     Property propertyWidth(0);
     propertyWidth.setName("width");
-    propertyWidth.setValue(sizeMM.width(), dataType->getDataTypeDouble());
+    propertyWidth.setValue<double>(sizeMM.width(), dataType->getDataTypeDouble());
 
     Property propertyHeight(0);
     propertyHeight.setName("height");
-    propertyHeight.setValue(sizeMM.height(), dataType->getDataTypeDouble());
+    propertyHeight.setValue<double>(sizeMM.height(), dataType->getDataTypeDouble());
 
     propertiesCopy.addProperty(propertyWidth);
     propertiesCopy.addProperty(propertyHeight);
@@ -91,8 +93,8 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
     const Property& pCurrentHeight = this->getProperty("height");
     const Property& pNewHeight = propertiesCopy.getProperty("height");
 
-    double currentHeight = pCurrentHeight.getValue().toDouble();
-    double newHeight = pNewHeight.getValue().toDouble();
+    double currentHeight = te::layout::Property::GetValueAs<double>(pCurrentHeight);
+    double newHeight = te::layout::Property::GetValueAs<double>(pNewHeight);
     double resizeFactor = newHeight / currentHeight;
 
     double ptSizeMM = 0.353;//size of one point (font measure), in millimeters
@@ -100,7 +102,7 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
     int newFontSize = (int)newFontSizeDouble;
 
     te::layout::Property pNewFont = this->getProperty("font"); //copies the current property
-    Font newFont = pNewFont.getValue().toFont();
+    Font newFont = te::layout::Property::GetValueAs<Font>(pNewFont);
     newFont.setPointSize(qRound(newFont.getPointSize() * resizeFactor));
 
     pNewFont.setValue(newFont, dataType->getDataTypeFont());
@@ -121,26 +123,12 @@ double te::layout::TextController::getDpiForCalculation() const
 
 QTextDocument* te::layout::TextController::createTextDocument(const te::layout::Properties& properties)
 {
-  te::layout::Property pText = properties.getProperty("text");
-  if (pText.isNull())
-  {
-    pText = this->getProperty("text");
-  }
+  const te::layout::Property& pText = getProperty("text", properties);
+  const te::layout::Property& pFont = getProperty("font", properties);
+  const te::layout::Property& pAligment = getProperty("alignment", properties);
 
-  te::layout::Property pFont = properties.getProperty("font");
-  if (pFont.isNull())
-  {
-    pFont = this->getProperty("font");
-  }
-
-  Property pAligment = properties.getProperty("alignment");
-  if (pAligment.isNull())
-  {
-    pAligment = this->getProperty("alignment");
-  }
-
-  QString qText = ItemUtils::convert2QString(pText.getValue().toString());
-  QFont qFont = ItemUtils::convertToQfont(pFont.getValue().toFont());
+  QString qText = ItemUtils::convert2QString(te::layout::Property::GetValueAs<std::string>(pText));
+  QFont qFont = ItemUtils::convertToQfont(te::layout::Property::GetValueAs<Font>(pFont));
   EnumAlignmentType enumAligmentType;
   const std::string& label = pAligment.getOptionByCurrentChoice().toString();
   EnumType* currentAligmentType = enumAligmentType.searchLabel(label);

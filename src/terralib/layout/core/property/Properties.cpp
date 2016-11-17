@@ -89,7 +89,7 @@ bool te::layout::Properties::updateProperty(const te::layout::Property& property
   {
     if (it->getName().compare(property.getName()) == 0)
     {
-      it->setValue(property.getValue());
+      it->setValue(property.getValue()->clone(), property.getType());
       it->setOptionChoice(property.getOptionByCurrentChoice());
 
       //if this property has subproperties, we must update them too
@@ -117,7 +117,7 @@ bool te::layout::Properties::completelyUpdateProperty(const te::layout::Property
   {
     if (it->getName().compare(property.getName()) == 0)
     {
-      it->setValue(property.getValue());
+      it->setValue(property.getValue()->clone(), property.getType());
       it->setOptionChoice(property.getOptionByCurrentChoice());
       it->setEditable(property.isEditable());
       it->setLabel(property.getLabel());
@@ -170,34 +170,24 @@ void te::layout::Properties::setTypeObj(te::layout::EnumType* type)
   m_typeObj = type;
 }
 
-bool te::layout::Properties::contains(const Property& property) const
+bool te::layout::Properties::contains(const std::string& propertyName) const
 {
-  bool is_present = false;
-
-  if (std::find(m_properties.begin(), m_properties.end(), property) != m_properties.end())
+  if (std::find(m_properties.begin(), m_properties.end(), propertyName) != m_properties.end())
   {
-    is_present = true;
+    return true;
   }
   else
   {
     for (std::vector<te::layout::Property>::const_iterator itSub = m_properties.begin(); itSub != m_properties.end(); ++itSub)
     {
-      is_present = itSub->containsSubProperty(property);
-      if (is_present)
+      if (itSub->containsSubProperty(propertyName))
       {
-        break;
+        return true;
       }
     }
   }
 
-  return is_present;
-}
-
-bool te::layout::Properties::contains(const std::string& propertyName) const
-{
-  Property property(0);
-  property.setName(propertyName);
-  return contains(property);
+  return false;
 }
 
 const te::layout::Property& te::layout::Properties::getProperty(const std::string& name) const
@@ -214,14 +204,14 @@ const te::layout::Property& te::layout::Properties::getProperty(const std::strin
   {
     for (std::vector<te::layout::Property>::const_iterator itSub = m_properties.begin(); itSub != m_properties.end(); ++itSub)
     {
-      const Property& prop = itSub->containsSubProperty(name);
-      if (prop.getName().compare(name) == 0)
+      if (itSub->containsSubProperty(name))
       {
+        const Property& prop = itSub->getSubProperty(name);
         return prop;
       }
     }
   }
-  return m_nullProperty;
+  throw te::common::Exception("Properties::The given property name was not found in the property list");
 }
 
 void te::layout::Properties::setHasWindows(bool windows)

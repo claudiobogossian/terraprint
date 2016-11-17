@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "ObjectInspectorOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/ObjectInspectorModel.h"
 #include "../../../../../outside/ObjectInspectorController.h"
 #include "../../../../outside/ObjectInspectorOutside.h"

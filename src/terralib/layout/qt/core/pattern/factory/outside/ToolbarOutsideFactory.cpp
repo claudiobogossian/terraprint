@@ -25,6 +25,9 @@
 
 // TerraLib
 #include "ToolbarOutsideFactory.h"
+
+#include "../../../../../core/enum/Enums.h"
+
 #include "../../../../../outside/ToolbarModel.h"
 #include "../../../../outside/ToolbarController.h"
 #include "../../../../outside/ToolbarOutside.h"

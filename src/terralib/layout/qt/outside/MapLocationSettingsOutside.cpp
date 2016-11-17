@@ -26,6 +26,8 @@
 // TerraLib
 #include "MapLocationSettingsOutside.h"
 #include "MapLayerChoiceOutside.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/ItemUtils.h"
 #include "../../core/property/SharedProperties.h"
@@ -147,19 +149,19 @@ void te::layout::MapLocationSettingsOutside::initCombo(QWidget* widget, std::str
 
   if (prop.getType() == dataType->getDataTypeBool())
   {
-    variant.setValue(prop.getValue().toBool());
+    variant.setValue(te::layout::Property::GetValueAs<bool>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeDouble())
   {
-    variant.setValue(prop.getValue().toDouble());
+    variant.setValue(te::layout::Property::GetValueAs<double>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeInt())
   {
-    variant.setValue(prop.getValue().toInt());
+    variant.setValue(te::layout::Property::GetValueAs<int>(prop));
   }
   else if (prop.getType() == dataType->getDataTypeString())
   {
-    std::string txt = prop.getValue().toString();
+    std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
     QString qText = ItemUtils::convert2QString(txt);
     variant.setValue(qText);
   }
@@ -181,7 +183,7 @@ void te::layout::MapLocationSettingsOutside::initCombo(QWidget* widget, std::str
     list = controller->getItemNames(list, dataTypeObj->getMapItem());
     combo->addItems(list);
 
-    std::string txt = prop.getValue().toString();
+    std::string txt = te::layout::Property::GetValueAs<std::string>(prop);
     QString qText = ItemUtils::convert2QString(txt);
     variant.setValue(qText);
   }
@@ -230,11 +232,8 @@ void te::layout::MapLocationSettingsOutside::on_cmbConnected_currentIndexChanged
   Property pConnected = controller->getProperty(sharedProps.getItemObserver());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  Variant variant;
 
-  variant.setValue(text.toStdString(), dataType->getDataTypeItemObserver());
-
-  pConnected.setValue(variant);
+  pConnected.setValue(text.toStdString(), dataType->getDataTypeItemObserver());
 
   emit updateProperty(pConnected);
 
@@ -249,10 +248,9 @@ void te::layout::MapLocationSettingsOutside::on_colorButton_pressed()
   if (controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(color, dataType->getDataTypeColor());
+
     Property prop = controller->getProperty("reference_box_fill_color");
-    prop.setValue(variant);
+    prop.setValue(color, dataType->getDataTypeColor());
     emit updateProperty(prop);
   }
 
@@ -265,10 +263,8 @@ void te::layout::MapLocationSettingsOutside::on_cColorButton_pressed()
   if (controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Variant variant;
-    variant.setValue(color, dataType->getDataTypeColor());
     Property prop = controller->getProperty("reference_box_contour_color");
-    prop.setValue(variant);
+    prop.setValue(color, dataType->getDataTypeColor());
     emit updateProperty(prop);
   }
   
@@ -306,7 +302,7 @@ void te::layout::MapLocationSettingsOutside::loadColor(QWidget* widget, std::str
   {
     Property prop = controller->getProperty(nameComponent);
 
-    te::color::RGBAColor rgbaColor = prop.getValue().toColor();
+    const te::color::RGBAColor& rgbaColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
 
     QColor color(rgbaColor.getRed(), rgbaColor.getGreen(), rgbaColor.getBlue(), rgbaColor.getAlpha());
 

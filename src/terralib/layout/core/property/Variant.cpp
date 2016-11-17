@@ -104,7 +104,6 @@ void te::layout::Variant::convertValue( const void* valueCopy )
   te::color::RGBAColor* colorValue = 0;
   Font* fontValue = 0;
   te::gm::Envelope* envelopeValue = 0;
-  GenericVariant* generic = 0;
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   if(!m_type || !dataType)
@@ -212,17 +211,6 @@ void te::layout::Variant::convertValue( const void* valueCopy )
         m_envelopeValue = *envelopeValue;
         m_complex = true;
       }
-   }
-   else if(m_type == dataType->getDataTypeGenericVariant())
-   {
-     // Cast it back to a string pointer.
-     generic = static_cast<GenericVariant*>(value);
-     if(generic)
-     {
-       null = false;
-       m_generic = *generic;
-       m_complex = true;
-     }
    }
    else if(m_type == dataType->getDataTypeGeometry())
    {
@@ -397,10 +385,6 @@ void te::layout::Variant::fromString(const std::string& value, EnumType* type)
       m_complex = true;
       null = false;
     }
-    else if(type == dataType->getDataTypeGenericVariant())
-    {
-      m_generic.fromString(value);
-    }
     else if (type == dataType->getDataTypeGeometry())
     {
       te::gm::Geometry* geometry = te::gm::WKTReader::read(value.c_str());
@@ -537,7 +521,7 @@ void te::layout::Variant::clear()
   m_bValue = false;
   m_type = Enums::getInstance().getEnumDataType()->getDataTypeNone();
   m_null = true;
-  m_generic.clear();
+  //m_generic.clear();
   m_geometryPtr.reset();
 }
 
@@ -772,11 +756,6 @@ bool te::layout::Variant::toBool( std::string str )
   }
 }
 
-const te::layout::GenericVariant& te::layout::Variant::toGenericVariant() const
-{
-  return m_generic;
-}
-
 const te::gm::GeometryShrPtr te::layout::Variant::toGeometry() const
 {
   return m_geometryPtr;
@@ -818,10 +797,12 @@ te::layout::Variant& te::layout::Variant::operator=(const Variant& variant)
   this->m_type = variant.m_type; //!< data type of this object
   this->m_null = variant.m_null; //!< true if no value has been set, false otherwise
   this->m_complex = variant.m_complex; //!< true if value is not of common C++ data type, false otherwise
-  this->m_generic = variant.m_generic; //!< value of te::layout::GenericVariant type
   this->m_vString = variant.m_vString; //!< value of string vector type
   this->m_stringMatrix = variant.m_stringMatrix; //!< value of vector of string vector type
-  this->m_listLayer = variant.m_listLayer; //!< value of te::map::AbstractLayerPtr list type
+  if (variant.m_listLayer.empty() == false)
+  {
+    this->m_listLayer = variant.m_listLayer; //!< value of te::map::AbstractLayerPtr list type
+  }
   this->m_usePrecision = variant.m_usePrecision; //!< true if uses precision in double value
   this->m_precision = variant.m_precision;
 

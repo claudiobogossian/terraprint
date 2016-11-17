@@ -23,13 +23,17 @@
   \brief This singleton defines the TerraLib Layout module entry.
 */
 
-// TerraLib
+
 #include "Module.h"
-#include "terralib/common/Logger.h"
-#include "terralib/common/TerraLib.h"
-#include "terralib/common/Translator.h"
+
+
 #include "../qt/core/InitFactories.h"
-#include "Config.h"
+#include "property/DataTypesUtils.h"
+
+// TerraLib
+#include <terralib/common/Logger.h>
+#include <terralib/common/TerraLib.h>
+#include <terralib/common/Translator.h>
 
 const te::layout::Module& sm_module = te::layout::Module::getInstance();
 
@@ -49,6 +53,9 @@ te::layout::Module::Module()
   te::layout::initToolFactories(); // init all tool factories
   te::layout::initItemFactories(); // init all item factories
   te::layout::initTemplateFactories(); // init all template factories
+
+  //registrar todos os tipos de dados
+  te::layout::RegisterLayoutTypes();
 }
 
 te::layout::Module::~Module()

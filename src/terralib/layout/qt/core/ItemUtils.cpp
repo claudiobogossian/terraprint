@@ -128,7 +128,7 @@ te::layout::MapItem* te::layout::ItemUtils::getMapItem( std::string name )
     }
 
     const Property& pName = controller->getProperty("name");
-    if(pName.getValue().toString().compare(name) != 0)
+    if(te::layout::Property::GetValueAs<std::string>(pName).compare(name) != 0)
       continue;
 
     map = dynamic_cast<te::layout::MapItem*>(itemView);
@@ -165,7 +165,7 @@ std::vector<std::string> te::layout::ItemUtils::mapNameList(bool selected)
     }
 
     const Property& pName = controller->getProperty("name");
-    strList.push_back(pName.getValue().toString());
+    strList.push_back(te::layout::Property::GetValueAs<std::string>(pName));
   }
 
   return strList;
@@ -216,7 +216,7 @@ int te::layout::ItemUtils::maxTypeId( te::layout::EnumType* type )
     if(controller == 0)
       continue;
 
-    int currentId = controller->getProperty("id").getValue().toInt();
+    int currentId = te::layout::Property::GetValueAs<int>(controller->getProperty("id"));
 
     if(controller->getProperties().getTypeObj() == type)
     {

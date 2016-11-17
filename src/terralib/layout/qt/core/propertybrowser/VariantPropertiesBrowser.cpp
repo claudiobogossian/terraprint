@@ -164,7 +164,7 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(QtPropert
 
   if(type == dataType->getDataTypeString())
   {
-    prop.setValue(valueString, type);
+    prop.setValue(valueString, dataType->getDataTypeString());
   }
   else if(type == dataType->getDataTypeStringList())
   {
@@ -190,15 +190,15 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(QtPropert
   }
   else if(type == dataType->getDataTypeDouble())
   {
-    prop.setValue(variant.toDouble(), type);
+    prop.setValue(variant.toDouble(), dataType->getDataTypeDouble());
   }
   else if(type == dataType->getDataTypeInt())
   {
-    prop.setValue(variant.toInt(), type);
+    prop.setValue(variant.toInt(), dataType->getDataTypeInt());
   }
   else if(type == dataType->getDataTypeBool())
   {
-    prop.setValue(variant.toBool(), type);
+    prop.setValue(variant.toBool(), dataType->getDataTypeBool());
   }
   else if(type == dataType->getDataTypeColor())
   {
@@ -206,7 +206,7 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(QtPropert
     if(qcolor.isValid()) 
     {
       te::color::RGBAColor color(qcolor.red(), qcolor.green(), qcolor.blue(), qcolor.alpha());
-      prop.setValue(color, type);
+      prop.setValue(color, dataType->getDataTypeColor());
     }
   }
   else if(type == dataType->getDataTypeFont())
@@ -224,7 +224,7 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(QtPropert
     font.setUnderline(qfont.underline());
     font.setStrikeout(qfont.strikeOut());
     font.setKerning(qfont.kerning());
-    prop.setValue(font, type);
+    prop.setValue(font, dataType->getDataTypeFont());
   }
   else if(type == dataType->getDataTypeEnvelope())
   {
@@ -359,7 +359,7 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   
   if(property.getType() == dataType->getDataTypeString())
   {
-    std::string value = property.getValue().toString();
+    std::string value = te::layout::Property::GetValueAs<std::string>(property);
     QString qValue = ItemUtils::convert2QString(value);
 
     vproperty->setValue(qValue);    
@@ -383,29 +383,29 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   }
   else if(property.getType() == dataType->getDataTypeGroup())
   {
-    std::string value = property.getValue().toString();
+    std::string value = te::layout::Property::GetValueAs<std::string>(property);
     QString qValue = ItemUtils::convert2QString(value);
 
     vproperty->setValue(qValue);  
   }
   else if(property.getType() == dataType->getDataTypeDouble())
   {
-    if (property.getValue().isUsingPrecision()){
-      vproperty->setAttribute(QLatin1String("decimals"), property.getValue().getprecision());
+    if (property.getUsePrecision()){
+      vproperty->setAttribute(QLatin1String("decimals"), property.getPrecision());
     }
-    vproperty->setValue(property.getValue().toDouble());
+    vproperty->setValue(te::layout::Property::GetValueAs<double>(property));
   }
   else if(property.getType() == dataType->getDataTypeInt())
   {
-    vproperty->setValue(property.getValue().toInt());
+    vproperty->setValue(te::layout::Property::GetValueAs<int>(property));
   }
   else if(property.getType() == dataType->getDataTypeBool())
   {
-    vproperty->setValue(property.getValue().toBool());
+    vproperty->setValue(te::layout::Property::GetValueAs<bool>(property));
   }
   else if(property.getType() == dataType->getDataTypeColor())
   {
-    const te::color::RGBAColor& color = property.getValue().toColor();
+    const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
 
     QColor qcolor;
     qcolor.setRed(color.getRed());
@@ -416,7 +416,7 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   }
   else if(property.getType() == dataType->getDataTypeFont())
   {
-    const Font& font = property.getValue().toFont();
+    const Font& font = te::layout::Property::GetValueAs<Font>(property);
     QFont qfont;
     std::string fontName = font.getFamily();
     QString qFontName = ItemUtils::convert2QString(fontName);
@@ -432,7 +432,7 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   }
   else if(property.getType() == dataType->getDataTypeEnvelope())
   {
-    const te::gm::Envelope& envelope  = property.getValue().toEnvelope();
+    const te::gm::Envelope& envelope  = te::layout::Property::GetValueAs<te::gm::Envelope>(property);
     QRectF rect(envelope.getLowerLeftX(), envelope.getUpperRightY(), envelope.getWidth(), envelope.getHeight());
 
     vproperty->setValue(rect);

@@ -32,8 +32,6 @@
 te::layout::PaperModel::PaperModel() 
   : AbstractItemModel()
 {
-  this->m_properties.setTypeObj(Enums::getInstance().getEnumObjectType()->getPaperItem());
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   te::color::RGBAColor paperColor(255, 255, 255, 255);
@@ -89,14 +87,14 @@ te::layout::PaperModel::PaperModel()
     Property property(0);
     property.setName("paper_type");
     property.setLabel(TR_LAYOUT("Paper type"));
-    property.setValue((int)paperType, dataType->getDataTypeInt());
+    property.setValue<int>((int)paperType, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_orientation");
     property.setLabel(TR_LAYOUT("Orientation"));
-    property.setValue((int)paperOrientation, dataType->getDataTypeInt());
+    property.setValue<int>((int)paperOrientation, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
 
@@ -111,7 +109,7 @@ te::layout::PaperModel::PaperModel()
   {
     Property property(0);
     property.setName("printable");
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     m_properties.completelyUpdateProperty(property);
   }
 
@@ -126,7 +124,7 @@ te::layout::PaperModel::PaperModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     m_properties.completelyUpdateProperty(property);
   }
 
@@ -142,6 +140,8 @@ te::layout::PaperModel::PaperModel()
     property.setMenu(true);
     m_properties.addProperty(property);
   }
+  
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getPaperItem());
 }
 
 te::layout::PaperModel::~PaperModel()
@@ -156,12 +156,12 @@ void te::layout::PaperModel::setProperty(const Property& property)
   const Property& pCurrentPaperWidth = m_properties.getProperty("paper_width");
   const Property& pCurrentPaperHeight = m_properties.getProperty("paper_height");
 
-  double currentPaperWidth = pCurrentPaperWidth.getValue().toDouble();
-  double currentPaperHeight = pCurrentPaperHeight.getValue().toDouble();
+  double currentPaperWidth = te::layout::Property::GetValueAs<double>(pCurrentPaperWidth);
+  double currentPaperHeight = te::layout::Property::GetValueAs<double>(pCurrentPaperHeight);
 
   if(property.getName() == "paper_width")
   {
-    double newPaperWidth = property.getValue().toDouble();
+    double newPaperWidth = te::layout::Property::GetValueAs<double>(property);
 
     Properties properties = handleNewPaperSize(newPaperWidth, currentPaperHeight);
     properties.addProperty(property);
@@ -171,7 +171,7 @@ void te::layout::PaperModel::setProperty(const Property& property)
   }
   else if(property.getName() == "paper_height")
   {
-    double newPaperHeight = property.getValue().toDouble();
+    double newPaperHeight = te::layout::Property::GetValueAs<double>(property);
 
     Properties properties = handleNewPaperSize(currentPaperWidth, newPaperHeight);
     properties.addProperty(property);
@@ -188,23 +188,23 @@ void te::layout::PaperModel::setProperties(const Properties& properties)
   const Property& pCurrentPaperWidth = m_properties.getProperty("paper_width");
   const Property& pCurrentPaperHeight = m_properties.getProperty("paper_height");
 
-  double currentPaperWidth = pCurrentPaperWidth.getValue().toDouble();
-  double currentPaperHeight = pCurrentPaperHeight.getValue().toDouble();
+  double currentPaperWidth = te::layout::Property::GetValueAs<double>(pCurrentPaperWidth);
+  double currentPaperHeight = te::layout::Property::GetValueAs<double>(pCurrentPaperHeight);
 
   if(properties.contains("paper_width") || properties.contains("paper_height"))
   {
     double newPaperWidth = currentPaperWidth;
     double newPaperHeight = currentPaperHeight;
 
-    const Property& pNewPaperWidth = properties.getProperty("paper_width");
-    if(pNewPaperWidth.isNull() == false)
+    if(properties.contains("paper_width"))
     {
-      newPaperWidth = pNewPaperWidth.getValue().toDouble();
+      const Property& pNewPaperWidth = properties.getProperty("paper_width");
+      newPaperWidth = te::layout::Property::GetValueAs<double>(pNewPaperWidth);
     }
-    const Property& pNewPaperHeight = properties.getProperty("paper_height");
-    if(pNewPaperHeight.isNull() == false)
+    if(properties.contains("paper_height"))
     {
-      newPaperHeight = pNewPaperHeight.getValue().toDouble();
+      const Property& pNewPaperHeight = properties.getProperty("paper_height");
+      newPaperHeight = te::layout::Property::GetValueAs<double>(pNewPaperHeight);
     }
 
     Properties fullProperties = handleNewPaperSize(newPaperWidth, newPaperHeight);
@@ -225,7 +225,7 @@ te::layout::Properties te::layout::PaperModel::handleNewPaperSize(double paperWi
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   const Property& pShadowPadding = m_properties.getProperty("shadow_padding");
-  double shadowPadding = pShadowPadding.getValue().toDouble();
+  double shadowPadding = te::layout::Property::GetValueAs<double>(pShadowPadding);
 
   double width = paperWidth + shadowPadding;
   double height = paperHeight + shadowPadding;

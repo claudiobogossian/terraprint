@@ -144,7 +144,7 @@ te::layout::AbstractItemView* te::layout::ItemObserverManager::findItem(const QS
       {
         const Property& property = view->getController()->getProperty("name");
 
-        std::string value = property.getValue().toString();
+        std::string value = te::layout::Property::GetValueAs<std::string>(property);
         QString qValue = ItemUtils::convert2QString(value);
 
         if (name.compare(qValue) == 0)
@@ -173,7 +173,7 @@ QStringList te::layout::ItemObserverManager::getItemNames(const EnumType* type)
       {
         const Property& prop_name = view->getController()->getProperty("name");
 
-        std::string value = prop_name.getValue().toString();
+        std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
         const Properties& prop_type = view->getController()->getProperties();
@@ -234,7 +234,7 @@ bool te::layout::ItemObserverManager::updateProperty(const Property& property)
       qprop = p;
 
       data = m_values[p];
-      const std::string itemName = property.getValue().toString();
+      const std::string itemName = te::layout::Property::GetValueAs<std::string>(property);
       if (!itemName.empty())
       {
         QString qValue = ItemUtils::convert2QString(itemName);        

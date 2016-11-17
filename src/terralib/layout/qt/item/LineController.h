@@ -30,13 +30,17 @@
 // TerraLib
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
-#include "terralib/geometry/Geometry.h"
 
 // Qt
 #include <QPolygonF>
 
 namespace te
 {
+  namespace gm
+  {
+    class Geometry;
+  }
+
   namespace layout
   {
     /*!
@@ -66,7 +70,7 @@ namespace te
 
         virtual QPolygonF getQPolygon();
 
-        virtual te::gm::GeometryShrPtr getGeometry();
+        virtual te::gm::Geometry* getGeometry();
 
       protected:
 

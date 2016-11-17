@@ -29,7 +29,6 @@
 #include "SVGDialogModel.h"
 #include "../core/property/Properties.h"
 #include "../core/enum/Enums.h"
-#include "../core/property/GenericVariant.h"
 
 // STL
 #include <algorithm>
@@ -82,13 +81,12 @@ std::vector<std::string> te::layout::SVGDialogModel::getPaths()
     return pathsName;
 
   const Property& pro_paths = props[0];
+  const std::vector<std::string>& vecString = te::layout::Property::GetValueAs< std::vector<std::string> >(pro_paths);
 
-  const GenericVariant& variant = pro_paths.getValue().toGenericVariant();
-
-  return variant.toStringVector();
+  return vecString;
 }
 
 te::layout::Property te::layout::SVGDialogModel::containsOutsideSubProperty(std::string name)
 {
-  return m_property.containsSubProperty(name);
+  return m_property.getSubProperty(name);
 }

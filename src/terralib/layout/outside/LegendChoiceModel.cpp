@@ -96,17 +96,16 @@ std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceModel::searchLayers
 
   for (; itProp != m_mapProperties.end(); ++itProp)
   {
-    Properties prop = (*itProp);
-    Property pp = prop.getProperty("layers");
-
-    if (pp.isNull())
+    const Properties& prop = (*itProp);
+    if (prop.contains("layers") == false)
     {
       continue;
     }
 
+    const Property& pp = prop.getProperty("layers");
     m_layerProperties.push_back(pp);
 
-    std::list<te::map::AbstractLayerPtr> currentLayers = pp.getValue().toLayerList();
+    std::list<te::map::AbstractLayerPtr> currentLayers = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pp);
     std::list<te::map::AbstractLayerPtr>::iterator itLayers = currentLayers.begin();
     while (itLayers != currentLayers.end())
     {

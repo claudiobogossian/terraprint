@@ -28,6 +28,9 @@
 // TerraLib
 #include "GridGeodesicModel.h"
 
+#include "../core/enum/EnumDataType.h"
+#include "../core/enum/Enums.h"
+
 #include "../core/enum/EnumTextFormatType.h"
 #include "../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"

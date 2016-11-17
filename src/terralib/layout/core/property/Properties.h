@@ -165,14 +165,6 @@ namespace te
         /*!
           \brief Checks if the property is contained within the set of properties.
 
-          \param property
-          \return true if contained, false otherwise
-        */
-        virtual bool contains(const Property& property) const;
-
-        /*!
-          \brief Checks if the property is contained within the set of properties.
-
           \param propertyName
           \return true if contained, false otherwise
         */

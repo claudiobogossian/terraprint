@@ -1,6 +1,8 @@
 #include "AbstractItemModel.h"
 
 #include "../../property/Property.h"
+#include "../../enum/EnumDataType.h"
+#include "../../enum/Enums.h"
 
 te::layout::AbstractItemModel::AbstractItemModel()
 : Subject()
@@ -14,11 +16,12 @@ te::layout::AbstractItemModel::AbstractItemModel()
   double frameThickness = 0.5; //in mm
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
   {
     Property property(0);
     property.setName("id");
     property.setLabel(TR_LAYOUT("Id"));
-    property.setValue(0, dataType->getDataTypeInt());
+    property.setValue<int>(0, dataType->getDataTypeInt());
     property.setEditable(false);
     m_properties.addProperty(property);
   }
@@ -99,8 +102,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     Property property(0);
     property.setName("show_frame");
     property.setLabel(TR_LAYOUT("Show Frame"));
-    property.setValue(false, dataType->getDataTypeBool());
-    property.setMenu(true);
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     this->m_properties.addProperty(property);
   }
 
@@ -109,7 +111,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("resizable");
     property.setLabel(TR_LAYOUT("Resizable"));
     property.setVisible(false);
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 
@@ -117,7 +119,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     Property property(0);
     property.setName("keep_aspect");
     property.setLabel(TR_LAYOUT("Keep Aspect on Resize"));
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     property.setVisible(false);
     m_properties.addProperty(property);
   }
@@ -135,7 +137,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("printable");
     property.setLabel(TR_LAYOUT("Printable"));
     property.setVisible(false);
-    property.setValue(true, dataType->getDataTypeBool());
+    property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 
@@ -152,7 +154,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     Property property(0);
     property.setName("connect_item_position");
     property.setVisible(false);
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 
@@ -161,7 +163,7 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setName("editable");
     property.setLabel(TR_LAYOUT("Editable"));
     property.setVisible(false);
-    property.setValue(false, dataType->getDataTypeBool());
+    property.setValue<bool>(false, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 
@@ -208,7 +210,7 @@ te::layout::EnumType* te::layout::AbstractItemModel::getType()
 std::string te::layout::AbstractItemModel::getName()
 {
   std::string prop = "name";
-  return m_properties.getProperty(prop).getValue().toString();
+  return te::layout::Property::GetValueAs<std::string>(m_properties.getProperty(prop));
 }
 
 bool te::layout::AbstractItemModel::completelyUpdateProperty(const Property& property)
@@ -221,7 +223,7 @@ bool te::layout::AbstractItemModel::isPrintable()
 {
   std::string propertyName = "printable";
   Property prop_printable = m_properties.getProperty(propertyName);
-  return prop_printable.getValue().toBool();
+  return te::layout::Property::GetValueAs<bool>(prop_printable);
 }
 
 te::gm::Envelope te::layout::AbstractItemModel::getBoundingRect()
@@ -237,10 +239,10 @@ te::gm::Envelope te::layout::AbstractItemModel::getBoundingRect()
   Property prop_height = m_properties.getProperty(propertyHeight);
 
   te::gm::Envelope box;
-  box.m_llx = prop_x.getValue().toDouble();
-  box.m_lly = prop_y.getValue().toDouble();
-  box.m_urx = box.m_llx + prop_width.getValue().toDouble();
-  box.m_ury = box.m_lly + prop_height.getValue().toDouble();
+  box.m_llx = te::layout::Property::GetValueAs<double>(prop_x);
+  box.m_lly = te::layout::Property::GetValueAs<double>(prop_y);
+  box.m_urx = box.m_llx + te::layout::Property::GetValueAs<double>(prop_width);
+  box.m_ury = box.m_lly + te::layout::Property::GetValueAs<double>(prop_height);
 
   return box;
 }
@@ -260,10 +262,10 @@ bool te::layout::AbstractItemModel::contains(const te::gm::Coord2D &coord) const
   Property prop_height = m_properties.getProperty(propertyHeight);
 
   te::gm::Envelope box;
-  box.m_llx = prop_x.getValue().toDouble();
-  box.m_lly = prop_y.getValue().toDouble();
-  box.m_urx = box.m_llx + prop_width.getValue().toDouble();
-  box.m_ury = box.m_lly + prop_height.getValue().toDouble();
+  box.m_llx = te::layout::Property::GetValueAs<double>(prop_x);
+  box.m_lly = te::layout::Property::GetValueAs<double>(prop_y);
+  box.m_urx = box.m_llx + te::layout::Property::GetValueAs<double>(prop_width);
+  box.m_ury = box.m_lly + te::layout::Property::GetValueAs<double>(prop_height);
   
   if (env.isValid())
     return box.contains(env);

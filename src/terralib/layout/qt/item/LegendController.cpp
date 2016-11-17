@@ -59,8 +59,8 @@ void te::layout::LegendController::update(const Subject* subject)
   const Property& pLayersNewUri = subjectModel->getProperty("layers_uri");
   const Property& pLayersCurrentUri = this->getProperty("layers_uri");
 
-  const std::vector<std::string>& layersNewUri = pLayersNewUri.getValue().toStringVector();
-  const std::vector<std::string>& layersCurrentUri = pLayersCurrentUri.getValue().toStringVector();
+  const std::vector<std::string>& layersNewUri = te::layout::Property::GetValueAs< std::vector<std::string> >(pLayersNewUri);
+  const std::vector<std::string>& layersCurrentUri = te::layout::Property::GetValueAs< std::vector<std::string> >(pLayersCurrentUri);
 
   if (layersNewUri != layersCurrentUri)
   {
@@ -71,7 +71,7 @@ void te::layout::LegendController::update(const Subject* subject)
 std::list<te::map::AbstractLayerPtr>  te::layout::LegendController::searchLayersFromURI()
 {
   Property property = m_model->getProperty("layers_uri");
-  const std::vector<std::string>& vlayersCurrentUri = property.getValue().toStringVector();
+  const std::vector<std::string>& vlayersCurrentUri = te::layout::Property::GetValueAs< std::vector<std::string> >(property);
 
   std::list<te::map::AbstractLayerPtr> layerList;
   

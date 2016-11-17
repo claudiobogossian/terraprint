@@ -80,8 +80,8 @@ te::layout::PropertiesOutside::PropertiesOutside(Scene* scene, AbstractProxyProj
   else
     m_layoutPropertyBrowser = propertyBrowser;
   
-  connect(m_layoutPropertyBrowser,SIGNAL(changePropertyValue(Property)),
-    this,SLOT(onChangePropertyValue(Property))); 
+  connect(m_layoutPropertyBrowser,SIGNAL(changePropertyValue(const Property&)),
+    this,SLOT(onChangePropertyValue(const Property&))); 
 
   createLayout();
 
@@ -232,7 +232,7 @@ void te::layout::PropertiesOutside::propertiesChanged(QList<QGraphicsItem*> grap
   updateTree(graphicsItems, props);
 }
 
-void te::layout::PropertiesOutside::onChangePropertyValue( Property property )
+void te::layout::PropertiesOutside::onChangePropertyValue( const Property& property )
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -384,7 +384,7 @@ bool te::layout::PropertiesOutside::updateTree( QList<QGraphicsItem*> graphicsIt
   return false;
 }
 
-void te::layout::PropertiesOutside::onMenuPropertyClicked(Property prop)
+void te::layout::PropertiesOutside::onMenuPropertyClicked(const Property& prop)
 {
   m_layoutPropertyBrowser->getDialogPropertiesBrowser()->directlyShowWindow(prop);
 }

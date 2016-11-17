@@ -46,7 +46,7 @@ void te::layout::BalloonController::calculateSize(const te::layout::Properties& 
     pMarginSize = properties.getProperty("margin_size");
   }
 
-  double marginSize = pMarginSize.getValue().toDouble();
+  double marginSize = te::layout::Property::GetValueAs<double>(pMarginSize);
   
   qreal newHeight = sizeMM.height() + (marginSize * 4);
 

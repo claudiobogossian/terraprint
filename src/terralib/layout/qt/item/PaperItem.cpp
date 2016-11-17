@@ -51,12 +51,12 @@ void te::layout::PaperItem::drawItem( QPainter * painter, const QStyleOptionGrap
   const Property& pPaperHeight = m_controller->getProperty("paper_height");
   const Property& pShadowPadding = m_controller->getProperty("shadow_padding");
 
-  const te::color::RGBAColor& paperColor = pPaperColor.getValue().toColor();
-  const te::color::RGBAColor& shadowColor = pShadowColor.getValue().toColor();
-  const te::color::RGBAColor& frameColor = pFrameColor.getValue().toColor();
-  double paperWidth = pPaperWidth.getValue().toDouble();
-  double paperHeight = pPaperHeight.getValue().toDouble();
-  double shadowPadding = pShadowPadding.getValue().toDouble();
+  const te::color::RGBAColor& paperColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pPaperColor);
+  const te::color::RGBAColor& shadowColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pShadowColor);
+  const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+  double paperWidth = te::layout::Property::GetValueAs<double>(pPaperWidth);
+  double paperHeight = te::layout::Property::GetValueAs<double>(pPaperHeight);
+  double shadowPadding = te::layout::Property::GetValueAs<double>(pShadowPadding);
 
   QColor qPaperColor(paperColor.getRed(), paperColor.getGreen(), paperColor.getBlue(), paperColor.getAlpha());
   QColor qShadowColor(shadowColor.getRed(), shadowColor.getGreen(), shadowColor.getBlue(), shadowColor.getAlpha());
