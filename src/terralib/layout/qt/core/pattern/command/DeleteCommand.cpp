@@ -33,7 +33,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-te::layout::DeleteCommand::DeleteCommand( QGraphicsScene* scene, const QList<QGraphicsItem*>& listItems, QUndoCommand *parent /*= 0*/ ) :
+te::layout::DeleteCommand::DeleteCommand( QGraphicsScene* scene, const QList<QGraphicsItem*>& listItems, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_scene(scene),
   m_items(listItems)

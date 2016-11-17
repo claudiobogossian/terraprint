@@ -29,7 +29,7 @@
 #include "ItemObserverFactory.h"
 #include "ItemObserverProperty.h"
 
-te::layout::ItemObserverFactory::ItemObserverFactory(QObject *parent /*= 0*/)
+te::layout::ItemObserverFactory::ItemObserverFactory(QObject *parent )
 : QtAbstractEditorFactory<ItemObserverManager>(parent)
 {
 

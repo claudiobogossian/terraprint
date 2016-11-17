@@ -38,7 +38,7 @@
 #include <QPointF>
 
 te::layout::ChangePropertyCommand::ChangePropertyCommand( QGraphicsItem* item, Properties oldProperties, 
-  Properties newProperties, PropertiesOutside* outside /*= 0*/, QUndoCommand *parent /*= 0 */ ) :
+  Properties newProperties, PropertiesOutside* outside, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_item(item),
   m_oldProperties(oldProperties),
@@ -49,7 +49,7 @@ te::layout::ChangePropertyCommand::ChangePropertyCommand( QGraphicsItem* item, P
 }
 
 te::layout::ChangePropertyCommand::ChangePropertyCommand( std::vector<QGraphicsItem*> items, std::vector<Properties> allOld, 
-  std::vector<Properties> allNew, PropertiesOutside* outside /*= 0*/, QUndoCommand *parent /*= 0 */ ) :
+  std::vector<Properties> allNew, PropertiesOutside* outside, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_item(0),
   m_outside(outside),
@@ -226,5 +226,3 @@ bool te::layout::ChangePropertyCommand::checkVectors()
 
   return true;
 }
-
-

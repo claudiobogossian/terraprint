@@ -102,7 +102,7 @@ void te::layout::AbstractItem::setItemPosition(double x, double y)
   this->setPos(x, y);
 }
 
-void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0 */)
+void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
   Q_UNUSED(option);
   Q_UNUSED(widget);
@@ -528,7 +528,7 @@ bool te::layout::AbstractItem::isZoomAdequateForRotation() const
 }
 
 
-void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const double& y/*, QPainter * painter*/)
+void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const double& y)
 {
   QRectF rectAdjusted = boundingRect();
   QRectF remapRect = qRectToQPolygonMap(rectAdjusted);

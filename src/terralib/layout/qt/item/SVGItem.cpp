@@ -62,7 +62,7 @@ te::layout::SVGItem::~SVGItem()
 
 }
 
-void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0 */ )
+void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   painter->save();
   SVGController *svgController = dynamic_cast<SVGController*>(m_controller);

@@ -95,7 +95,7 @@ te::layout::Scene::Scene( QObject* object):
   m_undoStack = new QUndoStack(this);
 }
 
-te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* object /*= 0*/ ) :
+te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* object ) :
   QGraphicsScene(object),
   m_undoStack(0),
   m_align(align),
@@ -1732,9 +1732,21 @@ void te::layout::Scene::addUndoCommandForResize()
 
 void te::layout::Scene::sortByZValue(QList<QGraphicsItem *> & listItems)
 {
+  std::vector<QGraphicsItem*> vecItems;
+  for (int i = 0; i < listItems.size(); ++i)
+  {
+    vecItems.push_back(listItems[i]);
+  }
+
   // using function as comparison
   // orders of lower zValue to the higher zValue
-  std::sort(listItems.begin(), listItems.end(), zValueLessThan);
+  std::sort(vecItems.begin(), vecItems.end(), zValueLessThan);
+
+  listItems.clear();
+  for (int i = 0; i < vecItems.size(); ++i)
+  {
+    listItems.append(vecItems[i]);
+  }
 }
 
 bool te::layout::Scene::zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2)

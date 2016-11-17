@@ -40,7 +40,7 @@
 #include <QGraphicsItem>
 
 te::layout::MoveCommand::MoveCommand( QGraphicsItem* item, const QPointF oldPos, 
-  QUndoCommand *parent /*= 0*/ ) :
+  QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_item(item)
 {
@@ -49,7 +49,7 @@ te::layout::MoveCommand::MoveCommand( QGraphicsItem* item, const QPointF oldPos,
 }
 
 te::layout::MoveCommand::MoveCommand( std::map<QGraphicsItem*, QPointF> items, 
-  QUndoCommand *parent /*= 0*/ ) :
+  QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_item(0),
   m_moveItems(items)
