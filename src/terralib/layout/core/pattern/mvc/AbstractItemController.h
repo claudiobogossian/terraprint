@@ -126,8 +126,6 @@ namespace te
         */
         virtual bool contains(const te::gm::Coord2D &coord) const;
 
-        virtual void resized(const double& width, const double& height);
-
         virtual void rotated(const double& degree);
 
         virtual void itemPositionChanged(double x, double y);
