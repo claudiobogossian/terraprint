@@ -215,27 +215,6 @@ void te::layout::AbstractItemController::setView(AbstractItemView* view)
   refresh(); // controller could be refresh your view
 }
 
-void te::layout::AbstractItemController::resized(const double& width, const double& height)
-{
-  Properties properties;
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  {
-    Property property(0);
-    property.setName("width");
-    property.setValue(width, dataType->getDataTypeDouble());
-    properties.addProperty(property);
-  }
-
-  {
-    Property property(0);
-    property.setName("height");
-    property.setValue(height, dataType->getDataTypeDouble());
-    properties.addProperty(property);
-  }
-  setProperties(properties);
-}
-
-
 void te::layout::AbstractItemController::rotated(const double& degree)
 {
   Properties properties;
