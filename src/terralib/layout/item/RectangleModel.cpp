@@ -91,7 +91,7 @@ te::layout::RectangleModel::RectangleModel()
     m_properties.addProperty(property);
   }
 
-  reparentProperties(Enums::getInstance().getEnumObjectType()->getScaleItem());
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getRectangleItem());
 }
 
 te::layout::RectangleModel::~RectangleModel()
