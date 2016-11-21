@@ -91,14 +91,7 @@ te::layout::RectangleModel::RectangleModel()
     m_properties.addProperty(property);
   }
 
-  {
-    te::gm::Envelope worldBox;
-    Property property(0);
-    property.setName("world_box");
-    property.setLabel(TR_LAYOUT("World Box"));
-    property.setValue(worldBox, dataType->getDataTypeEnvelope());
-    m_properties.addProperty(property);
-  }
+  reparentProperties(Enums::getInstance().getEnumObjectType()->getScaleItem());
 }
 
 te::layout::RectangleModel::~RectangleModel()
