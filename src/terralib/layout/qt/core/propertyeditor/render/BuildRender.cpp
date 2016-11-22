@@ -54,7 +54,7 @@ te::layout::AbstractRender* te::layout::BuildRender::buildRender(QPainter * pain
 {
   RenderFactoryParamsCreate params;
 
-  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
 
   te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);

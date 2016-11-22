@@ -55,6 +55,6 @@ te::layout::EnumType* te::layout::AbstractEditor::getType()
 
 int te::layout::AbstractEditor::getRole()
 {
-  int propertyRole = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyRole = qMetaTypeId<te::layout::Property>();
   return propertyRole;
 }

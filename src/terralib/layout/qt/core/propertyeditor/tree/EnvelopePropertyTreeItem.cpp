@@ -53,7 +53,7 @@ void te::layout::EnvelopePropertyTreeItem::refresh(int column, int role, QString
     return;
 
   // get childItem value
-  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyType = qMetaTypeId<te::layout::Property>();
   te::layout::Property prop = qvariant_cast<te::layout::Property>(value);
   double doubleValue = te::layout::Property::GetValueAs<double>(prop);
 

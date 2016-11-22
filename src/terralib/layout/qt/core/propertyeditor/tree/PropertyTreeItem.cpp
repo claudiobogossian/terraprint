@@ -132,7 +132,7 @@ te::layout::EnumType* te::layout::PropertyTreeItem::getDataType()
 
 int te::layout::PropertyTreeItem::getDataRole()
 {
-  int propertyRole = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyRole = qMetaTypeId<te::layout::Property>();
   return propertyRole;
 }
 

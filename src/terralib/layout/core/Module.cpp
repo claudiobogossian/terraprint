@@ -29,11 +29,14 @@
 
 #include "../qt/core/InitFactories.h"
 #include "property/DataTypesUtils.h"
+#include "../core/property/Property.h"
 
 // TerraLib
 #include <terralib/common/Logger.h>
 #include <terralib/common/TerraLib.h>
 #include <terralib/common/Translator.h>
+
+#include <QMetaType>
 
 const te::layout::Module& sm_module = te::layout::Module::getInstance();
 
@@ -58,6 +61,9 @@ te::layout::Module::Module()
   te::layout::initRenderFactories(); // init all renders factories
 
   te::layout::RegisterLayoutTypes();
+
+  // Register the type Property to use in QVariant. 
+  qRegisterMetaType<te::layout::Property>("te::layout::Property");
 }
 
 te::layout::Module::~Module()

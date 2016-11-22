@@ -85,7 +85,7 @@ te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::creat
 
 te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::createDataTreeItemChild(QString name, double value, QTreeWidgetItem* parent)
 {
-  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyType = qMetaTypeId<te::layout::Property>();
   EnumType* type = Enums::getInstance().getEnumDataType()->getDataTypeDouble();
 
   Property prop;

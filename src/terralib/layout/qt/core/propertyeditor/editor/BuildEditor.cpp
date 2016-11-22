@@ -47,7 +47,7 @@ te::layout::AbstractEditor* te::layout::BuildEditor::buildEditor(std::vector<Pro
 {
   EditorFactoryParamsCreate params(index, vprops, parent);
 
-  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
 
   AbstractEditor* editor = 0;

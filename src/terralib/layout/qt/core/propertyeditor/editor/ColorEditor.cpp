@@ -69,7 +69,7 @@ QVariant te::layout::ColorEditor::getValue()
 
 void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
 {
-  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {

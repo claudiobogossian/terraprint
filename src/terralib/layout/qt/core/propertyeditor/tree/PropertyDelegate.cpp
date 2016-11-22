@@ -130,7 +130,7 @@ void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionV
 {
   if (index.column() == 1)
   {
-    int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+    int propertyType = qMetaTypeId<te::layout::Property>();
     QVariant variant = index.data(propertyType);
 
     te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
