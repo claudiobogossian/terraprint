@@ -20,13 +20,13 @@
 #include "PropertyEditorExample.h"
 
 // Layout Module
-#include "terralib/layout/qt/core/propertytree/PropertyTree.h"
-#include "terralib/layout/qt/core/BuildGraphicsItem.h"
-#include "terralib/layout/qt/item/RectangleItem.h"
-#include "terralib/layout/core/pattern/mvc/AbstractItemView.h"
-#include "terralib/layout/core/pattern/mvc/AbstractItemController.h"
-#include "terralib/layout/core/enum/Enums.h"
-#include "terralib/layout/core/property/Property.h"
+#include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
+#include <terralib/layout/qt/core/BuildGraphicsItem.h>
+#include <terralib/layout/qt/item/RectangleItem.h>
+#include <terralib/layout/core/pattern/mvc/AbstractItemView.h>
+#include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
+#include <terralib/layout/core/enum/Enums.h>
+#include <terralib/layout/core/property/Property.h>
 
 // STL
 #include <vector>

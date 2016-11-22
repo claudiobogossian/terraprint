@@ -42,6 +42,8 @@ namespace te
     void TELAYOUTEXPORT initEditorFactories();
 
     void TELAYOUTEXPORT initTreeItemFactories();
+
+    void TELAYOUTEXPORT initRenderFactories();
   }
 }
 #endif

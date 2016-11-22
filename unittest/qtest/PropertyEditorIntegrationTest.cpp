@@ -20,11 +20,11 @@
 #include "PropertyEditorIntegrationTest.h"
 
 // Layout Module
-#include "terralib/layout/qt/core/propertytree/PropertyTree.h"
-#include "terralib/layout/qt/outside/ToolbarOutside.h"
-#include "terralib/layout/qt/core/Scene.h"
-#include "terralib/layout/core/pattern/mvc/AbstractItemView.h"
-#include "terralib/layout/core/pattern/mvc/AbstractItemController.h"
+#include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
+#include <terralib/layout/qt/outside/ToolbarOutside.h>
+#include <terralib/layout/qt/core/Scene.h>
+#include <terralib/layout/core/pattern/mvc/AbstractItemView.h>
+#include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
 
 // STL
 #include <vector>

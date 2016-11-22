@@ -1670,7 +1670,7 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
   }
   catch (...)
   {
-    int a = 0;
+    result = false;
   }
 
   emit endedPerformingIO();
