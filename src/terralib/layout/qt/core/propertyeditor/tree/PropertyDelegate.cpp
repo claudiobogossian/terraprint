@@ -143,10 +143,6 @@ void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionV
       render->render(painter, option, index);
       delete render;
     }
-    else
-    {
-      int a = 0;
-    }
     return;
   }
   QStyledItemDelegate::paint(painter, option, index);

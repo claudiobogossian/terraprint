@@ -345,7 +345,6 @@ void te::layout::ThreeNorthModel::calculateThreeNorth(Properties& properties)
     catch (const std::exception& e)
     {
       std::string what = e.what();
-      int a = 0;
     }
 #endif
 
