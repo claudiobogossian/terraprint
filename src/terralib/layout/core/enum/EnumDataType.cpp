@@ -1,32 +1,35 @@
 /*  Copyright (C) 2008 National Institute For Space Research (INPE) - Brazil.
 
-    This file is part of the TerraLib - a Framework for building GIS enabled applications.
+This file is part of the TerraLib - a Framework for building GIS enabled applications.
 
-    TerraLib is free software: you can redistribute it and/or modify
-    it under the terms of the GNU Lesser General Public License as published by
-    the Free Software Foundation, either version 3 of the License,
-    or (at your option) any later version.
+TerraLib is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License,
+or (at your option) any later version.
 
-    TerraLib is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-    GNU Lesser General Public License for more details.
+TerraLib is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public License
-    along with TerraLib. See COPYING. If not, write to
-    TerraLib Team at <terralib-team@terralib.org>.
- */
+You should have received a copy of the GNU Lesser General Public License
+along with TerraLib. See COPYING. If not, write to
+TerraLib Team at <terralib-team@terralib.org>.
+*/
 
 /*!
-  \file EnumDataType.cpp
-   
-  \brief 
+\file EnumDataType.cpp
 
-  \ingroup layout
+\brief
+
+\ingroup layout
 */
 
 // TerraLib
 #include "EnumDataType.h"
+
+// Qt
+#include <QtCore>
 
 te::layout::EnumDataType::EnumDataType() :
   m_dataTypeNone(0),
@@ -65,102 +68,102 @@ te::layout::EnumDataType::EnumDataType() :
 
 te::layout::EnumDataType::~EnumDataType()
 {
- if(m_dataTypeNone)
+  if (m_dataTypeNone)
   {
     delete m_dataTypeNone;
     m_dataTypeNone = 0;
   }
-  if(m_dataTypeInt)
+  if (m_dataTypeInt)
   {
     delete m_dataTypeInt;
     m_dataTypeInt = 0;
   }
-  if(m_dataTypeDouble)
+  if (m_dataTypeDouble)
   {
     delete m_dataTypeDouble;
     m_dataTypeDouble = 0;
   }
-  if(m_dataTypeLong)
+  if (m_dataTypeLong)
   {
     delete m_dataTypeLong;
     m_dataTypeLong = 0;
   }
-  if(m_dataTypeFloat)
+  if (m_dataTypeFloat)
   {
     delete m_dataTypeFloat;
     m_dataTypeFloat = 0;
   }
-  if(m_dataTypeString)
+  if (m_dataTypeString)
   {
     delete m_dataTypeString;
     m_dataTypeString = 0;
   }
-  if(m_dataTypeBool)
+  if (m_dataTypeBool)
   {
     delete m_dataTypeBool;
     m_dataTypeBool = 0;
   }
-  if(m_dataTypeGridSettings)
+  if (m_dataTypeGridSettings)
   {
     delete m_dataTypeGridSettings;
     m_dataTypeGridSettings = 0;
   }
-  if(m_dataTypeStringList)
+  if (m_dataTypeStringList)
   {
     delete m_dataTypeStringList;
     m_dataTypeStringList = 0;
   }
-  if(m_dataTypeFont)
+  if (m_dataTypeFont)
   {
     delete m_dataTypeFont;
     m_dataTypeFont = 0;
   }
-  if(m_dataTypeEnvelope)
+  if (m_dataTypeEnvelope)
   {
     delete m_dataTypeEnvelope;
     m_dataTypeEnvelope = 0;
   }
-  if(m_dataTypeImage)
+  if (m_dataTypeImage)
   {
     delete m_dataTypeImage;
     m_dataTypeImage = 0;
   }
-  if(m_dataTypeTextGridSettings)
+  if (m_dataTypeTextGridSettings)
   {
     delete m_dataTypeTextGridSettings;
     m_dataTypeTextGridSettings = 0;
   }
-  if(m_dataTypeGroup)
+  if (m_dataTypeGroup)
   {
     delete m_dataTypeGroup;
     m_dataTypeGroup = 0;
   }
-  if(m_dataTypeMapChoice)
+  if (m_dataTypeMapChoice)
   {
     delete m_dataTypeMapChoice;
     m_dataTypeMapChoice = 0;
   }
-  if(m_dataTypeLegendChoice)
+  if (m_dataTypeLegendChoice)
   {
     delete m_dataTypeLegendChoice;
     m_dataTypeLegendChoice = 0;
   }
-  if(m_dataTypeLayerList)
+  if (m_dataTypeLayerList)
   {
     delete m_dataTypeLayerList;
     m_dataTypeLayerList = 0;
   }
-  if(m_dataTypeStringVector)
+  if (m_dataTypeStringVector)
   {
     delete m_dataTypeStringVector;
     m_dataTypeStringVector = 0;
   }
-  if(m_dataTypeSVGView)
+  if (m_dataTypeSVGView)
   {
     delete m_dataTypeSVGView;
     m_dataTypeSVGView = 0;
   }
-  if(m_dataTypeGeometry)
+  if (m_dataTypeGeometry)
   {
     delete m_dataTypeGeometry;
     m_dataTypeGeometry = 0;
@@ -210,65 +213,98 @@ te::layout::EnumDataType::~EnumDataType()
 
 void te::layout::EnumDataType::init()
 {
-  m_dataTypeNone = createEnum("None", this, TR_LAYOUT("None"));
+  int id = 1;
 
-  m_dataTypeInt = createEnum("Int", this, TR_LAYOUT("Int"));
+  id += Qt::UserRole; // Qt::UserRole: The first role that can be used for application-specific purposes.
 
-  m_dataTypeDouble = createEnum("Double", this, TR_LAYOUT("Double"));
-
-  m_dataTypeLong = createEnum("Long", this, TR_LAYOUT("Long"));
-
-  m_dataTypeFloat = createEnum("Float", this, TR_LAYOUT("Float"));
-
-  m_dataTypeString = createEnum("String", this, TR_LAYOUT("String"));
-
-  m_dataTypeBool = createEnum("Bool", this, TR_LAYOUT("Bool"));
-
-  m_dataTypeColor = createEnum("Color", this, TR_LAYOUT("Color"));
-
-  m_dataTypeGridSettings = createEnum("GridSettings", this, TR_LAYOUT("Grid Settings"));
-
-  m_dataTypeStringList = createEnum("StringList", this, TR_LAYOUT("String List"));
-
-  m_dataTypeFont = createEnum("Font", this, TR_LAYOUT("Font"));
-
-  m_dataTypeEnvelope = createEnum("Envelope", this, TR_LAYOUT("Envelope"));
-
-  m_dataTypeImage = createEnum("Image", this, TR_LAYOUT("Image"));
-
-  m_dataTypeTextGridSettings = createEnum("TextGridSettings", this, TR_LAYOUT("Text Grid Settings"));
-
-  m_dataTypeGroup = createEnum("Group", this, TR_LAYOUT("Group"));
-
-  m_dataTypeMapChoice = createEnum("MapChoice", this, TR_LAYOUT("Map Choice"));
-
-  m_dataTypeLegendChoice = createEnum("LegendChoice", this, TR_LAYOUT("Legend Choice"));
-
-  m_dataTypeLayerList = createEnum("Layer", this, TR_LAYOUT("None"));
-
-  m_dataTypeStringVector = createEnum("StringVector", this, TR_LAYOUT("String Vector"));
-
-  m_dataTypeStringMatrix = createEnum("StringMatrix", this, TR_LAYOUT("String Matrix"));
-
-  m_dataTypeSVGView = createEnum("SVGView", this, TR_LAYOUT("SVG View"));
-
-  m_dataTypeGeometry = createEnum("Geometry", this, TR_LAYOUT("Geometry"));
-
-  m_dataTypeItemObserver = createEnum("ItemObserver", this, TR_LAYOUT("Item Observer"));
-
-  m_dataTypeGroupProperties = createEnum("GroupProperties", this, TR_LAYOUT("Group Properties"));
-
-  m_dataTypeMapSettings = createEnum("MapSettings", this, TR_LAYOUT("Map Settings"));
-
-  m_dataTypeScaleSettings = createEnum("ScaleSettings", this, TR_LAYOUT("Scale Settings"));
+  m_dataTypeNone = createEnum(id, "None", this, TR_LAYOUT("None"));
   
-  m_dataTypeNorthSettings = createEnum("NorthSettings", this, TR_LAYOUT("North Settings"));
+  ++id;
+  m_dataTypeInt = createEnum(id, "Int", this, TR_LAYOUT("Int"));
 
-  m_dataTypePageSetup = createEnum("PageSetup", this, TR_LAYOUT("Page Setup"));
+  ++id;
+  m_dataTypeDouble = createEnum(id, "Double", this, TR_LAYOUT("Double"));
 
-  m_dataTypePath = createEnum("PathString", this, TR_LAYOUT("Path"));
+  ++id;
+  m_dataTypeLong = createEnum(id, "Long", this, TR_LAYOUT("Long"));
 
-  m_dataTypeMapLocationSettings = createEnum("MapLocationSettings", this, TR_LAYOUT("Map Location Settings"));
+  ++id;
+  m_dataTypeFloat = createEnum(id, "Float", this, TR_LAYOUT("Float"));
+
+  ++id;
+  m_dataTypeString = createEnum(id, "String", this, TR_LAYOUT("String"));
+
+  ++id;
+  m_dataTypeBool = createEnum(id, "Bool", this, TR_LAYOUT("Bool"));
+
+  ++id;
+  m_dataTypeColor = createEnum(id, "Color", this, TR_LAYOUT("Color"));
+
+  ++id;
+  m_dataTypeGridSettings = createEnum(id, "GridSettings", this, TR_LAYOUT("Grid Settings"));
+
+  ++id;
+  m_dataTypeStringList = createEnum(id, "StringList", this, TR_LAYOUT("String List"));
+
+  ++id;
+  m_dataTypeFont = createEnum(id, "Font", this, TR_LAYOUT("Font"));
+
+  ++id;
+  m_dataTypeEnvelope = createEnum(id, "Envelope", this, TR_LAYOUT("Envelope"));
+
+  ++id;
+  m_dataTypeImage = createEnum(id, "Image", this, TR_LAYOUT("Image"));
+
+  ++id;
+  m_dataTypeTextGridSettings = createEnum(id, "TextGridSettings", this, TR_LAYOUT("Text Grid Settings"));
+
+  ++id;
+  m_dataTypeGroup = createEnum(id, "Group", this, TR_LAYOUT("Group"));
+
+  ++id;
+  m_dataTypeMapChoice = createEnum(id, "MapChoice", this, TR_LAYOUT("Map Choice"));
+
+  ++id;
+  m_dataTypeLegendChoice = createEnum(id, "LegendChoice", this, TR_LAYOUT("Legend Choice"));
+  
+  ++id;
+  m_dataTypeLayerList = createEnum(id, "Layer", this, TR_LAYOUT("None"));
+
+  ++id;
+  m_dataTypeStringVector = createEnum(id, "StringVector", this, TR_LAYOUT("String Vector"));
+
+  ++id;
+  m_dataTypeStringMatrix = createEnum(id, "StringMatrix", this, TR_LAYOUT("String Matrix"));
+  
+  ++id;
+  m_dataTypeSVGView = createEnum(id, "SVGView", this, TR_LAYOUT("SVG View"));
+
+  ++id;
+  m_dataTypeGeometry = createEnum(id, "Geometry", this, TR_LAYOUT("Geometry"));
+
+  ++id;
+  m_dataTypeItemObserver = createEnum(id, "ItemObserver", this, TR_LAYOUT("Item Observer"));
+
+  ++id;
+  m_dataTypeGroupProperties = createEnum(id, "GroupProperties", this, TR_LAYOUT("Group Properties"));
+
+  ++id;
+  m_dataTypeMapSettings = createEnum(id, "MapSettings", this, TR_LAYOUT("Map Settings"));
+
+  ++id;
+  m_dataTypeScaleSettings = createEnum(id, "ScaleSettings", this, TR_LAYOUT("Scale Settings"));
+
+  ++id;
+  m_dataTypeNorthSettings = createEnum(id, "NorthSettings", this, TR_LAYOUT("North Settings"));
+
+  ++id;
+  m_dataTypePageSetup = createEnum(id, "PageSetup", this, TR_LAYOUT("Page Setup"));
+
+  ++id;
+  m_dataTypePath = createEnum(id, "PathString", this, TR_LAYOUT("Path"));
+
+  ++id;
+  m_dataTypeMapLocationSettings = createEnum(id, "MapLocationSettings", this, TR_LAYOUT("Map Location Settings"));
 }
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeNone() const
@@ -415,7 +451,6 @@ te::layout::EnumType* te::layout::EnumDataType::getDataTypePath() const
 {
   return m_dataTypePath;
 }
-
 
 te::layout::EnumType* te::layout::EnumDataType::getDataTypeMapLocationSettings() const
 {

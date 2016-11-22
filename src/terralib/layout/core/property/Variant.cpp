@@ -31,6 +31,7 @@
 #include <terralib/common/StringUtils.h>
 #include "terralib/geometry/WKTReader.h"
 #include "terralib/geometry/WKTWriter.h"
+#include "../../qt/core/ItemUtils.h"
 
 //Boost
 #include <boost/tokenizer.hpp>
@@ -43,6 +44,7 @@
 #include <cctype>
 #include <iostream>
 #include <stdlib.h>
+#include <algorithm>
 
 te::layout::Variant::Variant() :
   m_sValue("unknown"),

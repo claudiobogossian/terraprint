@@ -29,6 +29,12 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_PROPERTY_H 
 #define __TERRALIB_LAYOUT_INTERNAL_PROPERTY_H
 
+// Boost
+/* Boost conflict with Qt in Q_FOREACH.
+Solution: put all boost include before Qt, 
+and also explicitly include the foreach boost */
+#include <boost/foreach.hpp> // Boost => don't change this include order, otherwise you may have compiling problems!
+
 // TerraPrint
 #include "Variant.h"
 #include "DataTypes.h"
@@ -40,6 +46,8 @@
 //Terralib
 #include <terralib/datatype/AbstractData.h>
 
+// To declare metatype (QVariant will recognize this type)
+#include <QMetaType>
 //STL
 #include <memory>
 
@@ -412,5 +420,7 @@ namespace te
     }
   }
 }
+
+Q_DECLARE_METATYPE(te::layout::Property) // To declare metatype (QVariant will recognize this type)
 
 #endif

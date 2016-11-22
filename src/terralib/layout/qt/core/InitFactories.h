@@ -38,6 +38,10 @@ namespace te
     void TELAYOUTEXPORT initItemFactories();
 
     void TELAYOUTEXPORT initTemplateFactories();
+
+    void TELAYOUTEXPORT initEditorFactories();
+
+    void TELAYOUTEXPORT initTreeItemFactories();
   }
 }
 #endif

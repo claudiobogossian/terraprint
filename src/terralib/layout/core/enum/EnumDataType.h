@@ -52,7 +52,7 @@ namespace te
         /*!
           \brief Constructor
         */
-        EnumDataType(); 
+        EnumDataType();
 
         /*!
           \brief Destructor

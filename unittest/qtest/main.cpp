@@ -19,6 +19,8 @@
 
 // TerraLib
 #include "ViewTest.h"
+#include "PropertyEditorIntegrationTest.h"
+#include "PropertyEditorTest.h"
 
 // Unit-Test TerraLib includes by platform
 #include "../Config.h"
@@ -26,5 +28,24 @@
 // Qt
 #include <QtTest/QtTest>
 
-QTEST_MAIN(te::layout::ViewTest)
+int main(int argv, char **args)
+{
+  QApplication app(argv, args); // required to run classes with Qt
+
+  int result = 0;
+  {
+    te::layout::qtest::ViewTest viewTest;
+    result |= QTest::qExec(&viewTest, argv, args);
+  }
+  {
+    te::layout::qtest::PropertyEditorTest propertyEditorTest;
+    result |= QTest::qExec(&propertyEditorTest, argv, args);
+
+  }
+  {
+    te::layout::qtest::PropertyEditorIntegrationTest propertyEditorIntegrationTest;
+    result |= QTest::qExec(&propertyEditorIntegrationTest, argv, args);
+  }
+  return result;
+}
 

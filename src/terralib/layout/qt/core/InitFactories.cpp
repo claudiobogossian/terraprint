@@ -78,6 +78,18 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../../core/template/XmlTemplateFactory.h"
 #include "tempDataStorage/TempFileFactory.h"
 
+// Editors
+#include "../core/pattern/factory/editor/IntSpinBoxEditorFactory.h"
+#include "../core/pattern/factory/editor/DoubleSpinBoxEditorFactory.h"
+#include "../core/pattern/factory/editor/BoolCheckBoxEditorFactory.h"
+#include "../core/pattern/factory/editor/StringLineEditorFactory.h"
+#include "../core/pattern/factory/editor/StringListComboBoxEditorFactory.h"
+#include "../core/pattern/factory/editor/FontEditorFactory.h"
+#include "../core/pattern/factory/editor/ColorEditorFactory.h"
+
+// Tree Items
+#include "../core/pattern/factory/treeItem/EnvelopePropertyTreeItemFactory.h"
+
 namespace te
 {
   namespace layout
@@ -163,9 +175,39 @@ namespace te
 
       if (!TemplateFactoryInitalized)
       {
+        TemplateFactoryInitalized = true;
         static XmlTemplateFactory XmlTemplateFactory_instance;
         static TempFileFactory TempFileFactory_instance;
       }
     }
+
+    void initEditorFactories()
+    {
+      static bool EditorFactoryInitalized = false;
+
+      if (!EditorFactoryInitalized)
+      {
+        EditorFactoryInitalized = true;
+        static IntSpinBoxEditorFactory IntSpinBoxEditorFactory_instance;
+        static DoubleSpinBoxEditorFactory DoubleSpinBoxEditorFactory_instance;
+        static BoolCheckBoxEditorFactory BoolCheckBoxEditorFactory_instance;
+        static StringLineEditorFactory StringLineEditorFactory_instance;
+        static StringListComboBoxEditorFactory StringListComboBoxEditorFactory_instance;
+        static FontEditorFactory FontEditorFactory_instance;
+        static ColorEditorFactory ColorEditorFactory_instance;
+      }
+    }
+
+    void initTreeItemFactories()
+    {
+      static bool TreeItemFactoryInitalized = false;
+
+      if (!TreeItemFactoryInitalized)
+      {
+        TreeItemFactoryInitalized = true;
+        static EnvelopePropertyTreeItemFactory EnvelopePropertyTreeItemFactory_instance;
+      }
+    }
   }
 }
+

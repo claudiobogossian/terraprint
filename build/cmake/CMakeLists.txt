@@ -79,12 +79,21 @@ if(NOT DEFINED TERRALIB_DESTINATION_SHARE)
   set(TERRALIB_DESTINATION_SHARE "${TERRALIB_BASE_DESTINATION_DIR}share")
 endif()
 
+if(NOT DEFINED TERRALIB_DESTINATION_EXAMPLES)
+  set(TERRALIB_DESTINATION_EXAMPLES "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/examples")
+endif()
+
 if(NOT DEFINED TERRALIB_DESTINATION_UNITTEST)
   set(TERRALIB_DESTINATION_UNITTEST "${TERRALIB_BASE_DESTINATION_DIR}share/terralib/unittest")
 endif()
 
+# variables that controls what is built
 if(NOT DEFINED TERRALIB_BUILD_LAYOUT_TEST_ENABLED)
   set(TERRALIB_BUILD_LAYOUT_TEST_ENABLED ON CACHE BOOL "If on, shows the list of unit-tests to be built")
+endif()
+
+if(NOT DEFINED TERRALIB_BUILD_EXAMPLES_ENABLED)
+  set(TERRALIB_BUILD_EXAMPLES_ENABLED ON CACHE BOOL "If on, shows the list of examples to be built")
 endif()
 
 # variable that set the bundle items as writable before install_name_tool tries to change them (for APPLE platforms)
@@ -310,6 +319,12 @@ CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_UNITTEST_ENABLED "Build the unit test
 CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_QTEST_ENABLED "Build tests with QTest for the layout module?" OFF "TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_BUILD_LAYOUT_TEST_ENABLED" OFF)
 
 #
+# build options for the Layout Module Examples
+#
+
+CMAKE_DEPENDENT_OPTION(TERRALIB_MOD_LAYOUT_EXAMPLES_PROPERTYEDITOR_ENABLED "Build the Property Editor example?" OFF "TERRALIB_MOD_LAYOUT_ENABLED;TERRALIB_BUILD_EXAMPLES_ENABLED" OFF)
+
+#
 # process TERRALIB configuration files
 #
 
@@ -377,6 +392,18 @@ endif()
 
 if(TERRALIB_MOD_LAYOUT_QTEST_ENABLED)
   add_subdirectory(terralib_mod_layout_qtest)
+endif()
+
+#
+# build examples
+#
+
+if(TERRALIB_BUILD_EXAMPLES_ENABLED)
+
+	if(TERRALIB_MOD_LAYOUT_EXAMPLES_PROPERTYEDITOR_ENABLED)
+	  add_subdirectory(terralib_mod_layout_example_propertyeditor)
+	endif()
+	
 endif()
 
 #

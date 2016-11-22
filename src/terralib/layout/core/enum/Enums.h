@@ -171,7 +171,7 @@ namespace te
         \return data type enumeration
         */
         virtual EnumTempDataStorageType* getEnumTempDataStorageType();
-
+        
       protected:
 
         /*!

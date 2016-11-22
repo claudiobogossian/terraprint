@@ -152,3 +152,25 @@ te::layout::EnumType* te::layout::AbstractEnum::createEnum(std::string name, Abs
   return enumType;
 }
 
+te::layout::EnumType* te::layout::AbstractEnum::createEnum(int id, const std::string& name, AbstractEnum* type, const std::string& label)
+{
+  EnumType* enumType = 0; 
+  if (getEnum(id) != 0) // checks already registered an enum with id
+  {
+    return enumType;
+  }
+
+  enumType = new EnumType(id, name, type);
+
+  std::string newLabel = label;
+  if (label.compare("") == 0)
+  {
+    newLabel = name;
+  }
+  enumType->setLabel(newLabel);
+
+  m_enums.push_back(enumType);
+
+  return enumType;
+}
+

@@ -275,7 +275,7 @@ QToolButton* te::layout::ToolbarOutside::createMapToolButton()
   QAction* actionNorth = createAction(tr("North Object"), m_actionNorth, iconManager.getIconNameAsQString(itemType->getNorthItem()->getName()), "", menu);
   menu->addAction(actionNorth);
 
-  QAction* actionThreeNorth = createAction(tr("Three North Object"), m_actionThreeNorth, iconManager.getIconNameAsQString(itemType->getNorthItem()->getName()), "", menu);
+  QAction* actionThreeNorth = createAction(tr("Three North Object"), m_actionThreeNorth, iconManager.getIconNameAsQString(itemType->getThreeNorthItem()->getName()), "", menu);
   menu->addAction(actionThreeNorth);
 
   QAction* actionMapLocation = createAction(tr("Map Location Object"), m_actionMapLocation, iconManager.getIconNameAsQString(itemType->getMapLocationItem()->getName()), "", menu);

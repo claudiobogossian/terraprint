@@ -37,13 +37,13 @@
 #include <QMenu>
 #include <QStatusBar>
 
-void te::layout::ViewTest::on_test_create_view()
+void te::layout::qtest::ViewTest::on_test_create_view()
 {
   m_view.reset(new te::layout::View);
   QVERIFY2(m_view.get() != 0, "Could not create a View object.");
 }
 
-void te::layout::ViewTest::on_test_create_scene()
+void te::layout::qtest::ViewTest::on_test_create_scene()
 {
   te::layout::Scene* myScene = new te::layout::Scene(m_view.get());
   m_view->setScene(myScene);
@@ -52,7 +52,7 @@ void te::layout::ViewTest::on_test_create_scene()
   m_view->config();
 }
 
-void te::layout::ViewTest::on_test_click_view()
+void te::layout::qtest::ViewTest::on_test_click_view()
 {
   QPoint clickPoint1(100, 80);
   QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint1);
@@ -61,13 +61,13 @@ void te::layout::ViewTest::on_test_click_view()
   QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint2);
 }
 
-void te::layout::ViewTest::on_test_create_outside_area()
+void te::layout::qtest::ViewTest::on_test_create_outside_area()
 {
   m_outsideArea.reset(new OutsideArea(0, m_view.get()));
   QVERIFY2(m_outsideArea.get() != 0, "Could not create a OutsideArea object.");
 }
 
-void te::layout::ViewTest::on_test_create_rectangle_item()
+void te::layout::qtest::ViewTest::on_test_create_rectangle_item()
 {  
   QVERIFY2(m_outsideArea->getToolbar() != 0, "The ToolBar object is null.");
   QString rectName = m_outsideArea->getToolbar()->getActionRectangle();
@@ -102,14 +102,14 @@ void te::layout::ViewTest::on_test_create_rectangle_item()
   QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
 }
 
-void te::layout::ViewTest::on_test_click_rectangle_item()
+void te::layout::qtest::ViewTest::on_test_click_rectangle_item()
 {
   // Test: select rectangle item
   QPoint clickPoint(75, 105);
   QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
 }
 
-void te::layout::ViewTest::on_test_create_map_composition_item()
+void te::layout::qtest::ViewTest::on_test_create_map_composition_item()
 {
   QString rectName = m_outsideArea->getToolbar()->getActionMapDefault();
 
@@ -145,14 +145,14 @@ void te::layout::ViewTest::on_test_create_map_composition_item()
   QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
 }
 
-void te::layout::ViewTest::on_test_click_map_composition_item()
+void te::layout::qtest::ViewTest::on_test_click_map_composition_item()
 {
   // Test: select map composition item
   QPoint clickPoint(100, 80);
   QTest::mouseClick(m_view->viewport(), Qt::LeftButton, 0, clickPoint);
 }
 
-void te::layout::ViewTest::on_test_verify_items()
+void te::layout::qtest::ViewTest::on_test_verify_items()
 {
   int total = m_view->getScene()->items().size();
   QVERIFY2(total == 6, "Wrong number of created objects, inconsistent scene.");
