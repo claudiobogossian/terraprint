@@ -26,7 +26,7 @@
 // TerraLib
 #include "PropertyTreeItemFactoryParamsCreate.h"
 
-te::layout::PropertyTreeItemFactoryParamsCreate::PropertyTreeItemFactoryParamsCreate(Property & prop, QTreeWidgetItem* parent):
+te::layout::PropertyTreeItemFactoryParamsCreate::PropertyTreeItemFactoryParamsCreate(const Property& prop, QTreeWidgetItem* parent):
   m_prop(prop),
   m_parent(parent)
 {

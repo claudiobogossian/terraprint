@@ -66,13 +66,13 @@ namespace te
         
       signals:
 
-        void dataValueChanged(QWidget* widget, Property prop);
+        void dataValueChanged(QWidget* widget, const Property& prop);
 
       protected:
 
         virtual void changeEditorData(const QModelIndex& index);
 
-        virtual void addComboOptions(std::vector<te::layout::Variant> options);
+        virtual void addComboOptions(const std::vector<te::layout::Variant>& options);
     };
   }
 }

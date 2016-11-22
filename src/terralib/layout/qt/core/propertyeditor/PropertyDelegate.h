@@ -62,7 +62,7 @@ namespace te
 
         virtual ~PropertyDelegate();
 
-        virtual void setProperties(std::vector<Property> vprops);
+        virtual void setProperties(const std::vector<Property>& vprops);
 
         virtual QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const;
 
@@ -76,11 +76,11 @@ namespace te
         
       signals:
 
-        void dataEditorChanged(Property & prop, int row, int column);
+        void dataEditorChanged(const Property& prop, int row, int column);
 
       protected slots:
 
-        void onDataValueChanged(QWidget* widget, Property prop);
+        void onDataValueChanged(QWidget* widget, const Property& prop);
 
       protected:
 

@@ -64,7 +64,7 @@ namespace te
 
           \param view
         */ 
-        PropertyTreeItemFactoryParamsCreate(Property & prop, QTreeWidgetItem* parent);
+        PropertyTreeItemFactoryParamsCreate(const Property& prop, QTreeWidgetItem* parent);
 
         /*!
         \brief Destructor

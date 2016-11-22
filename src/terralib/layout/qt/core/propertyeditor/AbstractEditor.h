@@ -58,7 +58,7 @@ namespace te
 
         virtual ~AbstractEditor();
 
-        virtual void setProperties(std::vector<Property> vprops);
+        virtual void setProperties(const std::vector<Property>& vprops);
 
         virtual void setEditorData(const QModelIndex& index);
 

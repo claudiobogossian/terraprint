@@ -39,7 +39,7 @@ te::layout::AbstractEditor::~AbstractEditor()
 
 }
 
-void te::layout::AbstractEditor::setProperties(std::vector<Property> vprops)
+void te::layout::AbstractEditor::setProperties(const std::vector<Property>& vprops)
 {
   m_vprops = vprops;
 }

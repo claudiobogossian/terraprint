@@ -54,7 +54,7 @@ te::layout::PropertyDelegate::~PropertyDelegate()
   }
 }
 
-void te::layout::PropertyDelegate::setProperties(std::vector<Property> vprops)
+void te::layout::PropertyDelegate::setProperties(const std::vector<Property>& vprops)
 {
   m_vprops = vprops;
 }
@@ -140,7 +140,7 @@ QWidget* te::layout::PropertyDelegate::createFromFactory(QWidget* parent, const 
   return editor;
 }
 
-void te::layout::PropertyDelegate::onDataValueChanged(QWidget* widget, Property prop)
+void te::layout::PropertyDelegate::onDataValueChanged(QWidget* widget, const Property& prop)
 {
   if (widget == m_currentEditor)
   {

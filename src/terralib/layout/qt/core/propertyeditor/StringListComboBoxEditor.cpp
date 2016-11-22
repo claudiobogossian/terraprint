@@ -65,12 +65,12 @@ void te::layout::StringListComboBoxEditor::changeEditorData(const QModelIndex& i
   }
 }
 
-void te::layout::StringListComboBoxEditor::addComboOptions(std::vector<te::layout::Variant> options)
+void te::layout::StringListComboBoxEditor::addComboOptions(const std::vector<te::layout::Variant>& options)
 {
   clear();
 
   QStringList list;
-  for (std::vector<Variant>::iterator it = options.begin(); it != options.end(); ++it)
+  for (std::vector<Variant>::const_iterator it = options.begin(); it != options.end(); ++it)
   {
     std::string value = (*it).toString();
     QString qValue = te::layout::ItemUtils::convert2QString(value);

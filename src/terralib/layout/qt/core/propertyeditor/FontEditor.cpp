@@ -157,7 +157,7 @@ void te::layout::FontEditor::getFont()
   QFont font = QFontDialog::getFont(&ok, m_font, this);
   if (ok)
   {
-    // font is set to the font the user selected  }
+    // font is set to the font the user selected  
     m_font = font;
   }
   else 
@@ -170,7 +170,6 @@ void te::layout::FontEditor::getFont()
 
   Property prop;
   prop.setName("");
-  //prop.setValue(newFont, dataType->getDataTypeFont());
 
   //Emit our own signal.
   emit dataValueChanged(this, prop);

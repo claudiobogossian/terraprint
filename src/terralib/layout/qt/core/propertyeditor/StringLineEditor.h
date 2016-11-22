@@ -66,7 +66,7 @@ namespace te
         
       signals:
 
-        void dataValueChanged(QWidget* widget, Property prop);
+        void dataValueChanged(QWidget* widget, const Property& prop);
 
       protected:
 
