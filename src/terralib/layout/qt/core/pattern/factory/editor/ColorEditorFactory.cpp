@@ -31,12 +31,10 @@
 
 te::layout::AbstractEditor* te::layout::ColorEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
   ColorEditor* editor = new ColorEditor(index, parent);
-  editor->setProperties(props);
   return editor;
 }
 

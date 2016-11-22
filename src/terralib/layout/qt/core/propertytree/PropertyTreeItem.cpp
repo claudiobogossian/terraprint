@@ -27,16 +27,19 @@
 
 // TerraLib
 #include "PropertyTreeItem.h"
+#include "PropertyTree.h"
 
 // Qt
+#include <QMetaType>
 #include <QString>
 #include <QVariant>
+#include <QTreeWidget>
 
 te::layout::PropertyTreeItem::PropertyTreeItem(Property & prop, QTreeWidgetItem* parent) :
   QTreeWidgetItem(parent),
   m_property(prop)
 {
-  m_dataRole = prop.getType()->getId();
+  setFlags(flags() | Qt::ItemIsEditable);
 }
 
 te::layout::PropertyTreeItem::~PropertyTreeItem()
@@ -50,15 +53,34 @@ void te::layout::PropertyTreeItem::setData(int column, int role, const QVariant 
 
   if (column != 0)
   {
-    //m_datatype = role
     QVariant name = data(0, Qt::UserRole); // get name of the property
+
+    // update property
+    m_property = qvariant_cast<te::layout::Property>(value);
 
     if (parent())
     {
       PropertyTreeItem* parentTreeItem = dynamic_cast<PropertyTreeItem*>(parent());
       if (parentTreeItem)
       {
+        //QTreeWidgetItem::setData(column, role, value);
         parentTreeItem->refresh(column, role, name.toString(), value, this); // refresh parent
+      }
+    }
+    else
+    {
+      /* For each setData there is an internal call to the model->emitDataChanged, so with each change,
+      the QTreeWidget's itemChanged method is called. In case of this customization,
+      when the item has a parent, then only the parent could notify */
+      // this item data has changed, so notify QTreeWidget
+      QTreeWidget* tree = treeWidget();
+      if (tree)
+      {
+        PropertyTree* propTree = dynamic_cast<PropertyTree*>(tree);
+        if (propTree)
+        {
+          propTree->propertyTreeItemChanged(this, column);
+        }
       }
     }
   }
@@ -103,8 +125,14 @@ void te::layout::PropertyTreeItem::setChildData(QTreeWidgetItem* childItem, int 
   }
 }
 
+te::layout::EnumType* te::layout::PropertyTreeItem::getDataType()
+{
+  return m_property.getType();
+}
+
 int te::layout::PropertyTreeItem::getDataRole()
 {
-  return m_dataRole;
+  int propertyRole = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  return propertyRole;
 }
 

@@ -56,8 +56,8 @@ void te::layout::StringLineEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    std::string newValue = te::layout::Property::GetValueAs<std::string>(prop);
+    m_property = qvariant_cast<te::layout::Property>(variant);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(m_property);
 
     QString qValue = ItemUtils::convert2QString(newValue);
     setText(qValue);

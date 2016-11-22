@@ -31,12 +31,10 @@
 
 te::layout::AbstractEditor* te::layout::BoolCheckBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
   BoolCheckBoxEditor* editor = new BoolCheckBoxEditor(index, parent);
-  editor->setProperties(props);
   return editor;
 }
 

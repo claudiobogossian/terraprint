@@ -73,15 +73,19 @@ void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    te::color::RGBAColor newValue = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
+    m_property = qvariant_cast<te::layout::Property>(variant);
+    const te::color::RGBAColor& newValue = te::layout::Property::GetValueAs<te::color::RGBAColor>(m_property);
 
     m_color = QColor(newValue.getRed(), newValue.getGreen(), newValue.getBlue(), newValue.getAlpha());
     if (m_textLabel)
     {
-      m_textLabel->setText(m_color.name());
-      m_textLabel->setPalette(QPalette(m_color));
-      m_textLabel->setAutoFillBackground(true);
+      QPalette ptt(m_textLabel->palette());
+      if (m_color.isValid())
+      {
+        ptt.setColor(m_textLabel->backgroundRole(), m_color);
+        m_textLabel->setAutoFillBackground(true);
+        m_textLabel->setPalette(ptt);
+      }      
     }
   }
 }
@@ -93,9 +97,7 @@ void te::layout::ColorEditor::createGroupBox()
   setupTreeViewEditorMargin(hlayout);
   m_textLabel = new QLabel("");
 
-  QColor color(255, 255, 255);
-  m_textLabel->setPalette(QPalette(color));
-  m_textLabel->setAutoFillBackground(true);
+  m_textLabel->setFixedWidth(20);
 
   m_button = new QToolButton(this);
   m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
@@ -156,15 +158,16 @@ void te::layout::ColorEditor::onButtonClicked(bool checked)
 void te::layout::ColorEditor::getColor()
 {
   QColor color = configColor(m_textLabel);
+  
+  if (color.isValid())
+  {
+    te::color::RGBAColor rgba(color.red(), color.green(), color.blue(), color.alpha());
+    m_property.setValue(rgba, m_property.getType());
+    m_color = color;
 
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  Property prop;
-  prop.setName("");
-  //prop.setValue(newFont, dataType->getDataTypeFont());
-
-  //Emit our own signal.
-  emit dataValueChanged(this, prop);
+    //Emit our own signal.
+    emit dataValueChanged(this, m_property);
+  }
 }
 
 void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
@@ -190,12 +193,9 @@ QColor te::layout::ColorEditor::configColor(QWidget* widget)
 
   if (color.isValid())
   {
-    QPalette paltt(widget->palette());
-    paltt.setColor(widget->backgroundRole(), color);
-    widget->setPalette(paltt);
+    ptt.setColor(widget->backgroundRole(), m_color);
     widget->setAutoFillBackground(true);
-  }
-  
+    widget->setPalette(ptt);
+  }  
   return color;
 }
-

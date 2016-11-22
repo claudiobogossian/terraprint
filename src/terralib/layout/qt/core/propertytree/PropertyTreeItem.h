@@ -69,6 +69,8 @@ namespace te
 
         virtual void refreshChild(int column, int role, QString name, QVariant value);
 
+        EnumType* getDataType();
+
         int getDataRole();
 
       protected:
@@ -78,7 +80,6 @@ namespace te
       protected:
 
         Property  m_property;
-        int       m_dataRole;
     };
   }
 }

@@ -31,12 +31,10 @@
 
 te::layout::AbstractEditor* te::layout::IntSpinBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
   IntSpinBoxEditor* editor = new IntSpinBoxEditor(index, parent);
-  editor->setProperties(props);
   return editor;
 }
 

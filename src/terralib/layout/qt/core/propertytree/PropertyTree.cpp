@@ -28,7 +28,7 @@
 // TerraLib
 #include "PropertyTree.h"
 #include "../../core/ItemUtils.h"
-#include "../propertyeditor/PropertyDelegate.h"
+#include "PropertyDelegate.h"
 #include "PropertyTreeItem.h"
 #include "../propertytree/BuildTreeItem.h"
 
@@ -45,20 +45,19 @@ te::layout::PropertyTree::PropertyTree(View* view, PropertyDelegate* delegate, Q
   m_view(view),
   m_columns(2),
   m_nameColumn(0),
-  m_valueColumn(1)
+  m_valueColumn(1),
+  m_loading(false)
 {
   configTree(m_columns);
 
   PropertyDelegate* propDelegate = delegate;
   if (!propDelegate)
   {
-    propDelegate  = new PropertyDelegate(this);
+    propDelegate = new PropertyDelegate(this);
   }
 
   setItemDelegateForColumn(1, propDelegate); // Add new delegate to second column
 
-  // value changed in delegate via editor
-  connect(propDelegate, SIGNAL(dataEditorChanged(Property&, int, int)), this, SLOT(onDataEditorChanged(Property&, int, int)));
   // check column and let just the value column editable
   connect(this, SIGNAL(itemPressed(QTreeWidgetItem*, int)), this, SLOT(onCheckEdit(QTreeWidgetItem*, int)));
 }
@@ -91,6 +90,7 @@ void te::layout::PropertyTree::configTree(int numberColumns)
 
 void te::layout::PropertyTree::load(std::vector<te::layout::Property> props)
 {
+  m_loading = true;
   m_vprops = props;
   clearAll();
   std::size_t rows = props.size();
@@ -106,6 +106,7 @@ void te::layout::PropertyTree::load(std::vector<te::layout::Property> props)
     QTreeWidgetItem* newItem = createNewRow(prop, invisibleRootItem()); // root QTreeWidgetItem
     setItemExpanded(newItem, true); // Warning: The QTreeWidgetItem must be added to the QTreeWidget before calling this function
   }
+  m_loading = false;
 }
 
 QTreeWidgetItem* te::layout::PropertyTree::createNewRow(te::layout::Property prop, QTreeWidgetItem* parent)
@@ -116,7 +117,6 @@ QTreeWidgetItem* te::layout::PropertyTree::createNewRow(te::layout::Property pro
 
   PropertyTreeItem* newItem = build.buildTreeItem(prop, parent); //  Detail to generate a hierarchical tree, the parent must be passed in the constructor QTreeWidgetItem
 
-  newItem->setFlags(newItem->flags() | Qt::ItemIsEditable);
   newItem->setText(m_nameColumn, propertyName); // First Column (Property Name)
   newItem->setData(m_nameColumn, Qt::UserRole, QVariant(propertyName)); // First Column(Property Name)
 
@@ -154,44 +154,43 @@ void te::layout::PropertyTree::onCheckEdit(QTreeWidgetItem * item, int column)
   }
 }
 
-void te::layout::PropertyTree::onDataEditorChanged(te::layout::Property & prop, int row, int column)
+void te::layout::PropertyTree::propertyTreeItemChanged(QTreeWidgetItem * item, int column)
 {
-  QTreeWidgetItem* item = currentItem();
-
-  QTreeWidgetItem* topParent = findTopParent(item->parent(), item->parent());
-  if (topParent)
+  if (column == 1 && m_loading == false)
   {
-    PropertyTreeItem* treeItem = dynamic_cast<PropertyTreeItem*>(parent());
-    if (treeItem)
+    QTreeWidgetItem* itemForUpdate = findTopParent(item, item->parent());
+    if (itemForUpdate)
     {
-      Property topParentProp = treeItem->getProperty();
-      emit propertiesChanged(topParentProp);
+      PropertyTreeItem* treeItem = dynamic_cast<PropertyTreeItem*>(itemForUpdate);
+      if (treeItem)
+      {
+        Property propForUpdate = treeItem->getProperty();
+        emit propertiesChanged(propForUpdate);
+      }
     }
   }
 }
 
-QTreeWidgetItem* te::layout::PropertyTree::findTopParent(QTreeWidgetItem* topParent, QTreeWidgetItem* root)
+QTreeWidgetItem* te::layout::PropertyTree::findTopParent(QTreeWidgetItem* currentItem, QTreeWidgetItem* parentItem)
 {
-  if (root)
+  if (parentItem)
   {
-    if (root != invisibleRootItem())
+    if (parentItem != invisibleRootItem())
     {
-      topParent = root;
-      if (root->parent())
+      currentItem = parentItem;
+      if (parentItem->parent())
       {
-        findTopParent(topParent, root->parent());
+        findTopParent(currentItem, parentItem->parent());
       }
       else
       {
-        return topParent;
+        return currentItem;
       }
     }
     else
     {
-      return topParent;
+      return currentItem;
     }
   }
-  
-  return topParent;
+  return currentItem;
 }
-

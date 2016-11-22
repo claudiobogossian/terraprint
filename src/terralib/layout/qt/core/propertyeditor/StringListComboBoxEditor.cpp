@@ -57,10 +57,10 @@ void te::layout::StringListComboBoxEditor::changeEditorData(const QModelIndex& i
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    std::string newValue = te::layout::Property::GetValueAs<std::string>(prop);
+    m_property = qvariant_cast<te::layout::Property>(variant);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(m_property);
 
-    std::vector<te::layout::Variant> options = prop.getOptionChoices();
+    std::vector<te::layout::Variant> options = m_property.getOptionChoices();
     addComboOptions(options);
   }
 }

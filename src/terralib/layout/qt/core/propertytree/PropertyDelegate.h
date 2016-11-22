@@ -45,7 +45,7 @@ namespace te
   namespace layout
   {
     class View;
-    class BuildPaintCustomData;
+    class BuildRender;
 
     /*!
     \brief 
@@ -59,6 +59,8 @@ namespace te
       public:
 
         PropertyDelegate(QObject* parent = 0);
+
+        PropertyDelegate(BuildRender* build, QObject* parent = 0);
 
         virtual ~PropertyDelegate();
 
@@ -92,7 +94,7 @@ namespace te
         mutable QWidget*        m_currentEditor;
         mutable int             m_currentEditorRow;
         mutable int             m_currentEditorColumn;
-        BuildPaintCustomData*   m_paintCustomDataType;
+        BuildRender*            m_buildRender;
     };
   }
 }

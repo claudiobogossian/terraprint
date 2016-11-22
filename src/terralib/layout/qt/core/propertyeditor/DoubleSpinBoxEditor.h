@@ -68,6 +68,10 @@ namespace te
 
         void dataValueChanged(QWidget* widget, const Property& prop);
 
+      protected slots:
+
+        virtual void onValueChanged(double d);
+
       protected:
 
         virtual void changeEditorData(const QModelIndex& index);

@@ -69,7 +69,7 @@ namespace te
 
         PropertyTreeItem* createEnvelopeDataTreeItem(Property & prop, QTreeWidgetItem* parent);
 
-        PropertyTreeItem* createDataTreeItemChild(QString name, QVariant value, QTreeWidgetItem* parent);
+        PropertyTreeItem* createDataTreeItemChild(QString name, double value, QTreeWidgetItem* parent);
     };
 
   } // end namespace layout

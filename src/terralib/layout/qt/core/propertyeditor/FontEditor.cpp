@@ -29,7 +29,7 @@
 #include "FontEditor.h"
 #include "../../../core/enum/Enums.h"
 #include "../../../core/property/Property.h"
-#include <terralib/layout/qt/core/ItemUtils.h>
+#include "../../../qt/core/ItemUtils.h"
 
 //Qt
 #include <QMetaType>
@@ -74,8 +74,8 @@ void te::layout::FontEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    te::layout::Font newValue = te::layout::Property::GetValueAs<te::layout::Font>(prop);
+    m_property = qvariant_cast<te::layout::Property>(variant);
+    te::layout::Font newValue = te::layout::Property::GetValueAs<te::layout::Font>(m_property);
     
     m_font = ItemUtils::convertToQfont(newValue);
     if (m_textLabel)
@@ -165,14 +165,20 @@ void te::layout::FontEditor::getFont()
     // the user canceled the dialog; font is set to the initial
     return;
   }
+  
+  te::layout::Font newFont;
+  newFont.setPointSize(m_font.pointSize());
+  newFont.setFamily(ItemUtils::convert2StdString(m_font.family()));
+  newFont.setBold(m_font.bold());
+  newFont.setItalic(m_font.italic());
+  newFont.setKerning(m_font.kerning());
+  newFont.setStrikeout(m_font.strikeOut());
+  newFont.setUnderline(m_font.underline());
 
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  Property prop;
-  prop.setName("");
-
+  m_property.setValue(newFont, m_property.getType());
+  
   //Emit our own signal.
-  emit dataValueChanged(this, prop);
+  emit dataValueChanged(this, m_property);
 }
 
 void te::layout::FontEditor::setupTreeViewEditorMargin(QLayout* layout)

@@ -87,6 +87,16 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../core/pattern/factory/editor/FontEditorFactory.h"
 #include "../core/pattern/factory/editor/ColorEditorFactory.h"
 
+// Renders
+#include "../core/pattern/factory/render/IntSpinBoxRenderFactory.h"
+#include "../core/pattern/factory/render/DoubleSpinBoxRenderFactory.h"
+#include "../core/pattern/factory/render/BoolCheckBoxRenderFactory.h"
+#include "../core/pattern/factory/render/StringLineRenderFactory.h"
+#include "../core/pattern/factory/render/StringListComboBoxRenderFactory.h"
+#include "../core/pattern/factory/render/FontRenderFactory.h"
+#include "../core/pattern/factory/render/ColorRenderFactory.h"
+#include "../core/pattern/factory/render/EnvelopeRenderFactory.h"
+
 // Tree Items
 #include "../core/pattern/factory/treeItem/EnvelopePropertyTreeItemFactory.h"
 
@@ -206,6 +216,24 @@ namespace te
       {
         TreeItemFactoryInitalized = true;
         static EnvelopePropertyTreeItemFactory EnvelopePropertyTreeItemFactory_instance;
+      }
+    }
+
+    void initRenderFactories()
+    {
+      static bool RenderFactoryInitalized = false;
+
+      if (!RenderFactoryInitalized)
+      {
+        RenderFactoryInitalized = true;
+        static IntSpinBoxRenderFactory IntSpinBoxRenderFactory_instance;
+        static DoubleSpinBoxRenderFactory DoubleSpinBoxRenderFactory_instance;
+        static BoolCheckBoxRenderFactory BoolCheckBoxRenderFactory_instance;
+        static StringLineRenderFactory StringLineRenderFactory_instance;
+        static StringListComboBoxRenderFactory StringListComboBoxRenderFactory_instance;
+        static FontRenderFactory FontRenderFactory_instance;
+        static ColorRenderFactory ColorRenderFactory_instance;
+        static EnvelopeRenderFactory EnvelopeRenderFactory_instance;
       }
     }
   }

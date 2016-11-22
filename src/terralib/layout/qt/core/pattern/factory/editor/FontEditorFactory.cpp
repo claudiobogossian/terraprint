@@ -31,12 +31,10 @@
 
 te::layout::AbstractEditor* te::layout::FontEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
   FontEditor* editor = new FontEditor(index, parent);
-  editor->setProperties(props);
   return editor;
 }
 

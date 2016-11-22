@@ -39,7 +39,7 @@ te::layout::EnvelopePropertyTreeItem::EnvelopePropertyTreeItem(Property & prop, 
   m_x2Name("x2"),
   m_y2Name("y2")
 {
-  
+  setFlags(flags() & (~Qt::ItemIsEditable)); // remove editable flag
 }
 
 te::layout::EnvelopePropertyTreeItem::~EnvelopePropertyTreeItem()
@@ -47,21 +47,26 @@ te::layout::EnvelopePropertyTreeItem::~EnvelopePropertyTreeItem()
 
 }
 
-void te::layout::EnvelopePropertyTreeItem::setData(int column, int role, const QVariant & value)
-{
-  PropertyTreeItem::setData(column, role, value);
-}
-
 void te::layout::EnvelopePropertyTreeItem::refresh(int column, int role, QString name, QVariant value, QTreeWidgetItem* childItem)
 {
-  if (column == 0) 
+  if (column == 0)
     return;
 
-  double doubleValue = value.toDouble();
-  QVariant currentDataValue = data(1, m_dataRole).toRectF();
+  // get childItem value
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  te::layout::Property prop = qvariant_cast<te::layout::Property>(value);
+  double doubleValue = te::layout::Property::GetValueAs<double>(prop);
+
+  int dataRole = getDataRole();
+
+  QVariant currentDataValue = data(1, dataRole).toRectF();
   int count = childCount();
 
-  QRectF dataRect = currentDataValue.toRectF();
+  te::gm::Envelope env = te::layout::Property::GetValueAs<te::gm::Envelope>(m_property);
+  double x = env.getLowerLeftX();
+  double y = env.getLowerLeftY();
+  double width = env.getWidth();
+  double height = env.getHeight();
 
   for (int i = 0; i < count; ++i)
   {
@@ -71,21 +76,23 @@ void te::layout::EnvelopePropertyTreeItem::refresh(int column, int role, QString
     {
       if (itemChild->data(0, Qt::UserRole) == name)
       {
-        te::gm::Envelope env = te::layout::Property::GetValueAs<te::gm::Envelope>(m_property);
         if (name == m_x1Name)
-          env = te::gm::Envelope(doubleValue, dataRect.y(), dataRect.width(), dataRect.height());
-        if (name == m_y1Name) 
-          env = te::gm::Envelope(dataRect.x(), doubleValue, dataRect.width(), dataRect.height());
-        if (name == m_x2Name) 
-          env = te::gm::Envelope(dataRect.x(), dataRect.y(), doubleValue, dataRect.height());
-        if (name == m_y2Name) 
-          env = te::gm::Envelope(dataRect.x(), dataRect.y(), dataRect.width(), doubleValue);
+          env = te::gm::Envelope(doubleValue, y, x + width, y + height);
+        if (name == m_y1Name)
+          env = te::gm::Envelope(x, doubleValue, x + width, y + height);
+        if (name == m_x2Name)
+          env = te::gm::Envelope(x, y, doubleValue, y + height);
+        if (name == m_y2Name)
+          env = te::gm::Envelope(x, y, x + width, doubleValue);
 
-        setData(1, m_dataRole, dataRect);
         m_property.setValue(env, m_property.getType());
+
+        // te::layout::Property to QVariant (Wrapper)
+        QVariant variant = QVariant::fromValue<te::layout::Property>(m_property);
+        setData(1, dataRole, variant);
         break;
       }
     }
-  }    
+  }
 }
 

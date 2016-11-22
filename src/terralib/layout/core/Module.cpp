@@ -55,6 +55,7 @@ te::layout::Module::Module()
   te::layout::initTemplateFactories(); // init all template factories
   te::layout::initEditorFactories(); // init all editors factories
   te::layout::initTreeItemFactories(); // init all tree items factories
+  te::layout::initRenderFactories(); // init all renders factories
 
   te::layout::RegisterLayoutTypes();
 }

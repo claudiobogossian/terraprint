@@ -31,6 +31,10 @@
 #include "../../../../../core/property/Property.h"
 #include "../../../propertytree/PropertyTreeItem.h"
 
+// Qt
+#include <QMetaType>
+#include <QVariant>
+
 te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::build(PropertyTreeItemFactoryParamsCreate params)
 {
   Property prop = params.getProperty();
@@ -61,8 +65,8 @@ te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::creat
   }
 
   QString firstChildName("x1");
-  QVariant  childValue(env.getLowerLeftX());
-  createDataTreeItemChild(firstChildName, childValue, envelopePropertyTreeItem);
+  double  childValue = env.getLowerLeftX();
+  te::layout::PropertyTreeItem* x1 = createDataTreeItemChild(firstChildName, childValue, envelopePropertyTreeItem);
 
   QString secondChildName("y1");
   childValue = env.getLowerLeftY();
@@ -79,13 +83,15 @@ te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::creat
   return envelopePropertyTreeItem;
 }
 
-te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::createDataTreeItemChild(QString name, QVariant value, QTreeWidgetItem* parent)
+te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::createDataTreeItemChild(QString name, double value, QTreeWidgetItem* parent)
 {
+  int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
   EnumType* type = Enums::getInstance().getEnumDataType()->getDataTypeDouble();
+
   Property prop;
   prop.setName(name.toStdString());
 
-  double dValue = value.toDouble();
+  double dValue = value;
   prop.setValue(dValue, type);
 
   PropertyTreeItem* newItem = new PropertyTreeItem(prop, parent); //Detail to generate a hierarchical tree, the parent must be passed in the constructor QTreeWidgetItem
@@ -94,7 +100,9 @@ te::layout::PropertyTreeItem* te::layout::EnvelopePropertyTreeItemFactory::creat
   newItem->setData(0, Qt::UserRole, QVariant(name)); // Property Name
 
   // Second Column
-  newItem->setData(1, type->getId(), value); // Property Value
+  // te::layout::Property to QVariant (Wrapper)
+  QVariant variant = QVariant::fromValue<te::layout::Property>(prop);
+  newItem->setData(1, propertyType, variant); // Property Value
 
   return newItem;
 }

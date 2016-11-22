@@ -37,6 +37,9 @@ te::layout::IntSpinBoxEditor::IntSpinBoxEditor(const QModelIndex& index, QWidget
   AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeInt())
 {
   changeEditorData(index);
+
+  // connect signal / slot
+  connect(this, SIGNAL(valueChanged(int)), this, SLOT(onValueChanged(int)));
 }
 
 te::layout::IntSpinBoxEditor::~IntSpinBoxEditor()
@@ -55,9 +58,13 @@ void te::layout::IntSpinBoxEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    int newValue = te::layout::Property::GetValueAs<int>(prop);
+    m_property = qvariant_cast<te::layout::Property>(variant);
+    int newValue = te::layout::Property::GetValueAs<int>(m_property);
     setValue(newValue);
   }
 }
 
+void te::layout::IntSpinBoxEditor::onValueChanged(int i)
+{
+  emit dataValueChanged(this, m_property);
+}

@@ -26,7 +26,6 @@
 // Qt
 #include <QApplication>
 #include <QWidget>
-#include <QDebug>
 
 int main(int argc, char *argv[])
 {

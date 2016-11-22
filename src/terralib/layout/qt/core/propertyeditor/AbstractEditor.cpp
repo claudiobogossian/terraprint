@@ -28,7 +28,6 @@
 // TerraLib
 #include "AbstractEditor.h"
 
-
 te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
 {
   m_dataType = type; // type
@@ -39,17 +38,23 @@ te::layout::AbstractEditor::~AbstractEditor()
 
 }
 
-void te::layout::AbstractEditor::setProperties(const std::vector<Property>& vprops)
-{
-  m_vprops = vprops;
-}
-
 void te::layout::AbstractEditor::setEditorData(const QModelIndex& index)
 {
   changeEditorData(index);
 }
 
+te::layout::Property te::layout::AbstractEditor::getProperty()
+{
+  return m_property;
+}
+
 te::layout::EnumType* te::layout::AbstractEditor::getType()
 {
   return m_dataType;
+}
+
+int te::layout::AbstractEditor::getRole()
+{
+  int propertyRole = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+  return propertyRole;
 }

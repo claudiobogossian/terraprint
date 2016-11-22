@@ -31,12 +31,10 @@
 
 te::layout::AbstractEditor* te::layout::StringLineEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
   StringLineEditor* editor = new StringLineEditor(index, parent);
-  editor->setProperties(props);
   return editor;
 }
 

@@ -37,6 +37,8 @@ te::layout::DoubleSpinBoxEditor::DoubleSpinBoxEditor(const QModelIndex& index, Q
   AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeDouble())
 {
   changeEditorData(index);
+  // connect signal / slot
+  connect(this, SIGNAL(valueChanged(double)), this, SLOT(onValueChanged(double)));
 }
 
 te::layout::DoubleSpinBoxEditor::~DoubleSpinBoxEditor()
@@ -55,9 +57,20 @@ void te::layout::DoubleSpinBoxEditor::changeEditorData(const QModelIndex& index)
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    double newValue = te::layout::Property::GetValueAs<double>(prop);
+    m_property = qvariant_cast<te::layout::Property>(variant);
+    double newValue = te::layout::Property::GetValueAs<double>(m_property);
     setValue(newValue);
   }
 }
 
+void te::layout::DoubleSpinBoxEditor::onValueChanged(double d)
+{
+  double oldValue = te::layout::Property::GetValueAs<double>(m_property);
+  if (oldValue == d)
+    return;
+
+  EnumType* type = getType();
+  m_property.setValue(d, type);
+
+  emit dataValueChanged(this, m_property);
+}

@@ -57,14 +57,21 @@ namespace te
         AbstractEditor(const QModelIndex& index, EnumType* type);
 
         virtual ~AbstractEditor();
-
-        virtual void setProperties(const std::vector<Property>& vprops);
-
+        
         virtual void setEditorData(const QModelIndex& index);
+
+        te::layout::Property getProperty();
 
         virtual QVariant getValue() = 0;
 
         virtual EnumType* getType();
+
+        /*!
+          \brief Value acquired after registration via meta type that QVariant recognizes objects of type te::layout::Property
+
+          \return role value of te::layout::Property
+        */
+        int getRole();
 
       protected:
 
@@ -75,7 +82,7 @@ namespace te
 
       protected:
         
-        std::vector<Property>   m_vprops;
+        te::layout::Property    m_property;
         EnumType*               m_dataType;
     };
   }

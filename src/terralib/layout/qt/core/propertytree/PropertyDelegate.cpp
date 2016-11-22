@@ -27,30 +27,41 @@
 
 // TerraLib
 #include "PropertyDelegate.h"
-#include "AbstractEditor.h"
-#include "BuildEditor.h"
-#include "BuildPaintCustomData.h"
+#include "../propertyeditor/AbstractEditor.h"
+#include "../propertyeditor/BuildEditor.h"
+#include "../propertyrender/BuildRender.h"
+#include "../propertyrender/AbstractRender.h"
 
 // Qt
 #include <QApplication>
 #include <QPainter>
-#include <QDebug>
 
 te::layout::PropertyDelegate::PropertyDelegate(QObject* parent) :
   QStyledItemDelegate(parent),
   m_currentEditor(0),
   m_currentEditorRow(-1),
-  m_currentEditorColumn(-1)
+  m_currentEditorColumn(-1),
+  m_buildRender(0)
 {
-  m_paintCustomDataType = new BuildPaintCustomData();
+  m_buildRender = new BuildRender;
+}
+
+te::layout::PropertyDelegate::PropertyDelegate(BuildRender* build, QObject* parent) :
+  QStyledItemDelegate(parent),
+  m_currentEditor(0),
+  m_currentEditorRow(-1),
+  m_currentEditorColumn(-1),
+  m_buildRender(build)
+{
+
 }
 
 te::layout::PropertyDelegate::~PropertyDelegate()
 {
-  if (m_paintCustomDataType)
+  if (m_buildRender)
   {
-    delete m_paintCustomDataType;
-    m_paintCustomDataType = 0;
+    delete m_buildRender;
+    m_buildRender = 0;
   }
 }
 
@@ -91,17 +102,22 @@ void te::layout::PropertyDelegate::setModelData(QWidget * editor, QAbstractItemM
   AbstractEditor* abstractEditor = dynamic_cast<AbstractEditor*>(editor);
   if (abstractEditor)
   {
-    QVariant value = abstractEditor->getValue();
-    int role = abstractEditor->getType()->getId(); // important because this delegate is using custom data type(role) and obvious not exist in Qt default implementation
-
     if (index.column() == 1)
     {
+      te::layout::Property currentProperty = abstractEditor->getProperty();
+      int role = abstractEditor->getRole(); // important because this delegate is using custom data type(role) and not exist in Qt default implementation
+      const te::dt::AbstractData* currentAbsData = currentProperty.getValue();
+
       QVariant modelData = model->data(index, role);
-      QVariant indexData = index.data(1);
-      if (modelData == indexData) 
+      te::layout::Property modelProp = qvariant_cast<te::layout::Property>(modelData);
+      const te::dt::AbstractData* modelAbsData = modelProp.getValue();
+
+      if (currentAbsData == modelAbsData)
         return;
+      // te::layout::Property to QVariant (Wrapper)
+      QVariant value = QVariant::fromValue<te::layout::Property>(currentProperty);
+      model->setData(index, value, role);
     }
-    model->setData(index, value, role);
   }
 }
 
@@ -114,10 +130,24 @@ void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionV
 {
   if (index.column() == 1)
   {
-    if (m_paintCustomDataType->paintCustomData(painter, option, index))
+    int propertyType = qRegisterMetaType<te::layout::Property>("te::layout::Property");
+    QVariant variant = index.data(propertyType);
+
+    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+    std::string propName = prop.getName();
+
+    std::string renderName = prop.getType()->getName();
+    if (renderName.compare("NONE") != 0)
     {
-      return;
+      AbstractRender* render = m_buildRender->buildRender(painter, option, index);
+      render->render(painter, option, index);
+      delete render;
     }
+    else
+    {
+      int a = 0;
+    }
+    return;
   }
   QStyledItemDelegate::paint(painter, option, index);
 }
@@ -146,7 +176,6 @@ void te::layout::PropertyDelegate::onDataValueChanged(QWidget* widget, const Pro
   {
     // Signal from QItemDelegate
     commitData(widget); // call setEditorData()
-    emit dataEditorChanged(prop, m_currentEditorRow, m_currentEditorColumn);
   }
 }
 

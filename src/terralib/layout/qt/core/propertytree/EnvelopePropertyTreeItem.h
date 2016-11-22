@@ -58,9 +58,7 @@ namespace te
         EnvelopePropertyTreeItem(Property & prop, QTreeWidgetItem* parent = 0);
 
         virtual ~EnvelopePropertyTreeItem();
-
-        virtual void setData(int column, int role, const QVariant & value);
-
+        
         virtual void refresh(int column, int role, QString name, QVariant value, QTreeWidgetItem* childItem);
 
       protected:

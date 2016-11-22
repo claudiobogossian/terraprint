@@ -31,12 +31,10 @@
 
 te::layout::AbstractEditor* te::layout::StringListComboBoxEditorFactory::build(EditorFactoryParamsCreate params)
 {
-  std::vector<Property> props = params.getProperties();
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
 
   StringListComboBoxEditor* editor = new StringListComboBoxEditor(index, parent);
-  editor->setProperties(props);
   return editor;
 }
 

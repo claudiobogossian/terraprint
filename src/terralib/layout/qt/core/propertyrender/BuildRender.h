@@ -18,51 +18,47 @@
  */
 
 /*!
-  \file BuildPaintCustomData.h
+  \file BuildRender.h
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BUILD_PAINT_CUSTOM_DATA_H
-#define __TERRALIB_LAYOUT_INTERNAL_BUILD_PAINT_CUSTOM_DATA_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_BUILD_RENDER_H
+#define __TERRALIB_LAYOUT_INTERNAL_BUILD_RENDER_H
 
 //TerraLib
 #include "../../../core/Config.h"
 
 // Qt
-class QTreeWidgetItem;
 class QPainter;
-class QStyleOptionViewItem;
 class QModelIndex;
-class QString;
-class QVariant;
+class QStyleOptionViewItem;
 
 namespace te
 {
   namespace layout
   {
-    class Property;
-    class PropertyTreeItem;
-
+    class AbstractRender;
+    class EnumType;
     /*!
     \brief 
     
       \ingroup layout
     */
-    class TELAYOUTEXPORT BuildPaintCustomData
+    class TELAYOUTEXPORT BuildRender
     {
       public:
         /*!
           \brief Constructor
         */
-        BuildPaintCustomData();
+        BuildRender();
 
         /*!
           \brief Destructor
         */
-        virtual ~BuildPaintCustomData();
+        virtual ~BuildRender();
         
         /*!
           \brief Method to build a editor to a property inside a cell of QTreeWidget.
@@ -71,28 +67,11 @@ namespace te
       
           \return new editor
         */
-        virtual void build();
-
-        virtual bool paintCustomData(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index);
-
-        QString intToString(QVariant& value);
-
-        QString doubleToString(QVariant& value);
-
-        QString stringToString(QVariant& value);
-
-        QString boolToString(QVariant& value);
-
-        QString fontToString(QVariant& value);
-
-        QString envelopeToString(QVariant& value);
-
-        QString colorToString(QVariant& value);
-
-        QString propertyToQString(QVariant& value);
+        virtual AbstractRender* buildRender(QPainter * painter, const QStyleOptionViewItem & option, const QModelIndex & index);
     };
   }
 }
 
 #endif
+
 

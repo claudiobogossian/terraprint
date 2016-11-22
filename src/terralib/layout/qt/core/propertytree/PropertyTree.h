@@ -71,10 +71,12 @@ namespace te
         virtual QTreeWidgetItem* createNewRow(te::layout::Property prop, QTreeWidgetItem* parent = 0);
 
         void clearAll();
+
+        virtual void propertyTreeItemChanged(QTreeWidgetItem * item, int column);
         
       signals:
 
-        void propertiesChanged(te::layout::Property prop);
+        void propertiesChanged(const te::layout::Property& prop);
 
       protected slots:
               
@@ -82,14 +84,12 @@ namespace te
           \brief Goes into editing mode when a item in a column is pressed with the mouse.
         */
         void onCheckEdit(QTreeWidgetItem * item, int column);
-
-        virtual void onDataEditorChanged(te::layout::Property & prop, int row, int column);
-
+        
       protected:
 
         virtual void configTree(int numberColumns);
 
-        virtual QTreeWidgetItem* findTopParent(QTreeWidgetItem* topParent, QTreeWidgetItem* root);
+        virtual QTreeWidgetItem* findTopParent(QTreeWidgetItem* currentItem, QTreeWidgetItem* parentItem);
 
       protected:
         
@@ -98,6 +98,7 @@ namespace te
         int                                 m_columns;
         int                                 m_nameColumn;
         int                                 m_valueColumn;
+        bool                                m_loading;
     };
   }
 }
