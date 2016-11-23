@@ -241,13 +241,16 @@ QList<QGraphicsItem*> te::layout::ItemUtils::getItems( bool selected )
 {
   QList<QGraphicsItem*> graphicsItems;
 
-  if(selected)
+  if (m_scene)
   {
-    graphicsItems = m_scene->selectedItems();
-  }
-  else
-  {
-    graphicsItems = m_scene->items();
+    if (selected)
+    {
+      graphicsItems = m_scene->selectedItems();
+    }
+    else
+    {
+      graphicsItems = m_scene->items();
+    }
   }
 
   return graphicsItems;

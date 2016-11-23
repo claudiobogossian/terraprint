@@ -24,13 +24,21 @@
 #include <QWidget>
 
 class QComboBox;
+class QString;
+class QGraphicsItem;
 
 namespace te
 {
+  namespace gm
+  {
+    struct Coord2D;
+  }
   namespace layout
   {
     class RectangleItem;
+    class MapItem;
     class PropertyTree;
+    class EnumType;
 
     namespace example
     {
@@ -60,9 +68,17 @@ namespace te
 
           void run();
 
-        protected:
+        protected slots:
 
+          void onCurrentIndexChanged(const QString & text);
+
+        protected:
+          
           void createRectangleItem();
+
+          void createMapItem();
+
+          QGraphicsItem* createItem(EnumType* itemType, te::gm::Coord2D& coord, double width = 20, double height = 20);
 
           void createPropertyTree();
 
@@ -70,9 +86,12 @@ namespace te
 
           void loadComboboxNames();
 
+          void loadProperties(QGraphicsItem* item);
+
         private:
 
           te::layout::RectangleItem*  m_rectItem;
+          te::layout::MapItem*        m_mapItem;
           te::layout::PropertyTree*   m_tree;
           QComboBox*                  m_combobox;
         };

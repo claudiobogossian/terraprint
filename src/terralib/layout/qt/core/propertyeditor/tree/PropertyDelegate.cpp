@@ -140,8 +140,11 @@ void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionV
     if (renderName.compare("NONE") != 0)
     {
       AbstractRender* render = m_buildRender->buildRender(painter, option, index);
-      render->render(painter, option, index);
-      delete render;
+      if (render)
+      {
+        render->render(painter, option, index);
+        delete render;
+      }
     }
     return;
   }

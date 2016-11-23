@@ -130,8 +130,9 @@ QTreeWidgetItem* te::layout::PropertyTree::createNewRow(te::layout::Property pro
   // find child
   if (!prop.getSubProperty().empty())
   {
+    std::vector<Property> vprops = prop.getSubProperty();
     std::vector<Property>::iterator it;
-    for (it = m_vprops.begin(); it != m_vprops.end(); ++it)
+    for (it = vprops.begin(); it != vprops.end(); ++it)
     {
       Property child = (*it);
       QTreeWidgetItem* newChildItem = createNewRow(child, newItem); // add child

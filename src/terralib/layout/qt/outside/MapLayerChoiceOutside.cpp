@@ -218,6 +218,9 @@ std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTi
 std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getLayers(){
 
   std::list<te::map::AbstractLayerPtr> currentLayers;
+  if (!m_controller)
+    return currentLayers;
+
   MapLayerChoiceController* controllerlayers = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (!controllerlayers)
     currentLayers;
@@ -454,8 +457,15 @@ void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string 
   else
   {
     Property prop = controller->getProperty(nameComponent);
-    double number = te::layout::Property::GetValueAs<double>(prop);
-    convert << number;
+    if (prop.isNull())
+    {
+      convert << 0;
+    }
+    else
+    {
+      double number = te::layout::Property::GetValueAs<double>(prop);
+      convert << number;
+    }
   }
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
@@ -543,8 +553,9 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
   {
-
     Property initialProp = controller->getProperty("scale");
+    if (initialProp.isNull())
+      return;
 
     int currentScale = (int)te::layout::Property::GetValueAs<double>(initialProp);
 
@@ -557,7 +568,6 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
     QVariant vScale = dValue;
 
     m_ui->cmbScale->addItem(stringValue.c_str(), vScale);
-
   }
 
   m_ui->cmbScale->addItem("1.000", QVariant((double)1000));
@@ -601,6 +611,8 @@ void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string na
     return;
 
   Property prop = controller->getProperty(nameComponent);
+  if (prop.isNull())
+    return;
 
   QCheckBox* chk = dynamic_cast<QCheckBox*>(widget);
 

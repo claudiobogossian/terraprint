@@ -23,6 +23,7 @@
 #include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
 #include <terralib/layout/qt/core/BuildGraphicsItem.h>
 #include <terralib/layout/qt/item/RectangleItem.h>
+#include <terralib/layout/qt/item/MapItem.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemView.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
 #include <terralib/layout/core/enum/Enums.h>
@@ -49,6 +50,7 @@
 te::layout::example::propertyeditor::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
   QWidget(parent),
   m_rectItem(0),
+  m_mapItem(0),
   m_tree(0),
   m_combobox(0)
 {
@@ -62,32 +64,50 @@ te::layout::example::propertyeditor::PropertyEditorExample::~PropertyEditorExamp
   {
     delete m_rectItem;
   }
+
+  if (m_mapItem)
+  {
+    delete m_mapItem;
+  }
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::run()
 {
   createRectangleItem();
+  createMapItem();
   createPropertyTree();
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createRectangleItem()
 {
   EnumType* itemType = Enums::getInstance().getEnumObjectType()->getRectangleItem();
+  te::gm::Coord2D coord(5, 5);
+
+  QGraphicsItem* item = createItem(itemType, coord);
+  m_rectItem = dynamic_cast<RectangleItem*>(item);
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::createMapItem()
+{
+  EnumType* itemType = Enums::getInstance().getEnumObjectType()->getMapItem();
+  te::gm::Coord2D coord(30, 30);
+
+  QGraphicsItem* item = createItem(itemType, coord);
+  m_mapItem = dynamic_cast<MapItem*>(item);
+}
+
+QGraphicsItem* te::layout::example::propertyeditor::PropertyEditorExample::createItem(EnumType* itemType, te::gm::Coord2D& coord, double width, double height)
+{
+  QGraphicsItem* item = 0;
+
   if (!itemType)
   {
-    return;
+    return item;
   }
 
-  te::gm::Coord2D coord(5, 5);
   BuildGraphicsItem buildItem(0);
-  QGraphicsItem* item = buildItem.createItem(itemType, coord, 20, 20);
-
-  if (!item)
-  {
-    return;
-  }
-
-  m_rectItem = dynamic_cast<RectangleItem*>(item);
+  item = buildItem.createItem(itemType, coord, width, height);  
+  return item;
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyTree()
@@ -99,13 +119,6 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyT
 
   m_tree = new te::layout::PropertyTree(0, 0, this); // create property tree
   createLayout();
-  
-  std::vector<Property> props;
-  AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem);
-  Properties itemProperties = view->getController()->getProperties();
-  props = itemProperties.getProperties();
-
-  m_tree->load(props); // load properties from rectangle item
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
@@ -128,6 +141,11 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
   layout->addWidget(m_tree);
   
   setLayout(layout);
+
+  connect(m_combobox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCurrentIndexChanged(const QString &)));
+  
+  m_combobox->setCurrentIndex(-1);
+  m_combobox->setCurrentIndex(0);
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNames()
@@ -136,11 +154,51 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNam
 
   // add rect item name
   const te::layout::Property rectProp = m_rectItem->getController()->getProperty("name");
+  std::string nameRect = te::layout::Property::GetValueAs<std::string>(rectProp);
+  list.append(nameRect.c_str());
 
-  std::string name = te::layout::Property::GetValueAs<std::string>(rectProp);
-
-  list.append(name.c_str());
+  // add map item name
+  const te::layout::Property mapProp = m_mapItem->getController()->getProperty("name");
+  std::string nameMap = te::layout::Property::GetValueAs<std::string>(mapProp);
+  list.append(nameMap.c_str());
 
   m_combobox->addItems(list);
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexChanged(const QString & text)
+{
+  if (m_rectItem && m_mapItem)
+  {
+    const Property& prop_nameRect = m_rectItem->getController()->getProperty("name");
+    std::string nameRect = te::layout::Property::GetValueAs<std::string>(prop_nameRect);
+    QString rectText = ItemUtils::convert2QString(nameRect);
+    
+    if (text.compare(rectText) == 0)
+    {
+      loadProperties(m_rectItem);
+      return;
+    }
+
+    const Property& prop_nameMap = m_mapItem->getController()->getProperty("name");
+    std::string nameMap = te::layout::Property::GetValueAs<std::string>(prop_nameMap);
+    QString mapText = ItemUtils::convert2QString(nameMap);
+    
+    if (text.compare(mapText) == 0)
+    {
+      loadProperties(m_mapItem);
+    }
+  }  
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::loadProperties(QGraphicsItem* item)
+{
+  std::vector<Property> props;
+
+  AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+  
+  Properties itemProperties = view->getController()->getProperties();
+  props = itemProperties.getProperties();
+
+  m_tree->load(props); // load properties from rectangle item
 }
 
