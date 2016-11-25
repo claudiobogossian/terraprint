@@ -37,6 +37,7 @@ namespace te
   {
     class RectangleItem;
     class MapItem;
+    class MapCompositionItem;
     class PropertyTree;
     class EnumType;
 
@@ -78,6 +79,8 @@ namespace te
 
           void createMapItem();
 
+          void createMapCompositionItem();
+
           QGraphicsItem* createItem(EnumType* itemType, te::gm::Coord2D& coord, double width = 20, double height = 20);
 
           void createPropertyTree();
@@ -90,10 +93,11 @@ namespace te
 
         private:
 
-          te::layout::RectangleItem*  m_rectItem;
-          te::layout::MapItem*        m_mapItem;
-          te::layout::PropertyTree*   m_tree;
-          QComboBox*                  m_combobox;
+          te::layout::RectangleItem*        m_rectItem;
+          te::layout::MapItem*              m_mapItem;
+          te::layout::MapCompositionItem*   m_mapCompositionItem;
+          te::layout::PropertyTree*         m_tree;
+          QComboBox*                        m_combobox;
         };
       }
     }
