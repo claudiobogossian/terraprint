@@ -105,6 +105,10 @@ bool te::layout::GridSettingsController::containsGrid(EnumType* enumType)
 te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid(EnumType* enumType)
 {
   AbstractItemView* itemFound = 0;
+  if (!m_scene)
+  {
+    return itemFound;
+  }
 
   QList<QGraphicsItem*> items = m_scene->items();
   

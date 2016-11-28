@@ -80,10 +80,20 @@ te::layout::example::propertyeditor::PropertyEditorExample::~PropertyEditorExamp
 
 void te::layout::example::propertyeditor::PropertyEditorExample::run()
 {
+  createGraphicsViewInfrastructure();
   createRectangleItem();
   createMapItem();
   createMapCompositionItem();
   createPropertyTree();
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::createGraphicsViewInfrastructure()
+{
+  m_view.reset(new te::layout::View); // create View
+
+  te::layout::Scene* myScene = new te::layout::Scene(m_view.get()); // create Scene
+  m_view->setScene(myScene);
+  m_view->config(); // init layout infrastructure
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createRectangleItem()
@@ -122,7 +132,7 @@ QGraphicsItem* te::layout::example::propertyeditor::PropertyEditorExample::creat
     return item;
   }
 
-  BuildGraphicsItem buildItem(0);
+  BuildGraphicsItem buildItem(m_view->getScene());
   item = buildItem.createItem(itemType, coord, width, height);  
   return item;
 }

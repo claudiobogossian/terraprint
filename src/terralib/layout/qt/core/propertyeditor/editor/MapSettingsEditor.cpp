@@ -54,7 +54,7 @@
 
 te::layout::MapSettingsEditor::MapSettingsEditor(const QModelIndex& index, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeInt()),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeMapSettings()),
   m_textLabel(0),
   m_button(0),
   m_mapSettings(0)

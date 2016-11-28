@@ -49,7 +49,7 @@
 
 te::layout::ColorEditor::ColorEditor(const QModelIndex& index, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeInt()),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeColor()),
   m_textLabel(0),
   m_button(0)
 {

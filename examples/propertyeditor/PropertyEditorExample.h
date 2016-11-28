@@ -20,6 +20,12 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
 #define __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
 
+// TerraLib
+#include <terralib/layout/qt/core/View.h>
+
+// STL
+#include <memory>
+
 // Qt
 #include <QWidget>
 
@@ -75,6 +81,8 @@ namespace te
 
         protected:
           
+          void createGraphicsViewInfrastructure();
+
           void createRectangleItem();
 
           void createMapItem();
@@ -93,6 +101,7 @@ namespace te
 
         private:
 
+          std::unique_ptr<te::layout::View> m_view;
           te::layout::RectangleItem*        m_rectItem;
           te::layout::MapItem*              m_mapItem;
           te::layout::MapCompositionItem*   m_mapCompositionItem;

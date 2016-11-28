@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file FontEditor.cpp
+  \file GridSettingsEditor.cpp
    
   \brief 
 
@@ -26,10 +26,15 @@
 */
 
 // TerraLib
-#include "FontEditor.h"
+#include "GridSettingsEditor.h"
 #include "../../../../core/enum/Enums.h"
 #include "../../../../core/property/Property.h"
-#include "../../../../qt/core/ItemUtils.h"
+#include "../../../outside/GridSettingsOutside.h"
+#include "../../../core/ItemUtils.h"
+#include "../../BuildGraphicsOutside.h"
+
+// STL
+#include <string>
 
 //Qt
 #include <QMetaType>
@@ -46,55 +51,57 @@
 #include <QStyle>
 #include <QApplication>
 #include <QFontDialog>
-#include <QColor>
+#include <QColorDialog>
 
-te::layout::FontEditor::FontEditor(const QModelIndex& index, QWidget* parent) :
+te::layout::GridSettingsEditor::GridSettingsEditor(const QModelIndex& index, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeFont()),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeGridSettings()),
   m_textLabel(0),
-  m_button(0)
+  m_button(0),
+  m_gridSettings(0)
 {
   createGroupBox();
   changeEditorData(index);
 }
 
-te::layout::FontEditor::~FontEditor()
+te::layout::GridSettingsEditor::~GridSettingsEditor()
 {
-
+  if (m_gridSettings)
+  {
+    m_gridSettings->setParent(0);
+    delete m_gridSettings;
+  }
 }
 
-QVariant te::layout::FontEditor::getValue()
+QVariant te::layout::GridSettingsEditor::getValue()
 {
   return m_textLabel->text();
 }
 
-void te::layout::FontEditor::changeEditorData(const QModelIndex& index)
+void te::layout::GridSettingsEditor::changeEditorData(const QModelIndex& index)
 {
   int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     m_property = qvariant_cast<te::layout::Property>(variant);
-    te::layout::Font newValue = te::layout::Property::GetValueAs<te::layout::Font>(m_property);
-    
-    m_font = ItemUtils::convertToQfont(newValue);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(m_property);
+
     if (m_textLabel)
     {
-      m_textLabel->setText(m_font.family());
+      QString name = ItemUtils::convert2QString(m_property.getLabel());
+      m_textLabel->setText(name);
     }
   }
 }
 
-void te::layout::FontEditor::createGroupBox()
+void te::layout::GridSettingsEditor::createGroupBox()
 {
   QHBoxLayout* hlayout = new QHBoxLayout(this);
 
   setupTreeViewEditorMargin(hlayout);
   m_textLabel = new QLabel("");
-
-  QColor color(255, 255, 255);
-  m_textLabel->setPalette(QPalette(color));
-
+  
   m_button = new QToolButton(this);
   m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
   m_button->setFixedWidth(20);
@@ -102,7 +109,7 @@ void te::layout::FontEditor::createGroupBox()
   m_button->installEventFilter(this);
 
   connect(m_button, SIGNAL(clicked(bool)), this, SLOT(onButtonClicked(bool)));
-
+  
   setFocusProxy(m_button);
   setFocusPolicy(m_button->focusPolicy());
 
@@ -117,7 +124,7 @@ void te::layout::FontEditor::createGroupBox()
   setLayout(hlayout);
 }
 
-bool te::layout::FontEditor::eventFilter(QObject * watched, QEvent * event)
+bool te::layout::GridSettingsEditor::eventFilter(QObject * watched, QEvent * event)
 {
   if (watched == m_button)
   {
@@ -137,7 +144,7 @@ bool te::layout::FontEditor::eventFilter(QObject * watched, QEvent * event)
   return QWidget::eventFilter(watched, event);
 }
 
-void te::layout::FontEditor::paintEvent(QPaintEvent * event)
+void te::layout::GridSettingsEditor::paintEvent(QPaintEvent * event)
 {
   QStyleOption opt;
   opt.init(this);
@@ -145,43 +152,29 @@ void te::layout::FontEditor::paintEvent(QPaintEvent * event)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void te::layout::FontEditor::onButtonClicked(bool checked)
+void te::layout::GridSettingsEditor::onButtonClicked(bool checked)
 {
   emit showDlg();
-  getFont();
+  showSettings();
 }
 
-void te::layout::FontEditor::getFont()
+void te::layout::GridSettingsEditor::showSettings()
 {
-  bool ok;
-  QFont font = QFontDialog::getFont(&ok, m_font, this);
-  if (ok)
-  {
-    // font is set to the font the user selected  
-    m_font = font;
-  }
-  else 
-  {
-    // the user canceled the dialog; font is set to the initial
-    return;
-  }
-  
-  te::layout::Font newFont;
-  newFont.setPointSize(m_font.pointSize());
-  newFont.setFamily(ItemUtils::convert2StdString(m_font.family()));
-  newFont.setBold(m_font.bold());
-  newFont.setItalic(m_font.italic());
-  newFont.setKerning(m_font.kerning());
-  newFont.setStrikeout(m_font.strikeOut());
-  newFont.setUnderline(m_font.underline());
+  EnumType* type = Enums::getInstance().getEnumObjectType()->getGridSettings();
 
-  m_property.setValue(newFont, m_property.getType());
-  
-  //Emit our own signal.
-  emit dataValueChanged(this, m_property);
+  BuildGraphicsOutside build;
+  if (!m_gridSettings)
+  {
+    QWidget* widget = build.createOutside(type, 0, (QWidget*) this->parent());
+    m_gridSettings = dynamic_cast<GridSettingsOutside*>(widget);
+  }
+
+  m_gridSettings->load();
+  m_gridSettings->show(); // modeless dialog
+  m_gridSettings->raise(); // top of the parent widget's stack
 }
 
-void te::layout::FontEditor::setupTreeViewEditorMargin(QLayout* layout)
+void te::layout::GridSettingsEditor::setupTreeViewEditorMargin(QLayout* layout)
 {
   int decorationMargin = 4;
 
@@ -195,3 +188,11 @@ void te::layout::FontEditor::setupTreeViewEditorMargin(QLayout* layout)
   }
 }
 
+void te::layout::GridSettingsEditor::onUpdateProperty(Property prop)
+{
+  if (!prop.isNull())
+  {
+    // Emit our own signal.
+    emit dataValueChanged(this, m_property);
+  }
+}
