@@ -18,56 +18,49 @@
  */
 
 /*!
-  \file terralib/terralib_version.h
+  \file terralib/terraprint_version.h
 
   \brief System versioning macros.
 */
 
-#ifndef __TERRALIB_INTERNAL_TERRALIB_VERSION_H__
-#define __TERRALIB_INTERNAL_TERRALIB_VERSION_H__
+#ifndef __TERRAPRINT_INTERNAL_TERRAPRINT_VERSION_H__
+#define __TERRAPRINT_INTERNAL_TERRAPRINT_VERSION_H__
 
 /*!
-  \def TERRALIB_VERSION_MAJOR
+  \def TERRALIB_LAYOUT_VERSION_MAJOR
 
-  \brief Major version of TerraLib (or version).
+  \brief Major version of TerraPrint (or version).
  */
-#define TERRALIB_VERSION_MAJOR @TERRALIB_VERSION_MAJOR@
+#define TERRALIB_LAYOUT_VERSION_MAJOR @TERRALIB_LAYOUT_VERSION_MAJOR@
 
 /*!
-  \def TERRALIB_VERSION_MINOR
+  \def TERRALIB_LAYOUT_VERSION_MINOR
 
-  \brief Minor version of TerraLib (or revision). 
+  \brief Minor version of TerraPrint (or revision). 
  */
-#define TERRALIB_VERSION_MINOR @TERRALIB_VERSION_MINOR@
+#define TERRALIB_LAYOUT_VERSION_MINOR @TERRALIB_LAYOUT_VERSION_MINOR@
 
 /*!
-  \def TERRALIB_VERSION_PATCH
+  \def TERRALIB_LAYOUT_VERSION_PATCH
 
-  \brief Patched version of TerraLib (or patch).
+  \brief Patched version of TerraPrint (or patch).
  */
-#define TERRALIB_VERSION_PATCH @TERRALIB_VERSION_PATCH@
+#define TERRALIB_LAYOUT_VERSION_PATCH @TERRALIB_LAYOUT_VERSION_PATCH@
 
 /*!
-  \def TERRALIB_VERSION_STATUS
+  \def TERRALIB_LAYOUT_VERSION_STRING
 
-  \brief
+  \brief This flag is used for versioning the TerraPrint code. If you have plugins and other tools
+         that must check the TerraPrint version, you can test against this string.
  */
-#define TERRALIB_VERSION_STATUS "@TERRALIB_VERSION_STATUS@"
+#define TERRALIB_LAYOUT_VERSION_STRING "@TERRALIB_LAYOUT_VERSION_STRING@"
 
 /*!
-  \def TERRALIB_VERSION_STRING
+  \def TERRALIB_LAYOUT_VERSION
 
-  \brief This flag is used for versioning the TerraLib code. If you have plugins and other tools
-         that must check the TerraLib version, you can test against this string.
+  \brief This flag is used for versioning the TerraPrint code. If you have plugins and other tools
+         that must check the TerraPrint version, you can test against this number.
  */
-#define TERRALIB_VERSION_STRING "@TERRALIB_VERSION_STRING@"
+#define TERRALIB_LAYOUT_VERSION @TERRALIB_VERSION@
 
-/*!
-  \def TERRALIB_VERSION
-
-  \brief This flag is used for versioning the TerraLib code. If you have plugins and other tools
-         that must check the TerraLib version, you can test against this number.
- */
-#define TERRALIB_VERSION @TERRALIB_VERSION@
-
-#endif  // __TERRALIB_INTERNAL_TERRALIB_VERSION_H__
+#endif  // __TERRAPRINT_INTERNAL_TERRAPRINT_VERSION_H__
