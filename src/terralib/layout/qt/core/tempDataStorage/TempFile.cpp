@@ -50,6 +50,8 @@ te::layout::TempFile::~TempFile()
 
 bool te::layout::TempFile::save()
 {
+  boost::mutex::scoped_lock lock(m_mutex);
+
   bool result = false;
 
   TempFileInfo* tempFileInfo = dynamic_cast<TempFileInfo*>(m_info);
@@ -89,6 +91,8 @@ void te::layout::TempFile::readProperties()
   {
     return;
   }
+
+  boost::mutex::scoped_lock lock(m_mutex);
   
   Scene* scene = tempFileInfo->getScene();
   m_properties.clear();
