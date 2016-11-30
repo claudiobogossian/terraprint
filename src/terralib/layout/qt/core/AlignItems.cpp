@@ -193,9 +193,12 @@ void te::layout::AlignItems::alignLeft()
 
   if(items.count() == 1)
   {
+    //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+    double dx = items.first()->scenePos().x() - items.first()->sceneBoundingRect().x();
+
     te::gm::Envelope ppbx(0, 0, ww, hh);
-    dbLeft = ppbx.getLowerLeftX();
-    QPointF pot(dbLeft, items.first()->sceneBoundingRect().y());
+    dbLeft = ppbx.getLowerLeftX() + dx;
+    QPointF pot(dbLeft, items.first()->scenePos().y());
 
     itemsWithPoints[items.first()] = items.first()->scenePos();//it will be added to the undo/redo stack
 
@@ -210,7 +213,10 @@ void te::layout::AlignItems::alignLeft()
   {
     if(item)
     {
-      QPointF pt(dbLeft, item->sceneBoundingRect().y());
+      //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+      double dx = item->scenePos().x() - item->sceneBoundingRect().x();
+
+      QPointF pt(dbLeft + dx, item->scenePos().y());
       itemsWithPoints[item] = item->scenePos();//it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -242,10 +248,13 @@ void te::layout::AlignItems::alignRight()
 
   if(items.count() == 1)
   {
+    //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+    double dx = items.first()->scenePos().x() - items.first()->sceneBoundingRect().x();
+
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbRight = ppbx.getUpperRightX();
-    w = dbRight - items.first()->sceneBoundingRect().width();
-    QPointF pot(w, items.first()->sceneBoundingRect().y());
+    w = dbRight - items.first()->sceneBoundingRect().width() + dx;
+    QPointF pot(w, items.first()->scenePos().y());
 
     itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
 
@@ -260,8 +269,11 @@ void te::layout::AlignItems::alignRight()
   {
     if(item)
     {
-      w = dbRight - item->sceneBoundingRect().width();
-      QPointF pt(w, item->sceneBoundingRect().y());
+      //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+      double dx = item->scenePos().x() - item->sceneBoundingRect().x();
+
+      w = dbRight - item->sceneBoundingRect().width() + dx;
+      QPointF pt(w, item->scenePos().y());
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -293,10 +305,13 @@ void te::layout::AlignItems::alignTop()
 
   if(items.count() == 1)
   {
+    //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+    double dy = items.first()->scenePos().y() - items.first()->sceneBoundingRect().y();
+
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbBottom = ppbx.getUpperRightY();
     h = dbBottom - items.first()->sceneBoundingRect().height();
-    QPointF pot(items.first()->sceneBoundingRect().x(), h);
+    QPointF pot(items.first()->scenePos().x(), h + dy);
 
     itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
 
@@ -311,8 +326,11 @@ void te::layout::AlignItems::alignTop()
   {
     if(item)
     {
+      //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+      double dy = item->scenePos().y() - item->sceneBoundingRect().y();
+
       h = dbBottom - item->sceneBoundingRect().height();
-      QPointF pt(item->scenePos().x(), h);
+      QPointF pt(item->scenePos().x(), h + dy);
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -343,9 +361,12 @@ void te::layout::AlignItems::alignBottom()
 
   if(items.count() == 1)
   {
+    //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+    double dy = items.first()->scenePos().y() - items.first()->sceneBoundingRect().y();
+
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbTop = ppbx.getLowerLeftY();
-    QPointF pot(items.first()->sceneBoundingRect().x(), dbTop);
+    QPointF pot(items.first()->scenePos().x(), dbTop + dy);
 
     itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
 
@@ -360,7 +381,10 @@ void te::layout::AlignItems::alignBottom()
   {
     if(item)
     {
-      QPointF pt(item->scenePos().x(), dbTop);
+      //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+      double dy = item->scenePos().y() - item->sceneBoundingRect().y();
+
+      QPointF pt(item->scenePos().x(), dbTop + dy);
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -392,10 +416,13 @@ void te::layout::AlignItems::alignCenterHorizontal()
 
   if(items.count() == 1)
   {
+    //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+    double dx = items.first()->scenePos().x() - items.first()->sceneBoundingRect().x();
+
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbCenterHrz = ppbx.getCenter().x;
     w = items.first()->sceneBoundingRect().width() / 2.;
-    QPointF pot(dbCenterHrz - w, items.first()->sceneBoundingRect().y());
+    QPointF pot(dbCenterHrz - w + dx, items.first()->scenePos().y());
 
     itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
 
@@ -410,9 +437,12 @@ void te::layout::AlignItems::alignCenterHorizontal()
   {
     if(item)
     {
+      //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+      double dx = item->scenePos().x() - item->sceneBoundingRect().x();
+
       w = item->sceneBoundingRect().width() / 2.;
 
-      QPointF pt(dbCenterHrz - w, item->sceneBoundingRect().y());
+      QPointF pt(dbCenterHrz - w + dx, item->scenePos().y());
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
@@ -444,10 +474,13 @@ void te::layout::AlignItems::alignCenterVertical()
 
   if(items.count() == 1)
   {
+    //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+    double dy = items.first()->scenePos().y() - items.first()->sceneBoundingRect().y();
+
     te::gm::Envelope ppbx(0, 0, ww, hh);
     dbCenterVrt = ppbx.getCenter().y;
     h = items.first()->sceneBoundingRect().height() / 2.;
-    QPointF pot(items.first()->sceneBoundingRect().x(), dbCenterVrt - h);
+    QPointF pot(items.first()->scenePos().x(), dbCenterVrt - h + dy);
 
     itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
 
@@ -462,9 +495,12 @@ void te::layout::AlignItems::alignCenterVertical()
   {
     if(item)
     {
+      //some items like the MapItem have their bounding rects translated from its position, and so we must consider the displacement
+      double dy = items.first()->scenePos().y() - items.first()->sceneBoundingRect().y();
+
       h = item->sceneBoundingRect().height() / 2.;
 
-      QPointF pt(item->scenePos().x(), dbCenterVrt - h);
+      QPointF pt(item->scenePos().x(), dbCenterVrt - h + dy);
       itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
       item->setPos(pt);
     }
