@@ -488,6 +488,11 @@ void te::layout::AbstractItem::drawWarningAlert(QPainter * painter)
 bool te::layout::AbstractItem::isZoomAdequateForResize() const
 {
   AbstractScene* myScene = this->getScene();
+  if (myScene == 0)
+  {
+    throw te::common::Exception("The scene is invalid in AbstractItem::isZoomAdequateForResize");
+  }
+
   te::layout::Utils utils = myScene->getUtils();
 
   //We convert the expeted size in Pixels to MM. We also consider the zoom factor

@@ -488,6 +488,8 @@ void te::layout::Scene::destroyItemGroup(te::layout::ItemGroup* group )
     group->removeFromGroup(childItems[i]);
   }
 
+  group->setVisible(false);
+
   std::vector<std::string> vecNames;
   AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(group);
   if (abstractItem)

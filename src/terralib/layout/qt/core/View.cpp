@@ -707,7 +707,8 @@ void te::layout::View::createItemGroup()
   Scene* sc = dynamic_cast<Scene*>(scene());
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
 
-  if (graphicsItems.isEmpty())
+  //if the list is empty or there is only one item, we do not need to do anything
+  if (graphicsItems.isEmpty() || graphicsItems.size() == 1)
   {
     return;
   }
@@ -738,6 +739,17 @@ void te::layout::View::destroyItemGroup()
   {
     if (item)
     {
+      te::layout::AbstractItemView* absItemView = dynamic_cast<te::layout::AbstractItemView*>(item);
+      if (absItemView == 0)
+      {
+        continue;
+      }
+
+      if (absItemView->getController()->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
+      {
+        continue;
+      }
+
       te::layout::ItemGroup* group = dynamic_cast<te::layout::ItemGroup*>(item);
       if(group)
       {
