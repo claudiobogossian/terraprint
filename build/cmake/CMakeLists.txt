@@ -326,7 +326,7 @@ configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/BuildConfig.h.in
                ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h @ONLY)
 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/Version.h.in
-               ${CMAKE_BINARY_DIR}/terralib_layout_version.h @ONLY)
+               ${CMAKE_BINARY_DIR}/terraprint_version.h @ONLY)
 			 
 configure_file(${TERRALIB_ABSOLUTE_ROOT_DIR}/unittest/Config.h.in
                ${CMAKE_BINARY_DIR}/terralib_layout_unittest_config.h @ONLY)
@@ -386,7 +386,7 @@ endif()
 file(GLOB TERRALIB_HDR_FILES ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/*.h)
 
 install(FILES ${CMAKE_BINARY_DIR}/terralib_layout_buildconfig.h
-              ${CMAKE_BINARY_DIR}/terralib_layout_version.h
+              ${CMAKE_BINARY_DIR}/terraprint_version.h
               ${TERRALIB_HDR_FILES}
         DESTINATION ${TERRALIB_DESTINATION_HEADERS}/terralib COMPONENT devel)
 
