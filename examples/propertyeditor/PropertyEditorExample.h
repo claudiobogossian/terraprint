@@ -21,7 +21,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
 
 // TerraLib
+#ifndef Q_MOC_RUN
 #include <terralib/layout/qt/core/View.h>
+#endif
 
 // STL
 #include <memory>
@@ -32,6 +34,8 @@
 class QComboBox;
 class QString;
 class QGraphicsItem;
+
+namespace Ui { class PropertyEditorExampleDialog; }
 
 namespace te
 {
@@ -51,7 +55,7 @@ namespace te
     {
       namespace propertyeditor
       {
-
+        class ProxyLayers;
         /*!
           \brief
 
@@ -79,6 +83,8 @@ namespace te
 
           void onCurrentIndexChanged(const QString & text);
 
+          void on_tbtnLoadLayers_clicked();
+
         protected:
           
           void createGraphicsViewInfrastructure();
@@ -99,14 +105,18 @@ namespace te
 
           void loadProperties(QGraphicsItem* item);
 
+          void loadLayerTree();
+          
         private:
 
-          std::unique_ptr<te::layout::View> m_view;
-          te::layout::RectangleItem*        m_rectItem;
-          te::layout::MapItem*              m_mapItem;
-          te::layout::MapCompositionItem*   m_mapCompositionItem;
-          te::layout::PropertyTree*         m_tree;
-          QComboBox*                        m_combobox;
+          std::unique_ptr<Ui::PropertyEditorExampleDialog>  m_ui;
+          std::unique_ptr<te::layout::View>                 m_view;
+          te::layout::RectangleItem*                        m_rectItem;
+          te::layout::MapItem*                              m_mapItem;
+          te::layout::MapCompositionItem*                   m_mapCompositionItem;
+          te::layout::PropertyTree*                         m_tree;
+          QComboBox*                                        m_combobox;
+          ProxyLayers*                                      m_proxy;
         };
       }
     }

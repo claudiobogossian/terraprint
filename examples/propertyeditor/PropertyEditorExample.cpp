@@ -18,6 +18,7 @@
  */
 
 #include "PropertyEditorExample.h"
+#include "ui_PropertyEditorExampleDialog.h"
 
 // Layout Module
 #include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
@@ -29,6 +30,8 @@
 #include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
 #include <terralib/layout/core/enum/Enums.h>
 #include <terralib/layout/core/property/Property.h>
+#include <terralib/qt/widgets/Utils.h>
+#include "ProxyLayers.h"
 
 // STL
 #include <vector>
@@ -47,34 +50,31 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 #include <QStringList>
+#include <QFileDialog>
+#include <QFileInfo>
 
 te::layout::example::propertyeditor::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
   QWidget(parent),
+  m_ui(new Ui::PropertyEditorExampleDialog),
   m_rectItem(0),
   m_mapItem(0),
   m_mapCompositionItem(0),
   m_tree(0),
   m_combobox(0)
 {
+  m_ui->setupUi(this);
+
+  m_proxy = new ProxyLayers;
+
   setWindowTitle(tr("Property Editor"));
   resize(480, 320);
 }
 
 te::layout::example::propertyeditor::PropertyEditorExample::~PropertyEditorExample()
 {
-  if (m_rectItem)
+  if (m_proxy)
   {
-    delete m_rectItem;
-  }
-
-  if (m_mapItem)
-  {
-    delete m_mapItem;
-  }
-
-  if (m_mapCompositionItem)
-  {
-    delete m_mapCompositionItem;
+    delete m_proxy;
   }
 }
 
@@ -90,8 +90,9 @@ void te::layout::example::propertyeditor::PropertyEditorExample::run()
 void te::layout::example::propertyeditor::PropertyEditorExample::createGraphicsViewInfrastructure()
 {
   m_view.reset(new te::layout::View); // create View
-
+  
   te::layout::Scene* myScene = new te::layout::Scene(m_view.get()); // create Scene
+  myScene->setProxyProject(m_proxy);
   m_view->setScene(myScene);
   m_view->config(); // init layout infrastructure
 }
@@ -144,7 +145,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyT
     return;
   }
 
-  m_tree = new te::layout::PropertyTree(0, 0, this); // create property tree
+  m_tree = new te::layout::PropertyTree(m_view.get(), 0, this); // create property tree
   createLayout();
 }
 
@@ -155,7 +156,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
   if (!m_tree)
     return;
 
-  QVBoxLayout* layout = new QVBoxLayout(this);
+  QVBoxLayout* layout = m_ui->propEditorLayout;
   layout->setMargin(0);
   
   m_combobox = new QComboBox(this);
@@ -167,8 +168,6 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
   layout->addWidget(m_combobox);
   layout->addWidget(m_tree);
   
-  setLayout(layout);
-
   connect(m_combobox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCurrentIndexChanged(const QString &)));
   
   m_combobox->setCurrentIndex(-1);
@@ -244,3 +243,23 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadProperties(
   m_tree->load(props); // load properties from rectangle item
 }
 
+void te::layout::example::propertyeditor::PropertyEditorExample::on_tbtnLoadLayers_clicked()
+{
+  QString fileName = QFileDialog::getOpenFileName(0, "Open Shape File", te::qt::widgets::GetFilePathFromSettings("shp"), "Shape Files (*.shp)");
+  
+  if (m_proxy)
+  {
+    if (m_proxy->loadShapesToLayers(fileName))
+    {
+      m_ui->layerList->clear();
+
+      QFileInfo fi(fileName);
+      QString name = fi.fileName();
+
+      QStringList list;
+      list.append(name);
+
+      m_ui->layerList->addItems(list);
+    }
+  }
+}
