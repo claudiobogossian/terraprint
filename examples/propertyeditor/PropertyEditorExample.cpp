@@ -146,6 +146,9 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyT
   }
 
   m_tree = new te::layout::PropertyTree(m_view.get(), 0, this); // create property tree
+
+  connect(m_tree, SIGNAL(propertiesChanged(const te::layout::Property&)), this, SLOT(onPropertiesChanged(const te::layout::Property&)));
+
   createLayout();
 }
 
@@ -206,6 +209,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexC
     
     if (text.compare(rectText) == 0)
     {
+      m_view->getScene()->selectItem(m_rectItem);
       loadProperties(m_rectItem);
       return;
     }
@@ -216,6 +220,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexC
     
     if (text.compare(mapText) == 0)
     {
+      m_view->getScene()->selectItem(m_mapItem);
       loadProperties(m_mapItem);
       return;
     }
@@ -226,6 +231,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexC
 
     if (text.compare(mapCompText) == 0)
     {
+      m_view->getScene()->selectItem(m_mapCompositionItem);
       loadProperties(m_mapCompositionItem);
     }
   }  
@@ -263,3 +269,30 @@ void te::layout::example::propertyeditor::PropertyEditorExample::on_tbtnLoadLaye
     }
   }
 }
+
+void te::layout::example::propertyeditor::PropertyEditorExample::onPropertiesChanged(const te::layout::Property& prop)
+{
+  if (!m_view.get())
+    return;
+
+  Scene* scene = m_view->getScene();
+
+  QList<QGraphicsItem*> items = scene->selectedItems();
+
+  foreach(QGraphicsItem* item, items)
+  {
+    if (item)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+      if (lItem)
+      {
+        if (!lItem->getController())
+        {
+          continue;
+        }        
+        lItem->getController()->setProperty(prop);
+      }
+    }
+  }
+}
+

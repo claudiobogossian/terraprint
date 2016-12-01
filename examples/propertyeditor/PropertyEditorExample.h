@@ -50,6 +50,7 @@ namespace te
     class MapCompositionItem;
     class PropertyTree;
     class EnumType;
+    class Property;
 
     namespace example
     {
@@ -84,6 +85,8 @@ namespace te
           void onCurrentIndexChanged(const QString & text);
 
           void on_tbtnLoadLayers_clicked();
+
+          void onPropertiesChanged(const te::layout::Property& prop);
 
         protected:
           
