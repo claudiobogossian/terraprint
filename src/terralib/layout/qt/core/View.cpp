@@ -1634,8 +1634,9 @@ void te::layout::View::configTempFileDataStorage(const QString& fullNewPath)
   TempFileInfo* info = new TempFileInfo(scene, path);
   m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
 
-  connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
-  connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
+  //we disabled the signals because there will be a change in the way this file is saved, and this will not be necessary anymore after the change
+  //connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
+  //connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
 }
 
 void te::layout::View::onRequestIOEnterAccessTempDataStorage()
