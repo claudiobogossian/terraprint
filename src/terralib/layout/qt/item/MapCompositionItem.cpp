@@ -52,9 +52,7 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
 
 te::layout::MapCompositionItem::~MapCompositionItem()
 {
-  delete m_mapItem;
-  delete m_planarGridItem;
-  delete m_geodesicGridItem;
+  finalizeItems();
 }
 
 te::layout::AbstractItemView* te::layout::MapCompositionItem::getMapItem()
@@ -158,6 +156,25 @@ void te::layout::MapCompositionItem::initItems()
   ItemUtils::normalizeChildrenPosition(this);
 }
 
+void te::layout::MapCompositionItem::finalizeItems()
+{
+  if (m_mapItem)
+  {
+    delete m_mapItem;
+    m_mapItem = 0;
+  }
+  if (m_planarGridItem)
+  {
+    delete m_planarGridItem;
+    m_planarGridItem = 0;
+  }
+  if (m_geodesicGridItem)
+  {
+    delete m_geodesicGridItem;
+    m_geodesicGridItem = 0;
+  }
+}
+
 void te::layout::MapCompositionItem::setEditionMode(bool editionMode)
 {
   m_mapItem->setEditionMode(editionMode);
@@ -231,7 +248,11 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
   else if (change == QGraphicsItem::ItemSceneHasChanged)
   {
     QGraphicsScene* scene = qvariant_cast<QGraphicsScene *>(value);
-    if (scene != 0)
+    if (scene == 0)
+    {
+      finalizeItems();
+    }
+    else
     {
       initItems();
     }
