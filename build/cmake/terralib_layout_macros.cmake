@@ -33,12 +33,12 @@ MACRO(TeInstallPlugins plugins location)
     get_target_property(_loc ${plugin} LOCATION)
     list(APPEND _files ${_loc})
   endforeach()
-  
+
   install(FILES ${_files}
            DESTINATION "${TERRALIB_BASE_DESTINATION_DIR}qtplugins/${location}"
            CONFIGURATIONS Release
            COMPONENT runtime)
-  
+
 ENDMACRO(TeInstallPlugins)
 
 
@@ -48,11 +48,11 @@ MACRO(TeInstallQt5Plugins)
 # Installing image plugins
   set(_plugins Qt5::QGifPlugin Qt5::QICOPlugin Qt5::QJpegPlugin Qt5::QMngPlugin Qt5::QTiffPlugin)
   TeInstallPlugins("${_plugins}" "imageformats")
-  
+
 # Installing svg plugins
   set(_plugins Qt5::QSvgPlugin Qt5::QSvgIconPlugin)
   TeInstallPlugins("${_plugins}" "iconengines")
-    
+
 # Installing sql plugins
   set(_plugins Qt5::QSQLiteDriverPlugin)
   TeInstallPlugins("${_plugins}" "sqldrivers")
@@ -62,7 +62,7 @@ MACRO(TeInstallQt5Plugins)
     set(_plugins Qt5::QWindowsPrinterSupportPlugin)
     TeInstallPlugins("${_plugins}" "printsupport")
   endif()
-  
+
 # Installing platform plugins
   if(WIN32)
     set(_plugins Qt5::QWindowsIntegrationPlugin Qt5::QMinimalIntegrationPlugin)
@@ -80,7 +80,7 @@ MACRO(TeInstallQt5Plugins)
 #      COMPONENT runtime
 #    )
  # endif()
-  
+
 ENDMACRO(TeInstallQt5Plugins)
 
 #
@@ -148,7 +148,7 @@ MACRO(addExternalLibrariesToRPATH LIBRARY_LIST)
       FOREACH(LIBRARY ${LIBRARY_LIST})
         string(FIND ${LIBRARY} ".so" isShared)
         IF(NOT "${isShared}" EQUAL "-1")
-            addExternalLibraryToRPATH(${LIBRARY})    
+            addExternalLibraryToRPATH(${LIBRARY})
         ENDIF()
       ENDFOREACH()
   ENDIF()
@@ -162,9 +162,9 @@ MACRO(GenerateTranslationQt5 translation_dir project_name qm_files)
     TARGET ${project_name}
     POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E make_directory "${terralib_DIR}/share/terralib/translations/"
-      COMMAND ${Qt5_LUPDATE_EXECUTABLE} 
+      COMMAND ${Qt5_LUPDATE_EXECUTABLE}
       ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
-      COMMAND ${Qt5_LRELEASE_EXECUTABLE} 
+      COMMAND ${Qt5_LRELEASE_EXECUTABLE}
       ARGS "${_ts_file_name}" -qm "${qm_file}"
       COMMENT "Generating ${project_name} translations"
   )
@@ -173,18 +173,18 @@ ENDMACRO(GenerateTranslationQt5)
 
 MACRO(GenerateTranslationQt4 translation_dir project_name qm_files)
   set(_ts_file_name ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/${project_name}_pt_br.ts)
-  set(qm_file ${CMAKE_BINARY_DIR}/share/terralib/translations/${project_name}_pt_br.qm)
+  set(qm_file ${terralib_DIR}/share/terralib/translations/${project_name}_pt_br.qm)
 
   add_custom_command(
     TARGET ${project_name}
     POST_BUILD
           COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_BINARY_DIR}/translations"
-      COMMAND ${QT_LUPDATE_EXECUTABLE} 
+      COMMAND ${QT_LUPDATE_EXECUTABLE}
       ARGS -I ${translation_dir} -recursive ${translation_dir} -ts "${_ts_file_name}"
-      COMMAND ${QT_LRELEASE_EXECUTABLE} 
+      COMMAND ${QT_LRELEASE_EXECUTABLE}
       ARGS "${_ts_file_name}" -qm "${qm_file}"
       COMMENT "Generating ${project_name} translations"
   )
-  
+
   list(APPEND ${qm_files} ${qm_file})
 ENDMACRO(GenerateTranslationQt4)
