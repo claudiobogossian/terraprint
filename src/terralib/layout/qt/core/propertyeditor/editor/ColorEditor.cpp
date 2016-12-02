@@ -47,9 +47,9 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-te::layout::ColorEditor::ColorEditor(const QModelIndex& index, QWidget* parent) :
+te::layout::ColorEditor::ColorEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeColor()),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeColor(), context),
   m_textLabel(0),
   m_button(0)
 {

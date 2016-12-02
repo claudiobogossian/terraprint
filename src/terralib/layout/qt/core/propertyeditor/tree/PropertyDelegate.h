@@ -46,6 +46,7 @@ namespace te
   {
     class View;
     class BuildRender;
+    class ContextPropertyEditor;
 
     /*!
     \brief 
@@ -58,9 +59,7 @@ namespace te
 
       public:
 
-        PropertyDelegate(QObject* parent = 0);
-
-        PropertyDelegate(BuildRender* build, QObject* parent = 0);
+        PropertyDelegate(ContextPropertyEditor* context, BuildRender* build = 0, QObject* parent = 0);
 
         virtual ~PropertyDelegate();
 
@@ -90,11 +89,12 @@ namespace te
                 
       protected:
         
-        std::vector<Property>   m_vprops;
-        mutable QWidget*        m_currentEditor;
-        mutable int             m_currentEditorRow;
-        mutable int             m_currentEditorColumn;
-        BuildRender*            m_buildRender;
+        std::vector<Property>           m_vprops;
+        mutable QWidget*                m_currentEditor;
+        mutable int                     m_currentEditorRow;
+        mutable int                     m_currentEditorColumn;
+        BuildRender*                    m_buildRender;
+        ContextPropertyEditor*          m_context;
     };
   }
 }

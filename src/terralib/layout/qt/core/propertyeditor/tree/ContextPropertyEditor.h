@@ -18,62 +18,63 @@
  */
 
 /*!
-  \file BuildEditor.h
+  \file ContextPropertyEditor.h
    
-  \brief 
+   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_BUILD_EDITOR_H
-#define __TERRALIB_LAYOUT_INTERNAL_BUILD_EDITOR_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_CONTEXT_PROPERTY_EDITOR_H 
+#define __TERRALIB_LAYOUT_INTERNAL_CONTEXT_PROPERTY_EDITOR_H
 
-//TerraLib
-#ifndef Q_MOC_RUN
+// TerraLib
 #include "../../../../core/Config.h"
-#endif
 
-// STL
-#include <vector>
-
-class QWidget;
+// Qt
+class QStringList;
 
 namespace te
 {
   namespace layout
   {
-    class AbstractEditor;
-    class EditorFactoryParamsCreate;
+    class EnumType;
+    class AbstractProxyProject;
+    class Scene;
     /*!
     \brief 
     
-      \ingroup layout
+    \ingroup layout
     */
-    class TELAYOUTEXPORT BuildEditor
+    class TELAYOUTEXPORT ContextPropertyEditor
     {
       public:
-        /*!
-          \brief Constructor
-        */
-        BuildEditor();
 
-        /*!
-          \brief Destructor
+        ContextPropertyEditor(AbstractProxyProject* proxy, Scene* scene);
+
+        virtual ~ContextPropertyEditor();
+
+        AbstractProxyProject* getProxy();
+
+        QStringList getMapNames();
+
+      protected:
+
+        /*
+          \brief Search the scene for items and return the names.
+
+          \param type of research
+          \return names
         */
-        virtual ~BuildEditor();
-        
-        /*!
-          \brief Method to build a editor to a property inside a cell of QTreeWidget.
-      
-          \param vprops properties
-      
-          \return new editor
-        */
-        virtual AbstractEditor* buildEditor(const EditorFactoryParamsCreate& params);
+        QStringList getItemNames(const EnumType* type);
+
+      protected:
+
+        AbstractProxyProject* m_proxy;
+        Scene*                m_scene;
     };
   }
 }
 
 #endif
-
 

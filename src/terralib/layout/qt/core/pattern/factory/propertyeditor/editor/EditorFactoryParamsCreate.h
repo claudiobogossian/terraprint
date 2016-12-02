@@ -46,6 +46,7 @@ namespace te
   namespace layout
   {
     class EnumType;
+    class ContextPropertyEditor;
     /*!
     \brief Parameters to create a new tool. 
     
@@ -66,7 +67,8 @@ namespace te
 
           \param view
         */ 
-        EditorFactoryParamsCreate(const QModelIndex& index, std::vector<Property> vprops, QWidget* parent = 0);
+        EditorFactoryParamsCreate(const QModelIndex& index, std::vector<Property> vprops, 
+          ContextPropertyEditor* context, QWidget* parent = 0);
 
         /*!
           \brief Destructor
@@ -77,22 +79,25 @@ namespace te
 
         void reset() throw(te::common::Exception);
 
-        std::vector<Property> getProperties();
+        std::vector<Property> getProperties() const;
 
         /*!
           \brief Returns the QModelIndex of the QTreeWidget
 
           \return QModelIndex
         */
-        QModelIndex getModelIndex();
+        QModelIndex getModelIndex() const;
 
         QWidget* getParent();
+
+        ContextPropertyEditor* getContextPropertyEditor();
         
       protected:
 
-        std::vector<Property>   m_vprops;
-        QModelIndex             m_index; //!< Model Index from QTreeWidget
-        QWidget*                m_parent;
+        std::vector<Property>           m_vprops;
+        QModelIndex                     m_index; //!< Model Index from QTreeWidget
+        ContextPropertyEditor*          m_context;
+        QWidget*                        m_parent;
     };
   }
 }

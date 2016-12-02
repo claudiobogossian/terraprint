@@ -52,6 +52,7 @@ namespace te
   {
     class View;
     class MapSettingsOutside;
+    class ContextPropertyEditor;
 
     /*!
     \brief 
@@ -64,7 +65,7 @@ namespace te
 
       public:
 
-        MapSettingsEditor(const QModelIndex& index, QWidget* parent = 0);
+        MapSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
 
         virtual ~MapSettingsEditor();
         

@@ -41,6 +41,7 @@
 
 // Qt
 class QString;
+class QStringList;
 
 namespace te
 {
@@ -108,7 +109,7 @@ namespace te
             */
             virtual std::string getURIFromLayer(te::map::AbstractLayerPtr layer);
 
-            bool loadShapesToLayers(QString fileName);
+            bool loadShapesToLayers(QStringList files);
 
           protected:
             
@@ -116,7 +117,7 @@ namespace te
 
           protected:
 
-            te::map::DataSetLayer* m_layer;
+            std::list<te::map::AbstractLayerPtr> m_listLayer;
         };
       }
     }

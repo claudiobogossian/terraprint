@@ -33,8 +33,9 @@ te::layout::AbstractEditor* te::layout::GridSettingsEditorFactory::build(EditorF
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
+  ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  GridSettingsEditor* editor = new GridSettingsEditor(index, parent);
+  GridSettingsEditor* editor = new GridSettingsEditor(index, context, parent);
   return editor;
 }
 

@@ -33,8 +33,9 @@ te::layout::AbstractEditor* te::layout::MapSettingsEditorFactory::build(EditorFa
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
+  ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  MapSettingsEditor* editor = new MapSettingsEditor(index, parent);
+  MapSettingsEditor* editor = new MapSettingsEditor(index, context, parent);
   return editor;
 }
 

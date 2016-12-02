@@ -28,9 +28,11 @@
 // TerraLib
 #include "AbstractEditor.h"
 
-te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type)
+te::layout::AbstractEditor::AbstractEditor(const QModelIndex& index, EnumType* type, ContextPropertyEditor* context) :
+  m_dataType(type),
+  m_context(context)
 {
-  m_dataType = type; // type
+
 }
 
 te::layout::AbstractEditor::~AbstractEditor()

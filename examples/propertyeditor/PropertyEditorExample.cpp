@@ -22,6 +22,8 @@
 
 // Layout Module
 #include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
+#include <terralib/layout/qt/core/propertyeditor/tree/PropertyDelegate.h>
+#include <terralib/layout/qt/core/propertyeditor/tree/ContextPropertyEditor.h>
 #include <terralib/layout/qt/core/BuildGraphicsItem.h>
 #include <terralib/layout/qt/item/RectangleItem.h>
 #include <terralib/layout/qt/item/MapItem.h>
@@ -145,7 +147,9 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyT
     return;
   }
 
-  m_tree = new te::layout::PropertyTree(m_view.get(), 0, this); // create property tree
+  ContextPropertyEditor* context = new ContextPropertyEditor(m_proxy, m_view->getScene());
+  PropertyDelegate* propDelegate = new PropertyDelegate(context);
+  m_tree = new te::layout::PropertyTree(m_view.get(), propDelegate, this); // create property tree
 
   connect(m_tree, SIGNAL(propertiesChanged(const te::layout::Property&)), this, SLOT(onPropertiesChanged(const te::layout::Property&)));
 
@@ -251,21 +255,22 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadProperties(
 
 void te::layout::example::propertyeditor::PropertyEditorExample::on_tbtnLoadLayers_clicked()
 {
-  QString fileName = QFileDialog::getOpenFileName(0, "Open Shape File", te::qt::widgets::GetFilePathFromSettings("shp"), "Shape Files (*.shp)");
+  QStringList files = QFileDialog::getOpenFileNames(0, "Open Shape File", te::qt::widgets::GetFilePathFromSettings("shp"), "Shape Files (*.shp)");
   
   if (m_proxy)
   {
-    if (m_proxy->loadShapesToLayers(fileName))
+    if (m_proxy->loadShapesToLayers(files))
     {
       m_ui->layerList->clear();
-
-      QFileInfo fi(fileName);
-      QString name = fi.fileName();
-
-      QStringList list;
-      list.append(name);
-
-      m_ui->layerList->addItems(list);
+      QStringList names;
+      for (QStringList::iterator it = files.begin(); it != files.end(); ++it)
+      {
+        QString fileName = *it;
+        QFileInfo fi(fileName);
+        QString name = fi.fileName();
+        names.push_back(name);
+      }
+      m_ui->layerList->addItems(names);
     }
   }
 }

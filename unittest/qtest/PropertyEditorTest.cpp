@@ -21,6 +21,8 @@
 
 // Layout Module
 #include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
+#include <terralib/layout/qt/core/propertyeditor/tree/PropertyDelegate.h>
+#include <terralib/layout/qt/core/propertyeditor/tree/ContextPropertyEditor.h>
 #include <terralib/layout/qt/core/BuildGraphicsItem.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemView.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
@@ -77,7 +79,9 @@ void te::layout::qtest::PropertyEditorTest::on_test_create_property_tree()
     BOOST_FAIL("FAIL: pointer to rectangle object is null."); //throws on error
   }
 
-  te::layout::PropertyTree* tree = new te::layout::PropertyTree(0);
+  ContextPropertyEditor* context = new ContextPropertyEditor(0, 0);
+  PropertyDelegate* propDelegate = new PropertyDelegate(context);
+  te::layout::PropertyTree* tree = new te::layout::PropertyTree(0, propDelegate);
   
   std::vector<Property> props;
   AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem.get());

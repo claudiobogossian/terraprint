@@ -33,8 +33,9 @@ te::layout::AbstractEditor* te::layout::ColorEditorFactory::build(EditorFactoryP
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
+  ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  ColorEditor* editor = new ColorEditor(index, parent);
+  ColorEditor* editor = new ColorEditor(index, context, parent);
   return editor;
 }
 

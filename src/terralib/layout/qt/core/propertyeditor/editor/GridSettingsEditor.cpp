@@ -53,9 +53,9 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-te::layout::GridSettingsEditor::GridSettingsEditor(const QModelIndex& index, QWidget* parent) :
+te::layout::GridSettingsEditor::GridSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeGridSettings()),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeGridSettings(), context),
   m_textLabel(0),
   m_button(0),
   m_gridSettings(0)

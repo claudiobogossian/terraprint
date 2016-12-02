@@ -50,8 +50,8 @@ namespace te
 {
   namespace layout
   {
-    class View;
     class GridSettingsOutside;
+    class ContextPropertyEditor;
 
     /*!
     \brief 
@@ -64,7 +64,7 @@ namespace te
 
       public:
 
-        GridSettingsEditor(const QModelIndex& index, QWidget* parent = 0);
+        GridSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
 
         virtual ~GridSettingsEditor();
         

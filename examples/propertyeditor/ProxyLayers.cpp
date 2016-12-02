@@ -46,30 +46,31 @@
 
 // Qt
 #include <QString>
+#include <QStringList>
 
-te::layout::example::propertyeditor::ProxyLayers::ProxyLayers():
-  m_layer(0)
+te::layout::example::propertyeditor::ProxyLayers::ProxyLayers()
 {
   
 }
 
 te::layout::example::propertyeditor::ProxyLayers::~ProxyLayers()
 {
-  if (m_layer)
-  {
-    delete m_layer;
-  }
+  
 }
 
-bool te::layout::example::propertyeditor::ProxyLayers::loadShapesToLayers(QString fileName)
+bool te::layout::example::propertyeditor::ProxyLayers::loadShapesToLayers(QStringList files)
 {
-  if (!fileName.isEmpty())
+  for (QStringList::iterator it = files.begin(); it != files.end(); ++it)
   {
-    if (fileName.endsWith(".shp") == false)
+    QString fileName = *it;
+    if (!fileName.isEmpty())
     {
-      fileName.append(".shp");
+      if (fileName.endsWith(".shp") == false)
+      {
+        fileName.append(".shp");
+      }
+      return createLayer(fileName);
     }
-    return createLayer(fileName);
   }
   return false;
 }
@@ -98,32 +99,27 @@ bool te::layout::example::propertyeditor::ProxyLayers::createLayer(QString fileN
 
   // Box
   std::auto_ptr<te::gm::Envelope> extent(datasource->getExtent(datasetName, geomProperty->getName()));
-
-  if (m_layer)
-    delete m_layer;
-
+  
   // Creates a DataSetLayer
-  m_layer = new te::map::DataSetLayer(te::common::Convert2String(0), datasetName);
-  m_layer->setDataSourceId(datasource->getId());
-  m_layer->setDataSetName(datasetName);
-  m_layer->setExtent(*extent);
-  m_layer->setRendererType("DATASET_LAYER_RENDERER");
+  te::map::DataSetLayer* layer = new te::map::DataSetLayer(te::common::Convert2String(0), datasetName);
+  layer->setDataSourceId(datasource->getId());
+  layer->setDataSetName(datasetName);
+  layer->setExtent(*extent);
+  layer->setRendererType("DATASET_LAYER_RENDERER");
+
+  m_listLayer.push_back(layer);
 
   return true;
 }
 
 std::list<te::map::AbstractLayerPtr> te::layout::example::propertyeditor::ProxyLayers::getAllLayers(bool invalid /*= true*/)
 {
-  std::list<te::map::AbstractLayerPtr> list;
-  list.push_back(m_layer);
-  return list;
+  return m_listLayer;
 }
 
 const std::list<te::map::AbstractLayerPtr> te::layout::example::propertyeditor::ProxyLayers::getSelectedLayers(bool invalid /*= true*/)
 {
-  std::list<te::map::AbstractLayerPtr> list;
-  list.push_back(m_layer);
-  return list;
+  return m_listLayer;
 }
 
 te::map::AbstractLayerPtr te::layout::example::propertyeditor::ProxyLayers::contains(std::string name)

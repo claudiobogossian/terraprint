@@ -52,9 +52,9 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-te::layout::MapSettingsEditor::MapSettingsEditor(const QModelIndex& index, QWidget* parent) :
+te::layout::MapSettingsEditor::MapSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeMapSettings()),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeMapSettings(), context),
   m_textLabel(0),
   m_button(0),
   m_mapSettings(0)
