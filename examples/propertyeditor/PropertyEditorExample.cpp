@@ -186,17 +186,17 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNam
   QStringList list;
 
   // add rect item name
-  const te::layout::Property rectProp = m_rectItem->getController()->getProperty("name");
+  const te::layout::Property& rectProp = m_rectItem->getController()->getProperty("name");
   std::string nameRect = te::layout::Property::GetValueAs<std::string>(rectProp);
   list.append(nameRect.c_str());
 
   // add map item name
-  const te::layout::Property mapProp = m_mapItem->getController()->getProperty("name");
+  const te::layout::Property& mapProp = m_mapItem->getController()->getProperty("name");
   std::string nameMap = te::layout::Property::GetValueAs<std::string>(mapProp);
   list.append(nameMap.c_str());
 
   // add map composition item name
-  const te::layout::Property mapCompProp = m_mapCompositionItem->getController()->getProperty("name");
+  const te::layout::Property& mapCompProp = m_mapCompositionItem->getController()->getProperty("name");
   std::string nameMapComp = te::layout::Property::GetValueAs<std::string>(mapCompProp);
   list.append(nameMapComp.c_str());
 
