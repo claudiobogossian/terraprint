@@ -74,9 +74,16 @@ te::layout::Property te::layout::MapLayerChoiceController::getProperty(std::stri
   return prop;
 }
 
-std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::getlistLayers(){
-  
-  return m_proxy->getAllLayers();
+std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::getlistLayers()
+{
+  std::list<te::map::AbstractLayerPtr> list;
+
+  if (m_proxy)
+  {
+    list = m_proxy->getAllLayers();
+  }
+
+  return list;
 }
 
 std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::searchLayers()
@@ -85,6 +92,8 @@ std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceController::searc
 
   std::string nameProp = "layers";
   Property prop = getProperty(nameProp);
+  if (prop.isNull())
+    return layers;
 
   const std::list<te::map::AbstractLayerPtr>& currentLayers = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> > (prop);
   std::list<te::map::AbstractLayerPtr>::const_iterator itLayers = currentLayers.begin();

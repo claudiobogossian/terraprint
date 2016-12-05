@@ -2072,12 +2072,12 @@ nononon</source>
         <translation>Camada Selecionada</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="425"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="428"/>
         <source>Map Settings</source>
         <translation type="unfinished">Configurações do Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="425"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="428"/>
         <source>Set Width and Height.</source>
         <translation type="unfinished">Configure Largura e Altura.</translation>
     </message>

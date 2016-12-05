@@ -20,23 +20,43 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
 #define __TERRALIB_LAYOUT_INTERNAL_EXAMPLES_PROPERTY_EDITOR_H
 
+// TerraLib
+#ifndef Q_MOC_RUN
+#include <terralib/layout/qt/core/View.h>
+#endif
+
+// STL
+#include <memory>
+
 // Qt
 #include <QWidget>
 
 class QComboBox;
+class QString;
+class QGraphicsItem;
+
+namespace Ui { class PropertyEditorExampleDialog; }
 
 namespace te
 {
+  namespace gm
+  {
+    struct Coord2D;
+  }
   namespace layout
   {
     class RectangleItem;
+    class MapItem;
+    class MapCompositionItem;
     class PropertyTree;
+    class EnumType;
+    class Property;
 
     namespace example
     {
       namespace propertyeditor
       {
-
+        class ProxyLayers;
         /*!
           \brief
 
@@ -60,9 +80,25 @@ namespace te
 
           void run();
 
+        protected slots:
+
+          void onCurrentIndexChanged(const QString & text);
+
+          void on_tbtnLoadLayers_clicked();
+
+          void onPropertiesChanged(const te::layout::Property& prop);
+
         protected:
+          
+          void createGraphicsViewInfrastructure();
 
           void createRectangleItem();
+
+          void createMapItem();
+
+          void createMapCompositionItem();
+
+          QGraphicsItem* createItem(EnumType* itemType, te::gm::Coord2D& coord, double width = 20, double height = 20);
 
           void createPropertyTree();
 
@@ -70,11 +106,20 @@ namespace te
 
           void loadComboboxNames();
 
+          void loadProperties(QGraphicsItem* item);
+
+          void loadLayerTree();
+          
         private:
 
-          te::layout::RectangleItem*  m_rectItem;
-          te::layout::PropertyTree*   m_tree;
-          QComboBox*                  m_combobox;
+          std::unique_ptr<Ui::PropertyEditorExampleDialog>  m_ui;
+          std::unique_ptr<te::layout::View>                 m_view;
+          te::layout::RectangleItem*                        m_rectItem;
+          te::layout::MapItem*                              m_mapItem;
+          te::layout::MapCompositionItem*                   m_mapCompositionItem;
+          te::layout::PropertyTree*                         m_tree;
+          QComboBox*                                        m_combobox;
+          ProxyLayers*                                      m_proxy;
         };
       }
     }

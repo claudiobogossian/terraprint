@@ -18,34 +18,34 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/editor/ColorEditorFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/editor/GridSettingsEditorFactory.cpp
 
-  \brief This is the concrete factory for color editors.
+  \brief This is the concrete factory for grid settings editors.
 */
 
 // TerraLib
-#include "ColorEditorFactory.h"
+#include "GridSettingsEditorFactory.h"
 #include "../../../../../../core/enum/Enums.h"
 #include "../../../../View.h"
-#include "../../../../propertyeditor/editor/ColorEditor.h"
+#include "../../../../propertyeditor/editor/GridSettingsEditor.h"
 
-te::layout::AbstractEditor* te::layout::ColorEditorFactory::build(EditorFactoryParamsCreate params)
+te::layout::AbstractEditor* te::layout::GridSettingsEditorFactory::build(EditorFactoryParamsCreate params)
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
   ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  ColorEditor* editor = new ColorEditor(index, context, parent);
+  GridSettingsEditor* editor = new GridSettingsEditor(index, context, parent);
   return editor;
 }
 
-te::layout::ColorEditorFactory::ColorEditorFactory() :
-  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeColor()->getName())
+te::layout::GridSettingsEditorFactory::GridSettingsEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeGridSettings()->getName())
 {
 
 }
 
-te::layout::ColorEditorFactory::~ColorEditorFactory()
+te::layout::GridSettingsEditorFactory::~GridSettingsEditorFactory()
 {
 
 }

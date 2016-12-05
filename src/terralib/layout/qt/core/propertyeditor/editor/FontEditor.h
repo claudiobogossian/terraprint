@@ -51,7 +51,7 @@ namespace te
 {
   namespace layout
   {
-    class View;
+    class ContextPropertyEditor;
 
     /*!
     \brief 
@@ -64,7 +64,7 @@ namespace te
 
       public:
 
-        FontEditor(const QModelIndex& index, QWidget* parent = 0);
+        FontEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
 
         virtual ~FontEditor();
         

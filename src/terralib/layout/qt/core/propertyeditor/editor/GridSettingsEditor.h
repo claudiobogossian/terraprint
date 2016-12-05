@@ -18,15 +18,15 @@
  */
 
 /*!
-  \file FontEditor.h
+  \file GridSettingsEditor.h
    
    \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_COLOR_EDITOR_H 
-#define __TERRALIB_LAYOUT_INTERNAL_COLOR_EDITOR_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_SETTINGS_EDITOR_H 
+#define __TERRALIB_LAYOUT_INTERNAL_GRID_SETTINGS_EDITOR_H
 
 // TerraLib
 #ifndef Q_MOC_RUN
@@ -40,7 +40,6 @@
 
 // Qt
 #include <QWidget>
-#include <QColor>
 
 class QLabel;
 class QToolButton;
@@ -51,6 +50,7 @@ namespace te
 {
   namespace layout
   {
+    class GridSettingsOutside;
     class ContextPropertyEditor;
 
     /*!
@@ -58,15 +58,15 @@ namespace te
     
     \ingroup layout
     */
-    class TELAYOUTEXPORT ColorEditor : public QWidget, public AbstractEditor
+    class TELAYOUTEXPORT GridSettingsEditor : public QWidget, public AbstractEditor
     {
       Q_OBJECT //for slots/signals
 
       public:
 
-        ColorEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
+        GridSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
 
-        virtual ~ColorEditor();
+        virtual ~GridSettingsEditor();
         
         virtual QVariant getValue();
 
@@ -80,7 +80,9 @@ namespace te
 
       protected slots:
 
-      void onButtonClicked(bool checked = false);
+        void onButtonClicked(bool checked = false);
+
+        void onUpdateProperty(Property prop);
 
       protected:
 
@@ -90,21 +92,18 @@ namespace te
 
         virtual void paintEvent(QPaintEvent * event);
 
-        virtual void getColor();
+        virtual void showSettings();
 
         void setupTreeViewEditorMargin(QLayout* layout);
-
-        virtual QColor configColor(QWidget* widget);
-
+        
       protected:
 
-        QColor          m_color;
-        QLabel*         m_textLabel;
-        QToolButton*    m_button;
+        QLabel*              m_textLabel;
+        QToolButton*         m_button;
+        GridSettingsOutside* m_gridSettings;
     };
   }
 }
 
 #endif
-
 

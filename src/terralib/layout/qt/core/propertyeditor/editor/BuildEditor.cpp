@@ -29,6 +29,7 @@
 #include "BuildEditor.h"
 #include "../../../../core/enum/Enums.h"
 #include "../../../core/pattern/factory/propertyeditor/editor/EditorFactory.h"
+#include "../../pattern/factory/propertyeditor/editor/EditorFactoryParamsCreate.h"
 
 // Qt
 #include <QMetaType>
@@ -43,19 +44,22 @@ te::layout::BuildEditor::~BuildEditor()
  
 }
 
-te::layout::AbstractEditor* te::layout::BuildEditor::buildEditor(std::vector<Property> vprops, QModelIndex index, QWidget* parent)
+te::layout::AbstractEditor* te::layout::BuildEditor::buildEditor(const EditorFactoryParamsCreate& params)
 {
-  EditorFactoryParamsCreate params(index, vprops, parent);
+  QModelIndex index = params.getModelIndex();
 
   int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
-
+  
   AbstractEditor* editor = 0;
-  std::string editorName = "";
-  if (variant.isValid() && !variant.isNull())
+
+  te::common::ParameterizedAbstractFactory<AbstractEditor, std::string, EditorFactoryParamsCreate>::dictionary_type& d = te::common::ParameterizedAbstractFactory<AbstractEditor, std::string, EditorFactoryParamsCreate>::getDictionary();
+
+  te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
+  std::string editorName = prop.getType()->getName();
+  EditorFactory* fact = dynamic_cast<EditorFactory*>(d.find(editorName));
+  if (fact)
   {
-    te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
-    editorName = prop.getType()->getName();
     editor = te::layout::EditorFactory::make(editorName, params);
   }
   return editor;

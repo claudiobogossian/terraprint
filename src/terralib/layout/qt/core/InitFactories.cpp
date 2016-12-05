@@ -86,6 +86,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../core/pattern/factory/propertyeditor/editor/StringListComboBoxEditorFactory.h"
 #include "../core/pattern/factory/propertyeditor/editor/FontEditorFactory.h"
 #include "../core/pattern/factory/propertyeditor/editor/ColorEditorFactory.h"
+#include "../core/pattern/factory/propertyeditor/editor/MapSettingsEditorFactory.h"
+#include "../core/pattern/factory/propertyeditor/editor/GridSettingsEditorFactory.h"
 
 // Renders
 #include "../core/pattern/factory/propertyeditor/render/IntSpinBoxRenderFactory.h"
@@ -234,6 +236,8 @@ namespace te
         static FontRenderFactory FontRenderFactory_instance;
         static ColorRenderFactory ColorRenderFactory_instance;
         static EnvelopeRenderFactory EnvelopeRenderFactory_instance;
+        static MapSettingsEditorFactory MapSettingsEditorFactory_instance;
+        static GridSettingsEditorFactory GridSettingsEditorFactory_instance;
       }
     }
   }

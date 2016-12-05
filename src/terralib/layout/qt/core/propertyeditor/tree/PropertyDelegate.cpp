@@ -31,29 +31,25 @@
 #include "../editor/BuildEditor.h"
 #include "../render/BuildRender.h"
 #include "../render/AbstractRender.h"
+#include "../../pattern/factory/propertyeditor/editor/EditorFactoryParamsCreate.h"
+#include "ContextPropertyEditor.h"
 
 // Qt
 #include <QApplication>
 #include <QPainter>
 
-te::layout::PropertyDelegate::PropertyDelegate(QObject* parent) :
+te::layout::PropertyDelegate::PropertyDelegate(ContextPropertyEditor* context, BuildRender* build, QObject* parent) :
   QStyledItemDelegate(parent),
   m_currentEditor(0),
   m_currentEditorRow(-1),
   m_currentEditorColumn(-1),
-  m_buildRender(0)
+  m_buildRender(build),
+  m_context(context)
 {
-  m_buildRender = new BuildRender;
-}
-
-te::layout::PropertyDelegate::PropertyDelegate(BuildRender* build, QObject* parent) :
-  QStyledItemDelegate(parent),
-  m_currentEditor(0),
-  m_currentEditorRow(-1),
-  m_currentEditorColumn(-1),
-  m_buildRender(build)
-{
-
+  if (!build)
+  {
+    m_buildRender = new BuildRender;
+  }
 }
 
 te::layout::PropertyDelegate::~PropertyDelegate()
@@ -62,6 +58,12 @@ te::layout::PropertyDelegate::~PropertyDelegate()
   {
     delete m_buildRender;
     m_buildRender = 0;
+  }
+
+  if (m_context)
+  {
+    delete m_context;
+    m_context = 0;
   }
 }
 
@@ -140,8 +142,11 @@ void te::layout::PropertyDelegate::paint(QPainter * painter, const QStyleOptionV
     if (renderName.compare("NONE") != 0)
     {
       AbstractRender* render = m_buildRender->buildRender(painter, option, index);
-      render->render(painter, option, index);
-      delete render;
+      if (render)
+      {
+        render->render(painter, option, index);
+        delete render;
+      }
     }
     return;
   }
@@ -152,8 +157,10 @@ QWidget* te::layout::PropertyDelegate::createFromFactory(QWidget* parent, const 
 {
   QWidget* editor = 0;
 
+  EditorFactoryParamsCreate params(index, m_vprops, m_context, parent);
+
   BuildEditor build;
-  AbstractEditor* abstractEditor = build.buildEditor(m_vprops, index, parent);  
+  AbstractEditor* abstractEditor = build.buildEditor(params);  
   if (abstractEditor)
   {
     editor = dynamic_cast<QWidget*>(abstractEditor);

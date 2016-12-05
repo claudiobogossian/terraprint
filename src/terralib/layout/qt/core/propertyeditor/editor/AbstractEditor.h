@@ -42,8 +42,8 @@ namespace te
 {
   namespace layout
   {
-    class View;
     class EnumType;
+    class ContextPropertyEditor;
 
     /*!
     \brief 
@@ -54,7 +54,7 @@ namespace te
     {
       public:
 
-        AbstractEditor(const QModelIndex& index, EnumType* type);
+        AbstractEditor(const QModelIndex& index, EnumType* type, ContextPropertyEditor* context = 0);
 
         virtual ~AbstractEditor();
         
@@ -82,8 +82,9 @@ namespace te
 
       protected:
         
-        te::layout::Property    m_property;
-        EnumType*               m_dataType;
+        te::layout::Property            m_property;
+        EnumType*                       m_dataType;
+        ContextPropertyEditor*  m_context;
     };
   }
 }

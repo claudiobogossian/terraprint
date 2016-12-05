@@ -50,13 +50,8 @@ te::layout::PropertyTree::PropertyTree(View* view, PropertyDelegate* delegate, Q
 {
   configTree(m_columns);
 
-  PropertyDelegate* propDelegate = delegate;
-  if (!propDelegate)
-  {
-    propDelegate = new PropertyDelegate(this);
-  }
-
-  setItemDelegateForColumn(1, propDelegate); // Add new delegate to second column
+  delegate->setParent(this);
+  setItemDelegateForColumn(1, delegate); // Add new delegate to second column
 
   // check column and let just the value column editable
   connect(this, SIGNAL(itemPressed(QTreeWidgetItem*, int)), this, SLOT(onCheckEdit(QTreeWidgetItem*, int)));
@@ -130,8 +125,9 @@ QTreeWidgetItem* te::layout::PropertyTree::createNewRow(te::layout::Property pro
   // find child
   if (!prop.getSubProperty().empty())
   {
+    std::vector<Property> vprops = prop.getSubProperty();
     std::vector<Property>::iterator it;
-    for (it = m_vprops.begin(); it != m_vprops.end(); ++it)
+    for (it = vprops.begin(); it != vprops.end(); ++it)
     {
       Property child = (*it);
       QTreeWidgetItem* newChildItem = createNewRow(child, newItem); // add child

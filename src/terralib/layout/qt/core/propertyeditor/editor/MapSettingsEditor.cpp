@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file ColorEditor.cpp
+  \file MapSettingsEditor.cpp
    
   \brief 
 
@@ -26,9 +26,14 @@
 */
 
 // TerraLib
-#include "ColorEditor.h"
+#include "MapSettingsEditor.h"
 #include "../../../../core/enum/Enums.h"
 #include "../../../../core/property/Property.h"
+#include "../../../outside/MapSettingsOutside.h"
+#include "../../BuildGraphicsOutside.h"
+
+// STL
+#include <string>
 
 //Qt
 #include <QMetaType>
@@ -47,50 +52,49 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-te::layout::ColorEditor::ColorEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
+te::layout::MapSettingsEditor::MapSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeColor(), context),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeMapSettings(), context),
   m_textLabel(0),
-  m_button(0)
+  m_button(0),
+  m_mapSettings(0)
 {
   createGroupBox();
   changeEditorData(index);
 }
 
-te::layout::ColorEditor::~ColorEditor()
+te::layout::MapSettingsEditor::~MapSettingsEditor()
 {
-
+  if (m_mapSettings)
+  {
+    m_mapSettings->setParent(0);
+    delete m_mapSettings;
+  }
 }
 
-QVariant te::layout::ColorEditor::getValue()
+QVariant te::layout::MapSettingsEditor::getValue()
 {
   return m_textLabel->text();
 }
 
-void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
+void te::layout::MapSettingsEditor::changeEditorData(const QModelIndex& index)
 {
   int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     m_property = qvariant_cast<te::layout::Property>(variant);
-    const te::color::RGBAColor& newValue = te::layout::Property::GetValueAs<te::color::RGBAColor>(m_property);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(m_property);
 
-    m_color = QColor(newValue.getRed(), newValue.getGreen(), newValue.getBlue(), newValue.getAlpha());
     if (m_textLabel)
     {
-      QPalette ptt(m_textLabel->palette());
-      if (m_color.isValid())
-      {
-        ptt.setColor(m_textLabel->backgroundRole(), m_color);
-        m_textLabel->setAutoFillBackground(true);
-        m_textLabel->setPalette(ptt);
-      }      
+      QString name;
+      m_textLabel->setText(name);
     }
   }
 }
 
-void te::layout::ColorEditor::createGroupBox()
+void te::layout::MapSettingsEditor::createGroupBox()
 {
   QHBoxLayout* hlayout = new QHBoxLayout(this);
 
@@ -121,7 +125,7 @@ void te::layout::ColorEditor::createGroupBox()
   setLayout(hlayout);
 }
 
-bool te::layout::ColorEditor::eventFilter(QObject * watched, QEvent * event)
+bool te::layout::MapSettingsEditor::eventFilter(QObject * watched, QEvent * event)
 {
   if (watched == m_button)
   {
@@ -141,7 +145,7 @@ bool te::layout::ColorEditor::eventFilter(QObject * watched, QEvent * event)
   return QWidget::eventFilter(watched, event);
 }
 
-void te::layout::ColorEditor::paintEvent(QPaintEvent * event)
+void te::layout::MapSettingsEditor::paintEvent(QPaintEvent * event)
 {
   QStyleOption opt;
   opt.init(this);
@@ -149,28 +153,29 @@ void te::layout::ColorEditor::paintEvent(QPaintEvent * event)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void te::layout::ColorEditor::onButtonClicked(bool checked)
+void te::layout::MapSettingsEditor::onButtonClicked(bool checked)
 {
   emit showDlg();
-  getColor();
+  showSettings();
 }
 
-void te::layout::ColorEditor::getColor()
+void te::layout::MapSettingsEditor::showSettings()
 {
-  QColor color = configColor(m_textLabel);
-  
-  if (color.isValid())
-  {
-    te::color::RGBAColor rgba(color.red(), color.green(), color.blue(), color.alpha());
-    m_property.setValue(rgba, m_property.getType());
-    m_color = color;
+  EnumType* type = Enums::getInstance().getEnumObjectType()->getMapSettingsDialog();
 
-    //Emit our own signal.
-    emit dataValueChanged(this, m_property);
+  BuildGraphicsOutside build;
+  if (!m_mapSettings)
+  {
+    QWidget* widget = build.createOutside(type, 0, (QWidget*) this->parent());
+    m_mapSettings = dynamic_cast<MapSettingsOutside*>(widget);
   }
+
+  m_mapSettings->load();
+  m_mapSettings->show(); // modeless dialog
+  m_mapSettings->raise(); // top of the parent widget's stack
 }
 
-void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
+void te::layout::MapSettingsEditor::setupTreeViewEditorMargin(QLayout* layout)
 {
   int decorationMargin = 4;
 
@@ -184,18 +189,11 @@ void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
   }
 }
 
-QColor te::layout::ColorEditor::configColor(QWidget* widget)
+void te::layout::MapSettingsEditor::onUpdateProperty(Property prop)
 {
-  QPalette ptt(widget->palette());
-  QBrush brush = ptt.brush(widget->backgroundRole());
-  
-  QColor color = QColorDialog::getColor(brush.color(), this, tr("Select Color"));
-
-  if (color.isValid())
+  if (!prop.isNull())
   {
-    ptt.setColor(widget->backgroundRole(), m_color);
-    widget->setAutoFillBackground(true);
-    widget->setPalette(ptt);
-  }  
-  return color;
+    // Emit our own signal.
+    emit dataValueChanged(this, m_property);
+  }
 }

@@ -33,8 +33,9 @@ te::layout::AbstractEditor* te::layout::FontEditorFactory::build(EditorFactoryPa
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
+  ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  FontEditor* editor = new FontEditor(index, parent);
+  FontEditor* editor = new FontEditor(index, context, parent);
   return editor;
 }
 

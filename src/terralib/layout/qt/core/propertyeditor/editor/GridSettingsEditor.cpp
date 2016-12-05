@@ -18,7 +18,7 @@
  */
 
 /*!
-  \file ColorEditor.cpp
+  \file GridSettingsEditor.cpp
    
   \brief 
 
@@ -26,9 +26,15 @@
 */
 
 // TerraLib
-#include "ColorEditor.h"
+#include "GridSettingsEditor.h"
 #include "../../../../core/enum/Enums.h"
 #include "../../../../core/property/Property.h"
+#include "../../../outside/GridSettingsOutside.h"
+#include "../../../core/ItemUtils.h"
+#include "../../BuildGraphicsOutside.h"
+
+// STL
+#include <string>
 
 //Qt
 #include <QMetaType>
@@ -47,58 +53,55 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-te::layout::ColorEditor::ColorEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
+te::layout::GridSettingsEditor::GridSettingsEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
   QWidget(parent),
-  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeColor(), context),
+  AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeGridSettings(), context),
   m_textLabel(0),
-  m_button(0)
+  m_button(0),
+  m_gridSettings(0)
 {
   createGroupBox();
   changeEditorData(index);
 }
 
-te::layout::ColorEditor::~ColorEditor()
+te::layout::GridSettingsEditor::~GridSettingsEditor()
 {
-
+  if (m_gridSettings)
+  {
+    m_gridSettings->setParent(0);
+    delete m_gridSettings;
+  }
 }
 
-QVariant te::layout::ColorEditor::getValue()
+QVariant te::layout::GridSettingsEditor::getValue()
 {
   return m_textLabel->text();
 }
 
-void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
+void te::layout::GridSettingsEditor::changeEditorData(const QModelIndex& index)
 {
   int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
   if (variant.isValid() && !variant.isNull())
   {
     m_property = qvariant_cast<te::layout::Property>(variant);
-    const te::color::RGBAColor& newValue = te::layout::Property::GetValueAs<te::color::RGBAColor>(m_property);
+    std::string newValue = te::layout::Property::GetValueAs<std::string>(m_property);
 
-    m_color = QColor(newValue.getRed(), newValue.getGreen(), newValue.getBlue(), newValue.getAlpha());
     if (m_textLabel)
     {
-      QPalette ptt(m_textLabel->palette());
-      if (m_color.isValid())
-      {
-        ptt.setColor(m_textLabel->backgroundRole(), m_color);
-        m_textLabel->setAutoFillBackground(true);
-        m_textLabel->setPalette(ptt);
-      }      
+      QString name = ItemUtils::convert2QString(m_property.getLabel());
+      m_textLabel->setText(name);
     }
   }
 }
 
-void te::layout::ColorEditor::createGroupBox()
+void te::layout::GridSettingsEditor::createGroupBox()
 {
   QHBoxLayout* hlayout = new QHBoxLayout(this);
 
   setupTreeViewEditorMargin(hlayout);
   m_textLabel = new QLabel("");
-
-  m_textLabel->setFixedWidth(20);
-
+  
   m_button = new QToolButton(this);
   m_button->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Ignored);
   m_button->setFixedWidth(20);
@@ -121,7 +124,7 @@ void te::layout::ColorEditor::createGroupBox()
   setLayout(hlayout);
 }
 
-bool te::layout::ColorEditor::eventFilter(QObject * watched, QEvent * event)
+bool te::layout::GridSettingsEditor::eventFilter(QObject * watched, QEvent * event)
 {
   if (watched == m_button)
   {
@@ -141,7 +144,7 @@ bool te::layout::ColorEditor::eventFilter(QObject * watched, QEvent * event)
   return QWidget::eventFilter(watched, event);
 }
 
-void te::layout::ColorEditor::paintEvent(QPaintEvent * event)
+void te::layout::GridSettingsEditor::paintEvent(QPaintEvent * event)
 {
   QStyleOption opt;
   opt.init(this);
@@ -149,28 +152,29 @@ void te::layout::ColorEditor::paintEvent(QPaintEvent * event)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void te::layout::ColorEditor::onButtonClicked(bool checked)
+void te::layout::GridSettingsEditor::onButtonClicked(bool checked)
 {
   emit showDlg();
-  getColor();
+  showSettings();
 }
 
-void te::layout::ColorEditor::getColor()
+void te::layout::GridSettingsEditor::showSettings()
 {
-  QColor color = configColor(m_textLabel);
-  
-  if (color.isValid())
-  {
-    te::color::RGBAColor rgba(color.red(), color.green(), color.blue(), color.alpha());
-    m_property.setValue(rgba, m_property.getType());
-    m_color = color;
+  EnumType* type = Enums::getInstance().getEnumObjectType()->getGridSettings();
 
-    //Emit our own signal.
-    emit dataValueChanged(this, m_property);
+  BuildGraphicsOutside build;
+  if (!m_gridSettings)
+  {
+    QWidget* widget = build.createOutside(type, 0, (QWidget*) this->parent());
+    m_gridSettings = dynamic_cast<GridSettingsOutside*>(widget);
   }
+
+  m_gridSettings->load();
+  m_gridSettings->show(); // modeless dialog
+  m_gridSettings->raise(); // top of the parent widget's stack
 }
 
-void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
+void te::layout::GridSettingsEditor::setupTreeViewEditorMargin(QLayout* layout)
 {
   int decorationMargin = 4;
 
@@ -184,18 +188,11 @@ void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
   }
 }
 
-QColor te::layout::ColorEditor::configColor(QWidget* widget)
+void te::layout::GridSettingsEditor::onUpdateProperty(Property prop)
 {
-  QPalette ptt(widget->palette());
-  QBrush brush = ptt.brush(widget->backgroundRole());
-  
-  QColor color = QColorDialog::getColor(brush.color(), this, tr("Select Color"));
-
-  if (color.isValid())
+  if (!prop.isNull())
   {
-    ptt.setColor(widget->backgroundRole(), m_color);
-    widget->setAutoFillBackground(true);
-    widget->setPalette(ptt);
-  }  
-  return color;
+    // Emit our own signal.
+    emit dataValueChanged(this, m_property);
+  }
 }

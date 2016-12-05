@@ -18,15 +18,22 @@
  */
 
 #include "PropertyEditorExample.h"
+#include "ui_PropertyEditorExampleDialog.h"
 
 // Layout Module
 #include <terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h>
+#include <terralib/layout/qt/core/propertyeditor/tree/PropertyDelegate.h>
+#include <terralib/layout/qt/core/propertyeditor/tree/ContextPropertyEditor.h>
 #include <terralib/layout/qt/core/BuildGraphicsItem.h>
 #include <terralib/layout/qt/item/RectangleItem.h>
+#include <terralib/layout/qt/item/MapItem.h>
+#include <terralib/layout/qt/item/MapCompositionItem.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemView.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
 #include <terralib/layout/core/enum/Enums.h>
 #include <terralib/layout/core/property/Property.h>
+#include <terralib/qt/widgets/Utils.h>
+#include "ProxyLayers.h"
 
 // STL
 #include <vector>
@@ -45,49 +52,92 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 #include <QStringList>
+#include <QFileDialog>
+#include <QFileInfo>
 
 te::layout::example::propertyeditor::PropertyEditorExample::PropertyEditorExample(QWidget* parent) :
   QWidget(parent),
+  m_ui(new Ui::PropertyEditorExampleDialog),
   m_rectItem(0),
+  m_mapItem(0),
+  m_mapCompositionItem(0),
   m_tree(0),
   m_combobox(0)
 {
+  m_ui->setupUi(this);
+
+  m_proxy = new ProxyLayers;
+
   setWindowTitle(tr("Property Editor"));
   resize(480, 320);
 }
 
 te::layout::example::propertyeditor::PropertyEditorExample::~PropertyEditorExample()
 {
-  if (m_rectItem)
+  if (m_proxy)
   {
-    delete m_rectItem;
+    delete m_proxy;
   }
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::run()
 {
+  createGraphicsViewInfrastructure();
   createRectangleItem();
+  createMapItem();
+  createMapCompositionItem();
   createPropertyTree();
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::createGraphicsViewInfrastructure()
+{
+  m_view.reset(new te::layout::View); // create View
+  
+  te::layout::Scene* myScene = new te::layout::Scene(m_view.get()); // create Scene
+  myScene->setProxyProject(m_proxy);
+  m_view->setScene(myScene);
+  m_view->config(); // init layout infrastructure
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createRectangleItem()
 {
   EnumType* itemType = Enums::getInstance().getEnumObjectType()->getRectangleItem();
+  te::gm::Coord2D coord(5, 5);
+
+  QGraphicsItem* item = createItem(itemType, coord);
+  m_rectItem = dynamic_cast<RectangleItem*>(item);
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::createMapItem()
+{
+  EnumType* itemType = Enums::getInstance().getEnumObjectType()->getMapItem();
+  te::gm::Coord2D coord(30, 30);
+
+  QGraphicsItem* item = createItem(itemType, coord);
+  m_mapItem = dynamic_cast<MapItem*>(item);
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::createMapCompositionItem()
+{
+  EnumType* itemType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+  te::gm::Coord2D coord(60, 60);
+
+  QGraphicsItem* item = createItem(itemType, coord);
+  m_mapCompositionItem = dynamic_cast<MapCompositionItem*>(item);
+}
+
+QGraphicsItem* te::layout::example::propertyeditor::PropertyEditorExample::createItem(EnumType* itemType, te::gm::Coord2D& coord, double width, double height)
+{
+  QGraphicsItem* item = 0;
+
   if (!itemType)
   {
-    return;
+    return item;
   }
 
-  te::gm::Coord2D coord(5, 5);
-  BuildGraphicsItem buildItem(0);
-  QGraphicsItem* item = buildItem.createItem(itemType, coord, 20, 20);
-
-  if (!item)
-  {
-    return;
-  }
-
-  m_rectItem = dynamic_cast<RectangleItem*>(item);
+  BuildGraphicsItem buildItem(m_view->getScene());
+  item = buildItem.createItem(itemType, coord, width, height);  
+  return item;
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyTree()
@@ -97,15 +147,13 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createPropertyT
     return;
   }
 
-  m_tree = new te::layout::PropertyTree(0, 0, this); // create property tree
-  createLayout();
-  
-  std::vector<Property> props;
-  AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem);
-  Properties itemProperties = view->getController()->getProperties();
-  props = itemProperties.getProperties();
+  ContextPropertyEditor* context = new ContextPropertyEditor(m_proxy, m_view->getScene());
+  PropertyDelegate* propDelegate = new PropertyDelegate(context);
+  m_tree = new te::layout::PropertyTree(m_view.get(), propDelegate, this); // create property tree
 
-  m_tree->load(props); // load properties from rectangle item
+  connect(m_tree, SIGNAL(propertiesChanged(const te::layout::Property&)), this, SLOT(onPropertiesChanged(const te::layout::Property&)));
+
+  createLayout();
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
@@ -115,7 +163,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
   if (!m_tree)
     return;
 
-  QVBoxLayout* layout = new QVBoxLayout(this);
+  QVBoxLayout* layout = m_ui->propEditorLayout;
   layout->setMargin(0);
   
   m_combobox = new QComboBox(this);
@@ -127,7 +175,10 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createLayout()
   layout->addWidget(m_combobox);
   layout->addWidget(m_tree);
   
-  setLayout(layout);
+  connect(m_combobox, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(onCurrentIndexChanged(const QString &)));
+  
+  m_combobox->setCurrentIndex(-1);
+  m_combobox->setCurrentIndex(0);
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNames()
@@ -135,12 +186,118 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNam
   QStringList list;
 
   // add rect item name
-  const te::layout::Property rectProp = m_rectItem->getController()->getProperty("name");
+  const te::layout::Property& rectProp = m_rectItem->getController()->getProperty("name");
+  std::string nameRect = te::layout::Property::GetValueAs<std::string>(rectProp);
+  list.append(nameRect.c_str());
 
-  std::string name = te::layout::Property::GetValueAs<std::string>(rectProp);
+  // add map item name
+  const te::layout::Property& mapProp = m_mapItem->getController()->getProperty("name");
+  std::string nameMap = te::layout::Property::GetValueAs<std::string>(mapProp);
+  list.append(nameMap.c_str());
 
-  list.append(name.c_str());
+  // add map composition item name
+  const te::layout::Property& mapCompProp = m_mapCompositionItem->getController()->getProperty("name");
+  std::string nameMapComp = te::layout::Property::GetValueAs<std::string>(mapCompProp);
+  list.append(nameMapComp.c_str());
 
   m_combobox->addItems(list);
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexChanged(const QString & text)
+{
+  if (m_rectItem && m_mapItem && m_mapCompositionItem)
+  {
+    const Property& prop_nameRect = m_rectItem->getController()->getProperty("name");
+    std::string nameRect = te::layout::Property::GetValueAs<std::string>(prop_nameRect);
+    QString rectText = ItemUtils::convert2QString(nameRect);
+    
+    if (text.compare(rectText) == 0)
+    {
+      m_view->getScene()->selectItem(m_rectItem);
+      loadProperties(m_rectItem);
+      return;
+    }
+
+    const Property& prop_nameMap = m_mapItem->getController()->getProperty("name");
+    std::string nameMap = te::layout::Property::GetValueAs<std::string>(prop_nameMap);
+    QString mapText = ItemUtils::convert2QString(nameMap);
+    
+    if (text.compare(mapText) == 0)
+    {
+      m_view->getScene()->selectItem(m_mapItem);
+      loadProperties(m_mapItem);
+      return;
+    }
+
+    const Property& prop_nameMapComp = m_mapCompositionItem->getController()->getProperty("name");
+    std::string nameMapComp = te::layout::Property::GetValueAs<std::string>(prop_nameMapComp);
+    QString mapCompText = ItemUtils::convert2QString(nameMapComp);
+
+    if (text.compare(mapCompText) == 0)
+    {
+      m_view->getScene()->selectItem(m_mapCompositionItem);
+      loadProperties(m_mapCompositionItem);
+    }
+  }  
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::loadProperties(QGraphicsItem* item)
+{
+  std::vector<Property> props;
+
+  AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+  
+  Properties itemProperties = view->getController()->getProperties();
+  props = itemProperties.getProperties();
+
+  m_tree->load(props); // load properties from rectangle item
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::on_tbtnLoadLayers_clicked()
+{
+  QStringList files = QFileDialog::getOpenFileNames(0, "Open Shape File", te::qt::widgets::GetFilePathFromSettings("shp"), "Shape Files (*.shp)");
+  
+  if (m_proxy)
+  {
+    if (m_proxy->loadShapesToLayers(files))
+    {
+      m_ui->layerList->clear();
+      QStringList names;
+      for (QStringList::iterator it = files.begin(); it != files.end(); ++it)
+      {
+        QString fileName = *it;
+        QFileInfo fi(fileName);
+        QString name = fi.fileName();
+        names.push_back(name);
+      }
+      m_ui->layerList->addItems(names);
+    }
+  }
+}
+
+void te::layout::example::propertyeditor::PropertyEditorExample::onPropertiesChanged(const te::layout::Property& prop)
+{
+  if (!m_view.get())
+    return;
+
+  Scene* scene = m_view->getScene();
+
+  QList<QGraphicsItem*> items = scene->selectedItems();
+
+  foreach(QGraphicsItem* item, items)
+  {
+    if (item)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+      if (lItem)
+      {
+        if (!lItem->getController())
+        {
+          continue;
+        }        
+        lItem->getController()->setProperty(prop);
+      }
+    }
+  }
 }
 

@@ -22,14 +22,22 @@
 
 // Examples TerraLib includes by platform
 #include "../Config.h"
+#include <terralib/common/TerraLib.h>
 
 // Qt
 #include <QApplication>
 #include <QWidget>
 
+void LoadPlugins();
+
 int main(int argc, char *argv[])
 {
   QApplication app(argc, argv); // required to run classes with Qt
+
+  // Initialize the Terralib support
+  TerraLib::getInstance().initialize();
+
+  LoadPlugins();
 
   te::layout::example::propertyeditor::PropertyEditorExample editor;
   editor.run();

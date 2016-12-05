@@ -18,34 +18,34 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/editor/ColorEditorFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/editor/MapSettingsEditorFactory.cpp
 
-  \brief This is the concrete factory for color editors.
+  \brief This is the concrete factory for map settings editors.
 */
 
 // TerraLib
-#include "ColorEditorFactory.h"
+#include "MapSettingsEditorFactory.h"
 #include "../../../../../../core/enum/Enums.h"
 #include "../../../../View.h"
-#include "../../../../propertyeditor/editor/ColorEditor.h"
+#include "../../../../propertyeditor/editor/MapSettingsEditor.h"
 
-te::layout::AbstractEditor* te::layout::ColorEditorFactory::build(EditorFactoryParamsCreate params)
+te::layout::AbstractEditor* te::layout::MapSettingsEditorFactory::build(EditorFactoryParamsCreate params)
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
   ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  ColorEditor* editor = new ColorEditor(index, context, parent);
+  MapSettingsEditor* editor = new MapSettingsEditor(index, context, parent);
   return editor;
 }
 
-te::layout::ColorEditorFactory::ColorEditorFactory() :
-  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeColor()->getName())
+te::layout::MapSettingsEditorFactory::MapSettingsEditorFactory() :
+  EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeMapSettings()->getName())
 {
 
 }
 
-te::layout::ColorEditorFactory::~ColorEditorFactory()
+te::layout::MapSettingsEditorFactory::~MapSettingsEditorFactory()
 {
 
 }

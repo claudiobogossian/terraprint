@@ -59,8 +59,16 @@ te::layout::AbstractRender* te::layout::BuildRender::buildRender(QPainter * pain
 
   te::layout::Property prop = qvariant_cast<te::layout::Property>(variant);
 
+  te::common::ParameterizedAbstractFactory<AbstractRender, std::string, RenderFactoryParamsCreate>::dictionary_type& d = te::common::ParameterizedAbstractFactory<AbstractRender, std::string, RenderFactoryParamsCreate>::getDictionary();
+
   std::string renderName = prop.getType()->getName();
-  AbstractRender* render = te::layout::RenderFactory::make(renderName, params);
+  RenderFactory* fact = dynamic_cast<RenderFactory*>(d.find(renderName));
+  
+  AbstractRender* render = 0;
+  if (fact)
+  {
+    render = te::layout::RenderFactory::make(renderName, params);
+  }
   return render;
 }
 

@@ -60,7 +60,7 @@ namespace te
 
       public:
 
-        PropertyTree(View* view, PropertyDelegate* delegate = 0, QWidget* parent = 0);
+        PropertyTree(View* view, PropertyDelegate* delegate, QWidget* parent = 0);
 
         virtual ~PropertyTree();
 

@@ -26,9 +26,11 @@
 // TerraLib
 #include "EditorFactoryParamsCreate.h"
 
-te::layout::EditorFactoryParamsCreate::EditorFactoryParamsCreate(const QModelIndex& index, std::vector<Property> vprops, QWidget* parent) :
+te::layout::EditorFactoryParamsCreate::EditorFactoryParamsCreate(const QModelIndex& index, std::vector<Property> vprops, 
+  ContextPropertyEditor* context, QWidget* parent) :
   m_index(index),
   m_vprops(vprops),
+  m_context(context),
   m_parent(parent)
 {
 
@@ -54,7 +56,7 @@ void te::layout::EditorFactoryParamsCreate::reset() throw(te::common::Exception)
 
 }
 
-QModelIndex te::layout::EditorFactoryParamsCreate::getModelIndex()
+QModelIndex te::layout::EditorFactoryParamsCreate::getModelIndex() const
 {
   return m_index;
 }
@@ -64,8 +66,13 @@ QWidget* te::layout::EditorFactoryParamsCreate::getParent()
   return m_parent;
 }
 
-std::vector<te::layout::Property> te::layout::EditorFactoryParamsCreate::getProperties()
+std::vector<te::layout::Property> te::layout::EditorFactoryParamsCreate::getProperties() const
 {
   return m_vprops;
+}
+
+te::layout::ContextPropertyEditor* te::layout::EditorFactoryParamsCreate::getContextPropertyEditor()
+{
+  return m_context;
 }
 
