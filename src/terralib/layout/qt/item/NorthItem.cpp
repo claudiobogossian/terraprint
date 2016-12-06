@@ -49,19 +49,22 @@ void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGrap
   EnumNorthArrowType enumNorthArrowType;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
-  EnumType* currentNorthArrowType = enumNorthArrowType.searchLabel(label);
+  EnumType* currentNorthArrowType = enumNorthArrowType.getEnum(label);
 
-  if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType1())
+  if (currentNorthArrowType)
   {
-    drawNorthArrow1(painter);
-  }
-  else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType2())
-  {
-    drawNorthArrow2(painter);
-  }
-  else if(currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
-  {
-    drawNorthArrow3(painter);
+    if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType1())
+    {
+      drawNorthArrow1(painter);
+    }
+    else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType2())
+    {
+      drawNorthArrow2(painter);
+    }
+    else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
+    {
+      drawNorthArrow3(painter);
+    }
   }
 }
 

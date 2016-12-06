@@ -84,24 +84,27 @@ void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGrap
   EnumScaleType enumScale;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
-  EnumType* currentScaleType = enumScale.searchLabel(label);
+  EnumType* currentScaleType = enumScale.getEnum(label);
 
   if (validateGaps() == false)
   {
     return;
   }
 
-  if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
+  if (currentScaleType)
   {
-    drawDoubleAlternatingScaleBar(painter);
-  }
-  if(currentScaleType == enumScale.getAlternatingScaleBarType())
-  {
-    drawAlternatingScaleBar(painter);
-  }
-  if(currentScaleType == enumScale.getHollowScaleBarType())
-  {
-    drawHollowScaleBar(painter);
+    if (currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
+    {
+      drawDoubleAlternatingScaleBar(painter);
+    }
+    if (currentScaleType == enumScale.getAlternatingScaleBarType())
+    {
+      drawAlternatingScaleBar(painter);
+    }
+    if (currentScaleType == enumScale.getHollowScaleBarType())
+    {
+      drawHollowScaleBar(painter);
+    }
   }
 }
 

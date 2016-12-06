@@ -54,20 +54,23 @@ void te::layout::RectangleItem::drawItem( QPainter * painter, const QStyleOption
   EnumRectangleType enumRectangleType;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
-  EnumType* currentRectangleType = enumRectangleType.searchLabel(label);
+  EnumType* currentRectangleType = enumRectangleType.getEnum(label);
 
-  if(currentRectangleType == enumRectangleType.getSimpleRectangleType())
+  if (currentRectangleType)
   {
-    drawRectangle(painter);
-  }
-  if(currentRectangleType == enumRectangleType.getRoundedRetangleType())
-  {
-    drawRoundedRectangle(painter);
-  }
+    if (currentRectangleType == enumRectangleType.getSimpleRectangleType())
+    {
+      drawRectangle(painter);
+    }
+    if (currentRectangleType == enumRectangleType.getRoundedRetangleType())
+    {
+      drawRoundedRectangle(painter);
+    }
 
-  if(currentRectangleType == enumRectangleType.getSingleCornerTrimmedRectangleType())
-  {
-    drawSingleCornerTrimmedRectangle(painter);
+    if (currentRectangleType == enumRectangleType.getSingleCornerTrimmedRectangleType())
+    {
+      drawSingleCornerTrimmedRectangle(painter);
+    }
   }
 }
 

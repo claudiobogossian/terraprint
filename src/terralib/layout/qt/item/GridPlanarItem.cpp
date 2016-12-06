@@ -75,12 +75,10 @@ void te::layout::GridPlanarItem::calculateGrid()
   te::gm::Envelope referenceBoxMM(0, 0, width, height);
 
   clear();
-
   
   const Property& pVerticalGap = pGridSettings.getSubProperty(settingsConfig.getLneVrtGap());
 
   double verticalGap = te::layout::Property::GetValueAs<double>(pVerticalGap);
-
 
   const Property& pHorizontalGap = pGridSettings.getSubProperty(settingsConfig.getLneHrzGap());
 
@@ -100,23 +98,22 @@ void te::layout::GridPlanarItem::calculateGrid()
 
   const std::string& style = pStyle.getOptionByCurrentChoice().toString();
   EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
-  if (currentStyle != 0)
-  {
-    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
-  }
-
+  
   EnumGridStyleType gridStyleType;
 
-  if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
+  if (currentStyle)
   {
-    clearLines();
-    calculateCrossLines();
-  }
+    if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
+    {
+      clearLines();
+      calculateCrossLines();
+    }
 
-  if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
-  {
-    clearLines();
-    addGridLinesToPath();
+    if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
+    {
+      clearLines();
+      addGridLinesToPath();
+    }
   }
 
   prepareGeometryChange();

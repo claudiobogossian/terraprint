@@ -131,24 +131,28 @@ QTextDocument* te::layout::TextController::createTextDocument(const te::layout::
   QFont qFont = ItemUtils::convertToQfont(te::layout::Property::GetValueAs<Font>(pFont));
   EnumAlignmentType enumAligmentType;
   const std::string& label = pAligment.getOptionByCurrentChoice().toString();
-  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
+  EnumType* currentAligmentType = enumAligmentType.getEnum(label);
 
   QTextOption textOption;
-  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+
+  if (currentAligmentType)
   {
-    textOption.setAlignment(Qt::AlignLeft);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
-  {
-    textOption.setAlignment(Qt::AlignRight);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
-  {
-    textOption.setAlignment(Qt::AlignCenter);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
-  {
-    textOption.setAlignment(Qt::AlignJustify);
+    if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+    {
+      textOption.setAlignment(Qt::AlignLeft);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+    {
+      textOption.setAlignment(Qt::AlignRight);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+    {
+      textOption.setAlignment(Qt::AlignCenter);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+    {
+      textOption.setAlignment(Qt::AlignJustify);
+    }
   }
 
   QTextDocument* textDocument = new QTextDocument();

@@ -736,19 +736,21 @@ void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& p
     EnumScaleType enumScale;
 
     const std::string& label = pScaleType.getOptionByCurrentChoice().toString();
-    EnumType* currentScaleType = enumScale.searchLabel(label);
+    EnumType* currentScaleType = enumScale.getEnum(label);
 
     QRectF rect(0, 0, te::layout::Property::GetValueAs<double>(pCopyWidth), 10);
 
     QRectF gap(rect.bottomLeft().x(), rect.bottomLeft().y(), te::layout::Property::GetValueAs<double>(pWidthGap), te::layout::Property::GetValueAs<double>(pHeightGap));
     rect = rect.united(gap);
 
-    if (currentScaleType != enumScale.getAlternatingScaleBarType())
+    if (currentScaleType)
     {
-      QRectF doubleGap(gap.bottomLeft().x(), gap.bottomLeft().y(), te::layout::Property::GetValueAs<double>(pWidthGap), te::layout::Property::GetValueAs<double>(pHeightGap));
-      rect = rect.united(doubleGap);
+      if (currentScaleType != enumScale.getAlternatingScaleBarType())
+      {
+        QRectF doubleGap(gap.bottomLeft().x(), gap.bottomLeft().y(), te::layout::Property::GetValueAs<double>(pWidthGap), te::layout::Property::GetValueAs<double>(pHeightGap));
+        rect = rect.united(doubleGap);
+      }
     }
-
 
     QRectF space(rect.bottomLeft().x(), rect.bottomLeft().y(), te::layout::Property::GetValueAs<double>(pWidthGap), 4.0);
 
@@ -782,6 +784,5 @@ void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& p
 
     pCopyHeight.setValue(height, dataType->getDataTypeDouble());
     properties.addProperty(pCopyHeight);
-
   }
 }

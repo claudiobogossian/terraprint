@@ -69,12 +69,6 @@ void te::layout::GridGeodesicItem::calculateGrid()
   const std::string& style = pStyle.getOptionByCurrentChoice().toString();
   double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
-  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
-  if (currentStyle != 0)
-  {
-    currentStyle = Enums::getInstance().getEnumGridStyleType()->searchLabel(style);
-  }
-
   te::gm::Envelope newBoxMM(0, 0, width, height);
 
   clear();
@@ -112,20 +106,23 @@ void te::layout::GridGeodesicItem::calculateGrid()
     calculateHorizontal(geographicBox, planarBox, newBoxMM);
   }
 
+  EnumType* currentStyle = Enums::getInstance().getEnumGridStyleType()->getEnum(style);
 
   EnumGridStyleType gridStyleType;
 
-  if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
+  if (currentStyle)
   {
-    clearLines();
-    calculateCrossLines();
-  }
+    if (currentStyle->getName() == gridStyleType.getStyleCross()->getName())
+    {
+      clearLines();
+      calculateCrossLines();
+    }
 
-  if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
-  {
-    clearLines();
-    addGridLinesToPath();
-
+    if (currentStyle->getName() == gridStyleType.getStyleContinuous()->getName())
+    {
+      clearLines();
+      addGridLinesToPath();
+    }
   }
 
   prepareGeometryChange();
@@ -226,14 +223,6 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
   int secPrecision = te::layout::Property::GetValueAs<int>(pSecPrecisionText);
 
-
-  EnumTextFormatType textFormatEnum;
-  EnumType* currentTextFormat = textFormatEnum.getEnum(textFormat);
-  if (currentTextFormat == 0)
-  {
-    currentTextFormat = Enums::getInstance().getEnumGridStyleType()->searchLabel(textFormat);
-  }
-
   // Draw a horizontal line and the y coordinate change(vertical)
   Utils utils = ((Scene*) this->scene())->getUtils();
 
@@ -301,14 +290,21 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
     m_horizontalLines.push_back(te::gm::LineString(*lineString));
 
+    EnumTextFormatType textFormatEnum;
+    EnumType* currentTextFormat = textFormatEnum.getEnum(textFormat);
+
     std::string text = "";
-    if (currentTextFormat->getName() == textFormatEnum.getDefaultFormat()->getName())
+
+    if (currentTextFormat)
     {
-      text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
-    }
-    else if (currentTextFormat->getName() == textFormatEnum.getANPFormat()->getName())
-    {
-      text = utils.convertDecimalToDegreeANP(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+      if (currentTextFormat->getName() == textFormatEnum.getDefaultFormat()->getName())
+      {
+        text = utils.convertDecimalToDegree(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+      }
+      else if (currentTextFormat->getName() == textFormatEnum.getANPFormat()->getName())
+      {
+        text = utils.convertDecimalToDegreeANP(y1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+      }
     }
 
     QString qText = ItemUtils::convert2QString(text);
@@ -370,13 +366,6 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
   bool bBottomRotate = te::layout::Property::GetValueAs<bool>(pBottomRotate);
 
   int secPrecision = te::layout::Property::GetValueAs<int>(pSecPrecisionText);
-
-  EnumTextFormatType textFormatEnum;
-  EnumType* currentTextFormat = textFormatEnum.getEnum(textFormat);
-  if (currentTextFormat == 0)
-  {
-    currentTextFormat = Enums::getInstance().getEnumGridStyleType()->searchLabel(textFormat);
-  }
 
   // Draw a vertical line and the x coordinate change(horizontal)
 
@@ -448,16 +437,22 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
 
     m_verticalLines.push_back(te::gm::LineString(*lineString));
 
-    std::string text = "";
-    if (currentTextFormat->getName() == textFormatEnum.getDefaultFormat()->getName())
-    {
-      text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
-    }
-    else if (currentTextFormat->getName() == textFormatEnum.getANPFormat()->getName())
-    {
-      text = utils.convertDecimalToDegreeANP(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
-    }
+    EnumTextFormatType textFormatEnum;
+    EnumType* currentTextFormat = textFormatEnum.getEnum(textFormat);
 
+    std::string text = "";
+
+    if (currentTextFormat)
+    {
+      if (currentTextFormat->getName() == textFormatEnum.getDefaultFormat()->getName())
+      {
+        text = utils.convertDecimalToDegree(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+      }
+      else if (currentTextFormat->getName() == textFormatEnum.getANPFormat()->getName())
+      {
+        text = utils.convertDecimalToDegreeANP(x1, showDegreesText, showMinutesText, showSecondsText, secPrecision);
+      }
+    }
 
     QString qText = ItemUtils::convert2QString(text);
 

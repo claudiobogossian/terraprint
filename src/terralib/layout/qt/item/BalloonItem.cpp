@@ -69,25 +69,25 @@ void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGr
   EnumBalloonType balloonEnum;
 
   const std::string& label = pBalloonType.getOptionByCurrentChoice().toString();
-  EnumType* currentBalloonType = balloonEnum.searchLabel(label);
+  EnumType* currentBalloonType = balloonEnum.getEnum(label);
 
-
-  if (currentBalloonType == balloonEnum.getRectangleBalloon())
+  if (currentBalloonType)
   {
-    drawRectangleBalloon(painter);
+    if (currentBalloonType == balloonEnum.getRectangleBalloon())
+    {
+      drawRectangleBalloon(painter);
+    }
+
+    if (currentBalloonType == balloonEnum.getRoundedRectangleBalloon())
+    {
+      drawRoundedRectangleBalloon(painter);
+    }
+
+    if (currentBalloonType == balloonEnum.getEllipseBalloon())
+    {
+      drawEllipseBalloon(painter);
+    }
   }
-
-  if (currentBalloonType == balloonEnum.getRoundedRectangleBalloon())
-  {
-    drawRoundedRectangleBalloon(painter);
-  }
-
-
-  if (currentBalloonType == balloonEnum.getEllipseBalloon())
-  {
-    drawEllipseBalloon(painter);
-  }
-
 
   TextItem::drawItem(painter, option, widget);
 }
@@ -241,14 +241,16 @@ void  te::layout::BalloonItem::setBalloonDirection(QPainterPath& qpainterpath)
   EnumBalloonDirectionType balloonDirection;
   const Property& pDirection = m_controller->getProperty("balloon_direction");
   const std::string& label = pDirection.getOptionByCurrentChoice().toString();
-  EnumType* currentBalloonDirectionType = balloonDirection.searchLabel(label);
+  EnumType* currentBalloonDirectionType = balloonDirection.getEnum(label);
 
-  if (currentBalloonDirectionType == balloonDirection.getLeft())
+  if (currentBalloonDirectionType)
   {
-
-    QTransform transform;
-    transform.scale(-1, 1);
-    transform.translate(-width, 0);
-    qpainterpath = transform.map(qpainterpath);
+    if (currentBalloonDirectionType == balloonDirection.getLeft())
+    {
+      QTransform transform;
+      transform.scale(-1, 1);
+      transform.translate(-width, 0);
+      qpainterpath = transform.map(qpainterpath);
+    }
   }
 }

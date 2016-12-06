@@ -188,32 +188,30 @@ void te::layout::GridMapItem::configPainter( QPainter* painter )
   EnumLineStyleType* lineStyle = Enums::getInstance().getEnumLineStyleType();
   EnumType* currentLineStyle = Enums::getInstance().getEnumLineStyleType()->getEnum(lineStyleName);
 
-  if(currentLineStyle == 0)
-  {
-    currentLineStyle = Enums::getInstance().getEnumLineStyleType()->searchLabel(lineStyleName);
-  }
-
   QPen pen;
 
-  if(currentLineStyle == lineStyle->getStyleSolid())
+  if (currentLineStyle)
   {
-    pen.setStyle(Qt::SolidLine);
-  }
-  else if(currentLineStyle == lineStyle->getStyleDot())
-  {
-    pen.setStyle(Qt::DotLine);
-  }
-  else if(currentLineStyle == lineStyle->getStyleDash())
-  {
-    pen.setStyle(Qt::DashLine);
-  }
-  else if(currentLineStyle == lineStyle->getStyleDashDot())
-  {
-    pen.setStyle(Qt::DashDotLine);
-  }
-  else if(currentLineStyle == lineStyle->getStyleDashDotDot())
-  {
-    pen.setStyle(Qt::DashDotDotLine);
+    if (currentLineStyle == lineStyle->getStyleSolid())
+    {
+      pen.setStyle(Qt::SolidLine);
+    }
+    else if (currentLineStyle == lineStyle->getStyleDot())
+    {
+      pen.setStyle(Qt::DotLine);
+    }
+    else if (currentLineStyle == lineStyle->getStyleDash())
+    {
+      pen.setStyle(Qt::DashLine);
+    }
+    else if (currentLineStyle == lineStyle->getStyleDashDot())
+    {
+      pen.setStyle(Qt::DashDotLine);
+    }
+    else if (currentLineStyle == lineStyle->getStyleDashDotDot())
+    {
+      pen.setStyle(Qt::DashDotDotLine);
+    }
   }
 
   QColor clrLine(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue(), lineColor.getAlpha());
