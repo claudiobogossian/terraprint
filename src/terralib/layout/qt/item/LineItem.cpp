@@ -94,31 +94,34 @@ QPen te::layout::LineItem::searchStyle()
   EnumLineStyleType lineStyle;
 
   const std::string& label = pLineStyle.getOptionByCurrentChoice().toString();
-  EnumType* currentLineStyle = lineStyle.searchLabel(label);
+  EnumType* currentLineStyle = lineStyle.getEnum(label);
 
-  if(currentLineStyle == lineStyle.getStyleSolid())
+  if (currentLineStyle)
   {
-    penStyle.setStyle(Qt::SolidLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDash())
-  {
-    penStyle.setStyle(Qt::DashLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDot())
-  {
-    penStyle.setStyle(Qt::DotLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDashDot())
-  {
-    penStyle.setStyle(Qt::DashDotLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDashDotDot())
-  {
-    penStyle.setStyle(Qt::DashDotDotLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleCustomDash())
-  {
-    penStyle.setStyle(Qt::CustomDashLine);
+    if (currentLineStyle == lineStyle.getStyleSolid())
+    {
+      penStyle.setStyle(Qt::SolidLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDash())
+    {
+      penStyle.setStyle(Qt::DashLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDot())
+    {
+      penStyle.setStyle(Qt::DotLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDashDot())
+    {
+      penStyle.setStyle(Qt::DashDotLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDashDotDot())
+    {
+      penStyle.setStyle(Qt::DashDotDotLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleCustomDash())
+    {
+      penStyle.setStyle(Qt::CustomDashLine);
+    }
   }
 
   return penStyle;

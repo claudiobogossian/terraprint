@@ -58,43 +58,46 @@ void te::layout::PointItem::drawItem( QPainter * painter, const QStyleOptionGrap
   EnumPointType enumPointType;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
-  EnumType* currentPointType = enumPointType.searchLabel(label);
+  EnumType* currentPointType = enumPointType.getEnum(label);
 
-  if(currentPointType == enumPointType.getStar1Type())
+  if (currentPointType)
   {
-    drawStar1(painter);
-  }
-  if(currentPointType == enumPointType.getStar2Type())
-  {
-    drawStar2(painter);
-  }
-  if(currentPointType == enumPointType.getStar3Type())
-  {
-    drawStar3(painter);
-  }
-  if(currentPointType == enumPointType.getStar4Type())
-  {
-    drawStar4(painter);
-  }
-  if(currentPointType == enumPointType.getCircleType())
-  {
-    drawCircle(painter);
-  }
-  if(currentPointType == enumPointType.getCrossType())
-  {
-    drawCross(painter);
-  }
-  if(currentPointType == enumPointType.getRhombusType())
-  {
-    drawRhombus(painter);
-  }
-  if(currentPointType == enumPointType.getSquareType())
-  {
-    drawSquare(painter);
-  }
-  if(currentPointType == enumPointType.getXType())
-  {
-    drawX(painter);
+    if (currentPointType == enumPointType.getStar1Type())
+    {
+      drawStar1(painter);
+    }
+    if (currentPointType == enumPointType.getStar2Type())
+    {
+      drawStar2(painter);
+    }
+    if (currentPointType == enumPointType.getStar3Type())
+    {
+      drawStar3(painter);
+    }
+    if (currentPointType == enumPointType.getStar4Type())
+    {
+      drawStar4(painter);
+    }
+    if (currentPointType == enumPointType.getCircleType())
+    {
+      drawCircle(painter);
+    }
+    if (currentPointType == enumPointType.getCrossType())
+    {
+      drawCross(painter);
+    }
+    if (currentPointType == enumPointType.getRhombusType())
+    {
+      drawRhombus(painter);
+    }
+    if (currentPointType == enumPointType.getSquareType())
+    {
+      drawSquare(painter);
+    }
+    if (currentPointType == enumPointType.getXType())
+    {
+      drawX(painter);
+    }
   }
 }
 
