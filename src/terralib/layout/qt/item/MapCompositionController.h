@@ -72,7 +72,7 @@ namespace te
 
         virtual std::map<std::string, te::layout::Properties> groupPropertiesByParent(const Properties& properties);
 
-        virtual te::layout::Properties explodeHiddenProperties(const Properties& properties);
+        virtual te::layout::Properties expandHiddenProperties(const Properties& properties);
 
         virtual void hideProperties(Property& property) const;
 

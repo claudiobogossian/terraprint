@@ -159,7 +159,7 @@ const te::layout::Properties& te::layout::MapCompositionController::getPropertie
 void te::layout::MapCompositionController::setProperties(const te::layout::Properties& properties)
 {
   //here we must "open" the new properties before passing them to the map and grid items
-  Properties allProperties = explodeHiddenProperties(properties);
+  Properties allProperties = expandHiddenProperties(properties);
 
   std::map<std::string, te::layout::Properties> mapProperties = groupPropertiesByParent(allProperties);
 
@@ -246,11 +246,11 @@ std::map<std::string, te::layout::Properties> te::layout::MapCompositionControll
   return mapProperties;
 }
 
-te::layout::Properties te::layout::MapCompositionController::explodeHiddenProperties(const Properties& properties)
+te::layout::Properties te::layout::MapCompositionController::expandHiddenProperties(const Properties& properties)
 {
   const std::vector<Property>& vecProperties = properties.getProperties();
 
-  te::layout::Properties explodedProperties;
+  te::layout::Properties expandedProperties;
   
   for (std::size_t i = 0; i < vecProperties.size(); ++i)
   {
@@ -260,7 +260,7 @@ te::layout::Properties te::layout::MapCompositionController::explodeHiddenProper
       const std::vector<Property>& vecSubProperties = property.getSubProperty();
       for (std::size_t j = 0; j < vecSubProperties.size(); ++j)
       {
-        explodedProperties.addProperty(vecSubProperties[j]);
+        expandedProperties.addProperty(vecSubProperties[j]);
       }
     }
     else if (property.getName() == "GeodesicGridProperties")
@@ -268,7 +268,7 @@ te::layout::Properties te::layout::MapCompositionController::explodeHiddenProper
       const std::vector<Property>& vecSubProperties = property.getSubProperty();
       for (std::size_t j = 0; j < vecSubProperties.size(); ++j)
       {
-        explodedProperties.addProperty(vecSubProperties[j]);
+        expandedProperties.addProperty(vecSubProperties[j]);
       }
     }
     else if (property.getName() == "MapProperties")
@@ -276,16 +276,16 @@ te::layout::Properties te::layout::MapCompositionController::explodeHiddenProper
       const std::vector<Property>& vecSubProperties = property.getSubProperty();
       for (std::size_t j = 0; j < vecSubProperties.size(); ++j)
       {
-        explodedProperties.addProperty(vecSubProperties[j]);
+        expandedProperties.addProperty(vecSubProperties[j]);
       }
     }
     else
     {
-      explodedProperties.addProperty(property);
+      expandedProperties.addProperty(property);
     }
   }
 
-  return explodedProperties;
+  return expandedProperties;
 }
 
 
