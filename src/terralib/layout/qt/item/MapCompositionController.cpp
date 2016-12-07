@@ -19,6 +19,8 @@
 
 // TerraLib
 #include "MapCompositionController.h"
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
@@ -50,34 +52,105 @@ const te::layout::Properties& te::layout::MapCompositionController::getPropertie
     return ItemGroupController::getProperties();
   }
 
+  //here, we decide which properties from the map and grid items should be hidden
+  //what we do here is create (for each item) one new property that will contain all the properties that we want to hide
+  //this is done because the properties returned MUST contain all the properties of the items in order to correctly show it in the dialogs or export to a saved map
+  //in the other hand, when we receive a setProperties function call, we must "open" the new properties before passing them to the map and grid items
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
   AbstractItemView* planarGridItem = mapCompositionItem->getPlanarGridItem();
   if (planarGridItem != 0)
   {
+    const Properties& gridProperties = planarGridItem->getController()->getProperties();
+    const std::vector<Property>& vecGridProperties = gridProperties.getProperties();
+
     Property pGridSettings = planarGridItem->getController()->getProperty("GridSettings");
 
     hideProperties(pGridSettings);
 
     pGridSettings.setLabel(TR_LAYOUT("Planar Grid Settings"));
     m_propertiesFullReference = te::layout::Properties(ItemGroupController::getProperties());    
+
+    Property pGridProperties;
+    pGridProperties.setName("PlanarGridProperties");
+    pGridProperties.setValue(std::string(""), dataType->getDataTypeString());
+    pGridProperties.setParent(pGridSettings.getParent());
+    pGridProperties.setVisible(false);
+
+    for (std::size_t i = 0; i < vecGridProperties.size(); ++i)
+    {
+      if (vecGridProperties[i].getName() == "GridSettings")
+      {
+        continue;
+      }
+
+      pGridProperties.addSubProperty(vecGridProperties[i]);
+    }
+
     m_propertiesFullReference.addProperty(pGridSettings);
+    m_propertiesFullReference.addProperty(pGridProperties);
   }
 
   AbstractItemView* geodesicGridItem = mapCompositionItem->getGeodesicGridItem();
-  if (planarGridItem != 0)
+  if (geodesicGridItem != 0)
   {
+    const Properties& gridProperties = geodesicGridItem->getController()->getProperties();
+    const std::vector<Property>& vecGridProperties = gridProperties.getProperties();
+
     Property pGridSettings = geodesicGridItem->getController()->getProperty("GridSettings");
 
     hideProperties(pGridSettings);
 
     pGridSettings.setLabel(TR_LAYOUT("Geodesic Grid Settings"));
+
+
+    Property pGridProperties;
+    pGridProperties.setName("GeodesicGridProperties");
+    pGridProperties.setValue(std::string(""), dataType->getDataTypeString());
+    pGridProperties.setParent(pGridSettings.getParent());
+    pGridProperties.setVisible(false);
+
+    for (std::size_t i = 0; i < vecGridProperties.size(); ++i)
+    {
+      if (vecGridProperties[i].getName() == "GridSettings")
+      {
+        continue;
+      }
+
+      pGridProperties.addSubProperty(vecGridProperties[i]);
+    }
+
     m_propertiesFullReference.addProperty(pGridSettings);
+    m_propertiesFullReference.addProperty(pGridProperties);
   }
 
   AbstractItemView* mapItem = mapCompositionItem->getMapItem();
-  if (planarGridItem != 0)
+  if (mapItem != 0)
   {
-    const Property& pMapSettings = mapItem->getController()->getProperty("mapSettings");
+    const Properties& mapProperties = mapItem->getController()->getProperties();
+    const std::vector<Property>& vecMapProperties = mapProperties.getProperties();
+
+    const Property& pMapSettings = mapProperties.getProperty("mapSettings");
+
+    Property pMapProperties;
+    pMapProperties.setName("MapProperties");
+    pMapProperties.setValue(std::string(""), dataType->getDataTypeString());
+    pMapProperties.setParent(pMapSettings.getParent());
+    pMapProperties.setVisible(false);
+    
+    for (std::size_t i = 0; i < vecMapProperties.size(); ++i)
+    {
+      if (vecMapProperties[i].getName() == "mapSettings")
+      {
+        continue;
+      }
+
+      pMapProperties.addSubProperty(vecMapProperties[i]);
+    }
+
     m_propertiesFullReference.addProperty(pMapSettings);
+    m_propertiesFullReference.addProperty(pMapProperties);
   }
 
   return m_propertiesFullReference;
@@ -85,16 +158,12 @@ const te::layout::Properties& te::layout::MapCompositionController::getPropertie
 
 void te::layout::MapCompositionController::setProperties(const te::layout::Properties& properties)
 {
-  std::map<std::string, te::layout::Properties> mapProperties = groupPropertiesByParent(properties);
+  //here we must "open" the new properties before passing them to the map and grid items
+  Properties allProperties = explodeHiddenProperties(properties);
+
+  std::map<std::string, te::layout::Properties> mapProperties = groupPropertiesByParent(allProperties);
 
   const std::string& parentClass = this->getModel()->getType()->getName();
-
-  std::map<std::string, te::layout::Properties>::iterator it = mapProperties.find(parentClass);
-
-  if (it != mapProperties.end())
-  {
-    ItemGroupController::setProperties(it->second);
-  }
 
   std::vector<AbstractItemView*> vecAvailableViews;
   MapCompositionItem* mapCompositionItem = dynamic_cast<MapCompositionItem*>(m_view);
@@ -130,6 +199,13 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
     {
       currentView->getController()->setProperties(it->second);
     }
+  }
+
+  std::map<std::string, te::layout::Properties>::iterator it = mapProperties.find(parentClass);
+
+  if (it != mapProperties.end())
+  {
+    ItemGroupController::setProperties(it->second);
   }
 }
 
@@ -169,6 +245,50 @@ std::map<std::string, te::layout::Properties> te::layout::MapCompositionControll
 
   return mapProperties;
 }
+
+te::layout::Properties te::layout::MapCompositionController::explodeHiddenProperties(const Properties& properties)
+{
+  const std::vector<Property>& vecProperties = properties.getProperties();
+
+  te::layout::Properties explodedProperties;
+  
+  for (std::size_t i = 0; i < vecProperties.size(); ++i)
+  {
+    const Property& property = vecProperties[i];
+    if(property.getName() == "PlanarGridProperties")
+    { 
+      const std::vector<Property>& vecSubProperties = property.getSubProperty();
+      for (std::size_t j = 0; j < vecSubProperties.size(); ++j)
+      {
+        explodedProperties.addProperty(vecSubProperties[j]);
+      }
+    }
+    else if (property.getName() == "GeodesicGridProperties")
+    {
+      const std::vector<Property>& vecSubProperties = property.getSubProperty();
+      for (std::size_t j = 0; j < vecSubProperties.size(); ++j)
+      {
+        explodedProperties.addProperty(vecSubProperties[j]);
+      }
+    }
+    else if (property.getName() == "MapProperties")
+    {
+      const std::vector<Property>& vecSubProperties = property.getSubProperty();
+      for (std::size_t j = 0; j < vecSubProperties.size(); ++j)
+      {
+        explodedProperties.addProperty(vecSubProperties[j]);
+      }
+    }
+    else
+    {
+      explodedProperties.addProperty(property);
+    }
+  }
+
+  return explodedProperties;
+}
+
+
 
 void te::layout::MapCompositionController::hideProperties(Property& property) const
 {
