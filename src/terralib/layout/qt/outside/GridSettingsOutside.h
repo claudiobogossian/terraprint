@@ -290,11 +290,11 @@ namespace te
         
       protected:
 
-        PlanarGridSettingsConfigProperties* m_planarGridSettings;
+        PlanarGridSettingsConfigProperties*   m_planarGridSettings;
         GeodesicGridSettingsConfigProperties* m_geodesicGridSettings;
-        EnumType* m_planarType;
-        EnumType* m_geodesicType;
-        bool  m_doubleSpinBoxChangeValue;
+        EnumType*                             m_planarType;
+        EnumType*                             m_geodesicType;
+        double                                m_lineWidthIncrement;
 
       private:
 

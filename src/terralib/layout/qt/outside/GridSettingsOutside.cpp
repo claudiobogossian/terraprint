@@ -61,11 +61,13 @@
 te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* controller, QWidget* parent) :
   QDialog(parent),
   AbstractOutsideView(controller),
-  m_ui(new Ui::GridSettings)
+  m_ui(new Ui::GridSettings),
+  m_planarGridSettings(new PlanarGridSettingsConfigProperties),
+  m_geodesicGridSettings(new GeodesicGridSettingsConfigProperties),
+  m_planarType(0),
+  m_geodesicType(0),
+  m_lineWidthIncrement(0.5)
 {
-  m_planarGridSettings = new PlanarGridSettingsConfigProperties;
-  m_geodesicGridSettings = new GeodesicGridSettingsConfigProperties;
-
   EnumObjectType* objType = Enums::getInstance().getEnumObjectType();
 
   if(objType)
@@ -140,6 +142,10 @@ void te::layout::GridSettingsOutside::init()
   
   m_ui->m_planarLineWidthDoubleSpinBox->setKeyboardTracking(false);
   m_ui->m_lineWidthDoubleSpinBox->setKeyboardTracking(false);
+
+  // increment
+  m_ui->m_planarLineWidthDoubleSpinBox->setSingleStep(m_lineWidthIncrement);
+  m_ui->m_lineWidthDoubleSpinBox->setSingleStep(m_lineWidthIncrement);
 }
 
 void te::layout::GridSettingsOutside::setPosition( const double& x, const double& y )
