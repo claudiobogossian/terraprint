@@ -36,8 +36,9 @@
 #include <QDialog>
 #include <QString>
 
-namespace Ui { class MapSettings;
-               //class MapLayerChoice;
+namespace Ui 
+{ 
+  class MapSettings;
 }
 
 
@@ -70,8 +71,6 @@ namespace te
 
         virtual te::gm::Coord2D getPosition();
 
-
-
       signals:
 
         void updateProperty(Property prop);
@@ -82,14 +81,11 @@ namespace te
 
         void onCancelPushButtonPressed();
 
-        void updateWidgetProperty(Property prop);
-        
-
+        void updateWidgetProperty(Property prop);     
         
       private:
 
         std::auto_ptr<Ui::MapSettings> m_ui;
-        //std::auto_ptr<Ui::MapLayerChoice> ui_MapLayerChoice;
         std::auto_ptr<MapLayerChoiceOutside> m_widget;
         void initDouble(QWidget* widget, std::string nameComponent);
         void initCombo(QWidget* widget, std::string nameComponent);
@@ -97,8 +93,7 @@ namespace te
         double mm2cm(double mmSize);
         double cm2mm(double cmSize);
         std::string formatScaleValue(std::string inputValue);
-        MapLayerChoiceOutside *m_mapChoice;
-        
+        MapLayerChoiceOutside *m_mapChoice;        
     };
   }    
 }     

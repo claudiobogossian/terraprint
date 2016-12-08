@@ -60,12 +60,14 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
 
   m_widget->setLeftLabel(tr("Available Layer"));
   m_widget->setRightLabel(tr("Selected Layer"));
-
   
   m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
   m_ui->lneWidth->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneWidth));
+
+  m_ui->cmbUnit->blockSignals(true);
   m_ui->cmbUnit->setItemData(0, QVariant("Centimeter"));
   m_ui->cmbUnit->setItemData(1, QVariant("Millimeter"));
+  m_ui->cmbUnit->blockSignals(false);
 }
 
 te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
@@ -75,7 +77,6 @@ te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
 
 void te::layout::MapLayerChoiceOutside::init()
 {
-
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
   if(!model)
@@ -107,27 +108,18 @@ void te::layout::MapLayerChoiceOutside::init()
     connect(m_ui->pBtnOK, SIGNAL(clicked()), this, SLOT(onOkPushButtonPressed()));
     connect(m_ui->pBtnCancel, SIGNAL(clicked()), this, SLOT(onCancelPushButtonPressed()));
   }
-
-
+  
   namesToInput = intersectionLayersTitle(namesToOutput);
   
+  m_widget->blockSignals(true);
   m_widget->setInputValues(namesToInput);
   m_widget->setOutputValues(namesToOutput);
-
+  m_widget->blockSignals(false);
 }
 
-
 te::layout::Property te::layout::MapLayerChoiceOutside::getSavedLayers()
-{
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
-  MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
-  if(!model)
-  {
-    //return;
-  }
-  
+{  
   m_layersOnTheRight = m_widget->getOutputValues();
-
 
   std::list<te::map::AbstractLayerPtr> layerListMap = getLayers();//model->getLayers();
 
@@ -211,7 +203,6 @@ std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTi
       namesToInput.push_back(layer->getTitle());
     }
   }
-
   return namesToInput;
 }
 
@@ -265,7 +256,6 @@ void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished(){
 
     emit updateWidgetProperty(prop);
   }
-
 }
 
 void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
@@ -287,8 +277,6 @@ void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
     emit updateWidgetProperty(prop);
   }
 }
-
-
 
 void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QString & text){
 
@@ -331,10 +319,8 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
       prop.setValue(selectedValue.toDouble(), dataType->getDataTypeDouble());
 
       emit updateWidgetProperty(prop);
-
     }
   }
-
 }
 
 void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QString & text){
@@ -346,7 +332,6 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
     std::string mm = "Millimeter";
 
     std::string selectedUnit = ItemUtils::convert2StdString(m_ui->cmbUnit->itemData(m_ui->cmbUnit->currentIndex()).toString());
-    //std::string stdText = ItemUtils::convert2StdString(text);
 
     Property prop = controller->getProperty("size_unit");
     if (selectedUnit != prop.getOptionByCurrentChoice().convertToString())
@@ -396,20 +381,15 @@ void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked(){
   }
 }
 
-
-
 void te::layout::MapLayerChoiceOutside::load()
 {
-
   loadScaleCombobox();
   initDouble(m_ui->lneHeight, "height");
   initDouble(m_ui->lneWidth, "width");
   initCombo(m_ui->cmbUnit, "size_unit");
   initCombo(m_ui->cmbScale, "scale");
   initBool(m_ui->ckbFixedScale, "fixed_scale");
-
 }
-
 
 void te::layout::MapLayerChoiceOutside::onOkPushButtonPressed()
 {
@@ -430,8 +410,6 @@ void te::layout::MapLayerChoiceOutside::onCancelPushButtonPressed()
   reject();
   emit closeWidget();
 }
-
-
 
 void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string nameComponent)
 {
@@ -461,7 +439,9 @@ void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if (edit)
   {
+    edit->blockSignals(true);
     edit->setText(convert.str().c_str());
+    edit->blockSignals(false);
   }
 }
 
@@ -477,6 +457,8 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
 
   if (!combo)
     return;
+
+  combo->blockSignals(true);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -504,7 +486,6 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
     QString qText = ItemUtils::convert2QString(txt);
 
     variant.setValue(qText);
-
   }
 
   QString value = variant.toString();
@@ -513,12 +494,10 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
   if (nameComponent == "size_unit"){
 
     index = combo->findData(variant);
-
   }
   else{
 
     index = combo->findData(variant, Qt::DisplayRole);
-
   }
 
   if (index == -1)
@@ -533,17 +512,17 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
   {
     combo->setCurrentIndex(index);
   }
+  combo->blockSignals(false);
 }
-
-
-
 
 void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
 
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
+
+  m_ui->cmbScale->blockSignals(true);
+
   if (controller)
   {
-
     Property initialProp = controller->getProperty("scale");
 
     int currentScale = (int)te::layout::Property::GetValueAs<double>(initialProp);
@@ -557,7 +536,6 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
     QVariant vScale = dValue;
 
     m_ui->cmbScale->addItem(stringValue.c_str(), vScale);
-
   }
 
   m_ui->cmbScale->addItem("1.000", QVariant((double)1000));
@@ -581,6 +559,8 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
   m_ui->cmbScale->addItem("25.000.000", QVariant((double)25000000));
   m_ui->cmbScale->addItem("50.000.000", QVariant((double)50000000));
   m_ui->cmbScale->addItem("100.000.000", QVariant((double)100000000));
+
+  m_ui->cmbScale->blockSignals(false);
 }
 
 
@@ -591,8 +571,6 @@ double te::layout::MapLayerChoiceOutside::mm2cm(double mmSize){
 double  te::layout::MapLayerChoiceOutside::cm2mm(double cmSize){
   return cmSize * 10.;
 }
-
-
 
 void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string nameComponent)
 {
@@ -606,7 +584,9 @@ void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string na
 
   if (chk)
   {
+    chk->blockSignals(true);
     chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
+    chk->blockSignals(false);
   }
 }
 
