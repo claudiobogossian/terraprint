@@ -98,7 +98,6 @@ te::layout::GridSettingsOutside::~GridSettingsOutside()
 
 void te::layout::GridSettingsOutside::init()
 {
-
   m_ui->groupBox6_2_2->setVisible(false);
   m_ui->textLabel9_2_2->setVisible(false);
   m_ui->cmbCornerGeoFont->setVisible(false);
@@ -106,7 +105,6 @@ void te::layout::GridSettingsOutside::init()
   m_ui->cmbCornerGeoTextSize->setVisible(false);
   m_ui->fraCornerTextGeoColor->setVisible(false);
   m_ui->pbCornerTextGeoColor->setVisible(false);
-
 
   m_ui->lneVrtPlanarDisplacement->setValidator(new  QDoubleValidator(this));
   m_ui->lneHrzPlanarDisplacement->setValidator(new  QDoubleValidator(this));
@@ -399,48 +397,6 @@ void te::layout::GridSettingsOutside::load()
 
   initBool(m_ui->chkVisibleTextsGeoText, m_geodesicGridSettings->getVisibleAllTexts(), m_geodesicType);
 
-  //initCombo(m_ui->cmbCornerGeoFont, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
-
-  //initCombo(m_ui->cmbCornerGeoTextSize, m_geodesicGridSettings->getFontCorner(), m_geodesicType);
-  
-  //initColor(m_ui->fraCornerTextGeoColor, m_geodesicGridSettings->getTextColorCorner(), m_geodesicType);
-  
-  //initDouble(m_ui->lneCornerHrzGeoDisplacement, m_geodesicGridSettings->getLneCornerHrzDisplacement(), m_geodesicType);
-
-  //initDouble(m_ui->lneCornerVrtGeoDisplacement, m_geodesicGridSettings->getLneCornerVrtDisplacement(), m_geodesicType);
-  
-  //initBool(m_ui->chkLowerRightCornerGeoText, m_geodesicGridSettings->getLowerRightCornerText(), m_geodesicType);
-
-  //initBool(m_ui->chkUpperRightCornerGeoText, m_geodesicGridSettings->getUpperRightCornerText(), m_geodesicType);
-
-  //initBool(m_ui->chkLowerLeftCornerGeoText, m_geodesicGridSettings->getLowerLeftCornerText(), m_geodesicType);
-
-  //initBool(m_ui->chkUpperLeftCornerGeoText, m_geodesicGridSettings->getUpperLeftCornerText(), m_geodesicType);
-  
-  /*Geodesic: Topographic Map*/
-  
-  //initBool(m_ui->ckDefineScale, m_geodesicGridSettings->getDefineScale(), m_geodesicType);
-
-  //initCombo(m_ui->cmbScale, m_geodesicGridSettings->getScale(), m_geodesicType);
-
-  //initBool(m_ui->ckbClip, m_geodesicGridSettings->getClip(), m_geodesicType);
-
-  //initDouble(m_ui->lneX1, m_geodesicGridSettings->getLneX1(), m_geodesicType);
-
-  //initDouble(m_ui->lneX2, m_geodesicGridSettings->getLneX2(), m_geodesicType);
-
-  //initDouble(m_ui->lneY1, m_geodesicGridSettings->getLneY1(), m_geodesicType);
-
-  //initDouble(m_ui->lneY2, m_geodesicGridSettings->getLneY2(), m_geodesicType);
-
-  //initDouble(m_ui->lneX3, m_geodesicGridSettings->getLneX3(), m_geodesicType);
-
-  //initDouble(m_ui->lneX4, m_geodesicGridSettings->getLneX4(), m_geodesicType);
-
-  //initDouble(m_ui->lneY3, m_geodesicGridSettings->getLneY3(), m_geodesicType);
-
-  //initDouble(m_ui->lneY4, m_geodesicGridSettings->getLneY4(), m_geodesicType);
-
   m_ui->chkDegreesGeoText->setChecked(true);
   setGeodesicValues();
 }
@@ -620,13 +576,6 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarGap_editingFinished()
 
 void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
 {
-  /*if(checkValidDegreeValue(m_ui->lneHorizontalGap->text()) == false)
-  {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0� 1' 0''"));  
-    m_ui->lneHorizontalGap->setFocus();
-    return;
-  }*/
-
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -918,14 +867,6 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_planar_textField_edit
 
 void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_editingFinished()
 {
-  /*  
-  if(checkValidDegreeValue(m_ui->yGridInitialPoint_geo_textField->text()) == false)
-  {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0� 1' 0''"));  
-    m_ui->lneVerticalGap->setFocus();
-    return;
-  }*/
-
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -938,13 +879,6 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_edit
 
 void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editingFinished()
 {
-  /*if(checkValidDegreeValue(m_ui->xGridInitialPoint_geo_textField->text()) == false)
-  {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0� 1' 0''"));  
-    m_ui->lneVerticalGap->setFocus();
-    return;
-  }*/
-
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1677,7 +1611,6 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
 
   Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
 
-  //QString currentValue = ItemUtils::DMS2DD(m_ui->lneHorizontalGap->text());
   QString currentValue = ItemUtils::convert2QString(boost::lexical_cast<std::string>(te::layout::Property::GetValueAs<double>(prop)));
   std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
   InputCoordDialog degreeDialog(stdCurrentValue, 0, 180, this);
@@ -1767,7 +1700,6 @@ void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
 
   }
 }
-
 
 void te::layout::GridSettingsOutside::on_btnInitialPointY_clicked()
 {
