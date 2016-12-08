@@ -93,6 +93,7 @@ te::layout::Scene::Scene( QObject* object):
   m_align = new AlignItems(this, m_paperConfig);
   
   m_undoStack = new QUndoStack(this);
+  connect(m_undoStack, SIGNAL(indexChanged(int)), this, SLOT(onUndoStackHasChanged()));
 }
 
 te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* object ) :
@@ -636,6 +637,12 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
 
   return true;
 }
+
+void te::layout::Scene::onUndoStackHasChanged()
+{
+  emit undoStackHasChanged();
+}
+
 
 QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGraphicsItem*>& listItems)
 {
