@@ -377,6 +377,10 @@ namespace te
         */
         virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
 
+      public slots:
+
+        void onUndoStackHasChanged();
+
       signals:
 
       /*!
@@ -404,7 +408,9 @@ namespace te
           \brief Issued when the scene context changes, like Zoom and DPI
           */
          void contextUpdated();
-        
+
+         void undoStackHasChanged();
+
       protected:
 
         /*!
