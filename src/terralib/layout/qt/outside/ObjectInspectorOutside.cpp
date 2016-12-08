@@ -120,6 +120,11 @@ te::gm::Coord2D te::layout::ObjectInspectorOutside::getPosition()
 
 void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> graphicsItems)
 {
+  if (m_graphicsItems == graphicsItems)
+  {
+    return;
+  }
+
   m_treeWidget->clear();
 
   m_graphicsItems = graphicsItems;
