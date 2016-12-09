@@ -412,17 +412,14 @@ bool te::layout::View::zoomByKey(QKeyEvent* keyEvent)
     return false;
   }
 
+  int zoom = 0;
+
   /* In edit mode not apply the zoom */
   if (scne->isEditionMode())
   {
     return result;
   }
-
-  ViewportUpdateMode mode = viewportUpdateMode();
-  setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
-
-  int zoom = 0;
-
+  
   if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Plus))
   {
     //Zooming In
@@ -436,9 +433,15 @@ bool te::layout::View::zoomByKey(QKeyEvent* keyEvent)
     result = true;
   }
 
-  setZoom(zoom);
+  if (zoom != 0)
+  {
+    ViewportUpdateMode mode = viewportUpdateMode();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
-  setViewportUpdateMode(mode);
+    setZoom(zoom);
+
+    setViewportUpdateMode(mode);
+  }
 
   return result;
 }
