@@ -466,6 +466,8 @@ namespace te
 
         virtual bool importTempFile(EnumType* type, const QString& fullTempPath);
 
+        virtual bool zoomByKey(QKeyEvent* keyEvent);
+
       protected:
 
         VisualizationArea*                   m_visualizationArea;
