@@ -396,6 +396,51 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
   {
     cutSelectedItens();
   }
+  else
+  {
+    zoomByKey(keyEvent); // Keys Plus and Minus
+  }
+}
+
+bool te::layout::View::zoomByKey(QKeyEvent* keyEvent)
+{
+  bool result = false;
+
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+  {
+    return false;
+  }
+
+  /* In edit mode not apply the zoom */
+  if (scne->isEditionMode())
+  {
+    return result;
+  }
+
+  ViewportUpdateMode mode = viewportUpdateMode();
+  setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
+  int zoom = 0;
+
+  if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Plus))
+  {
+    //Zooming In
+    zoom = nextZoom();
+    result = true;
+  }
+  else if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Minus))
+  {
+    // Zooming Out
+    zoom = previousZoom();
+    result = true;
+  }
+
+  setZoom(zoom);
+
+  setViewportUpdateMode(mode);
+
+  return result;
 }
 
 void te::layout::View::copyToClipboard()
