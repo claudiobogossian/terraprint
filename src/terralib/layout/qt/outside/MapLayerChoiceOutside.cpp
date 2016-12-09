@@ -44,6 +44,7 @@
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QString>
+#include <QKeyEvent>
 
 te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller, QWidget* parent)
   : QDialog(parent),
@@ -618,3 +619,18 @@ std::string  te::layout::MapLayerChoiceOutside::formatScaleValue(std::string inp
   }
   return formatedString;
 }
+
+void te::layout::MapLayerChoiceOutside::keyPressEvent(QKeyEvent * e)
+{
+  /* Qt Doc: If the user presses the Esc key in a dialog, QDialog::reject() will be called.
+  This will cause the window to close: The close event cannot be ignored. */
+  if (e->key() != Qt::Key_Escape)
+  {
+    QDialog::keyPressEvent(e);
+  }
+  else 
+  {
+    e->ignore();
+  }
+}
+

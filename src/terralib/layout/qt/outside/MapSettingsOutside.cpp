@@ -37,6 +37,7 @@
 #include <QMessageBox>
 #include <QString>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 #include <boost/lexical_cast.hpp>
 
@@ -104,3 +105,18 @@ void te::layout::MapSettingsOutside::updateWidgetProperty(Property prop)
 {
   emit updateProperty(prop);
 }
+
+void te::layout::MapSettingsOutside::keyPressEvent(QKeyEvent * e)
+{
+  /* Qt Doc: If the user presses the Esc key in a dialog, QDialog::reject() will be called. 
+  This will cause the window to close: The close event cannot be ignored. */
+  if (e->key() != Qt::Key_Escape)
+  {
+    QDialog::keyPressEvent(e);
+  }
+  else
+  {
+    e->ignore();
+  }
+}
+
