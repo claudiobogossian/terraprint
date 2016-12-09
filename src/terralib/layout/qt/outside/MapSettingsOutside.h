@@ -83,7 +83,9 @@ namespace te
 
         void onCancelPushButtonPressed();
 
-        void updateWidgetProperty(Property prop);     
+        void updateWidgetProperty(Property prop);  
+
+      protected:
 
         virtual void keyPressEvent(QKeyEvent * e);
         
