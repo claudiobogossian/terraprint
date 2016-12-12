@@ -674,7 +674,7 @@
                 <item>
                  <widget class="QLineEdit" name="lineEditNorthWidth">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -687,7 +687,7 @@
                   </property>
                   <property name="maximumSize">
                    <size>
-                    <width>50</width>
+                    <width>60</width>
                     <height>20</height>
                    </size>
                   </property>
@@ -718,10 +718,28 @@
                     <verstretch>0</verstretch>
                    </sizepolicy>
                   </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>60</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                  </widget>
                 </item>
                 <item>
                  <widget class="QLabel" name="label_2">
+                  <property name="minimumSize">
+                   <size>
+                    <width>65</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>65</width>
+                    <height>20</height>
+                   </size>
+                  </property>
                   <property name="text">
                    <string>mm</string>
                   </property>
@@ -782,7 +800,8 @@
     </layout>
    </item>
   </layout>
-  <zorder></zorder>
+  <zorder>grpSettingsCenter</zorder>
+  <zorder>NorthSettirngs</zorder>
  </widget>
  <resources/>
  <connections/>
