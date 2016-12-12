@@ -21,7 +21,7 @@
   \file terralib/layout/qt/outside/MapLayerChoiceOutside.cpp
 
   \brief A dialog configure the input layer to address geocoding operation
-*/
+*/ 
 
 // TerraLib
 #include "MapLayerChoiceOutside.h"
@@ -30,6 +30,7 @@
 #include "../../outside/MapLayerChoiceModel.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/Constants.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/ItemUtils.h"
 #include "ui_MapLayerChoice.h"
@@ -61,9 +62,6 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
 
   m_widget->setLeftLabel(tr("Available Layer"));
   m_widget->setRightLabel(tr("Selected Layer"));
-  
-  m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
-  m_ui->lneWidth->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneWidth));
 
   m_ui->cmbUnit->blockSignals(true);
   m_ui->cmbUnit->setItemData(0, QVariant("Centimeter"));
@@ -340,18 +338,43 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
       if (selectedUnit == cm)
       {
         double cmWidth = mm2cm(m_ui->lneWidth->text().toDouble());
-        m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(cmWidth).c_str()));
+        m_ui->lneWidth->setText(QString::number(cmWidth, 'f', CENTIMETER_PRECISION));
 
         double cmHeight = mm2cm(m_ui->lneHeight->text().toDouble());
-        m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(cmHeight).c_str()));
+        m_ui->lneHeight->setText(QString::number(cmHeight, 'f', CENTIMETER_PRECISION));
+
+        QString qUnit("cm");
+
+        m_ui->lblUnitW->setText(qUnit);
+        m_ui->lblUnitH->setText(qUnit);
+
+        QDoubleValidator* validator = new QDoubleValidator(0.0, 9999999999, CENTIMETER_PRECISION, this);
+        validator->setNotation(QDoubleValidator::StandardNotation);
+
+        m_ui->lneWidth->setValidator(validator);
+        m_ui->lneHeight->setValidator(validator);
+
       }
       if (selectedUnit == mm)
       {
         double mmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
-        m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(mmWidth).c_str()));
+        m_ui->lneWidth->setText(QString::number(mmWidth, 'f', MILLIMETER_PRECISION));
 
         double mmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
-        m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(mmHeight).c_str()));
+        m_ui->lneHeight->setText(QString::number(mmHeight, 'f', MILLIMETER_PRECISION));
+
+
+        QString qUnit("mm");
+
+        m_ui->lblUnitW->setText(qUnit);
+        m_ui->lblUnitH->setText(qUnit);
+
+        QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.99, MILLIMETER_PRECISION, this);
+        validator->setNotation(QDoubleValidator::StandardNotation);
+
+        m_ui->lneWidth->setValidator(validator);
+        m_ui->lneHeight->setValidator(validator);
+
       }
     }
 
@@ -390,6 +413,39 @@ void te::layout::MapLayerChoiceOutside::load()
   initCombo(m_ui->cmbUnit, "size_unit");
   initCombo(m_ui->cmbScale, "scale");
   initBool(m_ui->ckbFixedScale, "fixed_scale");
+  if (m_ui->cmbUnit->currentIndex() == 0)
+  {
+    QString qUnit("cm");
+    m_ui->lblUnitW->setText(qUnit);
+    m_ui->lblUnitH->setText(qUnit);
+
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 9999999999, CENTIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+    
+    m_ui->lneWidth->blockSignals(true);
+    m_ui->lneHeight->blockSignals(true);
+    m_ui->lneWidth->setValidator(validator);
+    m_ui->lneHeight->setValidator(validator);
+    m_ui->lneWidth->blockSignals(false);
+    m_ui->lneHeight->blockSignals(false);
+  }
+  else
+  {
+    QString qUnit("mm");
+    m_ui->lblUnitW->setText(qUnit);
+    m_ui->lblUnitH->setText(qUnit);
+
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 9999999999, MILLIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+
+    m_ui->lneWidth->blockSignals(true);
+    m_ui->lneHeight->blockSignals(true);
+    m_ui->lneWidth->setValidator(validator);
+    m_ui->lneHeight->setValidator(validator);
+    m_ui->lneWidth->blockSignals(false);
+    m_ui->lneHeight->blockSignals(false);
+  }
+
 }
 
 void te::layout::MapLayerChoiceOutside::onOkPushButtonPressed()

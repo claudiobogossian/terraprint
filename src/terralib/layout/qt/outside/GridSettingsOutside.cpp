@@ -40,7 +40,7 @@
 #include "../core/ItemUtils.h"
 #include "../outside/InputCoordDialog.h"
 #include "GridSettingsController.h"
-
+#include "../../core/Constants.h"
 // STL
 #include <string>
 #include <sstream> 
@@ -77,6 +77,10 @@ te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* 
   }
 
   m_ui->setupUi(this);
+
+  m_ui->m_lineWidthDoubleSpinBox->setDecimals(MILLIMETER_PRECISION);
+  m_ui->m_planarLineWidthDoubleSpinBox->setDecimals(MILLIMETER_PRECISION);
+  
 
   init();
 }
