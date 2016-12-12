@@ -52,8 +52,6 @@ namespace te
 
         virtual ~Serialization();
 
-        virtual void loadFromPath(std::string loadPath) = 0;
-
         /*!
         \brief Encodes the given vector of Properties into a Boost Property Tree container
         */
@@ -64,18 +62,15 @@ namespace te
         */
         virtual bool decode(const boost::property_tree::ptree& tree, PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties, std::map< std::string, std::vector<std::string> >& oMapGroups) = 0;
 
-        virtual std::string getLoadPath();
-
         virtual bool isEmpty() = 0;
 
         virtual void setRootKey(std::string rootKey);
 
-        virtual std::string getRootKey();
-       
+        virtual std::string getRootKey() const;
+
        protected:
 
-         std::string m_loadPath;
-         std::string m_rootKey;
+        std::string m_rootKey;
     };
   }
 }

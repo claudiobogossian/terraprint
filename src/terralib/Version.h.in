@@ -61,6 +61,6 @@
   \brief This flag is used for versioning the TerraPrint code. If you have plugins and other tools
          that must check the TerraPrint version, you can test against this number.
  */
-#define TERRALIB_LAYOUT_VERSION @TERRALIB_VERSION@
+#define TERRALIB_LAYOUT_VERSION @TERRALIB_LAYOUT_VERSION@
 
 #endif  // __TERRAPRINT_INTERNAL_TERRAPRINT_VERSION_H__
