@@ -177,14 +177,9 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthWidth_editingFinished()
     double width = text.toDouble();
     if (m_ui->rdbCentimeters->isChecked() == true)
     {
-      width = width * 10.;
+      width = width * 10.; // width and height are always stored in millimeters
     }
-
-    else if (m_ui->rdbMillimeters->isChecked() == true)
-    {
-      width = width / 10.;
-    }
-
+    
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Property prop = controller->getNorthProperty("width");
     prop.setValue(width, dataType->getDataTypeDouble());
@@ -201,14 +196,9 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthHeight_editingFinished()
     double height = text.toDouble();
     if (m_ui->rdbCentimeters->isChecked() == true)
     {
-      height = height * 10.;
+      height = height * 10.; // width and height are always stored in millimeters
     }
-
-    else if (m_ui->rdbMillimeters->isChecked() == true)
-    {
-      height = height / 10.;
-    }
-
+    
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Property prop = controller->getNorthProperty("height");
     prop.setValue(height, dataType->getDataTypeDouble());
