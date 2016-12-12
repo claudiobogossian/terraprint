@@ -181,16 +181,7 @@
               <property name="spacing">
                <number>0</number>
               </property>
-              <property name="leftMargin">
-               <number>0</number>
-              </property>
-              <property name="topMargin">
-               <number>0</number>
-              </property>
-              <property name="rightMargin">
-               <number>0</number>
-              </property>
-              <property name="bottomMargin">
+              <property name="margin">
                <number>0</number>
               </property>
               <item>
@@ -239,6 +230,13 @@
                <widget class="QLineEdit" name="lneCustomWidth"/>
               </item>
               <item>
+               <widget class="QLabel" name="label_5">
+                <property name="text">
+                 <string> mm</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <spacer name="spacer3">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -282,6 +280,13 @@
               </item>
               <item>
                <widget class="QLineEdit" name="lneCustomHeight"/>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_6">
+                <property name="text">
+                 <string> mm</string>
+                </property>
+               </widget>
               </item>
               <item>
                <spacer name="spacer5_2">
@@ -381,6 +386,13 @@
                </widget>
               </item>
               <item>
+               <widget class="QLabel" name="label">
+                <property name="text">
+                 <string>mm</string>
+                </property>
+               </widget>
+              </item>
+              <item>
                <spacer name="horizontalSpacer">
                 <property name="orientation">
                  <enum>Qt::Horizontal</enum>
@@ -413,6 +425,13 @@
                 </property>
                </widget>
               </item>
+              <item>
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>mm</string>
+                </property>
+               </widget>
+              </item>
              </layout>
             </item>
             <item>
@@ -434,6 +453,13 @@
                 </property>
                 <property name="text">
                  <string>0.75</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>mm</string>
                 </property>
                </widget>
               </item>
@@ -467,6 +493,13 @@
                 </property>
                 <property name="text">
                  <string>0.75</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_4">
+                <property name="text">
+                 <string>mm</string>
                 </property>
                </widget>
               </item>
