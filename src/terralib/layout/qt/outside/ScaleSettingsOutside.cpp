@@ -29,6 +29,7 @@
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/property/SharedProperties.h"
+#include "../../core/Constants.h"
 #include "ScaleSettingsController.h"
 #include "../core/ItemUtils.h"
 #include "ui_ScaleSettings.h"
@@ -61,7 +62,11 @@ te::layout::ScaleSettingsOutside::~ScaleSettingsOutside()
 
 void te::layout::ScaleSettingsOutside::init()
 { 
-  
+  QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.9, MILLIMETER_PRECISION, this);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+  m_ui->txtScaleGapX->setValidator(validator);
+  m_ui->txtScaleGapY->setValidator(validator);
+ 
 }
 
 void te::layout::ScaleSettingsOutside::load()

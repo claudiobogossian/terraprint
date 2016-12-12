@@ -29,8 +29,10 @@
 #include "PageSetupOutside.h"
 #include "ui_PageSetup.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../../core/Constants.h"
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
+
 
 // STL
 #include <string>
@@ -66,13 +68,17 @@ te::layout::PageSetupOutside::~PageSetupOutside()
 
 void te::layout::PageSetupOutside::init()
 {
-  m_ui->lneLeft->setValidator(new  QDoubleValidator(this));
-  m_ui->lneTop->setValidator(new  QDoubleValidator(this));
-  m_ui->lneRight->setValidator(new  QDoubleValidator(this));
-  m_ui->lneBottom->setValidator(new  QDoubleValidator(this));
 
-  m_ui->lneCustomWidth->setValidator(new  QDoubleValidator(this));
-  m_ui->lneCustomHeight->setValidator(new  QDoubleValidator(this));
+  QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.9, MILLIMETER_PRECISION, this);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+
+  m_ui->lneLeft->setValidator(validator);
+  m_ui->lneTop->setValidator(validator);
+  m_ui->lneRight->setValidator(validator);
+  m_ui->lneBottom->setValidator(validator);
+
+  m_ui->lneCustomWidth->setValidator(validator);
+  m_ui->lneCustomHeight->setValidator(validator);
 }
 
 void te::layout::PageSetupOutside::setPosition( const double& x, const double& y )
