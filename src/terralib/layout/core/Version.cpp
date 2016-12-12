@@ -18,33 +18,48 @@
  */
 
 /*!
-  \file Serialization.cpp
-   
-  \brief 
+  \file terraprint/layout/Version.cpp
 
-  \ingroup layout
+  \brief Utility class for system versioning.
 */
 
-// TerraLib
-#include "Serialization.h"
+// TerraPrint
+#include "Version.h"
 
-te::layout::Serialization::Serialization() 
-  : m_rootKey("Unknown")
+#include "../terraprint_version.h"
+
+// STL
+#include <cassert>
+
+int te::layout::Version::majorNumber()
 {
-
+  return TERRALIB_LAYOUT_VERSION_MAJOR;
 }
 
-te::layout::Serialization::~Serialization()
+int te::layout::Version::minorNumber()
 {
-
+  return TERRALIB_LAYOUT_VERSION_MINOR;
 }
 
-void te::layout::Serialization::setRootKey( std::string rootKey )
+int te::layout::Version::patchNumber()
 {
-  m_rootKey = rootKey;
+  return TERRALIB_LAYOUT_VERSION_PATCH;
 }
 
-std::string te::layout::Serialization::getRootKey() const
+std::string te::layout::Version::buildDate()
 {
-  return m_rootKey;
+  assert(__DATE__ " " __TIME__);
+  return std::string(__DATE__ " " __TIME__);
 }
+
+std::string te::layout::Version::asString()
+{
+  assert(TERRALIB_LAYOUT_VERSION_STRING);
+  return std::string(TERRALIB_LAYOUT_VERSION_STRING);
+}
+
+int te::layout::Version::asInt()
+{
+  return TERRALIB_LAYOUT_VERSION;
+}
+

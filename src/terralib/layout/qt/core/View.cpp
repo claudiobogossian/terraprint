@@ -1416,7 +1416,15 @@ bool te::layout::View::importTemplate( EnumType* type )
 
   std::string j_name = ItemUtils::convert2StdString(fileName); 
 
-  bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  bool result = false;
+  try
+  {
+    result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  }  
+  catch (const te::common::Exception& e)
+  {
+    QMessageBox::information(this, tr("Information"), ItemUtils::convert2QString(e.what()));
+  }
 
   emit endedPerformingIO();
 

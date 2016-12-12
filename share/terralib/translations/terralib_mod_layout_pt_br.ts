@@ -1476,7 +1476,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="129"/>
         <source>Super Draft</source>
-        <translation type="unfinished"></translation>
+        <translation>Rascunho Rápido</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PrintSettings.ui" line="136"/>
@@ -2054,22 +2054,22 @@ nononon</source>
         <translation type="obsolete">Planos Selecionados</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="61"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="62"/>
         <source>Available Layer</source>
         <translation>Camada Disponível</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="62"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="63"/>
         <source>Selected Layer</source>
         <translation>Camada Selecionada</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="405"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="406"/>
         <source>Map Settings</source>
         <translation>Configurações do Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="405"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="406"/>
         <source>Set Width and Height.</source>
         <translation>Configure Largura e Altura.</translation>
     </message>
@@ -2946,43 +2946,52 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1312"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1360"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1313"/>
         <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1361"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1409"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1337"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1385"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1342"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1390"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1360"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1408"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1389"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1426"/>
+        <source>Information</source>
+        <translation>Informação</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation type="obsolete">Erro</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1445"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1396"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1452"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1407"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1463"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>
