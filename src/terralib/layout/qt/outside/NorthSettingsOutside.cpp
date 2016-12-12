@@ -33,6 +33,8 @@
 #include "../../core/property/Variant.h"
 #include "../../core/enum/Enums.h"
 #include "../core/ItemUtils.h"
+#include "../../core/Constants.h"
+
 // Qt
 #include <QMessageBox>
 #include <QString>
@@ -127,8 +129,15 @@ void te::layout::NorthSettingsOutside::on_rdbMillimeters_clicked()
     Property propH = controller->getNorthProperty("height");
     double numberH = te::layout::Property::GetValueAs<double>(propH);
 
+
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.9, MILLIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+
     m_ui->lineEditNorthWidth->setText(QString::number(numberW));
     m_ui->lineEditNorthHeight->setText(QString::number(numberH));
+
+    m_ui->lineEditNorthHeight->setValidator(validator);
+    m_ui->lineEditNorthWidth->setValidator(validator);
   }
 }
 
@@ -145,8 +154,14 @@ void te::layout::NorthSettingsOutside::on_rdbCentimeters_clicked()
     double numberH = te::layout::Property::GetValueAs<double>(propH);
     numberH = numberH / 10.; //convert to cm
 
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999, CENTIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+
     m_ui->lineEditNorthWidth->setText(QString::number(numberW));
     m_ui->lineEditNorthHeight->setText(QString::number(numberH));
+
+    m_ui->lineEditNorthHeight->setValidator(validator);
+    m_ui->lineEditNorthWidth->setValidator(validator);
   }
 }
 
@@ -177,9 +192,9 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthWidth_editingFinished()
     double width = text.toDouble();
     if (m_ui->rdbCentimeters->isChecked() == true)
     {
-      width = width * 10.; // width and height are always stored in millimeters
+      width = width * 10.;
     }
-    
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Property prop = controller->getNorthProperty("width");
     prop.setValue(width, dataType->getDataTypeDouble());
@@ -196,9 +211,9 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthHeight_editingFinished()
     double height = text.toDouble();
     if (m_ui->rdbCentimeters->isChecked() == true)
     {
-      height = height * 10.; // width and height are always stored in millimeters
+      height = height * 10.;
     }
-    
+
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Property prop = controller->getNorthProperty("height");
     prop.setValue(height, dataType->getDataTypeDouble());

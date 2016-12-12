@@ -33,6 +33,7 @@
 #include "../../core/enum/Enums.h"
 #include "../../core/property/TextGridSettingsConfigProperties.h"
 #include "../core/ItemUtils.h"
+#include "../../core/Constants.h"
 
 // STL
 #include <string>
@@ -65,16 +66,20 @@ te::layout::TextGridSettingsOutside::~TextGridSettingsOutside()
 
 void te::layout::TextGridSettingsOutside::init()
 {
-  m_ui->lneEdtBorderWidth->setValidator(new  QDoubleValidator(this));
+
+  QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999, CENTIMETER_PRECISION, this);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+
+  m_ui->lneEdtBorderWidth->setValidator(validator);
   m_ui->lneEdtColumnsNumber->setValidator(new  QDoubleValidator(this));
 
-  m_ui->lneEdtColumnsWidth->setValidator(new  QDoubleValidator(this));
+  m_ui->lneEdtColumnsWidth->setValidator(validator);
   m_ui->lneEdtRowsNumber->setValidator(new  QDoubleValidator(this));
 
   m_ui->lneEdtTablePadding->setValidator(new  QDoubleValidator(this));
   m_ui->lneEdtTableSpacing->setValidator(new  QDoubleValidator(this));
 
-  m_ui->lneEdtTableWidth->setValidator(new  QDoubleValidator(this));
+  m_ui->lneEdtTableWidth->setValidator(validator);
   
   m_ui->frmBorderColor->setAutoFillBackground(true);
   m_ui->frmBorderColor->installEventFilter(this);
