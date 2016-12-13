@@ -85,7 +85,7 @@ te::layout::MainLayout::~MainLayout()
   }
 }
 
-void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
+void te::layout::MainLayout::init(const QSize& size, const QRect& screen, bool defaultTempFilePath)
 {
   bool create = false;
 
@@ -110,8 +110,12 @@ void te::layout::MainLayout::init(const QSize& size, const QRect& screen)
   {
     // Calculate matrix and centralizes the scene
     m_view->config();
-    // init or read temporary file data storage
-    m_view->configLayoutWithTempFile();
+
+    if (defaultTempFilePath)
+    {
+      // init or read temporary file data storage
+      m_view->configLayoutWithDefaultTempFilePath();
+    }
   }
 
   m_statusBar = new QStatusBar;

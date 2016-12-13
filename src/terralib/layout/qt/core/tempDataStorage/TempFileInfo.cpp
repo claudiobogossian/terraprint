@@ -46,3 +46,8 @@ std::string te::layout::TempFileInfo::getPath()
   return m_path;
 }
 
+void te::layout::TempFileInfo::setPath(const std::string& path)
+{
+  m_path = path;
+}
+

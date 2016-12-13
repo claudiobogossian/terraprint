@@ -80,6 +80,8 @@ namespace te
 
         void stop();
 
+        AbstractTempDataStorageInfo* getTempDataStorageInfo();
+
       signals:
 
         void requestIOEnterAccess();

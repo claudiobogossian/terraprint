@@ -76,7 +76,7 @@ namespace te
         This methods
         \exception te::layout::Exception if the
         */
-        virtual void init(const QSize& size, const QRect& screen);
+        virtual void init(const QSize& size, const QRect& screen, bool defaultTempFilePath = true);
 
         virtual QStatusBar* getStatusBar();
 
