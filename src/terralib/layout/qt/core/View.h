@@ -275,7 +275,9 @@ namespace te
 
         virtual QString getTempFileName();
 
-        virtual void configLayoutWithTempFile();
+        virtual void configLayoutWithDefaultTempFilePath();
+
+        void setTempFilePath(const std::string& path);
 
       public slots:
     
@@ -467,6 +469,16 @@ namespace te
         virtual bool importTempFile(EnumType* type, const QString& fullTempPath);
 
         virtual bool zoomByKey(QKeyEvent* keyEvent);
+
+        virtual bool existDirTempFile(const QString& newPath);
+
+        virtual bool createDirToTempFile(const QString& newPath);
+
+        virtual bool loadTempFile(const QString& newPath);
+
+        virtual bool configTempFilePath(const QString& newPath);
+
+        virtual void setFullTempFilePath(const QString& newPath);
 
       protected:
 

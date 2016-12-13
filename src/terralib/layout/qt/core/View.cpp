@@ -72,6 +72,7 @@
 #include <QLayout>
 #include <QDir>
 #include <QString>
+#include <QUndoStack>
 
 // STL
 #include <memory>
@@ -1644,55 +1645,126 @@ void te::layout::View::onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> 
   emit showDialogWindow(type, itemList);
 }
 
-void te::layout::View::configLayoutWithTempFile()
+void te::layout::View::configLayoutWithDefaultTempFilePath()
 {
-  // init or read temporary file data storage
-
-  Scene* scene = getScene();
-
+  // init or read temporary file data storage 
   // User folder path
   // Whether a directory separator is added to the end or not, depends on the operating system.
   QString newPath = QDir(QDir::tempPath()).filePath("TerraPrint");
-  
-  QDir dir(newPath);
-  if (!dir.exists())
+  configTempFilePath(newPath);
+}
+
+bool te::layout::View::configTempFilePath(const QString& newPath)
+{
+  bool result = false;
+  if (!existDirTempFile(newPath))
   {
-    emit aboutToPerformIO();
-    bool result = dir.mkpath(newPath); // create a new path or directory
-    emit endedPerformingIO();
-    if (!result)
+    if (!createDirToTempFile(newPath))
     {
-      return;
-    }
-  }
-  else
-  {
-    QString pathToLoad = newPath + "/" + m_tempFileName;
-    QFile file(pathToLoad);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-      file.close();
-      te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-      importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+      return result;
     }
   }
 
-  m_fullTempPath = newPath + "/" + m_tempFileName;
-  configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+  result = loadTempFile(newPath);
+  if (result)
+  {
+    configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+  }
+  return result;
+}
+
+bool te::layout::View::existDirTempFile(const QString& newPath)
+{
+  QDir dir(newPath);
+  return dir.exists();
+}
+
+bool te::layout::View::createDirToTempFile(const QString& newPath)
+{
+  QDir dir(newPath);
+  
+  emit aboutToPerformIO();
+  bool result = dir.mkpath(newPath); // create a new path or directory
+  emit endedPerformingIO();
+  
+  return result;
+}
+
+bool te::layout::View::loadTempFile(const QString& newPath)
+{
+  bool result = false;
+
+  QString pathToLoad(newPath);
+
+  QString subString = newPath.mid(newPath.length() - 1, newPath.length());
+  if (subString.compare("/") != 0)
+  {
+    pathToLoad = newPath + "/" + m_tempFileName;
+  }
+  else
+  {
+    pathToLoad = newPath + m_tempFileName;
+  }
+
+  QFile file(pathToLoad);
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    result = true;
+    file.close();    
+  }
+  else if (file.open(QIODevice::ReadWrite | QIODevice::Text)) // Create a file if it does not exist
+  {
+    result = true;
+    file.close();
+  }
+
+  if (result)
+  {
+    setFullTempFilePath(pathToLoad); // change TempFileInfo path
+    newTemplate(); // reset scene
+    te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
+    importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+  }
+  
+  return result;
 }
 
 void te::layout::View::configTempFileDataStorage(const QString& fullNewPath)
 {
   Scene* scene = getScene();
+  if (scene)
+  {
+    if (!m_tempDataStorageEditor)
+    {
+      std::string path = ItemUtils::convert2StdString(fullNewPath);
+      EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
+      TempFileInfo* info = new TempFileInfo(scene, path);
+      m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+    }
+  }  
+}
 
-  std::string path = ItemUtils::convert2StdString(fullNewPath);
-  EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
-  TempFileInfo* info = new TempFileInfo(scene, path);
-  m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+void te::layout::View::setTempFilePath(const std::string& path)
+{
+  // init or read temporary file data storage 
+  QString qNewPath(ItemUtils::convert2QString(path));
+  configTempFilePath(qNewPath);
+}
 
-  //we disabled the signals because there will be a change in the way this file is saved, and this will not be necessary anymore after the change
-  //connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
-  //connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
+void te::layout::View::setFullTempFilePath(const QString& newPath)
+{
+  m_fullTempPath = newPath;
+  if (m_tempDataStorageEditor)
+  {
+    AbstractTempDataStorageInfo* abInfo = m_tempDataStorageEditor->getTempDataStorageInfo();
+    TempFileInfo* info = dynamic_cast<TempFileInfo*>(abInfo);
+    if (info)
+    {      
+      // change TempFileInfo path
+      std::string newPath = ItemUtils::convert2StdString(m_fullTempPath);
+      info->setPath(newPath);
+    }
+  }
 }
 
 void te::layout::View::onRequestIOEnterAccessTempDataStorage()

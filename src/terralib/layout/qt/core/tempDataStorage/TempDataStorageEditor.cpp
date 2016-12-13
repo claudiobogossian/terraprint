@@ -238,3 +238,8 @@ void te::layout::TempDataStorageEditor::stop()
   }
 }
 
+te::layout::AbstractTempDataStorageInfo* te::layout::TempDataStorageEditor::getTempDataStorageInfo()
+{
+  return m_info;
+}
+
