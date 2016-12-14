@@ -177,7 +177,7 @@ bool te::layout::ChangePropertyCommand::equals( Properties props1, Properties pr
 
     if(proper1 == proper2)
     {
-      if(proper1.getValue() == proper2.getValue())
+      if(proper1.getValue()->toString() == proper2.getValue()->toString())
       {
         continue;
       }
