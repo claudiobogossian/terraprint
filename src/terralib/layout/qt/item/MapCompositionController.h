@@ -76,9 +76,14 @@ namespace te
 
         virtual void hideProperties(Property& property) const;
 
+        virtual void syncItemSize(std::map<std::string, te::layout::Properties>& mapProperties);
+
+        virtual void updateBoundingRect(QRectF rect);
+
       protected: 
 
         mutable te::layout::Properties m_propertiesFullReference;
+        bool                           m_ignoreResize;
     };
   }
 }
