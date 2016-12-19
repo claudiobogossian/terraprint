@@ -207,7 +207,7 @@ namespace te
         \param type type of template. Ex .: JSON type
         \return true if exported, false otherwise
         */
-        virtual bool exportProperties(EnumType* type);
+        virtual bool exportTemplate(EnumType* type);
 
         /*!
         \brief Method that import a template and build all objects. Ex.: JSON.

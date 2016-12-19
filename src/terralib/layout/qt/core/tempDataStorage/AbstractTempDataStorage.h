@@ -66,6 +66,8 @@ namespace te
         */
         virtual void readProperties() = 0;
 
+        virtual bool deleteDataStorage() = 0;
+
       protected:
 
         AbstractTempDataStorageInfo* m_info;

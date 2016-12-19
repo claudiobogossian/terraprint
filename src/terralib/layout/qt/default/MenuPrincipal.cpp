@@ -151,7 +151,7 @@ void te::layout::MenuPrincipal::onMainMenuTriggered(QAction* action)
   else if(action->objectName().compare(m_optionExportXml) == 0)
   {
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->exportProperties(enumTemplate->getXmlType());
+    m_view->exportTemplate(enumTemplate->getXmlType());
   }
   else if(action->objectName().compare(m_optionPageConfig) == 0)
   {    
@@ -163,7 +163,6 @@ void te::layout::MenuPrincipal::onMainMenuTriggered(QAction* action)
   }
   else if(action->objectName().compare(m_optionExit) == 0)
   {
-    m_view->close();
     emit exit();
   }
   else if(action->objectName().compare(m_optionDockInspector) == 0)

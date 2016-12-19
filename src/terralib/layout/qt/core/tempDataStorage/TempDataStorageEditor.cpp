@@ -243,3 +243,8 @@ te::layout::AbstractTempDataStorageInfo* te::layout::TempDataStorageEditor::getT
   return m_info;
 }
 
+bool te::layout::TempDataStorageEditor::deleteDataStorage()
+{
+  return m_tempDataStorage->deleteDataStorage();
+}
+

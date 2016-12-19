@@ -63,6 +63,8 @@ namespace te
 
             virtual void createMenu();
 
+            virtual void closeLayout(bool shutdown = false);
+
           protected slots:
 
             virtual void onActionActivated(bool checked);

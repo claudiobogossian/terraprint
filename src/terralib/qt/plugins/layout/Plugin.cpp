@@ -129,6 +129,12 @@ void te::qt::plugins::layout::Plugin::shutdown()
 {
   if(!m_initialized)
     return;
+
+  if (m_layout)
+  {
+    // shutdown plugin: true
+    m_layout->closeLayout(true);
+  }
   
   // unregister actions
   unRegisterActions();

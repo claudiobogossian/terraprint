@@ -59,7 +59,6 @@
 #include <QKeyEvent>
 #include <QGraphicsRectItem>
 #include <QGraphicsItem>
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPainterPath>
@@ -852,6 +851,7 @@ void te::layout::View::hideEvent( QHideEvent * event )
   if (m_tempDataStorageEditor)
   {
     m_tempDataStorageEditor->stop();
+    m_tempDataStorageEditor->deleteDataStorage();
   }
   emit hideView();
 }
@@ -1348,7 +1348,7 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   QGraphicsView::drawForeground(painter, rect);
 }
 
-bool te::layout::View::exportProperties( EnumType* type )
+bool te::layout::View::exportTemplate(EnumType* type)
 {
   Scene* scne = dynamic_cast<Scene*>(scene());
   if (!scne)
@@ -1720,6 +1720,15 @@ bool te::layout::View::loadTempFile(const QString& newPath)
 
   if (result)
   {
+    if (m_fullTempPath.compare(pathToLoad) != 0)
+    {
+      // delete current temp file
+      if (m_tempDataStorageEditor)
+      {
+        m_tempDataStorageEditor->deleteDataStorage();
+      }
+    }
+
     setFullTempFilePath(pathToLoad); // change TempFileInfo path
     newTemplate(); // reset scene
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
