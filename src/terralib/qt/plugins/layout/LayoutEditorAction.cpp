@@ -67,12 +67,6 @@ te::qt::plugins::layout::LayoutEditorAction::LayoutEditorAction(QMenu* menu)
 te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
 {
   TerraLib::getInstance().remove(TE_LAYOUT_MODULE_NAME);
-  
-  if(m_mainLayout)
-  {
-    delete m_mainLayout;
-    m_mainLayout=0;
-  }
 
   m_menu->clear();
 }
@@ -86,10 +80,6 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   QSize size = mw->centralWidget()->size();
   QRect screen = mw->centralWidget()->geometry();
 
-  if(m_mainLayout)
-  {
-    delete m_mainLayout;
-  }
   m_mainLayout = new te::layout::MainLayout(proxyProject);
   m_mainLayout->init(size, screen);
 
@@ -152,7 +142,7 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
 
 void te::qt::plugins::layout::LayoutEditorAction::onExit()
 {
-  closeLayout();
+  finalizeLayout();
 }
 
 void te::qt::plugins::layout::LayoutEditorAction::createMenu()
@@ -166,7 +156,7 @@ void te::qt::plugins::layout::LayoutEditorAction::createMenu()
   layoutMenu->addAction(actionExit);
 }
 
-void te::qt::plugins::layout::LayoutEditorAction::closeLayout(bool shutdown)
+void te::qt::plugins::layout::LayoutEditorAction::finalizeLayout(bool shutdown)
 {
   QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
 
@@ -197,7 +187,24 @@ void te::qt::plugins::layout::LayoutEditorAction::closeLayout(bool shutdown)
   }
 
   m_menu->clear();
+
+  closeLayout(shutdown);
+
+  if (m_mainLayout)
+  {
+    delete m_mainLayout;
+    m_mainLayout = 0;
+  }
+
   createAction(tr("Layout Editor..."));
+
+  //enabling taskManager
+  te::common::ProgressManager::getInstance().setSuspendViewers(false);
+}
+
+void te::qt::plugins::layout::LayoutEditorAction::closeLayout(bool shutdown)
+{
+  QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
 
   if (m_mainLayout)
   {
@@ -228,18 +235,15 @@ void te::qt::plugins::layout::LayoutEditorAction::closeLayout(bool shutdown)
 
     if (m_dockLayoutDisplay)
     {
-      mw->removeDockWidget(m_dockLayoutDisplay);
       if (shutdown) // shutdown plugin
       {
         m_dockLayoutDisplay->setPreviousCentralWidget(0);
       }
+      mw->removeDockWidget(m_dockLayoutDisplay);
       m_dockLayoutDisplay->close();
       delete m_dockLayoutDisplay;
       m_dockLayoutDisplay = 0;
     }
   }
-
-  //enabling taskManager
-  te::common::ProgressManager::getInstance().setSuspendViewers(false);
 }
 

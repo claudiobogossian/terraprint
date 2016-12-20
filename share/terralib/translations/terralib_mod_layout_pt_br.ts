@@ -2377,12 +2377,12 @@ nononon</source>
         <translation type="obsolete">Imprimir...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="296"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="302"/>
         <source>TerraPrint - TerraLib 5</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="301"/>
+        <location filename="../../../src/terralib/layout/qt/default/OutsideArea.cpp" line="307"/>
         <source>TerraPrint - TerraLib 5 | Context: </source>
         <translation>TerraPrint - TerraLib 5 | Contexto:</translation>
     </message>

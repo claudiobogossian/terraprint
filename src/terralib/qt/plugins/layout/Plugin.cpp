@@ -133,7 +133,7 @@ void te::qt::plugins::layout::Plugin::shutdown()
   if (m_layout)
   {
     // shutdown plugin: true
-    m_layout->closeLayout(true);
+    m_layout->finalizeLayout(true);
   }
   
   // unregister actions
