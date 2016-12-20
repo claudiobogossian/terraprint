@@ -30,12 +30,17 @@
 #include "TempFileInfo.h"
 #include "../../../core/template/TemplateEditor.h"
 #include "../../../core/enum/Enums.h"
-#include "../Scene.h"
 #include "../../../core/property/Properties.h"
 #include "../../../core/template/AbstractTemplate.h"
+#include "../Scene.h"
+#include "../ItemUtils.h"
 
 // STL
 #include <vector>
+
+// Qt
+#include <QFile>
+#include <QFileInfo>
 
 te::layout::TempFile::TempFile(AbstractTempDataStorageInfo* info) :
   AbstractTempDataStorage(info)
@@ -103,5 +108,25 @@ void te::layout::TempFile::readProperties()
 
   //to make the save function thread safe, we must copy the properties before stating to process it
   m_properties = vecProperties;
+}
+
+bool te::layout::TempFile::deleteDataStorage()
+{
+  TempFileInfo* tempFileInfo = dynamic_cast<TempFileInfo*>(m_info);
+  if (!tempFileInfo)
+  {
+    return false;
+  }
+
+  std::string path = tempFileInfo->getPath();
+  QString filePath(ItemUtils::convert2QString(path));
+  
+  QFileInfo info(filePath);
+  if (info.exists())
+  {
+    return QFile::remove(filePath);
+  }
+
+  return false;
 }
 

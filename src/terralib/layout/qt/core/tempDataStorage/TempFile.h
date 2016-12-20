@@ -68,6 +68,8 @@ namespace te
         */
         virtual void readProperties();
 
+        bool deleteDataStorage();
+
       protected:
 
         std::vector<te::layout::Properties>                 m_properties;

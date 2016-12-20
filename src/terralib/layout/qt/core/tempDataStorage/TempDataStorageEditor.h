@@ -82,6 +82,8 @@ namespace te
 
         AbstractTempDataStorageInfo* getTempDataStorageInfo();
 
+        bool deleteDataStorage();
+
       signals:
 
         void requestIOEnterAccess();

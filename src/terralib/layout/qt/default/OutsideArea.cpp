@@ -103,6 +103,12 @@ te::layout::OutsideArea::~OutsideArea()
     delete m_dockEditTemplate;
     m_dockEditTemplate = 0;
   }
+
+  if (m_menuPrincipal)
+  {
+    delete m_menuPrincipal;
+    m_menuPrincipal = 0;
+  }
 }
 
 void te::layout::OutsideArea::init(AbstractProxyProject* proxyProject)

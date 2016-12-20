@@ -59,7 +59,6 @@
 #include <QKeyEvent>
 #include <QGraphicsRectItem>
 #include <QGraphicsItem>
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPainterPath>
@@ -852,6 +851,7 @@ void te::layout::View::hideEvent( QHideEvent * event )
   if (m_tempDataStorageEditor)
   {
     m_tempDataStorageEditor->stop();
+    m_tempDataStorageEditor->deleteDataStorage();
   }
   emit hideView();
 }
@@ -1348,22 +1348,23 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   QGraphicsView::drawForeground(painter, rect);
 }
 
-bool te::layout::View::exportProperties( EnumType* type )
+bool te::layout::View::exportTemplate(EnumType* type, bool & cancel)
 {
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if (!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
-
-  bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if(fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
+    cancel = true;
     return is_export;
   }
   if (fileName.endsWith(".xml") == false)
@@ -1398,21 +1399,24 @@ bool te::layout::View::exportProperties( EnumType* type )
   return is_export;
 }
 
-bool te::layout::View::importTemplate( EnumType* type )
+bool te::layout::View::importTemplate(EnumType* type, bool & cancel)
 {  
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if(!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if (fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
-    return false;
+    cancel = true;
+    return is_export;
   }
 
   std::string j_name = ItemUtils::convert2StdString(fileName); 
@@ -1720,6 +1724,15 @@ bool te::layout::View::loadTempFile(const QString& newPath)
 
   if (result)
   {
+    if (m_fullTempPath.compare(pathToLoad) != 0)
+    {
+      // delete current temp file
+      if (m_tempDataStorageEditor)
+      {
+        m_tempDataStorageEditor->deleteDataStorage();
+      }
+    }
+
     setFullTempFilePath(pathToLoad); // change TempFileInfo path
     newTemplate(); // reset scene
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
