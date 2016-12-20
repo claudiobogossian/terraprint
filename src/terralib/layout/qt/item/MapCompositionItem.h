@@ -60,7 +60,7 @@ namespace te
     {
       public:
 
-        MapCompositionItem(AbstractItemController* controller);
+        MapCompositionItem(AbstractItemController* controller, const std::string& name);
 
         virtual ~MapCompositionItem();
 

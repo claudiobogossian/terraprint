@@ -212,7 +212,6 @@ bool te::layout::AbstractItemController::contains(const te::gm::Coord2D &coord) 
 void te::layout::AbstractItemController::setView(AbstractItemView* view)
 {
   m_view = view;
-  refresh(); // controller could be refresh your view
 }
 
 void te::layout::AbstractItemController::rotated(const double& degree)

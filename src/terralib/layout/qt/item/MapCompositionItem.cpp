@@ -39,7 +39,7 @@
 // Qt
 #include <QGraphicsSceneMouseEvent>
 
-te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* controller)
+te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* controller, const std::string& name)
   : ItemGroup(controller)
   , m_mapItem(0)
   , m_planarGridItem(0)
@@ -48,6 +48,62 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
   m_stacksBehindParent = true;
   m_isSubSelectionAllowed = false;
   this->setHandlesChildEvents(false);
+
+  std::string mapName = name + "_Map";
+  {
+    ItemFactoryParamsCreate params(mapName);
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(Enums::getInstance().getEnumObjectType()->getMapItem()->getName(), params);
+    abstractItem->getController()->attach(this->getController());
+
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+      this->addToGroup(item);
+    }
+
+    m_mapItem = abstractItem;
+  }
+  {
+    ItemFactoryParamsCreate params(name + "_PlanarGrid");
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(Enums::getInstance().getEnumObjectType()->getGridPlanarItem()->getName(), params);
+    abstractItem->getController()->attach(this->getController());
+
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+      this->addToGroup(item);
+    }
+
+    m_planarGridItem = abstractItem;
+  }
+  {
+    ItemFactoryParamsCreate params(name + "_GeodesicGrid");
+
+    AbstractItemView* abstractItem = te::layout::ItemFactory::make(Enums::getInstance().getEnumObjectType()->getGridGeodesicItem()->getName(), params);
+    abstractItem->getController()->attach(this->getController());
+
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
+
+    if (item != 0)
+    {
+      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
+      this->addToGroup(item);
+    }
+
+    m_geodesicGridItem = abstractItem;
+  }
+
+  Property pName;
+  pName.setName("name");
+  pName.setValue<std::string>(name, Enums::getInstance().getEnumDataType()->getDataTypeString());
+
+  getController()->setProperty(pName);
 }
 
 te::layout::MapCompositionItem::~MapCompositionItem()
@@ -72,61 +128,7 @@ te::layout::AbstractItemView* te::layout::MapCompositionItem::getGeodesicGridIte
 
 void te::layout::MapCompositionItem::initItems()
 {
-  const Property& pName = this->getController()->getProperty("name");
-  const std::string& parentName = te::layout::Property::GetValueAs<std::string>(pName);
-
-  std::string mapName = parentName + "_Map";
-  {
-    ItemFactoryParamsCreate params(mapName);// = createParams(itemType);
-    std::string type = "MAP_ITEM";
-
-    AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
-    abstractItem->getController()->attach(this->getController());
-
-    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-    if (item != 0)
-    {
-      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-      this->addToGroup(item);
-    }
-
-    m_mapItem = abstractItem;
-  }
-  {
-    ItemFactoryParamsCreate params(parentName + "_PlanarGrid");// = createParams(itemType);
-    std::string type = "GRID_PLANAR_ITEM";
-
-    AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
-    abstractItem->getController()->attach(this->getController());
-
-    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-    if (item != 0)
-    {
-      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-      this->addToGroup(item);
-    }
-
-    m_planarGridItem = abstractItem;
-  }
-  {
-    ItemFactoryParamsCreate params(parentName + "_GeodesicGrid");// = createParams(itemType);
-    std::string type = "GRID_GEODESIC_ITEM";
-
-    AbstractItemView* abstractItem = te::layout::ItemFactory::make(type, params);
-    abstractItem->getController()->attach(this->getController());
-
-    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-    if (item != 0)
-    {
-      item->setFlag(QGraphicsItem::ItemIsSelectable, false);
-      this->addToGroup(item);
-    }
-
-    m_geodesicGridItem = abstractItem;
-  }
+  const std::string& mapName = Property::GetValueAs<std::string>(m_mapItem->getController()->getProperty("name"));
 
   SharedProperties sharedProps;
   GridSettingsConfigProperties settingsConfig;
@@ -146,7 +148,7 @@ void te::layout::MapCompositionItem::initItems()
   pVisible.setName(settingsConfig.getVisible());
   pVisible.setValue(false, dataType->getDataTypeBool());
 
-  Properties geodesicProperties;    
+  Properties geodesicProperties;
   geodesicProperties.addProperty(pAssociate);
   geodesicProperties.addProperty(pVisible);
 
@@ -250,7 +252,7 @@ QVariant te::layout::MapCompositionItem::itemChange(QGraphicsItem::GraphicsItemC
     QGraphicsScene* scene = qvariant_cast<QGraphicsScene *>(value);
     if (scene == 0)
     {
-      finalizeItems();
+      //finalizeItems();
     }
     else
     {
