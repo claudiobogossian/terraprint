@@ -1348,22 +1348,23 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   QGraphicsView::drawForeground(painter, rect);
 }
 
-bool te::layout::View::exportTemplate(EnumType* type)
+bool te::layout::View::exportTemplate(EnumType* type, bool & cancel)
 {
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if (!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
-
-  bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if(fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
+    cancel = true;
     return is_export;
   }
   if (fileName.endsWith(".xml") == false)
@@ -1398,21 +1399,24 @@ bool te::layout::View::exportTemplate(EnumType* type)
   return is_export;
 }
 
-bool te::layout::View::importTemplate( EnumType* type )
+bool te::layout::View::importTemplate(EnumType* type, bool & cancel)
 {  
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if(!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if (fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
-    return false;
+    cancel = true;
+    return is_export;
   }
 
   std::string j_name = ItemUtils::convert2StdString(fileName); 

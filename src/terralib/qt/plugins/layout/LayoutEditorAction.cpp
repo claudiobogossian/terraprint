@@ -48,6 +48,7 @@
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QMessageBox>
+#include <QGraphicsScene>
 
 // STL
 #include <memory>
@@ -66,11 +67,6 @@ te::qt::plugins::layout::LayoutEditorAction::LayoutEditorAction(QMenu* menu)
 te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
 {
   TerraLib::getInstance().remove(TE_LAYOUT_MODULE_NAME);
-
-  /*if (m_dockLayoutDisplay)
-  {
-    m_dockLayoutDisplay->setPreviousCentralWidget(0);
-  }*/
   
   if(m_mainLayout)
   {
@@ -174,20 +170,29 @@ void te::qt::plugins::layout::LayoutEditorAction::closeLayout(bool shutdown)
 {
   QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
 
+  bool saveTempFile = false;
+
   if (m_dockLayoutDisplay && !shutdown)
   {
-    bool saveTempFile = false;
-    int answer = QMessageBox::question(mw, tr("Close"), tr("Do you want to save?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
-    if (answer == QMessageBox::Yes)
+    QGraphicsScene* sc = m_mainLayout->getView()->scene();
+    if (sc)
     {
-      saveTempFile = true;
+      if (sc->items().count() > 1)
+      {
+        int answer = QMessageBox::question(mw, tr("Close"), tr("You have been editing a map. If you leave before saving, your changes will be lost. Do you want to save before you leave?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (answer == QMessageBox::Yes)
+        {
+          saveTempFile = true;
+        }
+      }
     }
 
     // export template
     if (saveTempFile)
     {
+      bool cancel = false;
       te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-      m_mainLayout->getView()->exportTemplate(enumTemplate->getXmlType()); // export to xml
+      m_mainLayout->getView()->exportTemplate(enumTemplate->getXmlType(), cancel); // export to xml
     }
   }
 

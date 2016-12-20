@@ -93,9 +93,6 @@ void te::layout::MenuPrincipal::createMainMenu()
   QAction* actionNew = createAction(tr("New"), m_optionNew, "layout-new");
   m_layoutMenu->addAction(actionNew);
 
-  QAction* actionSave = createAction(tr("Update Map"), m_optionUpdate, "layout-save");
-  m_layoutMenu->addAction(actionSave);
-
   m_layoutMenu->addSeparator();
 
   QMenu* mnuImport = m_layoutMenu->addMenu(tr("Import Map"));
@@ -145,13 +142,15 @@ void te::layout::MenuPrincipal::onMainMenuTriggered(QAction* action)
   }
   else if(action->objectName().compare(m_optionImportXml) == 0)
   {
+    bool cancel = false;
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->importTemplate(enumTemplate->getXmlType());
+    m_view->importTemplate(enumTemplate->getXmlType(), cancel);
   }
   else if(action->objectName().compare(m_optionExportXml) == 0)
   {
+    bool cancel = false;
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->exportTemplate(enumTemplate->getXmlType());
+    m_view->exportTemplate(enumTemplate->getXmlType(), cancel);
   }
   else if(action->objectName().compare(m_optionPageConfig) == 0)
   {    

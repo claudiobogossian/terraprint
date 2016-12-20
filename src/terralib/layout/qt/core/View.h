@@ -207,14 +207,14 @@ namespace te
         \param type type of template. Ex .: JSON type
         \return true if exported, false otherwise
         */
-        virtual bool exportTemplate(EnumType* type);
+        virtual bool exportTemplate(EnumType* type, bool & cancel);
 
         /*!
         \brief Method that import a template and build all objects. Ex.: JSON.
 
         \return true if exported, false otherwise
         */
-        virtual bool importTemplate(EnumType* type);
+        virtual bool importTemplate(EnumType* type, bool & cancel);
 
         /*!
         \brief Method that instantiates and shows the Page Setup window.

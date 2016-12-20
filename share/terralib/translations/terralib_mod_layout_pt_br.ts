@@ -2252,47 +2252,46 @@ nononon</source>
         <translation>Novo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="96"/>
         <source>Update Map</source>
-        <translation>Atualizar Carta</translation>
+        <translation type="obsolete">Atualizar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="101"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="98"/>
         <source>Import Map</source>
         <translation>Importar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="102"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="99"/>
         <source>Export Map</source>
         <translation>Exportar Carta</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="104"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="101"/>
         <source>Import Xml Map</source>
         <translation>Importar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="107"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="104"/>
         <source>Export XML Map</source>
         <translation>Exportar Carta XML</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="112"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="109"/>
         <source>Dock Inspector</source>
         <translation>Exibir Inspetor de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="117"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="114"/>
         <source>Dock Properties</source>
         <translation>Exibir Editor de Propriedades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="124"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="121"/>
         <source>Page Config...</source>
         <translation>Configuração da Página...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="127"/>
+        <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="124"/>
         <source>Print...</source>
         <translation>Imprimir...</translation>
     </message>
@@ -3004,27 +3003,27 @@ nononon</source>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1362"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1410"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1413"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1386"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1387"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1391"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1392"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1409"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1412"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1427"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1431"/>
         <source>Information</source>
         <translation>Informação</translation>
     </message>
@@ -3033,17 +3032,17 @@ nononon</source>
         <translation type="obsolete">Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1446"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1450"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1453"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1457"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1464"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1468"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>
