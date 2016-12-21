@@ -173,7 +173,8 @@ ENDMACRO(GenerateTranslationQt5)
 
 MACRO(GenerateTranslationQt4 translation_dir project_name qm_files)
   set(_ts_file_name ${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/${project_name}_pt_br.ts)
-  set(qm_file ${terralib_DIR}/share/terralib/translations/${project_name}_pt_br.qm)
+  set(qm_file ${CMAKE_BINARY_DIR}/share/terralib/translations/${project_name}_ptbr.qm)
+  
 
   add_custom_command(
     TARGET ${project_name}
