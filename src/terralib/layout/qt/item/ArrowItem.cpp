@@ -27,6 +27,7 @@
 
 // TerraLib
 #include "ArrowItem.h"
+#include "../../item/ArrowModel.h"
 #include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumArrowType.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
@@ -35,14 +36,19 @@
 #include <QPointF>
 #include "qglobal.h"
 
-te::layout::ArrowItem::ArrowItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ArrowItem::ArrowItem()
+  : AbstractItem(nullptr)
 {
 }
 
 te::layout::ArrowItem::~ArrowItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::ArrowItem::createModel() const
+{
+  return new ArrowModel();
 }
 
 void te::layout::ArrowItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

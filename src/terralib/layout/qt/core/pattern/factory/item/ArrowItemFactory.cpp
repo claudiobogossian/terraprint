@@ -32,19 +32,15 @@
 
 te::layout::AbstractItemView* te::layout::ArrowItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  ArrowItem* view = new ArrowItem();
 
-  ArrowModel* model = new ArrowModel();
-  AbstractItemController* controller = new AbstractItemController(model, 0);
-  ArrowItem* view = new ArrowItem(controller);
-  controller->setView(view);
-
+  Properties props = params.getProperties();
   if (props.getProperties().empty())
   {
     props = convertToProperties(params);
   }
-  controller->setProperties(props);
 
+  view->setProperties(props);
   return view;
 }
 

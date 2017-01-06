@@ -121,9 +121,9 @@ namespace te
 
         void setProperty(const te::layout::Property& property);
 
-        AbstractItemController* createController() const;
+        virtual AbstractItemController* createController() const;
 
-        AbstractItemModel* createModel() const;
+        virtual AbstractItemModel* createModel() const;
 
     protected:
 

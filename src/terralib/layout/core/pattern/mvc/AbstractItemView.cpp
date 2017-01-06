@@ -12,7 +12,10 @@ te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controlle
   , m_subSelected(false)
   , m_useResizePixmap(true)
 {
-  controller->setView(this);
+  if (controller != nullptr)
+  {
+    controller->setView(this);
+  }
 }
 
 te::layout::AbstractItemView::~AbstractItemView()
