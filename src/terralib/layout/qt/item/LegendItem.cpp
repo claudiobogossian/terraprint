@@ -27,7 +27,9 @@
 
 // TerraLib
 #include "LegendItem.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../item/LegendModel.h"
+#include "LegendController.h"
+
 #include "../../core/pattern/singleton/Context.h"
 #include "terralib/maptools/GroupingItem.h"
 #include "terralib/maptools/Grouping.h"
@@ -38,13 +40,12 @@
 #include "terralib/qt/widgets/canvas/Canvas.h"
 #include "../core/Scene.h"
 #include "../core/ItemUtils.h"
-#include "LegendController.h"
 
 // Qt
 #include <QPixmap>
 
-te::layout::LegendItem::LegendItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::LegendItem::LegendItem()
+  : AbstractItem(nullptr)
   , m_currentMaxHeight(0)
   , m_maxWidth(0)
   , m_displacementBetweenSymbols(0)
@@ -65,6 +66,17 @@ te::layout::LegendItem::LegendItem(AbstractItemController* controller)
 te::layout::LegendItem::~LegendItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::LegendItem::createModel() const
+{
+  return new LegendModel();
+}
+
+te::layout::AbstractItemController* te::layout::LegendItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new LegendController(model, (AbstractItemView*)this);
 }
 
 void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

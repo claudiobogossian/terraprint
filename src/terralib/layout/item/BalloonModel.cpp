@@ -46,6 +46,7 @@ te::layout::BalloonModel::BalloonModel()
   te::color::RGBAColor fillColor(255, 242, 188, 255);
   te::color::RGBAColor contourColor(0, 0, 0, 255);
   double contourThickness = 0.5;
+  std::string text = "";
 
   {
     EnumBalloonType balloonType;
@@ -174,6 +175,13 @@ te::layout::BalloonModel::BalloonModel()
     property.setLabel(TR_LAYOUT("Contour Thickness"));
     property.setValue(contourThickness, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("text");
+    property.setValue<std::string>(text, dataType->getDataTypeString());
+    this->m_properties.updateProperty(property);
   }
 
   reparentProperties(Enums::getInstance().getEnumObjectType()->getBalloonItem());

@@ -27,23 +27,34 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "ImageItem.h"
+#include "../../item/ImageModel.h"
+#include "ImageController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
-
-
 // Qt
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ImageItem::ImageItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ImageItem::ImageItem()
+  : AbstractItem(nullptr)
 {
+
 }
 
 te::layout::ImageItem::~ImageItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::ImageItem::createModel() const
+{
+  return new ImageModel();
+}
+
+te::layout::AbstractItemController* te::layout::ImageItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ImageController(model, (AbstractItemView*)this);
 }
 
 const std::string& te::layout::ImageItem::getFileName() const

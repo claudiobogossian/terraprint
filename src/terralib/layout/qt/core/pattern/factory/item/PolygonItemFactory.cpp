@@ -26,20 +26,15 @@
 // TerraLib
 #include "PolygonItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/PolygonModel.h"
-#include "../../../../item/LineController.h"
 #include "../../../../item/PolygonItem.h"
 
 te::layout::AbstractItemView* te::layout::PolygonItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
+  PolygonItem* view = new PolygonItem();
 
-  PolygonModel* model = new PolygonModel();
-  LineController* controller = new LineController(model, 0);
-  PolygonItem* view = new PolygonItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

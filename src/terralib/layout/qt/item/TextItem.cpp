@@ -27,14 +27,13 @@
 
 // TerraLib
 #include "TextItem.h"
+#include "../../item/TextModel.h"
 #include "TextController.h"
 #include "../../qt/core/Scene.h"
 #include "../core/ItemUtils.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
-#include "../../core/pattern/singleton/Context.h"
-
 
 // STL
 #include <string>
@@ -52,9 +51,9 @@
 #include <QClipboard>
 #include <QTimer>
 
-te::layout::TextItem::TextItem(AbstractItemController* controller)
+te::layout::TextItem::TextItem()
   : QObject()
-  , AbstractItem(controller)
+  , AbstractItem(nullptr)
   , m_document(0)
   , m_textCursor(0)
   , m_cursorTimer(0)
@@ -74,6 +73,17 @@ te::layout::TextItem::~TextItem()
 {
   delete m_textCursor;
   delete m_document;
+}
+
+te::layout::AbstractItemModel* te::layout::TextItem::createModel() const
+{
+  return new TextModel();
+}
+
+te::layout::AbstractItemController* te::layout::TextItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new TextController(model, (AbstractItemView*)this);
 }
 
 void te::layout::TextItem::setDocument(QTextDocument* textDocument)

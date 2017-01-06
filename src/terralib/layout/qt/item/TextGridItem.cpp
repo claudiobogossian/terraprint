@@ -27,24 +27,36 @@
 
 // TerraLib
 #include "TextGridItem.h"
+#include "../../item/TextGridModel.h"
+#include "TextGridController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 
 // Qt
 #include <QTextDocument>
 #include <QTextCursor>
 #include <QTextTableCell>
 
-te::layout::TextGridItem::TextGridItem(AbstractItemController* controller) 
-  : TextItem(controller)
+te::layout::TextGridItem::TextGridItem() 
+  : TextItem()
 {
 }
 
 te::layout::TextGridItem::~TextGridItem()
 {
   
+}
+
+te::layout::AbstractItemModel* te::layout::TextGridItem::createModel() const
+{
+  return new TextGridModel();
+}
+
+te::layout::AbstractItemController* te::layout::TextGridItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new TextGridController(model, (AbstractItemView*)this);
 }
 
 void te::layout::TextGridItem::keyPressEvent(QKeyEvent * event)

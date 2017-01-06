@@ -26,20 +26,15 @@
 // TerraLib
 #include "TextGridItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/TextGridModel.h"
-#include "../../../../item/TextGridController.h"
 #include "../../../../item/TextGridItem.h"
 
 te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  TextGridItem* view = new TextGridItem();
 
-  TextGridModel* model = new TextGridModel();
-  AbstractItemController* controller = new TextGridController(model, 0);
-  TextGridItem* view = new TextGridItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

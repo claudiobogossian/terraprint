@@ -27,11 +27,12 @@
 
 // TerraLib
 #include "LineItem.h"
+#include "../../item/LineModel.h"
+#include "LineController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/property/Property.h"
-#include "LineController.h"
 // STL
 #include <vector>
 
@@ -41,8 +42,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::LineItem::LineItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::LineItem::LineItem()
+  : AbstractItem(nullptr)
 {
     setFlag(QGraphicsItem::ItemClipsToShape);
 }
@@ -50,6 +51,17 @@ te::layout::LineItem::LineItem(AbstractItemController* controller)
 te::layout::LineItem::~LineItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::LineItem::createModel() const
+{
+  return new LineModel();
+}
+
+te::layout::AbstractItemController* te::layout::LineItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new LineController(model, (AbstractItemView*)this);
 }
 
 void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

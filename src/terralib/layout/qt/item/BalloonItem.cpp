@@ -27,11 +27,11 @@
 
 // TerraLib
 #include "BalloonItem.h"
-#include "TextItem.h"
+#include "../../item/BalloonModel.h"
+#include "BalloonController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/enum/EnumBalloonDirectionType.h"
 #include "../../core/enum/EnumBalloonType.h"
 
@@ -39,8 +39,8 @@
 #include <algorithm>    // std::max and std::min
 #include <cmath>
 
-te::layout::BalloonItem::BalloonItem(AbstractItemController* controller)
-: TextItem(controller)
+te::layout::BalloonItem::BalloonItem()
+  : TextItem()
 {
 
 }
@@ -48,6 +48,17 @@ te::layout::BalloonItem::BalloonItem(AbstractItemController* controller)
 te::layout::BalloonItem::~BalloonItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::BalloonItem::createModel() const
+{
+  return new BalloonModel();
+}
+
+te::layout::AbstractItemController* te::layout::BalloonItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new BalloonController(model, (AbstractItemView*)this);
 }
 
 QRectF te::layout::BalloonItem::boundingRect() const
@@ -62,8 +73,7 @@ void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGr
     TextItem::drawItem(painter, option, widget);
     return;
   }
-
-
+  
   const Property& pBalloonType = this->getProperty("balloon_type");
 
   EnumBalloonType balloonEnum;
@@ -154,7 +164,6 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   QRectF rightTopRect(fullRect.topRight().x() - margin, fullRect.topRight().y() - margin, margin, margin);
   QRectF rightBottomRect(fullRect.bottomRight().x() - margin, fullRect.bottomRight().y(), margin, margin);
 
-
   qPath.moveTo(leftBottomRect.topRight());
   qPath.quadTo(leftBottomRect.topLeft(), leftBottomRect.bottomLeft());
   qPath.lineTo(leftTopRect.topLeft());
@@ -167,7 +176,6 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   qPath.lineTo(rightBottomRect.topLeft().x(), rightBottomRect.topLeft().y() - (margin * 2));
   qPath.lineTo(rightBottomRect.topLeft().x() - margin, rightBottomRect.topLeft().y());
   qPath.lineTo(leftBottomRect.topRight());
-
 
   setBalloonDirection(qPath);
 
@@ -213,7 +221,6 @@ void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
   setPainterParameters(painter);
 
   QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
-
 
   QPointF p2 = QPointF(adjustedBoundbox.x(), adjustedBoundbox.y() + adjustedBoundbox.height());
   QPointF p3 = QPointF(adjustedBoundbox.x() + adjustedBoundbox.width(), adjustedBoundbox.y() + (margin * 2));

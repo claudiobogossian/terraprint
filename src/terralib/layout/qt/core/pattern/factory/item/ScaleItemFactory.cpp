@@ -26,20 +26,15 @@
 // TerraLib
 #include "ScaleItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/ScaleModel.h"
-#include "../../../../item/ScaleController.h"
 #include "../../../../item/ScaleItem.h"
 
 te::layout::AbstractItemView* te::layout::ScaleItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  ScaleItem* view = new ScaleItem();
 
-  ScaleModel* model = new ScaleModel();
-  ScaleController* controller = new ScaleController(model, 0);
-  ScaleItem* view = new ScaleItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

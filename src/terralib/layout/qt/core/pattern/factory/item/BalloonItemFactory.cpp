@@ -26,36 +26,15 @@
 // TerraLib
 #include "BalloonItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/BalloonModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/BalloonItem.h"
-#include "../../../../item/BalloonController.h"
 
 te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
-  const Property& propName = props.getProperty("name");
+  BalloonItem* view = new BalloonItem();
+ 
+  const Properties& props = params.getProperties();
 
-  BalloonModel* model = new BalloonModel();
-  BalloonController* controller = new BalloonController(model, 0);
-  BalloonItem* view = new BalloonItem(controller);
-  controller->setView(view);
-
-  std::string name = te::layout::Property::GetValueAs<std::string>(propName);
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  if (!props.contains("text"))
-  {
-    if (name.compare("") != 0)
-    {
-      Property propText(0);
-      propText.setName("text");
-      propText.setValue(name, dataType->getDataTypeString());
-      props.addProperty(propText);
-    }
-  }
-  controller->setProperties(props);
-
+  view->setProperties(props);
   return view;
 }
 

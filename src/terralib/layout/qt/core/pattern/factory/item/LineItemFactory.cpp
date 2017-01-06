@@ -26,20 +26,15 @@
 // TerraLib
 #include "LineItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/LineModel.h"
-#include "../../../../item/LineController.h"
 #include "../../../../item/LineItem.h"
 
 te::layout::AbstractItemView* te::layout::LineItemFactory::build(ItemFactoryParamsCreate params)
-{
-  Properties props = params.getProperties(); 
+{  
+  LineItem* view = new LineItem();
 
-  LineModel* model = new LineModel();
-  LineController* controller = new LineController(model, 0);
-  LineItem* view = new LineItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

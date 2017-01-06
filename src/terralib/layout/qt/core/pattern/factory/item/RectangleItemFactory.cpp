@@ -25,25 +25,16 @@
 
 // TerraLib
 #include "RectangleItemFactory.h"
-
-#include "../../../../../core/enum/Enums.h"
-
-
-#include "../../../../../item/RectangleModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
-#include "../../../../../core/property/Properties.h"
 #include "../../../../item/RectangleItem.h"
+#include "../../../../../core/enum/Enums.h"
 
 te::layout::AbstractItemView* te::layout::RectangleItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
+  RectangleItem* view = new RectangleItem();
+ 
+  const Properties& props = params.getProperties();
 
-  RectangleModel* model = new RectangleModel();
-  AbstractItemController* controller = new AbstractItemController(model, 0);
-  RectangleItem* view = new RectangleItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
-
+  view->setProperties(props);
   return view;
 }
 

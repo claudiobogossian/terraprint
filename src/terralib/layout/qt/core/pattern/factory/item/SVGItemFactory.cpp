@@ -26,21 +26,15 @@
 // TerraLib
 #include "SVGItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/SVGModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/SVGItem.h"
-#include "../../../../item/SVGController.h"
 
 te::layout::AbstractItemView* te::layout::SVGItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();  
+  SVGItem* view = new SVGItem();
 
-  SVGModel* model = new SVGModel();
-  SVGController* controller = new SVGController(model, 0);
-  SVGItem* view = new SVGItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

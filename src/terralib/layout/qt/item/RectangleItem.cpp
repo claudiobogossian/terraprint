@@ -27,6 +27,8 @@
 
 // TerraLib
 #include "RectangleItem.h"
+#include "../../item/RectangleModel.h"
+
 #include "terralib/color/RGBAColor.h"
 #include "../../core/enum/EnumRectangleType.h"
 
@@ -35,10 +37,8 @@
 #include <QPen>
 #include <QRectF>
 
-#include "../../core/pattern/mvc/AbstractItemController.h"
-
-te::layout::RectangleItem::RectangleItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::RectangleItem::RectangleItem()
+  : AbstractItem(nullptr)
 {
 
 }
@@ -46,6 +46,11 @@ te::layout::RectangleItem::RectangleItem(AbstractItemController* controller)
 te::layout::RectangleItem::~RectangleItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::RectangleItem::createModel() const
+{
+  return new RectangleModel();
 }
 
 void te::layout::RectangleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

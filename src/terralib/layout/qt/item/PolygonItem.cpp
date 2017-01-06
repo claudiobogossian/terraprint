@@ -38,8 +38,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::PolygonItem::PolygonItem(AbstractItemController* controller)
-  : LineItem(controller)
+te::layout::PolygonItem::PolygonItem()
+  : LineItem()
 { 
   
 }
@@ -47,6 +47,16 @@ te::layout::PolygonItem::PolygonItem(AbstractItemController* controller)
 te::layout::PolygonItem::~PolygonItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::PolygonItem::createModel() const
+{
+  return new PolygonModel();
+}
+
+te::layout::AbstractItemController* te::layout::PolygonItem::createController() const
+{
+  return LineItem::createController();
 }
 
 void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

@@ -31,13 +31,14 @@
 #include "../../core/enum/EnumScaleType.h"
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
-#include "../item/ScaleController.h"
+#include "../../item/ScaleModel.h"
+#include "ScaleController.h"
 
 // STL
 #include <iostream>
 
-te::layout::ScaleItem::ScaleItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ScaleItem::ScaleItem()
+  : AbstractItem(nullptr)
   , m_scale(0)
   , m_gapX(0)
   , m_gapY(0)
@@ -52,6 +53,17 @@ te::layout::ScaleItem::ScaleItem(AbstractItemController* controller)
 te::layout::ScaleItem::~ScaleItem()
 {
   
+}
+
+te::layout::AbstractItemModel* te::layout::ScaleItem::createModel() const
+{
+  return new ScaleModel();
+}
+
+te::layout::AbstractItemController* te::layout::ScaleItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ScaleController(model, (AbstractItemView*)this);
 }
 
 bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)

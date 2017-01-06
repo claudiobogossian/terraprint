@@ -25,21 +25,16 @@
 
 // TerraLib
 #include "TitleItemFactory.h"
-#include "../../../../item/TitleController.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/TitleModel.h"
 #include "../../../../item/TitleItem.h"
 
 te::layout::AbstractItemView* te::layout::TitleItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  TitleItem* view = new TitleItem();
 
-  TitleModel* model = new TitleModel();
-  TitleController* controller = new TitleController(model, 0);
-  TitleItem* view = new TitleItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

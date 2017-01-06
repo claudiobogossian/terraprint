@@ -26,20 +26,15 @@
 // TerraLib
 #include "LegendItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/LegendModel.h"
-#include "../../../../item/LegendController.h"
 #include "../../../../item/LegendItem.h"
 
 te::layout::AbstractItemView* te::layout::LegendItemFactory::build(ItemFactoryParamsCreate params)
-{
-  Properties props = params.getProperties(); 
+{  
+  LegendItem* view = new LegendItem();
 
-  LegendModel* model = new LegendModel();
-  LegendController* controller = new LegendController(model, 0);
-  LegendItem* view = new LegendItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

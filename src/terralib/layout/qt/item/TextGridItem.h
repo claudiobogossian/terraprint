@@ -32,14 +32,12 @@
 #include "TextItem.h"
 #include "../../core/Config.h"
 
-//Qt
-class QTextTable;
-
 namespace te
 {
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
 
     /*!
       \brief Class that represents a matrix of texts
@@ -58,7 +56,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        TextGridItem(AbstractItemController* controller);
+        TextGridItem();
 
         /*!
           \brief Destructor
@@ -73,6 +71,12 @@ namespace te
         void documentEditionFinished();
 
         virtual void updateBlockEditionRange();
+
+      protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
     };
   }
 }

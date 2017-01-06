@@ -33,7 +33,7 @@
 #include <QStyleOptionGraphicsItem>
 
 te::layout::BarCodeItem::BarCodeItem(AbstractItemController* controller) 
-  : TextItem(controller)
+  : TextItem()
 {
  
 }
