@@ -32,17 +32,12 @@
 
 te::layout::AbstractItemView* te::layout::ItemGroupItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  Properties props = params.getProperties(); 
 
   ItemGroupModel* model = new ItemGroupModel();
   ItemGroupController* controller = new ItemGroupController(model, 0);
   ItemGroup* view = new ItemGroup(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

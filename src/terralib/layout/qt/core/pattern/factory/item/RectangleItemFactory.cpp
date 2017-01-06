@@ -42,11 +42,6 @@ te::layout::AbstractItemView* te::layout::RectangleItemFactory::build(ItemFactor
   AbstractItemController* controller = new AbstractItemController(model, 0);
   RectangleItem* view = new RectangleItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

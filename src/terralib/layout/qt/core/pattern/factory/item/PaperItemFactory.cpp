@@ -41,11 +41,6 @@ te::layout::AbstractItemView* te::layout::PaperItemFactory::build(ItemFactoryPar
   AbstractItemController* controller = new AbstractItemController(model, 0);
   PaperItem* view = new PaperItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

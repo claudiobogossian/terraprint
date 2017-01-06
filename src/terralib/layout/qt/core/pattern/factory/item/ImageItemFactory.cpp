@@ -38,15 +38,13 @@ te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryPar
   AbstractItemController* controller = new ImageController(model, 0);
   ImageItem* view = new ImageItem(controller);
 
-  double width = te::layout::Property::GetValueAs<double>(model->getProperty("width"));
-  double height = te::layout::Property::GetValueAs<double>(model->getProperty("height"));
-  view->setPos(params.getCoord().getX() - width / 2, params.getCoord().getY() - height / 2);
+  double width = te::layout::Property::GetValueAs<double>(props.getProperty("width"));
+  double height = te::layout::Property::GetValueAs<double>(props.getProperty("height"));
+  double x = te::layout::Property::GetValueAs<double>(props.getProperty("x"));
+  double y = te::layout::Property::GetValueAs<double>(props.getProperty("y"));
+  view->setPos(x - width / 2, y - height / 2);
   controller->setView(view);
 
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return dynamic_cast<AbstractItemView*>(view);

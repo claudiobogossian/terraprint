@@ -32,17 +32,12 @@
 
 te::layout::AbstractItemView* te::layout::ScaleItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  Properties props = params.getProperties(); 
 
   ScaleModel* model = new ScaleModel();
   ScaleController* controller = new ScaleController(model, 0);
   ScaleItem* view = new ScaleItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

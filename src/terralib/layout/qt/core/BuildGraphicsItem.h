@@ -132,6 +132,8 @@ namespace te
 
         virtual void showImgDlg(QGraphicsItem* item);
 
+        virtual te::layout::Properties convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, double width, double height);
+        
       protected:
 
         virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type, bool isCopy = false);

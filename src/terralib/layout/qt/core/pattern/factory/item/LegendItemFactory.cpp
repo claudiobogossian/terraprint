@@ -32,17 +32,12 @@
 
 te::layout::AbstractItemView* te::layout::LegendItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  Properties props = params.getProperties(); 
 
   LegendModel* model = new LegendModel();
   LegendController* controller = new LegendController(model, 0);
   LegendItem* view = new LegendItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

@@ -131,7 +131,6 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
     Property nameProp = m_props.getProperty("name");
     nameProp.setValue(nameItem(itemType), dataType->getDataTypeString());
     m_props.updateProperty(nameProp);
-
   }
 
   AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
@@ -148,10 +147,10 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
   }
 
   if (m_props.getProperties().empty() == false)
-  { 
+  {
     abstractItem->getController()->setProperties(m_props);
   }
-  
+    
   afterBuild(item, addUndo);
 
   showImgDlg(item);
@@ -209,7 +208,6 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
     pointInItemCS.setY(pointInItemCS.y() - (height / 2.));
     pointInSceneCS = item->mapToScene(pointInItemCS);
   }
-
   item->setPos(pointInSceneCS);
 
   if (!m_props.getProperties().empty())
@@ -220,7 +218,7 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
       item->setZValue(zValue);
     }
   }
-
+  
   if (item)
   {
     if (m_scene)
@@ -236,31 +234,21 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
 
 te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type, bool isCopy)
 {
+  if (!m_props.getProperties().empty())
+  {
+    std::string name = findName(m_props);
+    if (!name.empty())
+    {
+      m_name = name;
+      return ItemFactoryParamsCreate(m_props);
+    }
+  }
+
   std::string strName = nameItem(type);
+  m_name = strName;
 
-  if (isCopy == true)
-  {
-    m_name = strName;
-    return ItemFactoryParamsCreate(strName, m_id, m_coord, m_width, m_height);
-  }
-
-  if (m_props.getProperties().empty())
-  {
-    m_name = strName;
-    return ItemFactoryParamsCreate(strName, m_id, m_coord, m_width, m_height);
-  }
-
-  std::string name = findName(m_props);
-  if (name.empty())
-  {
-    m_name = strName;
-    Properties pEmpty;
-    return ItemFactoryParamsCreate(strName, m_coord, pEmpty);
-  }  
-
-  Properties pEmpty;
-  m_name = name;
-  return ItemFactoryParamsCreate(name, m_id, m_coord, m_width, m_height);
+  Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height);
+  return ItemFactoryParamsCreate(props);
 }
 
 void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
@@ -301,3 +289,52 @@ std::string te::layout::BuildGraphicsItem::getNewName()
 {
   return m_name;
 }
+
+te::layout::Properties te::layout::BuildGraphicsItem::convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, double width, double height)
+{
+  Properties props;
+  
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = coord.getX();
+  double y = coord.getY();
+
+  Property prop_name(0);
+  prop_name.setName("name");
+  prop_name.setValue(name, dataType->getDataTypeString());
+  props.addProperty(prop_name);
+
+  Property prop_id(0);
+  prop_id.setName("id");
+  prop_id.setValue(id, dataType->getDataTypeInt());
+  props.addProperty(prop_id);
+
+  Property prop_x(0);
+  prop_x.setName("x");
+  prop_x.setValue(x, dataType->getDataTypeDouble());
+  props.addProperty(prop_x);
+
+  Property prop_y(0);
+  prop_y.setName("y");
+  prop_y.setValue(y, dataType->getDataTypeDouble());
+  props.addProperty(prop_y);
+
+  if (width > 0)
+  {
+    Property prop_width(0);
+    prop_width.setName("width");
+    prop_width.setValue(width, dataType->getDataTypeDouble());
+    props.addProperty(prop_width);
+  }
+
+  if (height > 0)
+  {
+    Property prop_height(0);
+    prop_height.setName("height");
+    prop_height.setValue(height, dataType->getDataTypeDouble());
+    props.addProperty(prop_height);
+  }
+  
+  return props;
+}
+

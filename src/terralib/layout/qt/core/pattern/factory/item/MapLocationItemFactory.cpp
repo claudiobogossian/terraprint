@@ -32,17 +32,12 @@
 
 te::layout::AbstractItemView* te::layout::MapLocationItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  Properties props = params.getProperties(); 
 
   MapLocationModel* model = new MapLocationModel();
   AbstractItemController* controller = new MapLocationController(model, 0);
   MapLocationItem* view = new MapLocationItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

@@ -32,26 +32,26 @@
 
 te::layout::AbstractItemView* te::layout::TextItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties();
+  Properties props = params.getProperties();
+  const Property& propName = props.getProperty("name");
 
   TextModel* model = new TextModel();
   TextController* controller = new TextController(model, 0);
   TextItem* view = new TextItem(controller);
   controller->setView(view);
 
-  if (props.getProperties().empty())
+  std::string name = te::layout::Property::GetValueAs<std::string>(propName);
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  if (!props.contains("text"))
   {
-    props = convertToProperties(params);
-
-    std::string text = params.getName();
-
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-    Property prop_name(0);
-    prop_name.setName("text");
-    prop_name.setValue(text, dataType->getDataTypeString());
-    props.addProperty(prop_name);
-
+    if (name.compare("") != 0)
+    {
+      Property propText(0);
+      propText.setName("text");
+      propText.setValue(name, dataType->getDataTypeString());
+      props.addProperty(propText);
+    }
   }
   controller->setProperties(props);
 

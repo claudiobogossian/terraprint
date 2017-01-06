@@ -35,10 +35,6 @@ te::layout::AbstractItemView* te::layout::ArrowItemFactory::build(ItemFactoryPar
   ArrowItem* view = new ArrowItem();
 
   Properties props = params.getProperties();
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
 
   view->setProperties(props);
   return view;

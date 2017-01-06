@@ -38,11 +38,6 @@ te::layout::AbstractItemView* te::layout::PointItemFactory::build(ItemFactoryPar
   AbstractItemController* controller = new AbstractItemController(model, 0);
   PointItem* view = new PointItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

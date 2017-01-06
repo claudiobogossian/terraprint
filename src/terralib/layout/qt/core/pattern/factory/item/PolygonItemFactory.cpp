@@ -32,17 +32,12 @@
 
 te::layout::AbstractItemView* te::layout::PolygonItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties();
+  Properties props = params.getProperties();
 
   PolygonModel* model = new PolygonModel();
   LineController* controller = new LineController(model, 0);
   PolygonItem* view = new PolygonItem(controller);
   controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
   controller->setProperties(props);
 
   return view;

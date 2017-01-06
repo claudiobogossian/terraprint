@@ -51,7 +51,12 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
 
   std::string mapName = name + "_Map";
   {
-    ItemFactoryParamsCreate params(mapName);
+    Properties props;
+    Property propName(0);
+    propName.setName("name");
+    propName.setValue(mapName, Enums::getInstance().getEnumDataType()->getDataTypeString());
+    props.addProperty(propName);
+    ItemFactoryParamsCreate params(props);
 
     AbstractItemView* abstractItem = te::layout::ItemFactory::make(Enums::getInstance().getEnumObjectType()->getMapItem()->getName(), params);
     abstractItem->getController()->attach(this->getController());
@@ -66,8 +71,14 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
 
     m_mapItem = abstractItem;
   }
+  std::string gridPlanarName = name + "_PlanarGrid";
   {
-    ItemFactoryParamsCreate params(name + "_PlanarGrid");
+    Properties props;
+    Property propName(0);
+    propName.setName("name");
+    propName.setValue(gridPlanarName, Enums::getInstance().getEnumDataType()->getDataTypeString());
+    props.addProperty(propName);
+    ItemFactoryParamsCreate params(props);
 
     AbstractItemView* abstractItem = te::layout::ItemFactory::make(Enums::getInstance().getEnumObjectType()->getGridPlanarItem()->getName(), params);
     abstractItem->getController()->attach(this->getController());
@@ -82,8 +93,14 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
 
     m_planarGridItem = abstractItem;
   }
+  std::string gridGeoGridName = name + "_GeodesicGrid";
   {
-    ItemFactoryParamsCreate params(name + "_GeodesicGrid");
+    Properties props;
+    Property propName(0);
+    propName.setName("name");
+    propName.setValue(gridGeoGridName, Enums::getInstance().getEnumDataType()->getDataTypeString());
+    props.addProperty(propName);
+    ItemFactoryParamsCreate params(props);
 
     AbstractItemView* abstractItem = te::layout::ItemFactory::make(Enums::getInstance().getEnumObjectType()->getGridGeodesicItem()->getName(), params);
     abstractItem->getController()->attach(this->getController());
