@@ -32,8 +32,8 @@
 #include <terralib/common/UnitOfMeasure.h>
 #include <terralib/srs/SpatialReferenceSystemManager.h>
 
-te::layout::GridGeodesicController::GridGeodesicController(AbstractItemModel* model)
-  : GridMapController(model)
+te::layout::GridGeodesicController::GridGeodesicController(AbstractItemModel* model, AbstractItemView* view)
+  : GridMapController(model, view)
   , m_gridPropertiesInitialized(false)
 {
 

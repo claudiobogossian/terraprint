@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::GridPlanarItemFactory::build(ItemFacto
   Properties      props = params.getProperties(); 
 
   GridPlanarModel* model = new GridPlanarModel();
-  te::layout::AbstractItemController* controller = new GridPlanarController(model);
+  te::layout::AbstractItemController* controller = new GridPlanarController(model, 0);
   GridPlanarItem* view = new GridPlanarItem(controller);
   controller->setView(view);
 

@@ -30,8 +30,8 @@
 #include <terralib/maptools/Utils.h>
 #include <terralib/srs/SpatialReferenceSystemManager.h>
 
-te::layout::GridPlanarController::GridPlanarController(AbstractItemModel* model)
-  : GridMapController(model)
+te::layout::GridPlanarController::GridPlanarController(AbstractItemModel* model, AbstractItemView* view)
+  : GridMapController(model, view)
   , m_gridPropertiesInitialized(false)
 {
 

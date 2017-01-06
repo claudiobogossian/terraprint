@@ -49,11 +49,11 @@ void te::layout::MapLocationItem::drawLayers(te::qt::widgets::Canvas* canvas, co
 {
   te::layout::MapItem::drawLayers(canvas, envelope);
 
-  const Property& pSrid = m_controller->getProperty("srid");
-  const Property& pReferenceSrid = m_controller->getProperty("reference_srid");
-  const Property& pReferenceBox = m_controller->getProperty("reference_box");
-  const Property& pFillColor = m_controller->getProperty("reference_box_fill_color");
-  const Property& pContourColor = m_controller->getProperty("reference_box_contour_color");
+  const Property& pSrid = this->getProperty("srid");
+  const Property& pReferenceSrid = this->getProperty("reference_srid");
+  const Property& pReferenceBox = this->getProperty("reference_box");
+  const Property& pFillColor = this->getProperty("reference_box_fill_color");
+  const Property& pContourColor = this->getProperty("reference_box_contour_color");
 
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
   int referenceSrid = te::layout::Property::GetValueAs<int>(pReferenceSrid);

@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::LegendChildItemFactory::build(ItemFact
   Properties      props = params.getProperties(); 
 
   LegendChildModel* model = new LegendChildModel();
-  AbstractItemController* controller = new AbstractItemController(model);
+  AbstractItemController* controller = new AbstractItemController(model, 0);
   LegendChildItem* view = new LegendChildItem(controller);
   controller->setView(view);
 

@@ -26,8 +26,8 @@
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "ThreeNorthItem.h"
 
-te::layout::ThreeNorthController::ThreeNorthController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::ThreeNorthController::ThreeNorthController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 
 }

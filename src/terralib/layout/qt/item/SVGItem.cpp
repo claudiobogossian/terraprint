@@ -65,7 +65,7 @@ te::layout::SVGItem::~SVGItem()
 void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   painter->save();
-  SVGController *svgController = dynamic_cast<SVGController*>(m_controller);
+  SVGController *svgController = dynamic_cast<SVGController*>(getController());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 

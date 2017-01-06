@@ -88,7 +88,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
     {
       if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
       {
-        const Property& property = m_controller->getProperty("background_color");
+        const Property& property = this->getProperty("background_color");
         const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
         QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
@@ -111,10 +111,10 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
 
 void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
 {
-  const Property& pSrid = m_controller->getProperty("srid");
-  const Property& pWorldBox = m_controller->getProperty("world_box");
-  const Property& pScale = m_controller->getProperty("scale");
-  const Property& property = m_controller->getProperty("background_color");
+  const Property& pSrid = this->getProperty("srid");
+  const Property& pWorldBox = this->getProperty("world_box");
+  const Property& pScale = this->getProperty("scale");
+  const Property& property = this->getProperty("background_color");
 
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
   const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
@@ -132,8 +132,8 @@ void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 {
-  const Property& pWorldBox = m_controller->getProperty("world_box");
-  const Property& property = m_controller->getProperty("background_color");
+  const Property& pWorldBox = this->getProperty("world_box");
+  const Property& property = this->getProperty("background_color");
 
   const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
@@ -171,9 +171,9 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 
 void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)
 {
-  const Property& pSrid = m_controller->getProperty("srid");  
-  const Property& pScale = m_controller->getProperty("scale");
-  const Property& pLayerList = m_controller->getProperty("layers");
+  const Property& pSrid = this->getProperty("srid");  
+  const Property& pScale = this->getProperty("scale");
+  const Property& pLayerList = this->getProperty("layers");
   
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
   double scale = te::layout::Property::GetValueAs<double>(pScale);
@@ -293,14 +293,14 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if (mapController == 0)
   {
     m_clickedPointMM = te::gm::Point();
     return;
   }
 
-  const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pWorldBox = this->getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
 
   te::gm::Coord2D m_clickedCoordMM(m_clickedPointMM.getX(), m_clickedPointMM.getY());
@@ -407,7 +407,7 @@ void te::layout::MapItem::dropEvent( QGraphicsSceneDragDropEvent * event )
     listLayers.push_back(layer);
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if(mapController != 0)
   {
     mapController->addLayers(listLayers);
@@ -422,7 +422,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if (mapController == 0)
   {
     return;
@@ -434,7 +434,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
     zoomIn = false;
   }
 
-  const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pWorldBox = this->getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
 
   te::gm::Coord2D coordMM(event->pos().x(), event->pos().y());
@@ -482,7 +482,7 @@ bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
   //here we define the current edition mode, and each mode will now handle the mouse/keyboard events
   //this modes are used in the edition mode
 
-  const Property& pFixedScale = m_controller->getProperty("fixed_scale");
+  const Property& pFixedScale = this->getProperty("fixed_scale");
   bool fixedScale = te::layout::Property::GetValueAs<bool>(pFixedScale);
 
   EnumModeType* mode = Enums::getInstance().getEnumModeType();
@@ -599,12 +599,12 @@ void te::layout::MapItem::redraw()
 
 void te::layout::MapItem::recompose()
 {
-  if (m_controller == 0)
+  if (getController() == 0)
   {
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if (mapController == 0)
   {
     return;

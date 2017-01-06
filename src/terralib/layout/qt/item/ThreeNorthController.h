@@ -54,7 +54,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ThreeNorthController(AbstractItemModel* model);
+        ThreeNorthController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor

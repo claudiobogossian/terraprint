@@ -64,7 +64,7 @@ void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGr
   }
 
 
-  const Property& pBalloonType = m_controller->getProperty("balloon_type");
+  const Property& pBalloonType = this->getProperty("balloon_type");
 
   EnumBalloonType balloonEnum;
 
@@ -94,7 +94,7 @@ void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGr
 
 void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter)
 {
-  const Property& pMarginSize = m_controller->getProperty("margin_size");
+  const Property& pMarginSize = this->getProperty("margin_size");
   double margin = te::layout::Property::GetValueAs<double>(pMarginSize);
  
   painter->save();
@@ -132,7 +132,7 @@ void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter)
 
 void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
 {
-  const Property& pMarginSize = m_controller->getProperty("margin_size");
+  const Property& pMarginSize = this->getProperty("margin_size");
   double margin = te::layout::Property::GetValueAs<double>(pMarginSize);
 
   painter->save();
@@ -179,13 +179,13 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
 
 void te::layout::BalloonItem::setPainterParameters(QPainter* painter)
 {
-  const Property& colorProperty = m_controller->getProperty("color");
+  const Property& colorProperty = this->getProperty("color");
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor> (colorProperty);
 
-  const Property& pFillColor = m_controller->getProperty("fill_color");
-  const Property& pContourColor = m_controller->getProperty("contour_color");
+  const Property& pFillColor = this->getProperty("fill_color");
+  const Property& pContourColor = this->getProperty("contour_color");
 
-  const Property& pContourThickness = m_controller->getProperty("contour_thickness");
+  const Property& pContourThickness = this->getProperty("contour_thickness");
   double contourThickness = te::layout::Property::GetValueAs<double>(pContourThickness);
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
@@ -206,7 +206,7 @@ void te::layout::BalloonItem::setPainterParameters(QPainter* painter)
 
 void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
 {
-  const Property& pMarginSize = m_controller->getProperty("margin_size");
+  const Property& pMarginSize = this->getProperty("margin_size");
   double margin = te::layout::Property::GetValueAs<double>(pMarginSize);
 
   painter->save();
@@ -235,11 +235,11 @@ void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
 
 void  te::layout::BalloonItem::setBalloonDirection(QPainterPath& qpainterpath)
 {
-  const Property& pWidth = m_controller->getProperty("width");
+  const Property& pWidth = this->getProperty("width");
   double width = te::layout::Property::GetValueAs<double>(pWidth);
 
   EnumBalloonDirectionType balloonDirection;
-  const Property& pDirection = m_controller->getProperty("balloon_direction");
+  const Property& pDirection = this->getProperty("balloon_direction");
   const std::string& label = pDirection.getOptionByCurrentChoice().toString();
   EnumType* currentBalloonDirectionType = balloonDirection.getEnum(label);
 

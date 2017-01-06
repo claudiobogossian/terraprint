@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::MapCompositionItemFactory::build(ItemF
   Properties      props = params.getProperties(); 
 
   MapCompositionModel* model = new MapCompositionModel();
-  MapCompositionController* controller = new MapCompositionController(model);
+  MapCompositionController* controller = new MapCompositionController(model, 0);
   MapCompositionItem* view = new MapCompositionItem(controller, params.getName());
   controller->setView(view);
 

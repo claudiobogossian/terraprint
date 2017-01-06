@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::ItemGroupItemFactory::build(ItemFactor
   Properties      props = params.getProperties(); 
 
   ItemGroupModel* model = new ItemGroupModel();
-  ItemGroupController* controller = new ItemGroupController(model);
+  ItemGroupController* controller = new ItemGroupController(model, 0);
   ItemGroup* view = new ItemGroup(controller);
   controller->setView(view);
 

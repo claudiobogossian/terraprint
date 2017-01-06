@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::MapItemFactory::build(ItemFactoryParam
   Properties      props = params.getProperties(); 
 
   MapModel* model = new MapModel();
-  MapController* controller = new MapController(model);
+  MapController* controller = new MapController(model, 0);
   MapItem* view = new MapItem(controller);
   controller->setView(view);
 

@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::ArrowItemFactory::build(ItemFactoryPar
   Properties      props = params.getProperties(); 
 
   ArrowModel* model = new ArrowModel();
-  AbstractItemController* controller = new AbstractItemController(model);
+  AbstractItemController* controller = new AbstractItemController(model, 0);
   ArrowItem* view = new ArrowItem(controller);
   controller->setView(view);
 

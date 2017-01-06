@@ -34,10 +34,10 @@
 // Qt
 #include <QGraphicsItem>
 
-te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model)
+te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model, AbstractItemView* view)
   : Observer()
   , m_model(model)
-  , m_view(0)
+  , m_view(view)
   , m_marginResizePrecision(2.)
   , m_warningManager(new WarningManager())
   , m_resizableDefaultState(false)

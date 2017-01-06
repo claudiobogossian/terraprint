@@ -26,8 +26,8 @@
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 
 
-te::layout::ItemGroupController::ItemGroupController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::ItemGroupController::ItemGroupController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 }
 

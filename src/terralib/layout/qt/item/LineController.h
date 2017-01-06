@@ -59,7 +59,7 @@ namespace te
           \param controller "Controller" part of MVM component
           \param o "Model" part of MVM component
         */ 
-        LineController(AbstractItemModel* model);
+        LineController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor

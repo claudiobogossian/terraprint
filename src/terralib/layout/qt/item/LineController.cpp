@@ -34,8 +34,8 @@
 #include <QVector>
 #include <QPointF>
 
-te::layout::LineController::LineController(te::layout::AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::LineController::LineController(te::layout::AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 
 }

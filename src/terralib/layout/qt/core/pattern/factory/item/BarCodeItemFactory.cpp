@@ -36,7 +36,7 @@ te::layout::AbstractItemView* te::layout::BarCodeItemFactory::build(ItemFactoryP
   Properties      props = params.getProperties();
 
   BarCodeModel* model = new BarCodeModel();
-  BarCodeController* controller = new BarCodeController(model);
+  BarCodeController* controller = new BarCodeController(model, 0);
   BarCodeItem* view = new BarCodeItem(controller);
   controller->setView(view);
 

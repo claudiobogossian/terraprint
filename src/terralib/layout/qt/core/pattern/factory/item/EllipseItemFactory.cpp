@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::EllipseItemFactory::build(ItemFactoryP
   Properties      props = params.getProperties();
 
   EllipseModel* model = new EllipseModel();
-  AbstractItemController* controller = new AbstractItemController(model);
+  AbstractItemController* controller = new AbstractItemController(model, 0);
   EllipseItem* view = new EllipseItem(controller);
   controller->setView(view);
 

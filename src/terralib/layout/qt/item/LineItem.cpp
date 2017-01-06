@@ -54,7 +54,7 @@ te::layout::LineItem::~LineItem()
 
 void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  LineController* controller = dynamic_cast<LineController*>(m_controller);
+  LineController* controller = dynamic_cast<LineController*>(getController());
   if (!controller)
   {
     return;
@@ -66,11 +66,11 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
     return;
   }
 
-  const Property& pColor = m_controller->getProperty("color");
+  const Property& pColor = this->getProperty("color");
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(pColor);
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
@@ -89,7 +89,7 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
 QPen te::layout::LineItem::searchStyle()
 {
-  const Property& pLineStyle = m_controller->getProperty("line_style_type");
+  const Property& pLineStyle = this->getProperty("line_style_type");
   QPen penStyle;
 
   EnumLineStyleType lineStyle;

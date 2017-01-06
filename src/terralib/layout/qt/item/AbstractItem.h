@@ -139,7 +139,7 @@ namespace te
         virtual te::layout::ItemAction getCurrentAction();
 
         virtual void prepareGeometryChange();
-        
+
       protected:
 
         /*!

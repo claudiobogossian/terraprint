@@ -36,7 +36,7 @@ te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryP
   Properties props = params.getProperties();
 
   BalloonModel* model = new BalloonModel();
-  BalloonController* controller = new BalloonController(model);
+  BalloonController* controller = new BalloonController(model, 0);
   BalloonItem* view = new BalloonItem(controller);
   controller->setView(view);
 

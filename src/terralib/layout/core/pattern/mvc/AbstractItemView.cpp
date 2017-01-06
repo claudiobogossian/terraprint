@@ -1,8 +1,10 @@
 #include "AbstractItemView.h"
 
-
 #include "AbstractItemController.h"
 #include "AbstractItemModel.h"
+
+#include "../../property/Properties.h"
+#include "../../property/Property.h"
 
 te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controller)
   : m_controller(controller)
@@ -24,6 +26,11 @@ te::layout::AbstractItemView::~AbstractItemView()
 
 te::layout::AbstractItemController* te::layout::AbstractItemView::getController() const
 {
+  if (m_controller == nullptr)
+  {
+    m_controller = createController();
+  }
+
   return m_controller;
 }
 
@@ -71,6 +78,37 @@ bool te::layout::AbstractItemView::isSubSelected() const
   return m_subSelected;
 }
 
+const te::layout::Properties& te::layout::AbstractItemView::getProperties() const
+{
+  AbstractItemController* controller = getController();
+  return controller->getProperties();
+}
 
+void te::layout::AbstractItemView::setProperties(const te::layout::Properties& properties)
+{
+  AbstractItemController* controller = getController();
+  controller->setProperties(properties);
+}
 
+const te::layout::Property& te::layout::AbstractItemView::getProperty(const std::string& propertyName) const
+{
+  AbstractItemController* controller = getController();
+  return controller->getProperty(propertyName);
+}
 
+void te::layout::AbstractItemView::setProperty(const te::layout::Property& property)
+{
+  AbstractItemController* controller = getController();
+  controller->setProperty(property);
+}
+
+te::layout::AbstractItemController* te::layout::AbstractItemView::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new AbstractItemController(model, (AbstractItemView*)this);
+}
+
+te::layout::AbstractItemModel* te::layout::AbstractItemView::createModel() const
+{
+  return 0;
+}

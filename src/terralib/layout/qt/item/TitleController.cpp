@@ -33,8 +33,8 @@
 #include <QTextCursor>
 #include <QTextTable>
 
-te::layout::TitleController::TitleController(AbstractItemModel* model)
-  : TextController(model)
+te::layout::TitleController::TitleController(AbstractItemModel* model, AbstractItemView* view)
+  : TextController(model, view)
   , m_table(0)
 {
 }

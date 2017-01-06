@@ -3,8 +3,8 @@
 #include "../../qt/item/BarCodeItem.h"
 
 
-te::layout::BarCodeController::BarCodeController(AbstractItemModel* model)
-: TextController(model)
+te::layout::BarCodeController::BarCodeController(AbstractItemModel* model, AbstractItemView* view)
+: TextController(model, view)
 {
 
 }

@@ -50,7 +50,7 @@ te::layout::ItemGroup::~ItemGroup()
 
 QRectF te::layout::ItemGroup::boundingRect() const
 {
-  bool resizable = te::layout::Property::GetValueAs<bool>(m_controller->getProperty("resizable"));
+  bool resizable = te::layout::Property::GetValueAs<bool>(this->getProperty("resizable"));
   if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
   {
     return AbstractItem::boundingRect();
@@ -74,7 +74,7 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
 {
   if(change == QGraphicsItem::ItemChildAddedChange)
   {
-    ItemGroupController* controller = dynamic_cast<ItemGroupController*>(m_controller);
+    ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
     if(controller != 0)
     {
       controller->itemAdded();

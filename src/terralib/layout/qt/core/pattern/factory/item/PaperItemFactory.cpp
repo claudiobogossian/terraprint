@@ -38,7 +38,7 @@ te::layout::AbstractItemView* te::layout::PaperItemFactory::build(ItemFactoryPar
   Properties props = params.getProperties();
 
   PaperModel* model = new PaperModel();
-  AbstractItemController* controller = new AbstractItemController(model);
+  AbstractItemController* controller = new AbstractItemController(model, 0);
   PaperItem* view = new PaperItem(controller);
   controller->setView(view);
 

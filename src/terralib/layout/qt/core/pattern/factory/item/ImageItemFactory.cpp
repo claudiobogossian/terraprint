@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryPar
   Properties props = params.getProperties(); 
 
   ImageModel* model = new ImageModel();
-  AbstractItemController* controller = new ImageController(model);
+  AbstractItemController* controller = new ImageController(model, 0);
   ImageItem* view = new ImageItem(controller);
 
   double width = te::layout::Property::GetValueAs<double>(model->getProperty("width"));

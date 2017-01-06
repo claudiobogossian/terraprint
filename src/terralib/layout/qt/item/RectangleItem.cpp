@@ -50,7 +50,7 @@ te::layout::RectangleItem::~RectangleItem()
 
 void te::layout::RectangleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& property = m_controller->getProperty("rectangle_type");
+  const Property& property = this->getProperty("rectangle_type");
   EnumRectangleType enumRectangleType;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
@@ -78,9 +78,9 @@ void te::layout::RectangleItem::drawRectangle( QPainter * painter )
 {
   painter->save();
 
-  const Property& pFillColor = m_controller->getProperty("fill_color");
-  const Property& pContourColor = m_controller->getProperty("contour_color");
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pFillColor = this->getProperty("fill_color");
+  const Property& pContourColor = this->getProperty("contour_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
   const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
@@ -112,9 +112,9 @@ void te::layout::RectangleItem::drawRoundedRectangle(QPainter * painter)
 {
   painter->save();
 
-  const Property& pFillColor = m_controller->getProperty("fill_color");
-  const Property& pContourColor = m_controller->getProperty("contour_color");
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pFillColor = this->getProperty("fill_color");
+  const Property& pContourColor = this->getProperty("contour_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
   const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
@@ -146,9 +146,9 @@ void te::layout::RectangleItem::drawSingleCornerTrimmedRectangle(QPainter * pain
 {
   painter->save();
 
-  const Property& pFillColor = m_controller->getProperty("fill_color");
-  const Property& pContourColor = m_controller->getProperty("contour_color");
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pFillColor = this->getProperty("fill_color");
+  const Property& pContourColor = this->getProperty("contour_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
   const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);

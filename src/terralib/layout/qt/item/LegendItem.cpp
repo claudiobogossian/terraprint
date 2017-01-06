@@ -120,7 +120,7 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
 
   painter->save();
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(m_qFontTitleColor, lnew, Qt::SolidLine);
@@ -296,7 +296,7 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont f
 
   painter->save();
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(fontColor, lnew, Qt::SolidLine);
@@ -402,17 +402,17 @@ void te::layout::LegendItem::refreshLegendProperties()
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  const Property& pFontColor = m_controller->getProperty("font_legend_color");
-  const Property& pLegendFont = m_controller->getProperty("font_legend");
-  const Property& pDisplacementBetweenSymbols = m_controller->getProperty("displacement_between_symbols");
-  const Property& pDisplacementBetweenSymbolsAndText = m_controller->getProperty("displacement_between_symbols_and_texts");
-  const Property& pSymbolSize = m_controller->getProperty("symbol_size");
-  const Property& pBorderDisplacement = m_controller->getProperty("border_displacement");
-  const Property& pDispBetweenTitleAndSymbols = m_controller->getProperty("displacement_between_title_and_symbols");
-  const Property& pFontTitleColor = m_controller->getProperty("font_title_color");
-  const Property& pTitleFont = m_controller->getProperty("font_title");
-  const Property& pRows = m_controller->getProperty("rows");
-  const Property& pOffsetBetweenColumns = m_controller->getProperty("offset_between_columns");
+  const Property& pFontColor = this->getProperty("font_legend_color");
+  const Property& pLegendFont = this->getProperty("font_legend");
+  const Property& pDisplacementBetweenSymbols = this->getProperty("displacement_between_symbols");
+  const Property& pDisplacementBetweenSymbolsAndText = this->getProperty("displacement_between_symbols_and_texts");
+  const Property& pSymbolSize = this->getProperty("symbol_size");
+  const Property& pBorderDisplacement = this->getProperty("border_displacement");
+  const Property& pDispBetweenTitleAndSymbols = this->getProperty("displacement_between_title_and_symbols");
+  const Property& pFontTitleColor = this->getProperty("font_title_color");
+  const Property& pTitleFont = this->getProperty("font_title");
+  const Property& pRows = this->getProperty("rows");
+  const Property& pOffsetBetweenColumns = this->getProperty("offset_between_columns");
 
   const te::color::RGBAColor& fontLegendColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFontColor);
   const Font& fontLegend = te::layout::Property::GetValueAs<Font>(pLegendFont);
@@ -431,7 +431,7 @@ void te::layout::LegendItem::refreshLegendProperties()
   m_qFontTitleColor.setRgb(fontTitleColor.getRed(), fontTitleColor.getGreen(), fontTitleColor.getBlue(), fontTitleColor.getAlpha());
   m_qFontTitle = utils.convertToQfont(fontTitle);
 
-  LegendController* controller = dynamic_cast<LegendController*>(m_controller);
+  LegendController* controller = dynamic_cast<LegendController*>(getController());
   if (controller)
   {
     m_layerList = controller->searchLayersFromURI();

@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::TitleItemFactory::build(ItemFactoryPar
   Properties      props = params.getProperties(); 
 
   TitleModel* model = new TitleModel();
-  TitleController* controller = new TitleController(model);
+  TitleController* controller = new TitleController(model, 0);
   TitleItem* view = new TitleItem(controller);
   controller->setView(view);
 

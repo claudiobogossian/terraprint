@@ -31,8 +31,8 @@
 
 #include <set>
 
-te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model)
-  : ItemGroupController(model)
+te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model, AbstractItemView* view)
+  : ItemGroupController(model, view)
   , m_ignoreResize(false)
 {
 

@@ -59,7 +59,7 @@ namespace te
           \param controller "Controller" part of MVM component
           \param o "Model" part of MVM component
         */ 
-        ScaleController(AbstractItemModel* model);
+        ScaleController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor

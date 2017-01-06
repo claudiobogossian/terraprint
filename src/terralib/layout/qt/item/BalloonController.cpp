@@ -25,8 +25,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 
-te::layout::BalloonController::BalloonController(AbstractItemModel* model)
-: TextController(model)
+te::layout::BalloonController::BalloonController(AbstractItemModel* model, AbstractItemView* view)
+: TextController(model, view)
 {
 
 }

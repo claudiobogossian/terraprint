@@ -47,7 +47,7 @@ namespace te
     class TELAYOUTEXPORT BalloonController : public TextController
     {
     public:
-      BalloonController(AbstractItemModel* model);
+      BalloonController(AbstractItemModel* model, AbstractItemView* view);
 
       virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
 

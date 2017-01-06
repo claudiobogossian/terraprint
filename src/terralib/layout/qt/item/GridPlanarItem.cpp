@@ -54,12 +54,12 @@ void te::layout::GridPlanarItem::calculateGrid()
 {
   PlanarGridSettingsConfigProperties settingsConfig;
 
-  const Property& pPlanarBox = m_controller->getProperty("planar_box");
-  const Property& pWidth = m_controller->getProperty("width");
-  const Property& pHeight = m_controller->getProperty("height");
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pPlanarBox = this->getProperty("planar_box");
+  const Property& pWidth = this->getProperty("width");
+  const Property& pHeight = this->getProperty("height");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
 
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   const Property& pInitialX = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointX());
   const Property& pInitialY = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointY());
@@ -123,7 +123,7 @@ void te::layout::GridPlanarItem::calculateGrid()
 
 void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
@@ -192,7 +192,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
 
     std::string text = convert.toStdString();
 
-    const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+    const Property& pSuperscript = this->getProperty(settingsConfig.getSuperscriptText());
     bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
     QPainterPath textObject;
@@ -249,7 +249,7 @@ void te::layout::GridPlanarItem::generateGridCrossStyle(){
 
 void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
@@ -323,7 +323,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
     std::string text = convert.toStdString();
 
-    const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+    const Property& pSuperscript = this->getProperty(settingsConfig.getSuperscriptText());
     bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
     QPainterPath textObject;
@@ -375,7 +375,7 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
 
 double te::layout::GridPlanarItem::initVerticalLines( const te::gm::Envelope& geoBox )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
 
@@ -405,7 +405,7 @@ double te::layout::GridPlanarItem::initVerticalLines( const te::gm::Envelope& ge
 
 double te::layout::GridPlanarItem::initHorizontalLines( const te::gm::Envelope& geoBox )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
 

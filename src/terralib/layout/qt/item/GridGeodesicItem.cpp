@@ -53,15 +53,15 @@ te::layout::GridGeodesicItem::~GridGeodesicItem()
 
 void te::layout::GridGeodesicItem::calculateGrid()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pGeographicBox = m_controller->getProperty("geographic_box");
-  const Property& pWidth = m_controller->getProperty("width");
-  const Property& pHeight = m_controller->getProperty("height");
+  const Property& pGeographicBox = this->getProperty("geographic_box");
+  const Property& pWidth = this->getProperty("width");
+  const Property& pHeight = this->getProperty("height");
   const Property& pStyle = pGridSettings.getSubProperty(settingsConfig.getStyle());
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
 
   const te::gm::Envelope& geographicBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pGeographicBox);
   double width = te::layout::Property::GetValueAs<double>(pWidth);
@@ -131,7 +131,7 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
 double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& geoBox )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
@@ -160,7 +160,7 @@ double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& 
 
 double te::layout::GridGeodesicItem::initHorizontalLines( const te::gm::Envelope& geoBox )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
@@ -190,7 +190,7 @@ double te::layout::GridGeodesicItem::initHorizontalLines( const te::gm::Envelope
 
 void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
@@ -334,7 +334,7 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
 
 void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 

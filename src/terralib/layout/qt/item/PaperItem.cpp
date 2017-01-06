@@ -44,12 +44,12 @@ te::layout::PaperItem::~PaperItem()
 
 void te::layout::PaperItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& pPaperColor = m_controller->getProperty("paper_color");
-  const Property& pShadowColor = m_controller->getProperty("shadow_color");
-  const Property& pFrameColor = m_controller->getProperty("frame_color");
-  const Property& pPaperWidth = m_controller->getProperty("paper_width");
-  const Property& pPaperHeight = m_controller->getProperty("paper_height");
-  const Property& pShadowPadding = m_controller->getProperty("shadow_padding");
+  const Property& pPaperColor = this->getProperty("paper_color");
+  const Property& pShadowColor = this->getProperty("shadow_color");
+  const Property& pFrameColor = this->getProperty("frame_color");
+  const Property& pPaperWidth = this->getProperty("paper_width");
+  const Property& pPaperHeight = this->getProperty("paper_height");
+  const Property& pShadowPadding = this->getProperty("shadow_padding");
 
   const te::color::RGBAColor& paperColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pPaperColor);
   const te::color::RGBAColor& shadowColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pShadowColor);

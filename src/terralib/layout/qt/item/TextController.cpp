@@ -32,8 +32,8 @@
 #include <QTextDocument>
 #include <QTextCursor>
 
-te::layout::TextController::TextController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::TextController::TextController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
   , m_dpiForCalculation(96.)
 {
 }

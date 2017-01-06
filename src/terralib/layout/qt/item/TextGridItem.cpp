@@ -102,7 +102,7 @@ void te::layout::TextGridItem::documentEditionFinished()
   propertyText.setName("text_matrix");
   propertyText.setValue(textMatrix, dataType->getDataTypeStringMatrix());
 
-  m_controller->setProperty(propertyText);
+  te::layout::AbstractItem::setProperty(propertyText);
 }
 
 void te::layout::TextGridItem::updateBlockEditionRange()

@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::GridGeodesicItemFactory::build(ItemFac
   Properties      props = params.getProperties(); 
 
   GridGeodesicModel* model = new GridGeodesicModel();
-  te::layout::AbstractItemController* controller = new GridGeodesicController(model);
+  te::layout::AbstractItemController* controller = new GridGeodesicController(model, 0);
   GridGeodesicItem* view = new GridGeodesicItem(controller);
   controller->setView(view);
 

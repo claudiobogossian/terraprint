@@ -101,10 +101,10 @@ QRectF te::layout::TextItem::boundingRect() const
     return AbstractItem::boundingRect();
   }
 
-  const Property& pDx = m_controller->getProperty("dx");
+  const Property& pDx = this->getProperty("dx");
   double dx = te::layout::Property::GetValueAs<double>(pDx);
 
-  const Property& pDy = m_controller->getProperty("dy");
+  const Property& pDy = this->getProperty("dy");
   double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   Utils utils = myScene->getUtils();
@@ -132,7 +132,7 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
     return;
   }
 
-  TextController* textController = (TextController*)m_controller;
+  TextController* textController = (TextController*)getController();
 
   //we must set some transformation in order to prepare the item to be rendered on the screen or in other output device
   //we must first aquire some information about the current dpi and the zoom
@@ -212,10 +212,10 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
   }
 
   //me must consider the optional displacement
-  const Property& pDx = m_controller->getProperty("dx");
+  const Property& pDx = this->getProperty("dx");
   double dx = te::layout::Property::GetValueAs<double>(pDx);
 
-  const Property& pDy = m_controller->getProperty("dy");
+  const Property& pDy = this->getProperty("dy");
   double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   double xPosMM = event->pos().x() - dx;
@@ -458,7 +458,7 @@ void te::layout::TextItem::documentEditionFinished()
   propertyText.setName("text");
   propertyText.setValue(newText, dataType->getDataTypeString());
 
-  m_controller->setProperty(propertyText);
+  te::layout::AbstractItem::setProperty(propertyText);
 }
 
 

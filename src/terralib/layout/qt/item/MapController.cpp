@@ -39,8 +39,8 @@
 // Qt
 #include <QGraphicsItem>
 
-te::layout::MapController::MapController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::MapController::MapController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 
 }

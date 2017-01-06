@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::TextItemFactory::build(ItemFactoryPara
   Properties      props = params.getProperties();
 
   TextModel* model = new TextModel();
-  TextController* controller = new TextController(model);
+  TextController* controller = new TextController(model, 0);
   TextItem* view = new TextItem(controller);
   controller->setView(view);
 

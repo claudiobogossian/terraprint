@@ -38,8 +38,8 @@ QRectF te::layout::AbstractItem::boundingRect() const
   }
 
   //models stores size information in item CS. 
-  double width = te::layout::Property::GetValueAs<double>(m_controller->getProperty("width"));
-  double height = te::layout::Property::GetValueAs<double>(m_controller->getProperty("height"));
+  double width = te::layout::Property::GetValueAs<double>(this->getProperty("width"));
+  double height = te::layout::Property::GetValueAs<double>(this->getProperty("height"));
 
   QRectF boundingRect(0, 0, width, height);
   return boundingRect;
@@ -127,7 +127,7 @@ void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraph
 
   //Draws the item
   drawItem(painter, option, widget);
-  if (m_controller->getWarningManager()->hasWarning() && (m_isPrinting == false))
+  if (getController()->getWarningManager()->hasWarning() && (m_isPrinting == false))
   {
     drawWarningAlert(painter);
   }
@@ -187,7 +187,7 @@ void te::layout::AbstractItem::drawBackground(QPainter * painter)
     return;
   }
 
-  const Property& pBackgroundColor = m_controller->getProperty("background_color");
+  const Property& pBackgroundColor = this->getProperty("background_color");
   const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pBackgroundColor);
   QColor qBackgroundColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
@@ -213,13 +213,13 @@ void te::layout::AbstractItem::drawFrame(QPainter * painter)
     return;
   }
 
-  if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("show_frame")) == false)
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_frame")) == false)
   {
     return;
   }
 
-  const Property& pFrameColor = m_controller->getProperty("frame_color");
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pFrameColor = this->getProperty("frame_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
   const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
   double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
@@ -268,7 +268,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   //if the item is not resizable, or
   //if the rect is too small to fit two hot points in the same axis plus a gap between them, we do not draw the hot points
   bool drawHotPoints = true;
-  const Property& pResizable = m_controller->getProperty("resizable");
+  const Property& pResizable = this->getProperty("resizable");
   if (te::layout::Property::GetValueAs<bool>(pResizable) == false)
   {
     drawHotPoints = false;
@@ -370,12 +370,12 @@ QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange 
   {
     if (m_currentAction == te::layout::NO_ACTION)
     {
-      m_controller->itemPositionChanged(this->pos().x(), this->pos().y());
+      getController()->itemPositionChanged(this->pos().x(), this->pos().y());
     }
   }
   else if (change == QGraphicsItem::ItemZValueHasChanged)
   {
-    m_controller->itemZValueChanged(this->zValue());
+    getController()->itemZValueChanged(this->zValue());
   }
 
   return QGraphicsItem::itemChange(change, value);
@@ -383,7 +383,7 @@ QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange 
 
 void te::layout::AbstractItem::hoverMoveEvent(QGraphicsSceneHoverEvent * event)
 {
-  if (isEditionMode() == false && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("resizable")))
+  if (isEditionMode() == false && te::layout::Property::GetValueAs<bool>(this->getProperty("resizable")))
   {
     if (isZoomAdequateForResize())
     {
@@ -552,7 +552,7 @@ void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const d
 
   QPoint tipPoint = QCursor::pos();
 
-  std::vector<std::string> warningVect = m_controller->getWarningManager()->getWarnings();
+  std::vector<std::string> warningVect = getController()->getWarningManager()->getWarnings();
 
   std::string warningsMsg = "";
 
@@ -637,7 +637,7 @@ bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double&
   }
   else
   {
-    const Property& pKeepAspect = m_controller->getProperty("keep_aspect");
+    const Property& pKeepAspect = this->getProperty("keep_aspect");
     bool keepAspect = te::layout::Property::GetValueAs<bool>(pKeepAspect);
     if (keepAspect == false)
     {
@@ -702,7 +702,7 @@ bool te::layout::AbstractItem::checkRotationArea(const double& x, const double& 
 void te::layout::AbstractItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
   //checks if the item is resizable.
-  const Property& property = m_controller->getProperty("resizable");
+  const Property& property = this->getProperty("resizable");
   if (te::layout::Property::GetValueAs<bool>(property) == true && isZoomAdequateForResize())
   {
     //If so, checks if the resize operation must be started
@@ -740,7 +740,7 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
     this->setOpacity(0.5);
     m_finalCoord = event->pos();
     this->prepareGeometryChange();
-    m_rect = m_controller->calculateResize(m_enumSides, m_initialCoord, m_finalCoord);
+    m_rect = getController()->calculateResize(m_enumSides, m_initialCoord, m_finalCoord);
 
     QGraphicsScene* scene = this->scene();
     QGraphicsView* view = scene->views().first();
@@ -796,21 +796,21 @@ void te::layout::AbstractItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * even
   {
     m_currentAction = te::layout::NO_ACTION;
     m_finalCoord = event->pos();
-    m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
+    getController()->resize(m_enumSides, m_initialCoord, m_finalCoord);
     this->setOpacity(1.);
   }
   else if (m_currentAction == te::layout::MOVE_ACTION)
   {
     m_currentAction = te::layout::NO_ACTION;
     this->setOpacity(1.);
-    m_controller->itemPositionChanged(this->pos().x(), this->pos().y());
+    getController()->itemPositionChanged(this->pos().x(), this->pos().y());
   }
   else if (m_currentAction == te::layout::ROTATION_ACTION)
   {
     m_currentAction = te::layout::NO_ACTION;
 
     double rotation = getItemRotation();
-    m_controller->rotated(rotation);
+    getController()->rotated(rotation);
   }
 
   QGraphicsItem::mouseReleaseEvent(event);
@@ -880,3 +880,4 @@ void te::layout::AbstractItem::prepareGeometryChange()
 {
   QGraphicsItem::prepareGeometryChange();
 }
+

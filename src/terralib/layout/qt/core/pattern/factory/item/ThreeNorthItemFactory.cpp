@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::ThreeNorthItemFactory::build(ItemFacto
   Properties      props = params.getProperties();
 
   ThreeNorthModel* model = new ThreeNorthModel();
-  AbstractItemController* controller = new ThreeNorthController(model);
+  AbstractItemController* controller = new ThreeNorthController(model, 0);
   ThreeNorthItem* view = new ThreeNorthItem(controller);
   controller->setView(view);
 

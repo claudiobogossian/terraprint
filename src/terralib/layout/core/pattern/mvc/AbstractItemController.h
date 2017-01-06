@@ -67,7 +67,7 @@ namespace te
         /*
           \brief Constructor
         */ 
-        explicit AbstractItemController(AbstractItemModel* model);
+        explicit AbstractItemController(AbstractItemModel* model, AbstractItemView* view);
         
         virtual ~AbstractItemController();
 

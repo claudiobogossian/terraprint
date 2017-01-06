@@ -24,8 +24,8 @@
 #include "../../core/property/SharedProperties.h"
 #include "GridMapItem.h"
 
-te::layout::GridMapController::GridMapController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::GridMapController::GridMapController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 
 }

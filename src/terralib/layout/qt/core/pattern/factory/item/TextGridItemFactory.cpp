@@ -35,7 +35,7 @@ te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactory
   Properties      props = params.getProperties(); 
 
   TextGridModel* model = new TextGridModel();
-  AbstractItemController* controller = new TextGridController(model);
+  AbstractItemController* controller = new TextGridController(model, 0);
   TextGridItem* view = new TextGridItem(controller);
   controller->setView(view);
 

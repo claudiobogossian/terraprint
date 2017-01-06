@@ -79,7 +79,7 @@ void te::layout::GridMapItem::addGridLinesToPath()
 
 void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -116,7 +116,7 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
     {
       if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
       {
-        const Property& property = m_controller->getProperty("background_color");
+        const Property& property = this->getProperty("background_color");
         const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
         QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
@@ -173,7 +173,7 @@ void te::layout::GridMapItem::drawGridOnDevice( QPainter* painter )
 
 void te::layout::GridMapItem::configPainter( QPainter* painter )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -223,7 +223,7 @@ void te::layout::GridMapItem::configPainter( QPainter* painter )
 
 void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -271,7 +271,7 @@ void te::layout::GridMapItem::clearLines()
 
 void te::layout::GridMapItem::calculateTexts()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -316,7 +316,7 @@ void te::layout::GridMapItem::calculateTexts()
 
 void te::layout::GridMapItem::calculateTopTexts()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pTopRotateText = pGridSettings.getSubProperty(settingsConfig.getTopRotateText());
@@ -336,7 +336,7 @@ void te::layout::GridMapItem::calculateTopTexts()
   std::vector<TextPosition>::iterator it = m_topTexts.begin();
 
 
-  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  const Property& pSuperscript = this->getProperty(settingsConfig.getSuperscriptText());
   bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
   for( ; it != m_topTexts.end() ; ++it )
@@ -406,7 +406,7 @@ void te::layout::GridMapItem::calculateSuperScriptText(const QPointF& point, con
 
 void te::layout::GridMapItem::calculateBottomTexts()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pBottomRotateText = pGridSettings.getSubProperty(settingsConfig.getBottomRotateText());
@@ -426,7 +426,7 @@ void te::layout::GridMapItem::calculateBottomTexts()
   std::vector<TextPosition>::iterator it = m_bottomTexts.begin();
 
 
-  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  const Property& pSuperscript = this->getProperty(settingsConfig.getSuperscriptText());
   bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
   for( ; it != m_bottomTexts.end() ; ++it )
@@ -450,7 +450,7 @@ void te::layout::GridMapItem::calculateBottomTexts()
 
 void te::layout::GridMapItem::calculateLeftTexts()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pLeftRotateText = pGridSettings.getSubProperty(settingsConfig.getLeftRotateText());
@@ -472,7 +472,7 @@ void te::layout::GridMapItem::calculateLeftTexts()
   
   std::vector<TextPosition>::iterator it = m_leftTexts.begin();
 
-  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  const Property& pSuperscript = this->getProperty(settingsConfig.getSuperscriptText());
   bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
 
@@ -499,7 +499,7 @@ void te::layout::GridMapItem::calculateLeftTexts()
 
 void te::layout::GridMapItem::calculateRightTexts()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
   const Property& pRightRotateText = pGridSettings.getSubProperty(settingsConfig.getRightRotateText());
@@ -510,7 +510,7 @@ void te::layout::GridMapItem::calculateRightTexts()
 
   QFont qFont = ItemUtils::convertToQfont(font);
 
-  const Property& pSuperscript = m_controller->getProperty(settingsConfig.getSuperscriptText());
+  const Property& pSuperscript = this->getProperty(settingsConfig.getSuperscriptText());
   bool useSuperScript = te::layout::Property::GetValueAs<bool>(pSuperscript);
 
   int iRotate = 0;
@@ -555,7 +555,7 @@ QRectF te::layout::GridMapItem::boundingRect() const
 
 void te::layout::GridMapItem::calculateCrossLines()
 {
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
 
@@ -631,8 +631,8 @@ void te::layout::GridMapItem::calculateCrossLines()
 
 void te::layout::GridMapItem::calculateBoldersSegments(double crossOffSet){
 
-  const Property& pWidth = m_controller->getProperty("width");
-  const Property& pHeight = m_controller->getProperty("height");
+  const Property& pWidth = this->getProperty("width");
+  const Property& pHeight = this->getProperty("height");
 
   double width = te::layout::Property::GetValueAs<double>(pWidth);
   double height = te::layout::Property::GetValueAs<double>(pHeight);
@@ -843,12 +843,12 @@ bool te::layout::GridMapItem::calculateCrossIntersectMapBorder( QLineF vrt, QLin
 {
   bool result = false;
 
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
 
-  const Property& pWidth = m_controller->getProperty("width");
-  const Property& pHeight = m_controller->getProperty("height");
+  const Property& pWidth = this->getProperty("width");
+  const Property& pHeight = this->getProperty("height");
   const Property& pCrossOffset = pGridSettings.getSubProperty(settingsConfig.getCrossOffset());
 
   double width = te::layout::Property::GetValueAs<double>(pWidth);
@@ -924,7 +924,7 @@ void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF
     return;
   }
 
-  const Property& pGridSettings = m_controller->getProperty("GridSettings");
+  const Property& pGridSettings = this->getProperty("GridSettings");
 
   QString qText = ItemUtils::convert2QString(text);
 
