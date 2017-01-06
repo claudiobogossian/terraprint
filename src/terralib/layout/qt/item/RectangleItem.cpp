@@ -38,7 +38,7 @@
 #include <QRectF>
 
 te::layout::RectangleItem::RectangleItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
 
 }

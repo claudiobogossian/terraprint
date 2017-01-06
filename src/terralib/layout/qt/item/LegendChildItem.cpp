@@ -30,7 +30,7 @@
 #include "../../item/LegendChildModel.h"
 
 te::layout::LegendChildItem::LegendChildItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {  
  
 }

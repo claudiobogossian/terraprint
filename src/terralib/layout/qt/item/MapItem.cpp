@@ -52,7 +52,7 @@
 
 te::layout::MapItem::MapItem()
   : QObject()
-  , AbstractItem(nullptr)
+  , AbstractItem()
   , m_currentEditionMode(0)
 {
   this->setAcceptDrops(true);

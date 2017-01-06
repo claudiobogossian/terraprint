@@ -42,7 +42,7 @@
 #include <memory>
 
 te::layout::GridMapItem::GridMapItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
   , m_maxWidthTextMM(0)
   , m_maxHeigthTextMM(0)
   , m_changeSize(false)

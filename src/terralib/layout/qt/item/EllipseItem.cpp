@@ -32,7 +32,7 @@
 #include "terralib/color/RGBAColor.h"
 
 te::layout::EllipseItem::EllipseItem()
-: AbstractItem(nullptr)
+: AbstractItem()
 {
 }
 

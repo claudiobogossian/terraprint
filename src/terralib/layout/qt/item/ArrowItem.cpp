@@ -37,7 +37,7 @@
 #include "qglobal.h"
 
 te::layout::ArrowItem::ArrowItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
 }
 

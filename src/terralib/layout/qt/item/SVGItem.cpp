@@ -52,7 +52,7 @@
 #include "AbstractItem.h"
 
 te::layout::SVGItem::SVGItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
     
 }

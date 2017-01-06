@@ -53,7 +53,7 @@
 
 te::layout::TextItem::TextItem()
   : QObject()
-  , AbstractItem(nullptr)
+  , AbstractItem()
   , m_document(0)
   , m_textCursor(0)
   , m_cursorTimer(0)

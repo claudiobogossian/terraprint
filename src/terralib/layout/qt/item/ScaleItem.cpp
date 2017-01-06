@@ -38,7 +38,7 @@
 #include <iostream>
 
 te::layout::ScaleItem::ScaleItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
   , m_scale(0)
   , m_gapX(0)
   , m_gapY(0)

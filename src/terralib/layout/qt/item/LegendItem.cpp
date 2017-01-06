@@ -45,7 +45,7 @@
 #include <QPixmap>
 
 te::layout::LegendItem::LegendItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
   , m_currentMaxHeight(0)
   , m_maxWidth(0)
   , m_displacementBetweenSymbols(0)

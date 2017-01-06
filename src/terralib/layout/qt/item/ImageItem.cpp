@@ -36,7 +36,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include <QStyleOptionGraphicsItem>
 
 te::layout::ImageItem::ImageItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
 
 }

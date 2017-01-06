@@ -6,16 +6,12 @@
 #include "../../property/Properties.h"
 #include "../../property/Property.h"
 
-te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controller)
-  : m_controller(controller)
+te::layout::AbstractItemView::AbstractItemView()
+  : m_controller(0)
   , m_isEditionMode(false)
   , m_subSelected(false)
   , m_useResizePixmap(true)
 {
-  if (controller != nullptr)
-  {
-    controller->setView(this);
-  }
 }
 
 te::layout::AbstractItemView::~AbstractItemView()
@@ -109,9 +105,4 @@ te::layout::AbstractItemController* te::layout::AbstractItemView::createControll
 {
   AbstractItemModel* model = createModel();
   return new AbstractItemController(model, (AbstractItemView*)this);
-}
-
-te::layout::AbstractItemModel* te::layout::AbstractItemView::createModel() const
-{
-  return 0;
 }

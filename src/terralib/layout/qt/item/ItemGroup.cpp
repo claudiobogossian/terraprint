@@ -37,7 +37,7 @@
 #include <QStyleOptionGraphicsItem>
 
 te::layout::ItemGroup::ItemGroup()
-  : AbstractItem(nullptr)
+  : AbstractItem()
   , m_stacksBehindParent(false)
   , m_isSubSelectionAllowed(true)
 {

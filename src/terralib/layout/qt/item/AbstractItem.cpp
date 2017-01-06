@@ -6,9 +6,9 @@
 #include "../../core/Utils.h"
 #include "../core/Scene.h"
 
-te::layout::AbstractItem::AbstractItem(AbstractItemController* controller)
+te::layout::AbstractItem::AbstractItem()
   : QGraphicsItem()
-  , AbstractItemView(controller)
+  , AbstractItemView()
   , m_enumSides(TPNoneSide)
   , m_currentAction(te::layout::NO_ACTION)
   , m_marginResizePrecision(5.)

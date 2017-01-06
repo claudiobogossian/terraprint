@@ -43,7 +43,7 @@
 #include <QObject>
 
 te::layout::LineItem::LineItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
     setFlag(QGraphicsItem::ItemClipsToShape);
 }

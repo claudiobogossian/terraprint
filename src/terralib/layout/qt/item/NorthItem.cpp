@@ -32,7 +32,7 @@
 #include "../../core/enum/EnumNorthArrowType.h"
 
 te::layout::NorthItem::NorthItem() 
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
 
 }

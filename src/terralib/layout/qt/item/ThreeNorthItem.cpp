@@ -49,7 +49,7 @@
 
 
 te::layout::ThreeNorthItem::ThreeNorthItem() 
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {
 
 }

@@ -34,7 +34,7 @@
 // Qt
 #include <QStyleOptionGraphicsItem>
 
-te::layout::BarCodeItem::BarCodeItem(AbstractItemController* controller) 
+te::layout::BarCodeItem::BarCodeItem() 
   : TextItem()
 {
  

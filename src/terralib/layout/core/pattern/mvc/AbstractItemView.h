@@ -57,7 +57,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        AbstractItemView(AbstractItemController* controller);
+        AbstractItemView();
 
         /*!
           \brief Destructor
@@ -129,17 +129,19 @@ namespace te
 
       virtual AbstractItemController* createController() const;
 
-      virtual AbstractItemModel* createModel() const;
+      virtual AbstractItemModel* createModel() const = 0;
 
-      protected:
+    private:
+
+      mutable AbstractItemController* m_controller; //!< The controller
+
+    protected:
 
         bool                    m_isEditionMode;
         bool                    m_subSelected;
         bool                    m_useResizePixmap; //!< use or not pixmap for resizing
 
-      private:
-
-        mutable AbstractItemController* m_controller; //!< The controller
+      
     };
   }
 }

@@ -34,7 +34,7 @@
 
 
 te::layout::PaperItem::PaperItem()
-  : AbstractItem(nullptr)
+  : AbstractItem()
 {  
   this->setFlags(QGraphicsItem::ItemSendsGeometryChanges);
   this->setAcceptHoverEvents(false);
