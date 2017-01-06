@@ -70,7 +70,7 @@ void te::layout::LineController::verifyPolygon()
   Property property;
   property.setName("geometry");
   property.setValue<te::gm::Geometry*>(line, dataType->getDataTypeGeometry());
-  m_model->setProperty(property);
+  this->setProperty(property);
 }
 
 te::gm::Geometry* te::layout::LineController::getGeometry()
