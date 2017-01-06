@@ -429,8 +429,11 @@ void te::layout::TextItem::enterEditionMode()
 
   setCursor(Qt::IBeamCursor);
 
+  int position = m_document->findBlockByNumber(m_blockEditionRangeStart).position();
+
   m_textCursor = new QTextCursor(m_document);
-  m_textCursor->select(QTextCursor::Document);
+  m_textCursor->setPosition(position);
+  m_textCursor->select(QTextCursor::LineUnderCursor);
 
   m_cursorTimer = new QTimer(this);
   connect(m_cursorTimer, SIGNAL(timeout()), this, SLOT(timerEvent()));
