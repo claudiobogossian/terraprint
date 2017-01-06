@@ -37,13 +37,8 @@ te::layout::AbstractItemView* te::layout::MapCompositionItemFactory::build(ItemF
   std::string name = te::layout::Property::GetValueAs<std::string>(propName);
 
   MapCompositionModel* model = new MapCompositionModel();
-<<<<<<< HEAD
   MapCompositionController* controller = new MapCompositionController(model, 0);
-  MapCompositionItem* view = new MapCompositionItem(controller, params.getName());
-=======
-  MapCompositionController* controller = new MapCompositionController(model);
   MapCompositionItem* view = new MapCompositionItem(controller, name);
->>>>>>> Creation of items so that they receive all as properties at once just after their creation, thus reducing unnecessary overheads;
   controller->setView(view);
 
   props.setTypeObj(model->getType());
