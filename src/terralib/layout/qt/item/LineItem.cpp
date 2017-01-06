@@ -77,6 +77,7 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
   QPen penStyle = searchStyle();
   QPen pn(qColor, lnew, penStyle.style());
   painter->setPen(pn);
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
   QPainterPath path;
   path.addPolygon(poly);

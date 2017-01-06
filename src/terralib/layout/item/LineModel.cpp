@@ -114,37 +114,3 @@ te::layout::LineModel::~LineModel()
 
 }
 
-void te::layout::LineModel::setProperty(const Property& property)
-{
-  Properties properties("");
-  properties.addProperty(property);
-  setProperties(properties);
-}
-
-void te::layout::LineModel::setProperties(const Properties& props)
-{
-  Properties propertiesCopy(props);
-  if (propertiesCopy.contains("geometry"))
-  {
-    const Property& property = propertiesCopy.getProperty("geometry");
-
-    te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(property);
-    const te::gm::Envelope* env = geometryPtr->getMBR();
-    double width = env->getWidth();
-    double height = env->getHeight();
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    {
-      Property property(0);
-      property.setName("width");
-      property.setValue(width, dataType->getDataTypeDouble());
-      propertiesCopy.addProperty(property);
-    }
-    {
-      Property property(0);
-      property.setName("height");
-      property.setValue(height, dataType->getDataTypeDouble());
-      propertiesCopy.addProperty(property);
-    }
-  }
-  AbstractItemModel::setProperties(propertiesCopy);
-}

@@ -70,7 +70,7 @@ void te::layout::LineController::verifyPolygon()
   Property property;
   property.setName("geometry");
   property.setValue<te::gm::Geometry*>(line, dataType->getDataTypeGeometry());
-  m_model->setProperty(property);
+  this->setProperty(property);
 }
 
 te::gm::Geometry* te::layout::LineController::getGeometry()
@@ -175,3 +175,34 @@ bool te::layout::LineController::isGeometrySizeChange()
   return true;
 }
 
+
+
+void te::layout::LineController::setProperties(const te::layout::Properties& properties)
+{
+    Properties propertiesCopy = properties; 
+    
+    if (propertiesCopy.contains("geometry"))
+    {
+        const Property& property = propertiesCopy.getProperty("geometry");
+
+        te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(property);
+        const te::gm::Envelope* env = geometryPtr->getMBR();
+        double width = env->getWidth();
+        double height = env->getHeight();
+        EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+        {
+            Property property(0);
+            property.setName("width");
+            property.setValue(width, dataType->getDataTypeDouble());
+            propertiesCopy.addProperty(property);
+        }
+        {
+            Property property(0);
+            property.setName("height");
+            property.setValue(height, dataType->getDataTypeDouble());
+            propertiesCopy.addProperty(property);
+        }
+    
+    }
+    AbstractItemController::setProperties(propertiesCopy);
+}

@@ -72,6 +72,8 @@ namespace te
 
         virtual te::gm::Geometry* getGeometry();
 
+        virtual void setProperties(const te::layout::Properties& properties);
+
       protected:
 
         virtual QPolygonF recalculatePolygon();
@@ -79,6 +81,8 @@ namespace te
         virtual void verifyPolygon();
 
         bool isGeometrySizeChange();
+
+
     };
   }
 }
