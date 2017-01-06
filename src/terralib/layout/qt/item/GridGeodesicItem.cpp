@@ -28,20 +28,24 @@
 // TerraLib
 #include "GridGeodesicItem.h"
 
+#include "GridGeodesicController.h"
+#include "../core/ItemUtils.h"
+#include "../core/Scene.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../core/ItemUtils.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/enum/EnumTextFormatType.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
-#include "terralib/maptools/Utils.h"
-#include "terralib/geometry/Utils.h"
-#include "../core/Scene.h"
+#include "../../item/GridGeodesicModel.h"
 
-te::layout::GridGeodesicItem::GridGeodesicItem(AbstractItemController* controller)
-  : GridMapItem(controller)
+
+#include <terralib/maptools/Utils.h>
+#include <terralib/geometry/Utils.h>
+
+te::layout::GridGeodesicItem::GridGeodesicItem()
+  : GridMapItem()
 {  
   
 }
@@ -49,6 +53,17 @@ te::layout::GridGeodesicItem::GridGeodesicItem(AbstractItemController* controlle
 te::layout::GridGeodesicItem::~GridGeodesicItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::GridGeodesicItem::createModel() const
+{
+  return new GridGeodesicModel();
+}
+
+te::layout::AbstractItemController* te::layout::GridGeodesicItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new GridGeodesicController(model, (AbstractItemView*)this);
 }
 
 void te::layout::GridGeodesicItem::calculateGrid()

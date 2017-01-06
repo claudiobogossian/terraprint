@@ -26,21 +26,16 @@
 // TerraLib
 #include "GridPlanarItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/GridPlanarModel.h"
 #include "../../../../item/GridPlanarItem.h"
-#include "../../../../item/GridPlanarController.h"
 
 te::layout::AbstractItemView* te::layout::GridPlanarItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  GridPlanarItem* view = new GridPlanarItem();
 
-  GridPlanarModel* model = new GridPlanarModel();
-  te::layout::AbstractItemController* controller = new GridPlanarController(model, 0);
-  GridPlanarItem* view = new GridPlanarItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
-  return dynamic_cast<AbstractItemView*>(view);
+  view->setProperties(props);
+  return view;
 }
 
 te::layout::GridPlanarItemFactory::GridPlanarItemFactory() :

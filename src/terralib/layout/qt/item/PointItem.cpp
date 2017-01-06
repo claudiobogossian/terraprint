@@ -25,11 +25,13 @@
   \ingroup layout
 */
 
-// TerraLib
 #include "PointItem.h"
-#include "terralib/color/RGBAColor.h"
-#include "../../core/enum/EnumPointType.h"
 
+#include "../../core/enum/EnumPointType.h"
+#include "../../item/PointModel.h"
+
+// TerraLib
+#include <terralib/color/RGBAColor.h>
 
 // Qt
 #include <QColor>
@@ -37,18 +39,21 @@
 #include <QPolygonF>
 #include <QPainterPath>
 
-#include "../../core/pattern/mvc/AbstractItemController.h"
-
 # define M_PI		3.14159265358979323846
 
-te::layout::PointItem::PointItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::PointItem::PointItem()
+  : AbstractItem(nullptr)
 {
 }
 
 te::layout::PointItem::~PointItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::PointItem::createModel() const
+{
+  return new PointModel();
 }
 
 void te::layout::PointItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

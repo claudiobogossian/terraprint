@@ -121,15 +121,15 @@ namespace te
 
         void setProperty(const te::layout::Property& property);
 
-        virtual AbstractItemController* createController() const;
-
-        virtual AbstractItemModel* createModel() const;
-
     protected:
 
       virtual void enterEditionMode() = 0;
 
       virtual void leaveEditionMode() = 0;
+
+      virtual AbstractItemController* createController() const;
+
+      virtual AbstractItemModel* createModel() const;
 
       protected:
 

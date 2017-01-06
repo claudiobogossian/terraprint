@@ -27,9 +27,13 @@
 
 // TerraLib
 #include "ThreeNorthItem.h"
-#include "terralib/color/RGBAColor.h"
+
+#include "ThreeNorthController.h"
 #include "../core/Scene.h"
 #include "../core/ItemUtils.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../item/ThreeNorthModel.h"
+
 // Qt
 #include <QPointF>
 #include "qglobal.h"
@@ -39,14 +43,13 @@
 
 
 // TerraLib
-#include "ThreeNorthItem.h"
-#include "../../item/ThreeNorthModel.h"
-#include "terralib/common/StringUtils.h"
+#include <terralib/color/RGBAColor.h>
+#include <terralib/common/StringUtils.h>
 
-#include "../../core/pattern/mvc/AbstractItemController.h"
 
-te::layout::ThreeNorthItem::ThreeNorthItem(AbstractItemController* controller) 
-  : AbstractItem(controller)
+
+te::layout::ThreeNorthItem::ThreeNorthItem() 
+  : AbstractItem(nullptr)
 {
 
 }
@@ -56,6 +59,16 @@ te::layout::ThreeNorthItem::~ThreeNorthItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::ThreeNorthItem::createModel() const
+{
+  return new ThreeNorthModel();
+}
+
+te::layout::AbstractItemController* te::layout::ThreeNorthItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ThreeNorthController(model, (AbstractItemView*)this);
+}
 
 void te::layout::ThreeNorthItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {

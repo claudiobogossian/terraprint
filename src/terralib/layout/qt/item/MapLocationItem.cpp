@@ -28,14 +28,17 @@
 // TerraLib
 #include "MapLocationItem.h"
 
-#include "terralib/qt/widgets/canvas/Canvas.h"
-#include "terralib/qt/widgets/canvas/MapDisplay.h"
-#include "terralib/geometry/Utils.h"
+#include "MapLocationController.h"
+#include "../../item/MapLocationModel.h"
 
-#include "../../core/pattern/mvc/AbstractItemController.h"
+#include <terralib/geometry/Utils.h>
+#include <terralib/qt/widgets/canvas/Canvas.h>
+#include <terralib/qt/widgets/canvas/MapDisplay.h>
 
-te::layout::MapLocationItem::MapLocationItem(AbstractItemController* controller) 
-  : MapItem(controller)
+
+
+te::layout::MapLocationItem::MapLocationItem() 
+  : MapItem()
 {
 
 }
@@ -43,6 +46,17 @@ te::layout::MapLocationItem::MapLocationItem(AbstractItemController* controller)
 te::layout::MapLocationItem::~MapLocationItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::MapLocationItem::createModel() const
+{
+  return new MapLocationModel();
+}
+
+te::layout::AbstractItemController* te::layout::MapLocationItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new MapLocationController(model, (AbstractItemView*)this);
 }
 
 void te::layout::MapLocationItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)

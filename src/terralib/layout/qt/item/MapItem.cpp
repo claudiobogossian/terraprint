@@ -29,11 +29,12 @@
 #include "MapItem.h"
 #include "MapController.h"
 
+#include "../core/ItemUtils.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../core/ItemUtils.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../../item/MapModel.h"
 #include "../../qt/core/Scene.h"
 #include <terralib/qt/widgets/layer/explorer/TreeItem.h>
 #include <terralib/qt/widgets/layer/explorer/LayerItem.h>
@@ -49,9 +50,9 @@
 #include <QMouseEvent>
 #include <QPaintEngine>
 
-te::layout::MapItem::MapItem(AbstractItemController* controller)
+te::layout::MapItem::MapItem()
   : QObject()
-  , AbstractItem(controller)
+  , AbstractItem(nullptr)
   , m_currentEditionMode(0)
 {
   this->setAcceptDrops(true);
@@ -59,6 +60,17 @@ te::layout::MapItem::MapItem(AbstractItemController* controller)
 
 te::layout::MapItem::~MapItem()
 {
+}
+
+te::layout::AbstractItemModel* te::layout::MapItem::createModel() const
+{
+  return new MapModel();
+}
+
+te::layout::AbstractItemController* te::layout::MapItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new MapController(model, (AbstractItemView*)this);
 }
 
 void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)

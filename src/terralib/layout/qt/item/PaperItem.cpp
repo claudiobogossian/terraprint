@@ -25,13 +25,16 @@
   \ingroup layout
 */
 
-// TerraLib
 #include "PaperItem.h"
-#include "terralib/color/RGBAColor.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 
-te::layout::PaperItem::PaperItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+#include "../../item/PaperModel.h"
+
+// TerraLib
+#include <terralib/color/RGBAColor.h>
+
+
+te::layout::PaperItem::PaperItem()
+  : AbstractItem(nullptr)
 {  
   this->setFlags(QGraphicsItem::ItemSendsGeometryChanges);
   this->setAcceptHoverEvents(false);
@@ -40,6 +43,11 @@ te::layout::PaperItem::PaperItem(AbstractItemController* controller)
 te::layout::PaperItem::~PaperItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::PaperItem::createModel() const
+{
+  return new PaperModel();
 }
 
 void te::layout::PaperItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

@@ -25,21 +25,16 @@
 
 // TerraLib
 #include "ThreeNorthItemFactory.h"
-#include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/ThreeNorthModel.h"
-#include "../../../../item/ThreeNorthController.h"
 #include "../../../../item/ThreeNorthItem.h"
+#include "../../../../../core/enum/Enums.h"
+
 
 te::layout::AbstractItemView* te::layout::ThreeNorthItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
+  ThreeNorthItem* view = new ThreeNorthItem();
 
-  ThreeNorthModel* model = new ThreeNorthModel();
-  AbstractItemController* controller = new ThreeNorthController(model, 0);
-  ThreeNorthItem* view = new ThreeNorthItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
-
+  const Properties& props = params.getProperties();
+  view->setProperties(props);
   return view;
 }
 

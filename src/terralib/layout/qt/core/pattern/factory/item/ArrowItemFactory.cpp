@@ -26,15 +26,13 @@
 // TerraLib
 #include "ArrowItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/ArrowModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/ArrowItem.h"
 
 te::layout::AbstractItemView* te::layout::ArrowItemFactory::build(ItemFactoryParamsCreate params)
 {
   ArrowItem* view = new ArrowItem();
 
-  Properties props = params.getProperties();
+  const Properties& props = params.getProperties();
 
   view->setProperties(props);
   return view;

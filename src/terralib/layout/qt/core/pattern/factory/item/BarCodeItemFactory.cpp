@@ -25,23 +25,16 @@
 
 // TerraLib
 #include "BarCodeItemFactory.h"
-#include "../../../../item/BarCodeController.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/BarCodeModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/BarCodeItem.h"
 
 te::layout::AbstractItemView* te::layout::BarCodeItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
+  BarCodeItem* view = new BarCodeItem();
 
-  BarCodeModel* model = new BarCodeModel();
-  BarCodeController* controller = new BarCodeController(model, 0);
-  BarCodeItem* view = new BarCodeItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
-
-  return dynamic_cast<AbstractItemView*>(view);
+  const Properties& props = params.getProperties();
+  view->setProperties(props);
+  return view;
 }
 
 te::layout::BarCodeItemFactory::BarCodeItemFactory() :

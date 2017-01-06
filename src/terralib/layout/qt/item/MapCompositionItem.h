@@ -60,7 +60,7 @@ namespace te
     {
       public:
 
-        MapCompositionItem(AbstractItemController* controller, const std::string& name);
+        MapCompositionItem(const std::string& name);
 
         virtual ~MapCompositionItem();
 
@@ -87,6 +87,12 @@ namespace te
         virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value);
         
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
+
+    protected:
     
         te::layout::AbstractItemView* m_mapItem;
         te::layout::AbstractItemView* m_planarGridItem;

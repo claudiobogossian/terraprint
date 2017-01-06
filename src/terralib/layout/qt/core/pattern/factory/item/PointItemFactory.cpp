@@ -25,21 +25,17 @@
 
 // TerraLib
 #include "PointItemFactory.h"
-#include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/PointModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
+
 #include "../../../../item/PointItem.h"
+#include "../../../../../core/enum/Enums.h"
 
 te::layout::AbstractItemView* te::layout::PointItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  PointItem* view = new PointItem();
 
-  PointModel *model = new PointModel();
-  AbstractItemController* controller = new AbstractItemController(model, 0);
-  PointItem* view = new PointItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

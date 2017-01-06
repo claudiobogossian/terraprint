@@ -27,16 +27,17 @@
 
 // TerraLib
 #include "ItemGroup.h"
-#include "ItemGroupController.h"
 
+#include "ItemGroupController.h"
 #include "../core/Scene.h"
+#include "../../item/ItemGroupModel.h"
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ItemGroup::ItemGroup(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ItemGroup::ItemGroup()
+  : AbstractItem(nullptr)
   , m_stacksBehindParent(false)
   , m_isSubSelectionAllowed(true)
 {
@@ -46,6 +47,17 @@ te::layout::ItemGroup::ItemGroup(AbstractItemController* controller)
 te::layout::ItemGroup::~ItemGroup()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::ItemGroup::createModel() const
+{
+  return new ItemGroupModel();
+}
+
+te::layout::AbstractItemController* te::layout::ItemGroup::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ItemGroupController(model, (AbstractItemView*)this);
 }
 
 QRectF te::layout::ItemGroup::boundingRect() const

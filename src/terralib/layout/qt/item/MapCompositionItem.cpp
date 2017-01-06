@@ -28,19 +28,21 @@
 // TerraLib
 #include "MapCompositionItem.h"
 
+#include "MapCompositionController.h"
+#include "MapItem.h"
+#include "../core/pattern/factory/item/ItemFactory.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
-#include "../core/pattern/factory/item/ItemFactory.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
-#include "MapItem.h"
+#include "../../item/MapCompositionModel.h"
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
 
-te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* controller, const std::string& name)
-  : ItemGroup(controller)
+te::layout::MapCompositionItem::MapCompositionItem(const std::string& name)
+  : ItemGroup()
   , m_mapItem(0)
   , m_planarGridItem(0)
   , m_geodesicGridItem(0)
@@ -116,11 +118,22 @@ te::layout::MapCompositionItem::MapCompositionItem(AbstractItemController* contr
     m_geodesicGridItem = abstractItem;
   }
 
-  Property pName;
-  pName.setName("name");
-  pName.setValue<std::string>(name, Enums::getInstance().getEnumDataType()->getDataTypeString());
+  //Property pName;
+  //pName.setName("name");
+  //pName.setValue<std::string>(name, Enums::getInstance().getEnumDataType()->getDataTypeString());
 
-  getController()->setProperty(pName);
+  //getController()->setProperty(pName);
+}
+
+te::layout::AbstractItemModel* te::layout::MapCompositionItem::createModel() const
+{
+  return new MapCompositionModel();
+}
+
+te::layout::AbstractItemController* te::layout::MapCompositionItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new MapCompositionController(model, (AbstractItemView*)this);
 }
 
 te::layout::MapCompositionItem::~MapCompositionItem()

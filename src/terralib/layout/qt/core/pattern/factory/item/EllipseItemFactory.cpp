@@ -26,20 +26,15 @@
 // TerraLib
 #include "EllipseItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/EllipseModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/EllipseItem.h"
 
 te::layout::AbstractItemView* te::layout::EllipseItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
+  EllipseItem* view = new EllipseItem();
 
-  EllipseModel* model = new EllipseModel();
-  AbstractItemController* controller = new AbstractItemController(model, 0);
-  EllipseItem* view = new EllipseItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

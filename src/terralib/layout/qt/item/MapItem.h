@@ -87,7 +87,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        MapItem(AbstractItemController* controller);
+        MapItem();
 
         /*!
           \brief Destructor
@@ -108,6 +108,10 @@ namespace te
         virtual void recompose();
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         /*!
           \brief For any specific drawing, the item must reimplement this function

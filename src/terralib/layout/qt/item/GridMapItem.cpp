@@ -28,21 +28,21 @@
 // TerraLib
 #include "GridMapItem.h"
 
+#include "../core/ItemUtils.h"
+#include "../core/Scene.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/property/GridSettingsConfigProperties.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
-#include "../core/ItemUtils.h"
 #include "../../core/Utils.h"
-#include "../core/Scene.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
 #include <QBrush>
 
 #include <memory>
 
-te::layout::GridMapItem::GridMapItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::GridMapItem::GridMapItem()
+  : AbstractItem(nullptr)
   , m_maxWidthTextMM(0)
   , m_maxHeigthTextMM(0)
   , m_changeSize(false)

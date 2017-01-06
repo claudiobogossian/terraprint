@@ -27,13 +27,12 @@
 
 // TerraLib
 #include "NorthItem.h"
+
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
-#include "../../core/pattern/mvc/AbstractItemController.h"
-
-te::layout::NorthItem::NorthItem(AbstractItemController* controller) 
-  : AbstractItem(controller)
+te::layout::NorthItem::NorthItem() 
+  : AbstractItem(nullptr)
 {
 
 }
@@ -41,6 +40,11 @@ te::layout::NorthItem::NorthItem(AbstractItemController* controller)
 te::layout::NorthItem::~NorthItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::NorthItem::createModel() const
+{
+  return new NorthModel();
 }
 
 void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

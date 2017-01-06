@@ -57,7 +57,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        GridGeodesicItem(AbstractItemController* controller);
+        GridGeodesicItem();
 
         /*!
           \brief Destructor
@@ -67,8 +67,11 @@ namespace te
         virtual void calculateGrid();
 
       protected:
-        
-        
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
+
         virtual void calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM);
 
         virtual void calculateHorizontal(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM);

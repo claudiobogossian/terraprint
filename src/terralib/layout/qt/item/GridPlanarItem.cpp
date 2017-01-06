@@ -28,18 +28,20 @@
 // TerraLib
 #include "GridPlanarItem.h"
 
+#include "GridPlanarController.h"
+#include "../core/ItemUtils.h"
+#include "../core/Scene.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../core/ItemUtils.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/Utils.h"
-#include "../core/Scene.h"
+#include "../../item/GridPlanarModel.h"
 
-te::layout::GridPlanarItem::GridPlanarItem(AbstractItemController* controller)
-  : GridMapItem(controller)
+te::layout::GridPlanarItem::GridPlanarItem()
+  : GridMapItem()
 {
 
 }
@@ -49,6 +51,16 @@ te::layout::GridPlanarItem::~GridPlanarItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::GridPlanarItem::createModel() const
+{
+  return new GridPlanarModel();
+}
+
+te::layout::AbstractItemController* te::layout::GridPlanarItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new GridPlanarController(model, (AbstractItemView*)this);
+}
 
 void te::layout::GridPlanarItem::calculateGrid()
 {

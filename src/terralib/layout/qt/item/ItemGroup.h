@@ -59,7 +59,7 @@ namespace te
     {
       public:
 
-        ItemGroup(AbstractItemController* controller);
+        ItemGroup();
 
         virtual ~ItemGroup();
 
@@ -84,13 +84,17 @@ namespace te
 
       protected:
 
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
+
         /*!
         \brief Reimplemented from AbstractItem<QGraphicsItemGroup>
         */
         virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
         
         virtual bool hasChildrenInResizeMode();
-        
+
       protected:
 
         bool m_stacksBehindParent;

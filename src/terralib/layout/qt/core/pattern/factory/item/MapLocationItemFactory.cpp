@@ -25,21 +25,18 @@
 
 // TerraLib
 #include "MapLocationItemFactory.h"
-#include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/MapLocationModel.h"
-#include "../../../../item/MapLocationController.h"
+
 #include "../../../../item/MapLocationItem.h"
+#include "../../../../../core/enum/Enums.h"
+
 
 te::layout::AbstractItemView* te::layout::MapLocationItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  MapLocationItem* view = new MapLocationItem();
 
-  MapLocationModel* model = new MapLocationModel();
-  AbstractItemController* controller = new MapLocationController(model, 0);
-  MapLocationItem* view = new MapLocationItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 

@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        GridPlanarItem(AbstractItemController* controller);
+        GridPlanarItem();
 
         /*!
           \brief Destructor
@@ -73,6 +73,9 @@ namespace te
         
       protected:
 
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM);
 

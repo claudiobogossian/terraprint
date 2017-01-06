@@ -27,17 +27,23 @@
 
 // TerraLib
 #include "EllipseItem.h"
-#include "terralib/color/RGBAColor.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../item/EllipseModel.h"
+#include "terralib/color/RGBAColor.h"
 
-te::layout::EllipseItem::EllipseItem(AbstractItemController* controller)
-: AbstractItem(controller)
+te::layout::EllipseItem::EllipseItem()
+: AbstractItem(nullptr)
 {
 }
 
 te::layout::EllipseItem::~EllipseItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::EllipseItem::createModel() const
+{
+  return new EllipseModel();
 }
 
 void te::layout::EllipseItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

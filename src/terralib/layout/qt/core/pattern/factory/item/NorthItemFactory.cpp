@@ -26,20 +26,15 @@
 // TerraLib
 #include "NorthItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/NorthModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../item/NorthItem.h"
 
 te::layout::AbstractItemView* te::layout::NorthItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  NorthItem* view = new NorthItem();
 
-  NorthModel* model = new NorthModel();
-  AbstractItemController* controller = new AbstractItemController(model, 0);
-  NorthItem* view = new NorthItem(controller);
-  controller->setView(view);
-  controller->setProperties(props);
+  const Properties& props = params.getProperties();
 
+  view->setProperties(props);
   return view;
 }
 
