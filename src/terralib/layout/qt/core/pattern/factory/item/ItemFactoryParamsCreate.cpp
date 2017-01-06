@@ -52,7 +52,7 @@ void te::layout::ItemFactoryParamsCreate::reset() throw(te::common::Exception)
   m_props.clear();
 }
 
-te::layout::Properties te::layout::ItemFactoryParamsCreate::getProperties() const
+const te::layout::Properties& te::layout::ItemFactoryParamsCreate::getProperties() const
 {
   return m_props;
 }

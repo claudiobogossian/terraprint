@@ -70,7 +70,7 @@ namespace te
 
         void reset() throw(te::common::Exception);
         
-        Properties getProperties() const;
+        const Properties& getProperties() const;
 
       protected:
 
