@@ -65,6 +65,17 @@ namespace te
         \brief Method called by the subject to inform changes in the model
         */
         virtual void update(const Subject* subject);
+                
+        /*!
+        \brief Sets the new values of the given properties
+        */
+        virtual void setProperties(const Properties& properties);
+
+      protected:
+
+        double calculateMeridianConvergence(const double &latitude, const double &longitude, const double &longitudeSource);
+
+        virtual void calculateThreeNorth(Properties& properties);
     };
   }
 }

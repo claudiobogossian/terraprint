@@ -28,6 +28,7 @@
 #include "PaperItem.h"
 
 #include "../../item/PaperModel.h"
+#include "PaperController.h"
 
 // TerraLib
 #include <terralib/color/RGBAColor.h>
@@ -48,6 +49,12 @@ te::layout::PaperItem::~PaperItem()
 te::layout::AbstractItemModel* te::layout::PaperItem::createModel() const
 {
   return new PaperModel();
+}
+
+te::layout::AbstractItemController* te::layout::PaperItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new PaperController(model, (AbstractItemView*)this);
 }
 
 void te::layout::PaperItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

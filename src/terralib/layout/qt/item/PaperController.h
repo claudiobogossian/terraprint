@@ -18,39 +18,31 @@
  */
 
 /*!
-  \file PaperItem.h
+  \file ImageController.h
    
-   \brief Class that represents a graphic sheet of paper. 
-   Its coordinate system is the same of scene (millimeters). 
-   This is also son of ItemObserver and ObjectItem, so it can become observer of a model (Observable). 
-
+  \brief Class that represents paper controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PAPER_ITEM_H
-#define __TERRALIB_LAYOUT_INTERNAL_PAPER_ITEM_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_PAPER_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_PAPER_CONTROLLER_H
 
 // TerraLib
-#ifndef Q_MOC_RUN
-#include "AbstractItem.h"
-#endif
 #include "../../core/Config.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 namespace te
 {
   namespace layout
   {
-    class AbstractItemController;
+    class Properties;
     /*!
-    \brief Class that represents a graphic sheet of paper. 
-    Its coordinate system is the same of scene (millimeters). 
-    This is also son of AbstractItem, so it can become observer of a model (Observable). 
+    \brief Class that represents image controller.
     
     \ingroup layout
-
-    \sa te::layout::AbstractItem
+    \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT PaperItem : public AbstractItem
+    class TELAYOUTEXPORT PaperController : public AbstractItemController
     {
       public:
 
@@ -60,22 +52,22 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        PaperItem();
+        PaperController( AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
-         */
-        virtual ~PaperItem();
-
+        */ 
+        virtual ~PaperController();
+        
+        /*!
+        \brief Sets the new values of the given properties
+        */
+        virtual void setProperties(const Properties& properties);
+        
       protected:
 
-        virtual AbstractItemModel* createModel() const;
-
-        virtual AbstractItemController* createController() const;
-
-        virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+        virtual Properties handleNewPaperSize(double paperWidth, double paperHeight);
     };
   }
 }
-
-#endif
+#endif //__TERRALIB_LAYOUT_INTERNAL_IMAGE_CONTROLLER1_H
