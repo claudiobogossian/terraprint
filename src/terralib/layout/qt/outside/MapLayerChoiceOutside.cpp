@@ -67,6 +67,18 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   m_ui->cmbUnit->setItemData(0, QVariant("Centimeter"));
   m_ui->cmbUnit->setItemData(1, QVariant("Millimeter"));
   m_ui->cmbUnit->blockSignals(false);
+
+  /* In a QLineEdit, when you click the Enter button, an editFinished signal is triggered, 
+  however in a window there are buttons set as default, other events such as DynamicPropertyChange 
+  are sent to these buttons, and causes QLineEdit to lose focus for a short time. 
+  This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method. 
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked */
+  m_ui->pBtnOK->setDefault(false);
+  m_ui->pBtnOK->setAutoDefault(false);
+  m_ui->pBtnCancel->setDefault(false);
+  m_ui->pBtnCancel->setAutoDefault(false);
+  m_ui->helpPushButton->setDefault(false);
+  m_ui->helpPushButton->setAutoDefault(false);
 }
 
 te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
@@ -205,8 +217,8 @@ std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTi
   return namesToInput;
 }
 
-std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getLayers(){
-
+std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getLayers()
+{
   std::list<te::map::AbstractLayerPtr> currentLayers;
   MapLayerChoiceController* controllerlayers = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (!controllerlayers)
@@ -235,7 +247,15 @@ te::layout::Property te::layout::MapLayerChoiceOutside::getProperty(std::string 
   return   controller->getProperty(name);
 }
 
-void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished(){
+void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished()
+{
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneWidth->isModified())
+  {
+    return;
+  }
 
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
@@ -254,10 +274,23 @@ void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished(){
     prop.setValue(widthSize, dataType->getDataTypeDouble());
 
     emit updateWidgetProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus (the editingFinished is automatically
+    called in the "lost focus") */
+    m_ui->lneWidth->setModified(false);
   }
 }
 
-void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
+void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished()
+{
+  /* Avoid executing unnecessary code in the editingFinished method 
+    when QLineEdit loses focus (the editingFinished is automatically 
+    called in the "lost focus") */
+  if (!m_ui->lneHeight->isModified())
+  {
+    return;
+  }
 
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller){
@@ -274,11 +307,16 @@ void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
     Property prop = controller->getProperty("height");
     prop.setValue(heightSize, dataType->getDataTypeDouble());
     emit updateWidgetProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus (the editingFinished is automatically
+    called in the "lost focus") */
+    m_ui->lneHeight->setModified(false);
   }
 }
 
-void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QString & text){
-
+void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QString & text)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
 
   QString copyText = text;
@@ -322,8 +360,8 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
   }
 }
 
-void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QString & text){
-
+void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QString & text)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
   {
@@ -363,7 +401,6 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
         double mmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
         m_ui->lneHeight->setText(QString::number(mmHeight, 'f', MILLIMETER_PRECISION));
 
-
         QString qUnit("mm");
 
         m_ui->lblUnitW->setText(qUnit);
@@ -389,8 +426,8 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
   }
 }
 
-void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked(){
-
+void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked()
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
   {
@@ -502,8 +539,8 @@ void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string 
   }
 }
 
-void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string nameComponent){
-
+void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string nameComponent)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (!controller)
     return;
@@ -572,8 +609,8 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
   combo->blockSignals(false);
 }
 
-void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
-
+void te::layout::MapLayerChoiceOutside::loadScaleCombobox()
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
 
   m_ui->cmbScale->blockSignals(true);
@@ -620,12 +657,13 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
   m_ui->cmbScale->blockSignals(false);
 }
 
-
-double te::layout::MapLayerChoiceOutside::mm2cm(double mmSize){
+double te::layout::MapLayerChoiceOutside::mm2cm(double mmSize)
+{
   return mmSize / 10.;
 }
 
-double  te::layout::MapLayerChoiceOutside::cm2mm(double cmSize){
+double  te::layout::MapLayerChoiceOutside::cm2mm(double cmSize)
+{
   return cmSize * 10.;
 }
 
@@ -647,8 +685,8 @@ void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string na
   }
 }
 
-std::string  te::layout::MapLayerChoiceOutside::formatScaleValue(std::string inputValue){
-
+std::string  te::layout::MapLayerChoiceOutside::formatScaleValue(std::string inputValue)
+{
   string formatedValue = inputValue;
 
   string formatedString = "";
