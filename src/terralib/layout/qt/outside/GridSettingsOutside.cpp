@@ -81,6 +81,26 @@ te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* 
   m_ui->m_lineWidthDoubleSpinBox->setDecimals(MILLIMETER_PRECISION);
   m_ui->m_planarLineWidthDoubleSpinBox->setDecimals(MILLIMETER_PRECISION);
   
+  /* In a QLineEdit, when you click the Enter button, an editFinished signal is triggered,
+  however in a window there are buttons set as default, other events such as DynamicPropertyChange
+  are sent to these buttons, and causes QLineEdit to lose focus for a short time.
+  This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method.
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked.
+  By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
+  m_ui->pbClose->setDefault(false);
+  m_ui->pbClose->setAutoDefault(false);
+  m_ui->helpPushButton->setDefault(false);
+  m_ui->helpPushButton->setAutoDefault(false);
+  m_ui->pbCornerTextGeoColor->setDefault(false);
+  m_ui->pbCornerTextGeoColor->setAutoDefault(false);
+  m_ui->pbGridTextGeoColor->setDefault(false);
+  m_ui->pbGridTextGeoColor->setAutoDefault(false);
+  m_ui->pbGridTextPlanarColor->setDefault(false);
+  m_ui->pbGridTextPlanarColor->setAutoDefault(false);
+  m_ui->pbLineColor->setDefault(false);
+  m_ui->pbLineColor->setAutoDefault(false);
+  m_ui->pbPlanarLineColor->setDefault(false);
+  m_ui->pbPlanarLineColor->setAutoDefault(false);
 
   init();
 }
@@ -556,6 +576,14 @@ void te::layout::GridSettingsOutside::on_chkShowGeodesic_clicked()
 
 void te::layout::GridSettingsOutside::on_lneHrzPlanarGap_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneHrzPlanarGap->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -563,11 +591,23 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarGap_editingFinished()
     Property prop = controller->getProperty(m_planarGridSettings->getLneHrzGap(), m_planarType);
     prop.setValue(m_ui->lneHrzPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneHrzPlanarGap->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneVrtPlanarGap_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneVrtPlanarGap->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -575,11 +615,23 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarGap_editingFinished()
     Property prop = controller->getProperty(m_planarGridSettings->getLneVrtGap(), m_planarType);
     prop.setValue(m_ui->lneVrtPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneVrtPlanarGap->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneHorizontalGap->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -592,17 +644,22 @@ void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
     prop.setValue(lneHorizontalGap.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneHorizontalGap->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
 {
-  /*if(checkValidDegreeValue(m_ui->lneVerticalGap->text()) == false)
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneVerticalGap->isModified())
   {
-    QMessageBox::information(this, tr("Information"), tr("Invalid Geodesic value! Try for example 0� 1' 0''"));  
-    m_ui->lneVerticalGap->setFocus();
     return;
-  }*/
+  }
 
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
@@ -617,10 +674,22 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
     prop.setValue(lneVerticalGap.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneVerticalGap->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneSecPrecision_editingFinished(){
+
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneSecPrecision->isModified())
+  {
+    return;
+  }
 
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if (controller)
@@ -630,6 +699,10 @@ void te::layout::GridSettingsOutside::on_lneSecPrecision_editingFinished(){
     Property prop = controller->getProperty(m_geodesicGridSettings->getSecondsPrecisionText(), m_geodesicType);
     prop.setValue(secPrecision.toInt(), dataType->getDataTypeInt());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneSecPrecision->setModified(false);
   }
 }
 
@@ -859,6 +932,14 @@ void te::layout::GridSettingsOutside::on_chkSuperscriptGeoText_clicked()
 
 void te::layout::GridSettingsOutside::on_xGridInitialPoint_planar_textField_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->xGridInitialPoint_planar_textField->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -866,11 +947,23 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_planar_textField_edit
     Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_planarType);
     prop.setValue(m_ui->xGridInitialPoint_planar_textField->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->xGridInitialPoint_planar_textField->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->yGridInitialPoint_planar_textField->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -878,11 +971,23 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_edit
     Property prop = controller->getProperty(m_planarGridSettings->getInitialGridPointY(), m_planarType);
     prop.setValue(m_ui->yGridInitialPoint_planar_textField->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->yGridInitialPoint_planar_textField->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->xGridInitialPoint_geo_textField->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -895,11 +1000,23 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editing
     Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
     prop.setValue(xGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->xGridInitialPoint_geo_textField->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_yGridInitialPoint_geo_textField_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->yGridInitialPoint_geo_textField->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -912,6 +1029,10 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_geo_textField_editing
     Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
     prop.setValue(yGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->yGridInitialPoint_geo_textField->setModified(false);
   }
 }
 
@@ -1109,6 +1230,14 @@ void te::layout::GridSettingsOutside::on_chkTopRotateGeoText_clicked()
 
 void te::layout::GridSettingsOutside::on_lneVrtPlanarDisplacement_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneVrtPlanarDisplacement->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1116,6 +1245,10 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarDisplacement_editingFinishe
     Property prop = controller->getProperty(m_planarGridSettings->getLneVrtDisplacement(), m_planarType);
     prop.setValue(m_ui->lneVrtPlanarDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneVrtPlanarDisplacement->setModified(false);
   }
 }
 
@@ -1140,6 +1273,14 @@ void te::layout::GridSettingsOutside::on_chkVisibleTextsPlanarText_clicked()
 
 void te::layout::GridSettingsOutside::on_lneHrzPlanarDisplacement_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneHrzPlanarDisplacement->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1147,11 +1288,23 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarDisplacement_editingFinishe
     Property prop = controller->getProperty(m_planarGridSettings->getLneHrzDisplacement(), m_planarType);
     prop.setValue(m_ui->lneHrzPlanarDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneHrzPlanarDisplacement->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneVrtGeoDisplacement_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneVrtGeoDisplacement->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1159,11 +1312,23 @@ void te::layout::GridSettingsOutside::on_lneVrtGeoDisplacement_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtDisplacement(), m_geodesicType);
     prop.setValue(m_ui->lneVrtGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneVrtGeoDisplacement->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneHrzGeoDisplacement_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneHrzGeoDisplacement->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1171,6 +1336,10 @@ void te::layout::GridSettingsOutside::on_lneHrzGeoDisplacement_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzDisplacement(), m_geodesicType);
     prop.setValue(m_ui->lneHrzGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneHrzGeoDisplacement->setModified(false);
   }
 }
 
@@ -1273,6 +1442,14 @@ void te::layout::GridSettingsOutside::on_pbCornerTextGeoColor_clicked()
 
 void te::layout::GridSettingsOutside::on_lneCornerHrzGeoDisplacement_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneCornerHrzGeoDisplacement->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1280,11 +1457,23 @@ void te::layout::GridSettingsOutside::on_lneCornerHrzGeoDisplacement_editingFini
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneCornerHrzDisplacement(), m_geodesicType);
     prop.setValue(m_ui->lneCornerHrzGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneCornerHrzGeoDisplacement->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneCornerVrtGeoDisplacement_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneCornerVrtGeoDisplacement->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1292,6 +1481,10 @@ void te::layout::GridSettingsOutside::on_lneCornerVrtGeoDisplacement_editingFini
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneCornerVrtDisplacement(), m_geodesicType);
     prop.setValue(m_ui->lneCornerVrtGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneCornerVrtGeoDisplacement->setModified(false);
   }
 }
 
@@ -1393,6 +1586,14 @@ void te::layout::GridSettingsOutside::on_ckbClip_clicked()
 
 void te::layout::GridSettingsOutside::on_lneX1_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneX1->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1400,11 +1601,23 @@ void te::layout::GridSettingsOutside::on_lneX1_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneX1(), m_geodesicType);
     prop.setValue(m_ui->lneX1->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneX1->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneX2_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneX2->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1412,11 +1625,23 @@ void te::layout::GridSettingsOutside::on_lneX2_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneX2(), m_geodesicType);
     prop.setValue(m_ui->lneX2->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneX2->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneY1_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneY1->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1424,11 +1649,23 @@ void te::layout::GridSettingsOutside::on_lneY1_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneY1(), m_geodesicType);
     prop.setValue(m_ui->lneY1->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneY1->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneY2_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneY2->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1436,11 +1673,23 @@ void te::layout::GridSettingsOutside::on_lneY2_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneY2(), m_geodesicType);
     prop.setValue(m_ui->lneY2->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneY2->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneX3_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneX3->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1448,11 +1697,23 @@ void te::layout::GridSettingsOutside::on_lneX3_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneX3(), m_geodesicType);
     prop.setValue(m_ui->lneX3->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneX3->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneX4_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneX4->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1460,11 +1721,23 @@ void te::layout::GridSettingsOutside::on_lneX4_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneX4(), m_geodesicType);
     prop.setValue(m_ui->lneX4->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneX4->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneY3_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneY3->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1472,11 +1745,23 @@ void te::layout::GridSettingsOutside::on_lneY3_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneY3(), m_geodesicType);
     prop.setValue(m_ui->lneY3->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneY3->setModified(false);
   }
 }
 
 void te::layout::GridSettingsOutside::on_lneY4_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneY4->isModified())
+  {
+    return;
+  }
+
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if(controller)
   {
@@ -1484,6 +1769,10 @@ void te::layout::GridSettingsOutside::on_lneY4_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getLneY4(), m_geodesicType);
     prop.setValue(m_ui->lneY4->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneY4->setModified(false);
   }
 }
 

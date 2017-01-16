@@ -72,7 +72,8 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   however in a window there are buttons set as default, other events such as DynamicPropertyChange 
   are sent to these buttons, and causes QLineEdit to lose focus for a short time. 
   This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method. 
-  To prevent such calls, no button is default in this window, just as it does not become default when clicked */
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked.
+  By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
   m_ui->pBtnOK->setDefault(false);
   m_ui->pBtnOK->setAutoDefault(false);
   m_ui->pBtnCancel->setDefault(false);
