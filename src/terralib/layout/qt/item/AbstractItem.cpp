@@ -366,18 +366,6 @@ QRectF te::layout::AbstractItem::qRectToQPolygonMap(QRectF rect)
 
 QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
 {
-  if (change == QGraphicsItem::ItemPositionHasChanged)
-  {
-    if (m_currentAction == te::layout::NO_ACTION)
-    {
-      getController()->itemPositionChanged(this->pos().x(), this->pos().y());
-    }
-  }
-  else if (change == QGraphicsItem::ItemZValueHasChanged)
-  {
-    getController()->itemZValueChanged(this->zValue());
-  }
-
   return QGraphicsItem::itemChange(change, value);
 }
 
@@ -881,3 +869,15 @@ void te::layout::AbstractItem::prepareGeometryChange()
   QGraphicsItem::prepareGeometryChange();
 }
 
+void te::layout::AbstractItem::addUndoCommandToStack(QUndoCommand* command)
+{
+  te::layout::AbstractScene* absScene = getScene();
+  if (absScene)
+  {
+    Scene* scene = dynamic_cast<Scene*>(absScene);
+    if (scene)
+    {
+      scene->addUndoStack(command);
+    }
+  }
+}

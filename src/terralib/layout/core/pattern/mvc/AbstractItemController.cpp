@@ -30,6 +30,8 @@
 #include "../../AbstractScene.h"
 #include "../../../qt/core/ItemUtils.h"
 #include "../../WarningManager.h"
+#include "../../../qt/core/pattern/command/ChangePropertyCommand.h"
+#include "../../../qt/item/AbstractItem.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -160,9 +162,26 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       m_view->prepareGeometryChange();
     }
   }
+
+  Properties oldProperties = m_model->getProperties();
+
   m_model->setProperties(propertiesCopy);
 
   validateItem();
+
+  /* add command in scene undo stack */
+
+  Properties newProperties = m_model->getProperties();
+
+  AbstractItem* item = dynamic_cast<AbstractItem*>(m_view);
+  if (item)
+  {
+    if (item->isUndoEnabled())
+    {
+      QUndoCommand* command = new ChangePropertyCommand(item, oldProperties, newProperties);
+      m_view->addUndoCommandToStack(command);
+    }
+  }
 }
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
@@ -248,7 +267,7 @@ void te::layout::AbstractItemController::itemPositionChanged(double x, double y)
     property.setValue(y, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
-  m_model->setProperties(properties);
+  setProperties(properties);
 }
 
 void te::layout::AbstractItemController::itemZValueChanged(int index)
@@ -258,7 +277,7 @@ void te::layout::AbstractItemController::itemZValueChanged(int index)
     Property property(0);
     property.setName("zValue");
     property.setValue(index, dataType->getDataTypeInt());
-    m_model->setProperty(property);
+    setProperty(property);
   }
 }
 

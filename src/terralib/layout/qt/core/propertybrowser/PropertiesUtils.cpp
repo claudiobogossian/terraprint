@@ -36,7 +36,6 @@
 #include "../../../core/pattern/mvc/AbstractItemModel.h"
 #include "../ItemUtils.h"
 #include "../Scene.h"
-#include "../pattern/command/ChangePropertyCommand.h"
 
 // Qt
 #include <QGraphicsItem>

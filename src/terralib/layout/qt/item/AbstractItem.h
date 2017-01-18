@@ -62,6 +62,7 @@
 #include <math.h>
 
 class QWidget;
+class QUndoCommand;
 
 namespace te
 {
@@ -79,6 +80,7 @@ namespace te
       Who inherits it is required the implementation of updateObserver(ContextItem context) method.
       Drawing starting point is llx, lly.
       Can't add signals and slots in this class because moc(Qt) doesn't support templates.
+      Each item, at the end of the setProperties method (AbstractItemView), adds a Property Change command to the Undo/Redo stack, via the scene.
       \ingroup layout
 
       \sa te::layout::AbstractItemView
@@ -139,6 +141,12 @@ namespace te
         virtual te::layout::ItemAction getCurrentAction();
 
         virtual void prepareGeometryChange();
+
+        /*!
+        \brief Implemented from AbstractItemView. Each item, at the end of the setProperties method (AbstractItemView), 
+            adds a Property Change command to the Undo/Redo stack, via the scene.
+        */
+        virtual void addUndoCommandToStack(QUndoCommand* command);
 
       protected:
 

@@ -29,7 +29,6 @@
 #include "ChangePropertyCommand.h"
 #include "../../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../outside/PropertiesOutside.h"
 #include "../../ItemUtils.h"
 
@@ -152,7 +151,7 @@ QString te::layout::ChangePropertyCommand::createCommandString( QGraphicsItem* i
 
   QPointF pos = m_item->scenePos();
 
-  std::string name = absView->getController()->getProperties().getTypeObj()->getName();
+  std::string name = absView->getProperties().getTypeObj()->getName();
   QString qName = ItemUtils::convert2QString(name);
 
   return QObject::tr("%1 at (%2, %3)")
@@ -201,16 +200,13 @@ bool te::layout::ChangePropertyCommand::checkItem( QGraphicsItem* item, Properti
   if(!obs)
     return false;
 
-  AbstractItemController* controller = obs->getController();
-
-  if(!controller)
-    return false;
-
-  const Properties& propsModel = controller->getProperties();  
+  const Properties& propsModel = obs->getProperties();
   if(equals(props, propsModel))
     return false;
 
-  controller->setProperties(props);
+  obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
+  obs->setProperties(props);
+  obs->setUndoEnabled(true); // set properties will generate an UndoCommand on the Stack
   obs->refresh();
 
   return true;

@@ -20,7 +20,8 @@
 /*!
   \file Observable.h
    
-  \brief Abstract class to represent an observable. "Model" part of MVC component. 
+  \brief Abstract class to represent an observable. "Model" part of MVC component. Each item, at the end of the setProperties method, 
+        adds a Property Change command to the Undo/Redo stack, via the scene. 
 
   \ingroup layout
 */
@@ -32,6 +33,8 @@
 #include "../../Config.h"
 #include "../../../core/ContextObject.h"
 #include "../../../core/enum/AbstractType.h"
+
+class QUndoCommand;
 
 namespace te
 {
@@ -121,6 +124,28 @@ namespace te
 
         void setProperty(const te::layout::Property& property);
 
+        /* 
+          \brief Each item, at the end of the setProperties method, 
+          adds a Property Change command to the Undo/Redo stack, via the scene. 
+         */
+        virtual void addUndoCommandToStack(QUndoCommand* command) = 0;
+
+        /*
+        \brief Set properties will or not generate an UndoCommand on the stack.
+
+        \param enabled if true will generate an UndoCommand on the stack, false otherwise.
+
+        */
+        void setUndoEnabled(bool enabled);
+
+        /*
+        \brief Check if set properties will or not generate an UndoCommand on the stack.
+
+        \return if true will generate an UndoCommand on the stack, false otherwise.
+
+        */
+        bool isUndoEnabled();
+
     protected:
 
       virtual void enterEditionMode() = 0;
@@ -140,8 +165,7 @@ namespace te
         bool                    m_isEditionMode;
         bool                    m_subSelected;
         bool                    m_useResizePixmap; //!< use or not pixmap for resizing
-
-      
+        bool                    m_undoEnabled; // set properties will or not generate an UndoCommand on the stack      
     };
   }
 }

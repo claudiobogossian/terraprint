@@ -39,6 +39,7 @@ te::layout::PaperItem::PaperItem()
 {  
   this->setFlags(QGraphicsItem::ItemSendsGeometryChanges);
   this->setAcceptHoverEvents(false);
+  setUndoEnabled(false);
 }
 
 te::layout::PaperItem::~PaperItem()
@@ -54,7 +55,8 @@ te::layout::AbstractItemModel* te::layout::PaperItem::createModel() const
 te::layout::AbstractItemController* te::layout::PaperItem::createController() const
 {
   AbstractItemModel* model = createModel();
-  return new PaperController(model, (AbstractItemView*)this);
+  PaperController* paper = new PaperController(model, (AbstractItemView*)this);  
+  return paper;
 }
 
 void te::layout::PaperItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

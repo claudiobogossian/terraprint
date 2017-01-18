@@ -100,8 +100,6 @@ namespace te
         virtual bool syncMapScaleProperties(Properties& properties);
 
         virtual AbstractProxyProject* getAbstractProxyProject();
-
-        virtual void changedPropertyLayerURIFromDropEvent(const Properties& beforeProps);
     };
   }
 }

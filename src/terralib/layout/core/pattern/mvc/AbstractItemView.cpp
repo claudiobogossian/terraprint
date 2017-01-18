@@ -11,7 +11,9 @@ te::layout::AbstractItemView::AbstractItemView()
   , m_isEditionMode(false)
   , m_subSelected(false)
   , m_useResizePixmap(true)
+  , m_undoEnabled(true)
 {
+
 }
 
 te::layout::AbstractItemView::~AbstractItemView()
@@ -105,4 +107,14 @@ te::layout::AbstractItemController* te::layout::AbstractItemView::createControll
 {
   AbstractItemModel* model = createModel();
   return new AbstractItemController(model, (AbstractItemView*)this);
+}
+
+void te::layout::AbstractItemView::setUndoEnabled(bool enabled)
+{
+  m_undoEnabled = enabled;
+}
+
+bool te::layout::AbstractItemView::isUndoEnabled()
+{
+  return m_undoEnabled;
 }

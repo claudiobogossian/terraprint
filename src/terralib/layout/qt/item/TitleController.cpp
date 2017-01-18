@@ -20,7 +20,6 @@
 // TerraLib
 #include "TitleController.h"
 
-#include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/property/TextGridSettingsConfigProperties.h"

@@ -45,7 +45,6 @@
 #include "../../core/Utils.h"
 #include "terralib/common/STLUtils.h"
 #include "../item/MapItem.h"
-#include "pattern/command/MoveCommand.h"
 #include "../item/PaperItem.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/PaperConfig.h"
@@ -54,7 +53,6 @@
 #include "../../core/WorldTransformer.h"
 #include "ItemUtils.h"
 #include "../../core/Utils.h"
-#include "pattern/command/ChangePropertyCommand.h"
 
 // STL
 #include <algorithm>
@@ -964,29 +962,8 @@ void te::layout::Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
     }
     return;
   }
-
-  QGraphicsItem* item = mouseGrabberItem();
-
-  if (!m_isEditionMode) // Don't have move or resize event in edition mode
-  {
-    if (item) // MoveCommand and ChangePropertyCommand block
-    {
-      if (m_moveOrResizeWatched)
-      {
-        addUndoCommandForMove();
-        QGraphicsScene::mouseReleaseEvent(mouseEvent);
-        addUndoCommandForResize();
-      }
-      else
-      {
-        QGraphicsScene::mouseReleaseEvent(mouseEvent);
-      }
-    }
-  }
-  else
-  {
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
-  }  
+  
+  QGraphicsScene::mouseReleaseEvent(mouseEvent);
 
   m_moveWatches.clear();
   m_resizeWatches.clear();
@@ -1700,45 +1677,6 @@ void te::layout::Scene::searchSelectedItemsInMoveMode()
   }
 }
 
-void te::layout::Scene::addUndoCommandForMove()
-{
-  if (m_moveOrResizeWatched)
-  {
-    if (!m_moveWatches.empty())
-    {
-      QUndoCommand* command = new MoveCommand(m_moveWatches);
-      addUndoStack(command);
-    }
-  }
-}
-
-void te::layout::Scene::addUndoCommandForResize()
-{
-  if (m_moveOrResizeWatched)
-  {
-    // Undo/Redo for Resize (ChangePropertyCommand)
-    if (!m_resizeWatches.empty())
-    {
-      std::vector<QGraphicsItem*> commandItems;
-      std::vector<Properties> commandOld;
-      std::vector<Properties> commandNew;
-
-      for (std::map<QGraphicsItem*, Properties>::iterator it = m_resizeWatches.begin(); it != m_resizeWatches.end(); ++it)
-      {
-        QGraphicsItem* item = it->first;
-        AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(item);
-        commandItems.push_back(item);
-        Properties oldProps = it->second;
-        commandOld.push_back(oldProps);
-        Properties newProps = itemView->getController()->getProperties();
-        commandNew.push_back(newProps);
-      }
-      QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew);
-      addUndoStack(command);
-    }
-  }
-}
-
 void te::layout::Scene::sortByZValue(QList<QGraphicsItem *> & listItems)
 {
   std::vector<QGraphicsItem*> vecItems;
@@ -1761,4 +1699,62 @@ void te::layout::Scene::sortByZValue(QList<QGraphicsItem *> & listItems)
 bool te::layout::Scene::zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2)
 {
   return item1->zValue() < item2->zValue();
+}
+
+void te::layout::Scene::addChangePropertiesCommandToStack(QList<QGraphicsItem*> items, const Properties& properties)
+{
+  if (items.count() > 1)
+  {
+    m_undoStack->beginMacro("Block: Change Items Properties"); // begin only one block of commands on stack
+  }
+
+  foreach(QGraphicsItem* item, items)
+  {
+    if (item)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+      if (lItem)
+      {
+        /* Each item, at the end of the setProperties method (AbstractItemView), 
+        adds a Property Change command to the Undo/Redo stack, via the scene. */
+        lItem->setProperties(properties);
+      }
+    }
+  }
+
+  if (items.count() > 1)
+  {
+    m_undoStack->endMacro(); // end only one block of commands on stack
+  }
+}
+
+void te::layout::Scene::addChangePropertiesCommandToStack(std::map<QGraphicsItem*, te::layout::Properties>& map)
+{
+  if (map.size() > 1)
+  {
+    m_undoStack->beginMacro("Block: Change Items Properties"); // begin only one block of commands on stack
+  }
+
+  std::map<QGraphicsItem*, te::layout::Properties>::iterator it;
+
+  for (it = map.begin(); it != map.end(); ++it)
+  {
+    QGraphicsItem* item = it->first;
+    Properties properties = it->second;
+    if (item)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+      if (lItem)
+      {
+        /* Each item, at the end of the setProperties method (AbstractItemView),
+        adds a Property Change command to the Undo/Redo stack, via the scene. */
+        lItem->setProperties(properties);
+      }
+    }
+  }
+
+  if (map.size() > 1)
+  {
+    m_undoStack->endMacro(); // end only one block of commands on stack
+  }
 }

@@ -138,7 +138,7 @@ namespace te
 
       protected:
 
-        virtual bool addToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items);
+        virtual bool addChangePropertiesToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items);
 
         virtual QGraphicsItem* searchForSubselection(QGraphicsItem* parentItem);
 

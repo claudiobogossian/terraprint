@@ -143,7 +143,7 @@ namespace te
         virtual WarningManager* getWarningManager();
 
         virtual void validateItem();
-        
+                
       protected:
 
         /*!

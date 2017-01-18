@@ -377,6 +377,18 @@ namespace te
         */
         virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
 
+        /*
+          \brief Update multiple items with the same values of the same properties (setProperties).
+                The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
+        */
+        virtual void addChangePropertiesCommandToStack(QList<QGraphicsItem*> items, const Properties& properties);
+
+        /*
+        \brief Update multiple items with different values and properties that are the same or different (setProperties).
+              The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
+        */
+        virtual void addChangePropertiesCommandToStack(std::map<QGraphicsItem*, te::layout::Properties>& map);
+
       public slots:
 
         void onUndoStackHasChanged();
@@ -495,11 +507,7 @@ namespace te
         virtual void searchSelectedChildItemsInResizeMode(QGraphicsItem* item);
 
         virtual void searchSelectedItemsInMoveMode();
-
-        virtual void addUndoCommandForMove();
-
-        virtual void addUndoCommandForResize();
-
+        
         virtual QList<QGraphicsItem*> getListUngroupedItems(const QList<QGraphicsItem *> & items, EnumType* groupType);
 
         /*!
