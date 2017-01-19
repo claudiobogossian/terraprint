@@ -32,7 +32,7 @@
 
 //TerraLib
 #ifndef Q_MOC_RUN
-#include "../../core/AbstractBuildGraphicsItem.h"
+#include "AbstractBuildGraphicsItem.h"
 #include "../../core/property/Properties.h"
 #include "../../core/Config.h"
 #include "pattern/factory/item/ItemFactoryParamsCreate.h"
@@ -41,6 +41,7 @@
 #include <QObject>
 
 class QGraphicsItem;
+class QPointF;
 
 namespace te
 {
@@ -132,14 +133,15 @@ namespace te
 
         virtual void showImgDlg(QGraphicsItem* item);
 
-        virtual te::layout::Properties convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, double width, double height);
+        virtual te::layout::Properties convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, double width, double height, int zValue);
+
+        virtual Properties collapseProperties(const Properties& properties, const Properties& newProperties);
+
+        virtual Properties createPositionProperties(const QPointF& pos);
         
       protected:
 
-        virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type, bool isCopy = false);
-
-        Scene*      m_scene;
-       
+        virtual ItemFactoryParamsCreate createParams(te::layout::EnumType* type, bool isCopy = false);       
     };
   }
 }

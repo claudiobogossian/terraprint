@@ -48,10 +48,11 @@
 // Qt
 #include <QGraphicsItem>
 #include <QUndoCommand> 
+#include <QPointF>
 
 te::layout::BuildGraphicsItem::BuildGraphicsItem(Scene* scene, QObject* parent) :
-  QObject(parent),
-  m_scene(scene)
+  AbstractBuildGraphicsItem(scene),
+  QObject(parent)
 {
   if (m_scene)
   {
@@ -135,21 +136,6 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
 
   AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
   item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-  if (!item)
-  {
-    return item;
-  }
-
-  if (m_scene)
-  {
-    m_scene->insertItem(item);
-  }
-
-  if (m_props.getProperties().empty() == false)
-  {
-    abstractItem->getController()->setProperties(m_props);
-  }
     
   afterBuild(item, addUndo);
 
@@ -197,7 +183,7 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
 
   QPointF pointInSceneCS(m_coord.x, m_coord.y);
 
-  // tool for create items could be with size
+  // If the item does not have width and height, after created it will be centralized
   if (m_width == 0 && m_height == 0)
   {
     double width = item->boundingRect().width();
@@ -207,18 +193,17 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
     pointInItemCS.setX(pointInItemCS.x() - (width / 2.));
     pointInItemCS.setY(pointInItemCS.y() - (height / 2.));
     pointInSceneCS = item->mapToScene(pointInItemCS);
-  }
-  item->setPos(pointInSceneCS);
 
-  if (!m_props.getProperties().empty())
-  {
-    int zValue = findZValue(m_props);
-    if (zValue > -1)
-    {
-      item->setZValue(zValue);
-    }
+    AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(item);
+    Properties propsPostion = createPositionProperties(pointInSceneCS);
+    abstractItem->setProperties(propsPostion);
   }
-  
+
+  if (m_scene)
+  {
+    m_scene->insertItem(item);
+  }
+      
   if (item)
   {
     if (m_scene)
@@ -232,22 +217,38 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
   }
 }
 
+te::layout::Properties te::layout::BuildGraphicsItem::createPositionProperties(const QPointF& pos)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = pos.x();
+  double y = pos.y();
+
+  Properties properties;
+  {
+    Property prop_x(0);
+    prop_x.setName("x");
+    prop_x.setValue(x, dataType->getDataTypeDouble());
+    properties.addProperty(prop_x);
+
+    Property prop_y(0);
+    prop_y.setName("y");
+    prop_y.setValue(y, dataType->getDataTypeDouble());
+    properties.addProperty(prop_y);
+  }
+  return properties;
+}
+
 te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type, bool isCopy)
 {
-  if (!m_props.getProperties().empty())
-  {
-    std::string name = findName(m_props);
-    if (!name.empty())
-    {
-      m_name = name;
-      return ItemFactoryParamsCreate(m_props);
-    }
-  }
-
   std::string strName = nameItem(type);
   m_name = strName;
 
-  Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height);
+  int zValue = generateZValueFromScene();
+
+  Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height, zValue);
+  props = collapseProperties(m_props, props);
+
   return ItemFactoryParamsCreate(props);
 }
 
@@ -284,13 +285,13 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   }
 }
 
-
 std::string te::layout::BuildGraphicsItem::getNewName()
 {
   return m_name;
 }
 
-te::layout::Properties te::layout::BuildGraphicsItem::convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, double width, double height)
+te::layout::Properties te::layout::BuildGraphicsItem::convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, 
+  double width, double height, int zValue)
 {
   Properties props;
   
@@ -334,7 +335,30 @@ te::layout::Properties te::layout::BuildGraphicsItem::convertToProperties(const 
     prop_height.setValue(height, dataType->getDataTypeDouble());
     props.addProperty(prop_height);
   }
+
+  Property prop_zValue(0);
+  prop_zValue.setName("zValue");
+  prop_zValue.setValue(zValue, dataType->getDataTypeInt());
+  props.addProperty(prop_zValue);
   
   return props;
 }
 
+te::layout::Properties te::layout::BuildGraphicsItem::collapseProperties(const Properties& properties, const Properties& newProperties)
+{
+  Properties propertiesCopy = properties;
+  Properties newPropertiesCopy = newProperties;
+
+  std::vector<Property>::const_iterator it = newProperties.getProperties().begin();
+
+  for (; it != newProperties.getProperties().end(); ++it)
+  {
+    Property prop = (*it);
+    if (!propertiesCopy.contains(prop.getName()))
+    {
+      propertiesCopy.addProperty(prop);
+    }
+  }
+
+  return propertiesCopy;
+}

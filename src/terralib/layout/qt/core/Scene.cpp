@@ -36,7 +36,6 @@
 #include "../item/ItemGroup.h"
 #include "BuildGraphicsItem.h"
 #include "pattern/command/AddCommand.h"
-#include "../../core/AbstractBuildGraphicsItem.h"
 #include "../../core/template/TemplateEditor.h"
 #include "../../core/template/AbstractTemplate.h"
 #include "../../core/property/Properties.h"
@@ -1728,14 +1727,14 @@ void te::layout::Scene::addChangePropertiesCommandToStack(QList<QGraphicsItem*> 
   }
 }
 
-void te::layout::Scene::addChangePropertiesCommandToStack(std::map<QGraphicsItem*, te::layout::Properties>& map)
+void te::layout::Scene::addChangePropertiesCommandToStack(const std::map<QGraphicsItem*, te::layout::Properties>& map)
 {
   if (map.size() > 1)
   {
     m_undoStack->beginMacro("Block: Change Items Properties"); // begin only one block of commands on stack
   }
 
-  std::map<QGraphicsItem*, te::layout::Properties>::iterator it;
+  std::map<QGraphicsItem*, te::layout::Properties>::const_iterator it;
 
   for (it = map.begin(); it != map.end(); ++it)
   {

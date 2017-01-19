@@ -36,9 +36,9 @@
 #include <map>
 
 // Qt
-#include <QRectF>
-#include <QPointF>
 
+class QRectF;
+class QPointF;
 class QGraphicsItem;
 
 namespace te
@@ -46,6 +46,7 @@ namespace te
   namespace layout
   {
     class Scene;
+    class Property;
     /*!
     \brief Class applying the alignment in one or more components. Ex .: send to back, bring to front, align right, align bottom.
     
@@ -138,7 +139,11 @@ namespace te
 
       protected:
 
-        virtual bool addChangePropertiesToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items);
+        virtual bool addChangePropertiesToUndoRedoStack(const std::map<QGraphicsItem*, QPointF>& items);
+
+        virtual bool addChangePropertiesToUndoRedoStack(const std::map<QGraphicsItem*, int>& items);
+
+        Property createZValueProperty(int zValue);
 
         virtual QGraphicsItem* searchForSubselection(QGraphicsItem* parentItem);
 

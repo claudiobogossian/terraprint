@@ -387,7 +387,7 @@ namespace te
         \brief Update multiple items with different values and properties that are the same or different (setProperties).
               The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
         */
-        virtual void addChangePropertiesCommandToStack(std::map<QGraphicsItem*, te::layout::Properties>& map);
+        virtual void addChangePropertiesCommandToStack(const std::map<QGraphicsItem*, te::layout::Properties>& map);
 
       public slots:
 

@@ -38,8 +38,9 @@
 #include <sstream>
 
 // Qt
+#include <QRectF>
+#include <QPointF>
 #include <QGraphicsItem>
-#include <QUndoCommand>
 
 te::layout::AlignItems::AlignItems( Scene* scene, PaperConfig* config ):
   m_scene(scene),
@@ -67,12 +68,14 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
   {
     selectedItem = childItem;
   }
-
+  
   QList<QGraphicsItem *> items = m_scene->items(Qt::AscendingOrder);
-
+  
   qreal maxZValue = selectedItem->zValue();
   qreal zValue = selectedItem->zValue();
-  qreal beforeZValue = selectedItem->zValue();
+  qreal beforeZValue = selectedItem->zValue();  
+
+  std::map<QGraphicsItem*, int> mapItems;
 
   foreach(QGraphicsItem *item, items)
   {
@@ -81,13 +84,13 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if (it)
       {
-        if ((item->zValue() >= zValue))
+        if ((item->zValue() >= zValue) && (selectedItem != item))
         {
           if (item->zValue() > maxZValue)
           {
             beforeZValue = maxZValue;
             maxZValue = item->zValue();
-            item->setZValue(beforeZValue);
+            mapItems[item] = beforeZValue;
             if (oneLevel)
             {
               break;
@@ -98,12 +101,13 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
     }
   }
 
-  selectedItem->setZValue(maxZValue);
-
   if (maxZValue != zValue)
   {
+    mapItems[selectedItem] = maxZValue;
+    result = addChangePropertiesToUndoRedoStack(mapItems);
     result = true;
   }
+    
   return result;
 }
 
@@ -127,6 +131,8 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
   qreal zValue = selectedItem->zValue();
   qreal beforeZValue = selectedItem->zValue();
 
+  std::map<QGraphicsItem*, int> mapItems;
+
   foreach(QGraphicsItem *item, items)
   {
     if(item)
@@ -134,16 +140,19 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if(it)
       {
-        if (item->zValue() <= zValue && item->zValue() > m_minimunZValue)
+        if (selectedItem != item)
         {
-          if (item->zValue() < minimumZValue)
+          if (item->zValue() <= zValue && item->zValue() > m_minimunZValue)
           {
-            beforeZValue = minimumZValue;
-            minimumZValue = item->zValue();
-            item->setZValue(beforeZValue);
-            if (oneLevel)
+            if (item->zValue() < minimumZValue)
             {
-              break;
+              beforeZValue = minimumZValue;
+              minimumZValue = item->zValue();
+              mapItems[item] = beforeZValue;
+              if (oneLevel)
+              {
+                break;
+              }
             }
           }
         }
@@ -151,12 +160,13 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
     }
   }
 
-  selectedItem->setZValue(minimumZValue);
-
   if (minimumZValue != zValue)
   {
+    mapItems[selectedItem] = minimumZValue;
+    result = addChangePropertiesToUndoRedoStack(mapItems);
     result = true;
   }
+
   return result;
 }
 
@@ -521,7 +531,7 @@ void te::layout::AlignItems::setMinimumZValue(int minimum)
   m_minimunZValue = minimum;
 }
 
-bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items)
+bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(const std::map<QGraphicsItem*, QPointF>& items)
 {
   bool result = true;
 
@@ -529,7 +539,7 @@ bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(std::map<QGraphi
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  std::map<QGraphicsItem*, QPointF>::iterator it;
+  std::map<QGraphicsItem*, QPointF>::const_iterator it;
   for (it = items.begin() ; it != items.end(); ++it)
   {
     QGraphicsItem* item = it->first;
@@ -549,6 +559,30 @@ bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(std::map<QGraphi
       property.setValue(po.y(), dataType->getDataTypeDouble());
       properties.addProperty(property);
     }
+    map[item] = properties;
+  }
+
+  m_scene->addChangePropertiesCommandToStack(map);
+  
+  return result;
+}
+
+bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(const std::map<QGraphicsItem*, int>& items)
+{
+  bool result = true;
+
+  std::map<QGraphicsItem*, te::layout::Properties> map;
+
+  std::map<QGraphicsItem*, int>::const_iterator it;
+  for (it = items.begin(); it != items.end(); ++it)
+  {
+    QGraphicsItem* item = it->first;
+    int zValue = it->second;
+
+    Properties properties;
+    Property prop = createZValueProperty(zValue);
+    properties.addProperty(prop);
+
     map[item] = properties;
   }
 
@@ -584,4 +618,17 @@ QGraphicsItem* te::layout::AlignItems::searchForSubselection(QGraphicsItem* pare
     }
   }
   return item;
+}
+
+te::layout::Property te::layout::AlignItems::createZValueProperty(int zValue)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  int zValueCopy = zValue;
+
+  Property property(0);
+  property.setName("zValue");
+  property.setValue(zValueCopy, dataType->getDataTypeInt());
+  
+  return property;
 }
