@@ -22,7 +22,6 @@
 // Layout Module
 #include "terralib/layout/qt/core/Scene.h"
 #include "terralib/layout/qt/item/RectangleItem.h"
-#include "terralib/layout/qt/item/MapCompositionItem.h"
 #include "terralib/layout/core/pattern/proxy/AbstractProxyProject.h"
 #include "terralib/layout/qt/outside/ToolbarOutside.h"
 
