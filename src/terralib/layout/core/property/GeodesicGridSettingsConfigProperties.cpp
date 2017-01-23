@@ -28,36 +28,37 @@
 // TerraLib
 #include "GeodesicGridSettingsConfigProperties.h"
 
-te::layout::GeodesicGridSettingsConfigProperties::GeodesicGridSettingsConfigProperties() :
-  m_pointTextSizeCorner("grid_pointTextSizeCorner_geodesic"),
-  m_fontTextCorner("grid_fontTextCorner_geodesic"),
-  m_textColorCorner("grid_textColorCorner_geodesic"),
-  m_degreesText("grid_degreesText_geodesic"),
-  m_minutesText("grid_minutesText_geodesic"),
-  m_secondsText("grid_secondsText_geodesic"),
-  m_lneCornerHrzDisplacement("grid_lneCornerHrzDisplacement_geodesic"),
-  m_lneCornerVrtDisplacement("grid_lneCornerVrtDisplacement_geodesic"),
-  m_lowerRightCornerText("grid_lowerRightCornerText_geodesic"),
-  m_upperRightCornerText("grid_upperRightCornerText_geodesic"),
-  m_lowerLeftCornerText("grid_lowerLeftCornerText_geodesic"),
-  m_upperLeftCornerText("grid_upperLeftCornerText_geodesic"),
-  m_visibleCornerTextsText("grid_visibleCornerTextsText_geodesic"),
-  m_secondsPrecisionText("grid_seconds_precisionText"),
-  m_textFormat("text_format"),
+te::layout::GeodesicGridSettingsConfigProperties::GeodesicGridSettingsConfigProperties() 
+  : GridSettingsConfigProperties("geodesic"),
+  m_pointTextSizeCorner(m_prefix + "grid_pointTextSizeCorner"),
+  m_fontTextCorner(m_prefix + "grid_fontTextCorner"),
+  m_textColorCorner(m_prefix + "grid_textColorCorner"),
+  m_degreesText(m_prefix + "grid_degreesText"),
+  m_minutesText(m_prefix + "grid_minutesText"),
+  m_secondsText(m_prefix + "grid_secondsText"),
+  m_lneCornerHrzDisplacement(m_prefix + "grid_lneCornerHrzDisplacement"),
+  m_lneCornerVrtDisplacement(m_prefix + "grid_lneCornerVrtDisplacement"),
+  m_lowerRightCornerText(m_prefix + "grid_lowerRightCornerText"),
+  m_upperRightCornerText(m_prefix + "grid_upperRightCornerText"),
+  m_lowerLeftCornerText(m_prefix + "grid_lowerLeftCornerText"),
+  m_upperLeftCornerText(m_prefix + "grid_upperLeftCornerText"),
+  m_visibleCornerTextsText(m_prefix + "grid_visibleCornerTextsText"),
+  m_secondsPrecisionText(m_prefix + "grid_seconds_precisionText"),
+  m_textFormat(m_prefix + "text_format"),
 
   /* Geodesic: Topographic Map */
 
-  m_defineScale("grid_defineScale_geodesic"),
-  m_clip("grid_clip_geodesic"),
-  m_scale("grid_scale_geodesic"),
-  m_lneX1("grid_lneX1_geodesic"),
-  m_lneX2("grid_lneX2_geodesic"),
-  m_lneY1("grid_lneY1_geodesic"),
-  m_lneY2("grid_lneY2_geodesic"),
-  m_lneX3("grid_lneX3_geodesic"),
-  m_lneX4("grid_lneX4_geodesic"),
-  m_lneY3("grid_lneY3_geodesic"),
-  m_lneY4("grid_lneY4_geodesic")
+  m_defineScale(m_prefix + "grid_defineScale"),
+  m_clip(m_prefix + "grid_clip"),
+  m_scale(m_prefix + "grid_scale"),
+  m_lneX1(m_prefix + "grid_lneX1"),
+  m_lneX2(m_prefix + "grid_lneX2"),
+  m_lneY1(m_prefix + "grid_lneY1"),
+  m_lneY2(m_prefix + "grid_lneY2"),
+  m_lneX3(m_prefix + "grid_lneX3"),
+  m_lneX4(m_prefix + "grid_lneX4"),
+  m_lneY3(m_prefix + "grid_lneY3"),
+  m_lneY4(m_prefix + "grid_lneY4")
 {
   
 }

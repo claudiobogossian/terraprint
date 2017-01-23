@@ -125,6 +125,28 @@ te::layout::MapCompositionItem::MapCompositionItem(const std::string& name)
   //getController()->setProperty(pName);
 }
 
+te::layout::MapCompositionItem::~MapCompositionItem()
+{
+  finalizeItems();
+}
+
+QRectF te::layout::MapCompositionItem::boundingRect() const
+{
+  bool resizable = te::layout::Property::GetValueAs<bool>(this->getProperty("resizable"));
+  if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
+  {
+    return AbstractItem::boundingRect();
+  }
+
+  QRectF rect = this->childrenBoundingRect();
+  if(rect.isValid() == true)
+  {
+    return rect;
+  }
+
+  return AbstractItem::boundingRect();
+}
+
 te::layout::AbstractItemModel* te::layout::MapCompositionItem::createModel() const
 {
   return new MapCompositionModel();
@@ -134,11 +156,6 @@ te::layout::AbstractItemController* te::layout::MapCompositionItem::createContro
 {
   AbstractItemModel* model = createModel();
   return new MapCompositionController(model, (AbstractItemView*)this);
-}
-
-te::layout::MapCompositionItem::~MapCompositionItem()
-{
-  finalizeItems();
 }
 
 te::layout::AbstractItemView* te::layout::MapCompositionItem::getMapItem()
@@ -158,6 +175,7 @@ te::layout::AbstractItemView* te::layout::MapCompositionItem::getGeodesicGridIte
 
 void te::layout::MapCompositionItem::initItems()
 {
+  /*
   const std::string& mapName = Property::GetValueAs<std::string>(m_mapItem->getController()->getProperty("name"));
 
   SharedProperties sharedProps;
@@ -184,8 +202,9 @@ void te::layout::MapCompositionItem::initItems()
 
   m_geodesicGridItem->getController()->setProperties(geodesicProperties);
 
-  this->prepareGeometryChange();
-  ItemUtils::normalizeChildrenPosition(this);
+  //this->prepareGeometryChange();
+  //ItemUtils::normalizeItem(this);
+  */
 }
 
 void te::layout::MapCompositionItem::finalizeItems()

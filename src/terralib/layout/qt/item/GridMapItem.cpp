@@ -79,6 +79,7 @@ void te::layout::GridMapItem::addGridLinesToPath()
 
 void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -143,6 +144,7 @@ void te::layout::GridMapItem::drawItem( QPainter * painter, const QStyleOptionGr
 
     te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenCache);
   }
+  */
 }
 
 void te::layout::GridMapItem::drawGridOnDevice( QPainter* painter )
@@ -173,6 +175,7 @@ void te::layout::GridMapItem::drawGridOnDevice( QPainter* painter )
 
 void te::layout::GridMapItem::configPainter( QPainter* painter )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -219,10 +222,12 @@ void te::layout::GridMapItem::configPainter( QPainter* painter )
   pen.setWidthF(lineWidth);
 
   painter->setPen(pen);
+  */
 }
 
 void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 {
+  /*/
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -239,6 +244,7 @@ void te::layout::GridMapItem::configTextPainter( QPainter* painter )
 
   QBrush brush (clrText);
   painter->setBrush(brush);
+  */
 }
 
 void te::layout::GridMapItem::clear()
@@ -271,6 +277,7 @@ void te::layout::GridMapItem::clearLines()
 
 void te::layout::GridMapItem::calculateTexts()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -311,11 +318,12 @@ void te::layout::GridMapItem::calculateTexts()
   {
     calculateTopTexts();
   }
-
+  */
 }
 
 void te::layout::GridMapItem::calculateTopTexts()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -357,6 +365,8 @@ void te::layout::GridMapItem::calculateTopTexts()
     //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
+
+  */
 }
 
 void te::layout::GridMapItem::calculateText(const QPointF& point, const QFont& font, const std::string& text, int rotate)
@@ -406,6 +416,7 @@ void te::layout::GridMapItem::calculateSuperScriptText(const QPointF& point, con
 
 void te::layout::GridMapItem::calculateBottomTexts()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -446,10 +457,12 @@ void te::layout::GridMapItem::calculateBottomTexts()
     //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
+  */
 }
 
 void te::layout::GridMapItem::calculateLeftTexts()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -495,10 +508,12 @@ void te::layout::GridMapItem::calculateLeftTexts()
 #endif
 
   }
+  */
 }
 
 void te::layout::GridMapItem::calculateRightTexts()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -537,6 +552,7 @@ void te::layout::GridMapItem::calculateRightTexts()
     //debugDrawTextRect(painter, pt, txt, qFont, iRotate);
 #endif
   }
+  */
 }
 
 QRectF te::layout::GridMapItem::boundingRect() const
@@ -555,6 +571,7 @@ QRectF te::layout::GridMapItem::boundingRect() const
 
 void te::layout::GridMapItem::calculateCrossLines()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GridSettingsConfigProperties settingsConfig;
@@ -625,7 +642,7 @@ void te::layout::GridMapItem::calculateCrossLines()
   }
   
   calculateTexts();
-
+  */
 }
 
 
@@ -841,6 +858,8 @@ bool te::layout::GridMapItem::checkBolderIntersection(const te::gm::LineString& 
 }
 bool te::layout::GridMapItem::calculateCrossIntersectMapBorder( QLineF vrt, QLineF hrz)
 {
+  return true;
+  /*
   bool result = false;
 
   const Property& pGridSettings = this->getProperty("GridSettings");
@@ -904,6 +923,7 @@ bool te::layout::GridMapItem::calculateCrossIntersectMapBorder( QLineF vrt, QLin
   }
 
   return intersects;
+  */
 }
 
 void te::layout::GridMapItem::debugDrawTextRect(QPainter* painter, const QPointF& point, const std::string& text, QFont font, int rotate)

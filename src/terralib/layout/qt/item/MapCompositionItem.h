@@ -64,6 +64,11 @@ namespace te
 
         virtual ~MapCompositionItem();
 
+        /*!
+        \brief Reimplemented from ParentItem
+        */
+        virtual QRectF boundingRect() const;
+
         te::layout::AbstractItemView* getMapItem();
 
         te::layout::AbstractItemView* getPlanarGridItem();

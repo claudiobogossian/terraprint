@@ -285,12 +285,24 @@ te::color::RGBAColor te::layout::GridSettingsOutside::configColor( QWidget* widg
   return rgbaColor;
 }
 
-void te::layout::GridSettingsOutside::load()
+void te::layout::GridSettingsOutside::load(const std::string& gridName)
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
   if (!controller)
     return;
 
+  PlanarGridSettingsConfigProperties planarConfig;
+  GeodesicGridSettingsConfigProperties geodesicConfig;
+  if (gridName == planarConfig.getGridSettings())
+  {
+    m_ui->tabType->setCurrentIndex(0);
+  }
+  else if (gridName == geodesicConfig.getGridSettings())
+  {
+    m_ui->tabType->setCurrentIndex(1);
+  }
+
+  /*
   if (!controller->containsGrid(m_planarType))
   {
     m_ui->tabType->setTabEnabled(0, false);
@@ -303,7 +315,7 @@ void te::layout::GridSettingsOutside::load()
   else
   {
     m_ui->tbwSettings->setTabEnabled(2, false);
-  }
+  }*/
 
   /* Grid */
   
@@ -321,13 +333,13 @@ void te::layout::GridSettingsOutside::load()
 
   ///* Line */
   
-  initDouble(m_ui->lneHrzPlanarGap, m_planarGridSettings->getLneHrzGap(), m_planarType);
+  initDouble(m_ui->lneHrzPlanarGap, m_planarGridSettings->getHorizontalLineGap(), m_planarType);
   
-  initDouble(m_ui->lneVrtPlanarGap, m_planarGridSettings->getLneVrtGap(), m_planarType);
+  initDouble(m_ui->lneVrtPlanarGap, m_planarGridSettings->getVerticalLineGap(), m_planarType);
   
-  initDouble(m_ui->lneHorizontalGap, m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+  initDouble(m_ui->lneHorizontalGap, m_geodesicGridSettings->getHorizontalLineGap(), m_geodesicType);
   
-  initDouble(m_ui->lneVerticalGap, m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+  initDouble(m_ui->lneVerticalGap, m_geodesicGridSettings->getVerticalLineGap(), m_geodesicType);
 
   initColor(m_ui->fraPlanarLineColor, m_planarGridSettings->getLineColor(), m_planarType);
 
@@ -363,13 +375,13 @@ void te::layout::GridSettingsOutside::load()
 
   ///*Text: Advanced configuration*/
 
-  initDouble(m_ui->xGridInitialPoint_planar_textField, m_planarGridSettings->getInitialGridPointX(), m_planarType);
+  initDouble(m_ui->xGridInitialPoint_planar_textField, m_planarGridSettings->getVerticalLineInitial(), m_planarType);
 
-  initDouble(m_ui->yGridInitialPoint_planar_textField, m_planarGridSettings->getInitialGridPointY(), m_planarType);
+  initDouble(m_ui->yGridInitialPoint_planar_textField, m_planarGridSettings->getHorizontalLineInitial(), m_planarType);
 
-  initDouble(m_ui->xGridInitialPoint_geo_textField, m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+  initDouble(m_ui->xGridInitialPoint_geo_textField, m_geodesicGridSettings->getVerticalLineInitial(), m_geodesicType);
 
-  initDouble(m_ui->yGridInitialPoint_geo_textField, m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+  initDouble(m_ui->yGridInitialPoint_geo_textField, m_geodesicGridSettings->getHorizontalLineInitial(), m_geodesicType);
 
   initBool(m_ui->chkBottomPlanarText, m_planarGridSettings->getBottomText(), m_planarType);
 
@@ -403,15 +415,15 @@ void te::layout::GridSettingsOutside::load()
 
   initBool(m_ui->chkTopRotateGeoText, m_geodesicGridSettings->getTopRotateText(), m_geodesicType);
 
-  initDouble(m_ui->lneVrtPlanarDisplacement, m_planarGridSettings->getLneVrtDisplacement(), m_planarType);
+  initDouble(m_ui->lneVrtPlanarDisplacement, m_planarGridSettings->getVerticalLineDisplacement(), m_planarType);
 
   initBool(m_ui->chkVisibleTextsPlanarText, m_planarGridSettings->getVisibleAllTexts(), m_planarType);
 
-  initDouble(m_ui->lneHrzPlanarDisplacement, m_planarGridSettings->getLneHrzDisplacement(), m_planarType);
+  initDouble(m_ui->lneHrzPlanarDisplacement, m_planarGridSettings->getHorizontalLineDisplacement(), m_planarType);
 
-  initDouble(m_ui->lneVrtGeoDisplacement, m_geodesicGridSettings->getLneVrtDisplacement(), m_geodesicType);
+  initDouble(m_ui->lneVrtGeoDisplacement, m_geodesicGridSettings->getVerticalLineDisplacement(), m_geodesicType);
 
-  initDouble(m_ui->lneHrzGeoDisplacement, m_geodesicGridSettings->getLneHrzDisplacement(), m_geodesicType);
+  initDouble(m_ui->lneHrzGeoDisplacement, m_geodesicGridSettings->getHorizontalLineDisplacement(), m_geodesicType);
 
   initBool(m_ui->chkDegreesGeoText, m_geodesicGridSettings->getDegreesText(), m_geodesicType);
 
@@ -588,7 +600,7 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarGap_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_planarGridSettings->getLneHrzGap(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getHorizontalLineGap(), m_planarType);
     prop.setValue(m_ui->lneHrzPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -612,7 +624,7 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarGap_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_planarGridSettings->getLneVrtGap(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getVerticalLineGap(), m_planarType);
     prop.setValue(m_ui->lneVrtPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -641,7 +653,7 @@ void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
     {
       lneHorizontalGap = ItemUtils::DMS2DD(lneHorizontalGap);
     }
-    Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineGap(), m_geodesicType);
     prop.setValue(lneHorizontalGap.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -671,7 +683,7 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     {
       lneVerticalGap = ItemUtils::DMS2DD(lneVerticalGap);
     }
-    Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineGap(), m_geodesicType);
     prop.setValue(lneVerticalGap.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -944,7 +956,7 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_planar_textField_edit
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getVerticalLineInitial(), m_planarType);
     prop.setValue(m_ui->xGridInitialPoint_planar_textField->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -968,7 +980,7 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_planar_textField_edit
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_planarGridSettings->getInitialGridPointY(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getHorizontalLineInitial(), m_planarType);
     prop.setValue(m_ui->yGridInitialPoint_planar_textField->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -997,7 +1009,7 @@ void te::layout::GridSettingsOutside::on_xGridInitialPoint_geo_textField_editing
     {
       xGridInitialPoint_geo_textField = ItemUtils::DMS2DD(xGridInitialPoint_geo_textField);
     }
-    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineInitial(), m_geodesicType);
     prop.setValue(xGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -1026,7 +1038,7 @@ void te::layout::GridSettingsOutside::on_yGridInitialPoint_geo_textField_editing
     {
       yGridInitialPoint_geo_textField = ItemUtils::DMS2DD(yGridInitialPoint_geo_textField);
     }
-    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineInitial(), m_geodesicType);
     prop.setValue(yGridInitialPoint_geo_textField.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -1242,7 +1254,7 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarDisplacement_editingFinishe
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_planarGridSettings->getLneVrtDisplacement(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getVerticalLineDisplacement(), m_planarType);
     prop.setValue(m_ui->lneVrtPlanarDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -1285,7 +1297,7 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarDisplacement_editingFinishe
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_planarGridSettings->getLneHrzDisplacement(), m_planarType);
+    Property prop = controller->getProperty(m_planarGridSettings->getHorizontalLineDisplacement(), m_planarType);
     prop.setValue(m_ui->lneHrzPlanarDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -1309,7 +1321,7 @@ void te::layout::GridSettingsOutside::on_lneVrtGeoDisplacement_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtDisplacement(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineDisplacement(), m_geodesicType);
     prop.setValue(m_ui->lneVrtGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -1333,7 +1345,7 @@ void te::layout::GridSettingsOutside::on_lneHrzGeoDisplacement_editingFinished()
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzDisplacement(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineDisplacement(), m_geodesicType);
     prop.setValue(m_ui->lneHrzGeoDisplacement->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
@@ -1902,7 +1914,7 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
   if (!controller)
     return;
 
-  Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+  Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineGap(), m_geodesicType);
 
   QString currentValue = ItemUtils::convert2QString(boost::lexical_cast<std::string>(te::layout::Property::GetValueAs<double>(prop)));
   std::string stdCurrentValue = ItemUtils::convert2StdString(currentValue);
@@ -1921,7 +1933,7 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
       double dValue = ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble();
       if (dValue > 0.0)
       {
-        Property prop = controller->getProperty(m_geodesicGridSettings->getLneHrzGap(), m_geodesicType);
+        Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineGap(), m_geodesicType);
         prop.setValue(dValue, dataType->getDataTypeDouble());
         emit updateProperty(prop);
       }
@@ -1935,7 +1947,7 @@ void te::layout::GridSettingsOutside::on_btnVerticalGap_clicked()
   if (!controller)
     return;
 
-  Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+  Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineGap(), m_geodesicType);
 
   QString lneVerticalGap;
 
@@ -1954,7 +1966,7 @@ void te::layout::GridSettingsOutside::on_btnVerticalGap_clicked()
 
       double dValue = ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble();
 
-      Property prop = controller->getProperty(m_geodesicGridSettings->getLneVrtGap(), m_geodesicType);
+      Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineGap(), m_geodesicType);
       prop.setValue(dValue, dataType->getDataTypeDouble());
       emit updateProperty(prop);
 
@@ -1969,7 +1981,7 @@ void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
   if (!controller)
     return;
 
-  Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+  Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineInitial(), m_geodesicType);
 
   QString lneIntialPointX;
 
@@ -1986,7 +1998,7 @@ void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
     
     double dValue = ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble();
 
-    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointX(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineInitial(), m_geodesicType);
     prop.setValue(dValue, dataType->getDataTypeDouble());
 
     emit updateProperty(prop);
@@ -2000,7 +2012,7 @@ void te::layout::GridSettingsOutside::on_btnInitialPointY_clicked()
   if (!controller)
     return;
 
-  Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+  Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineInitial(), m_geodesicType);
 
   QString lneIntialPointY;
 
@@ -2017,7 +2029,7 @@ void te::layout::GridSettingsOutside::on_btnInitialPointY_clicked()
 
     double dValue = ItemUtils::convert2QString(degreeDialog.getCoordvalueDD()).toDouble();
 
-    Property prop = controller->getProperty(m_geodesicGridSettings->getInitialGridPointY(), m_geodesicType);
+    Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineInitial(), m_geodesicType);
     prop.setValue(dValue, dataType->getDataTypeDouble());
 
     emit updateProperty(prop);

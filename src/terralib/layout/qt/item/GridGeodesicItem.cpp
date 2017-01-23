@@ -68,6 +68,7 @@ te::layout::AbstractItemController* te::layout::GridGeodesicItem::createControll
 
 void te::layout::GridGeodesicItem::calculateGrid()
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
@@ -142,10 +143,12 @@ void te::layout::GridGeodesicItem::calculateGrid()
 
   prepareGeometryChange();
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
+  */
 }
 
 double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& geoBox )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
@@ -171,40 +174,46 @@ double te::layout::GridGeodesicItem::initVerticalLines( const te::gm::Envelope& 
     }
   }
   return yInit;
+  */
+  return 0;
 }
 
 double te::layout::GridGeodesicItem::initHorizontalLines( const te::gm::Envelope& geoBox )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
 
-  const Property& pInitialGridPointX = pGridSettings.getSubProperty(settingsConfig.getInitialGridPointX());
-  const Property& pHorizontalGap = pGridSettings.getSubProperty(settingsConfig.getLneHrzGap());
+  const Property& pHorizontalLineInitial = pGridSettings.getSubProperty(settingsConfig.getHorizontalLineInitial());
+  const Property& pHorizontalLineGap = pGridSettings.getSubProperty(settingsConfig.getHorizontalLineGap());
 
-  double initialGridPointX = te::layout::Property::GetValueAs<double>(pInitialGridPointX);
-  double horizontalGap = te::layout::Property::GetValueAs<double>(pHorizontalGap);
+  double horizontalLineInitial = te::layout::Property::GetValueAs<double>(pHorizontalLineInitial);
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
 
-  double xInit = initialGridPointX;
+  double xInit = horizontalLineInitial;
 
   if(xInit < geoBox.getLowerLeftX())
   {
     double difx = geoBox.getLowerLeftX() - xInit;
-    int nParts = (int)(difx/horizontalGap);
+    int nParts = (int)(difx/ horizontalLineGap);
     if(nParts == 0)
     {
-      xInit = initialGridPointX;
+      xInit = horizontalLineInitial;
     }
     else
     {
-      xInit = xInit + (nParts * horizontalGap);
+      xInit = xInit + (nParts * horizontalLineGap);
     }
   }
   return xInit;
+  */
+  return 0;
 }
 
 void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
@@ -345,10 +354,12 @@ void te::layout::GridGeodesicItem::calculateVertical(const te::gm::Envelope& geo
       line = 0;
     }
   }
+  */
 }
 
 void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& geoBox, const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   GeodesicGridSettingsConfigProperties settingsConfig;
@@ -493,4 +504,5 @@ void te::layout::GridGeodesicItem::calculateHorizontal( const te::gm::Envelope& 
     delete rectPolygon;
     delete clippedGeometry;
   }
+  */
 }

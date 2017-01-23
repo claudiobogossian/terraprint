@@ -62,6 +62,7 @@ namespace te
   {
     class AbstractItemController;
     class EnumType;
+    class Grid;
 
     /*!
     \brief This class is a proxy MapDisplay. This makes it possible to add a MapDisplay as item of a scene. 
@@ -107,6 +108,10 @@ namespace te
 
         virtual void recompose();
 
+        virtual te::layout::Grid* getPlanarGrid() const;
+
+        virtual te::layout::Grid* getGeodesicGrid() const;
+
       protected:
 
         virtual AbstractItemModel* createModel() const;
@@ -117,6 +122,11 @@ namespace te
           \brief For any specific drawing, the item must reimplement this function
         */
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+
+        /*!
+        \brief Draws the frame of the item
+        */
+        virtual void drawFrame(QPainter* painter);
 
 
         /*!
@@ -133,6 +143,11 @@ namespace te
         \brief Draws the layers using the given canvas
         */
         virtual void drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope);
+
+        /*!
+        \brief Draws the grid using the given QPainter
+        */
+        virtual void drawGrid(QPainter* painter);
 
         /*!
           \brief Reimplemented from QGraphicsItem to capture changes in the item
@@ -184,6 +199,8 @@ namespace te
         QPixmap                         m_screenGreaterCache; //!< A cache to avoid unnecessary full redraw. Its size may be greater than the current needed size
         QPixmap                         m_screenDraft; //!< A pixmap to be used as a draft during the edition of the item. Used by pan and zoom area
         te::gm::Point                   m_clickedPointMM; //!< The current clicked coord. Is valid only during the mouse click. When the mouse button is released, it is reset to its default value
+        Grid*                           m_planarGrid; //!< A planar grid that is drawn above the MapItem
+        Grid*                           m_geodesicGrid; //!< A geodesic grid that is drawn above the MapItem
     };
   }
 }

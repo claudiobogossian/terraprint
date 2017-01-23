@@ -64,6 +64,7 @@ te::layout::AbstractItemController* te::layout::GridPlanarItem::createController
 
 void te::layout::GridPlanarItem::calculateGrid()
 {
+  /*
   PlanarGridSettingsConfigProperties settingsConfig;
 
   const Property& pPlanarBox = this->getProperty("planar_box");
@@ -130,11 +131,13 @@ void te::layout::GridPlanarItem::calculateGrid()
 
   prepareGeometryChange();
   m_boundingBox = te::gm::Envelope(m_boundingBox.getLowerLeftX() - frameThickness, m_boundingBox.getLowerLeftY() - frameThickness, m_boundingBox.getUpperRightX() + frameThickness, m_boundingBox.getUpperRightY() + frameThickness);
+  */
 }
 
 
 void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
@@ -252,6 +255,7 @@ void te::layout::GridPlanarItem::calculateVertical( const te::gm::Envelope& geoB
     calculateLeft(line.p1(), rectF, convert, bLeftRotate, verticalDisplacement);
     calculateRight(line.p2(), rectF, convert, bRightRotate, verticalDisplacement);
   }
+  */
 }
 
 void te::layout::GridPlanarItem::generateGridCrossStyle(){
@@ -261,6 +265,7 @@ void te::layout::GridPlanarItem::generateGridCrossStyle(){
 
 void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
@@ -383,10 +388,12 @@ void te::layout::GridPlanarItem::calculateHorizontal( const te::gm::Envelope& ge
     calculateTop(line.p2(), rectF, convert, bTopRotate, horizontalDisplacement);
     calculateBottom(line.p1(), rectF, convert, bBottomRotate, horizontalDisplacement);
   }
+  */
 }
 
 double te::layout::GridPlanarItem::initVerticalLines( const te::gm::Envelope& geoBox )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
@@ -413,10 +420,13 @@ double te::layout::GridPlanarItem::initVerticalLines( const te::gm::Envelope& ge
   }
 
   return yInit;
+  */
+  return 0;
 }
 
 double te::layout::GridPlanarItem::initHorizontalLines( const te::gm::Envelope& geoBox )
 {
+  /*
   const Property& pGridSettings = this->getProperty("GridSettings");
 
   PlanarGridSettingsConfigProperties settingsConfig;
@@ -443,6 +453,8 @@ double te::layout::GridPlanarItem::initHorizontalLines( const te::gm::Envelope& 
   }
 
   return xInit;
+  */
+  return 0;
 }
 
 

@@ -38,8 +38,11 @@ te::layout::AbstractItemView* te::layout::MapCompositionItemFactory::build(ItemF
 
   props.setTypeObj(Enums::getInstance().getEnumObjectType()->getMapCompositionItem());
   std::string parentName = Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName();
-  props.reparentProperties(parentName);
-
+  if (propName.getParent().empty())
+  {
+    props.reparentProperties(parentName);
+  }
+  
   MapCompositionItem* view = new MapCompositionItem(name);
 
   view->setProperties(props);

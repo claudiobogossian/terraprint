@@ -31,6 +31,8 @@
 #include "../../core/Config.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
+class QGraphicsItem;
+
 namespace te
 {
   namespace layout
@@ -60,7 +62,24 @@ namespace te
         */ 
         virtual ~ItemGroupController();
 
-        void itemAdded();
+        void addItem(QGraphicsItem* child);
+
+        virtual void setProperties(const Properties& properties);
+
+        /*!
+        \brief Method called by the subject to inform changes in the model
+        */
+        virtual void update(const Subject* subject);
+
+    protected:
+      virtual void scaleChildrenItems(Properties& properties);
+
+      virtual QRectF resizeChildren(QGraphicsItem* qItem, double widthFactor, double heightFactor);
+
+    protected:
+
+      bool m_propagateResize;
+      bool m_ignoreChildrenUpdates;
     };
   }
 }

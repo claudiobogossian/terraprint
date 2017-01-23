@@ -33,7 +33,6 @@
 
 te::layout::MapCompositionController::MapCompositionController(AbstractItemModel* model, AbstractItemView* view)
   : ItemGroupController(model, view)
-  , m_ignoreResize(false)
 {
 
 }
@@ -162,8 +161,10 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
   //here we must "open" the new properties before passing them to the map and grid items
   Properties allProperties = expandHiddenProperties(properties);
   std::map<std::string, te::layout::Properties> mapProperties = groupPropertiesByParent(allProperties);
-
-  syncItemSize(mapProperties);
+  if (mapProperties.size() > 1)
+  {
+    m_propagateResize = false;
+  }
 
   const std::string& parentClass = this->getModel()->getType()->getName();
 
@@ -210,16 +211,78 @@ void te::layout::MapCompositionController::setProperties(const te::layout::Prope
     te::layout::Properties& mapCompositionProperties = it->second;
     ItemGroupController::setProperties(mapCompositionProperties);
   }
+
+  m_propagateResize = false;
+  ItemUtils::normalizeItem(mapCompositionItem);
+  m_propagateResize = true;
 }
 
 void te::layout::MapCompositionController::update(const Subject* subject)
 {
-  ItemGroupController::update(subject);
+  //we dont want to hear updates from our children. everything has already been updated
+  //so we overrid this function and do nothing
+}
 
-  if (subject != m_model)
+void te::layout::MapCompositionController::scaleChildrenItems(Properties& properties)
+{
+  //return;
+  //ItemGroupController::scaleChildrenItems(properties);
+  //return;
+
+  if (properties.contains("width") == false && properties.contains("height") == false)
   {
-    m_view->prepareGeometryChange();
+    return;
   }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  MapCompositionItem* mapCompositionItem = dynamic_cast<MapCompositionItem*>(m_view);
+  AbstractItemView* mapItem = mapCompositionItem->getMapItem();
+  if (mapItem == 0)
+  {
+    return;
+  }
+
+  std::string mapItemClassName = mapItem->getController()->getProperties().getTypeObj()->getName();
+
+  Properties mapItemProperties;
+  if (properties.contains("width"))
+  {
+    double newMapCompositionWidth = Property::GetValueAs<double>(properties.getProperty("width"));
+    double currentMapCompositionWidth = Property::GetValueAs<double>(getProperty("width"));
+    double currentMapWidth = Property::GetValueAs<double>(mapItem->getController()->getProperty("width"));
+    double diffWidth = currentMapCompositionWidth - currentMapWidth;
+    double newMapWidth = newMapCompositionWidth - diffWidth;
+
+    Property pNewWidth;
+    pNewWidth.setName("width");
+    pNewWidth.setValue(newMapWidth, dataType->getDataTypeDouble());
+    pNewWidth.setParent(mapItemClassName);
+
+    mapItemProperties.addProperty(pNewWidth);
+
+    properties.removeProperty("width");
+  }
+
+  if (properties.contains("height"))
+  {
+    double newMapCompositionHeight = Property::GetValueAs<double>(properties.getProperty("height"));
+    double currentMapCompositionHeight = Property::GetValueAs<double>(getProperty("height"));
+    double currentMapHeight = Property::GetValueAs<double>(mapItem->getController()->getProperty("height"));
+    double diffHeight = currentMapCompositionHeight - currentMapHeight;
+    double newMapHeight = newMapCompositionHeight - diffHeight;
+
+    Property pNewHeight;
+    pNewHeight.setName("height");
+    pNewHeight.setValue(newMapHeight, dataType->getDataTypeDouble());
+    pNewHeight.setParent(mapItemClassName);
+
+    mapItemProperties.addProperty(pNewHeight);
+
+    properties.removeProperty("height");
+  }
+
+  mapItem->setProperties(mapItemProperties);
 }
 
 std::map<std::string, te::layout::Properties> te::layout::MapCompositionController::groupPropertiesByParent(const te::layout::Properties& properties)
@@ -293,6 +356,7 @@ te::layout::Properties te::layout::MapCompositionController::expandHiddenPropert
 
 void te::layout::MapCompositionController::hideProperties(Property& property) const
 {
+  /*
   GridSettingsConfigProperties settingsConfig;
 
   std::set<std::string> setVisible;
@@ -317,92 +381,5 @@ void te::layout::MapCompositionController::hideProperties(Property& property) co
     hideProperties(subProperty);
     property.completelyUpdateSubProperty(subProperty);
   }
-}
-
-
-void te::layout::MapCompositionController::syncItemSize(std::map<std::string, te::layout::Properties>& mapProperties)
-{
-  if (m_ignoreResize)
-  {
-    return;
-  }
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  MapCompositionItem* mapCompositionItem = dynamic_cast<MapCompositionItem*>(m_view);
-  AbstractItemView* mapItem = mapCompositionItem->getMapItem();
-  if (mapItem == 0)
-  {
-    return;
-  }
-
-  std::string mapItemClassName = mapItem->getController()->getProperties().getTypeObj()->getName();
-
-
-  const std::string& parentClass = this->getModel()->getType()->getName();
-  
-  std::map<std::string, te::layout::Properties>::iterator itMapComposition = mapProperties.find(parentClass);
-  std::map<std::string, te::layout::Properties>::iterator itMap = mapProperties.find(mapItemClassName);
-
-  //if the size of the map composition item is being defined and the size of the map is not, we must resize the internal items
-  if (itMapComposition == mapProperties.end())
-  {
-    return;
-  }
-
-  const te::layout::Properties& mapCompositionItemProperties = itMapComposition->second;
-  te::layout::Properties mapItemProperties;
-  if (itMap != mapProperties.end())
-  {
-    mapItemProperties = itMap->second;
-
-    if (mapItemProperties.contains("width") || mapItemProperties.contains("height"))
-    {
-      return;
-    }
-  }
-
-  if (mapCompositionItemProperties.contains("width"))
-  {
-    double newMapCompositionWidth = Property::GetValueAs<double>(mapCompositionItemProperties.getProperty("width"));
-    double currentMapCompositionWidth = Property::GetValueAs<double>(getProperty("width"));
-    double currentMapWidth = Property::GetValueAs<double>(mapItem->getController()->getProperty("width"));
-    double diffWidth = currentMapCompositionWidth - currentMapWidth;
-    double newMapWidth = newMapCompositionWidth - diffWidth;
-
-    Property pNewWidth;
-    pNewWidth.setName("width");
-    pNewWidth.setValue(newMapWidth, dataType->getDataTypeDouble());
-    pNewWidth.setParent(mapItemClassName);
-
-    mapItemProperties.addProperty(pNewWidth);
-  }
-
-  if (mapCompositionItemProperties.contains("height"))
-  {
-    double newMapCompositionHeight = Property::GetValueAs<double>(mapCompositionItemProperties.getProperty("height"));
-    double currentMapCompositionHeight = Property::GetValueAs<double>(getProperty("height"));
-    double currentMapHeight = Property::GetValueAs<double>(mapItem->getController()->getProperty("height"));
-    double diffHeight = currentMapCompositionHeight - currentMapHeight;
-    double newMapHeight = newMapCompositionHeight - diffHeight;
-
-    Property pNewHeight;
-    pNewHeight.setName("height");
-    pNewHeight.setValue(newMapHeight, dataType->getDataTypeDouble());
-    pNewHeight.setParent(mapItemClassName);
-
-    mapItemProperties.addProperty(pNewHeight);
-  }
-
-  if (mapItemProperties.getProperties().empty() == false)
-  {
-    mapProperties[mapItemClassName] = mapItemProperties;
-  }
-}
-
-void te::layout::MapCompositionController::updateBoundingRect(QRectF rect)
-{
-  m_ignoreResize = true;
-  ItemGroupController::updateBoundingRect(rect);
-  m_ignoreResize = false;
+  */
 }

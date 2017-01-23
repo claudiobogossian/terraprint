@@ -104,10 +104,25 @@ bool te::layout::GridSettingsController::containsGrid(EnumType* enumType)
 
 te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid(EnumType* enumType)
 {
+  QList<QGraphicsItem*> items = m_scene->items();
+  foreach(QGraphicsItem* item, items)
+  {
+    AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
+    if (absItem)
+    {
+      const Properties& properties = absItem->getProperties();
+      if (properties.getTypeObj()->getName() == Enums::getInstance().getEnumObjectType()->getMapItem()->getName())
+      {
+        return absItem;
+      }
+    }
+  }
+  return 0;
+
+  /*
   AbstractItemView* itemFound = 0;
 
   QList<QGraphicsItem*> items = m_scene->items();
-  
   foreach(QGraphicsItem* item, items)
   {
     AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
@@ -135,5 +150,6 @@ te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid(Enu
     }
   }
   return itemFound;
+  */
 }
 

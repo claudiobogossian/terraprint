@@ -38,6 +38,7 @@
 te::layout::GridMapModel::GridMapModel() 
   : AbstractItemModel()
 {
+  /*
   //Reference Settings
   double scale = 0.;
 
@@ -373,6 +374,7 @@ te::layout::GridMapModel::GridMapModel()
   }
 
   reparentProperties(Enums::getInstance().getEnumObjectType()->getGridMapItem());
+  */
 }
 
 te::layout::GridMapModel::~GridMapModel()

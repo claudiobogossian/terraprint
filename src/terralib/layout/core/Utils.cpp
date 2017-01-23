@@ -470,6 +470,35 @@ void te::layout::Utils::remapToPlanar( te::gm::Point* point, int zone )
   point->computeMBR(true);
 }
 
+te::gm::Envelope te::layout::Utils::GetWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid)
+{
+  te::gm::Envelope worldBoxGeographic = worldBox;
+
+  //About units names (SI): terralib5\resources\json\uom.json 
+  te::layout::Utils utils(0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(srid);
+
+  if (!unitPtr)
+    return worldBoxGeographic;
+
+  std::string unitPtrStr = unitPtr->getName();
+  unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+  if (unitPtrStr.compare("DEGREE") != 0)
+  {
+    std::string proj4 = utils.proj4DescToGeodesic();
+
+    // Get the id of the projection of destination 
+    std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
+
+    // Remapping 
+    worldBoxGeographic.transform(srid, projGeographic.second);
+  }
+
+  return worldBoxGeographic;
+}
+
+
 void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::LinearRing* line )
 {
   if(!line)

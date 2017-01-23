@@ -95,11 +95,21 @@ namespace te
 
         virtual bool syncSridAndEnvelope(Properties& properties);
 
+        virtual bool adjustMapSizeProperties(Properties& properties);
+
         virtual bool syncMapSizeProperties(Properties& properties);
 
         virtual bool syncMapScaleProperties(Properties& properties);
 
+        virtual bool syncPlanarGridInitProperties(Properties& properties);
+
+        virtual bool syncGeodesicGridInitProperties(Properties& properties);
+
+        virtual bool syncGridReferenceProperties(Properties& properties);
+
         virtual AbstractProxyProject* getAbstractProxyProject();
+
+        virtual double getInitialCoord(double initialCoord, double distance, double& gap) const;
     };
   }
 }

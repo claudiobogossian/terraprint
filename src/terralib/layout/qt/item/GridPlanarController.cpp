@@ -23,7 +23,7 @@
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../core/property/GridSettingsConfigProperties.h"
+#include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/property/SharedProperties.h"
 #include <terralib/common/StringUtils.h>
 #include <terralib/common/UnitOfMeasure.h>
@@ -44,6 +44,7 @@ te::layout::GridPlanarController::~GridPlanarController()
 
 void te::layout::GridPlanarController::update(const Subject* subject)
 {
+  /*
   if (m_model == subject)
   {
     GridMapController::update(subject);
@@ -110,7 +111,7 @@ void te::layout::GridPlanarController::update(const Subject* subject)
   if (doUpdate == true)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    GridSettingsConfigProperties settingsConfig;
+    PlanarGridSettingsConfigProperties settingsConfig;
 
     Properties properties("");
     properties.addProperty(pNewWidth);
@@ -235,6 +236,7 @@ void te::layout::GridPlanarController::update(const Subject* subject)
 
     setProperties(properties);
   }
+  */
 }
 
 double te::layout::GridPlanarController::getInitialCoord(double initialCoord, double distance, double& gap)

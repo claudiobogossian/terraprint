@@ -44,6 +44,7 @@
 #include <QMap>
 #include <QSize>
 
+class QGraphicsItem;
 class QVariant;
 
 namespace te
@@ -77,6 +78,13 @@ namespace te
         virtual AbstractItemView* getView() const;
 
         virtual void setView(AbstractItemView* view);
+
+        /*!
+        \brief Merge the given propertiesToMerge list into baseProperties list
+               If a property if found in both lists, it will consider the property inside propertiesToMerge as being the most updated
+        */
+
+        virtual void mergeProperties(const te::layout::Properties& propertiesToMerge, te::layout::Properties& baseProperties);
 
         /*!
           \brief Gets the given property
@@ -143,7 +151,9 @@ namespace te
         virtual WarningManager* getWarningManager();
 
         virtual void validateItem();
-                
+
+        virtual void updateBoundingRect(QRectF rect);
+        
       protected:
 
         /*!
@@ -170,7 +180,7 @@ namespace te
 
         virtual bool isLimitExceeded(QRectF resizeRect);
 
-        virtual void updateBoundingRect(QRectF rect);
+        virtual void prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties);
 
       protected:
                   

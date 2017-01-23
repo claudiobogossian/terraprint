@@ -293,8 +293,8 @@ void te::layout::DialogPropertiesBrowser::onShowGridSettingsDlg()
   {
     return;
   }
-    
-  gridSettings->load();
+
+  gridSettings->load(m_currentPropertyClicked.getName());
   gridSettings->show(); // modeless dialog
   gridSettings->raise(); // top of the parent widget's stack
 }

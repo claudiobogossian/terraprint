@@ -928,9 +928,95 @@ QString te::layout::ItemUtils::DMS2DD(const QString dms)
   return qValue;
 }
 
+void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
+{
+  AbstractItemView* item = dynamic_cast<AbstractItemView*>(qItem);
+  if (item == 0)
+  {
+    return;
+  }
+
+  Properties parentProperties;
+  
+  //we must first recalculate the size of the parent item
+  //QPointF parentPos = qItem->pos();
+  double x = Property::GetValueAs<double>(item->getProperty("x"));
+  double y = Property::GetValueAs<double>(item->getProperty("y"));
+  QPointF parentPos(x, y);
+  QPointF parentPosAAAA = qItem->pos();
+
+  QRectF parentRect = qItem->childrenBoundingRect();
+  parentRect = qItem->mapToParent(parentRect).boundingRect();
+
+  //then we check if the size need to be updated
+  double width = Property::GetValueAs<double>(item->getProperty("width"));
+  if (parentRect.width() != width)
+  {
+    Property property;
+    property.setName("width");
+    property.setValue(parentRect.width(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
+    parentProperties.addProperty(property);
+  }
+
+  double height = Property::GetValueAs<double>(item->getProperty("height"));
+  if (parentRect.height() != height)
+  {
+    Property property;
+    property.setName("height");
+    property.setValue(parentRect.height(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
+    parentProperties.addProperty(property);
+  }
+
+  double dx = parentRect.x() - parentPos.x();
+  if (dx != 0.)
+  {
+    Property property;
+    property.setName("x");
+    property.setValue(parentRect.x(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
+    parentProperties.addProperty(property);
+  }
+
+  double dy = parentRect.y() - parentPos.y();
+  if (dy != 0.)
+  {
+    Property property;
+    property.setName("y");
+    property.setValue(parentRect.y(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
+    parentProperties.addProperty(property);
+  }
+
+  if (dx != 0. || dy != 0.)
+  {
+    QList<QGraphicsItem*> qChildrenList = qItem->childItems();
+    QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
+    while (itChild != qChildrenList.end())
+    {
+      QGraphicsItem* qChild = *itChild;
+      QPointF oldChildPos = qChild->pos();
+
+      AbstractItemView* child = dynamic_cast<AbstractItemView*>(qChild);
+      child->prepareGeometryChange();
+
+      qChild->moveBy(-dx, -dy);
+
+      ++itChild;
+    }
+  }
+
+  if(parentProperties.getProperties().empty() == false)
+  {
+    item->prepareGeometryChange();
+    item->setProperties(parentProperties);
+  }
+}
+
 void te::layout::ItemUtils::normalizeChildrenPosition(QGraphicsItem* item)
 {
-  QRectF oldRectItem = item->boundingRect();
+  QRectF oldRectItem = item->childrenBoundingRect();
 
   //first, we check if the bounding rect of the item has a displacement
   double dx = oldRectItem.x();
@@ -955,6 +1041,29 @@ void te::layout::ItemUtils::normalizeChildrenPosition(QGraphicsItem* item)
 
     qChild->moveBy(-dx, -dy);
 
+    ++itChild;
+  }
+}
+
+void te::layout::ItemUtils::normalizeChildrenPosition(QRectF& parentRect, QList<QRectF>& childrenRectList)
+{
+  //first, we check if the bounding rect of the item has a displacement
+  double dx = parentRect.x();
+  double dy = parentRect.y();
+
+  if (dx == 0. && dy == 0.)
+  {
+    return;
+  }
+
+  //if so, we must move the item and all its children in order to make the bounding rect of the item be placed in 0,0
+  //parentRect.translate(dx, dy);
+
+  QList<QRectF>::iterator itChild = childrenRectList.begin();
+  while (itChild != childrenRectList.end())
+  {
+    QRectF currentBoundinfRect = *itChild;
+    itChild->translate(-dx, -dy);
     ++itChild;
   }
 }

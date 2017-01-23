@@ -77,7 +77,7 @@ namespace te
 
         virtual AbstractItemController* createController() const;
 
-        virtual void calculateVertical(const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM);
+        virtual void calculateVertical(const te::gm::Envelope& planarBox, const te::gm::Envelope& boxMM);
 
         virtual void calculateHorizontal(const te::gm::Envelope& geoBox, const te::gm::Envelope& boxMM);
 

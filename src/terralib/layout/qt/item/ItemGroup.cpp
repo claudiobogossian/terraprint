@@ -60,23 +60,6 @@ te::layout::AbstractItemController* te::layout::ItemGroup::createController() co
   return new ItemGroupController(model, (AbstractItemView*)this);
 }
 
-QRectF te::layout::ItemGroup::boundingRect() const
-{
-  bool resizable = te::layout::Property::GetValueAs<bool>(this->getProperty("resizable"));
-  if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
-  {
-    return AbstractItem::boundingRect();
-  }
-
-  QRectF rect = this->childrenBoundingRect();
-  if(rect.isValid() == true)
-  {
-    return rect;
-  }
-
-  return AbstractItem::boundingRect();
-}
-
 void te::layout::ItemGroup::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   //we dont want the group to draw its selection, so we dont call the paint function
@@ -89,7 +72,8 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
     ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
     if(controller != 0)
     {
-      controller->itemAdded();
+      QGraphicsItem* child = qvariant_cast<QGraphicsItem *>(value);
+      //controller->itemAdded(child);
     }
 
     QGraphicsItem* child = qvariant_cast<QGraphicsItem *>(value);
@@ -143,14 +127,11 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
 
 void te::layout::ItemGroup::addToGroup(QGraphicsItem* item)
 {
-  QPointF itemCurrentPos = item->pos();
-
-  item->setParentItem(this);
-
-  QPointF itemNewPos = this->mapFromScene(itemCurrentPos);
-  item->setPos(itemNewPos);
-
-  ItemUtils::normalizeChildrenPosition(this);
+  ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
+  if (controller != 0)
+  {
+    controller->addItem(item);
+  }
 }
 
 void te::layout::ItemGroup::removeFromGroup(QGraphicsItem* item)

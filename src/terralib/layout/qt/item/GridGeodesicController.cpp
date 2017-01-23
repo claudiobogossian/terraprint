@@ -24,7 +24,7 @@
 #include "../../core/enum/Enums.h"
 
 #include "../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../core/property/GridSettingsConfigProperties.h"
+#include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/Utils.h"
 
@@ -46,6 +46,7 @@ te::layout::GridGeodesicController::~GridGeodesicController()
 
 void te::layout::GridGeodesicController::update(const Subject* subject)
 {
+  /*
   if (m_model == subject)
   {
     GridMapController::update(subject);
@@ -59,7 +60,7 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
   }
 
   SharedProperties sharedPropertiesName;
-  GridSettingsConfigProperties settingsGridConfig;
+  GeodesicGridSettingsConfigProperties settingsGridConfig;
 
   //new properties
   const Property& pNewWidth = subjectModel->getProperty("width");
@@ -118,7 +119,7 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
   if (doUpdate == true)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    GridSettingsConfigProperties settingsConfig;
+    GeodesicGridSettingsConfigProperties settingsConfig;
 
     Properties properties("");
     properties.addProperty(pNewWidth);
@@ -230,6 +231,7 @@ void te::layout::GridGeodesicController::update(const Subject* subject)
 
     setProperties(properties);
   }
+  */
 }
 
 te::gm::Envelope te::layout::GridGeodesicController::getWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid)

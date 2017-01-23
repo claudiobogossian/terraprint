@@ -79,7 +79,7 @@ namespace te
 
         virtual void unblockComponents();
        
-        virtual void load();
+        virtual void load(const std::string& gridName);
 
       private slots:
 

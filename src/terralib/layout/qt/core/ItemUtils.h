@@ -239,7 +239,9 @@ namespace te
 
         static void DMS2DD(QString degree, QString minute, QString second, QString &dd);
 
+        static void normalizeItem(QGraphicsItem* item);
         static void normalizeChildrenPosition(QGraphicsItem* item);
+        static void normalizeChildrenPosition(QRectF& parentRect, QList<QRectF>& childrenRectList);
 
         /*!
         \brief Draws the given image in the given location
