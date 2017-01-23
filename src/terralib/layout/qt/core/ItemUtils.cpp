@@ -952,7 +952,6 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
     Property property;
     property.setName("width");
     property.setValue(parentRect.width(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
-    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
     parentProperties.addProperty(property);
   }
 
@@ -962,7 +961,6 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
     Property property;
     property.setName("height");
     property.setValue(parentRect.height(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
-    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
     parentProperties.addProperty(property);
   }
 
@@ -972,7 +970,6 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
     Property property;
     property.setName("x");
     property.setValue(parentRect.x(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
-    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
     parentProperties.addProperty(property);
   }
 
@@ -982,7 +979,6 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
     Property property;
     property.setName("y");
     property.setValue(parentRect.y(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
-    property.setParent(Enums::getInstance().getEnumObjectType()->getMapCompositionItem()->getName());
     parentProperties.addProperty(property);
   }
 

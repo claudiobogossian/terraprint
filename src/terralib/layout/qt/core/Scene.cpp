@@ -748,7 +748,6 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
   getView()->onChangeConfig();
 
   te::layout::EnumType* groupType = Enums::getInstance().getEnumObjectType()->getItemGroup();
-  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
 
   //we create the items
   std::map<std::string, te::layout::Properties> mapProperties;

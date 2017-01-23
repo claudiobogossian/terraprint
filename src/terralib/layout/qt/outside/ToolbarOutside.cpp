@@ -257,7 +257,7 @@ QToolButton* te::layout::ToolbarOutside::createMapToolButton()
 
   QMenu* menu = new QMenu(btnMap);
 
-  QAction* actionDefaultMenu = createAction(tr("Insert Map"), m_actionMapDefault, iconManager.getIconNameAsQString(itemType->getMapCompositionItem()->getName()), "", menu);
+  QAction* actionDefaultMenu = createAction(tr("Insert Map"), m_actionMapDefault, iconManager.getIconNameAsQString(itemType->getMapItem()->getName()), "", menu);
   menu->addAction(actionDefaultMenu);
   
   QAction* actionLegend = createAction(tr("Insert Legend"), m_actionLegendDefault, iconManager.getIconNameAsQString(itemType->getLegendItem()->getName()), "", menu);

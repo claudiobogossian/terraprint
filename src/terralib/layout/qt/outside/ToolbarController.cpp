@@ -48,7 +48,6 @@ te::layout::ToolbarController::ToolbarController(AbstractOutsideModel* o, Scene*
   //map related items
   m_iconManager.setIcon(itemType->getLegendItem()->getName(), "layout-default-legend");
   m_iconManager.setIcon(itemType->getMapItem()->getName(),"layout-default-map");
-  m_iconManager.setIcon(itemType->getMapCompositionItem()->getName(), "layout-default-map");
   m_iconManager.setIcon(itemType->getMapLocationItem()->getName(), "layout-map-location");
   m_iconManager.setIcon(itemType->getNorthItem()->getName(), "layout-north");
   m_iconManager.setIcon(itemType->getScaleItem()->getName(), "layout-scale");

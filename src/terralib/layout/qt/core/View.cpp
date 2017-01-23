@@ -509,7 +509,7 @@ void te::layout::View::paste()
   std::vector<Properties> mapItens;
   std::vector<Properties> otherItens;
 
-  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapItem();
 
   for (int i = 0; i < p.size(); i++){
 

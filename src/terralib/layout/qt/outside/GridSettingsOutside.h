@@ -292,8 +292,6 @@ namespace te
 
         PlanarGridSettingsConfigProperties*   m_planarGridSettings;
         GeodesicGridSettingsConfigProperties* m_geodesicGridSettings;
-        EnumType*                             m_planarType;
-        EnumType*                             m_geodesicType;
         double                                m_lineWidthIncrement;
 
       private:

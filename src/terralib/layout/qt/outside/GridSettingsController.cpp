@@ -50,11 +50,11 @@ te::layout::GridSettingsController::~GridSettingsController()
 
 }
 
-te::layout::Property te::layout::GridSettingsController::getProperty( std::string name, EnumType* enumType )
+te::layout::Property te::layout::GridSettingsController::getProperty( std::string name)
 {
   Property prop;
 
-  AbstractItemView* grid = searchGrid(enumType);
+  AbstractItemView* grid = searchGrid();
   if (grid)
   {
     prop = grid->getController()->getProperty(name);
@@ -91,17 +91,17 @@ QStringList te::layout::GridSettingsController::getItemNames(QStringList list, c
   return list;
 }
 
-bool te::layout::GridSettingsController::containsGrid(EnumType* enumType)
+bool te::layout::GridSettingsController::containsGrid()
 {
   bool result = false;
-  if (searchGrid(enumType))
+  if (searchGrid())
   {
     result = true;
   }
   return result;
 }
 
-te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid(EnumType* enumType)
+te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid()
 {
   QList<QGraphicsItem*> items = m_scene->items();
   foreach(QGraphicsItem* item, items)
@@ -117,38 +117,5 @@ te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid(Enu
     }
   }
   return 0;
-
-  /*
-  AbstractItemView* itemFound = 0;
-
-  QList<QGraphicsItem*> items = m_scene->items();
-  foreach(QGraphicsItem* item, items)
-  {
-    AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
-    if (absItem)
-    {
-      if (absItem->getController()->getProperties().getTypeObj() == enumType)
-      {
-        if (item->isSelected())
-        {
-          itemFound = absItem;
-          break;
-        }
-        else
-        {
-          if (item->parentItem())
-          {
-            if (item->parentItem()->isSelected())
-            {
-              itemFound = absItem;
-              break;
-            }
-          }
-        }
-      }
-    }
-  }
-  return itemFound;
-  */
 }
 
