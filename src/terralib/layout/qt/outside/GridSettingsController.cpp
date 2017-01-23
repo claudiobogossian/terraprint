@@ -27,14 +27,13 @@
 
 // TerraLib
 #include "GridSettingsController.h"
+#include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/enum/Enums.h"
 #include "../../outside/GridSettingsModel.h"
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
-#include "../item/GridPlanarItem.h"
-#include "../item/GridGeodesicItem.h"
 
 // Qt
 #include <QGraphicsItem>

@@ -20,8 +20,8 @@
 // TerraLib
 #include "MapController.h"
 #include "MapItem.h"
-
 #include "../core/Grid.h"
+#include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"

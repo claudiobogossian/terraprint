@@ -51,7 +51,6 @@
 #include "../../outside/SVGDialogOutside.h"
 #include "../ItemUtils.h"
 #include "../BuildGraphicsOutside.h"
-#include "../../item/GridMapItem.h"
 #include "../../item/NorthItem.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
