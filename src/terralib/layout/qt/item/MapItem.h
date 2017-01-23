@@ -128,12 +128,6 @@ namespace te
         */
         virtual void drawFrame(QPainter* painter);
 
-
-        /*!
-        \brief Draws the map in the given device
-        */
-        virtual void drawMapOnDevice(QPaintDevice* device);
-
         /*!
         \brief Draws the map in the given painter
         */
@@ -148,11 +142,6 @@ namespace te
         \brief Draws the grid using the given QPainter
         */
         virtual void drawGrid(QPainter* painter);
-
-        /*!
-          \brief Reimplemented from QGraphicsItem to capture changes in the item
-        */
-        virtual QVariant itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value );
 
         /*!
            \brief Reimplemented from QGraphicsProxyWidget

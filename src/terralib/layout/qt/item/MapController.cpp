@@ -955,11 +955,33 @@ void te::layout::MapController::validateItem()
   }
 }
 
+void te::layout::MapController::sceneHasChanged(Scene* scene)
+{
+  if (scene == 0)
+  {
+    return;
+  }
+
+  //as the item has been added to the scene, we must check if the layer list is initialized (the initialization needs a valid scene)
+  const Property& pLayers = this->getProperty("layers");
+  const Property& pLayersUri = this->getProperty("layers_uri");
+
+  std::list<te::map::AbstractLayerPtr> currentLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pLayers);
+  std::vector<std::string> vecUri = te::layout::Property::GetValueAs< std::vector<std::string> >(pLayersUri);
+
+  if (vecUri.empty() == false && vecUri.size() != currentLayerList.size())
+  {
+    //if we must initialize it, we just set again the URI list
+    //as we are just synchronizing a value, we dont need to generate an undo/redo command
+    m_view->setUndoEnabled(false);
+    setProperty(pLayersUri);
+    m_view->setUndoEnabled(true);
+  }
+}
+
 void te::layout::MapController::changedPropertyLayerURIFromDropEvent(const Properties& beforeProps)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  Property prop;
-  prop = m_model->getProperty("layers_uri");
 
   std::vector<QGraphicsItem*> commandItems;
   std::vector<Properties> commandOld;

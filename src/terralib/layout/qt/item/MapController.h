@@ -85,6 +85,8 @@ namespace te
         
         virtual void validateItem();
 
+        virtual void sceneHasChanged(Scene* scene);
+
       protected:
 
         virtual Property syncLayersFromURIs(const Property& property);

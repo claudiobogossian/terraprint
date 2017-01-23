@@ -56,6 +56,7 @@ namespace te
     class AbstractItemView;
     class Property;
     class Properties;
+    class Scene;
 
     /*!
       \brief Abstract class to represent an observable. "Model" part of MVC component. 
@@ -153,6 +154,8 @@ namespace te
         virtual void validateItem();
 
         virtual void updateBoundingRect(QRectF rect);
+
+        virtual void sceneHasChanged(Scene* scene);
         
       protected:
 

@@ -185,27 +185,6 @@ void te::layout::MapItem::drawFrame(QPainter * painter)
   painter->restore();
 }
 
-void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
-{
-  const Property& pSrid = this->getProperty("srid");
-  const Property& pWorldBox = this->getProperty("world_box");
-  const Property& pScale = this->getProperty("scale");
-  const Property& property = this->getProperty("background_color");
-
-  int srid = te::layout::Property::GetValueAs<int>(pSrid);
-  const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
-  double scale = te::layout::Property::GetValueAs<double>(pScale);
-  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
-
-  //here we render the layers on the given device
-  te::qt::widgets::Canvas canvas(device);
-  canvas.setBackgroundColor(color);
-  canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
-  canvas.clear();
-
-  drawLayers(&canvas, envelope);
-}
-
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 {
   const Property& pWorldBox = this->getProperty("world_box");
@@ -300,22 +279,6 @@ void te::layout::MapItem::drawGrid(QPainter* painter)
     m_geodesicGrid->drawGrid(painter, properties);
     painter->restore();
   }
-}
-
-QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
-{
-  if(change == QGraphicsItem::ItemSceneHasChanged)
-  {
-    Scene* myScene = dynamic_cast<Scene*>(this->scene());
-    if(myScene != 0)
-    {
-      //contextUpdated(myScene->getContext());
-
-      //we dont want AbstractItem to handle this event, so we 'jump' to its father
-      return QGraphicsItem::itemChange(change, value);
-    }
-  }
-  return AbstractItem::itemChange(change, value);
 }
 
 void te::layout::MapItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )

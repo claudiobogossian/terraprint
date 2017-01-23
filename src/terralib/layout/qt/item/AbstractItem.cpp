@@ -366,6 +366,12 @@ QRectF te::layout::AbstractItem::qRectToQPolygonMap(QRectF rect)
 
 QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
 {
+  if (change == QGraphicsItem::ItemSceneHasChanged)
+  {
+    Scene* myScene = dynamic_cast<Scene*>(this->scene());
+    getController()->sceneHasChanged(myScene);
+  }
+
   return QGraphicsItem::itemChange(change, value);
 }
 

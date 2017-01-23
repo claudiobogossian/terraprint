@@ -625,6 +625,11 @@ void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
   setProperties(props);
 }
 
+void te::layout::AbstractItemController::sceneHasChanged(Scene* scene)
+{
+
+}
+
 void te::layout::AbstractItemController::prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
