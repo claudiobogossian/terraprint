@@ -74,7 +74,7 @@ te::layout::Property te::layout::SVGDialogController::getProperty(std::string na
   ItemUtils utils(m_scene);
   AbstractItemView* view = utils.getSelectedItem();
 
-  prop = view->getController()->getProperty(name);
+  prop = view->getProperty(name);
 
   /*
   if (vecMap.empty() == true)

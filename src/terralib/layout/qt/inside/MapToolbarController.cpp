@@ -108,7 +108,7 @@ void te::layout::MapToolbarController::changeMapTool(EnumType* tool)
     if (item)
     {
       te::layout::EnumObjectType* objectType = Enums::getInstance().getEnumObjectType();
-      if (objectType->getMapItem()->getName() == item->getController()->getProperties().getTypeObj()->getName())
+      if (objectType->getMapItem()->getName() == item->getProperties().getTypeObj()->getName())
       {
         MapItem* mapItem = dynamic_cast<MapItem*>(item);
         if (mapItem)
@@ -116,7 +116,7 @@ void te::layout::MapToolbarController::changeMapTool(EnumType* tool)
           mapItem->changeCurrentTool(tool);
         }
       }
-      else if(objectType->getMapLocationItem()->getName() == item->getController()->getProperties().getTypeObj()->getName())
+      else if(objectType->getMapLocationItem()->getName() == item->getProperties().getTypeObj()->getName())
       {
         MapLocationItem* mapItem = dynamic_cast<MapLocationItem*>(item);
         if (mapItem)

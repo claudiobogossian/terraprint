@@ -455,7 +455,7 @@ void te::layout::View::copyToClipboard()
   foreach(QGraphicsItem* item, graphicsItems)
   {
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
-    Properties itemProperties = view->getController()->getProperties();
+    const Properties& itemProperties = view->getProperties();
     propertiesList.push_back(itemProperties);
 
   }
@@ -793,7 +793,7 @@ void te::layout::View::destroyItemGroup()
         continue;
       }
 
-      if (absItemView->getController()->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
+      if (absItemView->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
       {
         continue;
       }

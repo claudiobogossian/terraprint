@@ -35,16 +35,6 @@ te::layout::AbstractItemController* te::layout::AbstractItemView::getController(
   return m_controller;
 }
 
-void te::layout::AbstractItemView::setController(AbstractItemController* controller)
-{
-  if (m_controller != 0)
-  {
-    delete m_controller;
-    m_controller = 0;
-  }
-  m_controller = controller;
-}
-
 void te::layout::AbstractItemView::setEditionMode(bool editionMode)
 {
   if(m_isEditionMode == editionMode)
@@ -101,6 +91,16 @@ void te::layout::AbstractItemView::setProperty(const te::layout::Property& prope
 {
   AbstractItemController* controller = getController();
   controller->setProperty(property);
+}
+
+void te::layout::AbstractItemView::attach(AbstractItemView* view)
+{
+  m_controller->attach(view->getController());
+}
+
+void te::layout::AbstractItemView::detach(AbstractItemView* view)
+{
+  m_controller->detach(view->getController());
 }
 
 te::layout::AbstractItemController* te::layout::AbstractItemView::createController() const

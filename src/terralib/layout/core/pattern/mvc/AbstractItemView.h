@@ -68,16 +68,6 @@ namespace te
         virtual ~AbstractItemView();
 
         /*!
-          \brief Gets the controller
-        */ 
-        virtual AbstractItemController* getController() const;
-
-        /*!
-        \brief Set the controller. This object will be the owner of the controller.
-        */
-        void setController(AbstractItemController* controller);
-
-        /*!
           \brief Refreshes the drawings of the view
         */
         virtual void refresh() = 0;
@@ -124,6 +114,16 @@ namespace te
 
         void setProperty(const te::layout::Property& property);
 
+        /*!
+        \brief Attaches the model of the given controller to the model of this instance
+        */
+        void attach(AbstractItemView* view);
+
+        /*!
+        \brief Detaches the model of the given controller from the model of this instance
+        */
+        void detach(AbstractItemView* view);
+
         /* 
           \brief Each item, at the end of the setProperties method, 
           adds a Property Change command to the Undo/Redo stack, via the scene. 
@@ -155,6 +155,11 @@ namespace te
       virtual AbstractItemController* createController() const;
 
       virtual AbstractItemModel* createModel() const = 0;
+
+      /*!
+      \brief Gets the controller
+      */
+      virtual AbstractItemController* getController() const;
 
     private:
 

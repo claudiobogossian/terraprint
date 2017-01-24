@@ -148,9 +148,9 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
     AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(parentItem);
 
-    const Property& pParentName = absParentItem->getController()->getProperty("name");
+    const Property& pParentName = absParentItem->getProperty("name");
     const std::string& parentName = te::layout::Property::GetValueAs<std::string>(pParentName);
-    std::string parentTypeName = absParentItem->getController()->getProperties().getTypeObj()->getName();
+    std::string parentTypeName = absParentItem->getProperties().getTypeObj()->getName();
 
     QString qParentName = ItemUtils::convert2QString(parentName);
     QString qParentTypeName = ItemUtils::convert2QString(parentTypeName);
@@ -160,7 +160,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
     parentList.append(qParentTypeName);
 
     QTreeWidgetItem* parentTreeItem = new QTreeWidgetItem(parentList);
-    QString qIconName = m_iconManager.getIconNameAsQString(absParentItem->getController()->getProperties().getTypeObj()->getName());
+    QString qIconName = m_iconManager.getIconNameAsQString(absParentItem->getProperties().getTypeObj()->getName());
     if (qIconName.isEmpty() == false)
     {
       parentTreeItem->setIcon(1, QIcon::fromTheme(qIconName));
@@ -178,9 +178,9 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
         AbstractItemView* absChildItem = dynamic_cast<AbstractItemView*>(childItem);
 
-        const Property& pChildName = absChildItem->getController()->getProperty("name");
+        const Property& pChildName = absChildItem->getProperty("name");
         const std::string& childName = te::layout::Property::GetValueAs<std::string>(pChildName);
-        std::string childTypeName = absChildItem->getController()->getProperties().getTypeObj()->getName();
+        std::string childTypeName = absChildItem->getProperties().getTypeObj()->getName();
 
         QString qChildName = ItemUtils::convert2QString(childName);
         QString qChildTypeName = ItemUtils::convert2QString(childTypeName);
@@ -191,7 +191,7 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
 
         QTreeWidgetItem* childTreeItem = new QTreeWidgetItem(childList);
         
-        QString qIconName = m_iconManager.getIconNameAsQString(absChildItem->getController()->getProperties().getTypeObj()->getName());
+        QString qIconName = m_iconManager.getIconNameAsQString(absChildItem->getProperties().getTypeObj()->getName());
         if (qIconName.isEmpty() == false)
         {
           childTreeItem->setIcon(1, QIcon::fromTheme(qIconName));
@@ -237,7 +237,7 @@ void te::layout::ObjectInspectorOutside::selectItems( QList<QGraphicsItem*> grap
       continue;
     }
 
-    const Property& pName = parentItem->getController()->getProperty("name");
+    const Property& pName = parentItem->getProperty("name");
     std::string name = te::layout::Property::GetValueAs<std::string>(pName);
 
     QString qName = ItemUtils::convert2QString(name);
@@ -282,7 +282,7 @@ void te::layout::ObjectInspectorOutside::itemSelectionChanged()
         continue;
       }
 
-      const Property& pName = absItemView->getController()->getProperty("name");
+      const Property& pName = absItemView->getProperty("name");
       std::string name = te::layout::Property::GetValueAs<std::string>(pName);
 
       if(name == treeItemName)
@@ -409,13 +409,9 @@ bool te::layout::ObjectInspectorOutside::isValidItem(QGraphicsItem* item)
   {
     return result;
   }
-  if (absParentItem->getController() == 0)
-  {
-    return result;
-  }
 
   EnumObjectType* enumObj = Enums::getInstance().getEnumObjectType();
-  if (absParentItem->getController()->getProperties().getTypeObj() == enumObj->getPaperItem())
+  if (absParentItem->getProperties().getTypeObj() == enumObj->getPaperItem())
   {
     return result;
   }

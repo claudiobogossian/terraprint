@@ -261,13 +261,13 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   }
   EnumDataType* enumData = Enums::getInstance().getEnumDataType();
   te::layout::EnumObjectType* enumObj = te::layout::Enums::getInstance().getEnumObjectType();
-  te::layout::EnumType* enumType = abstractItem->getController()->getProperties().getTypeObj();
+  te::layout::EnumType* enumType = abstractItem->getProperties().getTypeObj();
   if (enumType == enumObj->getImageItem())
   {
     ImageItem* imageItem = dynamic_cast<ImageItem*> (item);
     if (imageItem)
     {
-      Property prop = abstractItem->getController()->getProperty("file_name");
+      Property prop = abstractItem->getProperty("file_name");
 
       if (prop.getValue()->toString().compare("") != 0)
         return;

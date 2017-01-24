@@ -58,7 +58,7 @@ void te::layout::ItemGroupController::addItem(QGraphicsItem* newChild)
  
   ItemUtils::normalizeItem(item);
 
-  childView->getController()->attach(m_view->getController());
+  childView->attach(m_view);
 
   m_propagateResize = true;
 }

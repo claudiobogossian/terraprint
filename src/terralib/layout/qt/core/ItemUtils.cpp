@@ -114,17 +114,12 @@ te::layout::MapItem* te::layout::ItemUtils::getMapItem( std::string name )
     if(itemView == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = itemView->getController();
-
-    if(controller == 0)
-      continue;
-
-    if(controller->getProperties().getTypeObj() != objectType->getMapItem())
+    if(itemView->getProperties().getTypeObj() != objectType->getMapItem())
     {
       continue;
     }
 
-    const Property& pName = controller->getProperty("name");
+    const Property& pName = itemView->getProperty("name");
     if(te::layout::Property::GetValueAs<std::string>(pName).compare(name) != 0)
       continue;
 
@@ -151,17 +146,12 @@ std::vector<std::string> te::layout::ItemUtils::mapNameList(bool selected)
     if(itemView == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = itemView->getController();
-
-    if(controller == 0)
-      continue;
-
-    if(controller->getProperties().getTypeObj() != objectType->getMapItem())
+    if(itemView->getProperties().getTypeObj() != objectType->getMapItem())
     {
       continue;
     }
 
-    const Property& pName = controller->getProperty("name");
+    const Property& pName = itemView->getProperty("name");
     strList.push_back(te::layout::Property::GetValueAs<std::string>(pName));
   }
 
@@ -182,11 +172,7 @@ int te::layout::ItemUtils::countType( te::layout::EnumType* type )
     if(absItem == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = absItem->getController();
-    if(controller == 0)
-      continue;
-
-    if(controller->getProperties().getTypeObj() == type)
+    if(absItem->getProperties().getTypeObj() == type)
     {
       count+=1;
     }
@@ -209,13 +195,9 @@ int te::layout::ItemUtils::maxTypeId( te::layout::EnumType* type )
     if(absItem == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = absItem->getController();
-    if(controller == 0)
-      continue;
+    int currentId = te::layout::Property::GetValueAs<int>(absItem->getProperty("id"));
 
-    int currentId = te::layout::Property::GetValueAs<int>(controller->getProperty("id"));
-
-    if(controller->getProperties().getTypeObj() == type)
+    if(absItem->getProperties().getTypeObj() == type)
     {
       if(id == -1)
       {

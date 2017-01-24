@@ -399,14 +399,14 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
   AbstractItemView* currentObserver = scene->getItem(strCurrentObserver);
   if (currentObserver != 0)
   {
-    currentObserver->getController()->detach(this);
+    currentObserver->detach(this->getView());
   }
 
   //and then we make the new association (if there is a valid item)
   AbstractItemView* newObserver = scene->getItem(strNewObserver);
   if (newObserver != 0)
   {
-    newObserver->getController()->attach(this);
+    newObserver->attach(this->getView());
   }
 
   return true;
@@ -423,65 +423,6 @@ QRectF te::layout::AbstractItemController::resize(te::layout::LayoutAlign grabbe
   updateBoundingRect(newRect);
 
   return newRect;
-}
-
-void te::layout::AbstractItemController::scaleItem(double widthFactor, double heightFactor)
-{
-  QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->m_view);
-
-  //if the item has children, we must resize them first
-  QList<QGraphicsItem*> qChildrenList = qItem->childItems();
-  if (qChildrenList.isEmpty() == false)
-  {
-    QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
-    while (itChild != qChildrenList.end())
-    {
-      QGraphicsItem* qChild = *itChild;
-      AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
-      childView->getController()->scaleItem(widthFactor, heightFactor);
-
-      ++itChild;
-    }
-
-    if (qChildrenList.isEmpty() == false)
-    {
-      ItemUtils::normalizeChildrenPosition(qItem);
-
-      QRectF newRect = qItem->boundingRect();
-      updateBoundingRect(newRect);
-    }
-
-    return;
-  }
-
-  QGraphicsItem* qParentItem = qItem->parentItem();
-
-  //if we have a parent, our CS must me revative to it.
-  //if we dont have a parent, we consider the scene
-  QPointF oldItemPos(0, 0);
-  if (qParentItem != 0)
-  {
-    oldItemPos = qParentItem->mapToScene(QPoint(0, 0));
-  }
-
-  QRectF oldChildRect = qItem->boundingRect();
-  QPointF oldChildPos = qItem->mapToScene(QPoint(0, 0));
-
-  double oldDistanceFromOriginX = oldChildPos.x() - oldItemPos.x();
-  double oldDistanceFromOriginY = oldChildPos.y() - oldItemPos.y();
-
-  double newDistanceFromOriginX = oldItemPos.x() + (oldDistanceFromOriginX * widthFactor);
-  double newDistanceFromOriginY = oldItemPos.y() + (oldDistanceFromOriginY * heightFactor);
-
-  double newChildWidth = oldChildRect.width() * widthFactor;
-  double newChildHeight = oldChildRect.height() * heightFactor;
-
-  QPointF newChildPoint(newDistanceFromOriginX, newDistanceFromOriginY);
-  newChildPoint = qItem->mapFromScene(newChildPoint);
-
-  QRectF newChildRect(newChildPoint.x(), newChildPoint.y(), newChildWidth, newChildHeight);
-
-  this->m_view->getController()->updateBoundingRect(newChildRect);
 }
 
 QRectF te::layout::AbstractItemController::calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)

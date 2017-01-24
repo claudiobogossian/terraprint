@@ -69,18 +69,15 @@ te::layout::Properties te::layout::PropertiesUtils::intersection( const QList<QG
       AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
       if(lItem)
       {
-        if(lItem->getController())
-        {
-          props = lItem->getController()->getProperties();
-          window = props.hasWindows();
-        }
+        props = lItem->getProperties();
+        window = props.hasWindows();
       }
       else
       {
         AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
         if(absItem != 0)
         {
-          props = absItem->getController()->getProperties();
+          props = absItem->getProperties();
         }
       }
     }
@@ -106,11 +103,7 @@ te::layout::Properties te::layout::PropertiesUtils::sameProperties( const QList<
     return props;
   }
 
-  if(lItem->getController() == 0)
-  {
-    return props;
-  }
-  const Properties& firstProps = lItem->getController()->getProperties();
+  const Properties& firstProps = lItem->getProperties();
   if(firstProps.getProperties().empty())
   {
     return props;
@@ -163,12 +156,7 @@ std::vector<te::layout::Properties> te::layout::PropertiesUtils::getAllPropertie
       AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
       if(lItem)
       {
-        if(!lItem->getController())
-        {
-          continue;
-        }
-
-        const Properties& propsItem = lItem->getController()->getProperties();
+        const Properties& propsItem = lItem->getProperties();
         if(!propsItem.getProperties().empty())
         {
           propsVec.push_back(propsItem);

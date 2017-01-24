@@ -472,7 +472,7 @@ namespace te
 
         virtual void applyProportionAllItems(QSize oldPaper, QSize newPaper);
 
-        virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemController* controller);
+        virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemView* view);
 
         virtual bool enterEditionMode();
 

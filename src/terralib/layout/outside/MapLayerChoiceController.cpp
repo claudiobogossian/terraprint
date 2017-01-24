@@ -61,12 +61,12 @@ te::layout::Property te::layout::MapLayerChoiceController::getProperty(std::stri
     MapItem* mapItem = vecMap[i];
     if (mapItem->isSelected() == true)
     {
-      prop = mapItem->getController()->getProperty(name);
+      prop = mapItem->getProperty(name);
       break;
     }
     else if(mapItem->parentItem() != 0 && mapItem->parentItem()->isSelected())
     {
-      prop = mapItem->getController()->getProperty(name);
+      prop = mapItem->getProperty(name);
       break;
     }
   }

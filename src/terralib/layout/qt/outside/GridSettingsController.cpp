@@ -57,7 +57,7 @@ te::layout::Property te::layout::GridSettingsController::getProperty( std::strin
   AbstractItemView* grid = searchGrid();
   if (grid)
   {
-    prop = grid->getController()->getProperty(name);
+    prop = grid->getProperty(name);
   }
 
   return prop;
@@ -73,12 +73,12 @@ QStringList te::layout::GridSettingsController::getItemNames(QStringList list, c
       AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
       if (view)
       {
-        const Property& prop_name = view->getController()->getProperty("name");
+        const Property& prop_name = view->getProperty("name");
 
         std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
-        const Properties& prop_type = view->getController()->getProperties();
+        const Properties& prop_type = view->getProperties();
 
         if (txt.compare("") != 0 && prop_type.getTypeObj() == type)
         {
