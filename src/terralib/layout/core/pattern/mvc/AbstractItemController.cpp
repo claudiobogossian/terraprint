@@ -171,7 +171,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
 
   /* add command in scene undo stack */
 
-  Properties newProperties = m_model->getProperties();
+  const Properties& newProperties = m_model->getProperties();
 
   AbstractItem* item = dynamic_cast<AbstractItem*>(m_view);
   if (item)

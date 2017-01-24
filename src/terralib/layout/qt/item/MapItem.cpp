@@ -553,6 +553,8 @@ void te::layout::MapItem::refresh()
 {
   m_screenGreaterCache = QPixmap();
   m_screenCache = QPixmap();
+
+  te::layout::AbstractItem::refresh();
 }
 
 bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
