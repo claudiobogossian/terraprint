@@ -83,6 +83,8 @@ namespace te
 
       virtual void setIconManager(const ItemIconManager& iconManager);
 
+      void clearItemList();
+
     protected slots:
       
       virtual void onRemoveProperties(std::vector<std::string> names);

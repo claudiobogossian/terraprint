@@ -218,7 +218,10 @@ void te::layout::PropertiesCentralController::onUndoStackHasChanged()
   QList<QGraphicsItem*> allItems = m_view->scene()->items();
   //Refresh Inspector Object window
   if (m_objectInspectorOutside)
+  {
+    m_objectInspectorOutside->clearItemList();
     m_objectInspectorOutside->itemsInspector(allItems);
+  }
 }
 
 void te::layout::PropertiesCentralController::onShowContextMenu(QPointF scenePoint, QPointF globalPoint)

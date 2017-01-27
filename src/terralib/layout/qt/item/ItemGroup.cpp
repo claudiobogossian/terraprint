@@ -31,6 +31,7 @@
 #include "ItemGroupController.h"
 #include "../core/Scene.h"
 #include "../../item/ItemGroupModel.h"
+#include "../../core/enum/Enums.h"
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
@@ -136,18 +137,11 @@ void te::layout::ItemGroup::addToGroup(QGraphicsItem* item)
 
 void te::layout::ItemGroup::removeFromGroup(QGraphicsItem* item)
 {
-  QPointF itemNewPos = item->mapToScene(QPointF(0,0));
-  item->setParentItem(this->parentItem());
-
-  if (item->parentItem() != 0)
+  ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
+  if (controller != 0)
   {
-    itemNewPos = item->parentItem()->mapFromScene(itemNewPos);
+    controller->removeFromGroup(item);
   }
-
-  item->setPos(itemNewPos);
-
-
-  ItemUtils::normalizeChildrenPosition(this);
 }
 
 void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -240,3 +234,16 @@ bool te::layout::ItemGroup::hasChildrenInResizeMode()
   return result;
 }
 
+void te::layout::ItemGroup::setUndoEnabled(bool enabled)
+{
+  AbstractItemView::setUndoEnabled(enabled);
+  QList<QGraphicsItem*> children = childItems();
+  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+  {
+    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+    if (item)
+    {
+      item->setUndoEnabled(enabled);
+    }
+  }
+}

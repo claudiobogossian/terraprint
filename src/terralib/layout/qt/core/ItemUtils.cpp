@@ -964,6 +964,11 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
     parentProperties.addProperty(property);
   }
 
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  double newChildX = 0;
+  double newChildY = 0;
+
   if (dx != 0. || dy != 0.)
   {
     QList<QGraphicsItem*> qChildrenList = qItem->childItems();
@@ -972,11 +977,17 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
     {
       QGraphicsItem* qChild = *itChild;
       QPointF oldChildPos = qChild->pos();
+      
+      newChildX = oldChildPos.x() - dx;
+      newChildY = oldChildPos.y() - dy;
 
+      QPointF newPosition(newChildX, newChildY);
+
+      Properties properties;
+      ItemUtils::preparePositionForUpdate(newPosition, properties);
+     
       AbstractItemView* child = dynamic_cast<AbstractItemView*>(qChild);
-      child->prepareGeometryChange();
-
-      qChild->moveBy(-dx, -dy);
+      child->setProperties(properties);
 
       ++itChild;
     }
@@ -1176,3 +1187,46 @@ QPainterPath te::layout::ItemUtils::getRotationSymbol(const QPointF& pos, double
   return Ppath;
 }
 
+void te::layout::ItemUtils::prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = boundingRect.x();
+  double y = boundingRect.y();
+  double width = boundingRect.width();
+  double height = boundingRect.height();
+
+  QPointF position(x, y);
+  
+  Property pWidth;
+  pWidth.setName("width");
+  pWidth.setValue(width, dataType->getDataTypeDouble());
+
+  Property pHeight;
+  pHeight.setName("height");
+  pHeight.setValue(height, dataType->getDataTypeDouble());
+
+  preparePositionForUpdate(position, properties);
+
+  ItemUtils::addOrUpdateProperty(pWidth, properties);
+  ItemUtils::addOrUpdateProperty(pHeight, properties);
+}
+
+void te::layout::ItemUtils::preparePositionForUpdate(const QPointF& position, Properties& properties)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = position.x();
+  double y = position.y();
+
+  Property pX;
+  pX.setName("x");
+  pX.setValue(x, dataType->getDataTypeDouble());
+
+  Property pY;
+  pY.setName("y");
+  pY.setValue(y, dataType->getDataTypeDouble());
+  
+  ItemUtils::addOrUpdateProperty(pX, properties);
+  ItemUtils::addOrUpdateProperty(pY, properties);
+}

@@ -99,6 +99,7 @@ void te::layout::AbstractItem::setItemRotation(double angle)
 
 void te::layout::AbstractItem::setItemPosition(double x, double y)
 {
+  this->prepareGeometryChange();
   this->setPos(x, y);
 }
 

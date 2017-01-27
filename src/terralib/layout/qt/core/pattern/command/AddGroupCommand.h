@@ -18,23 +18,23 @@
  */
 
 /*!
-  \file DeleteCommand.h
+  \file AddCommand.h
    
-  \brief Undo/Redo for delete one or more components.
+  \brief Undo/Redo for add group components. 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_DELETE_COMMAND_H 
-#define __TERRALIB_LAYOUT_INTERNAL_DELETE_COMMAND_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ADD_GROUP_COMMAND_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ADD_GROUP_COMMAND_H
 
 // TerraLib
 #include "../../../../core/Config.h"
+#include "../../../../core/property/Properties.h"
 
 // STL
-#include <map>
-#include <vector>
 #include <string>
+#include <vector>
 
 // Qt
 #include <QUndoCommand>
@@ -48,27 +48,31 @@ namespace te
 {
   namespace layout
   {
+    class Properties;
+    class EnumType;
+    class Scene;
+    class ItemGroup;
     /*!
-      \brief Undo/Redo for delete one or more components.
+      \brief Undo/Redo for add one components.
     
       \ingroup layout
     */
-    class TELAYOUTEXPORT DeleteCommand : public QUndoCommand
+    class TELAYOUTEXPORT AddGroupCommand : public QUndoCommand
     {
       public:
 
         /*!
           \brief Constructor
 
-          \param scene
+          \param item
           \param parent
         */
-        DeleteCommand(QGraphicsScene* scene, const QList<QGraphicsItem*>& listItems, QUndoCommand *parent = 0);
+        AddGroupCommand(QGraphicsItem* item, QUndoCommand *parent = 0);
 
         /*!
           \brief Destructor
         */
-        virtual ~DeleteCommand();           
+        virtual ~AddGroupCommand();
 
         /*!
           \brief Reimplemented from QUndoCommand
@@ -82,17 +86,22 @@ namespace te
 
       protected:
 
-        virtual void init();
+        virtual void init(QGraphicsItem* item);
 
-        virtual QString createCommandString(int totalItems);
+        virtual QString createCommandString();
 
-        QList<QGraphicsItem *> childrenItems(QGraphicsItem* group);
-
-        QGraphicsScene*                                       m_scene;
-        QList<QGraphicsItem*>                                 m_items;
-        std::map< QGraphicsItem*, std::vector<std::string> >  m_groups;
+        QList<QGraphicsItem *> childrenItems();
+        
+      protected:
+      
+        Scene*                    m_scene;
+        QGraphicsItem*            m_group;
+        Properties                m_groupProperties;
+        std::vector<std::string>  m_childrenNames;
     };
   }
 }
 
 #endif
+
+

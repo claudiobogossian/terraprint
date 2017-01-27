@@ -36,6 +36,7 @@
 #include "../item/ItemGroup.h"
 #include "BuildGraphicsItem.h"
 #include "pattern/command/AddCommand.h"
+#include "pattern/command/AddGroupCommand.h"
 #include "../../core/template/TemplateEditor.h"
 #include "../../core/template/AbstractTemplate.h"
 #include "../../core/property/Properties.h"
@@ -372,7 +373,7 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
       listUngroupedItems.append(item);
       continue;
     }
-
+    
     if (view->getProperties().getTypeObj() == groupType)
     {
       QList<QGraphicsItem*> childItems = item->childItems();
@@ -382,7 +383,7 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
       }
 
       this->removeItem(item);
-      destroyItemGroup((te::layout::ItemGroup*)item);
+      removeItemGroup((te::layout::ItemGroup*)item);
     }
     else
     {
@@ -392,7 +393,44 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
   return listUngroupedItems;
 }
 
-QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, EnumType* groupType)
+QGraphicsItem* te::layout::Scene::createGroup(EnumType* groupType)
+{
+  QGraphicsItem* item = 0;
+
+  Properties properties;
+
+  QList<QGraphicsItem *> list = selectedItems();
+  item = createItemGroup(list, 0, groupType);
+
+  if (m_undoStack)
+  {
+    ItemGroup* group = dynamic_cast<ItemGroup*>(item);
+    QUndoCommand* command = new AddGroupCommand(group);
+    addUndoStack(command);
+  }
+
+  return item;
+}
+
+bool te::layout::Scene::removeGroup(te::layout::ItemGroup* group)
+{
+  bool result = true;
+  if (m_undoStack)
+  {
+    QList<QGraphicsItem*> listItems;
+    listItems.append(group);
+
+    QUndoCommand* command = new DeleteCommand(this, listItems);
+    addUndoStack(command);
+  }
+  else
+  {
+    result = removeItemGroup(group);
+  }
+  return result;
+}
+
+QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, QGraphicsItem* itemGroup, EnumType* groupType)
 {
   this->clearSelection();
 
@@ -405,9 +443,6 @@ QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> &
 
   QList<QGraphicsItem*> listUngroupedItems = getListUngroupedItems(items, groupType);
   sortByZValue(listUngroupedItems);
-
-  //The scene create a new group with important restriction
-  BuildGraphicsItem build(this);
   
   //we need to reorder the z values in order to make the group be correctly placed on the map
   std::vector<int> vecZValues;
@@ -438,10 +473,26 @@ QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> &
   // The group component must be initialized with a position (setPos).
   te::gm::Coord2D coord(x, y);
 
-  QGraphicsItem* item = build.createItem(groupType, coord);
+  QGraphicsItem* item = 0;
+
+  if (!itemGroup)
+  {
+    bool addUndo = false; // force the BuildGraphicsItem not create a AddCommand, since the group has a different command for add
+    //The scene create a new group with important restriction
+    BuildGraphicsItem build(this);
+    item = build.createItem(groupType, coord, 0, 0, addUndo);
+  }
+  else
+  {
+    item = itemGroup;
+    insertItem(item);
+  }
+
   ItemGroup* group = dynamic_cast<ItemGroup*>(item);
 
   vecZValues.push_back(item->zValue());
+
+  group->setUndoEnabled(false);
 
   if(group)
   {
@@ -449,39 +500,62 @@ QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> &
 
     for (int i = 0; i < listUngroupedItems.size(); ++i)
     {
+      AbstractItemView* iView = dynamic_cast<AbstractItemView*>(listUngroupedItems[i]);
+      iView->setUndoEnabled(false);
+
       listUngroupedItems[i]->setZValue(vecZValues[i+1]);
       group->addToGroup(listUngroupedItems[i]);
     }
 
-    QUndoCommand* command = new AddCommand(group);
-    addUndoStack(command);
+    for (int i = 0; i < listUngroupedItems.size(); ++i)
+    {
+      AbstractItemView* iView = dynamic_cast<AbstractItemView*>(listUngroupedItems[i]);
+      iView->setUndoEnabled(true);
+    }
   }
+  group->setUndoEnabled(true);
 
   emit addItemFinalized(group);
   
   return group;
 }
 
-void te::layout::Scene::destroyItemGroup(te::layout::ItemGroup* group )
+bool te::layout::Scene::removeItemGroup(te::layout::ItemGroup* group )
 {
-  group->setHandlesChildEvents(false);
+  if (!group)
+  {
+    return false;
+  }
   
   QList<QGraphicsItem*> listUngroupedItems;
   QList<QGraphicsItem*> childItems = group->childItems();
+  
+  group->setHandlesChildEvents(false);
+  group->setUndoEnabled(false);
 
   std::vector<int> vecZValues;
   vecZValues.push_back(group->zValue());
   for (int i = 0; i < childItems.size(); ++i)
   {
     vecZValues.push_back(childItems[i]->zValue());
+    
+    AbstractItemView* iView = dynamic_cast<AbstractItemView*>(childItems[i]);
+    iView->setUndoEnabled(false);
 
     childItems[i]->setZValue(vecZValues[i]);
-
+        
     group->removeFromGroup(childItems[i]);
   }
 
-  group->setVisible(false);
+  for (int i = 0; i < childItems.size(); ++i)
+  {
+    AbstractItemView* iView = dynamic_cast<AbstractItemView*>(childItems[i]);
 
+    iView->setUndoEnabled(true);
+  }
+
+  group->setUndoEnabled(true);
+  
   std::vector<std::string> vecNames;
   AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(group);
   if (abstractItem)
@@ -493,11 +567,13 @@ void te::layout::Scene::destroyItemGroup(te::layout::ItemGroup* group )
   QList<QGraphicsItem*> listItems;
   listItems.push_back(group);
 
-  QUndoCommand* command = new DeleteCommand(this, listItems);
-  addUndoStack(command);
-
+  removeItem(group);
+  addItemStackWithoutScene(group);
+  
   if (!vecNames.empty())
     emit deleteFinalized(vecNames);
+
+  return true;
 }
 
 void te::layout::Scene::calculateSceneMeasures(double widthMM, double heightMM)
@@ -777,11 +853,13 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
     const Properties& groupProperties = mapProperties[groupName];
 
-    QGraphicsItem* qItemGroup = createItemGroup(listItems, groupProperties.getTypeObj());
+    QGraphicsItem* qItemGroup = createItemGroup(listItems, 0, groupProperties.getTypeObj());
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(qItemGroup);
     if (itemView != 0)
     {
+      itemView->setUndoEnabled(false);
       itemView->setProperties(groupProperties);
+      itemView->setUndoEnabled(true);
     }
 
     ++itGroups;

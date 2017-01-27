@@ -180,9 +180,7 @@ namespace te
         virtual bool syncItemAssociation(Properties& properties);
 
         virtual bool isLimitExceeded(QRectF resizeRect);
-
-        virtual void prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties);
-
+        
       protected:
                   
         AbstractItemModel*                m_model; //!< The model of the view

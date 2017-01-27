@@ -148,6 +148,8 @@ namespace te
         */
         virtual void addUndoCommandToStack(QUndoCommand* command);
 
+        virtual AbstractScene* getScene() const;
+
       protected:
 
         /*!
@@ -221,8 +223,6 @@ namespace te
 
         virtual void drawItemResized( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
         
-        virtual AbstractScene* getScene() const;
-
         virtual QRectF qRectToQPolygonMap(QRectF rect);
         
         virtual void drawWarningAlert(QPainter * painter);

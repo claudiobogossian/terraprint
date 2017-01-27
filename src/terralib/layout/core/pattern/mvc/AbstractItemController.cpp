@@ -33,6 +33,7 @@
 #include "../../../qt/core/pattern/command/ChangePropertyCommand.h"
 #include "../../../qt/item/AbstractItem.h"
 
+
 // Qt
 #include <QGraphicsItem>
 
@@ -176,7 +177,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
   AbstractItem* item = dynamic_cast<AbstractItem*>(m_view);
   if (item)
   {
-    if (item->isUndoEnabled())
+    if (item->isUndoEnabled() && item->getScene())
     {
       QUndoCommand* command = new ChangePropertyCommand(item, oldProperties, newProperties);
       m_view->addUndoCommandToStack(command);
@@ -569,36 +570,6 @@ void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
 void te::layout::AbstractItemController::sceneHasChanged(Scene* scene)
 {
 
-}
-
-void te::layout::AbstractItemController::prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties)
-{
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  double x = boundingRect.x();
-  double y = boundingRect.y();
-  double width = boundingRect.width();
-  double height = boundingRect.height();
-
-  AbstractItemView* abstractView = getView();
-  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractView);
-
-  Property pX = getProperty("x");
-  pX.setValue(x, dataType->getDataTypeDouble());
-
-  Property pY = getProperty("y");
-  pY.setValue(y, dataType->getDataTypeDouble());
-
-  Property pWidth = getProperty("width");
-  pWidth.setValue(width, dataType->getDataTypeDouble());
-
-  Property pHeight = getProperty("height");
-  pHeight.setValue(height, dataType->getDataTypeDouble());
-
-  ItemUtils::addOrUpdateProperty(pX, properties);
-  ItemUtils::addOrUpdateProperty(pY, properties);
-  ItemUtils::addOrUpdateProperty(pWidth, properties);
-  ItemUtils::addOrUpdateProperty(pHeight, properties);
 }
 
 te::layout::WarningManager* te::layout::AbstractItemController::getWarningManager()

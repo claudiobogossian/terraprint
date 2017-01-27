@@ -265,6 +265,10 @@ namespace te
 
         static QPainterPath getRotationSymbol(const QPointF& pos, double widthMM);
 
+        static void prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties);
+
+        static void preparePositionForUpdate(const QPointF& position, Properties& properties);
+
       protected:
 
         /*!

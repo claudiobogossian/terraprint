@@ -68,21 +68,6 @@ te::layout::ObjectInspectorOutside::ObjectInspectorOutside(Scene* scene, Abstrac
   layout->addWidget(m_treeWidget);
   layout->setContentsMargins(0, 0, 0, 0);
   
-  //QVBoxLayout* layout = new QVBoxLayout(this);
-  //layout->setMargin(0);
-  //layout->addWidget(m_treeWidget);
-  //
-  //QGroupBox* groupBox = new QGroupBox;
-  //groupBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-  //groupBox->setLayout(layout);
-
-  //QVBoxLayout* layoutAll = new QVBoxLayout(this);
-  //layoutAll->setMargin(0);
-
-  //layoutAll->addWidget(groupBox);
-
-  //setLayout(layoutAll);
-
   QStringList headerLabels;
   headerLabels.append(tr("Name"));
   headerLabels.append(tr("Type"));
@@ -419,3 +404,7 @@ bool te::layout::ObjectInspectorOutside::isValidItem(QGraphicsItem* item)
   return true;
 }
 
+void te::layout::ObjectInspectorOutside::clearItemList()
+{
+  m_graphicsItems.clear();
+}

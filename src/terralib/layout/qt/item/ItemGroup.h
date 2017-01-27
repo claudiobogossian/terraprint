@@ -77,6 +77,14 @@ namespace te
 
         virtual void removeFromGroup(QGraphicsItem* item);
 
+        /*
+        \brief Set properties will or not generate an UndoCommand on the stack.
+
+        \param enabled if true will generate an UndoCommand on the stack, false otherwise.
+
+        */
+        virtual void setUndoEnabled(bool enabled);
+
       protected:
 
         virtual AbstractItemModel* createModel() const;

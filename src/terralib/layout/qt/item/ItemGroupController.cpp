@@ -40,8 +40,8 @@ te::layout::ItemGroupController::~ItemGroupController()
 
 void te::layout::ItemGroupController::addItem(QGraphicsItem* newChild)
 {
-  QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(m_view);
-  if(item == 0)
+  QGraphicsItem* group = dynamic_cast<QGraphicsItem*>(m_view);
+  if (group == 0)
   {
     return;
   }
@@ -49,16 +49,55 @@ void te::layout::ItemGroupController::addItem(QGraphicsItem* newChild)
   AbstractItemView* childView = dynamic_cast<AbstractItemView*>(newChild);
 
   QPointF currentChildPos = newChild->pos();
-  QPointF newChildPos = item->mapFromScene(currentChildPos);
+  QPointF newChildPos = group->mapFromScene(currentChildPos);
 
-  newChild->setParentItem(item);
+  newChild->setParentItem(group);
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  Properties properties;
+  ItemUtils::preparePositionForUpdate(newChildPos, properties);
 
   m_propagateResize = false;
-  newChild->setPos(newChildPos);
+
+  childView->setProperties(properties);
  
-  ItemUtils::normalizeItem(item);
+  ItemUtils::normalizeItem(group);
 
   childView->attach(m_view);
+  
+  m_propagateResize = true;
+}
+
+void te::layout::ItemGroupController::removeFromGroup(QGraphicsItem* item)
+{
+  QPointF itemNewPos = item->mapToScene(QPointF(0, 0));
+  
+  QGraphicsItem* group = dynamic_cast<QGraphicsItem*>(m_view);
+  
+  item->setParentItem(0);
+
+  if (item->parentItem() != 0)
+  {
+    itemNewPos = item->parentItem()->mapFromScene(itemNewPos);
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  Properties properties;
+  ItemUtils::preparePositionForUpdate(itemNewPos, properties);
+
+  m_propagateResize = false;
+  
+  AbstractItemView* iView = dynamic_cast<AbstractItemView*>(item);
+  if (item)
+  {
+    iView->setProperties(properties);
+  }
+
+  ItemUtils::normalizeItem(group);
+
+  iView->detach(m_view);
 
   m_propagateResize = true;
 }
@@ -179,7 +218,7 @@ void te::layout::ItemGroupController::scaleChildrenItems(Properties& properties)
     QRectF newRect = resizeChildren(item, itemWidthFactor, itemHeightFactor);
     newRect.moveTo(newX, newY);
 
-    prepareBoundingRectForUpdate(newRect, properties);
+    ItemUtils::prepareBoundingRectForUpdate(newRect, properties);
   }
 }
 
@@ -210,7 +249,7 @@ QRectF te::layout::ItemGroupController::resizeChildren(QGraphicsItem* qItem, dou
       AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
 
       Properties childProperties;
-      prepareBoundingRectForUpdate(childRect, childProperties);
+      ItemUtils::prepareBoundingRectForUpdate(childRect, childProperties);
       childView->setProperties(childProperties);
     }
 

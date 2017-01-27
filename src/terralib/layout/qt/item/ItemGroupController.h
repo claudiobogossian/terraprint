@@ -71,6 +71,8 @@ namespace te
         */
         virtual void update(const Subject* subject);
 
+        virtual void removeFromGroup(QGraphicsItem* item);
+
     protected:
       virtual void scaleChildrenItems(Properties& properties);
 

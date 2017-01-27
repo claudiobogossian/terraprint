@@ -763,7 +763,7 @@ void te::layout::View::createItemGroup()
 
   if(sc)
   {
-    QGraphicsItem* group = sc->createItemGroup(graphicsItems);
+    QGraphicsItem* group = sc->createGroup();
 
     if(!group)
       return;
@@ -803,7 +803,7 @@ void te::layout::View::destroyItemGroup()
       {
         if(sc)
         {
-          sc->destroyItemGroup(group);
+          sc->removeGroup(group);
         }
       }
     }
