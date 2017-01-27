@@ -532,6 +532,8 @@ namespace te
         \param list of graphic objects
         */
         virtual void sortByZValue(QList<QGraphicsItem *> & listItems);
+
+        void changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable);
                 
     protected:
 

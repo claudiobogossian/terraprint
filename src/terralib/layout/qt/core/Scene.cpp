@@ -815,7 +815,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
   getView()->onChangeConfig();
 
   te::layout::EnumType* groupType = Enums::getInstance().getEnumObjectType()->getItemGroup();
-
+  
   //we create the items
   std::map<std::string, te::layout::Properties> mapProperties;
   for (it = properties.begin(); it != properties.end(); ++it)
@@ -831,8 +831,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
       continue;
     }
     
-
-    build.buildItem(proper);
+    build.buildItem(proper, false);
   }
 
   //then we create the groups
@@ -857,9 +856,13 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(qItemGroup);
     if (itemView != 0)
     {
+      changeUndoEnable(listItems, false);
+
       itemView->setUndoEnabled(false);
       itemView->setProperties(groupProperties);
       itemView->setUndoEnabled(true);
+
+      changeUndoEnable(listItems, true);
     }
 
     ++itGroups;
@@ -867,7 +870,6 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
   return true;
 }
-
 
 void te::layout::Scene::buildItem(te::layout::Properties props,std::string &name, bool isCopy)
 {
@@ -1818,5 +1820,20 @@ void te::layout::Scene::addChangePropertiesCommandToStack(const std::map<QGraphi
   if (map.size() > 1)
   {
     m_undoStack->endMacro(); // end only one block of commands on stack
+  }
+}
+
+void te::layout::Scene::changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable)
+{
+  foreach(QGraphicsItem* item, listItems)
+  {
+    if (item)
+    {
+      AbstractItemView* iView = dynamic_cast<AbstractItemView*>(item);
+      if (iView)
+      {
+        iView->setUndoEnabled(enable);
+      }
+    }
   }
 }
