@@ -28,8 +28,9 @@
 // TerraLib
 #include "MapLocationModel.h"
 #include "../core/enum/Enums.h"
+#include "../core/property/GeodesicGridSettingsConfigProperties.h"
+#include "../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
-
 
 te::layout::MapLocationModel::MapLocationModel() 
   : MapModel()
@@ -96,6 +97,26 @@ te::layout::MapLocationModel::MapLocationModel()
     property.setComposeWidget(true);
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
+  }
+
+  //we turn off the planar grid grid
+  {
+    PlanarGridSettingsConfigProperties settingsConfig;
+    Property property(0);
+    property.setName(settingsConfig.getVisible());
+    property.setValue(false, dataType->getDataTypeBool());
+
+    m_properties.updateProperty(property);
+  }
+
+  //we turn off the planar geodesic grid
+  {
+    GeodesicGridSettingsConfigProperties settingsConfig;
+    Property property(0);
+    property.setName(settingsConfig.getVisible());
+    property.setValue(false, dataType->getDataTypeBool());
+
+    m_properties.updateProperty(property);
   }
   
   reparentProperties(Enums::getInstance().getEnumObjectType()->getMapLocationItem());

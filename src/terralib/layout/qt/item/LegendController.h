@@ -56,7 +56,7 @@ namespace te
           \param controller "Controller" part of MVM component
           \param o "Model" part of MVM component
         */ 
-        LegendController(AbstractItemModel* model);
+        LegendController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor

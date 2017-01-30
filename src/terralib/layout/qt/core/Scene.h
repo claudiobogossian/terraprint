@@ -166,6 +166,22 @@ namespace te
         */
         virtual bool removeItemByName(std::string name);
     
+        /*!
+        \brief Create a group with existing items. A command Undo/Redo of type AddGroupCommand is created.
+
+        \param list of objects
+
+        \return items group of objects
+        */
+        virtual QGraphicsItem* createGroup(EnumType* groupType = 0);
+
+        /*!
+        \brief Method that just remove from scene a object grouping, but the individual objects continue to exist. A command Undo/Redo of type DeleteGroupCommand is created.
+
+        \param group list of objects
+        */
+        virtual bool removeGroup(te::layout::ItemGroup* group = 0);
+
     /*!
           \brief Groups objects and creates a QGraphicsItem object. A command Undo/Redo of type AddCommand is created.
       
@@ -173,14 +189,14 @@ namespace te
       
       \return items group of objects
         */
-        virtual QGraphicsItem* createItemGroup( const QList<QGraphicsItem *> & items, EnumType* groupType = 0 );
+        virtual QGraphicsItem* createItemGroup( const QList<QGraphicsItem *> & items, QGraphicsItem* itemGroup = 0, EnumType* groupType = 0 );
 
     /*!
-          \brief Method that delete object grouping, but the individual objects continue to exist.
+          \brief Method that just remove from scene a object grouping, but the individual objects continue to exist.
       
       \param group list of objects
         */
-        virtual void destroyItemGroup(te::layout::ItemGroup* group );
+        virtual bool removeItemGroup(te::layout::ItemGroup* group);
         
     /*!
           \brief Method that insert command Undo/Redo of type AddCommand in the Undo/Redo stack.
@@ -377,6 +393,18 @@ namespace te
         */
         virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
 
+        /*
+          \brief Update multiple items with the same values of the same properties (setProperties).
+                The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
+        */
+        virtual void addChangePropertiesCommandToStack(QList<QGraphicsItem*> items, const Properties& properties);
+
+        /*
+        \brief Update multiple items with different values and properties that are the same or different (setProperties).
+              The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
+        */
+        virtual void addChangePropertiesCommandToStack(const std::map<QGraphicsItem*, te::layout::Properties>& map);
+
       public slots:
 
         void onUndoStackHasChanged();
@@ -460,7 +488,7 @@ namespace te
 
         virtual void applyProportionAllItems(QSize oldPaper, QSize newPaper);
 
-        virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemController* controller);
+        virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemView* view);
 
         virtual bool enterEditionMode();
 
@@ -495,11 +523,7 @@ namespace te
         virtual void searchSelectedChildItemsInResizeMode(QGraphicsItem* item);
 
         virtual void searchSelectedItemsInMoveMode();
-
-        virtual void addUndoCommandForMove();
-
-        virtual void addUndoCommandForResize();
-
+        
         virtual QList<QGraphicsItem*> getListUngroupedItems(const QList<QGraphicsItem *> & items, EnumType* groupType);
 
         /*!
@@ -508,6 +532,8 @@ namespace te
         \param list of graphic objects
         */
         virtual void sortByZValue(QList<QGraphicsItem *> & listItems);
+
+        void changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable);
                 
     protected:
 

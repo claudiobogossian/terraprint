@@ -455,7 +455,7 @@ void te::layout::View::copyToClipboard()
   foreach(QGraphicsItem* item, graphicsItems)
   {
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
-    Properties itemProperties = view->getController()->getProperties();
+    const Properties& itemProperties = view->getProperties();
     propertiesList.push_back(itemProperties);
 
   }
@@ -509,7 +509,7 @@ void te::layout::View::paste()
   std::vector<Properties> mapItens;
   std::vector<Properties> otherItens;
 
-  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapItem();
 
   for (int i = 0; i < p.size(); i++){
 
@@ -763,7 +763,7 @@ void te::layout::View::createItemGroup()
 
   if(sc)
   {
-    QGraphicsItem* group = sc->createItemGroup(graphicsItems);
+    QGraphicsItem* group = sc->createGroup();
 
     if(!group)
       return;
@@ -793,7 +793,7 @@ void te::layout::View::destroyItemGroup()
         continue;
       }
 
-      if (absItemView->getController()->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
+      if (absItemView->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
       {
         continue;
       }
@@ -803,7 +803,7 @@ void te::layout::View::destroyItemGroup()
       {
         if(sc)
         {
-          sc->destroyItemGroup(group);
+          sc->removeGroup(group);
         }
       }
     }

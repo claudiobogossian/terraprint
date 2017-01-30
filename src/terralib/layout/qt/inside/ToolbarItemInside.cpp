@@ -60,7 +60,7 @@ te::layout::EnumType* te::layout::ToolbarItemInside::getItemType()
   if (!m_item)
     return itemType;
 
-  itemType = m_item->getController()->getProperties().getTypeObj();
+  itemType = m_item->getProperties().getTypeObj();
   return itemType;
 }
 

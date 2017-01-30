@@ -27,6 +27,8 @@
 
 // TerraLib
 #include "SVGItem.h"
+#include "../../item/SVGModel.h"
+#include "SVGController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
@@ -37,8 +39,6 @@
 #include "terralib/common/STLUtils.h"
 #include "../../item/PointModel.h"
 #include "../../core/enum/EnumPointType.h"
-#include "../../item/SVGModel.h"
-#include "SVGController.h"
 
 // STL
 #include <cmath>
@@ -51,8 +51,8 @@
 #include <QtSvg/QSvgRenderer>
 #include "AbstractItem.h"
 
-te::layout::SVGItem::SVGItem(AbstractItemController* controller)
-: AbstractItem(controller)
+te::layout::SVGItem::SVGItem()
+  : AbstractItem()
 {
     
 }
@@ -62,10 +62,21 @@ te::layout::SVGItem::~SVGItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::SVGItem::createModel() const
+{
+  return new SVGModel();
+}
+
+te::layout::AbstractItemController* te::layout::SVGItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new SVGController(model, (AbstractItemView*)this);
+}
+
 void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   painter->save();
-  SVGController *svgController = dynamic_cast<SVGController*>(m_controller);
+  SVGController *svgController = dynamic_cast<SVGController*>(getController());
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 

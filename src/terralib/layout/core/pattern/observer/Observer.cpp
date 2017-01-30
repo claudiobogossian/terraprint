@@ -41,7 +41,7 @@ te::layout::Observer::~Observer()
   while (it != m_vecSubjects.end())
   {
     (*it)->detach(this);
-    ++it;
+    it = m_vecSubjects.begin();
   }
 
   m_vecSubjects.clear();

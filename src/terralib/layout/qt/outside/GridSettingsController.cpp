@@ -27,14 +27,13 @@
 
 // TerraLib
 #include "GridSettingsController.h"
+#include "../../core/pattern/mvc/AbstractItemView.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/enum/Enums.h"
 #include "../../outside/GridSettingsModel.h"
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
-#include "../item/GridPlanarItem.h"
-#include "../item/GridGeodesicItem.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -51,14 +50,14 @@ te::layout::GridSettingsController::~GridSettingsController()
 
 }
 
-te::layout::Property te::layout::GridSettingsController::getProperty( std::string name, EnumType* enumType )
+te::layout::Property te::layout::GridSettingsController::getProperty( std::string name)
 {
   Property prop;
 
-  AbstractItemView* grid = searchGrid(enumType);
+  AbstractItemView* grid = searchGrid();
   if (grid)
   {
-    prop = grid->getController()->getProperty(name);
+    prop = grid->getProperty(name);
   }
 
   return prop;
@@ -74,12 +73,12 @@ QStringList te::layout::GridSettingsController::getItemNames(QStringList list, c
       AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
       if (view)
       {
-        const Property& prop_name = view->getController()->getProperty("name");
+        const Property& prop_name = view->getProperty("name");
 
         std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
-        const Properties& prop_type = view->getController()->getProperties();
+        const Properties& prop_type = view->getProperties();
 
         if (txt.compare("") != 0 && prop_type.getTypeObj() == type)
         {
@@ -92,48 +91,31 @@ QStringList te::layout::GridSettingsController::getItemNames(QStringList list, c
   return list;
 }
 
-bool te::layout::GridSettingsController::containsGrid(EnumType* enumType)
+bool te::layout::GridSettingsController::containsGrid()
 {
   bool result = false;
-  if (searchGrid(enumType))
+  if (searchGrid())
   {
     result = true;
   }
   return result;
 }
 
-te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid(EnumType* enumType)
+te::layout::AbstractItemView* te::layout::GridSettingsController::searchGrid()
 {
-  AbstractItemView* itemFound = 0;
-
   QList<QGraphicsItem*> items = m_scene->items();
-  
   foreach(QGraphicsItem* item, items)
   {
     AbstractItemView* absItem = dynamic_cast<AbstractItemView*>(item);
     if (absItem)
     {
-      if (absItem->getController()->getProperties().getTypeObj() == enumType)
+      const Properties& properties = absItem->getProperties();
+      if (properties.getTypeObj()->getName() == Enums::getInstance().getEnumObjectType()->getMapItem()->getName())
       {
-        if (item->isSelected())
-        {
-          itemFound = absItem;
-          break;
-        }
-        else
-        {
-          if (item->parentItem())
-          {
-            if (item->parentItem()->isSelected())
-            {
-              itemFound = absItem;
-              break;
-            }
-          }
-        }
+        return absItem;
       }
     }
   }
-  return itemFound;
+  return 0;
 }
 

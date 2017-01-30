@@ -239,7 +239,9 @@ namespace te
 
         static void DMS2DD(QString degree, QString minute, QString second, QString &dd);
 
+        static void normalizeItem(QGraphicsItem* item);
         static void normalizeChildrenPosition(QGraphicsItem* item);
+        static void normalizeChildrenPosition(QRectF& parentRect, QList<QRectF>& childrenRectList);
 
         /*!
         \brief Draws the given image in the given location
@@ -262,6 +264,10 @@ namespace te
         static void drawSuperScriptText(const QPointF& pointMM, QPainter* painter, const QFont& font, const std::string& text, int rotate = 0);
 
         static QPainterPath getRotationSymbol(const QPointF& pos, double widthMM);
+
+        static void prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties);
+
+        static void preparePositionForUpdate(const QPointF& position, Properties& properties);
 
       protected:
 

@@ -25,8 +25,8 @@
 #include "../core/Value.h"
 #include "../core/Scene.h"
 
-te::layout::LegendController::LegendController(te::layout::AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::LegendController::LegendController(te::layout::AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 }
 

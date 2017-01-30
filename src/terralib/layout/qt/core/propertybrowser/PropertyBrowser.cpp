@@ -377,7 +377,7 @@ QtProperty* te::layout::PropertyBrowser::addItemProperty(const Property& propert
     const AbstractItemView* view = m_scene->getItem(te::layout::Property::GetValueAs<std::string>(property));
     if (view)
     {
-      const Property& property = view->getController()->getProperty("name");
+      const Property& property = view->getProperty("name");
       std::string value = te::layout::Property::GetValueAs<std::string>(property);
 
       val = ItemUtils::convert2QString(value);

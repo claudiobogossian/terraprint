@@ -79,7 +79,7 @@ namespace te
 
         virtual void unblockComponents();
        
-        virtual void load();
+        virtual void load(const std::string& gridName);
 
       private slots:
 
@@ -292,8 +292,6 @@ namespace te
 
         PlanarGridSettingsConfigProperties*   m_planarGridSettings;
         GeodesicGridSettingsConfigProperties* m_geodesicGridSettings;
-        EnumType*                             m_planarType;
-        EnumType*                             m_geodesicType;
         double                                m_lineWidthIncrement;
 
       private:

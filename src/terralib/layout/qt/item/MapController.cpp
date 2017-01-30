@@ -20,14 +20,16 @@
 // TerraLib
 #include "MapController.h"
 #include "MapItem.h"
-
+#include "../core/Grid.h"
+#include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
+#include "../../core/property/PlanarGridSettingsConfigProperties.h"
+#include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../core/Value.h"
 #include "../core/Scene.h"
-#include "../core/pattern/command/ChangePropertyCommand.h"
 
 #include "terralib/maptools/Utils.h"
 
@@ -39,8 +41,8 @@
 // Qt
 #include <QGraphicsItem>
 
-te::layout::MapController::MapController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::MapController::MapController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 
 }
@@ -151,8 +153,6 @@ void te::layout::MapController::addLayers(const std::list<te::map::AbstractLayer
   Properties beforeProps = getProperties();
 
   setProperty(property);
-
-  changedPropertyLayerURIFromDropEvent(beforeProps); // add change property command to undo/redo 
 }
 
 void te::layout::MapController::setProperty(const te::layout::Property& property)
@@ -166,7 +166,12 @@ void te::layout::MapController::setProperty(const te::layout::Property& property
 void te::layout::MapController::setProperties(const te::layout::Properties& properties)
 {
   //we first copy the properties that are being set
-  te::layout::Properties propertiesCopy = properties;
+  te::layout::Properties propertiesCopy(properties);
+
+  //the first thing we need to do is adjust the size of the map (without the grids) and the size total size (with the grids)
+  if (adjustMapSizeProperties(propertiesCopy) == true)
+  {
+  }
 
   //then we sync the properties related to the layers
   if (syncLayersProperties(propertiesCopy) == true)
@@ -187,6 +192,21 @@ void te::layout::MapController::setProperties(const te::layout::Properties& prop
   if (syncMapScaleProperties(propertiesCopy) == true)
   {
   }
+
+  //now we sync the properties related to the planar grid initialization
+  if (syncPlanarGridInitProperties(propertiesCopy) == true)
+  {
+  }
+
+  //now we sync the properties related to the geodesic grid initialization
+  if (syncGeodesicGridInitProperties(propertiesCopy) == true)
+  {
+  }
+
+  //now we sync the properties related to the grid reference box
+  if (syncGridReferenceProperties(propertiesCopy) == true)
+  {
+  }  
 
   //we finally set the properties into the model
   AbstractItemController::setProperties(propertiesCopy);
@@ -386,6 +406,103 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
   return true;
 }
 
+bool te::layout::MapController::adjustMapSizeProperties(Properties& properties)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  //here we sync all properties related to the map
+  bool containsMapLocalBox = properties.contains("map_local_box");
+  bool containsWidth = properties.contains("width");
+  bool containsHeight = properties.contains("height");
+
+  //if the map local box is being set, we just need to reset the overall width and height
+  if (containsMapLocalBox == true)
+  {
+    const Property& pMapLocalBox = getProperty("map_local_box", properties);
+    const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
+    double resetWidth = mapLocalBox.getWidth();
+    double resetHeight = mapLocalBox.getHeight();
+
+    Property pWidth;
+    pWidth.setName("width");
+    pWidth.setValue(resetWidth, dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pWidth, properties);
+
+    Property pHeight;
+    pHeight.setName("height");
+    pHeight.setValue(resetHeight, dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pHeight, properties);
+
+    return true;
+  }
+
+  //if there were no chances, we just reset the width and height of the item based of the size of the map
+  if (containsMapLocalBox == false && containsWidth == false && containsHeight == false)
+  {
+    const Property& pMapLocalBox = getProperty("map_local_box", properties);
+    const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
+    double resetWidth = mapLocalBox.getWidth();
+    double resetHeight = mapLocalBox.getHeight();
+    te::gm::Envelope resetMapLocalBox(0, 0, resetWidth, resetHeight);
+
+    Property pWidth;
+    pWidth.setName("width");
+    pWidth.setValue(resetWidth, dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pWidth, properties);
+
+    Property pHeight;
+    pHeight.setName("height");
+    pHeight.setValue(resetHeight, dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pHeight, properties);
+
+    Property pNewMapLocalBox;
+    pNewMapLocalBox.setName("map_local_box");
+    pNewMapLocalBox.setValue(resetMapLocalBox, dataType->getDataTypeEnvelope());
+    ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
+
+    return true;
+  }
+
+  //If we got here, the item has been resized and we must recalcute the map local box
+  const Property& pMapLocalBox = getProperty("map_local_box", properties);
+  const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
+
+  //for the width
+  double oldItemWidth = Property::GetValueAs<double>(getProperty("width"));
+  double newItemWidth = Property::GetValueAs<double>(getProperty("width", properties));
+    
+  double oldMapWidth = mapLocalBox.getWidth();
+  double diffMapWidth = oldItemWidth - oldMapWidth;
+  double newMapWidth = newItemWidth - diffMapWidth;
+
+  Property pNewWidth;
+  pNewWidth.setName("width");
+  pNewWidth.setValue(newMapWidth, dataType->getDataTypeDouble());
+  ItemUtils::addOrUpdateProperty(pNewWidth, properties);
+
+  //for the height
+  double oldItemHeight = Property::GetValueAs<double>(getProperty("height"));
+  double newItemHeight = Property::GetValueAs<double>(getProperty("height", properties));
+
+  double oldMapHeight = mapLocalBox.getHeight();
+  double diffMapHeight = oldItemHeight - oldMapHeight;
+  double newMapHeight = newItemHeight - diffMapHeight;
+
+  Property pNewHeight;
+  pNewHeight.setName("height");
+  pNewHeight.setValue(newMapHeight, dataType->getDataTypeDouble());
+  ItemUtils::addOrUpdateProperty(pNewHeight, properties);
+  
+  //for the map local box
+  te::gm::Envelope resetMapLocalBox(0, 0, newMapWidth, newMapHeight);
+  Property pNewMapLocalBox;
+  pNewMapLocalBox.setName("map_local_box");
+  pNewMapLocalBox.setValue(resetMapLocalBox, dataType->getDataTypeEnvelope());
+  ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
+
+  return true;
+}
+
 
 bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
 {
@@ -402,8 +519,7 @@ bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
   }
 
   //if the size is not being set, we must consider the current size of the item
-  const Property& pWidth = getProperty("width", properties);
-  const Property& pHeight = getProperty("height", properties);
+  const Property& pMapLocalBox = getProperty("map_local_box", properties);
 
   //if the world_box is not being set, we must consider the current world_box of the item
   const Property& pWorldBox = getProperty("world_box", properties);
@@ -412,8 +528,9 @@ bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
   const Property& pFixedScale = getProperty("fixed_scale", properties);
 
   //so we must ensure that the aspect of the world box is proportional to the width and height
-  double widthMM = te::layout::Property::GetValueAs<double>(pWidth);
-  double heightMM = te::layout::Property::GetValueAs<double>(pHeight);
+  const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
+  double widthMM = mapLocalBox.getWidth();
+  double heightMM = mapLocalBox.getHeight();
   te::gm::Envelope worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
   bool fixedScale = te::layout::Property::GetValueAs<bool>(pFixedScale);
@@ -512,6 +629,274 @@ bool te::layout::MapController::syncMapScaleProperties(Properties& properties)
   return true;
 }
 
+bool te::layout::MapController::syncPlanarGridInitProperties(Properties& properties)
+{
+  //if the new layer list does not have any intersection to the current layer list, we must also ensure that "srid" and "world_box" properties are initialized
+  const Property& pCurrentLayerList = this->getProperty("layers");
+
+  //if the list of layers has not been changed, there is nothing to do
+  if (properties.contains("layers") == false)
+  {
+    return false;
+  }
+
+  const Property& pNewLayerList = properties.getProperty("layers");
+
+  const std::list<te::map::AbstractLayerPtr>& currentLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pCurrentLayerList);
+  const std::list<te::map::AbstractLayerPtr>& newLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pNewLayerList);
+
+  //if there is an intersection, we do not try to initialize the "srid" and "world_box" properties
+  std::list<te::map::AbstractLayerPtr> intersectionList = getIntersection(currentLayerList, newLayerList);
+  if (intersectionList.empty() == false)
+  {
+    //there is nothing to update
+    return false;
+  }
+
+  PlanarGridSettingsConfigProperties planarGridSettings;
+  if (properties.contains(planarGridSettings.getGridSettings()))
+  {
+    return false;
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const Property& pSrid = getProperty("srid", properties);
+  const Property& pWidth = getProperty("width", properties);
+  const Property& pHeight = getProperty("height", properties);
+
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
+
+  if (worldBox.isValid() == false)
+  {
+    return false;
+  }
+
+  if (width == 0 || height == 0)
+  {
+    return false;
+  }
+
+  double horizontalLineGap = 0;
+  double verticalLineGap = 0;
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+
+  //then we calculate the initial coordinates and the gaps
+  double horizontalLineInitial = this->getInitialCoord(planarBox.getLowerLeftY(), planarBox.getHeight(), horizontalLineGap);
+  {
+    Property property(0);
+    property.setName(planarGridSettings.getHorizontalLineInitial());
+    property.setValue(horizontalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(planarGridSettings.getHorizontalLineGap());
+    property.setValue(horizontalLineGap, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+
+  double verticalLineInitial = this->getInitialCoord(planarBox.getLowerLeftX(), planarBox.getWidth(), verticalLineGap);
+  {
+    Property property(0);
+    property.setName(planarGridSettings.getVerticalLineInitial());
+    property.setValue(verticalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(planarGridSettings.getVerticalLineGap());
+    property.setValue(verticalLineGap, dataType->getDataTypeDouble());
+    
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+
+  return true;
+}
+
+bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& properties)
+{
+  //if the new layer list does not have any intersection to the current layer list, we must also ensure that "srid" and "world_box" properties are initialized
+  const Property& pCurrentLayerList = this->getProperty("layers");
+
+  //if the list of layers has not been changed, there is nothing to do
+  if (properties.contains("layers") == false)
+  {
+    return false;
+  }
+
+  const Property& pNewLayerList = properties.getProperty("layers");
+
+  const std::list<te::map::AbstractLayerPtr>& currentLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pCurrentLayerList);
+  const std::list<te::map::AbstractLayerPtr>& newLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pNewLayerList);
+
+  //if there is an intersection, we do not try to initialize the "srid" and "world_box" properties
+  std::list<te::map::AbstractLayerPtr> intersectionList = getIntersection(currentLayerList, newLayerList);
+  if (intersectionList.empty() == false)
+  {
+    //there is nothing to update
+    return false;
+  }
+
+  GeodesicGridSettingsConfigProperties geodesicGridSettings;
+  if (properties.contains(geodesicGridSettings.getGridSettings()))
+  {
+    return false;
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const Property& pSrid = getProperty("srid", properties);
+  const Property& pWidth = getProperty("width", properties);
+  const Property& pHeight = getProperty("height", properties);
+
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  double height = te::layout::Property::GetValueAs<double>(pHeight);
+
+  if (worldBox.isValid() == false)
+  {
+    return false;
+  }
+
+  if (width == 0 || height == 0)
+  {
+    return false;
+  }
+
+  //if first prepare the world box, ensuring that it is a geographic box. If it is not, we reproject it
+  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
+  
+  //then we calculate the initial coordinates and the gaps
+  double horizontalLineGap = geographicBox.getHeight() / 4.;
+  double horizontalLineInitial = geographicBox.getLowerLeftY();
+  
+  double verticalLineGap = geographicBox.getWidth() / 4.;
+  double verticalLineInitial = geographicBox.getLowerLeftX();
+
+  {
+    Property property(0);
+    property.setName(geodesicGridSettings.getHorizontalLineInitial());
+    property.setValue(horizontalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(geodesicGridSettings.getHorizontalLineGap());
+    property.setValue(horizontalLineGap, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+
+  {
+    Property property(0);
+    property.setName(geodesicGridSettings.getVerticalLineInitial());
+    property.setValue(verticalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(geodesicGridSettings.getVerticalLineGap());
+    property.setValue(verticalLineGap, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+
+  return true;
+}
+
+bool te::layout::MapController::syncGridReferenceProperties(Properties& properties)
+{
+  MapItem* mapItem = dynamic_cast<MapItem*>(m_view);
+  if (mapItem == 0)
+  {
+    return false;
+  }
+
+  Properties fullProperties = this->getProperties();
+
+  mergeProperties(properties, fullProperties);
+
+  const Property& pMapLocalBox = getProperty("map_local_box", fullProperties);
+  const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
+  double mapWidth = mapLocalBox.getWidth();
+  double mapHeight = mapLocalBox.getHeight();
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  Property pWidth;
+  pWidth.setName("width");
+  pWidth.setValue(mapWidth, dataType->getDataTypeDouble());
+  ItemUtils::addOrUpdateProperty(pWidth, fullProperties);
+
+  Property pHeight;
+  pHeight.setName("height");
+  pHeight.setValue(mapHeight, dataType->getDataTypeDouble());
+  ItemUtils::addOrUpdateProperty(pHeight, fullProperties);
+
+  te::layout::Grid* planarGrid = mapItem->getPlanarGrid();
+  planarGrid->initialize(fullProperties);
+
+  te::layout::Grid* geodesicGrid = mapItem->getGeodesicGrid();
+  geodesicGrid->initialize(fullProperties);
+
+  QPointF planarOriginPoint = planarGrid->getOrigin();
+  QSizeF planarSize = planarGrid->getSize();
+
+  QPointF geodesicOriginPoint = geodesicGrid->getOrigin();
+  QSizeF geodesicSize = geodesicGrid->getSize();
+
+  QPointF mapOriginPoint;
+  QSizeF fullSize;
+
+  if (planarSize.isValid() && planarSize.isEmpty() == false)
+  {
+    fullSize = fullSize.expandedTo(planarSize);
+  }
+
+  if (geodesicSize.isValid() && geodesicSize.isEmpty() == false)
+  {
+    fullSize = fullSize.expandedTo(geodesicSize);
+  }
+
+  mapOriginPoint = QPointF(qMax(planarOriginPoint.x(), geodesicOriginPoint.x()), qMax(planarOriginPoint.y(), geodesicOriginPoint.y()));
+
+  if (fullSize.isValid() && fullSize.isEmpty() == false)
+  {
+    te::gm::Envelope mapLocalBox(mapOriginPoint.x(), mapOriginPoint.y(), mapOriginPoint.x() + mapWidth, mapOriginPoint.y() + mapHeight);
+
+    Property pWidth;
+    pWidth.setName("width");
+    pWidth.setValue(fullSize.width(), dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pWidth, properties);
+
+    Property pHeight;
+    pHeight.setName("height");
+    pHeight.setValue(fullSize.height(), dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pHeight, properties);
+
+    Property pNewMapLocalBox;
+    pNewMapLocalBox.setName("map_local_box");
+    pNewMapLocalBox.setValue(mapLocalBox, dataType->getDataTypeEnvelope());
+    ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
+  }
+
+  return true;
+}
+
 te::layout::AbstractProxyProject* te::layout::MapController::getAbstractProxyProject()
 {
   AbstractProxyProject* project = 0;
@@ -570,11 +955,33 @@ void te::layout::MapController::validateItem()
   }
 }
 
+void te::layout::MapController::sceneHasChanged(Scene* scene)
+{
+  if (scene == 0)
+  {
+    return;
+  }
+
+  //as the item has been added to the scene, we must check if the layer list is initialized (the initialization needs a valid scene)
+  const Property& pLayers = this->getProperty("layers");
+  const Property& pLayersUri = this->getProperty("layers_uri");
+
+  std::list<te::map::AbstractLayerPtr> currentLayerList = te::layout::Property::GetValueAs< std::list<te::map::AbstractLayerPtr> >(pLayers);
+  std::vector<std::string> vecUri = te::layout::Property::GetValueAs< std::vector<std::string> >(pLayersUri);
+
+  if (vecUri.empty() == false && vecUri.size() != currentLayerList.size())
+  {
+    //if we must initialize it, we just set again the URI list
+    //as we are just synchronizing a value, we dont need to generate an undo/redo command
+    m_view->setUndoEnabled(false);
+    setProperty(pLayersUri);
+    m_view->setUndoEnabled(true);
+  }
+}
+
 void te::layout::MapController::changedPropertyLayerURIFromDropEvent(const Properties& beforeProps)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  Property prop;
-  prop = m_model->getProperty("layers_uri");
 
   std::vector<QGraphicsItem*> commandItems;
   std::vector<Properties> commandOld;
@@ -598,5 +1005,31 @@ void te::layout::MapController::changedPropertyLayerURIFromDropEvent(const Prope
       scene->addUndoStack(command);
     }    
   }
+}
+
+double te::layout::MapController::getInitialCoord(double initialCoord, double distance, double& gap) const
+{
+  if (distance <= 0)
+  {
+    gap = 0;
+    return 0;
+  }
+  unsigned const int size = 25;
+  int gaps[size] = { 1000, 1500, 2000, 2500, 5000, 7500, 10000, 12500, 15000, 20000, 25000, 50000, 100000, 125000, 150000, 175000, 200000, 250000, 500000, 750000, 1000000, 1250000, 1500000, 1750000, 2000000 };
+  int numberOfIntervals = 5;
+  gap = (int)(distance / numberOfIntervals);
+  for (unsigned int i = 0; i < size; i++)
+  {
+    if (gap <= gaps[i])
+    {
+      if (i > 0)
+      {
+        gap = gaps[i - 1];
+      }
+      break;
+    }
+  }
+  int interval = (int)(initialCoord / gap);
+  return interval * gap;
 }
 

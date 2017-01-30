@@ -26,8 +26,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include <QtSvg/QSvgRenderer>
 
 
-te::layout::SVGController::SVGController(te::layout::AbstractItemModel* model)
-: AbstractItemController(model)
+te::layout::SVGController::SVGController(te::layout::AbstractItemModel* model, AbstractItemView* view)
+: AbstractItemController(model, view)
 {
 }
 

@@ -37,6 +37,7 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
     /*!
       \brief Class daughter of te::layout::TextItem representing a grid with two cells which can be inserted texts.
       \ingroup layout
@@ -52,7 +53,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        TitleItem(AbstractItemController* controller);
+        TitleItem();
 
         /*!
           \brief Destructor
@@ -62,6 +63,12 @@ namespace te
       protected slots:
 
         virtual void updateGeometry( int position, int charsRemoved, int charsAdded );
+
+      protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
     };
   }
 }

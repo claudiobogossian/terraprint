@@ -28,17 +28,19 @@
 // TerraLib
 #include "AlignItems.h"
 #include "../../core/pattern/mvc/AbstractItemView.h"
+#include "../../core/property/Properties.h"
+#include "../../core/enum/Enums.h"
 #include "terralib/geometry/Envelope.h"
 #include "terralib/geometry/Coord2D.h"
-#include "../core/pattern/command/MoveCommand.h"
 #include "../core/Scene.h"
 
 // STL
 #include <sstream>
 
 // Qt
+#include <QRectF>
+#include <QPointF>
 #include <QGraphicsItem>
-#include <QUndoCommand>
 
 te::layout::AlignItems::AlignItems( Scene* scene, PaperConfig* config ):
   m_scene(scene),
@@ -66,12 +68,14 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
   {
     selectedItem = childItem;
   }
-
+  
   QList<QGraphicsItem *> items = m_scene->items(Qt::AscendingOrder);
-
+  
   qreal maxZValue = selectedItem->zValue();
   qreal zValue = selectedItem->zValue();
-  qreal beforeZValue = selectedItem->zValue();
+  qreal beforeZValue = selectedItem->zValue();  
+
+  std::map<QGraphicsItem*, int> mapItems;
 
   foreach(QGraphicsItem *item, items)
   {
@@ -80,13 +84,13 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if (it)
       {
-        if ((item->zValue() >= zValue))
+        if ((item->zValue() >= zValue) && (selectedItem != item))
         {
           if (item->zValue() > maxZValue)
           {
             beforeZValue = maxZValue;
             maxZValue = item->zValue();
-            item->setZValue(beforeZValue);
+            mapItems[item] = beforeZValue;
             if (oneLevel)
             {
               break;
@@ -97,12 +101,13 @@ bool te::layout::AlignItems::bringToFront(bool oneLevel)
     }
   }
 
-  selectedItem->setZValue(maxZValue);
-
   if (maxZValue != zValue)
   {
+    mapItems[selectedItem] = maxZValue;
+    result = addChangePropertiesToUndoRedoStack(mapItems);
     result = true;
   }
+    
   return result;
 }
 
@@ -126,6 +131,8 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
   qreal zValue = selectedItem->zValue();
   qreal beforeZValue = selectedItem->zValue();
 
+  std::map<QGraphicsItem*, int> mapItems;
+
   foreach(QGraphicsItem *item, items)
   {
     if(item)
@@ -133,16 +140,19 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if(it)
       {
-        if (item->zValue() <= zValue && item->zValue() > m_minimunZValue)
+        if (selectedItem != item)
         {
-          if (item->zValue() < minimumZValue)
+          if (item->zValue() <= zValue && item->zValue() > m_minimunZValue)
           {
-            beforeZValue = minimumZValue;
-            minimumZValue = item->zValue();
-            item->setZValue(beforeZValue);
-            if (oneLevel)
+            if (item->zValue() < minimumZValue)
             {
-              break;
+              beforeZValue = minimumZValue;
+              minimumZValue = item->zValue();
+              mapItems[item] = beforeZValue;
+              if (oneLevel)
+              {
+                break;
+              }
             }
           }
         }
@@ -150,12 +160,13 @@ bool te::layout::AlignItems::sendToBack(bool oneLevel)
     }
   }
 
-  selectedItem->setZValue(minimumZValue);
-
   if (minimumZValue != zValue)
   {
+    mapItems[selectedItem] = minimumZValue;
+    result = addChangePropertiesToUndoRedoStack(mapItems);
     result = true;
   }
+
   return result;
 }
 
@@ -200,10 +211,9 @@ void te::layout::AlignItems::alignLeft()
     dbLeft = ppbx.getLowerLeftX() + dx;
     QPointF pot(dbLeft, items.first()->scenePos().y());
 
-    itemsWithPoints[items.first()] = items.first()->scenePos();//it will be added to the undo/redo stack
+    itemsWithPoints[items.first()] = pot;//it will be added to the undo/redo stack
 
-    items.first()->setPos(pot);
-    addToUndoRedoStack(itemsWithPoints);
+    addChangePropertiesToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -217,12 +227,11 @@ void te::layout::AlignItems::alignLeft()
       double dx = item->scenePos().x() - item->sceneBoundingRect().x();
 
       QPointF pt(dbLeft + dx, item->scenePos().y());
-      itemsWithPoints[item] = item->scenePos();//it will be added to the undo/redo stack
-      item->setPos(pt);
+      itemsWithPoints[item] = pt;//it will be added to the undo/redo stack
     }
   }
 
-  addToUndoRedoStack(itemsWithPoints);
+  addChangePropertiesToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignRight()
@@ -256,10 +265,9 @@ void te::layout::AlignItems::alignRight()
     w = dbRight - items.first()->sceneBoundingRect().width() + dx;
     QPointF pot(w, items.first()->scenePos().y());
 
-    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+    itemsWithPoints[items.first()] = pot; //it will be added to the undo/redo stack
 
-    items.first()->setPos(pot);
-    addToUndoRedoStack(itemsWithPoints);
+    addChangePropertiesToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -274,12 +282,11 @@ void te::layout::AlignItems::alignRight()
 
       w = dbRight - item->sceneBoundingRect().width() + dx;
       QPointF pt(w, item->scenePos().y());
-      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
-      item->setPos(pt);
+      itemsWithPoints[item] = pt; //it will be added to the undo/redo stack
     }
   }
 
-  addToUndoRedoStack(itemsWithPoints);
+  addChangePropertiesToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignTop()
@@ -313,10 +320,9 @@ void te::layout::AlignItems::alignTop()
     h = dbBottom - items.first()->sceneBoundingRect().height();
     QPointF pot(items.first()->scenePos().x(), h + dy);
 
-    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+    itemsWithPoints[items.first()] = pot; //it will be added to the undo/redo stack
 
-    items.first()->setPos(pot);
-    addToUndoRedoStack(itemsWithPoints);
+    addChangePropertiesToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -331,12 +337,11 @@ void te::layout::AlignItems::alignTop()
 
       h = dbBottom - item->sceneBoundingRect().height();
       QPointF pt(item->scenePos().x(), h + dy);
-      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
-      item->setPos(pt);
+      itemsWithPoints[item] = pt; //it will be added to the undo/redo stack
     }
   }
 
-  addToUndoRedoStack(itemsWithPoints);
+  addChangePropertiesToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignBottom()
@@ -368,10 +373,9 @@ void te::layout::AlignItems::alignBottom()
     dbTop = ppbx.getLowerLeftY();
     QPointF pot(items.first()->scenePos().x(), dbTop + dy);
 
-    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+    itemsWithPoints[items.first()] = pot; //it will be added to the undo/redo stack
 
-    items.first()->setPos(pot);
-    addToUndoRedoStack(itemsWithPoints);
+    addChangePropertiesToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -385,12 +389,11 @@ void te::layout::AlignItems::alignBottom()
       double dy = item->scenePos().y() - item->sceneBoundingRect().y();
 
       QPointF pt(item->scenePos().x(), dbTop + dy);
-      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
-      item->setPos(pt);
+      itemsWithPoints[item] = pt; //it will be added to the undo/redo stack
     }
   }
 
-  addToUndoRedoStack(itemsWithPoints);
+  addChangePropertiesToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignCenterHorizontal()
@@ -424,10 +427,9 @@ void te::layout::AlignItems::alignCenterHorizontal()
     w = items.first()->sceneBoundingRect().width() / 2.;
     QPointF pot(dbCenterHrz - w + dx, items.first()->scenePos().y());
 
-    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+    itemsWithPoints[items.first()] = pot; //it will be added to the undo/redo stack
 
-    items.first()->setPos(pot);
-    addToUndoRedoStack(itemsWithPoints);
+    addChangePropertiesToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -443,12 +445,11 @@ void te::layout::AlignItems::alignCenterHorizontal()
       w = item->sceneBoundingRect().width() / 2.;
 
       QPointF pt(dbCenterHrz - w + dx, item->scenePos().y());
-      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
-      item->setPos(pt);
+      itemsWithPoints[item] = pt; //it will be added to the undo/redo stack
     }
   }
 
-  addToUndoRedoStack(itemsWithPoints);
+  addChangePropertiesToUndoRedoStack(itemsWithPoints);
 }
 
 void te::layout::AlignItems::alignCenterVertical()
@@ -482,10 +483,9 @@ void te::layout::AlignItems::alignCenterVertical()
     h = items.first()->sceneBoundingRect().height() / 2.;
     QPointF pot(items.first()->scenePos().x(), dbCenterVrt - h + dy);
 
-    itemsWithPoints[items.first()] = items.first()->scenePos(); //it will be added to the undo/redo stack
+    itemsWithPoints[items.first()] = pot; //it will be added to the undo/redo stack
 
-    items.first()->setPos(pot);
-    addToUndoRedoStack(itemsWithPoints);
+    addChangePropertiesToUndoRedoStack(itemsWithPoints);
     return;
   }
 
@@ -501,12 +501,11 @@ void te::layout::AlignItems::alignCenterVertical()
       h = item->sceneBoundingRect().height() / 2.;
 
       QPointF pt(item->scenePos().x(), dbCenterVrt - h + dy);
-      itemsWithPoints[item] = item->scenePos(); //it will be added to the undo/redo stack
-      item->setPos(pt);
+      itemsWithPoints[item] = pt; //it will be added to the undo/redo stack
     }
   }
 
-  addToUndoRedoStack(itemsWithPoints);
+  addChangePropertiesToUndoRedoStack(itemsWithPoints);
 }
 
 QRectF te::layout::AlignItems::getSelectionItemsBoundingBox()
@@ -532,12 +531,62 @@ void te::layout::AlignItems::setMinimumZValue(int minimum)
   m_minimunZValue = minimum;
 }
 
-bool te::layout::AlignItems::addToUndoRedoStack(std::map<QGraphicsItem*, QPointF> items)
+bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(const std::map<QGraphicsItem*, QPointF>& items)
 {
   bool result = true;
 
-  QUndoCommand* command = new MoveCommand(items);
-  m_scene->addUndoStack(command);
+  std::map<QGraphicsItem*, te::layout::Properties> map;
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  std::map<QGraphicsItem*, QPointF>::const_iterator it;
+  for (it = items.begin() ; it != items.end(); ++it)
+  {
+    QGraphicsItem* item = it->first;
+    QPointF po = it->second;
+
+    Properties properties;
+    {
+      Property property(0);
+      property.setName("x");
+      property.setValue(po.x(), dataType->getDataTypeDouble());
+      properties.addProperty(property);
+    }
+
+    {
+      Property property(0);
+      property.setName("y");
+      property.setValue(po.y(), dataType->getDataTypeDouble());
+      properties.addProperty(property);
+    }
+    map[item] = properties;
+  }
+
+  m_scene->addChangePropertiesCommandToStack(map);
+  
+  return result;
+}
+
+bool te::layout::AlignItems::addChangePropertiesToUndoRedoStack(const std::map<QGraphicsItem*, int>& items)
+{
+  bool result = true;
+
+  std::map<QGraphicsItem*, te::layout::Properties> map;
+
+  std::map<QGraphicsItem*, int>::const_iterator it;
+  for (it = items.begin(); it != items.end(); ++it)
+  {
+    QGraphicsItem* item = it->first;
+    int zValue = it->second;
+
+    Properties properties;
+    Property prop = createZValueProperty(zValue);
+    properties.addProperty(prop);
+
+    map[item] = properties;
+  }
+
+  m_scene->addChangePropertiesCommandToStack(map);
 
   return result;
 }
@@ -569,4 +618,17 @@ QGraphicsItem* te::layout::AlignItems::searchForSubselection(QGraphicsItem* pare
     }
   }
   return item;
+}
+
+te::layout::Property te::layout::AlignItems::createZValueProperty(int zValue)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  int zValueCopy = zValue;
+
+  Property property(0);
+  property.setName("zValue");
+  property.setValue(zValueCopy, dataType->getDataTypeInt());
+  
+  return property;
 }

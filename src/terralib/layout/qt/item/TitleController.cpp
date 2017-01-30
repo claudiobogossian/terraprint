@@ -20,7 +20,6 @@
 // TerraLib
 #include "TitleController.h"
 
-#include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../../core/enum/EnumAlignmentType.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/property/TextGridSettingsConfigProperties.h"
@@ -33,8 +32,8 @@
 #include <QTextCursor>
 #include <QTextTable>
 
-te::layout::TitleController::TitleController(AbstractItemModel* model)
-  : TextController(model)
+te::layout::TitleController::TitleController(AbstractItemModel* model, AbstractItemView* view)
+  : TextController(model, view)
   , m_table(0)
 {
 }

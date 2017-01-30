@@ -36,8 +36,6 @@
 #include "../../../outside/TextGridSettingsModel.h"
 #include "../../../outside/TextGridSettingsController.h"
 #include "../../outside/TextGridSettingsOutside.h"
-#include "../pattern/command/ChangePropertyCommand.h"
-#include "../../../core/pattern/singleton/Context.h"
 #include "../Scene.h"
 #include "PropertiesUtils.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
@@ -64,7 +62,6 @@
 #include <QFont>
 #include <QColorDialog>
 #include <QColor>
-#include <QUndoCommand>
 #include <QApplication>
 #include <QRect>
 #include <QDesktopWidget>
@@ -250,47 +247,12 @@ void te::layout::MenuBuilder::changePropertyValue( const Property& property )
 
   if(property.getType() == dataType->getDataTypeNone())
     return;
+  
+  Properties properties;
+  properties.addProperty(property);
 
-  std::vector<QGraphicsItem*> commandItems;
-  std::vector<Properties> commandOld;
-  std::vector<Properties> commandNew;
-
-  foreach(QGraphicsItem* item, m_graphicsItems) 
-  {
-    if (item)
-    {      
-      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
-      if(lItem)
-      {
-        if(!lItem->getController())
-        {
-          continue;
-        }
-
-        Properties beforeProps = lItem->getController()->getProperties();
-        
-        Properties props("");
-        props.setObjectName(beforeProps.getObjectName());
-        props.setTypeObj(beforeProps.getTypeObj());
-        props.setHashCode(beforeProps.getHashCode());
-        props.addProperty(property);
-
-        lItem->getController()->setProperty(property);
-
-        Properties afterProps = lItem->getController()->getProperties();
-        commandItems.push_back(item);
-        commandOld.push_back(beforeProps);
-        commandNew.push_back(afterProps);
-        
-      }
-    }
-  }
-
-  if(!m_graphicsItems.isEmpty())
-  {
-    QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew);
-    m_scene->addUndoStack(command);
-  }
+  m_scene->addChangePropertiesCommandToStack(m_graphicsItems, properties);
+  
   m_scene->update();
 }
 
@@ -366,4 +328,3 @@ void te::layout::MenuBuilder::onShowPageSetupDlg()
 
   view->showPageSetup();
 }
-

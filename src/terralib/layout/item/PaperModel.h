@@ -64,12 +64,6 @@ namespace te
           \brief Destructor
         */
         virtual ~PaperModel();
-
-        virtual void setProperty(const Property& property);
-
-        virtual void setProperties(const Properties& properties);
-
-        virtual Properties handleNewPaperSize(double paperWidth, double paperHeight);
                         
       protected:
 

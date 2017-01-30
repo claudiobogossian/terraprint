@@ -60,7 +60,7 @@ te::layout::Property te::layout::NorthSettingsController::getNorthProperty(std::
   NorthItem* northItem = dynamic_cast<NorthItem*>(item);
   if (northItem)
   {
-    prop = northItem->getController()->getProperty(name);
+    prop = northItem->getProperty(name);
   }
   return prop;
 }

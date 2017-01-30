@@ -27,13 +27,12 @@
 
 // TerraLib
 #include "NorthItem.h"
+
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
-#include "../../core/pattern/mvc/AbstractItemController.h"
-
-te::layout::NorthItem::NorthItem(AbstractItemController* controller) 
-  : AbstractItem(controller)
+te::layout::NorthItem::NorthItem() 
+  : AbstractItem()
 {
 
 }
@@ -43,9 +42,14 @@ te::layout::NorthItem::~NorthItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::NorthItem::createModel() const
+{
+  return new NorthModel();
+}
+
 void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& property = m_controller->getProperty("northArrow_type");
+  const Property& property = this->getProperty("northArrow_type");
   EnumNorthArrowType enumNorthArrowType;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
@@ -81,7 +85,7 @@ void te::layout::NorthItem::drawNorthArrow1(QPainter * painter)
   double northLetterY = boundingBoxMM.center().y() + boundingBoxMM.height() / 3.;
   northLetter.translate(northLetterX, northLetterY);
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
@@ -115,7 +119,7 @@ void te::layout::NorthItem::drawNorthArrow2(QPainter * painter)
   double northLetterY = boundingBoxMM.center().y() + boundingBoxMM.height() / 3.;
   northLetter.translate(northLetterX, northLetterY);
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
@@ -158,7 +162,7 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
   double northLetterY = boundingBoxMM.center().y() + boundingBoxMM.height() / 3.;
   northLetter.translate(northLetterX, northLetterY);
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
@@ -197,7 +201,7 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
 
 QColor te::layout::NorthItem::setBrush(QPainter* painter)
 {
-  const Property& colorProperty = m_controller->getProperty("color");
+  const Property& colorProperty = this->getProperty("color");
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(colorProperty);
   QColor brushColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
   painter->setBrush(QBrush(brushColor));

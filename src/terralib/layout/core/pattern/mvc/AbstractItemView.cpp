@@ -1,16 +1,19 @@
 #include "AbstractItemView.h"
 
-
 #include "AbstractItemController.h"
 #include "AbstractItemModel.h"
 
-te::layout::AbstractItemView::AbstractItemView(AbstractItemController* controller)
-  : m_controller(controller)
+#include "../../property/Properties.h"
+#include "../../property/Property.h"
+
+te::layout::AbstractItemView::AbstractItemView()
+  : m_controller(0)
   , m_isEditionMode(false)
   , m_subSelected(false)
   , m_useResizePixmap(true)
+  , m_undoEnabled(true)
 {
-  controller->setView(this);
+
 }
 
 te::layout::AbstractItemView::~AbstractItemView()
@@ -24,17 +27,12 @@ te::layout::AbstractItemView::~AbstractItemView()
 
 te::layout::AbstractItemController* te::layout::AbstractItemView::getController() const
 {
-  return m_controller;
-}
-
-void te::layout::AbstractItemView::setController(AbstractItemController* controller)
-{
-  if (m_controller != 0)
+  if (m_controller == nullptr)
   {
-    delete m_controller;
-    m_controller = 0;
+    m_controller = createController();
   }
-  m_controller = controller;
+
+  return m_controller;
 }
 
 void te::layout::AbstractItemView::setEditionMode(bool editionMode)
@@ -71,6 +69,52 @@ bool te::layout::AbstractItemView::isSubSelected() const
   return m_subSelected;
 }
 
+const te::layout::Properties& te::layout::AbstractItemView::getProperties() const
+{
+  AbstractItemController* controller = getController();
+  return controller->getProperties();
+}
 
+void te::layout::AbstractItemView::setProperties(const te::layout::Properties& properties)
+{
+  AbstractItemController* controller = getController();
+  controller->setProperties(properties);
+}
 
+const te::layout::Property& te::layout::AbstractItemView::getProperty(const std::string& propertyName) const
+{
+  AbstractItemController* controller = getController();
+  return controller->getProperty(propertyName);
+}
 
+void te::layout::AbstractItemView::setProperty(const te::layout::Property& property)
+{
+  AbstractItemController* controller = getController();
+  controller->setProperty(property);
+}
+
+void te::layout::AbstractItemView::attach(AbstractItemView* view)
+{
+  m_controller->attach(view->getController());
+}
+
+void te::layout::AbstractItemView::detach(AbstractItemView* view)
+{
+  m_controller->detach(view->getController());
+}
+
+te::layout::AbstractItemController* te::layout::AbstractItemView::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new AbstractItemController(model, (AbstractItemView*)this);
+}
+
+void te::layout::AbstractItemView::setUndoEnabled(bool enabled)
+{
+  m_undoEnabled = enabled;
+}
+
+bool te::layout::AbstractItemView::isUndoEnabled()
+{
+  return m_undoEnabled;
+}

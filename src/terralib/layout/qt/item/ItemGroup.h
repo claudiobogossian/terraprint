@@ -59,14 +59,9 @@ namespace te
     {
       public:
 
-        ItemGroup(AbstractItemController* controller);
+        ItemGroup();
 
         virtual ~ItemGroup();
-
-        /*!
-          \brief Reimplemented from ParentItem
-         */
-        virtual QRectF boundingRect() const;
 
         /*!
           \brief For any specific drawing, the item must reimplement this function
@@ -82,7 +77,19 @@ namespace te
 
         virtual void removeFromGroup(QGraphicsItem* item);
 
+        /*
+        \brief Set properties will or not generate an UndoCommand on the stack.
+
+        \param enabled if true will generate an UndoCommand on the stack, false otherwise.
+
+        */
+        virtual void setUndoEnabled(bool enabled);
+
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         /*!
         \brief Reimplemented from AbstractItem<QGraphicsItemGroup>
@@ -90,7 +97,7 @@ namespace te
         virtual void mousePressEvent(QGraphicsSceneMouseEvent * event);
         
         virtual bool hasChildrenInResizeMode();
-        
+
       protected:
 
         bool m_stacksBehindParent;

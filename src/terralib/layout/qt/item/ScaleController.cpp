@@ -34,8 +34,8 @@
 #include <algorithm>
 #include <cmath>
 
-te::layout::ScaleController::ScaleController(te::layout::AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::ScaleController::ScaleController(te::layout::AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 }
 

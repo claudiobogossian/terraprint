@@ -18,18 +18,17 @@ TerraLib Team at <terralib-team@terralib.org>.
 */
 
 /*!
-\file TextController.h
+  \file BalloonController.h
 
-\brief Class that represents text controller.
-\ingroup layout
+  \brief Class that represents balloon controller.
+  \ingroup layout
 */
 
-#ifndef __TERRALIB_BALLOON_CONTROLLER_H
-#define __TERRALIB_BALLOON_CONTROLLER_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_BALLOON_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_BALLOON_CONTROLLER_H
 
 // TerraLib
 #include "../../core/Config.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "TextController.h"
 
 class QSizeF;
@@ -39,24 +38,37 @@ namespace te
   namespace layout
   {
     /*!
-    \brief Class that represents text controller.
+      \brief Class that represents balloon controller.
 
-    \ingroup layout
-    \sa te::layout::AbstractItemController
+      \ingroup layout
+      \sa te::layout::TextController
     */
     class TELAYOUTEXPORT BalloonController : public TextController
     {
     public:
-      BalloonController(AbstractItemModel* model);
+
+      /*!
+      \brief Constructor
+      */
+      BalloonController(AbstractItemModel* model, AbstractItemView* view);
+
+      /*!
+      \brief Destructor
+      */
+      virtual ~BalloonController();
 
       virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
 
       virtual bool needUpdateBox(const te::layout::Properties& properties);
 
+      /*!
+      \brief Sets the new values of the given properties
+      */
+      virtual void setProperties(const Properties& properties);
     };
 
   }
 }
 
 
-#endif //__TERRALIB_BALLOON_CONTROLLER_H
+#endif //__TERRALIB_LAYOUT_INTERNAL_BALLOON_CONTROLLER_H
