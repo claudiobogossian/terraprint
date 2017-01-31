@@ -230,11 +230,15 @@ void te::layout::ToolbarOutside::createToolbar()
   createExportToPDFButton();
   this->addSeparator();
 
+  createObjectToImageButton();
+  this->addSeparator();
+
   createSceneZoomCombobox();
   this->addSeparator();
 
   createExitButton();
   this->addSeparator();
+
 }
 
 QToolButton* te::layout::ToolbarOutside::createMapToolButton()

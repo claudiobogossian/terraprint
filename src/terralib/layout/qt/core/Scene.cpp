@@ -172,7 +172,6 @@ void te::layout::Scene::insertItem(QGraphicsItem* item)
     return;
   }
 
-  int total = this->items().count();
   
   AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(item);
   if (abstractItem == 0)
@@ -180,7 +179,6 @@ void te::layout::Scene::insertItem(QGraphicsItem* item)
     return;
   }
 
-  item->setZValue(total);
   this->addItem(item); 
   
   abstractItem->refresh();
@@ -903,59 +901,51 @@ void te::layout::Scene::redrawSelectionMap()
 void te::layout::Scene::exportItemsToImage(std::string dir)
 {
   const int dpi = 96;
-
-  Utils utils = this->getUtils();
+  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
+  ContextObject context(100, dpi, dpi, enumMode->getModePrinter());
+  
+  ContextObject oldContext = this->getContext();
+  this->setContext(context);
 
   QList<QGraphicsItem*> selected = selectedItems();
   foreach(QGraphicsItem *item, selected) 
   {
-    /*
+    AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+    if (view == 0)
+    {
+      continue;
+    }
+
+    const std::string& name = Property::GetValueAs<std::string>(view->getProperty("name"));
+
     QRectF rectInItemCS = item->boundingRect();
     QRectF rectInSceneCS = item->mapRectToScene(rectInItemCS); //rect in Millimeters
 
-    QSizeF size = rectInSceneCS.size(); //size in Millimeters
-    double widthInches = size.width() / 25.4;
-    double heightInches = size.height() / 25.4;
-    
-    double widthPixels = widthInches * dpi;
-    double heightPixels = heightInches * dpi;
+    //we first calculate the size in pixels
+    double widthPixels = Utils::mm2pixel(rectInSceneCS.width(), dpi);
+    double heightPixels = Utils::mm2pixel(rectInSceneCS.height(), dpi);
 
-    
+    double scaleX = widthPixels / rectInSceneCS.width();
+    double scaleY = heightPixels / rectInSceneCS.height();
+
     QImage image(widthPixels, heightPixels, QImage::Format_ARGB32);
-    */
 
-      
-    /*ItemObserver* it = dynamic_cast<ItemObserver*>(item);
-      if(it)
-      {
-        QImage* img = 0;
-        int w = 0;
-        int h = 0;
+    QStyleOptionGraphicsItem styleOption;
+    QPainter painter;
+    painter.begin(&image);
+    painter.scale(scaleX, -scaleY);
+    painter.translate(0, -rectInSceneCS.height());
 
-        if(!it->getModel())
-        {
-          continue;
-        }
+    //draws the item
+    item->paint(&painter, &styleOption);
 
-        te::color::RGBAColor** rgba = it->getRGBAColorImage(w, h);
-                
-        if(!rgba)
-          continue;
-        
-        img = te::qt::widgets::GetImage(rgba, w, h);
-        if(!img)
-          continue;
+    painter.end();
 
-        std::string dirName = dir + "/" + it->getModel()->getName() +".png";
-
-        img->save(dirName.c_str());
-
-        te::common::Free(rgba, h);
-
-        if(img)
-          delete img;        
-      }*/
+    std::string dirName = dir + "/" + name + ".png";
+    image.save(dirName.c_str());
   }
+
+  this->setContext(oldContext);
 }
 
 void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
