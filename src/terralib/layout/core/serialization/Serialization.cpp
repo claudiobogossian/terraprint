@@ -28,9 +28,8 @@
 // TerraLib
 #include "Serialization.h"
 
-te::layout::Serialization::Serialization() :
-  m_loadPath(""),
-  m_rootKey("Unknown")
+te::layout::Serialization::Serialization() 
+  : m_rootKey("Unknown")
 {
 
 }
@@ -40,18 +39,12 @@ te::layout::Serialization::~Serialization()
 
 }
 
-std::string te::layout::Serialization::getLoadPath()
-{
-  return m_loadPath;
-}
-
 void te::layout::Serialization::setRootKey( std::string rootKey )
 {
   m_rootKey = rootKey;
 }
 
-std::string te::layout::Serialization::getRootKey()
+std::string te::layout::Serialization::getRootKey() const
 {
   return m_rootKey;
 }
-

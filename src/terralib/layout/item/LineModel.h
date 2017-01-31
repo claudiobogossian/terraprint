@@ -49,10 +49,6 @@ namespace te
         LineModel();
 
         virtual ~LineModel();
-
-        virtual void setProperty(const Property& property);
-
-        virtual void setProperties(const Properties& properties);
     };
   }
 }

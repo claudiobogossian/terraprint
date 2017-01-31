@@ -33,6 +33,8 @@
 #include "../../core/property/Variant.h"
 #include "../../core/enum/Enums.h"
 #include "../core/ItemUtils.h"
+#include "../../core/Constants.h"
+
 // Qt
 #include <QMessageBox>
 #include <QString>
@@ -52,6 +54,21 @@ te::layout::NorthSettingsOutside::NorthSettingsOutside(AbstractOutsideController
   m_ui->setupUi(this);
 
   init();
+
+  /* In a QLineEdit, when you click the Enter button, an editFinished signal is triggered,
+  however in a window there are buttons set as default, other events such as DynamicPropertyChange
+  are sent to these buttons, and causes QLineEdit to lose focus for a short time.
+  This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method.
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked.
+  By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
+  m_ui->btnColor->setDefault(false);
+  m_ui->btnColor->setAutoDefault(false);
+  m_ui->helpPushButton->setDefault(false);
+  m_ui->helpPushButton->setAutoDefault(false);
+  m_ui->nBtnCancel->setDefault(false);
+  m_ui->nBtnCancel->setAutoDefault(false);
+  m_ui->nBtnOK->setDefault(false);
+  m_ui->nBtnOK->setAutoDefault(false);
 }
 
 te::layout::NorthSettingsOutside::~NorthSettingsOutside()
@@ -127,8 +144,15 @@ void te::layout::NorthSettingsOutside::on_rdbMillimeters_clicked()
     Property propH = controller->getNorthProperty("height");
     double numberH = te::layout::Property::GetValueAs<double>(propH);
 
+
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.9, MILLIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+
     m_ui->lineEditNorthWidth->setText(QString::number(numberW));
     m_ui->lineEditNorthHeight->setText(QString::number(numberH));
+
+    m_ui->lineEditNorthHeight->setValidator(validator);
+    m_ui->lineEditNorthWidth->setValidator(validator);
   }
 }
 
@@ -145,8 +169,14 @@ void te::layout::NorthSettingsOutside::on_rdbCentimeters_clicked()
     double numberH = te::layout::Property::GetValueAs<double>(propH);
     numberH = numberH / 10.; //convert to cm
 
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999, CENTIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+
     m_ui->lineEditNorthWidth->setText(QString::number(numberW));
     m_ui->lineEditNorthHeight->setText(QString::number(numberH));
+
+    m_ui->lineEditNorthHeight->setValidator(validator);
+    m_ui->lineEditNorthWidth->setValidator(validator);
   }
 }
 
@@ -170,6 +200,14 @@ void te::layout::NorthSettingsOutside::on_cbNorth_currentIndexChanged(const QStr
 
 void te::layout::NorthSettingsOutside::on_lineEditNorthWidth_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lineEditNorthWidth->isModified())
+  {
+    return;
+  }
+
   NorthSettingsController* controller = dynamic_cast<NorthSettingsController*>(m_controller);
   if (controller)
   {
@@ -180,20 +218,27 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthWidth_editingFinished()
       width = width * 10.;
     }
 
-    else if (m_ui->rdbMillimeters->isChecked() == true)
-    {
-      width = width / 10.;
-    }
-
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Property prop = controller->getNorthProperty("width");
     prop.setValue(width, dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lineEditNorthWidth->setModified(false);
   }
 }
 
 void te::layout::NorthSettingsOutside::on_lineEditNorthHeight_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lineEditNorthHeight->isModified())
+  {
+    return;
+  }
+
   NorthSettingsController* controller = dynamic_cast<NorthSettingsController*>(m_controller);
   if (controller)
   {
@@ -204,15 +249,14 @@ void te::layout::NorthSettingsOutside::on_lineEditNorthHeight_editingFinished()
       height = height * 10.;
     }
 
-    else if (m_ui->rdbMillimeters->isChecked() == true)
-    {
-      height = height / 10.;
-    }
-
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     Property prop = controller->getNorthProperty("height");
     prop.setValue(height, dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lineEditNorthHeight->setModified(false);
   }
 }
 

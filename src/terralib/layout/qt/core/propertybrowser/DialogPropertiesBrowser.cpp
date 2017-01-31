@@ -51,7 +51,6 @@
 #include "../../outside/SVGDialogOutside.h"
 #include "../ItemUtils.h"
 #include "../BuildGraphicsOutside.h"
-#include "../../item/GridMapItem.h"
 #include "../../item/NorthItem.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
@@ -293,8 +292,8 @@ void te::layout::DialogPropertiesBrowser::onShowGridSettingsDlg()
   {
     return;
   }
-    
-  gridSettings->load();
+
+  gridSettings->load(m_currentPropertyClicked.getName());
   gridSettings->show(); // modeless dialog
   gridSettings->raise(); // top of the parent widget's stack
 }

@@ -32,8 +32,8 @@
 #include <QTextDocument>
 #include <QTextCursor>
 
-te::layout::TextController::TextController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::TextController::TextController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
   , m_dpiForCalculation(96.)
 {
 }
@@ -55,7 +55,27 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties propertiesCopy(properties);
   
-  if (needUpdateBox(properties))
+  bool hasName = properties.contains("name");
+  bool hasText = properties.contains("text");
+  if (hasName && !hasText)
+  {
+    const Property& propName = properties.getProperty("name");
+    const Property& propText = getProperty("text");
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    std::string name = te::layout::Property::GetValueAs<std::string>(propName);
+    std::string text = te::layout::Property::GetValueAs<std::string>(propText);
+
+    if (name.compare("") != 0 && text.compare("") == 0)
+    {
+      Property propText(0);
+      propText.setName("text");
+      propText.setValue(name, dataType->getDataTypeString());
+      propertiesCopy.addProperty(propText);
+    }
+  }
+
+  if (needUpdateBox(propertiesCopy))
   {
     TextItem* textItem = dynamic_cast<TextItem*>(m_view);
     QSizeF sizeMM;
@@ -131,24 +151,28 @@ QTextDocument* te::layout::TextController::createTextDocument(const te::layout::
   QFont qFont = ItemUtils::convertToQfont(te::layout::Property::GetValueAs<Font>(pFont));
   EnumAlignmentType enumAligmentType;
   const std::string& label = pAligment.getOptionByCurrentChoice().toString();
-  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
+  EnumType* currentAligmentType = enumAligmentType.getEnum(label);
 
   QTextOption textOption;
-  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+
+  if (currentAligmentType)
   {
-    textOption.setAlignment(Qt::AlignLeft);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
-  {
-    textOption.setAlignment(Qt::AlignRight);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
-  {
-    textOption.setAlignment(Qt::AlignCenter);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
-  {
-    textOption.setAlignment(Qt::AlignJustify);
+    if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+    {
+      textOption.setAlignment(Qt::AlignLeft);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+    {
+      textOption.setAlignment(Qt::AlignRight);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+    {
+      textOption.setAlignment(Qt::AlignCenter);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+    {
+      textOption.setAlignment(Qt::AlignJustify);
+    }
   }
 
   QTextDocument* textDocument = new QTextDocument();

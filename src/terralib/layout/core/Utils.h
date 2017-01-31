@@ -122,7 +122,7 @@ namespace te
           \param gap distance between the points on the x axis
           \return
         */ 
-        virtual te::gm::LinearRing* addCoordsInX(te::gm::Envelope box, double axisCoord, double gap);
+        static te::gm::LinearRing* addCoordsInX(te::gm::Envelope box, double axisCoord, double gap);
 
         /*!
           \brief Creates a line with n points in y axis. Method used to create the grid lines on a map. Vertical line.
@@ -132,7 +132,7 @@ namespace te
           \param gap distance between the points on the y axis
           \return
         */ 
-        virtual te::gm::LinearRing* addCoordsInY(te::gm::Envelope box, double axisCoord, double gap);
+        static te::gm::LinearRing* addCoordsInY(te::gm::Envelope box, double axisCoord, double gap);
 
         /*!
           \brief Converts the box world (mm) to screen coordinates (pixel).
@@ -148,7 +148,7 @@ namespace te
           \param box in geo coordinates     
           \return box in mm
         */ 
-        te::layout::WorldTransformer getTransformGeo(te::gm::Envelope boxgeo, te::gm::Envelope boxmm);
+        static te::layout::WorldTransformer getTransformGeo(te::gm::Envelope boxgeo, te::gm::Envelope boxmm);
 
         /*!
           \brief Converts decimal geo coordinates to degrees.
@@ -159,7 +159,7 @@ namespace te
           \param bSeconds true if should appear in the return string, false otherwise
           \return string value in degree
         */ 
-        virtual std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds,  int precision = 0);
+        static std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds,  int precision = 0);
 
         /*!
         \brief Converts decimal geo coordinates to degrees, using the ANP pattern.
@@ -170,12 +170,12 @@ namespace te
         \param bSeconds true if should appear in the return string, false otherwise
         \return string value in degree
         */
-        virtual std::string convertDecimalToDegreeANP(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision = 0);
+        static std::string convertDecimalToDegreeANP(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision = 0);
 
         /*!
         \brief Concatenates the given 'lpadValue' to the left of the given 'text' until it reaches the given 'length'
         */
-        virtual std::string lpadString(std::string& text, size_t length, char lpadValue);
+        static std::string lpadString(std::string& text, size_t length, char lpadValue);
 
         /*!
           \brief Converts degree geo coordinates to decimal.
@@ -197,7 +197,7 @@ namespace te
      
           \return wkt
         */
-        std::string proj4DescToGeodesic();
+        static std::string proj4DescToGeodesic();
 
         /*!
           \brief Returns a UnitOfMeasurePtr pointer.
@@ -213,7 +213,7 @@ namespace te
           \param box in latlong
           \param zone returns UTM zone
         */
-        virtual void remapToPlanar(te::gm::Envelope* latLongBox, int zone);
+        static void remapToPlanar(te::gm::Envelope* latLongBox, int zone);
 
         /*!
           \brief Map latlong LinearRing (line) to UTM zone.
@@ -221,14 +221,16 @@ namespace te
           \param line line in latlong
           \param zone returns UTM zone
         */
-        virtual void remapToPlanar(te::gm::LinearRing* line, int zone);
+        static void remapToPlanar(te::gm::LinearRing* line, int zone);
 
         /*!
           \brief Map latlong Point (point) to UTM zone.
       
           \param zone returns UTM zone    
         */
-        virtual void remapToPlanar(te::gm::Point* point, int zone);
+        static void remapToPlanar(te::gm::Point* point, int zone);
+
+        static te::gm::Envelope GetWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
 
         /*!
           \brief Convert LinearRing from one coordinate system to mm
@@ -236,7 +238,7 @@ namespace te
           \param Object with logic for transforming
           \param line LinearRing pointer in one coordinate system
         */
-        virtual void convertToMillimeter(WorldTransformer transf, te::gm::LinearRing* line); 
+        static void convertToMillimeter(WorldTransformer transf, te::gm::LinearRing* line); 
 
         /*!
           \brief Convert Polygon from one coordinate system to mm
@@ -244,7 +246,7 @@ namespace te
           \param Object with logic for transforming
           \param line LinearRing pointer in one coordinate system
         */
-        virtual void convertToMillimeter(WorldTransformer transf, te::gm::Polygon* poly); 
+        static void convertToMillimeter(WorldTransformer transf, te::gm::Polygon* poly); 
 
         /*!
           \brief Converts from PaperConfig to Properties

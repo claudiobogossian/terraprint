@@ -73,12 +73,12 @@ te::layout::Property te::layout::MapLocationSettingsController::getProperty(std:
     MapItem* mapItem = vecMap[i];
     if (mapItem->isSelected() == true)
     {
-      prop = mapItem->getController()->getProperty(name);
+      prop = mapItem->getProperty(name);
       break;
     }
     else if (mapItem->parentItem() != 0 && mapItem->parentItem()->isSelected())
     {
-      prop = mapItem->getController()->getProperty(name);
+      prop = mapItem->getProperty(name);
       break;
     }
   }
@@ -113,12 +113,12 @@ QStringList te::layout::MapLocationSettingsController::getItemNames(QStringList 
       AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
       if (view)
       {
-        const Property& prop_name = view->getController()->getProperty("name");
+        const Property& prop_name = view->getProperty("name");
 
         std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
-        const Properties& prop_type = view->getController()->getProperties();
+        const Properties& prop_type = view->getProperties();
 
         if (txt.compare("") != 0 && prop_type.getTypeObj() == type)
         {

@@ -63,14 +63,18 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        MapLocationItem(AbstractItemController* controller);
+        MapLocationItem();
 
         /*!
           \brief Destructor
         */ 
         virtual ~MapLocationItem();
 
-    protected:
+      protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope);
 

@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        RectangleItem(AbstractItemController* controller);
+        RectangleItem();
 
         /*!
           \brief Destructor
@@ -71,13 +71,15 @@ namespace te
 
       protected:
 
+        virtual AbstractItemModel* createModel() const;
+
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-
         virtual void drawRectangle(QPainter * painter);
-        virtual void drawRoundedRectangle(QPainter * painter);
-        virtual void drawSingleCornerTrimmedRectangle(QPainter * painter);
 
+        virtual void drawRoundedRectangle(QPainter * painter);
+
+        virtual void drawSingleCornerTrimmedRectangle(QPainter * painter);
     };
   }
 }

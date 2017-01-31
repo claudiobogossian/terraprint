@@ -29,6 +29,7 @@
 //TerraLib
 #include "AbstractLayoutTool.h"
 #include "terralib/geometry/Point.h"
+#include "terralib/geometry/Coord2D.h"
 
 //STL
 #include <vector>
@@ -42,8 +43,8 @@ namespace te
   {
 // Forward declarations
     class View;
-    class AbstractItemController;
     class EnumType;
+    class Properties;
 
       /*!
         \class CreateLineItemTool
@@ -91,9 +92,12 @@ namespace te
         protected:
 
           virtual void setGeometry();
+          
+          virtual Properties createProperties(te::gm::LineString* lineString);
+
+          virtual Properties createProperties(const te::gm::Coord2D& coord);
 
           std::vector<te::gm::Point>  m_coords;
-          AbstractItemController*     m_controller;
           QGraphicsItem*              m_item;
           EnumType*                   m_itemType;
       };

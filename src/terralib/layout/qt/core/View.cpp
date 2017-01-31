@@ -59,7 +59,6 @@
 #include <QKeyEvent>
 #include <QGraphicsRectItem>
 #include <QGraphicsItem>
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPainterPath>
@@ -72,6 +71,7 @@
 #include <QLayout>
 #include <QDir>
 #include <QString>
+#include <QUndoStack>
 
 // STL
 #include <memory>
@@ -396,6 +396,54 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
   {
     cutSelectedItens();
   }
+  else
+  {
+    zoomByKey(keyEvent); // Keys Plus and Minus
+  }
+}
+
+bool te::layout::View::zoomByKey(QKeyEvent* keyEvent)
+{
+  bool result = false;
+
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+  {
+    return false;
+  }
+
+  int zoom = 0;
+
+  /* In edit mode not apply the zoom */
+  if (scne->isEditionMode())
+  {
+    return result;
+  }
+  
+  if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Plus))
+  {
+    //Zooming In
+    zoom = nextZoom();
+    result = true;
+  }
+  else if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Minus))
+  {
+    // Zooming Out
+    zoom = previousZoom();
+    result = true;
+  }
+
+  if (zoom != 0)
+  {
+    ViewportUpdateMode mode = viewportUpdateMode();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
+    setZoom(zoom);
+
+    setViewportUpdateMode(mode);
+  }
+
+  return result;
 }
 
 void te::layout::View::copyToClipboard()
@@ -407,7 +455,7 @@ void te::layout::View::copyToClipboard()
   foreach(QGraphicsItem* item, graphicsItems)
   {
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
-    Properties itemProperties = view->getController()->getProperties();
+    const Properties& itemProperties = view->getProperties();
     propertiesList.push_back(itemProperties);
 
   }
@@ -461,7 +509,7 @@ void te::layout::View::paste()
   std::vector<Properties> mapItens;
   std::vector<Properties> otherItens;
 
-  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapItem();
 
   for (int i = 0; i < p.size(); i++){
 
@@ -707,14 +755,15 @@ void te::layout::View::createItemGroup()
   Scene* sc = dynamic_cast<Scene*>(scene());
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
 
-  if (graphicsItems.isEmpty())
+  //if the list is empty or there is only one item, we do not need to do anything
+  if (graphicsItems.isEmpty() || graphicsItems.size() == 1)
   {
     return;
   }
 
   if(sc)
   {
-    QGraphicsItem* group = sc->createItemGroup(graphicsItems);
+    QGraphicsItem* group = sc->createGroup();
 
     if(!group)
       return;
@@ -738,12 +787,23 @@ void te::layout::View::destroyItemGroup()
   {
     if (item)
     {
+      te::layout::AbstractItemView* absItemView = dynamic_cast<te::layout::AbstractItemView*>(item);
+      if (absItemView == 0)
+      {
+        continue;
+      }
+
+      if (absItemView->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
+      {
+        continue;
+      }
+
       te::layout::ItemGroup* group = dynamic_cast<te::layout::ItemGroup*>(item);
       if(group)
       {
         if(sc)
         {
-          sc->destroyItemGroup(group);
+          sc->removeGroup(group);
         }
       }
     }
@@ -791,6 +851,7 @@ void te::layout::View::hideEvent( QHideEvent * event )
   if (m_tempDataStorageEditor)
   {
     m_tempDataStorageEditor->stop();
+    m_tempDataStorageEditor->deleteDataStorage();
   }
   emit hideView();
 }
@@ -1287,22 +1348,23 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   QGraphicsView::drawForeground(painter, rect);
 }
 
-bool te::layout::View::exportProperties( EnumType* type )
+bool te::layout::View::exportTemplate(EnumType* type, bool & cancel)
 {
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if (!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
-
-  bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if(fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
+    cancel = true;
     return is_export;
   }
   if (fileName.endsWith(".xml") == false)
@@ -1337,26 +1399,37 @@ bool te::layout::View::exportProperties( EnumType* type )
   return is_export;
 }
 
-bool te::layout::View::importTemplate( EnumType* type )
+bool te::layout::View::importTemplate(EnumType* type, bool & cancel)
 {  
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if(!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if (fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
-    return false;
+    cancel = true;
+    return is_export;
   }
 
   std::string j_name = ItemUtils::convert2StdString(fileName); 
 
-  bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  bool result = false;
+  try
+  {
+    result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  }  
+  catch (const te::common::Exception& e)
+  {
+    QMessageBox::information(this, tr("Information"), ItemUtils::convert2QString(e.what()));
+  }
 
   emit endedPerformingIO();
 
@@ -1576,54 +1649,135 @@ void te::layout::View::onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> 
   emit showDialogWindow(type, itemList);
 }
 
-void te::layout::View::configLayoutWithTempFile()
+void te::layout::View::configLayoutWithDefaultTempFilePath()
 {
-  // init or read temporary file data storage
-
-  Scene* scene = getScene();
-
+  // init or read temporary file data storage 
   // User folder path
   // Whether a directory separator is added to the end or not, depends on the operating system.
   QString newPath = QDir(QDir::tempPath()).filePath("TerraPrint");
-  
-  QDir dir(newPath);
-  if (!dir.exists())
+  configTempFilePath(newPath);
+}
+
+bool te::layout::View::configTempFilePath(const QString& newPath)
+{
+  bool result = false;
+  if (!existDirTempFile(newPath))
   {
-    emit aboutToPerformIO();
-    bool result = dir.mkpath(newPath); // create a new path or directory
-    emit endedPerformingIO();
-    if (!result)
+    if (!createDirToTempFile(newPath))
     {
-      return;
-    }
-  }
-  else
-  {
-    QString pathToLoad = newPath + "/" + m_tempFileName;
-    QFile file(pathToLoad);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-      file.close();
-      te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-      importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+      return result;
     }
   }
 
-  m_fullTempPath = newPath + "/" + m_tempFileName;
-  configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+  result = loadTempFile(newPath);
+  if (result)
+  {
+    configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+  }
+  return result;
+}
+
+bool te::layout::View::existDirTempFile(const QString& newPath)
+{
+  QDir dir(newPath);
+  return dir.exists();
+}
+
+bool te::layout::View::createDirToTempFile(const QString& newPath)
+{
+  QDir dir(newPath);
+  
+  emit aboutToPerformIO();
+  bool result = dir.mkpath(newPath); // create a new path or directory
+  emit endedPerformingIO();
+  
+  return result;
+}
+
+bool te::layout::View::loadTempFile(const QString& newPath)
+{
+  bool result = false;
+
+  QString pathToLoad(newPath);
+
+  QString subString = newPath.mid(newPath.length() - 1, newPath.length());
+  if (subString.compare("/") != 0)
+  {
+    pathToLoad = newPath + "/" + m_tempFileName;
+  }
+  else
+  {
+    pathToLoad = newPath + m_tempFileName;
+  }
+
+  QFile file(pathToLoad);
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    result = true;
+    file.close();    
+  }
+  else if (file.open(QIODevice::ReadWrite | QIODevice::Text)) // Create a file if it does not exist
+  {
+    result = true;
+    file.close();
+  }
+
+  if (result)
+  {
+    if (m_fullTempPath.compare(pathToLoad) != 0)
+    {
+      // delete current temp file
+      if (m_tempDataStorageEditor)
+      {
+        m_tempDataStorageEditor->deleteDataStorage();
+      }
+    }
+
+    setFullTempFilePath(pathToLoad); // change TempFileInfo path
+    newTemplate(); // reset scene
+    te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
+    importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+  }
+  
+  return result;
 }
 
 void te::layout::View::configTempFileDataStorage(const QString& fullNewPath)
 {
   Scene* scene = getScene();
+  if (scene)
+  {
+    if (!m_tempDataStorageEditor)
+    {
+      std::string path = ItemUtils::convert2StdString(fullNewPath);
+      EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
+      TempFileInfo* info = new TempFileInfo(scene, path);
+      m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+    }
+  }  
+}
 
-  std::string path = ItemUtils::convert2StdString(fullNewPath);
-  EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
-  TempFileInfo* info = new TempFileInfo(scene, path);
-  m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+void te::layout::View::setTempFilePath(const std::string& path)
+{
+  // init or read temporary file data storage 
+  QString qNewPath(ItemUtils::convert2QString(path));
+  configTempFilePath(qNewPath);
+}
 
-  connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
-  connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
+void te::layout::View::setFullTempFilePath(const QString& newPath)
+{
+  m_fullTempPath = newPath;
+  if (m_tempDataStorageEditor)
+  {
+    AbstractTempDataStorageInfo* abInfo = m_tempDataStorageEditor->getTempDataStorageInfo();
+    TempFileInfo* info = dynamic_cast<TempFileInfo*>(abInfo);
+    if (info)
+    {      
+      // change TempFileInfo path
+      std::string newPath = ItemUtils::convert2StdString(m_fullTempPath);
+      info->setPath(newPath);
+    }
+  }
 }
 
 void te::layout::View::onRequestIOEnterAccessTempDataStorage()

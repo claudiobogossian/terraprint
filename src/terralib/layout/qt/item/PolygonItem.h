@@ -41,16 +41,21 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
 
     class PolygonItem : public LineItem
     {
       public:
 
-        PolygonItem(AbstractItemController* controller);
+        PolygonItem();
 
         virtual ~PolygonItem ();
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
     };

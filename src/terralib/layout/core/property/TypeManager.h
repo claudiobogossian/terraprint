@@ -26,6 +26,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 // TerraLib
 #include <terralib/common/Singleton.h>
 #include <terralib/datatype/DataTypeConverter.h>
+#include <terralib/common/Exception.h>
 
 //STL
 #include <map>

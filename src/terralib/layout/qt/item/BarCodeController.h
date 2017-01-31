@@ -19,7 +19,7 @@ namespace te
     {
     public:
 
-          BarCodeController(AbstractItemModel* model);
+          BarCodeController(AbstractItemModel* model, AbstractItemView* view);
     };
   }
 }

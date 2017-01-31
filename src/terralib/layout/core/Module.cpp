@@ -60,7 +60,7 @@ te::layout::Module::Module()
   te::layout::initTreeItemFactories(); // init all tree items factories
   te::layout::initRenderFactories(); // init all renders factories
 
-  te::layout::RegisterLayoutTypes();
+  te::layout::registerLayoutTypes();
 
   // Register the type Property to use in QVariant. 
   qRegisterMetaType<te::layout::Property>("te::layout::Property");

@@ -18,65 +18,61 @@
  */
 
 /*!
-  \file MoveCommand.h
+  \file AddCommand.h
    
-  \brief Undo/Redo for moving components.
+  \brief Undo/Redo for add group components. 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_MOVE_COMMAND_H 
-#define __TERRALIB_LAYOUT_INTERNAL_MOVE_COMMAND_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ADD_GROUP_COMMAND_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ADD_GROUP_COMMAND_H
 
 // TerraLib
 #include "../../../../core/Config.h"
+#include "../../../../core/property/Properties.h"
+
+// STL
+#include <string>
+#include <vector>
 
 // Qt
 #include <QUndoCommand>
 #include <QString>
 #include <QPointF>
 
-// STL
-#include <map>
-#include <vector>
-
 class QGraphicsItem;
+class QGraphicsScene;
 
 namespace te
 {
   namespace layout
   {
+    class Properties;
+    class EnumType;
+    class Scene;
+    class ItemGroup;
     /*!
-      \brief Undo/Redo for moving components.
+      \brief Undo/Redo for add one components.
     
       \ingroup layout
     */
-    class TELAYOUTEXPORT MoveCommand : public QUndoCommand
+    class TELAYOUTEXPORT AddGroupCommand : public QUndoCommand
     {
       public:
-        
+
         /*!
           \brief Constructor
 
           \param item
-          \param oldPos
           \param parent
         */
-        MoveCommand(QGraphicsItem* item, const QPointF oldPos,
-          QUndoCommand *parent = 0);
-
-        /*!
-          \brief Constructor
-
-          \param items
-          \param parent
-        */
-        MoveCommand(std::map<QGraphicsItem*, QPointF> items, QUndoCommand *parent = 0);
+        AddGroupCommand(QGraphicsItem* item, QUndoCommand *parent = 0);
 
         /*!
           \brief Destructor
         */
-        virtual ~MoveCommand();       
+        virtual ~AddGroupCommand();
 
         /*!
           \brief Reimplemented from QUndoCommand
@@ -87,18 +83,25 @@ namespace te
           \brief Reimplemented from QUndoCommand
         */
         virtual void redo();
-        
+
       protected:
 
-        virtual QString createCommandString(QGraphicsItem* item, const QPointF &pos);
+        virtual void init(QGraphicsItem* item);
 
-        QGraphicsItem*  m_item;
-        QPointF         m_oldPos;
-        QPointF         m_newPos;
-        std::map<QGraphicsItem*, QPointF> m_moveItems;
-        QList<QPointF>              m_itemsPoints;
+        virtual QString createCommandString();
+
+        QList<QGraphicsItem *> childrenItems();
+        
+      protected:
+      
+        Scene*                    m_scene;
+        QGraphicsItem*            m_group;
+        Properties                m_groupProperties;
+        std::vector<std::string>  m_childrenNames;
     };
   }
 }
 
 #endif
+
+

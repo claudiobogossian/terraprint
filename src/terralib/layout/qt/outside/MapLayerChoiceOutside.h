@@ -43,6 +43,8 @@
 // Qt
 #include <QDialog>
 
+class QKeyEvent;
+
 namespace Ui { class MapLayerChoice; }
 
 namespace te
@@ -81,8 +83,6 @@ namespace te
         void updateProperties(std::vector<Property> props);
         
         void closeWidget();
-
-
         
       protected slots:
 
@@ -105,7 +105,10 @@ namespace te
       protected:
 
         std::vector<std::string> intersectionLayersTitle(std::vector<std::string> output);
+
         virtual Property getProperty(std::string name);
+
+        virtual void keyPressEvent(QKeyEvent * e);
 
       private:
 

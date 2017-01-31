@@ -28,16 +28,18 @@
 #include "../../../core/enum/Enums.h"
 #include "terralib/geometry/Point.h"
 
+// STL
+#include <string>
 
 // Qt
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
+#include <QUndoStack>
 
 te::layout::CreateLineItemTool::CreateLineItemTool(View* view, EnumType* itemType, QObject* parent)
-  : AbstractLayoutTool(view, parent),
-  m_controller(NULL),
-  m_item(0),
-  m_itemType(itemType)
+  : AbstractLayoutTool(view, parent)
+  ,m_item(0)
+  ,m_itemType(itemType)
 {
   setCursor(Qt::ArrowCursor);
 
@@ -56,28 +58,27 @@ bool te::layout::CreateLineItemTool::mousePressEvent(QMouseEvent* e)
   if (!m_view)
     return false;
 
+  Scene* scne = dynamic_cast<Scene*>(m_view->scene());
+  if (!scne)
+    return false;
+
   //Roll back the default tool cursor
   m_view->viewport()->setCursor(m_cursor);
-  
+
   if (e->button() != Qt::LeftButton)
   {
+    scne->getUndoStack()->endMacro();
     m_coords.clear();
     m_view->resetDefaultConfig(true);
     return true;
   }
-  
-  Scene* scne = dynamic_cast<Scene*>(m_view->scene());
-
-  if (!scne)
-    return false;
 
   createItem();
 
   QPointF scenePos = m_view->mapToScene(e->pos());
-  //QPointF itemPos = m_item->mapFromScene(scenePos);
   te::gm::Point p(scenePos.x(), scenePos.y());
   m_coords.push_back(p);
-  setGeometry();
+  setGeometry(); // update properties with undo/redo
   m_view->viewport()->update();
   return true;
 }
@@ -94,39 +95,82 @@ bool te::layout::CreateLineItemTool::mouseReleaseEvent(QMouseEvent* e)
 
 bool te::layout::CreateLineItemTool::keyPressEvent( QKeyEvent* keyEvent )
 {
+  Scene* sc = dynamic_cast<Scene*>(m_view->scene());
+
   if(keyEvent->key() == Qt::Key_Escape)
   {
+    if (sc)
+    {
+      sc->getUndoStack()->endMacro();
+    }
+    
     m_coords.clear();
     m_view->resetDefaultConfig(true);
   }
   return true;
 }
 
-// o melhor seria a tool ter um m�todo de desenho de linha para depois atualizar a geometria final no modelo
+// The best would be to have a method of drawing lines and only update the item with the geometry at the end
 void te::layout::CreateLineItemTool::setGeometry()
 {
-  // cria lineString apenas para achar o lowerleft
+  AbstractItem* itemView = dynamic_cast<AbstractItem*> (m_item);
+
+  // create lineString only to find the lowerleft
   te::gm::LineString* lineString = new te::gm::LineString(m_coords.size(), te::gm::LineStringType);
   for (unsigned int i = 0; i < m_coords.size(); i++)
   {
     lineString->setPointN(i, m_coords[i]);
   }
   te::gm::Coord2D lowerLeft = lineString->getMBR()->getLowerLeft();
-  m_item->setPos(lowerLeft.getX(), lowerLeft.getY());
-  
-  // atualiza posicao dos pontos de acordo com a nova posi��o do item
+
+  // update position
+  Properties properties = createProperties(lowerLeft);
+  itemView->setProperties(properties);
+
+  // Update position of points according to the new item position
   for (unsigned int i = 0; i < m_coords.size(); i++)
   {
     QPointF point(m_coords[i].getX(), m_coords[i].getY());
     QPointF point2Item = m_item->mapFromScene(point);
     lineString->setPointN(i, te::gm::Point(point2Item.x(), point2Item.y()));
   }
+  
+  // update geometry
+  properties = createProperties(lineString);
+  itemView->setProperties(properties);
+}
 
+te::layout::Properties te::layout::CreateLineItemTool::createProperties(te::gm::LineString* lineString)
+{
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  Property property(0);
-  property.setName("geometry");
-  property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
-  m_controller->setProperty(property);
+  Properties properties;
+  {
+    Property property(0);
+    property.setName("geometry");
+    property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
+    properties.addProperty(property);
+  }
+
+  return properties;
+}
+
+te::layout::Properties te::layout::CreateLineItemTool::createProperties(const te::gm::Coord2D& coord)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  Properties properties;
+  {
+    Property property(0);
+    property.setName("x");
+    property.setValue(coord.getX(), dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("y");
+    property.setValue(coord.getY(), dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+  return properties;
 }
 
 void te::layout::CreateLineItemTool::createItem()
@@ -139,12 +183,12 @@ void te::layout::CreateLineItemTool::createItem()
 
   if (m_coords.empty())
   {
+    std::string label = m_itemType->getLabel();
+
+    sc->getUndoStack()->beginMacro("Create line item or derived child");
     // create a new item
     BuildGraphicsItem buildItem(sc);
     m_item = buildItem.createItem(m_itemType);
-
-    AbstractItem* itemView = dynamic_cast<AbstractItem*> (m_item);
-    m_controller = itemView->getController();
   }
 }
 

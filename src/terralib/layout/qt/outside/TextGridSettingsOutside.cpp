@@ -33,6 +33,7 @@
 #include "../../core/enum/Enums.h"
 #include "../../core/property/TextGridSettingsConfigProperties.h"
 #include "../core/ItemUtils.h"
+#include "../../core/Constants.h"
 
 // STL
 #include <string>
@@ -52,6 +53,19 @@ te::layout::TextGridSettingsOutside::TextGridSettingsOutside(AbstractOutsideCont
   m_propertiesNames = new TextGridSettingsConfigProperties;
   
   init();
+
+  /* In a QLineEdit, when you click the Enter button, an editFinished signal is triggered,
+  however in a window there are buttons set as default, other events such as DynamicPropertyChange
+  are sent to these buttons, and causes QLineEdit to lose focus for a short time.
+  This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method.
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked.
+  By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
+  m_ui->m_helpPushButton->setDefault(false);
+  m_ui->m_helpPushButton->setAutoDefault(false);
+  m_ui->pbApply->setDefault(false);
+  m_ui->pbApply->setAutoDefault(false);
+  m_ui->pbCancel->setDefault(false);
+  m_ui->pbCancel->setAutoDefault(false);
 }
 
 te::layout::TextGridSettingsOutside::~TextGridSettingsOutside()
@@ -65,16 +79,20 @@ te::layout::TextGridSettingsOutside::~TextGridSettingsOutside()
 
 void te::layout::TextGridSettingsOutside::init()
 {
-  m_ui->lneEdtBorderWidth->setValidator(new  QDoubleValidator(this));
+
+  QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999, CENTIMETER_PRECISION, this);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+
+  m_ui->lneEdtBorderWidth->setValidator(validator);
   m_ui->lneEdtColumnsNumber->setValidator(new  QDoubleValidator(this));
 
-  m_ui->lneEdtColumnsWidth->setValidator(new  QDoubleValidator(this));
+  m_ui->lneEdtColumnsWidth->setValidator(validator);
   m_ui->lneEdtRowsNumber->setValidator(new  QDoubleValidator(this));
 
   m_ui->lneEdtTablePadding->setValidator(new  QDoubleValidator(this));
   m_ui->lneEdtTableSpacing->setValidator(new  QDoubleValidator(this));
 
-  m_ui->lneEdtTableWidth->setValidator(new  QDoubleValidator(this));
+  m_ui->lneEdtTableWidth->setValidator(validator);
   
   m_ui->frmBorderColor->setAutoFillBackground(true);
   m_ui->frmBorderColor->installEventFilter(this);
@@ -299,72 +317,155 @@ void te::layout::TextGridSettingsOutside::on_cmbCellAlign_currentIndexChanged( c
 
 void te::layout::TextGridSettingsOutside::on_lneEdtBorderWidth_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtBorderWidth->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
     controller->addUpdateProperty(m_propertiesNames->getBorderWidth(), CreateData(m_ui->lneEdtBorderWidth->text().toDouble()), dataType->getDataTypeDouble());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtBorderWidth->setModified(false);
   }
 }
 
 void te::layout::TextGridSettingsOutside::on_lneEdtColumnsNumber_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtColumnsNumber->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     controller->addUpdateProperty(m_propertiesNames->getColumnNumber(), CreateData(m_ui->lneEdtColumnsNumber->text().toInt()), dataType->getDataTypeInt());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtColumnsNumber->setModified(false);
   }
 }
 
 void te::layout::TextGridSettingsOutside::on_lneEdtColumnsWidth_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtColumnsWidth->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     controller->addUpdateProperty(m_propertiesNames->getColumnWidth(), CreateData(m_ui->lneEdtColumnsWidth->text().toDouble()), dataType->getDataTypeDouble());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtColumnsWidth->setModified(false);
   }
 }
 
 void te::layout::TextGridSettingsOutside::on_lneEdtRowsNumber_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtRowsNumber->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     controller->addUpdateProperty(m_propertiesNames->getRowNumber(), CreateData(m_ui->lneEdtRowsNumber->text().toInt()), dataType->getDataTypeInt());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtRowsNumber->setModified(false);
   }
 }
 
 void te::layout::TextGridSettingsOutside::on_lneEdtTablePadding_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtTablePadding->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     controller->addUpdateProperty(m_propertiesNames->getPadding(), CreateData(m_ui->lneEdtTablePadding->text().toDouble()), dataType->getDataTypeDouble());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtTablePadding->setModified(false);
   }
 }
 
 void te::layout::TextGridSettingsOutside::on_lneEdtTableSpacing_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtTableSpacing->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     controller->addUpdateProperty(m_propertiesNames->getSpacing(), CreateData(m_ui->lneEdtTableSpacing->text().toDouble()), dataType->getDataTypeDouble());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtTableSpacing->setModified(false);
   }
 }
 
 void te::layout::TextGridSettingsOutside::on_lneEdtTableWidth_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneEdtTableWidth->isModified())
+  {
+    return;
+  }
+
   TextGridSettingsController* controller = dynamic_cast<TextGridSettingsController*>(m_controller);
   if(controller)
   {
     EnumDataType* dataType = Enums::getInstance().getEnumDataType();
     controller->addUpdateProperty(m_propertiesNames->getWidth(), CreateData(m_ui->lneEdtTableWidth->text().toDouble()), dataType->getDataTypeDouble());
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->lneEdtTableWidth->setModified(false);
   }
 }
 

@@ -46,7 +46,7 @@ namespace te
     {
     public:
 
-      SVGController(AbstractItemModel* model);
+      SVGController(AbstractItemModel* model, AbstractItemView* view);
 
       virtual ~SVGController();
 

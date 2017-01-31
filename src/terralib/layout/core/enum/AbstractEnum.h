@@ -74,15 +74,7 @@ namespace te
           \return value found in the enumeration or null 
         */ 
         virtual EnumType* getEnum(const std::string& name) const;
-
-        /*!
-          \brief Searching for an enumeration value by name
-
-          \param name 
-          \return value found in the enumeration or null 
-        */ 
-        virtual EnumType* searchLabel(std::string label) const;
-
+        
         /*!
           \brief Searching for a max value of the id
 

@@ -72,7 +72,6 @@ namespace te
         std::string getLneX4();
         std::string getLneY3();
         std::string getLneY4();
-        
 
       protected:
 

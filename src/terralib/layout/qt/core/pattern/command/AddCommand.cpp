@@ -38,7 +38,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-te::layout::AddCommand::AddCommand( QGraphicsItem* item, QUndoCommand *parent /*= 0*/ ) :
+te::layout::AddCommand::AddCommand( QGraphicsItem* item, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_scene(0),
   m_item(item)
@@ -71,7 +71,7 @@ void te::layout::AddCommand::undo()
   if (!abstractItem)
     return;
 
-  const Property& pName = abstractItem->getController()->getProperty("name");
+  const Property& pName = abstractItem->getProperty("name");
   std::string nameItem = te::layout::Property::GetValueAs<std::string>(pName);
 
   m_scene->removeItem(m_item);
@@ -113,13 +113,10 @@ QString te::layout::AddCommand::createCommandString( QGraphicsItem* item, const 
   if(!obs)
     return QObject::tr("%1");
   
-  std::string name = obs->getController()->getProperties().getTypeObj()->getName();
+  std::string name = obs->getProperties().getTypeObj()->getName();
   QString qName = ItemUtils::convert2QString(name);
 
   return QObject::tr("%1 at (%2, %3)")
     .arg(qName)
     .arg(pos.x()).arg(pos.y());
 }
-
-
-

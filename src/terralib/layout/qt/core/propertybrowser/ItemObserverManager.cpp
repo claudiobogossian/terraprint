@@ -40,7 +40,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsItemGroup>
 
-te::layout::ItemObserverManager::ItemObserverManager(Scene* scene, QObject *parent /*= 0*/)
+te::layout::ItemObserverManager::ItemObserverManager(Scene* scene, QObject *parent )
   : QtAbstractPropertyManager(parent)
   , m_scene(scene)
 {
@@ -142,7 +142,7 @@ te::layout::AbstractItemView* te::layout::ItemObserverManager::findItem(const QS
       AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
       if (view)
       {
-        const Property& property = view->getController()->getProperty("name");
+        const Property& property = view->getProperty("name");
 
         std::string value = te::layout::Property::GetValueAs<std::string>(property);
         QString qValue = ItemUtils::convert2QString(value);
@@ -171,12 +171,12 @@ QStringList te::layout::ItemObserverManager::getItemNames(const EnumType* type)
       AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
       if (view)
       {
-        const Property& prop_name = view->getController()->getProperty("name");
+        const Property& prop_name = view->getProperty("name");
 
         std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
-        const Properties& prop_type = view->getController()->getProperties();
+        const Properties& prop_type = view->getProperties();
 
         if (txt.compare("") != 0 && prop_type.getTypeObj() == type)
         {

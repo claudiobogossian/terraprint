@@ -47,10 +47,7 @@
 #include "../../item/TextModel.h"
 #include "../item/LegendChildItem.h"
 #include "../../item/LegendChildModel.h"
-#include "../../item/GridGeodesicModel.h"
-#include "../../item/GridPlanarModel.h"
 #include "Scene.h"
-#include "../item/GridMapItem.h"
 #include "View.h"
 #include "../item/PaperItem.h"
 #include "terralib/common/StringUtils.h"
@@ -117,17 +114,12 @@ te::layout::MapItem* te::layout::ItemUtils::getMapItem( std::string name )
     if(itemView == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = itemView->getController();
-
-    if(controller == 0)
-      continue;
-
-    if(controller->getProperties().getTypeObj() != objectType->getMapItem())
+    if(itemView->getProperties().getTypeObj() != objectType->getMapItem())
     {
       continue;
     }
 
-    const Property& pName = controller->getProperty("name");
+    const Property& pName = itemView->getProperty("name");
     if(te::layout::Property::GetValueAs<std::string>(pName).compare(name) != 0)
       continue;
 
@@ -154,17 +146,12 @@ std::vector<std::string> te::layout::ItemUtils::mapNameList(bool selected)
     if(itemView == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = itemView->getController();
-
-    if(controller == 0)
-      continue;
-
-    if(controller->getProperties().getTypeObj() != objectType->getMapItem())
+    if(itemView->getProperties().getTypeObj() != objectType->getMapItem())
     {
       continue;
     }
 
-    const Property& pName = controller->getProperty("name");
+    const Property& pName = itemView->getProperty("name");
     strList.push_back(te::layout::Property::GetValueAs<std::string>(pName));
   }
 
@@ -185,11 +172,7 @@ int te::layout::ItemUtils::countType( te::layout::EnumType* type )
     if(absItem == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = absItem->getController();
-    if(controller == 0)
-      continue;
-
-    if(controller->getProperties().getTypeObj() == type)
+    if(absItem->getProperties().getTypeObj() == type)
     {
       count+=1;
     }
@@ -212,13 +195,9 @@ int te::layout::ItemUtils::maxTypeId( te::layout::EnumType* type )
     if(absItem == 0)
       continue;
 
-    te::layout::AbstractItemController* controller = absItem->getController();
-    if(controller == 0)
-      continue;
+    int currentId = te::layout::Property::GetValueAs<int>(absItem->getProperty("id"));
 
-    int currentId = te::layout::Property::GetValueAs<int>(controller->getProperty("id"));
-
-    if(controller->getProperties().getTypeObj() == type)
+    if(absItem->getProperties().getTypeObj() == type)
     {
       if(id == -1)
       {
@@ -931,9 +910,102 @@ QString te::layout::ItemUtils::DMS2DD(const QString dms)
   return qValue;
 }
 
+void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
+{
+  AbstractItemView* item = dynamic_cast<AbstractItemView*>(qItem);
+  if (item == 0)
+  {
+    return;
+  }
+
+  Properties parentProperties;
+  
+  //we must first recalculate the size of the parent item
+  //QPointF parentPos = qItem->pos();
+  double x = Property::GetValueAs<double>(item->getProperty("x"));
+  double y = Property::GetValueAs<double>(item->getProperty("y"));
+  QPointF parentPos(x, y);
+  QPointF parentPosAAAA = qItem->pos();
+
+  QRectF parentRect = qItem->childrenBoundingRect();
+  parentRect = qItem->mapToParent(parentRect).boundingRect();
+
+  //then we check if the size need to be updated
+  double width = Property::GetValueAs<double>(item->getProperty("width"));
+  if (parentRect.width() != width)
+  {
+    Property property;
+    property.setName("width");
+    property.setValue(parentRect.width(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    parentProperties.addProperty(property);
+  }
+
+  double height = Property::GetValueAs<double>(item->getProperty("height"));
+  if (parentRect.height() != height)
+  {
+    Property property;
+    property.setName("height");
+    property.setValue(parentRect.height(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    parentProperties.addProperty(property);
+  }
+
+  double dx = parentRect.x() - parentPos.x();
+  if (dx != 0.)
+  {
+    Property property;
+    property.setName("x");
+    property.setValue(parentRect.x(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    parentProperties.addProperty(property);
+  }
+
+  double dy = parentRect.y() - parentPos.y();
+  if (dy != 0.)
+  {
+    Property property;
+    property.setName("y");
+    property.setValue(parentRect.y(), Enums::getInstance().getEnumDataType()->getDataTypeDouble());
+    parentProperties.addProperty(property);
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  
+  double newChildX = 0;
+  double newChildY = 0;
+
+  if (dx != 0. || dy != 0.)
+  {
+    QList<QGraphicsItem*> qChildrenList = qItem->childItems();
+    QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
+    while (itChild != qChildrenList.end())
+    {
+      QGraphicsItem* qChild = *itChild;
+      QPointF oldChildPos = qChild->pos();
+      
+      newChildX = oldChildPos.x() - dx;
+      newChildY = oldChildPos.y() - dy;
+
+      QPointF newPosition(newChildX, newChildY);
+
+      Properties properties;
+      ItemUtils::preparePositionForUpdate(newPosition, properties);
+     
+      AbstractItemView* child = dynamic_cast<AbstractItemView*>(qChild);
+      child->setProperties(properties);
+
+      ++itChild;
+    }
+  }
+
+  if(parentProperties.getProperties().empty() == false)
+  {
+    item->prepareGeometryChange();
+    item->setProperties(parentProperties);
+  }
+}
+
 void te::layout::ItemUtils::normalizeChildrenPosition(QGraphicsItem* item)
 {
-  QRectF oldRectItem = item->boundingRect();
+  QRectF oldRectItem = item->childrenBoundingRect();
 
   //first, we check if the bounding rect of the item has a displacement
   double dx = oldRectItem.x();
@@ -958,6 +1030,29 @@ void te::layout::ItemUtils::normalizeChildrenPosition(QGraphicsItem* item)
 
     qChild->moveBy(-dx, -dy);
 
+    ++itChild;
+  }
+}
+
+void te::layout::ItemUtils::normalizeChildrenPosition(QRectF& parentRect, QList<QRectF>& childrenRectList)
+{
+  //first, we check if the bounding rect of the item has a displacement
+  double dx = parentRect.x();
+  double dy = parentRect.y();
+
+  if (dx == 0. && dy == 0.)
+  {
+    return;
+  }
+
+  //if so, we must move the item and all its children in order to make the bounding rect of the item be placed in 0,0
+  //parentRect.translate(dx, dy);
+
+  QList<QRectF>::iterator itChild = childrenRectList.begin();
+  while (itChild != childrenRectList.end())
+  {
+    QRectF currentBoundinfRect = *itChild;
+    itChild->translate(-dx, -dy);
     ++itChild;
   }
 }
@@ -1095,3 +1190,46 @@ QPainterPath te::layout::ItemUtils::getRotationSymbol(const QPointF& pos, double
   return Ppath;
 }
 
+void te::layout::ItemUtils::prepareBoundingRectForUpdate(const QRectF& boundingRect, Properties& properties)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = boundingRect.x();
+  double y = boundingRect.y();
+  double width = boundingRect.width();
+  double height = boundingRect.height();
+
+  QPointF position(x, y);
+  
+  Property pWidth;
+  pWidth.setName("width");
+  pWidth.setValue(width, dataType->getDataTypeDouble());
+
+  Property pHeight;
+  pHeight.setName("height");
+  pHeight.setValue(height, dataType->getDataTypeDouble());
+
+  preparePositionForUpdate(position, properties);
+
+  ItemUtils::addOrUpdateProperty(pWidth, properties);
+  ItemUtils::addOrUpdateProperty(pHeight, properties);
+}
+
+void te::layout::ItemUtils::preparePositionForUpdate(const QPointF& position, Properties& properties)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = position.x();
+  double y = position.y();
+
+  Property pX;
+  pX.setName("x");
+  pX.setValue(x, dataType->getDataTypeDouble());
+
+  Property pY;
+  pY.setName("y");
+  pY.setValue(y, dataType->getDataTypeDouble());
+  
+  ItemUtils::addOrUpdateProperty(pX, properties);
+  ItemUtils::addOrUpdateProperty(pY, properties);
+}

@@ -64,7 +64,7 @@ namespace te
           \param objectName Object name that owns these properties
           \param type Object type that owns these properties
         */ 
-        Properties(const std::string& objectName, EnumType* type = 0, int hashCode = 0);
+        explicit Properties(const std::string& objectName, EnumType* type = 0, int hashCode = 0);
 
         /*!
           \brief Destructor

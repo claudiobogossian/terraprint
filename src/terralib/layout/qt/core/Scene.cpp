@@ -36,7 +36,7 @@
 #include "../item/ItemGroup.h"
 #include "BuildGraphicsItem.h"
 #include "pattern/command/AddCommand.h"
-#include "../../core/AbstractBuildGraphicsItem.h"
+#include "pattern/command/AddGroupCommand.h"
 #include "../../core/template/TemplateEditor.h"
 #include "../../core/template/AbstractTemplate.h"
 #include "../../core/property/Properties.h"
@@ -45,7 +45,6 @@
 #include "../../core/Utils.h"
 #include "terralib/common/STLUtils.h"
 #include "../item/MapItem.h"
-#include "pattern/command/MoveCommand.h"
 #include "../item/PaperItem.h"
 #include "../../core/property/SharedProperties.h"
 #include "../../core/PaperConfig.h"
@@ -54,7 +53,6 @@
 #include "../../core/WorldTransformer.h"
 #include "ItemUtils.h"
 #include "../../core/Utils.h"
-#include "pattern/command/ChangePropertyCommand.h"
 
 // STL
 #include <algorithm>
@@ -93,9 +91,10 @@ te::layout::Scene::Scene( QObject* object):
   m_align = new AlignItems(this, m_paperConfig);
   
   m_undoStack = new QUndoStack(this);
+  connect(m_undoStack, SIGNAL(indexChanged(int)), this, SLOT(onUndoStackHasChanged()));
 }
 
-te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* object /*= 0*/ ) :
+te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* object ) :
   QGraphicsScene(object),
   m_undoStack(0),
   m_align(align),
@@ -173,7 +172,6 @@ void te::layout::Scene::insertItem(QGraphicsItem* item)
     return;
   }
 
-  int total = this->items().count();
   
   AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(item);
   if (abstractItem == 0)
@@ -181,7 +179,6 @@ void te::layout::Scene::insertItem(QGraphicsItem* item)
     return;
   }
 
-  item->setZValue(total);
   this->addItem(item); 
   
   abstractItem->refresh();
@@ -300,11 +297,8 @@ void te::layout::Scene::removeSelectedItems()
       AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(item);
       if (abstractItem)
       {
-        if (abstractItem->getController())
-        {
-          const Property& pName = abstractItem->getController()->getProperty("name");
-          names.push_back(pName.getValue()->toString());
-        }
+        const Property& pName = abstractItem->getProperty("name");
+        names.push_back(pName.getValue()->toString());
       }
     }
   }
@@ -329,12 +323,9 @@ bool te::layout::Scene::removeItemByName(std::string name)
   QList<QGraphicsItem*> graphicsItems;
   if (abstractItem)
   {
-    if (abstractItem->getController())
-    {
-      const Property& pName = abstractItem->getController()->getProperty("name");
-      names.push_back(pName.getValue()->toString());
-      result = true;
-    }
+    const Property& pName = abstractItem->getProperty("name");
+    names.push_back(pName.getValue()->toString());
+    result = true;
   }
 
   QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(abstractItem);
@@ -380,8 +371,8 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
       listUngroupedItems.append(item);
       continue;
     }
-
-    if (view->getController()->getProperties().getTypeObj() == groupType)
+    
+    if (view->getProperties().getTypeObj() == groupType)
     {
       QList<QGraphicsItem*> childItems = item->childItems();
       foreach(QGraphicsItem* childItem, childItems)
@@ -390,7 +381,7 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
       }
 
       this->removeItem(item);
-      destroyItemGroup((te::layout::ItemGroup*)item);
+      removeItemGroup((te::layout::ItemGroup*)item);
     }
     else
     {
@@ -400,7 +391,44 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
   return listUngroupedItems;
 }
 
-QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, EnumType* groupType)
+QGraphicsItem* te::layout::Scene::createGroup(EnumType* groupType)
+{
+  QGraphicsItem* item = 0;
+
+  Properties properties;
+
+  QList<QGraphicsItem *> list = selectedItems();
+  item = createItemGroup(list, 0, groupType);
+
+  if (m_undoStack)
+  {
+    ItemGroup* group = dynamic_cast<ItemGroup*>(item);
+    QUndoCommand* command = new AddGroupCommand(group);
+    addUndoStack(command);
+  }
+
+  return item;
+}
+
+bool te::layout::Scene::removeGroup(te::layout::ItemGroup* group)
+{
+  bool result = true;
+  if (m_undoStack)
+  {
+    QList<QGraphicsItem*> listItems;
+    listItems.append(group);
+
+    QUndoCommand* command = new DeleteCommand(this, listItems);
+    addUndoStack(command);
+  }
+  else
+  {
+    result = removeItemGroup(group);
+  }
+  return result;
+}
+
+QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> & items, QGraphicsItem* itemGroup, EnumType* groupType)
 {
   this->clearSelection();
 
@@ -413,9 +441,6 @@ QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> &
 
   QList<QGraphicsItem*> listUngroupedItems = getListUngroupedItems(items, groupType);
   sortByZValue(listUngroupedItems);
-
-  //The scene create a new group with important restriction
-  BuildGraphicsItem build(this);
   
   //we need to reorder the z values in order to make the group be correctly placed on the map
   std::vector<int> vecZValues;
@@ -446,10 +471,26 @@ QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> &
   // The group component must be initialized with a position (setPos).
   te::gm::Coord2D coord(x, y);
 
-  QGraphicsItem* item = build.createItem(groupType, coord);
+  QGraphicsItem* item = 0;
+
+  if (!itemGroup)
+  {
+    bool addUndo = false; // force the BuildGraphicsItem not create a AddCommand, since the group has a different command for add
+    //The scene create a new group with important restriction
+    BuildGraphicsItem build(this);
+    item = build.createItem(groupType, coord, 0, 0, addUndo);
+  }
+  else
+  {
+    item = itemGroup;
+    insertItem(item);
+  }
+
   ItemGroup* group = dynamic_cast<ItemGroup*>(item);
 
   vecZValues.push_back(item->zValue());
+
+  group->setUndoEnabled(false);
 
   if(group)
   {
@@ -457,56 +498,80 @@ QGraphicsItem* te::layout::Scene::createItemGroup(const QList<QGraphicsItem *> &
 
     for (int i = 0; i < listUngroupedItems.size(); ++i)
     {
+      AbstractItemView* iView = dynamic_cast<AbstractItemView*>(listUngroupedItems[i]);
+      iView->setUndoEnabled(false);
+
       listUngroupedItems[i]->setZValue(vecZValues[i+1]);
       group->addToGroup(listUngroupedItems[i]);
     }
 
-    QUndoCommand* command = new AddCommand(group);
-    addUndoStack(command);
+    for (int i = 0; i < listUngroupedItems.size(); ++i)
+    {
+      AbstractItemView* iView = dynamic_cast<AbstractItemView*>(listUngroupedItems[i]);
+      iView->setUndoEnabled(true);
+    }
   }
+  group->setUndoEnabled(true);
 
   emit addItemFinalized(group);
   
   return group;
 }
 
-void te::layout::Scene::destroyItemGroup(te::layout::ItemGroup* group )
+bool te::layout::Scene::removeItemGroup(te::layout::ItemGroup* group )
 {
-  group->setHandlesChildEvents(false);
+  if (!group)
+  {
+    return false;
+  }
   
   QList<QGraphicsItem*> listUngroupedItems;
   QList<QGraphicsItem*> childItems = group->childItems();
+  
+  group->setHandlesChildEvents(false);
+  group->setUndoEnabled(false);
 
   std::vector<int> vecZValues;
   vecZValues.push_back(group->zValue());
   for (int i = 0; i < childItems.size(); ++i)
   {
     vecZValues.push_back(childItems[i]->zValue());
+    
+    AbstractItemView* iView = dynamic_cast<AbstractItemView*>(childItems[i]);
+    iView->setUndoEnabled(false);
 
     childItems[i]->setZValue(vecZValues[i]);
-
+        
     group->removeFromGroup(childItems[i]);
   }
 
+  for (int i = 0; i < childItems.size(); ++i)
+  {
+    AbstractItemView* iView = dynamic_cast<AbstractItemView*>(childItems[i]);
+
+    iView->setUndoEnabled(true);
+  }
+
+  group->setUndoEnabled(true);
+  
   std::vector<std::string> vecNames;
   AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(group);
   if (abstractItem)
   {
-    if (abstractItem->getController())
-    {
-      const Property& pName = abstractItem->getController()->getProperty("name");
-      vecNames.push_back(pName.getValue()->toString());
-    }
+    const Property& pName = abstractItem->getProperty("name");
+    vecNames.push_back(pName.getValue()->toString());
   }
 
   QList<QGraphicsItem*> listItems;
   listItems.push_back(group);
 
-  QUndoCommand* command = new DeleteCommand(this, listItems);
-  addUndoStack(command);
-
+  removeItem(group);
+  addItemStackWithoutScene(group);
+  
   if (!vecNames.empty())
     emit deleteFinalized(vecNames);
+
+  return true;
 }
 
 void te::layout::Scene::calculateSceneMeasures(double widthMM, double heightMM)
@@ -598,7 +663,7 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
     //I am inside a group
     if (qItem->parentItem() != 0)
     {
-      const std::string& absItemName = absItem->getController()->getProperty("name").getValue()->toString();
+      const std::string& absItemName = absItem->getProperty("name").getValue()->toString();
 
       AbstractItemView* absParentItem = dynamic_cast<AbstractItemView*>(qItem->parentItem());
       if (absParentItem == 0)
@@ -607,10 +672,10 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
       }
 
       //we need to check if the parent is a group. If it is not, we dont register anything in the map
-      std::string objectTypeName = absParentItem->getController()->getProperties().getTypeObj()->getName();
+      std::string objectTypeName = absParentItem->getProperties().getTypeObj()->getName();
       if (objectTypeName == objectType->getItemGroup()->getName())
       {
-        const std::string& absParentName = absParentItem->getController()->getProperty("name").getValue()->toString();
+        const std::string& absParentName = absParentItem->getProperty("name").getValue()->toString();
         mapGroups[absParentName].push_back(absItemName);
       }
       else
@@ -624,16 +689,22 @@ bool te::layout::Scene::getItemsProperties(std::vector<te::layout::Properties>& 
     AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(qItem);
     if(lItem)
     {
-      const Property& pIsPrintable = lItem->getController()->getProperty("printable");
+      const Property& pIsPrintable = lItem->getProperty("printable");
       if(te::layout::Property::GetValueAs<bool>(pIsPrintable) == false)
         continue;
         
-      properties.push_back(lItem->getController()->getProperties());
+      properties.push_back(lItem->getProperties());
     }
   }
 
   return true;
 }
+
+void te::layout::Scene::onUndoStackHasChanged()
+{
+  emit undoStackHasChanged();
+}
+
 
 QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGraphicsItem*>& listItems)
 {
@@ -651,12 +722,12 @@ QList<QGraphicsItem*> te::layout::Scene::sortItemsByDependency(const QList<QGrap
       continue;
     }
 
-    const std::string& absItemName = te::layout::Property::GetValueAs<std::string>(absItem->getController()->getProperty("name"));
+    const std::string& absItemName = te::layout::Property::GetValueAs<std::string>(absItem->getProperty("name"));
 
     mapItems[absItemName] = qItem;
 
     
-    const Properties& properties = absItem->getController()->getProperties();
+    const Properties& properties = absItem->getProperties();
     const std::vector<Property>& vecProperty = properties.getProperties();
     for (size_t i = 0; i < vecProperty.size(); ++i)
     {
@@ -742,8 +813,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
   getView()->onChangeConfig();
 
   te::layout::EnumType* groupType = Enums::getInstance().getEnumObjectType()->getItemGroup();
-  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
-
+  
   //we create the items
   std::map<std::string, te::layout::Properties> mapProperties;
   for (it = properties.begin(); it != properties.end(); ++it)
@@ -759,8 +829,7 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
       continue;
     }
     
-
-    build.buildItem(proper);
+    build.buildItem(proper, false);
   }
 
   //then we create the groups
@@ -781,11 +850,17 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
     const Properties& groupProperties = mapProperties[groupName];
 
-    QGraphicsItem* qItemGroup = createItemGroup(listItems, groupProperties.getTypeObj());
+    QGraphicsItem* qItemGroup = createItemGroup(listItems, 0, groupProperties.getTypeObj());
     AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(qItemGroup);
     if (itemView != 0)
     {
-      itemView->getController()->setProperties(groupProperties);
+      changeUndoEnable(listItems, false);
+
+      itemView->setUndoEnabled(false);
+      itemView->setProperties(groupProperties);
+      itemView->setUndoEnabled(true);
+
+      changeUndoEnable(listItems, true);
     }
 
     ++itGroups;
@@ -793,7 +868,6 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
 
   return true;
 }
-
 
 void te::layout::Scene::buildItem(te::layout::Properties props,std::string &name, bool isCopy)
 {
@@ -827,59 +901,51 @@ void te::layout::Scene::redrawSelectionMap()
 void te::layout::Scene::exportItemsToImage(std::string dir)
 {
   const int dpi = 96;
-
-  Utils utils = this->getUtils();
+  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
+  ContextObject context(100, dpi, dpi, enumMode->getModePrinter());
+  
+  ContextObject oldContext = this->getContext();
+  this->setContext(context);
 
   QList<QGraphicsItem*> selected = selectedItems();
   foreach(QGraphicsItem *item, selected) 
   {
-    /*
+    AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+    if (view == 0)
+    {
+      continue;
+    }
+
+    const std::string& name = Property::GetValueAs<std::string>(view->getProperty("name"));
+
     QRectF rectInItemCS = item->boundingRect();
     QRectF rectInSceneCS = item->mapRectToScene(rectInItemCS); //rect in Millimeters
 
-    QSizeF size = rectInSceneCS.size(); //size in Millimeters
-    double widthInches = size.width() / 25.4;
-    double heightInches = size.height() / 25.4;
-    
-    double widthPixels = widthInches * dpi;
-    double heightPixels = heightInches * dpi;
+    //we first calculate the size in pixels
+    double widthPixels = Utils::mm2pixel(rectInSceneCS.width(), dpi);
+    double heightPixels = Utils::mm2pixel(rectInSceneCS.height(), dpi);
 
-    
+    double scaleX = widthPixels / rectInSceneCS.width();
+    double scaleY = heightPixels / rectInSceneCS.height();
+
     QImage image(widthPixels, heightPixels, QImage::Format_ARGB32);
-    */
 
-      
-    /*ItemObserver* it = dynamic_cast<ItemObserver*>(item);
-      if(it)
-      {
-        QImage* img = 0;
-        int w = 0;
-        int h = 0;
+    QStyleOptionGraphicsItem styleOption;
+    QPainter painter;
+    painter.begin(&image);
+    painter.scale(scaleX, -scaleY);
+    painter.translate(0, -rectInSceneCS.height());
 
-        if(!it->getModel())
-        {
-          continue;
-        }
+    //draws the item
+    item->paint(&painter, &styleOption);
 
-        te::color::RGBAColor** rgba = it->getRGBAColorImage(w, h);
-                
-        if(!rgba)
-          continue;
-        
-        img = te::qt::widgets::GetImage(rgba, w, h);
-        if(!img)
-          continue;
+    painter.end();
 
-        std::string dirName = dir + "/" + it->getModel()->getName() +".png";
-
-        img->save(dirName.c_str());
-
-        te::common::Free(rgba, h);
-
-        if(img)
-          delete img;        
-      }*/
+    std::string dirName = dir + "/" + name + ".png";
+    image.save(dirName.c_str());
   }
+
+  this->setContext(oldContext);
 }
 
 void te::layout::Scene::mouseMoveEvent(QGraphicsSceneMouseEvent * mouseEvent)
@@ -955,29 +1021,8 @@ void te::layout::Scene::mouseReleaseEvent(QGraphicsSceneMouseEvent * mouseEvent)
     }
     return;
   }
-
-  QGraphicsItem* item = mouseGrabberItem();
-
-  if (!m_isEditionMode) // Don't have move or resize event in edition mode
-  {
-    if (item) // MoveCommand and ChangePropertyCommand block
-    {
-      if (m_moveOrResizeWatched)
-      {
-        addUndoCommandForMove();
-        QGraphicsScene::mouseReleaseEvent(mouseEvent);
-        addUndoCommandForResize();
-      }
-      else
-      {
-        QGraphicsScene::mouseReleaseEvent(mouseEvent);
-      }
-    }
-  }
-  else
-  {
-    QGraphicsScene::mouseReleaseEvent(mouseEvent);
-  }  
+  
+  QGraphicsScene::mouseReleaseEvent(mouseEvent);
 
   m_moveWatches.clear();
   m_resizeWatches.clear();
@@ -997,8 +1042,8 @@ void te::layout::Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEv
   if (m_currentItemEdition && m_isEditionMode)
   {
     QPointF pt = mouseEvent->scenePos();
-    te::gm::Coord2D coord(pt.x(), pt.y());
-    if (m_currentItemEdition->getController()->contains(coord))
+    QGraphicsItem* qCurrentItem = (QGraphicsItem*)m_currentItemEdition;
+    if (qCurrentItem->contains(pt))
     {
       return; // the same item continues edition
     }
@@ -1104,12 +1149,7 @@ void te::layout::Scene::selectItem(std::string name)
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if(it)
       {
-        if (!it->getController())
-        {
-          continue;
-        }
-
-        const Property& pItemName = it->getController()->getProperty("name");
+        const Property& pItemName = it->getProperty("name");
         const std::string& itemName = te::layout::Property::GetValueAs<std::string>(pItemName);
         if(itemName.compare(name) == 0)
         {
@@ -1158,7 +1198,7 @@ void te::layout::Scene::redrawItems()
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if(it)
       {
-        const Property& pIsPrintable = it->getController()->getProperty("printable");
+        const Property& pIsPrintable = it->getProperty("printable");
         if(te::layout::Property::GetValueAs<bool>(pIsPrintable) == true)
         {
           it->refresh();
@@ -1303,14 +1343,14 @@ void te::layout::Scene::applyProportionAllItems( QSize oldPaper, QSize newPaper 
           box.m_urx = (box.m_llx + boxProportion.getWidth());
           box.m_ury = (box.m_lly + boxProportion.getHeight());
                     
-          updateBoxFromProperties(box, it->getController());
+          updateBoxFromProperties(box, it);
         }
       }
     }
   }
 }
 
-void te::layout::Scene::updateBoxFromProperties(te::gm::Envelope box, AbstractItemController* controller)
+void te::layout::Scene::updateBoxFromProperties(te::gm::Envelope box, AbstractItemView* view)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   
@@ -1341,7 +1381,7 @@ void te::layout::Scene::updateBoxFromProperties(te::gm::Envelope box, AbstractIt
   pro_height.setValue(height, dataType->getDataTypeDouble());
   props.addProperty(pro_height);
 
-  controller->setProperties(props);
+  view->setProperties(props);
 }
 
 te::gm::Envelope te::layout::Scene::calculateProportion(te::gm::Envelope box, QSize oldPaper, QSize newPaper)
@@ -1480,7 +1520,7 @@ bool te::layout::Scene::enterEditionMode()
   if (!absItem)
     return false;
 
-  const Property& property = absItem->getController()->getProperty("editable");
+  const Property& property = absItem->getProperty("editable");
   if (te::layout::Property::GetValueAs<bool>(property) == false)
   {
     return false;
@@ -1563,7 +1603,7 @@ te::layout::AbstractItemView* te::layout::Scene::getItem(const std::string& name
       AbstractItemView* it = dynamic_cast<AbstractItemView*>(item);
       if (it)
       {
-        const Property& property = it->getController()->getProperty("name");
+        const Property& property = it->getProperty("name");
         if (name.compare(te::layout::Property::GetValueAs<std::string>(property)) == 0)
         {
           abstractItem = it;
@@ -1592,7 +1632,7 @@ void te::layout::Scene::showDock()
     View* view = getView();
     if (view)
     {
-      EnumType* itemType = m_currentItemEdition->getController()->getProperties().getTypeObj();
+      EnumType* itemType = m_currentItemEdition->getProperties().getTypeObj();
       if (itemType)
       {
         view->showToolbar(itemType, m_currentItemEdition);
@@ -1656,7 +1696,7 @@ void te::layout::Scene::searchSelectedChildItemsInResizeMode(QGraphicsItem* item
     // Undo/Redo for Resize (ChangePropertyCommand)
     if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
     {
-      m_resizeWatches[item] = itemView->getController()->getProperties();
+      m_resizeWatches[item] = itemView->getProperties();
     }
     return;
   }
@@ -1673,7 +1713,7 @@ void te::layout::Scene::searchSelectedChildItemsInResizeMode(QGraphicsItem* item
       // Undo/Redo for Resize (ChangePropertyCommand)
       if (itemView->getCurrentAction() == te::layout::RESIZE_ACTION)
       {
-        m_resizeWatches[itm] = itemView->getController()->getProperties();
+        m_resizeWatches[itm] = itemView->getProperties();
       }
     }
   }
@@ -1691,53 +1731,99 @@ void te::layout::Scene::searchSelectedItemsInMoveMode()
   }
 }
 
-void te::layout::Scene::addUndoCommandForMove()
-{
-  if (m_moveOrResizeWatched)
-  {
-    if (!m_moveWatches.empty())
-    {
-      QUndoCommand* command = new MoveCommand(m_moveWatches);
-      addUndoStack(command);
-    }
-  }
-}
-
-void te::layout::Scene::addUndoCommandForResize()
-{
-  if (m_moveOrResizeWatched)
-  {
-    // Undo/Redo for Resize (ChangePropertyCommand)
-    if (!m_resizeWatches.empty())
-    {
-      std::vector<QGraphicsItem*> commandItems;
-      std::vector<Properties> commandOld;
-      std::vector<Properties> commandNew;
-
-      for (std::map<QGraphicsItem*, Properties>::iterator it = m_resizeWatches.begin(); it != m_resizeWatches.end(); ++it)
-      {
-        QGraphicsItem* item = it->first;
-        AbstractItemView* itemView = dynamic_cast<AbstractItemView*>(item);
-        commandItems.push_back(item);
-        Properties oldProps = it->second;
-        commandOld.push_back(oldProps);
-        Properties newProps = itemView->getController()->getProperties();
-        commandNew.push_back(newProps);
-      }
-      QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew);
-      addUndoStack(command);
-    }
-  }
-}
-
 void te::layout::Scene::sortByZValue(QList<QGraphicsItem *> & listItems)
 {
+  std::vector<QGraphicsItem*> vecItems;
+  for (int i = 0; i < listItems.size(); ++i)
+  {
+    vecItems.push_back(listItems[i]);
+  }
+
   // using function as comparison
   // orders of lower zValue to the higher zValue
-  std::sort(listItems.begin(), listItems.end(), zValueLessThan);
+  std::sort(vecItems.begin(), vecItems.end(), zValueLessThan);
+
+  listItems.clear();
+  for (int i = 0; i < vecItems.size(); ++i)
+  {
+    listItems.append(vecItems[i]);
+  }
 }
 
 bool te::layout::Scene::zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2)
 {
   return item1->zValue() < item2->zValue();
+}
+
+void te::layout::Scene::addChangePropertiesCommandToStack(QList<QGraphicsItem*> items, const Properties& properties)
+{
+  if (items.count() > 1)
+  {
+    m_undoStack->beginMacro("Block: Change Items Properties"); // begin only one block of commands on stack
+  }
+
+  foreach(QGraphicsItem* item, items)
+  {
+    if (item)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+      if (lItem)
+      {
+        /* Each item, at the end of the setProperties method (AbstractItemView), 
+        adds a Property Change command to the Undo/Redo stack, via the scene. */
+        lItem->setProperties(properties);
+      }
+    }
+  }
+
+  if (items.count() > 1)
+  {
+    m_undoStack->endMacro(); // end only one block of commands on stack
+  }
+}
+
+void te::layout::Scene::addChangePropertiesCommandToStack(const std::map<QGraphicsItem*, te::layout::Properties>& map)
+{
+  if (map.size() > 1)
+  {
+    m_undoStack->beginMacro("Block: Change Items Properties"); // begin only one block of commands on stack
+  }
+
+  std::map<QGraphicsItem*, te::layout::Properties>::const_iterator it;
+
+  for (it = map.begin(); it != map.end(); ++it)
+  {
+    QGraphicsItem* item = it->first;
+    Properties properties = it->second;
+    if (item)
+    {
+      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
+      if (lItem)
+      {
+        /* Each item, at the end of the setProperties method (AbstractItemView),
+        adds a Property Change command to the Undo/Redo stack, via the scene. */
+        lItem->setProperties(properties);
+      }
+    }
+  }
+
+  if (map.size() > 1)
+  {
+    m_undoStack->endMacro(); // end only one block of commands on stack
+  }
+}
+
+void te::layout::Scene::changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable)
+{
+  foreach(QGraphicsItem* item, listItems)
+  {
+    if (item)
+    {
+      AbstractItemView* iView = dynamic_cast<AbstractItemView*>(item);
+      if (iView)
+      {
+        iView->setUndoEnabled(enable);
+      }
+    }
+  }
 }

@@ -141,7 +141,7 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
 {
   SharedProperties sharedProps;
   AbstractItemView* itemView = dynamic_cast<AbstractItemView*> (item);
-  if(itemView->getController()->getProperties().contains(sharedProps.getItemObserver()) == false)
+  if(itemView->getProperties().contains(sharedProps.getItemObserver()) == false)
   {
     return;
   }
@@ -157,7 +157,7 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
       continue;
     }
 
-    itemName = te::layout::Property::GetValueAs<std::string>(mapItem->getController()->getProperty("name"));
+    itemName = te::layout::Property::GetValueAs<std::string>(mapItem->getProperty("name"));
 
     //we do not break in order to find the last Map on the list
   }
@@ -171,5 +171,5 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
   Property property(0);
   property.setName(sharedProps.getItemObserver());
   property.setValue(itemName, dataType->getDataTypeItemObserver());
-  itemView->getController()->setProperty(property);
+  itemView->setProperty(property);
 }

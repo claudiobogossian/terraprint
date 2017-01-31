@@ -26,28 +26,18 @@
 // TerraLib
 #include "PaperItemFactory.h"
 
-#include "../../../../../core/enum/Enums.h"
-
-#include "../../../../../item/PaperModel.h"
-#include "../../../../../core/pattern/mvc/AbstractItemController.h"
-#include "../../../../../core/property/Properties.h"
 #include "../../../../item/PaperItem.h"
+#include "../../../../../core/enum/Enums.h"
+#include "../../../../../core/property/Properties.h"
+
 
 te::layout::AbstractItemView* te::layout::PaperItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties();
+  PaperItem* view = new PaperItem();
 
-  PaperModel* model = new PaperModel();
-  AbstractItemController* controller = new AbstractItemController(model);
-  PaperItem* view = new PaperItem(controller);
-  controller->setView(view);
+  const Properties& props = params.getProperties();
 
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
-  controller->setProperties(props);
-
+  view->setProperties(props);
   return view;
 }
 

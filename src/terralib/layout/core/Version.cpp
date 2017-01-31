@@ -18,33 +18,48 @@
  */
 
 /*!
-  \file GridPlanarModel.h
-   
-  \brief 
+  \file terraprint/layout/Version.cpp
 
-  \ingroup layout
+  \brief Utility class for system versioning.
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_MODEL_H
+// TerraPrint
+#include "Version.h"
 
-// TerraLib
-#include "GridMapModel.h"
-#include "../core/Config.h"
+#include "../terraprint_version.h"
 
-namespace te
+// STL
+#include <cassert>
+
+int te::layout::Version::majorNumber()
 {
-  namespace layout
-  {
-    class TELAYOUTEXPORT GridPlanarModel: public GridMapModel
-    {
-      public:
-
-        GridPlanarModel();
-
-        virtual ~GridPlanarModel();
-    };
-  }
+  return TERRALIB_LAYOUT_VERSION_MAJOR;
 }
 
-#endif 
+int te::layout::Version::minorNumber()
+{
+  return TERRALIB_LAYOUT_VERSION_MINOR;
+}
+
+int te::layout::Version::patchNumber()
+{
+  return TERRALIB_LAYOUT_VERSION_PATCH;
+}
+
+std::string te::layout::Version::buildDate()
+{
+  assert(__DATE__ " " __TIME__);
+  return std::string(__DATE__ " " __TIME__);
+}
+
+std::string te::layout::Version::asString()
+{
+  assert(TERRALIB_LAYOUT_VERSION_STRING);
+  return std::string(TERRALIB_LAYOUT_VERSION_STRING);
+}
+
+int te::layout::Version::asInt()
+{
+  return TERRALIB_LAYOUT_VERSION;
+}
+
