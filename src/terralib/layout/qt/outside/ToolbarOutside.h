@@ -371,8 +371,6 @@ namespace te
       
       virtual QAction* createAction(QString text, QString objName, QString icon, QString tooltip = "", QWidget* parent = 0);
 
-      Scene* getScene();
-
     protected:
 
       QComboBox* m_comboZoom;
