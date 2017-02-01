@@ -118,23 +118,9 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
 
   ItemFactoryParamsCreate params = createParams(itemType, isCopy);
 
-  std::string name = itemType->getName();
+  std::string factoryName = itemType->getName();
 
-  if (isCopy == true)
-  {
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-    Property idProp = m_props.getProperty("id");
-
-    idProp.setValue(m_id, dataType->getDataTypeInt());
-    m_props.updateProperty(idProp);
-
-    Property nameProp = m_props.getProperty("name");
-    nameProp.setValue(nameItem(itemType), dataType->getDataTypeString());
-    m_props.updateProperty(nameProp);
-  }
-
-  AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
+  AbstractItemView* abstractItem = te::layout::ItemFactory::make(factoryName, params);
   item = dynamic_cast<QGraphicsItem*>(abstractItem);
     
   afterBuild(item, addUndo);
@@ -242,6 +228,23 @@ te::layout::Properties te::layout::BuildGraphicsItem::createPositionProperties(c
 te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type, bool isCopy)
 {
   std::string strName = nameItem(type);
+
+  if (isCopy == true)
+  {
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    Property idProp = m_props.getProperty("id");
+
+    idProp.setValue(m_id, dataType->getDataTypeInt());
+    m_props.updateProperty(idProp);
+
+    strName = nameItem(type);
+
+    Property nameProp = m_props.getProperty("name");
+    nameProp.setValue(strName, dataType->getDataTypeString());
+    m_props.updateProperty(nameProp);
+  }
+
   m_name = strName;
 
   int zValue = generateZValueFromScene();
