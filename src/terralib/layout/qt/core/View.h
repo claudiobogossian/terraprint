@@ -168,6 +168,11 @@ namespace te
         virtual void exportToPDF();
 
         /*!
+        \brief Method that sets View object for the Print function.
+        */
+        virtual void exportToSVG();
+
+        /*!
       \brief This method allows to refresh all properties of the selected item (send a signal).
     */
         virtual void refreshAllProperties();

@@ -34,6 +34,7 @@
 #include "Scene.h"
 #include "PrintPreviewDialog.h"
 #include "../outside/PrintSettingsOutside.h"
+#include <terralib/qt/widgets/Utils.h>
 
 // STL
 #include <sstream>
@@ -47,6 +48,8 @@
 #include <QApplication>
 #include <QMessageBox>
 #include <QPrintDialog>
+#include <QSvgGenerator>
+#include <QString>
 
 te::layout::PrintScene::PrintScene( QGraphicsScene* scene ):
   m_scene(scene),
@@ -156,15 +159,6 @@ void te::layout::PrintScene::printPaper( QPrinter* printer )
   if(!printer)
     return;
 
-  //Part print scene
-  //It's not necessary to change the scale of View
-  QPainter newPainter(printer);
-  newPainter.setRenderHint(QPainter::Antialiasing);
-
-  Scene* sc = dynamic_cast<Scene*>(m_scene);
-  if(!sc)
-    return;
-
   if (m_printState == NoPrinter)
   {
     m_printState = PreviewScene;
@@ -173,11 +167,8 @@ void te::layout::PrintScene::printPaper( QPrinter* printer )
   {
     m_printState = PrintingScene;
   }
-
-  ContextObject context = createNewContext(printer);
-  sc->setContext(context);
-
-  renderScene(&newPainter, printer);
+  
+  renderSceneOnPrinter(printer);
 }
 
 QPrinter* te::layout::PrintScene::createPrinter()
@@ -194,7 +185,7 @@ QPrinter* te::layout::PrintScene::createPrinter()
   PaperConfig* config = sc->getPaperConfig();
 
   if(!config)
-    return 0;
+    return printer;
 
   double w = 0;
   double h = 0;
@@ -234,7 +225,7 @@ QPrinter* te::layout::PrintScene::createPrinter()
   return printer;
 }
 
-void te::layout::PrintScene::renderScene( QPainter* newPainter, QPrinter* printer )
+void te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
 {
   if(!m_scene)
     return;
@@ -245,26 +236,10 @@ void te::layout::PrintScene::renderScene( QPainter* newPainter, QPrinter* printe
     return;
   }
 
-  if(!newPainter)
-    return;
-
   if(!printer)
     return;
   
-  double w = 0;
-  double h = 0;
-
-  PaperConfig* conf = sc->getPaperConfig();
-  conf->getPaperSize(w, h);
-        
-  //Box Paper in the Scene (Source)
-  QRectF mmSourceRect(0, 0, w, h);
-  
-  /* Gets the margins */
-  qreal top = 0;
-  qreal bottom = 0;
-  qreal left = 0;
-  qreal right = 0;
+  ContextObject context = createNewContext(printer);
   QRect pageRect = printer->pageRect();
 
   //Paper size using the printer dpi (Target)
@@ -275,25 +250,7 @@ void te::layout::PrintScene::renderScene( QPainter* newPainter, QPrinter* printe
   QSizeF paperPixelBox = printer->paperSize(QPrinter::DevicePixel);
   QRectF pxTargetRect(origin, paperPixelBox);
 
-  //Mirroring Y-Axis
-  newPainter->translate( paperPixelBox.width() / 2., paperPixelBox.height() / 2. );
-  newPainter->scale( 1, -1 );
-  newPainter->translate( -(paperPixelBox.width() / 2.), -(paperPixelBox.height() / 2.) );
-
-  sc->deselectAllItems();
-
-  QGraphicsItem* paperItem = sc->getPaperItem();
-  paperItem->setVisible(false);
-
-  QColor newBackgroundColor(255, 255, 255, 0);
-  QBrush newBrush(newBackgroundColor);
-  QBrush copyBackgroundColor = m_scene->backgroundBrush();
-
-  m_scene->setBackgroundBrush(newBrush);//transparent
-  m_scene->render(newPainter, pxTargetRect, mmSourceRect); 
-  m_scene->setBackgroundBrush(copyBackgroundColor);
-
-  paperItem->setVisible(true);
+  render(printer, pxTargetRect, context);
 }
 
 void te::layout::PrintScene::print()
@@ -397,6 +354,96 @@ bool te::layout::PrintScene::exportToPDF()
   return true;
 }
 
+bool te::layout::PrintScene::exportToSVG(const QString& pathFile)
+{
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return false;
+
+  if (pathFile.isEmpty())
+  {
+    return false;
+  }
+
+  QFileInfo fileInfo(pathFile);
+
+  //Box Paper in the Scene (Source)
+  QRectF mmSourceRect = paperRectMM();
+
+  ContextObject context = sc->getContext();
+  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
+  double zoom = 100;
+  double dpiX = context.getDpiX();
+  double dpiY = context.getDpiY();
+  context = ContextObject(zoom, dpiX, dpiY, enumMode->getModePrinter());
+
+  QRectF pxTargetRect = sc->sceneTransform().mapRect(mmSourceRect);
+  pxTargetRect = QRectF(0, 0, pxTargetRect.width(), pxTargetRect.height());
+  QSize svgSize(pxTargetRect.width(), pxTargetRect.height());
+
+  QSvgGenerator generator;
+  generator.setFileName(pathFile);
+  generator.setSize(svgSize);
+  generator.setViewBox(pxTargetRect);
+  generator.setTitle(tr("Map To SVG"));
+  generator.setDescription(tr("TerraPrint (TerraLib 5) - Map to SVG"));
+
+  m_printState = PrintingScene;
+
+  render(&generator, pxTargetRect, context);
+
+  m_printState = NoPrinter;
+
+  te::qt::widgets::AddFilePathToSettings(fileInfo.absolutePath(), "svg");
+
+  sc->redrawItems();
+
+  return true;
+}
+
+bool te::layout::PrintScene::render(QPaintDevice* device, const QRectF& pixelTargetRect, const ContextObject& context)
+{
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return false;
+
+  //It's not necessary to change the scale of View
+
+  //Box Paper in the Scene coordinates (Source mm)
+  QRectF mmSourceRect = paperRectMM();
+
+  sc->setContext(context);
+
+  QPainter painter;
+
+  painter.begin(device); // QSvgGenerator requires QPainter to be initialized by the begin() method
+  painter.setRenderHint(QPainter::Antialiasing);
+
+  //Mirroring Y-Axis
+  painter.translate(pixelTargetRect.width() / 2., pixelTargetRect.height() / 2.);
+  painter.scale(1, -1);
+  painter.translate(-(pixelTargetRect.width() / 2.), -(pixelTargetRect.height() / 2.));
+
+  sc->deselectAllItems();
+
+  QGraphicsItem* paperItem = sc->getPaperItem();
+  paperItem->setVisible(false);
+
+  QColor newBackgroundColor(255, 255, 255, 0);
+  QBrush newBrush(newBackgroundColor);
+  QBrush copyBackgroundColor = m_scene->backgroundBrush();
+
+  m_scene->setBackgroundBrush(newBrush);//transparent
+  m_scene->render(&painter, pixelTargetRect, mmSourceRect);
+  m_scene->setBackgroundBrush(copyBackgroundColor);
+
+  painter.end();
+
+  paperItem->setVisible(true);
+
+  return true;
+}
+
 te::layout::ContextObject te::layout::PrintScene::createNewContext( QPrinter* printer )
 {
   ContextObject invalidContext(0,0,0,0);
@@ -468,3 +515,18 @@ te::layout::LayoutAbstractPaperType te::layout::PrintScene::changePageSizeType(Q
   return type;
 }
 
+QRectF te::layout::PrintScene::paperRectMM()
+{
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return QRectF();
+
+  double w = 0;
+  double h = 0;
+  PaperConfig* conf = sc->getPaperConfig();
+  conf->getPaperSize(w, h);
+
+  //Box Paper in the Scene coordinates (Source mm)
+  QRect mmRect(0, 0, w, h);
+  return mmRect;
+}

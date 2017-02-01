@@ -40,6 +40,8 @@
 class QGraphicsScene;
 class QPrinter;
 class QPainter;
+class QPaintDevice;
+class QString;
 
 namespace te
 {
@@ -89,6 +91,11 @@ namespace te
         */
         virtual bool exportToPDF();
 
+        /*!
+        \brief Export scene to SVG (only the area corresponding to the paper).
+        */
+        virtual bool exportToSVG(const QString& pathFile);
+
       protected slots:
 
         virtual void printPaper(QPrinter* printer);
@@ -97,11 +104,17 @@ namespace te
 
         virtual QPrinter* createPrinter();
 
-        virtual void renderScene( QPainter* newPainter, QPrinter* printer );
+        virtual void renderSceneOnPrinter(QPrinter* printer);
 
         virtual ContextObject createNewContext(QPrinter* printer);
 
         virtual te::layout::LayoutAbstractPaperType changePageSizeType(QPrinter* printer, PaperConfig* paperConfig);
+
+        virtual bool render(QPaintDevice* device, const QRectF& pixelTargetRect, const ContextObject& context);
+
+        QRectF paperRectMM();
+
+      protected:
 
         QGraphicsScene*           m_scene;
         te::layout::PrinterScene  m_printState;

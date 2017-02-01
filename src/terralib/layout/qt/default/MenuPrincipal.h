@@ -116,6 +116,7 @@ namespace te
       QString               m_optionDockProperties;
       QString               m_optionDockToolbar;
       QString               m_optionDockEditTemplate;
+      QString               m_optionExportMapToSVG;
     };
   }
 }
