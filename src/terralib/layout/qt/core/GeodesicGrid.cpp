@@ -101,7 +101,7 @@ void te::layout::GeodesicGrid::initialize(const te::layout::Properties& gridSett
   QRectF rectGrid = m_gridLines.boundingRect();
   QRectF rectTexts = m_gridText.boundingRect();
 
-  QRectF recfFull = rectGrid.unite(rectTexts);
+  QRectF recfFull = rectGrid.united(rectTexts);
 
   QPointF origin = recfFull.topLeft();
   m_gridLines.translate(-origin.x(), -origin.y());
@@ -110,7 +110,7 @@ void te::layout::GeodesicGrid::initialize(const te::layout::Properties& gridSett
   rectGrid = m_gridLines.boundingRect();
   rectTexts = m_gridText.boundingRect();
 
-  recfFull = rectGrid.unite(rectTexts);
+  recfFull = rectGrid.united(rectTexts);
 
   m_size = recfFull.size();
   m_origin = rectGrid.topLeft();

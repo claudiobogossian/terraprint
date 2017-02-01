@@ -99,7 +99,7 @@ void te::layout::PlanarGrid::initialize(const te::layout::Properties& gridSettin
   QRectF rectGrid = m_gridLines.boundingRect();
   QRectF rectTexts = m_gridText.boundingRect();
 
-  QRectF recfFull = rectGrid.unite(rectTexts);
+  QRectF recfFull = rectGrid.united(rectTexts);
 
   QPointF origin = recfFull.topLeft();
   m_gridLines.translate(-origin.x(), -origin.y());
@@ -108,7 +108,7 @@ void te::layout::PlanarGrid::initialize(const te::layout::Properties& gridSettin
   rectGrid = m_gridLines.boundingRect();
   rectTexts = m_gridText.boundingRect();
 
-  recfFull = rectGrid.unite(rectTexts);
+  recfFull = rectGrid.united(rectTexts);
 
   m_size = recfFull.size();
   m_origin = rectGrid.topLeft();
