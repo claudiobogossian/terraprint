@@ -25,16 +25,21 @@
   \ingroup layout
 */
 
-// TerraLib
 #include "PaperItem.h"
-#include "terralib/color/RGBAColor.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 
-te::layout::PaperItem::PaperItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+#include "../../item/PaperModel.h"
+#include "PaperController.h"
+
+// TerraLib
+#include <terralib/color/RGBAColor.h>
+
+
+te::layout::PaperItem::PaperItem()
+  : AbstractItem()
 {  
   this->setFlags(QGraphicsItem::ItemSendsGeometryChanges);
   this->setAcceptHoverEvents(false);
+  setUndoEnabled(false);
 }
 
 te::layout::PaperItem::~PaperItem()
@@ -42,14 +47,26 @@ te::layout::PaperItem::~PaperItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::PaperItem::createModel() const
+{
+  return new PaperModel();
+}
+
+te::layout::AbstractItemController* te::layout::PaperItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  PaperController* paper = new PaperController(model, (AbstractItemView*)this);  
+  return paper;
+}
+
 void te::layout::PaperItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& pPaperColor = m_controller->getProperty("paper_color");
-  const Property& pShadowColor = m_controller->getProperty("shadow_color");
-  const Property& pFrameColor = m_controller->getProperty("frame_color");
-  const Property& pPaperWidth = m_controller->getProperty("paper_width");
-  const Property& pPaperHeight = m_controller->getProperty("paper_height");
-  const Property& pShadowPadding = m_controller->getProperty("shadow_padding");
+  const Property& pPaperColor = this->getProperty("paper_color");
+  const Property& pShadowColor = this->getProperty("shadow_color");
+  const Property& pFrameColor = this->getProperty("frame_color");
+  const Property& pPaperWidth = this->getProperty("paper_width");
+  const Property& pPaperHeight = this->getProperty("paper_height");
+  const Property& pShadowPadding = this->getProperty("shadow_padding");
 
   const te::color::RGBAColor& paperColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pPaperColor);
   const te::color::RGBAColor& shadowColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pShadowColor);

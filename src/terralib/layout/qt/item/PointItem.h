@@ -60,7 +60,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        PointItem(AbstractItemController* controller);
+        PointItem();
         
         /*!
           \brief Destructor
@@ -68,6 +68,8 @@ namespace te
         virtual ~PointItem();
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
 
         virtual void drawStar1(QPainter * painter);
 

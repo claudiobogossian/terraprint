@@ -42,6 +42,7 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
     /*!
     \brief Class that represents a graphic scale of a map.
         Its coordinate system is the same of scene (millimeters). 
@@ -61,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ScaleItem(AbstractItemController* controller);
+        ScaleItem();
 
         /*!
           \brief Destructor
@@ -71,6 +72,10 @@ namespace te
         virtual void refreshScaleProperties();
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
         
@@ -92,6 +97,7 @@ namespace te
         double  m_gapY;
         Font    m_font;
         double  m_scaleUnitGapX;
+        int     m_numberOfBreaks;
     };
   }
 }

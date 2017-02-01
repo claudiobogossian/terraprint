@@ -33,6 +33,11 @@
 #include "../../../core/Config.h"
 #include "../../../core/property/Properties.h"
 
+// Boost
+#ifndef Q_MOC_RUN
+#include <boost/thread.hpp>
+#endif
+
 // STL
 #include <string>
 
@@ -63,10 +68,13 @@ namespace te
         */
         virtual void readProperties();
 
+        bool deleteDataStorage();
+
       protected:
 
         std::vector<te::layout::Properties>                 m_properties;
         std::map< std::string, std::vector<std::string> >   m_mapGroups;
+        boost::mutex                                        m_mutex; //!< A mutex to lock the access
     };
   }
 }

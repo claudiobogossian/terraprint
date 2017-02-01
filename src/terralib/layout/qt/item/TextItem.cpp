@@ -27,14 +27,13 @@
 
 // TerraLib
 #include "TextItem.h"
+#include "../../item/TextModel.h"
 #include "TextController.h"
 #include "../../qt/core/Scene.h"
 #include "../core/ItemUtils.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
-#include "../../core/pattern/singleton/Context.h"
-
 
 // STL
 #include <string>
@@ -52,9 +51,9 @@
 #include <QClipboard>
 #include <QTimer>
 
-te::layout::TextItem::TextItem(AbstractItemController* controller)
+te::layout::TextItem::TextItem()
   : QObject()
-  , AbstractItem(controller)
+  , AbstractItem()
   , m_document(0)
   , m_textCursor(0)
   , m_cursorTimer(0)
@@ -74,6 +73,17 @@ te::layout::TextItem::~TextItem()
 {
   delete m_textCursor;
   delete m_document;
+}
+
+te::layout::AbstractItemModel* te::layout::TextItem::createModel() const
+{
+  return new TextModel();
+}
+
+te::layout::AbstractItemController* te::layout::TextItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new TextController(model, (AbstractItemView*)this);
 }
 
 void te::layout::TextItem::setDocument(QTextDocument* textDocument)
@@ -101,10 +111,10 @@ QRectF te::layout::TextItem::boundingRect() const
     return AbstractItem::boundingRect();
   }
 
-  const Property& pDx = m_controller->getProperty("dx");
+  const Property& pDx = this->getProperty("dx");
   double dx = te::layout::Property::GetValueAs<double>(pDx);
 
-  const Property& pDy = m_controller->getProperty("dy");
+  const Property& pDy = this->getProperty("dy");
   double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   Utils utils = myScene->getUtils();
@@ -132,7 +142,7 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
     return;
   }
 
-  TextController* textController = (TextController*)m_controller;
+  TextController* textController = (TextController*)getController();
 
   //we must set some transformation in order to prepare the item to be rendered on the screen or in other output device
   //we must first aquire some information about the current dpi and the zoom
@@ -212,10 +222,10 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
   }
 
   //me must consider the optional displacement
-  const Property& pDx = m_controller->getProperty("dx");
+  const Property& pDx = this->getProperty("dx");
   double dx = te::layout::Property::GetValueAs<double>(pDx);
 
-  const Property& pDy = m_controller->getProperty("dy");
+  const Property& pDy = this->getProperty("dy");
   double dy = te::layout::Property::GetValueAs<double>(pDy);
 
   double xPosMM = event->pos().x() - dx;
@@ -419,8 +429,11 @@ void te::layout::TextItem::enterEditionMode()
 
   setCursor(Qt::IBeamCursor);
 
+  int position = m_document->findBlockByNumber(m_blockEditionRangeStart).position();
+
   m_textCursor = new QTextCursor(m_document);
-  m_textCursor->select(QTextCursor::Document);
+  m_textCursor->setPosition(position);
+  m_textCursor->select(QTextCursor::LineUnderCursor);
 
   m_cursorTimer = new QTimer(this);
   connect(m_cursorTimer, SIGNAL(timeout()), this, SLOT(timerEvent()));
@@ -458,7 +471,7 @@ void te::layout::TextItem::documentEditionFinished()
   propertyText.setName("text");
   propertyText.setValue(newText, dataType->getDataTypeString());
 
-  m_controller->setProperty(propertyText);
+  te::layout::AbstractItem::setProperty(propertyText);
 }
 
 

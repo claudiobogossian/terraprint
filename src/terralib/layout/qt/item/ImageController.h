@@ -51,7 +51,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ImageController( AbstractItemModel* model);
+        ImageController( AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor

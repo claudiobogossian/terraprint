@@ -25,36 +25,16 @@
 
 // TerraLib
 #include "TextItemFactory.h"
-#include "../../../../item/TextController.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/TextModel.h"
 #include "../../../../item/TextItem.h"
 
 te::layout::AbstractItemView* te::layout::TextItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties();
+  TextItem* view = new TextItem();
 
-  TextModel* model = new TextModel();
-  TextController* controller = new TextController(model);
-  TextItem* view = new TextItem(controller);
-  controller->setView(view);
+  const Properties& props = params.getProperties();
 
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-
-    std::string text = params.getName();
-
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-    Property prop_name(0);
-    prop_name.setName("text");
-    prop_name.setValue(text, dataType->getDataTypeString());
-    props.addProperty(prop_name);
-
-  }
-  controller->setProperties(props);
-
+  view->setProperties(props);
   return view;
 }
 

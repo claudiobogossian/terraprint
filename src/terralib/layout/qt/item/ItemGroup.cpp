@@ -27,16 +27,18 @@
 
 // TerraLib
 #include "ItemGroup.h"
-#include "ItemGroupController.h"
 
+#include "ItemGroupController.h"
 #include "../core/Scene.h"
+#include "../../item/ItemGroupModel.h"
+#include "../../core/enum/Enums.h"
 
 // Qt
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ItemGroup::ItemGroup(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ItemGroup::ItemGroup()
+  : AbstractItem()
   , m_stacksBehindParent(false)
   , m_isSubSelectionAllowed(true)
 {
@@ -48,21 +50,15 @@ te::layout::ItemGroup::~ItemGroup()
 
 }
 
-QRectF te::layout::ItemGroup::boundingRect() const
+te::layout::AbstractItemModel* te::layout::ItemGroup::createModel() const
 {
-  bool resizable = te::layout::Property::GetValueAs<bool>(m_controller->getProperty("resizable"));
-  if (m_currentAction == te::layout::RESIZE_ACTION && resizable)
-  {
-    return AbstractItem::boundingRect();
-  }
+  return new ItemGroupModel();
+}
 
-  QRectF rect = this->childrenBoundingRect();
-  if(rect.isValid() == true)
-  {
-    return rect;
-  }
-
-  return AbstractItem::boundingRect();
+te::layout::AbstractItemController* te::layout::ItemGroup::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ItemGroupController(model, (AbstractItemView*)this);
 }
 
 void te::layout::ItemGroup::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
@@ -74,10 +70,11 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
 {
   if(change == QGraphicsItem::ItemChildAddedChange)
   {
-    ItemGroupController* controller = dynamic_cast<ItemGroupController*>(m_controller);
+    ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
     if(controller != 0)
     {
-      controller->itemAdded();
+      QGraphicsItem* child = qvariant_cast<QGraphicsItem *>(value);
+      //controller->itemAdded(child);
     }
 
     QGraphicsItem* child = qvariant_cast<QGraphicsItem *>(value);
@@ -131,30 +128,20 @@ QVariant te::layout::ItemGroup::itemChange ( QGraphicsItem::GraphicsItemChange c
 
 void te::layout::ItemGroup::addToGroup(QGraphicsItem* item)
 {
-  QPointF itemCurrentPos = item->pos();
-
-  item->setParentItem(this);
-
-  QPointF itemNewPos = this->mapFromScene(itemCurrentPos);
-  item->setPos(itemNewPos);
-
-  ItemUtils::normalizeChildrenPosition(this);
+  ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
+  if (controller != 0)
+  {
+    controller->addItem(item);
+  }
 }
 
 void te::layout::ItemGroup::removeFromGroup(QGraphicsItem* item)
 {
-  QPointF itemNewPos = item->mapToScene(QPointF(0,0));
-  item->setParentItem(this->parentItem());
-
-  if (item->parentItem() != 0)
+  ItemGroupController* controller = dynamic_cast<ItemGroupController*>(getController());
+  if (controller != 0)
   {
-    itemNewPos = item->parentItem()->mapFromScene(itemNewPos);
+    controller->removeFromGroup(item);
   }
-
-  item->setPos(itemNewPos);
-
-
-  ItemUtils::normalizeChildrenPosition(this);
 }
 
 void te::layout::ItemGroup::mousePressEvent(QGraphicsSceneMouseEvent * event)
@@ -247,3 +234,16 @@ bool te::layout::ItemGroup::hasChildrenInResizeMode()
   return result;
 }
 
+void te::layout::ItemGroup::setUndoEnabled(bool enabled)
+{
+  AbstractItemView::setUndoEnabled(enabled);
+  QList<QGraphicsItem*> children = childItems();
+  for (QList<QGraphicsItem*>::iterator it = children.begin(); it != children.end(); ++it)
+  {
+    AbstractItemView* item = dynamic_cast<AbstractItemView*>(*it);
+    if (item)
+    {
+      item->setUndoEnabled(enabled);
+    }
+  }
+}

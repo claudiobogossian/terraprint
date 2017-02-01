@@ -30,12 +30,14 @@
 
 // TerraLib
 #include "terralib/geometry/Coord2D.h"
-#include "property/Properties.h"
-#include "Config.h"
+#include "../../core/property/Properties.h"
+#include "../../core/Config.h"
 
 // STL
 #include <string>
 #include <vector>
+
+class QObject;
 
 namespace te
 {
@@ -43,6 +45,7 @@ namespace te
   {
     class Properties;
     class EnumType;
+    class Scene;
 
   /*!
       \class AbstractBuildGraphicsItem
@@ -59,7 +62,7 @@ namespace te
         /*!
           \brief Constructor
         */       
-        AbstractBuildGraphicsItem();
+        AbstractBuildGraphicsItem(Scene* scene);
     
         /*!
           \brief Destructor
@@ -90,6 +93,13 @@ namespace te
           \return z value
         */
         virtual int findZValue(te::layout::Properties props);
+
+        /*!
+        \brief Search for the last zValue of the items and plus 1.
+        
+        \return z value
+        */
+        virtual int generateZValueFromScene();
 
         /*!
         \brief Search for property of a graphic object that represent name value.
@@ -131,12 +141,14 @@ namespace te
 
       protected:
 
+        Scene*                  m_scene;
         te::layout::Properties  m_props; //!< Properties of a graphic object.
         te::gm::Coord2D         m_coord; //!< Coordinate of a graphic object.
         int                     m_id; //!< Id of a graphic object.
         double                  m_width;
         double                  m_height;
         std::string             m_name;
+        int                     m_zValue;
     };
   }
 }

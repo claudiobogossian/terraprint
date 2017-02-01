@@ -65,8 +65,6 @@ namespace te
 
         virtual bool isEmpty();
 
-        virtual void loadFromPath( std::string loadPath );
-
         /*!
         \brief Encodes the given vector of Properties into a Boost Property Tree container
         */
@@ -78,8 +76,6 @@ namespace te
         virtual bool decode(const boost::property_tree::ptree& tree, PaperConfig& oPaperConfig, std::vector<te::layout::Properties>& oProperties, std::map< std::string, std::vector<std::string> >& oMapGroups);
 
       protected:
-
-        virtual void searchProperty(const Property& property, boost::property_tree::ptree& array, boost::property_tree::ptree& child);
 
         /*!
         \brief Encodes the given vector of Property to a Boost Property Tree container

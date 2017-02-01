@@ -53,7 +53,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        TextController(AbstractItemModel* model);
+        TextController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor

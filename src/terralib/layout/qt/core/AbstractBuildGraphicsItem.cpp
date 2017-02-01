@@ -27,15 +27,22 @@
 
 // TerraLib
 #include "AbstractBuildGraphicsItem.h"
-#include "property/SharedProperties.h"
-#include "property/Property.h"
-#include "property/Properties.h"
+#include "../../core/property/SharedProperties.h"
+#include "../../core/property/Property.h"
+#include "../../core/property/Properties.h"
+#include "Scene.h"
 
-te::layout::AbstractBuildGraphicsItem::AbstractBuildGraphicsItem() :
+// Qt
+#include <QObject>
+#include <QGraphicsItem>
+
+te::layout::AbstractBuildGraphicsItem::AbstractBuildGraphicsItem(Scene* scene) :
+  m_scene(scene),
   m_id(0),
   m_width(0),
   m_height(0),
-  m_name("unknown")
+  m_name("unknown"),
+  m_zValue(0)
 {
 
 }
@@ -77,6 +84,31 @@ int te::layout::AbstractBuildGraphicsItem::findZValue( te::layout::Properties pr
     Property pro_zValue = props.getProperty("zValue");
     zValue = te::layout::Property::GetValueAs<int>(pro_zValue);
   }
+
+  return zValue;
+}
+
+int te::layout::AbstractBuildGraphicsItem::generateZValueFromScene()
+{
+  int zValue = -1;
+
+  if (m_scene)
+  {
+    QList<QGraphicsItem*> items = m_scene->items();
+    
+    foreach(QGraphicsItem *item, items)
+    {
+      if (item)
+      {
+        if (item->zValue() > zValue)
+        {
+          zValue = item->zValue();
+        }
+      }
+    }
+  }
+
+  zValue++;
 
   return zValue;
 }
@@ -126,6 +158,6 @@ void te::layout::AbstractBuildGraphicsItem::clear()
   m_width = 0;
   m_height = 0;
   m_name = "unknown";
+  m_zValue = 0;
 }
-
 

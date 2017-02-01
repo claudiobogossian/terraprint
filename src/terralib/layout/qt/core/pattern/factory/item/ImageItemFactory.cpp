@@ -26,30 +26,16 @@
 // TerraLib
 #include "ImageItemFactory.h"
 #include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/ImageModel.h"
-#include "../../../../item/ImageController.h"
 #include "../../../../item/ImageItem.h"
 
 te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties props = params.getProperties(); 
+  ImageItem* view = new ImageItem();
 
-  ImageModel* model = new ImageModel();
-  AbstractItemController* controller = new ImageController(model);
-  ImageItem* view = new ImageItem(controller);
-
-  double width = te::layout::Property::GetValueAs<double>(model->getProperty("width"));
-  double height = te::layout::Property::GetValueAs<double>(model->getProperty("height"));
-  view->setPos(params.getCoord().getX() - width / 2, params.getCoord().getY() - height / 2);
-  controller->setView(view);
-
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
-  controller->setProperties(props);
-
-  return dynamic_cast<AbstractItemView*>(view);
+  const Properties& props = params.getProperties();
+  
+  view->setProperties(props);
+  return view;
 }
 
 te::layout::ImageItemFactory::ImageItemFactory() :

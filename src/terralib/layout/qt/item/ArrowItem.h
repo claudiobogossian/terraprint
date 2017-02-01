@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        ArrowItem(AbstractItemController* controller);
+        ArrowItem();
         
         /*!
           \brief Destructor
@@ -70,6 +70,9 @@ namespace te
         virtual ~ArrowItem();
 
        protected:
+
+         virtual AbstractItemModel* createModel() const;
+
          
          virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 

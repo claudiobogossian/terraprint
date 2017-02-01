@@ -59,7 +59,7 @@ namespace te
           \param controller "Controller" part of MVM component
           \param o "Model" part of MVM component
         */ 
-        ScaleController(AbstractItemModel* model);
+        ScaleController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
@@ -72,11 +72,11 @@ namespace te
 
         virtual double getUnitValue(std::string strUnit);
 
-        virtual double getGap(double& initialGap, Font font, int numberOfBreaks = 0, double scaleWidthX = 0, std::string strUnit = "");
+        virtual double getGap(double& initialGap, Font font, int numberOfBreaks = 0, double scaleWidthX = 0, std::string strUnit = "", double scale = 0);
 
         virtual QPainterPath getLastText();
 
-        virtual QPainterPath getLastTextByBreaks(int numberOfBreaks, Font font, double scaleWidthX = 0, std::string strUnit = "");
+        virtual QPainterPath getLastTextByBreaks(int numberOfBreaks, Font font, double scaleWidthX, std::string strUnit, double scale);
 
         virtual void setProperty(const Property& property);
 
@@ -100,7 +100,7 @@ namespace te
 
         virtual Properties checkByBreaks(const Properties& properties);
 
-        virtual double getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit = "");
+        virtual double getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit = "", double scale = 0);
     };
   }
 }

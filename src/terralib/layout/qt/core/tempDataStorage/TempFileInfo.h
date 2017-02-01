@@ -53,7 +53,9 @@ namespace te
         virtual ~TempFileInfo();
 
         std::string getPath();
-        
+
+        void setPath(const std::string& path);
+                
       protected:
 
         std::string m_path;

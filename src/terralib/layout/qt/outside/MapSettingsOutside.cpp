@@ -37,6 +37,7 @@
 #include <QMessageBox>
 #include <QString>
 #include <QFileDialog>
+#include <QKeyEvent>
 
 #include <boost/lexical_cast.hpp>
 
@@ -44,16 +45,9 @@ te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* co
   : QDialog(parent),
   AbstractOutsideView(controller),
   m_ui(new Ui::MapSettings),
-  //ui_MapLayerChoice(new Ui::MapLayerChoice),
   m_widget(0)
 {
   m_ui->setupUi(this);
-
-  //m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
-  //m_ui->lneWidth->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneWidth));
-
-  //m_ui->cmbUnit->setItemData(0, QVariant("Centimeter"));
-  //m_ui->cmbUnit->setItemData(1, QVariant("Millimeter"));
 
   MapSettingsController* controllerSettings = dynamic_cast<MapSettingsController*>(m_controller);
   m_mapChoice = controllerSettings->getMapLayerChoice();
@@ -64,11 +58,8 @@ te::layout::MapSettingsOutside::MapSettingsOutside(AbstractOutsideController* co
   QGridLayout* layout = new QGridLayout(m_ui->m_widget_MapChoice);
   layout->addWidget(m_widget.get());
   
-  //ui_MapLayerChoice = m_mapChoice->getWidget();
-
   connect(m_widget.get(), SIGNAL(closeWidget()), this, SLOT(onCancelPushButtonPressed()));
   connect(m_widget.get(), SIGNAL(updateWidgetProperty(Property)), this, SLOT(updateWidgetProperty(Property)));
-
 }
 
 te::layout::MapSettingsOutside::~MapSettingsOutside()
@@ -80,7 +71,6 @@ void te::layout::MapSettingsOutside::init()
 {
   m_mapChoice->init();
 }
-
 
 void te::layout::MapSettingsOutside::load()
 {
@@ -111,9 +101,22 @@ void te::layout::MapSettingsOutside::onCancelPushButtonPressed()
   reject();
 }
 
-
 void te::layout::MapSettingsOutside::updateWidgetProperty(Property prop)
 {
   emit updateProperty(prop);
- 
 }
+
+void te::layout::MapSettingsOutside::keyPressEvent(QKeyEvent * e)
+{
+  /* Qt Doc: If the user presses the Esc key in a dialog, QDialog::reject() will be called. 
+  This will cause the window to close: The close event cannot be ignored. */
+  if (e->key() != Qt::Key_Escape)
+  {
+    QDialog::keyPressEvent(e);
+  }
+  else
+  {
+    e->ignore();
+  }
+}
+

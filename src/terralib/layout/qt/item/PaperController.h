@@ -18,32 +18,31 @@
  */
 
 /*!
-  \file MapCompositionController.h
+  \file ImageController.h
    
-  \brief Class that represents associate item group controller.
+  \brief Class that represents paper controller.
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_CONTROLLER_H
-#define __TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_CONTROLLER_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_PAPER_CONTROLLER_H
+#define __TERRALIB_LAYOUT_INTERNAL_PAPER_CONTROLLER_H
 
 // TerraLib
 #include "../../core/Config.h"
-#include "GridMapController.h"
+#include "../../core/pattern/mvc/AbstractItemController.h"
 
 namespace te
 {
   namespace layout
   {
-    class AbstractItemModel;
-    class AbstractItemView;
+    class Properties;
     /*!
-    \brief Class that represents associate item group controller.
+    \brief Class that represents image controller.
     
     \ingroup layout
     \sa te::layout::AbstractItemController
     */
-    class TELAYOUTEXPORT GridPlanarController : public GridMapController
+    class TELAYOUTEXPORT PaperController : public AbstractItemController
     {
       public:
 
@@ -53,24 +52,22 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        GridPlanarController(AbstractItemModel* model);
+        PaperController( AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
         */ 
-        virtual ~GridPlanarController();
-
+        virtual ~PaperController();
+        
         /*!
-        \brief This function is called by the subject every time its model is changed
+        \brief Sets the new values of the given properties
         */
-        virtual void update(const Subject* subject);
+        virtual void setProperties(const Properties& properties);
+        
+      protected:
 
-        double getInitialCoord(double intialCoord, double distance, double& gap);
-
-    private:
-
-      bool m_gridPropertiesInitialized;
+        virtual Properties handleNewPaperSize(double paperWidth, double paperHeight);
     };
   }
 }
-#endif //__TERRALIB_LAYOUT_INTERNAL_GRID_PLANAR_CONTROLLER_H
+#endif //__TERRALIB_LAYOUT_INTERNAL_IMAGE_CONTROLLER1_H

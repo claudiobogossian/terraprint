@@ -25,26 +25,16 @@
 
 // TerraLib
 #include "ItemGroupItemFactory.h"
-#include "../../../../item/ItemGroupController.h"
-#include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/ItemGroupModel.h"
 #include "../../../../item/ItemGroup.h"
+#include "../../../../../core/enum/Enums.h"
 
 te::layout::AbstractItemView* te::layout::ItemGroupItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  ItemGroup* view = new ItemGroup();
 
-  ItemGroupModel* model = new ItemGroupModel();
-  ItemGroupController* controller = new ItemGroupController(model);
-  ItemGroup* view = new ItemGroup(controller);
-  controller->setView(view);
+  const Properties& props = params.getProperties();
 
-  if (props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
-  controller->setProperties(props);
-
+  view->setProperties(props);
   return view;
 }
 

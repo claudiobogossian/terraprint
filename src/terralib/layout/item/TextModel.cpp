@@ -36,7 +36,7 @@ te::layout::TextModel::TextModel()
   : AbstractItemModel()
 {
   Font font;
-  std::string text = "Text Item";
+  std::string text = "";
   te::color::RGBAColor color(0, 0, 0, 255);
   double width = 40.;
   double height = 20.;

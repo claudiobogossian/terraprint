@@ -27,13 +27,15 @@
 
 // TerraLib
 #include "BarCodeItem.h"
-#include "TextController.h"
+#include "BarCodeController.h"
+#include "../../item/BarCodeModel.h"
+
 
 // Qt
 #include <QStyleOptionGraphicsItem>
 
-te::layout::BarCodeItem::BarCodeItem(AbstractItemController* controller) 
-  : TextItem(controller)
+te::layout::BarCodeItem::BarCodeItem() 
+  : TextItem()
 {
  
 }
@@ -41,6 +43,17 @@ te::layout::BarCodeItem::BarCodeItem(AbstractItemController* controller)
 te::layout::BarCodeItem::~BarCodeItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::BarCodeItem::createModel() const
+{
+  return new BarCodeModel();
+}
+
+te::layout::AbstractItemController* te::layout::BarCodeItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new BarCodeController(model, (AbstractItemView*)this);
 }
 
 void te::layout::BarCodeItem::paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /* = 0 */ )

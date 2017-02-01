@@ -18,15 +18,51 @@
  */
 
 /*!
-  \file terralib/Version.h
+  \file terraprint/layout/Version.h
 
-  \brief This is a proxy file for the real terralib_version.h file.
+  \brief Utility class for system versioning.
 */
 
-#ifndef __TERRALIB_INTERNAL_VERSION_H__
-#define __TERRALIB_INTERNAL_VERSION_H__
+#ifndef __TERRALIB_LAYOUT_CORE_INTERNAL_VERSION_H
+#define __TERRALIB_LAYOUT_CORE_INTERNAL_VERSION_H
 
-// TerraLib
-#include "terralib_version.h"
+// TerraPrint
+#include "Config.h"
 
-#endif  // __TERRALIB_INTERNAL_VERSION_H__
+// STL
+#include <string>
+
+namespace te
+{
+  namespace layout
+  {
+    class TELAYOUTEXPORT Version
+    {
+      public:
+
+        static int majorNumber();
+
+        static int minorNumber();
+
+        static int patchNumber();
+
+        static std::string buildDate();
+
+        static std::string asString();
+
+        static int asInt();
+
+      private:
+
+        Version();
+
+        ~Version();
+    };
+
+  } // end namespace common
+}   // end namespace te
+
+#endif  // __TERRALIB_LAYOUT_CORE_INTERNAL_VERSION_H
+
+
+

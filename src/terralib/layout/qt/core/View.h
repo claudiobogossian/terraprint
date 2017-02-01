@@ -207,14 +207,14 @@ namespace te
         \param type type of template. Ex .: JSON type
         \return true if exported, false otherwise
         */
-        virtual bool exportProperties(EnumType* type);
+        virtual bool exportTemplate(EnumType* type, bool & cancel);
 
         /*!
         \brief Method that import a template and build all objects. Ex.: JSON.
 
         \return true if exported, false otherwise
         */
-        virtual bool importTemplate(EnumType* type);
+        virtual bool importTemplate(EnumType* type, bool & cancel);
 
         /*!
         \brief Method that instantiates and shows the Page Setup window.
@@ -275,7 +275,9 @@ namespace te
 
         virtual QString getTempFileName();
 
-        virtual void configLayoutWithTempFile();
+        virtual void configLayoutWithDefaultTempFilePath();
+
+        void setTempFilePath(const std::string& path);
 
       public slots:
     
@@ -465,6 +467,18 @@ namespace te
         virtual void configTempFileDataStorage(const QString& fullNewPath);
 
         virtual bool importTempFile(EnumType* type, const QString& fullTempPath);
+
+        virtual bool zoomByKey(QKeyEvent* keyEvent);
+
+        virtual bool existDirTempFile(const QString& newPath);
+
+        virtual bool createDirToTempFile(const QString& newPath);
+
+        virtual bool loadTempFile(const QString& newPath);
+
+        virtual bool configTempFilePath(const QString& newPath);
+
+        virtual void setFullTempFilePath(const QString& newPath);
 
       protected:
 

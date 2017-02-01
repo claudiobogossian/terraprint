@@ -57,7 +57,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        MapController(AbstractItemModel* model);
+        MapController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
@@ -85,6 +85,8 @@ namespace te
         
         virtual void validateItem();
 
+        virtual void sceneHasChanged(Scene* scene);
+
       protected:
 
         virtual Property syncLayersFromURIs(const Property& property);
@@ -95,13 +97,23 @@ namespace te
 
         virtual bool syncSridAndEnvelope(Properties& properties);
 
+        virtual bool adjustMapSizeProperties(Properties& properties);
+
         virtual bool syncMapSizeProperties(Properties& properties);
 
         virtual bool syncMapScaleProperties(Properties& properties);
 
+        virtual bool syncPlanarGridInitProperties(Properties& properties);
+
+        virtual bool syncGeodesicGridInitProperties(Properties& properties);
+
+        virtual bool syncGridReferenceProperties(Properties& properties);
+
         virtual AbstractProxyProject* getAbstractProxyProject();
 
         virtual void changedPropertyLayerURIFromDropEvent(const Properties& beforeProps);
+
+        virtual double getInitialCoord(double initialCoord, double distance, double& gap) const;
     };
   }
 }

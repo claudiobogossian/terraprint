@@ -40,7 +40,6 @@
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/enum/Enums.h"
-#include "../core/pattern/command/ChangePropertyCommand.h"
 #include "../core/Scene.h"
 #include "../core/propertybrowser/PropertiesUtils.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
@@ -53,7 +52,6 @@
 #include <QHBoxLayout>
 #include <QToolButton>
 #include <QLabel>
-#include <QUndoCommand>
 #include <QLineEdit>
 
 #include <QtPropertyBrowser/QtTreePropertyBrowser>
@@ -250,47 +248,11 @@ bool te::layout::PropertiesOutside::sendPropertyToItems(const Property& property
 {
   bool result = true; 
 
-  std::vector<QGraphicsItem*> commandItems;
-  std::vector<Properties> commandOld;
-  std::vector<Properties> commandNew;
+  Properties properties;
+  properties.addProperty(property);
 
-  foreach(QGraphicsItem* item, items)
-  {
-    if (item)
-    {
-      AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
-      if (lItem)
-      {
-        if (!lItem->getController())
-        {
-          continue;
-        }
-
-        Properties beforeProps = lItem->getController()->getProperties();
-
-        Properties props("");
-        props.setObjectName(beforeProps.getObjectName());
-        props.setTypeObj(beforeProps.getTypeObj());
-        props.setHashCode(beforeProps.getHashCode());
-        props.addProperty(property);
-
-        lItem->getController()->setProperty(property);
-
-        Properties afterProps = lItem->getController()->getProperties();
-        commandItems.push_back(item);
-        commandOld.push_back(beforeProps);
-        commandNew.push_back(afterProps);
-
-        }
-      }
-   }
-
-  if (!items.isEmpty())
-  {
-    QUndoCommand* command = new ChangePropertyCommand(commandItems, commandOld, commandNew, this);
-
-   m_scene->addUndoStack(command);
-  }
+  m_scene->addChangePropertiesCommandToStack(items, properties);
+  
   return result;
 }
 

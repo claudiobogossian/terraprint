@@ -31,8 +31,8 @@
 #define __TERRALIB_LAYOUT_INTERNAL_MAP_MODEL_H
 
 // TerraLib
-#include "../core/pattern/mvc/AbstractItemModel.h"
 #include "../core/Config.h"
+#include "../core/pattern/mvc/AbstractItemModel.h"
 
 // STL
 #include <map>
@@ -44,7 +44,8 @@ namespace te
 {
   namespace layout
   {
-    class Systematic;
+    class GridSettingsConfigProperties;
+    class Property;
 
     /*!
     \brief Class that represents a "Model" part of Map MVC component.  
@@ -67,7 +68,15 @@ namespace te
         /*!
           \brief Destructor
         */ 
-        virtual ~MapModel();
+        virtual ~MapModel(); 
+
+    protected:
+
+        te::layout::Property getBasicGridSettings(GridSettingsConfigProperties* settingsConfig) const;
+
+        void initializeMapSettings();
+        void initializePlanarGridSettings();
+        void initializeGeodesicGridSettings();
     };
   }
 }

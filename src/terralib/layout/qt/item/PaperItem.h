@@ -60,14 +60,18 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        PaperItem(AbstractItemController* controller);
+        PaperItem();
 
         /*!
           \brief Destructor
          */
         virtual ~PaperItem();
 
-    protected:
+      protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
     };

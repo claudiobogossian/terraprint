@@ -25,7 +25,7 @@
 
 // Terralib
 #include "LayoutEditorAction.h"
-#include "terralib/qt/af/ApplicationController.h"
+#include <terralib/qt/af/ApplicationController.h>
 #include "../../../layout/qt/default/MainLayout.h"
 #include "terralib/common/TerraLib.h"
 #include "../../../layout/core/Config.h"
@@ -35,6 +35,7 @@
 #include "../../../layout/qt/default/ObjectInspectorDock.h"
 #include "../../../layout/qt/outside/ToolbarOutside.h"
 #include "terralib/common/progress/ProgressManager.h"
+#include "../../../layout/core/enum/Enums.h"
 
 #include "ProxyProject.h"
 
@@ -46,6 +47,8 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QVBoxLayout>
+#include <QMessageBox>
+#include <QGraphicsScene>
 
 // STL
 #include <memory>
@@ -65,20 +68,6 @@ te::qt::plugins::layout::LayoutEditorAction::~LayoutEditorAction()
 {
   TerraLib::getInstance().remove(TE_LAYOUT_MODULE_NAME);
 
-
-  if (m_dockLayoutDisplay != 0)
-  {
-    m_dockLayoutDisplay->setPreviousCentralWidget(0);
-  }
-
-  onExit();
-
-  if(m_mainLayout)
-  {
-    delete m_mainLayout;
-    m_mainLayout=0;
-  }
-
   m_menu->clear();
 }
 
@@ -91,10 +80,6 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   QSize size = mw->centralWidget()->size();
   QRect screen = mw->centralWidget()->geometry();
 
-  if(m_mainLayout)
-  {
-    delete m_mainLayout;
-  }
   m_mainLayout = new te::layout::MainLayout(proxyProject);
   m_mainLayout->init(size, screen);
 
@@ -114,7 +99,7 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
   m_dockLayoutDisplay->setWidget(m_groupBox);
   m_dockLayoutDisplay->setPreviousCentralWidget(mw->centralWidget());
   m_dockLayoutDisplay->setParent(mw);
-
+  
   mw->setCentralWidget(m_dockLayoutDisplay);
   m_dockLayoutDisplay->setVisible(true);
 
@@ -157,49 +142,7 @@ void te::qt::plugins::layout::LayoutEditorAction::onActionActivated(bool checked
 
 void te::qt::plugins::layout::LayoutEditorAction::onExit()
 {
-  QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
-
-  m_menu->clear();
-  createAction(tr("Layout Editor..."));
-
-  if(m_mainLayout)
-  {
-    if(m_mainLayout->getProperties())
-    {
-      mw->removeDockWidget(m_mainLayout->getProperties());
-      m_mainLayout->getProperties()->close();
-    }
-
-    if(m_mainLayout->getObjectInspector())
-    {
-      mw->removeDockWidget(m_mainLayout->getObjectInspector());
-      m_mainLayout->getObjectInspector()->close();
-    }
-
-    if(m_mainLayout->getToolbar())
-    {
-      mw->removeToolBar(m_mainLayout->getToolbar());
-      m_mainLayout->getToolbar()->close();
-    }
-
-    if(m_mainLayout->getEditTemplate())
-    {
-      mw->removeDockWidget(m_mainLayout->getEditTemplate());
-      m_mainLayout->getEditTemplate()->close();
-
-    }
-
-    if(m_dockLayoutDisplay)
-    {
-      mw->removeDockWidget(m_dockLayoutDisplay);
-      m_dockLayoutDisplay->close();
-      delete m_dockLayoutDisplay;
-      m_dockLayoutDisplay = 0;
-    }
-  }
-
-  //enabling taskManager
-  te::common::ProgressManager::getInstance().setSuspendViewers(false);
+  finalizeLayout();
 }
 
 void te::qt::plugins::layout::LayoutEditorAction::createMenu()
@@ -212,3 +155,95 @@ void te::qt::plugins::layout::LayoutEditorAction::createMenu()
   actionExit->setToolTip("");
   layoutMenu->addAction(actionExit);
 }
+
+void te::qt::plugins::layout::LayoutEditorAction::finalizeLayout(bool shutdown)
+{
+  QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
+
+  bool saveTempFile = false;
+
+  if (m_dockLayoutDisplay && !shutdown)
+  {
+    QGraphicsScene* sc = m_mainLayout->getView()->scene();
+    if (sc)
+    {
+      if (sc->items().count() > 1)
+      {
+        int answer = QMessageBox::question(mw, tr("Close"), tr("You have been editing a map. If you leave before saving, your changes will be lost. Do you want to save before you leave?"), QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+        if (answer == QMessageBox::Yes)
+        {
+          saveTempFile = true;
+        }
+      }
+    }
+
+    // export template
+    if (saveTempFile)
+    {
+      bool cancel = false;
+      te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
+      m_mainLayout->getView()->exportTemplate(enumTemplate->getXmlType(), cancel); // export to xml
+    }
+  }
+
+  m_menu->clear();
+
+  closeLayout(shutdown);
+
+  if (m_mainLayout)
+  {
+    delete m_mainLayout;
+    m_mainLayout = 0;
+  }
+
+  createAction(tr("Layout Editor..."));
+
+  //enabling taskManager
+  te::common::ProgressManager::getInstance().setSuspendViewers(false);
+}
+
+void te::qt::plugins::layout::LayoutEditorAction::closeLayout(bool shutdown)
+{
+  QMainWindow* mw = dynamic_cast<QMainWindow*>(te::qt::af::AppCtrlSingleton::getInstance().getMainWindow());
+
+  if (m_mainLayout)
+  {
+    if (m_mainLayout->getProperties())
+    {
+      mw->removeDockWidget(m_mainLayout->getProperties());
+      m_mainLayout->getProperties()->close();
+    }
+
+    if (m_mainLayout->getObjectInspector())
+    {
+      mw->removeDockWidget(m_mainLayout->getObjectInspector());
+      m_mainLayout->getObjectInspector()->close();
+    }
+
+    if (m_mainLayout->getToolbar())
+    {
+      mw->removeToolBar(m_mainLayout->getToolbar());
+      m_mainLayout->getToolbar()->close();
+    }
+
+    if (m_mainLayout->getEditTemplate())
+    {
+      mw->removeDockWidget(m_mainLayout->getEditTemplate());
+      m_mainLayout->getEditTemplate()->close();
+
+    }
+
+    if (m_dockLayoutDisplay)
+    {
+      if (shutdown) // shutdown plugin
+      {
+        m_dockLayoutDisplay->setPreviousCentralWidget(0);
+      }
+      mw->removeDockWidget(m_dockLayoutDisplay);
+      m_dockLayoutDisplay->close();
+      delete m_dockLayoutDisplay;
+      m_dockLayoutDisplay = 0;
+    }
+  }
+}
+

@@ -47,7 +47,7 @@ namespace te
 
         virtual ~PlanarGridSettingsConfigProperties(void);
       
-        std::string getUnit();
+        const std::string& getUnit() const;
 
       protected:
 
