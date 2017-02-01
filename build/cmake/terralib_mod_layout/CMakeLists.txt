@@ -326,7 +326,6 @@ file(COPY ${mo_input_dir}/telayout.mo DESTINATION ${mo_output_dir})
 
 file(GLOB _qm_files)
 if (QT4_FOUND)
-  message("terralib_absolute_root_dir: ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout")
   GenerateTranslationQt4("${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout" "terralib_mod_layout" _qm_files)
 else()
   if (Qt5_FOUND)
@@ -336,12 +335,14 @@ endif()
 file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
 list(APPEND _qm_files ${translated_files})
 
-#Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
-add_custom_command(
-  TARGET terralib_mod_layout
-  POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${terralib_DIR}/share/terralib/translations
-)
+if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
+  #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
+  add_custom_command(
+    TARGET terralib_mod_layout
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${terralib_DIR}/share/terralib/translations
+  )
+endif()
 
 install(
   FILES ${mo_input_dir}/telayout.mo
