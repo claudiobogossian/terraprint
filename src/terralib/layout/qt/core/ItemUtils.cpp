@@ -922,7 +922,6 @@ void te::layout::ItemUtils::normalizeItem(QGraphicsItem* qItem)
   double x = Property::GetValueAs<double>(item->getProperty("x"));
   double y = Property::GetValueAs<double>(item->getProperty("y"));
   QPointF parentPos(x, y);
-  QPointF parentPosAAAA = qItem->pos();
 
   QRectF parentRect = qItem->childrenBoundingRect();
   parentRect = qItem->mapToParent(parentRect).boundingRect();
