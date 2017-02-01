@@ -80,7 +80,7 @@ te::layout::MapModel::MapModel()
     Property property(0);
     property.setName("background_color");
     property.setValue(backgroundColor, dataType->getDataTypeColor());
-    this->m_properties.updateProperty(property);
+    //this->m_properties.updateProperty(property);
   }
   {
     Property property(0);
