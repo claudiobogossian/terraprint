@@ -59,6 +59,7 @@ void te::layout::ItemGroupController::addItem(QGraphicsItem* newChild)
   ItemUtils::preparePositionForUpdate(newChildPos, properties);
 
   m_propagateResize = false;
+  m_ignoreChildrenUpdates = true;
 
   childView->setProperties(properties);
  
@@ -67,6 +68,7 @@ void te::layout::ItemGroupController::addItem(QGraphicsItem* newChild)
   childView->attach(m_view);
   
   m_propagateResize = true;
+  m_ignoreChildrenUpdates = false;
 }
 
 void te::layout::ItemGroupController::removeFromGroup(QGraphicsItem* item)
@@ -118,8 +120,6 @@ void te::layout::ItemGroupController::setProperties(const Properties& properties
 
 void te::layout::ItemGroupController::update(const Subject* subject)
 {
-  return;
-
   if (m_ignoreChildrenUpdates == true)
   {
     return;
@@ -250,7 +250,10 @@ QRectF te::layout::ItemGroupController::resizeChildren(QGraphicsItem* qItem, dou
 
       Properties childProperties;
       ItemUtils::prepareBoundingRectForUpdate(childRect, childProperties);
+
+      m_ignoreChildrenUpdates = true;
       childView->setProperties(childProperties);
+      m_ignoreChildrenUpdates = false;
     }
 
     return newItemRect;
