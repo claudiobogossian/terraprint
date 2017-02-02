@@ -136,7 +136,7 @@ namespace te
         \param enabled if true will generate an UndoCommand on the stack, false otherwise.
 
         */
-        void setUndoEnabled(bool enabled);
+        virtual void setUndoEnabled(bool enabled);
 
         /*
         \brief Check if set properties will or not generate an UndoCommand on the stack.
