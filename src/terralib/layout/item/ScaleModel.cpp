@@ -36,6 +36,8 @@
 #include "../core/Font.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
 {
@@ -61,7 +63,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale");
-    property.setLabel(TR_LAYOUT("Scale"));
+    property.setLabel(TE_TR("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -69,7 +71,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale_width_rect_gap");
-    property.setLabel(TR_LAYOUT("Scale Gap X"));
+    property.setLabel(TE_TR("Scale Gap X"));
     property.setValue(scaleGapX, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
@@ -77,16 +79,16 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale_height_rect_gap");
-    property.setLabel(TR_LAYOUT("Scale Gap Y"));
+    property.setLabel(TE_TR("Scale Gap Y"));
     property.setValue(scaleGapY, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
 
   {
-    std::string value = TR_LAYOUT("Settings");
+    std::string value = TE_TR("Settings");
     Property property(0);
     property.setName("scaleSettings");
-    property.setLabel(TR_LAYOUT("Scale Settings"));
+    property.setLabel(TE_TR("Scale Settings"));
     property.setValue(value, dataType->getDataTypeScaleSettings());
     property.setSerializable(false);
     property.setMenu(true);
@@ -97,7 +99,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName(sharedProps.getItemObserver());
-    property.setLabel(TR_LAYOUT("Connection with"));
+    property.setLabel(TE_TR("Connection with"));
     property.setComposeWidget(true);
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
@@ -109,7 +111,7 @@ te::layout::ScaleModel::ScaleModel()
 
     Property property(0);
     property.setName("scale_type");
-    property.setLabel(TR_LAYOUT("Graphic type"));
+    property.setLabel(TE_TR("Graphic type"));
     property.setValue(currentScaleType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -135,7 +137,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("line_width");
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setVisible(false);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
@@ -144,7 +146,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("font");
-    property.setLabel(TR_LAYOUT("Font"));
+    property.setLabel(TE_TR("Font"));
     property.setValue(font, dataType->getDataTypeFont());
     m_properties.addProperty(property);
   }
@@ -152,7 +154,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("font_color");
-    property.setLabel(TR_LAYOUT("Font Color"));
+    property.setLabel(TE_TR("Font Color"));
     property.setValue(fontColor, dataType->getDataTypeColor());
     property.setVisible(false);
     m_properties.addProperty(property);
@@ -161,7 +163,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("Unit");
-    property.setLabel(TR_LAYOUT("Unit"));
+    property.setLabel(TE_TR("Unit"));
     property.setValue(std::string("km"), dataType->getDataTypeStringList());
 
     Variant v;
@@ -178,7 +180,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("scale_in_unit_width_rect_gap");
-    property.setLabel(TR_LAYOUT("Scale Gap X In Unit"));
+    property.setLabel(TE_TR("Scale Gap X In Unit"));
     property.setValue(scaleUnitGapX, dataType->getDataTypeDouble(), true, 1);
     m_properties.addProperty(property);
   }
@@ -186,7 +188,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("only_first_and_last_value");
-    property.setLabel(TR_LAYOUT("Only the first and the last value"));
+    property.setLabel(TE_TR("Only the first and the last value"));
     property.setValue(onlyFirstAndLastValue, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
@@ -194,7 +196,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("by_breaks");
-    property.setLabel(TR_LAYOUT("By Breaks"));
+    property.setLabel(TE_TR("By Breaks"));
     property.setVisible(false);
     property.setValue(byBreaks, dataType->getDataTypeBool());
     m_properties.addProperty(property);
@@ -203,7 +205,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("number_of_breaks");
-    property.setLabel(TR_LAYOUT("Number of graphical scale breaks"));
+    property.setLabel(TE_TR("Number of graphical scale breaks"));
     property.setValue(numberOfBreaks, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }

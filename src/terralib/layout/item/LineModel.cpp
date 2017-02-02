@@ -34,6 +34,8 @@
 #include "../core/enum/EnumType.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::LineModel::LineModel() 
   : AbstractItemModel()
 {
@@ -50,7 +52,7 @@ te::layout::LineModel::LineModel()
 
     Property property(0);
     property.setName("line_style_type");
-    property.setLabel(TR_LAYOUT("Line Style"));
+    property.setLabel(TE_TR("Line Style"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -75,7 +77,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("line_width");
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
   }
@@ -83,7 +85,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel(TR_LAYOUT("Color"));
+    property.setLabel(TE_TR("Color"));
     property.setValue(color, dataType->getDataTypeColor());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -92,7 +94,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("geometry");
-    property.setLabel(TR_LAYOUT("Geometry"));
+    property.setLabel(TE_TR("Geometry"));
     property.setVisible(false);
     property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
     this->m_properties.addProperty(property);
@@ -101,7 +103,7 @@ te::layout::LineModel::LineModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setLabel(TR_LAYOUT("Resizable"));
+    property.setLabel(TE_TR("Resizable"));
     property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
   }

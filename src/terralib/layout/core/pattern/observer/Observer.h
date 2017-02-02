@@ -31,6 +31,8 @@
 //TerraLib
 #include "../../Config.h"
 
+#include <vector>
+
 namespace te
 {
   namespace layout

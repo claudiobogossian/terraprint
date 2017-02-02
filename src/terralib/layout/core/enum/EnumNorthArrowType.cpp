@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumNorthArrowType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumNorthArrowType::EnumNorthArrowType() :
   m_noneType(0),
   m_northArrow1(0),
@@ -44,13 +46,13 @@ te::layout::EnumNorthArrowType::~EnumNorthArrowType()
 
 void te::layout::EnumNorthArrowType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_northArrow1 = createEnum("NorthArrow1", this, TR_LAYOUT("North Arrow 1"));
+  m_northArrow1 = createEnum("NorthArrow1", this, TE_TR("North Arrow 1"));
 
-  m_northArrow2 = createEnum("NorthArrow2", this, TR_LAYOUT("North Arrow 2"));
+  m_northArrow2 = createEnum("NorthArrow2", this, TE_TR("North Arrow 2"));
 
-  m_northArrow3 = createEnum("NorthArrow3", this, TR_LAYOUT("North Arrow 3"));
+  m_northArrow3 = createEnum("NorthArrow3", this, TE_TR("North Arrow 3"));
 
 }
 

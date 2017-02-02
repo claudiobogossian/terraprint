@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumRectangleType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumRectangleType::EnumRectangleType() :
   m_noneType(0),
   m_simpleRect(0),
@@ -44,13 +46,13 @@ te::layout::EnumRectangleType::~EnumRectangleType()
 
 void te::layout::EnumRectangleType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_simpleRect = createEnum("Simple Rectangle", this, TR_LAYOUT("Simple Rectangle"));
+  m_simpleRect = createEnum("Simple Rectangle", this, TE_TR("Simple Rectangle"));
 
-  m_roundedRect = createEnum("Rounded Rectangle", this, TR_LAYOUT("Rounded Rectangle"));
+  m_roundedRect = createEnum("Rounded Rectangle", this, TE_TR("Rounded Rectangle"));
 
-  m_singleCornerTrimmedRect = createEnum("Single Corner Trimmed Rectangle", this, TR_LAYOUT("Single Corner Trimmed Rectangle"));
+  m_singleCornerTrimmedRect = createEnum("Single Corner Trimmed Rectangle", this, TE_TR("Single Corner Trimmed Rectangle"));
 }
 
 te::layout::EnumType* te::layout::EnumRectangleType::getNoneType() const

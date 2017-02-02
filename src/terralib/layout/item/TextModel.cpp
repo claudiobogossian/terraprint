@@ -32,6 +32,8 @@
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::TextModel::TextModel()
   : AbstractItemModel()
 {
@@ -49,7 +51,7 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("font");
-    property.setLabel(TR_LAYOUT("Font"));
+    property.setLabel(TE_TR("Font"));
     property.setValue(font, dataType->getDataTypeFont());
     m_properties.addProperty(property);
   }
@@ -57,7 +59,7 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("text");
-    property.setLabel(TR_LAYOUT("Text"));
+    property.setLabel(TE_TR("Text"));
     property.setValue(text, dataType->getDataTypeString());
     m_properties.addProperty(property);
   }
@@ -65,7 +67,7 @@ te::layout::TextModel::TextModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel(TR_LAYOUT("Color"));
+    property.setLabel(TE_TR("Color"));
     property.setValue(color, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
@@ -95,7 +97,7 @@ te::layout::TextModel::TextModel()
 
     Property property(0);
     property.setName("alignment");
-    property.setLabel(TR_LAYOUT("Alignment"));
+    property.setLabel(TE_TR("Alignment"));
     property.setValue(currentAlignmentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;

@@ -24,15 +24,17 @@
 */
 
 // TerraLib
-#include "../../../BuildConfig.h"
-#include "terralib/common/Config.h"
-#include "terralib/common/Translator.h"
-#include "terralib/common/Logger.h"
-#include "terralib/qt/af/ApplicationController.h"
-#include "terralib/qt/af/events/ApplicationEvents.h"
 #include "Plugin.h"
-#include "terralib/qt/af/Utils.h"
+
+#include "../../../BuildConfig.h"
+#include <terralib/common/Config.h>
+#include <terralib/core/translator/Translator.h>
+#include <terralib/core/logger/Logger.h>
+#include <terralib/qt/af/ApplicationController.h>
+#include <terralib/qt/af/events/ApplicationEvents.h>
+#include <terralib/qt/af/Utils.h>
 #include "../../../layout/qt/core/ItemUtils.h"
+
 
 #if defined(TERRALIB_APACHE_LOG4CXX_ENABLED) && defined(TERRALIB_LOGGER_ENABLED)
 //Log4cxx
@@ -57,9 +59,9 @@
 #include <QMenu>
 #include <QMenuBar>
 
-te::qt::plugins::layout::Plugin::Plugin(const te::plugin::PluginInfo& pluginInfo)
+te::qt::plugins::layout::Plugin::Plugin(const te::core::PluginInfo& pluginInfo)
   : QObject(),
-  te::plugin::Plugin(pluginInfo), m_layoutMenu(0)
+  te::core::CppPlugin(pluginInfo), m_layoutMenu(0)
 {
 }
 
@@ -73,7 +75,9 @@ void te::qt::plugins::layout::Plugin::startup()
     return;
 
 // it initializes the Translator support for the TerraLib LayoutEditor Qt Plugin
-  TE_ADD_TEXT_DOMAIN(TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN, TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN_DIR, "ISO-8859-1");
+  TE_ADD_TEXT_DOMAIN(TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN, TE_QT_PLUGIN_LAYOUT_TEXT_DOMAIN_DIR);
+
+  TE_TR_LANGUAGE("ISO-8859-1");
 
   TE_LOG_TRACE(TE_TR("TerraLib Qt TerraPrint Plugin startup!"));
   
@@ -173,4 +177,4 @@ void  te::qt::plugins::layout::Plugin::unRegisterActions()
 #endif
 }
 
-PLUGIN_CALL_BACK_IMPL(te::qt::plugins::layout::Plugin)
+TERRALIB_PLUGIN_CALL_BACK_IMPL(te::qt::plugins::layout::Plugin)

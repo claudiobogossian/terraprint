@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumLineStyleType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumLineStyleType::EnumLineStyleType() :
   m_styleNone(0),
   m_styleSolid(0),
@@ -81,17 +83,17 @@ te::layout::EnumLineStyleType::~EnumLineStyleType()
 
 void te::layout::EnumLineStyleType::init()
 {
-  m_styleNone = createEnum("No Line", this, TR_LAYOUT("No Line"));
+  m_styleNone = createEnum("No Line", this, TE_TR("No Line"));
 
-  m_styleSolid = createEnum("Solid", this, TR_LAYOUT("Continuous"));
+  m_styleSolid = createEnum("Solid", this, TE_TR("Continuous"));
 
-  m_styleDash = createEnum("Dash", this, TR_LAYOUT("Dashed"));
+  m_styleDash = createEnum("Dash", this, TE_TR("Dashed"));
 
-  m_styleDot = createEnum("Dot", this, TR_LAYOUT("Dotted"));
+  m_styleDot = createEnum("Dot", this, TE_TR("Dotted"));
 
-  m_styleDashDot = createEnum("Dash Dot", this, TR_LAYOUT("Dash Dot"));
+  m_styleDashDot = createEnum("Dash Dot", this, TE_TR("Dash Dot"));
 
-  m_styleDashDotDot = createEnum("Dash Dot Dot", this, TR_LAYOUT("Dash Dot Dot"));
+  m_styleDashDotDot = createEnum("Dash Dot Dot", this, TE_TR("Dash Dot Dot"));
 }
 
 te::layout::EnumType* te::layout::EnumLineStyleType::getStyleNone() const

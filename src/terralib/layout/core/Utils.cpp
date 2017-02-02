@@ -39,7 +39,6 @@
 #include "terralib/maptools/Utils.h"
 #include "terralib/maptools/WorldDeviceTransformer.h"
 #include "terralib/srs/SpatialReferenceSystemManager.h"
-#include "terralib/common/Translator.h"
 #include "../core/ContextObject.h"
 #include "enum/AbstractType.h"
 #include "pattern/singleton/Context.h"

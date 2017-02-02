@@ -37,6 +37,8 @@
 #include "TextModel.h"
 #include "../core/enum/EnumAlignmentType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::BalloonModel::BalloonModel()
 : TextModel()
 {
@@ -54,7 +56,7 @@ te::layout::BalloonModel::BalloonModel()
 
     Property property(0);
     property.setName("balloon_type");
-    property.setLabel(TR_LAYOUT("Balloon Type"));
+    property.setLabel(TE_TR("Balloon Type"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -83,7 +85,7 @@ te::layout::BalloonModel::BalloonModel()
 
     Property property(0);
     property.setName("alignment");
-    property.setLabel(TR_LAYOUT("Alignment"));
+    property.setLabel(TE_TR("Alignment"));
     property.setValue(currentAlignmentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -113,7 +115,7 @@ te::layout::BalloonModel::BalloonModel()
 
     Property property(0);
     property.setName("balloon_direction");
-    property.setLabel(TR_LAYOUT("Balloon Direction"));
+    property.setLabel(TE_TR("Balloon Direction"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -140,7 +142,7 @@ te::layout::BalloonModel::BalloonModel()
   {
     Property property(0);
     property.setName("margin_size");
-    property.setLabel(TR_LAYOUT("Margin Size"));
+    property.setLabel(TE_TR("Margin Size"));
     property.setValue(margin, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
   }
@@ -154,7 +156,7 @@ te::layout::BalloonModel::BalloonModel()
   {
     Property property(0);
     property.setName("fill_color");
-    property.setLabel(TR_LAYOUT("Fill Color"));
+    property.setLabel(TE_TR("Fill Color"));
     property.setValue(fillColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -163,7 +165,7 @@ te::layout::BalloonModel::BalloonModel()
   {
     Property property(0);
     property.setName("contour_color");
-    property.setLabel(TR_LAYOUT("Contour Color"));
+    property.setLabel(TE_TR("Contour Color"));
     property.setValue(contourColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -172,7 +174,7 @@ te::layout::BalloonModel::BalloonModel()
   {
     Property property(0);
     property.setName("contour_thickness");
-    property.setLabel(TR_LAYOUT("Contour Thickness"));
+    property.setLabel(TE_TR("Contour Thickness"));
     property.setValue(contourThickness, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }

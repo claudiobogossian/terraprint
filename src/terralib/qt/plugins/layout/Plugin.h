@@ -27,8 +27,9 @@
 #define __TE_QT_PLUGINS_LAYOUT_INTERNAL_PLUGIN_H
 
 // TerraLib
-#include "terralib/plugin/Plugin.h"
 #include "Config.h"
+
+#include <terralib/core/plugin/CppPlugin.h>
 
 // Qt
 #include <QMenu>
@@ -51,11 +52,11 @@ namespace te
       {
         class LayoutEditorAction;
 
-        class Plugin : public QObject, public te::plugin::Plugin
+        class Plugin : public QObject, public te::core::CppPlugin
         {
           public:
 
-            Plugin(const te::plugin::PluginInfo& pluginInfo);
+            Plugin(const te::core::PluginInfo& pluginInfo);
 
             ~Plugin();
 
@@ -88,7 +89,5 @@ namespace te
     }   // end namespace plugins
   }     // end namespace qt
 }       // end namespace te
-
-PLUGIN_CALL_BACK_DECLARATION(TEQTPLUGINLAYOUTEXPORT);
 
 #endif //__TE_QT_PLUGINS_LAYOUT_INTERNAL_PLUGIN_H

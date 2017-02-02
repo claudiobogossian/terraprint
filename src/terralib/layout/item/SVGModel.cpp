@@ -29,6 +29,8 @@
 #include "SVGModel.h"
 #include "../core/enum/Enums.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::SVGModel::SVGModel()
   : AbstractItemModel()
 {
@@ -40,7 +42,7 @@ te::layout::SVGModel::SVGModel()
   {
     Property property(0);
     property.setName("file_name");
-    property.setLabel(TR_LAYOUT("File Name"));
+    property.setLabel(TE_TR("File Name"));
     property.setValue(fileName, dataType->getDataTypeString());
     property.setEditable(false);
     m_properties.addProperty(property);
@@ -64,7 +66,7 @@ te::layout::SVGModel::SVGModel()
   {
     Property property(0);
     property.setName("keep_aspect");
-    property.setLabel(TR_LAYOUT("Keep Aspect"));
+    property.setLabel(TE_TR("Keep Aspect"));
     property.setValue<bool>(true, dataType->getDataTypeBool());
     property.setVisible(true);
     m_properties.completelyUpdateProperty(property);
@@ -73,7 +75,7 @@ te::layout::SVGModel::SVGModel()
   {
     Property property(0);
     property.setName("SVG_Library");
-    property.setLabel(TR_LAYOUT("SVG Library"));
+    property.setLabel(TE_TR("SVG Library"));
     std::string name = "";
     property.setValue(name, dataType->getDataTypeSVGView());
     property.setVisible(true);

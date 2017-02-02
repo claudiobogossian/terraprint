@@ -33,11 +33,13 @@
 #include "../core/property/Property.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::NorthModel::NorthModel()
   : AbstractItemModel()
 {
   te::color::RGBAColor color(0, 0, 0, 255);
-  std::string name = TR_LAYOUT("Settings");
+  std::string name = TE_TR("Settings");
   double lineWidth = Utils::getLineWidthMinimumValue();
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -49,7 +51,7 @@ te::layout::NorthModel::NorthModel()
 
     Property property(0);
     property.setName("northArrow_type");
-    property.setLabel(TR_LAYOUT("Graphic Type"));
+    property.setLabel(TE_TR("Graphic Type"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -75,7 +77,7 @@ te::layout::NorthModel::NorthModel()
   {
     Property property(0);
     property.setName("line_width");
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setVisible(false);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
@@ -84,7 +86,7 @@ te::layout::NorthModel::NorthModel()
   {
     Property property(0);
     property.setName("color");
-    property.setLabel(TR_LAYOUT("Color"));
+    property.setLabel(TE_TR("Color"));
     property.setValue(color, dataType->getDataTypeColor());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -93,7 +95,7 @@ te::layout::NorthModel::NorthModel()
   // North settings
   Property prop_northsettings(0);
   prop_northsettings.setName("NorthSettings");
-  prop_northsettings.setLabel(TR_LAYOUT("North Settings"));
+  prop_northsettings.setLabel(TE_TR("North Settings"));
   prop_northsettings.setMenu(true);
   prop_northsettings.setValue(name, dataType->getDataTypeNorthSettings());
   this->m_properties.addProperty(prop_northsettings);

@@ -33,6 +33,8 @@
 #include "../core/property/Property.h"
 #include "terralib/color/RGBAColor.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::PolygonModel::PolygonModel()
 {
   te::color::RGBAColor fillColor = te::color::RGBAColor(255, 255, 255, 255);
@@ -45,7 +47,7 @@ te::layout::PolygonModel::PolygonModel()
   {
     Property property(0);
     property.setName("fill_color");
-    property.setLabel(TR_LAYOUT("Fill Color"));
+    property.setLabel(TE_TR("Fill Color"));
     property.setValue(fillColor, dataType->getDataTypeColor());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -54,7 +56,7 @@ te::layout::PolygonModel::PolygonModel()
   {
     Property property(0);
     property.setName("contour_color");
-    property.setLabel(TR_LAYOUT("Contour Color"));
+    property.setLabel(TE_TR("Contour Color"));
     property.setValue(contourColor, dataType->getDataTypeColor());
     property.setMenu(true);
     this->m_properties.addProperty(property);
@@ -63,7 +65,7 @@ te::layout::PolygonModel::PolygonModel()
   {
     Property property(0);
     property.setName("geometry");
-    property.setLabel(TR_LAYOUT("Geometry"));
+    property.setLabel(TE_TR("Geometry"));
     property.setVisible(false);
     property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
     this->m_properties.updateProperty(property);

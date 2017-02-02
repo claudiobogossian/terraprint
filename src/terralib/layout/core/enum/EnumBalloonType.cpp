@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumBalloonType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumBalloonType::EnumBalloonType() :
   m_noneType(0),
   m_balloon1(0),
@@ -44,13 +46,13 @@ te::layout::EnumBalloonType::~EnumBalloonType()
 
 void te::layout::EnumBalloonType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_balloon1 = createEnum("RectangleBalloon", this, TR_LAYOUT("Rectangle Balloon"));
+  m_balloon1 = createEnum("RectangleBalloon", this, TE_TR("Rectangle Balloon"));
 
-  m_balloon2 = createEnum("RoundedRectangleBalloon ", this, TR_LAYOUT("Rounded Rectangle Balloon"));
+  m_balloon2 = createEnum("RoundedRectangleBalloon ", this, TE_TR("Rounded Rectangle Balloon"));
 
-  m_balloon3 = createEnum("EllipseBalloon", this, TR_LAYOUT("Ellipse Balloon"));
+  m_balloon3 = createEnum("EllipseBalloon", this, TE_TR("Ellipse Balloon"));
 
 }
 

@@ -32,6 +32,8 @@
 #include "../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../core/property/SharedProperties.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::MapLocationModel::MapLocationModel() 
   : MapModel()
 {
@@ -57,9 +59,9 @@ te::layout::MapLocationModel::MapLocationModel()
   Property propertyMapSettings  = m_properties.getProperty("mapSettings");
 
   {
-    std::string value = TR_LAYOUT("Settings");
+    std::string value = TE_TR("Settings");
     propertyMapSettings.setName("mapSettings");
-    propertyMapSettings.setLabel(TR_LAYOUT("Map Location Settings"));
+    propertyMapSettings.setLabel(TE_TR("Map Location Settings"));
     propertyMapSettings.setValue(value, dataType->getDataTypeMapLocationSettings());
     propertyMapSettings.setMenu(true);
     m_properties.completelyUpdateProperty(propertyMapSettings);
@@ -76,7 +78,7 @@ te::layout::MapLocationModel::MapLocationModel()
   {
     Property property(0);
     property.setName("reference_box_fill_color");
-    property.setLabel(TR_LAYOUT("Reference Envelope Fill Color"));
+    property.setLabel(TE_TR("Reference Envelope Fill Color"));
     property.setValue(referenceBoxFillColor, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
@@ -84,7 +86,7 @@ te::layout::MapLocationModel::MapLocationModel()
   {
     Property property(0);
     property.setName("reference_box_contour_color");
-    property.setLabel(TR_LAYOUT("Reference Envelope Contour Color"));
+    property.setLabel(TE_TR("Reference Envelope Contour Color"));
     property.setValue(referenceBoxContourColor, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
@@ -93,7 +95,7 @@ te::layout::MapLocationModel::MapLocationModel()
   {
     Property property(0);
     property.setName(sharedProps.getItemObserver());
-    property.setLabel(TR_LAYOUT("Connection with"));
+    property.setLabel(TE_TR("Connection with"));
     property.setComposeWidget(true);
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);

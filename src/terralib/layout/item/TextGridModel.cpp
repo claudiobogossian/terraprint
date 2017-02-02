@@ -29,6 +29,8 @@
 #include "TextGridModel.h"
 #include "../core/enum/Enums.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::TextGridModel::TextGridModel()
   : TextModel()
 {
@@ -43,7 +45,7 @@ te::layout::TextGridModel::TextGridModel()
   {
     Property property;
     property.setName("text_matrix");
-    property.setLabel(TR_LAYOUT("Text Matrix"));
+    property.setLabel(TE_TR("Text Matrix"));
     property.setValue(textMatrix, dataType->getDataTypeStringMatrix());
     property.setVisible(false);
 
@@ -53,7 +55,7 @@ te::layout::TextGridModel::TextGridModel()
   {
     Property property;
     property.setName("num_rows");
-    property.setLabel(TR_LAYOUT("Number of Rows"));
+    property.setLabel(TE_TR("Number of Rows"));
     property.setValue(numRows, dataType->getDataTypeInt());
 
     m_properties.addProperty(property);
@@ -62,7 +64,7 @@ te::layout::TextGridModel::TextGridModel()
   {
     Property property;
     property.setName("num_columns");
-    property.setLabel(TR_LAYOUT("Number of Columns"));
+    property.setLabel(TE_TR("Number of Columns"));
     property.setValue(numColumns, dataType->getDataTypeInt());
 
     m_properties.addProperty(property);

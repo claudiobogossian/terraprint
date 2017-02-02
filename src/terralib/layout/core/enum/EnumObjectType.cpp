@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumObjectType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumObjectType::EnumObjectType() :
   m_rectangleItem(0),
   m_mapItem(0),
@@ -333,95 +335,95 @@ te::layout::EnumObjectType::~EnumObjectType()
 
 void te::layout::EnumObjectType::init()
 {
-  m_objectUnknown = createEnum("None", this, TR_LAYOUT("None"));
+  m_objectUnknown = createEnum("None", this, TE_TR("None"));
 
-  m_rectangleItem = createEnum("Rectangle_Item", this, TR_LAYOUT("Rectangle Item"));
+  m_rectangleItem = createEnum("Rectangle_Item", this, TE_TR("Rectangle Item"));
 
-  m_mapItem = createEnum("Map_Item", this, TR_LAYOUT("Map Item"));
+  m_mapItem = createEnum("Map_Item", this, TE_TR("Map Item"));
   
-  m_paperItem = createEnum("Paper_Item", this, TR_LAYOUT("Paper Item"));
+  m_paperItem = createEnum("Paper_Item", this, TE_TR("Paper Item"));
 
-  m_legendItem = createEnum("Legend_Item", this, TR_LAYOUT("Legend Item"));
+  m_legendItem = createEnum("Legend_Item", this, TE_TR("Legend Item"));
 
-  m_propertiesWindow = createEnum("Properties_Window", this, TR_LAYOUT("Properties Window"));
+  m_propertiesWindow = createEnum("Properties_Window", this, TE_TR("Properties Window"));
 
-  m_displayWindow = createEnum("Display_Window", this, TR_LAYOUT("Display Window"));
+  m_displayWindow = createEnum("Display_Window", this, TE_TR("Display Window"));
 
-  m_objectInspectorWindow = createEnum("ObjectInspector_Window", this, TR_LAYOUT("Object Inspector Window"));
+  m_objectInspectorWindow = createEnum("ObjectInspector_Window", this, TE_TR("Object Inspector Window"));
 
-  m_toolbar = createEnum("Toolbar", this, TR_LAYOUT("Toolbar"));
+  m_toolbar = createEnum("Toolbar", this, TE_TR("Toolbar"));
 
-  m_gridSettings  = createEnum("Grid_Settings", this, TR_LAYOUT("Grid Settings"));
+  m_gridSettings  = createEnum("Grid_Settings", this, TE_TR("Grid Settings"));
   
-  m_northSettings = createEnum("North_Settings", this, TR_LAYOUT("North Settings"));
+  m_northSettings = createEnum("North_Settings", this, TE_TR("North Settings"));
 
-  m_textItem = createEnum("Text_Item", this, TR_LAYOUT("Text Item"));
+  m_textItem = createEnum("Text_Item", this, TE_TR("Text Item"));
 
-  m_itemGroup = createEnum("Item_Group", this, TR_LAYOUT("Item Group"));
+  m_itemGroup = createEnum("Item_Group", this, TE_TR("Item Group"));
 
-  m_scaleItem = createEnum("Scale_Item", this, TR_LAYOUT("Scale Item"));
+  m_scaleItem = createEnum("Scale_Item", this, TE_TR("Scale Item"));
 
-  m_pageSetup = createEnum("Page_Setup", this, TR_LAYOUT("Page Setup"));
+  m_pageSetup = createEnum("Page_Setup", this, TE_TR("Page Setup"));
 
-  m_imageItem = createEnum("Image_Item", this, TR_LAYOUT("Image Item"));
+  m_imageItem = createEnum("Image_Item", this, TE_TR("Image Item"));
 
-  m_systematicScale = createEnum("Systematic_Scale", this, TR_LAYOUT("Systematic Scale"));
+  m_systematicScale = createEnum("Systematic_Scale", this, TE_TR("Systematic Scale"));
 
-  m_pointItem = createEnum("Point_Item", this, TR_LAYOUT("Point Item"));
+  m_pointItem = createEnum("Point_Item", this, TE_TR("Point Item"));
 
-  m_arrowItem = createEnum("Arrow_Item", this, TR_LAYOUT("Arrow Item"));
+  m_arrowItem = createEnum("Arrow_Item", this, TE_TR("Arrow Item"));
 
-  m_ellipseItem = createEnum("Ellipse_Item", this, TR_LAYOUT("Ellipse Item"));
+  m_ellipseItem = createEnum("Ellipse_Item", this, TE_TR("Ellipse Item"));
 
-  m_titleItem = createEnum("Title_Item", this, TR_LAYOUT("Title Item"));
+  m_titleItem = createEnum("Title_Item", this, TE_TR("Title Item"));
 
-  m_textGridItem = createEnum("TextGrid_Item", this, TR_LAYOUT("Text Grid Item"));
+  m_textGridItem = createEnum("TextGrid_Item", this, TE_TR("Text Grid Item"));
 
-  m_editTemplate = createEnum("Edit_Template", this, TR_LAYOUT("Edit Template"));
+  m_editTemplate = createEnum("Edit_Template", this, TE_TR("Edit Template"));
 
-  m_textGridSettings = createEnum("Text_Grid_Settings", this, TR_LAYOUT("Text Grid Settings"));
+  m_textGridSettings = createEnum("Text_Grid_Settings", this, TE_TR("Text Grid Settings"));
 
-  m_legendChildItem = createEnum("Legend_Child_Item", this, TR_LAYOUT("Legend Child Item"));
+  m_legendChildItem = createEnum("Legend_Child_Item", this, TE_TR("Legend Child Item"));
 
-  m_lineItem = createEnum("Line_Item", this, TR_LAYOUT("Line Item")); 
+  m_lineItem = createEnum("Line_Item", this, TE_TR("Line Item")); 
 
-  m_polygonItem = createEnum("Polygon_Item", this, TR_LAYOUT("Polygon Item")); 
+  m_polygonItem = createEnum("Polygon_Item", this, TE_TR("Polygon Item")); 
 
-  m_balloonItem = createEnum("Balloon_Item", this, TR_LAYOUT("Balloon Item")); 
+  m_balloonItem = createEnum("Balloon_Item", this, TE_TR("Balloon Item")); 
 
-  m_barCodeItem = createEnum("BarCode_Item", this, TR_LAYOUT("BarCode Item"));
+  m_barCodeItem = createEnum("BarCode_Item", this, TE_TR("BarCode Item"));
 
-  m_gridMapItem = createEnum("GridMap_Item", this, TR_LAYOUT("Grid Map Item"));
+  m_gridMapItem = createEnum("GridMap_Item", this, TE_TR("Grid Map Item"));
 
-  m_mapLayerChoice = createEnum("Map_Layout_Choice", this, TR_LAYOUT("Map Layout Choice"));
+  m_mapLayerChoice = createEnum("Map_Layout_Choice", this, TE_TR("Map Layout Choice"));
 
-  m_svgDialog = createEnum("SVG_Dialog", this, TR_LAYOUT("SVG Dialog"));
+  m_svgDialog = createEnum("SVG_Dialog", this, TE_TR("SVG Dialog"));
 
-  m_northItem = createEnum("North_Item", this, TR_LAYOUT("North Item"));
+  m_northItem = createEnum("North_Item", this, TE_TR("North Item"));
 
-  m_mapLocationItem = createEnum("Map_Location_Item", this, TR_LAYOUT("Map Location Item"));
+  m_mapLocationItem = createEnum("Map_Location_Item", this, TE_TR("Map Location Item"));
 
-  m_colorDialog = createEnum("Color_Dialog", this, TR_LAYOUT("Color Dialog"));
+  m_colorDialog = createEnum("Color_Dialog", this, TE_TR("Color Dialog"));
 
-  m_fontDialog = createEnum("Font_Dialog", this, TR_LAYOUT("Font Dialog"));
+  m_fontDialog = createEnum("Font_Dialog", this, TE_TR("Font Dialog"));
 
-  m_legendChoice = createEnum("Legend_Choice", this, TR_LAYOUT("Legend Choice"));
+  m_legendChoice = createEnum("Legend_Choice", this, TE_TR("Legend Choice"));
 
-  m_starItem = createEnum("Star_Item", this, TR_LAYOUT("Star Item"));
+  m_starItem = createEnum("Star_Item", this, TE_TR("Star Item"));
 
-  m_svgItem = createEnum("SVG_Item", this, TR_LAYOUT("SVG Item"));
+  m_svgItem = createEnum("SVG_Item", this, TE_TR("SVG Item"));
 
-  m_pdfSettingsDialog = createEnum("PDF_Settings", this, TR_LAYOUT("PDF Settings"));
+  m_pdfSettingsDialog = createEnum("PDF_Settings", this, TE_TR("PDF Settings"));
 
-  m_threeNorthItem = createEnum("Three_North_Item", this, TR_LAYOUT("Three North Item"));
+  m_threeNorthItem = createEnum("Three_North_Item", this, TE_TR("Three North Item"));
 
-  m_mapSettingsDialog = createEnum("Map_Settings", this, TR_LAYOUT("Map Settings"));
+  m_mapSettingsDialog = createEnum("Map_Settings", this, TE_TR("Map Settings"));
 
-  m_scaleSettingsDialog = createEnum("Scale_Settings", this, TR_LAYOUT("Scale Settings"));
+  m_scaleSettingsDialog = createEnum("Scale_Settings", this, TE_TR("Scale Settings"));
 
-  m_printSettingsDialog = createEnum("Print_Settings", this, TR_LAYOUT("Print Settings"));
+  m_printSettingsDialog = createEnum("Print_Settings", this, TE_TR("Print Settings"));
 
-  m_mapLocationSettingsDialog = createEnum("Map_Location_Settings", this, TR_LAYOUT("Map Location Settings"));
+  m_mapLocationSettingsDialog = createEnum("Map_Location_Settings", this, TE_TR("Map Location Settings"));
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getRectangleItem() const

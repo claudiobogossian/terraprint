@@ -42,6 +42,8 @@
 #include "terralib/maptools/Enums.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 // STL
 #include <string>
 #include <sstream> 
@@ -82,7 +84,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("line_width");
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setVisible(false);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
@@ -91,7 +93,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("legendChoice");
-    property.setLabel(TR_LAYOUT("Select the legend"));
+    property.setLabel(TE_TR("Select the legend"));
     property.setValue(name, dataType->getDataTypeLegendChoice());
     property.setMenu(true);
     property.setVisible(false);
@@ -100,7 +102,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property;
     property.setName("layers_uri");
-    property.setLabel(TR_LAYOUT("URI"));
+    property.setLabel(TE_TR("URI"));
     property.setValue(vString, dataType->getDataTypeStringVector());
     property.setEditable(false);
     property.setVisible(false);
@@ -111,7 +113,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName(sharedProps.getItemObserver());
-    property.setLabel(TR_LAYOUT("Connection with"));
+    property.setLabel(TE_TR("Connection with"));
     property.setComposeWidget(true);
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
@@ -119,7 +121,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("font_title");
-    property.setLabel(TR_LAYOUT("Font Title"));
+    property.setLabel(TE_TR("Font Title"));
     property.setValue(fontTitle, dataType->getDataTypeFont());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -127,7 +129,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("font_title_color");
-    property.setLabel(TR_LAYOUT("Font Title Color"));
+    property.setLabel(TE_TR("Font Title Color"));
     property.setValue(fontTitleColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -137,12 +139,12 @@ te::layout::LegendModel::LegendModel()
 
   Property prop_legend_body(0);
   prop_legend_body.setName("legend_body");
-  prop_legend_body.setLabel(TR_LAYOUT("Legend Body"));
+  prop_legend_body.setLabel(TE_TR("Legend Body"));
   prop_legend_body.setValue(legendBody, dataType->getDataTypeGroup());
   {
     Property property(0);
     property.setName("font_legend");
-    property.setLabel(TR_LAYOUT("Font Legend"));
+    property.setLabel(TE_TR("Font Legend"));
     property.setValue(fontLegend, dataType->getDataTypeFont());
     property.setMenu(true);
     prop_legend_body.addSubProperty(property);
@@ -150,7 +152,7 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("font_legend_color");
-    property.setLabel(TR_LAYOUT("Font Legend Color"));
+    property.setLabel(TE_TR("Font Legend Color"));
     property.setValue(fontLegendColor, dataType->getDataTypeColor());
     property.setMenu(true);
     prop_legend_body.addSubProperty(property);
@@ -158,49 +160,49 @@ te::layout::LegendModel::LegendModel()
   {
     Property property(0);
     property.setName("border_displacement");
-    property.setLabel(TR_LAYOUT("Border Displacement"));
+    property.setLabel(TE_TR("Border Displacement"));
     property.setValue(borderDisplacement, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_symbols");
-    property.setLabel(TR_LAYOUT("Displacement Between Symbols"));
+    property.setLabel(TE_TR("Displacement Between Symbols"));
     property.setValue(displacementBetweenSymbols, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_title_and_symbols");
-    property.setLabel(TR_LAYOUT("Displacement Between Title And Symbols"));
+    property.setLabel(TE_TR("Displacement Between Title And Symbols"));
     property.setValue(displacementBetweenTitleAndSymbols, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_symbols_and_texts");
-    property.setLabel(TR_LAYOUT("Displacement Between Symbols And Texts"));
+    property.setLabel(TE_TR("Displacement Between Symbols And Texts"));
     property.setValue(displacementBetweenSymbolsAndText, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("symbol_size");
-    property.setLabel(TR_LAYOUT("Symbol Size"));
+    property.setLabel(TE_TR("Symbol Size"));
     property.setValue(symbolSize, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("rows");
-    property.setLabel(TR_LAYOUT("Rows"));
+    property.setLabel(TE_TR("Rows"));
     property.setValue(rows, dataType->getDataTypeInt());
     prop_legend_body.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("offset_between_columns");
-    property.setLabel(TR_LAYOUT("Offset Between Columns"));
+    property.setLabel(TE_TR("Offset Between Columns"));
     property.setValue(offset, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }

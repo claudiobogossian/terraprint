@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumScaleType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumScaleType::EnumScaleType() :
   m_noneType(0),
   m_alternatingScaleBarType(0),
@@ -62,13 +64,13 @@ te::layout::EnumScaleType::~EnumScaleType()
 }
 void te::layout::EnumScaleType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_alternatingScaleBarType = createEnum("AlternatingScaleBar", this, TR_LAYOUT("Alternating Scale Bar"));
+  m_alternatingScaleBarType = createEnum("AlternatingScaleBar", this, TE_TR("Alternating Scale Bar"));
 
-  m_doubleAlternatingScaleBarType = createEnum("DoubleAlternatingScaleBar", this, TR_LAYOUT("Double Alternating Scale Bar"));
+  m_doubleAlternatingScaleBarType = createEnum("DoubleAlternatingScaleBar", this, TE_TR("Double Alternating Scale Bar"));
 
-  m_hollowScaleBarType = createEnum("HollowScaleBar", this, TR_LAYOUT("Hollow Scale Bar"));
+  m_hollowScaleBarType = createEnum("HollowScaleBar", this, TE_TR("Hollow Scale Bar"));
 }
 
 te::layout::EnumType* te::layout::EnumScaleType::getNoneType() const

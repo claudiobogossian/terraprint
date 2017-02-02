@@ -37,6 +37,8 @@
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
 
+#include <terralib/core/translator/Translator.h>
+
 //Qt
 #include <QGraphicsWidget>
 #include <QVBoxLayout>
@@ -335,7 +337,7 @@ void te::layout::ObjectInspectorOutside::createMenu(std::string itemName)
     m_menu->clear();
   }
 
-  std::string text = TR_LAYOUT("Delete ") + itemName;
+  std::string text = TE_TR("Delete ") + itemName;
   QString qText = ItemUtils::convert2QString(text);
   QString qItemName = ItemUtils::convert2QString(itemName);
   

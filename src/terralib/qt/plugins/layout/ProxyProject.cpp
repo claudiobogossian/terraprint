@@ -88,7 +88,6 @@ te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::contains( std::
 te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::getLayerFromURI(std::string uri)
 {
   te::map::AbstractLayerPtr layer;
-  std::string uriInfo = "URI";
 
   std::list<te::map::AbstractLayerPtr> layers = getAllLayers();
 
@@ -99,20 +98,16 @@ te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::getLayerFromURI
     te::map::AbstractLayerPtr layerPtr = (*it);
     if (!layerPtr)
       continue;
+
     const std::string& id = it->get()->getDataSourceId();
 
     te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
-    const std::map<std::string, std::string>& connInfo = info->getConnInfo();
+    const std::string& uriFromLayer = info->getConnInfo().uri();
 
-    std::string uriFromLayer = "";
-    for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
+    if (uriFromLayer.compare(uri) == 0)
     {
-      uriFromLayer = it->second;
-      if (uriFromLayer.compare(uri) == 0)
-      {
-        layer = layerPtr;
-        break;
-      }
+      layer = layerPtr;
+      break;
     }
   }
   return layer;
@@ -121,23 +116,13 @@ te::map::AbstractLayerPtr te::qt::plugins::layout::ProxyProject::getLayerFromURI
 std::string te::qt::plugins::layout::ProxyProject::getURIFromLayer(te::map::AbstractLayerPtr layer)
 {
   std::string uri;
-  std::string uriInfo = "URI";
-
   const std::string& id = layer->getDataSourceId();
 
   te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
   if (info)
   {
-    const std::map<std::string, std::string>& connInfo = info->getConnInfo();
-    for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
-    {
-      std::string nameURI = it->first;
-      if (nameURI.compare(uriInfo) == 0)
-      {
-        uri = it->second;
-        break;
-      }
-    }
+    return info->getConnInfo().uri();
+
   }
   return uri;
 }
