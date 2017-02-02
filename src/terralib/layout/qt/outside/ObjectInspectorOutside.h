@@ -48,6 +48,8 @@ class QContextMenuEvent;
 class QAction;
 class QMenu;
 class QKeyEvent;
+class QStringList;
+class QTreeWidgetItem;
 
 namespace te
 {
@@ -114,6 +116,16 @@ namespace te
       virtual std::string selectItemName();
 
       virtual bool isValidItem(QGraphicsItem* item);
+
+      void refreshInspector();
+
+      QStringList propertiesToStringList(QGraphicsItem* item);
+
+      QTreeWidgetItem* itemTreeFromTreeWidget(QGraphicsItem* item);
+
+      bool isParentItem(QGraphicsItem* item);
+
+    protected:
       
       QTreeWidget*            m_treeWidget;
       bool                    m_isChangingSelection;

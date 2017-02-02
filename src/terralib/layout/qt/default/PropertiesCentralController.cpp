@@ -219,7 +219,6 @@ void te::layout::PropertiesCentralController::onUndoStackHasChanged()
   //Refresh Inspector Object window
   if (m_objectInspectorOutside)
   {
-    m_objectInspectorOutside->clearItemList();
     m_objectInspectorOutside->itemsInspector(allItems);
   }
 }
