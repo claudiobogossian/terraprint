@@ -78,12 +78,6 @@ te::layout::MapModel::MapModel()
 //updating properties
   {
     Property property(0);
-    property.setName("background_color");
-    property.setValue(backgroundColor, dataType->getDataTypeColor());
-    this->m_properties.updateProperty(property);
-  }
-  {
-    Property property(0);
     property.setName("show_frame");
     property.setValue<bool>(true, dataType->getDataTypeBool());
     this->m_properties.updateProperty(property);
