@@ -33,6 +33,7 @@
 #include "../../core/pattern/singleton/Context.h"
 #include "../../core/enum/Enums.h"
 #include "pattern/command/DeleteCommand.h"
+#include "pattern/command/UngroupCommand.h"
 #include "../item/ItemGroup.h"
 #include "BuildGraphicsItem.h"
 #include "pattern/command/AddCommand.h"
@@ -117,15 +118,8 @@ te::layout::Scene::~Scene()
     m_undoStack = 0;
   }
 
-  foreach( QGraphicsItem *item, m_itemStackWithoutScene ) 
-  {
-    if(item->scene() != this)
-    {
-      delete item;
-      item = 0;
-    }
-  }
-
+  destroyItemsWithoutScene();
+  
   if(m_align)
   {
     delete m_align;
@@ -415,10 +409,7 @@ bool te::layout::Scene::removeGroup(te::layout::ItemGroup* group)
   bool result = true;
   if (m_undoStack)
   {
-    QList<QGraphicsItem*> listItems;
-    listItems.append(group);
-
-    QUndoCommand* command = new DeleteCommand(this, listItems);
+    QUndoCommand* command = new UngroupCommand(this, group);
     addUndoStack(command);
   }
   else
@@ -1824,6 +1815,32 @@ void te::layout::Scene::changeUndoEnable(const QList<QGraphicsItem *> & listItem
       {
         iView->setUndoEnabled(enable);
       }
+    }
+  }
+}
+
+void te::layout::Scene::destroyItemsWithoutScene()
+{
+  foreach(QGraphicsItem *item, m_itemStackWithoutScene)
+  {
+    if (item->scene() != this)
+    {
+      ItemGroup* group = dynamic_cast<ItemGroup*>(item);
+      if (group)
+      {
+        QList<QGraphicsItem*> childItems = item->childItems();
+        removeItemGroup(group); // Remove children from group
+        foreach(QGraphicsItem* child, childItems)
+        {
+          if ((!m_itemStackWithoutScene.contains(child)) && (child->scene() != this))
+          {
+            delete child;
+            child = 0;
+          }
+        }
+      }
+      delete item;
+      item = 0;
     }
   }
 }

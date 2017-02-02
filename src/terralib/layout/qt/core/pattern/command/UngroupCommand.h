@@ -25,24 +25,22 @@
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_DELETE_COMMAND_H 
-#define __TERRALIB_LAYOUT_INTERNAL_DELETE_COMMAND_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_UNGROUP_COMMAND_H 
+#define __TERRALIB_LAYOUT_INTERNAL_UNGROUP_COMMAND_H
 
 // TerraLib
 #include "../../../../core/Config.h"
 
 // STL
-#include <map>
 #include <vector>
 #include <string>
 
 // Qt
 #include <QUndoCommand>
-#include <QString>
-#include <QPointF>
 
 class QGraphicsItem;
 class QGraphicsScene;
+class QString;
 
 namespace te
 {
@@ -53,7 +51,7 @@ namespace te
     
       \ingroup layout
     */
-    class TELAYOUTEXPORT DeleteCommand : public QUndoCommand
+    class TELAYOUTEXPORT UngroupCommand : public QUndoCommand
     {
       public:
 
@@ -63,12 +61,12 @@ namespace te
           \param scene
           \param parent
         */
-        DeleteCommand(QGraphicsScene* scene, const QList<QGraphicsItem*>& listItems, QUndoCommand *parent = 0);
+        UngroupCommand(QGraphicsScene* scene, QGraphicsItem* item, QUndoCommand *parent = 0);
 
         /*!
           \brief Destructor
         */
-        virtual ~DeleteCommand();           
+        virtual ~UngroupCommand();
 
         /*!
           \brief Reimplemented from QUndoCommand
@@ -84,12 +82,15 @@ namespace te
 
         virtual void init();
 
-        virtual QString createCommandString(int totalItems);
+        virtual QString createCommandString(const std::string& name);
+
+        QList<QGraphicsItem *> childrenItems();
 
       protected:
-        
-        QGraphicsScene*       m_scene;
-        QList<QGraphicsItem*> m_items;
+
+        QGraphicsScene*          m_scene;
+        QGraphicsItem*           m_group;
+        std::vector<std::string> m_childrenNames;
     };
   }
 }

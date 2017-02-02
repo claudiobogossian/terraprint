@@ -176,7 +176,7 @@ namespace te
         virtual QGraphicsItem* createGroup(EnumType* groupType = 0);
 
         /*!
-        \brief Method that just remove from scene a object grouping, but the individual objects continue to exist. A command Undo/Redo of type DeleteGroupCommand is created.
+        \brief Method that just remove from scene a object grouping, but the individual objects continue to exist. A command Undo/Redo of type UngroupCommand is created.
 
         \param group list of objects
         */
@@ -534,6 +534,8 @@ namespace te
         virtual void sortByZValue(QList<QGraphicsItem *> & listItems);
 
         void changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable);
+
+        void destroyItemsWithoutScene();
                 
     protected:
 
