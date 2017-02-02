@@ -34,6 +34,8 @@
 #include "../core/property/Property.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::PointModel::PointModel()
   : AbstractItemModel()
 {
@@ -51,7 +53,7 @@ te::layout::PointModel::PointModel()
 
     Property property(0);
     property.setName("point_type");
-    property.setLabel(TR_LAYOUT("Graphic type"));
+    property.setLabel(TE_TR("Graphic type"));
     property.setValue(currentType->getLabel(), dataType->getDataTypeStringList());
 
     Variant v;
@@ -77,7 +79,7 @@ te::layout::PointModel::PointModel()
   {
     Property property(0);
     property.setName("line_width");
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setVisible(false);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
@@ -86,7 +88,7 @@ te::layout::PointModel::PointModel()
   {
     Property property(0);
     property.setName("fill_color");
-    property.setLabel(TR_LAYOUT("Fill Color"));
+    property.setLabel(TE_TR("Fill Color"));
     property.setValue(fillColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);
@@ -95,7 +97,7 @@ te::layout::PointModel::PointModel()
   {
     Property property(0);
     property.setName("contour_color");
-    property.setLabel(TR_LAYOUT("Contour Color"));
+    property.setLabel(TE_TR("Contour Color"));
     property.setValue(contourColor, dataType->getDataTypeColor());
     property.setMenu(true);
     m_properties.addProperty(property);

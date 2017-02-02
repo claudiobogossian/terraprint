@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumToolType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumToolType::EnumToolType() :
   m_noneTool(0),
   m_zoomAreaTool(0),
@@ -74,15 +76,15 @@ te::layout::EnumToolType::~EnumToolType()
 
 void te::layout::EnumToolType::init()
 {
-  m_noneTool = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneTool = createEnum("None", this, TE_TR("None"));
 
-  m_zoomAreaTool = createEnum("ZoomAreaTool", this, TR_LAYOUT("Zoom Area Tool"));
+  m_zoomAreaTool = createEnum("ZoomAreaTool", this, TE_TR("Zoom Area Tool"));
 
-  m_createLineItemTool = createEnum("CreateLineItemTool", this, TR_LAYOUT("Create Line Item Tool"));
+  m_createLineItemTool = createEnum("CreateLineItemTool", this, TE_TR("Create Line Item Tool"));
 
-  m_createPolygonItemTool = createEnum("CreatePolygonItemTool", this, TR_LAYOUT("Create Polygon Item Tool"));
+  m_createPolygonItemTool = createEnum("CreatePolygonItemTool", this, TE_TR("Create Polygon Item Tool"));
 
-  m_createItemTool = createEnum("CreateItemTool", this, TR_LAYOUT("Create Item Tool"));
+  m_createItemTool = createEnum("CreateItemTool", this, TE_TR("Create Item Tool"));
 }
 
 te::layout::EnumType* te::layout::EnumToolType::getNoneTool() const

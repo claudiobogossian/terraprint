@@ -27,7 +27,6 @@
 #include <terralib/layout/qt/core/BuildGraphicsItem.h>
 #include <terralib/layout/qt/item/RectangleItem.h>
 #include <terralib/layout/qt/item/MapItem.h>
-#include <terralib/layout/qt/item/MapCompositionItem.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemView.h>
 #include <terralib/layout/core/pattern/mvc/AbstractItemController.h>
 #include <terralib/layout/core/enum/Enums.h>
@@ -60,7 +59,6 @@ te::layout::example::propertyeditor::PropertyEditorExample::PropertyEditorExampl
   m_ui(new Ui::PropertyEditorExampleDialog),
   m_rectItem(0),
   m_mapItem(0),
-  m_mapCompositionItem(0),
   m_tree(0),
   m_combobox(0)
 {
@@ -85,7 +83,6 @@ void te::layout::example::propertyeditor::PropertyEditorExample::run()
   createGraphicsViewInfrastructure();
   createRectangleItem();
   createMapItem();
-  createMapCompositionItem();
   createPropertyTree();
 }
 
@@ -115,15 +112,6 @@ void te::layout::example::propertyeditor::PropertyEditorExample::createMapItem()
 
   QGraphicsItem* item = createItem(itemType, coord);
   m_mapItem = dynamic_cast<MapItem*>(item);
-}
-
-void te::layout::example::propertyeditor::PropertyEditorExample::createMapCompositionItem()
-{
-  EnumType* itemType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
-  te::gm::Coord2D coord(60, 60);
-
-  QGraphicsItem* item = createItem(itemType, coord);
-  m_mapCompositionItem = dynamic_cast<MapCompositionItem*>(item);
 }
 
 QGraphicsItem* te::layout::example::propertyeditor::PropertyEditorExample::createItem(EnumType* itemType, te::gm::Coord2D& coord, double width, double height)
@@ -186,28 +174,23 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadComboboxNam
   QStringList list;
 
   // add rect item name
-  const te::layout::Property& rectProp = m_rectItem->getController()->getProperty("name");
+  const te::layout::Property& rectProp = m_rectItem->getProperty("name");
   std::string nameRect = te::layout::Property::GetValueAs<std::string>(rectProp);
   list.append(nameRect.c_str());
 
   // add map item name
-  const te::layout::Property& mapProp = m_mapItem->getController()->getProperty("name");
+  const te::layout::Property& mapProp = m_mapItem->getProperty("name");
   std::string nameMap = te::layout::Property::GetValueAs<std::string>(mapProp);
   list.append(nameMap.c_str());
-
-  // add map composition item name
-  const te::layout::Property& mapCompProp = m_mapCompositionItem->getController()->getProperty("name");
-  std::string nameMapComp = te::layout::Property::GetValueAs<std::string>(mapCompProp);
-  list.append(nameMapComp.c_str());
 
   m_combobox->addItems(list);
 }
 
 void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexChanged(const QString & text)
 {
-  if (m_rectItem && m_mapItem && m_mapCompositionItem)
+  if (m_rectItem && m_mapItem)
   {
-    const Property& prop_nameRect = m_rectItem->getController()->getProperty("name");
+    const Property& prop_nameRect = m_rectItem->getProperty("name");
     std::string nameRect = te::layout::Property::GetValueAs<std::string>(prop_nameRect);
     QString rectText = ItemUtils::convert2QString(nameRect);
     
@@ -218,7 +201,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexC
       return;
     }
 
-    const Property& prop_nameMap = m_mapItem->getController()->getProperty("name");
+    const Property& prop_nameMap = m_mapItem->getProperty("name");
     std::string nameMap = te::layout::Property::GetValueAs<std::string>(prop_nameMap);
     QString mapText = ItemUtils::convert2QString(nameMap);
     
@@ -227,16 +210,6 @@ void te::layout::example::propertyeditor::PropertyEditorExample::onCurrentIndexC
       m_view->getScene()->selectItem(m_mapItem);
       loadProperties(m_mapItem);
       return;
-    }
-
-    const Property& prop_nameMapComp = m_mapCompositionItem->getController()->getProperty("name");
-    std::string nameMapComp = te::layout::Property::GetValueAs<std::string>(prop_nameMapComp);
-    QString mapCompText = ItemUtils::convert2QString(nameMapComp);
-
-    if (text.compare(mapCompText) == 0)
-    {
-      m_view->getScene()->selectItem(m_mapCompositionItem);
-      loadProperties(m_mapCompositionItem);
     }
   }  
 }
@@ -247,7 +220,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::loadProperties(
 
   AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
   
-  Properties itemProperties = view->getController()->getProperties();
+  Properties itemProperties = view->getProperties();
   props = itemProperties.getProperties();
 
   m_tree->load(props); // load properties from rectangle item
@@ -291,11 +264,7 @@ void te::layout::example::propertyeditor::PropertyEditorExample::onPropertiesCha
       AbstractItemView* lItem = dynamic_cast<AbstractItemView*>(item);
       if (lItem)
       {
-        if (!lItem->getController())
-        {
-          continue;
-        }        
-        lItem->getController()->setProperty(prop);
+        lItem->setProperty(prop);
       }
     }
   }

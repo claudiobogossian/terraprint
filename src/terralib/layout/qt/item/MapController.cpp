@@ -31,7 +31,9 @@
 #include "../core/Value.h"
 #include "../core/Scene.h"
 
-#include "terralib/maptools/Utils.h"
+#include <terralib/core/translator/Translator.h>
+#include <terralib/maptools/Utils.h>
+
 
 // STL
 #include <set>
@@ -937,7 +939,7 @@ void te::layout::MapController::validateItem()
 
   if (srid <= 0)
   {
-    m_warningManager->addWarning(TR_LAYOUT("Map Item Without Projection"));
+    m_warningManager->addWarning(TE_TR("Map Item Without Projection"));
   }
 
 
@@ -949,7 +951,7 @@ void te::layout::MapController::validateItem()
 
     if (layerSrid <= 0)
     {
-      std::string warningMSG = TR_LAYOUT("Layer ") + layer->getTitle() + TR_LAYOUT(" Without Projection");
+      std::string warningMSG = TE_TR("Layer ") + layer->getTitle() + TE_TR(" Without Projection");
       m_warningManager->addWarning(warningMSG);
     }
   }

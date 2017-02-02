@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumTextType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumTextType::EnumTextType() :
   m_fontItem(0)
 {
@@ -45,7 +47,7 @@ te::layout::EnumTextType::~EnumTextType()
 
 void te::layout::EnumTextType::init()
 {
-  m_fontItem = createEnum("Font Item", this, TR_LAYOUT("Font Item"));
+  m_fontItem = createEnum("Font Item", this, TE_TR("Font Item"));
 }
 
 te::layout::EnumType* te::layout::EnumTextType::getFontItem() const

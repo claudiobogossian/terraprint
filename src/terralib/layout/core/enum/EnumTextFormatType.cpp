@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumTextFormatType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumTextFormatType::EnumTextFormatType()
   : m_defaultFormat(0)
   , m_ANPFormat(0)
@@ -51,9 +53,9 @@ te::layout::EnumTextFormatType::~EnumTextFormatType()
 
 void te::layout::EnumTextFormatType::init()
 {
-  m_defaultFormat = createEnum("DefaultFormat", this, TR_LAYOUT("Default Format"));
+  m_defaultFormat = createEnum("DefaultFormat", this, TE_TR("Default Format"));
 
-  m_ANPFormat = createEnum("ANPFormat", this, TR_LAYOUT("ANP Format"));
+  m_ANPFormat = createEnum("ANPFormat", this, TE_TR("ANP Format"));
 }
 
 te::layout::EnumType* te::layout::EnumTextFormatType::getDefaultFormat() const

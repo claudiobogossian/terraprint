@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumGridStyleType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumGridStyleType::EnumGridStyleType() :
   m_styleNone(0),
   m_styleContinuous(0),
@@ -57,11 +59,11 @@ te::layout::EnumGridStyleType::~EnumGridStyleType()
 
 void te::layout::EnumGridStyleType::init()
 {
-  m_styleNone = createEnum("None", this, TR_LAYOUT("None"));
+  m_styleNone = createEnum("None", this, TE_TR("None"));
 
-  m_styleContinuous = createEnum("Continuous Lines", this, TR_LAYOUT("Continuous Lines"));
+  m_styleContinuous = createEnum("Continuous Lines", this, TE_TR("Continuous Lines"));
 
-  m_styleCross = createEnum("Cross Lines", this, TR_LAYOUT("Cross Lines"));
+  m_styleCross = createEnum("Cross Lines", this, TE_TR("Cross Lines"));
 }
 
 te::layout::EnumType* te::layout::EnumGridStyleType::getStyleNone() const

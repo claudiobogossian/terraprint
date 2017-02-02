@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumAlignmentType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumAlignmentType::EnumAlignmentType() :
   m_noneType(0),
   m_alignmentCenter(0),
@@ -45,15 +47,15 @@ te::layout::EnumAlignmentType::~EnumAlignmentType()
 
 void te::layout::EnumAlignmentType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_alignmentCenter = createEnum("Center", this, TR_LAYOUT("Center"));
+  m_alignmentCenter = createEnum("Center", this, TE_TR("Center"));
 
-  m_alignmentLeft = createEnum("Left", this, TR_LAYOUT("Left"));
+  m_alignmentLeft = createEnum("Left", this, TE_TR("Left"));
 
-  m_alignmentRight = createEnum("Right", this, TR_LAYOUT("Right"));
+  m_alignmentRight = createEnum("Right", this, TE_TR("Right"));
 
-  m_alignmentJustify = createEnum("Justify", this, TR_LAYOUT("Justify"));
+  m_alignmentJustify = createEnum("Justify", this, TE_TR("Justify"));
 }
 
 te::layout::EnumType* te::layout::EnumAlignmentType::getNoneType() const

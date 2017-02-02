@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumTempDataStorageType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumTempDataStorageType::EnumTempDataStorageType() :
   m_noneType(0),
   m_tempFileType(0)
@@ -51,9 +53,9 @@ te::layout::EnumTempDataStorageType::~EnumTempDataStorageType()
 
 void te::layout::EnumTempDataStorageType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_tempFileType = createEnum("TempFile", this, TR_LAYOUT("Temp File"));
+  m_tempFileType = createEnum("TempFile", this, TE_TR("Temp File"));
 }
 
 te::layout::EnumType* te::layout::EnumTempDataStorageType::getNoneType() const

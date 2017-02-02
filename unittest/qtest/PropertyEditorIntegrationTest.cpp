@@ -119,7 +119,7 @@ void te::layout::qtest::PropertyEditorIntegrationTest::on_test_create_property_t
   foreach(QGraphicsItem* item, graphicsItems)
   {
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
-    Properties itemProperties = view->getController()->getProperties();
+    Properties itemProperties = view->getProperties();
     props = itemProperties.getProperties();
   }
 

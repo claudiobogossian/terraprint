@@ -66,7 +66,8 @@ te::layout::MenuPrincipal::MenuPrincipal(te::layout::View* view, QMenu* parentMe
   m_optionDockInspector("mnu_dock_inspector"),
   m_optionDockProperties("mnu_dock_properties"),
   m_optionDockToolbar("mnu_dock_toolbar"),
-  m_optionDockEditTemplate("mnu_dock_edit_template")
+  m_optionDockEditTemplate("mnu_dock_edit_template"),
+  m_optionExportMapToSVG("mnu_export_map_to_svg")
 {
   init();
 }
@@ -98,11 +99,14 @@ void te::layout::MenuPrincipal::createMainMenu()
   QMenu* mnuImport = m_layoutMenu->addMenu(tr("Import Map"));
   QMenu* mnuExport = m_layoutMenu->addMenu(tr("Export Map"));
 
-  QAction* actionImportJSON = createAction(tr("Import Xml Map"), m_optionImportXml, "layout-import");
-  mnuImport->addAction(actionImportJSON);
+  QAction* actionImportXML = createAction(tr("Import Xml Map"), m_optionImportXml, "layout-import");
+  mnuImport->addAction(actionImportXML);
 
-  QAction* actionExportJSON = createAction(tr("Export XML Map"), m_optionExportXml, "layout-export");
-  mnuExport->addAction(actionExportJSON);
+  QAction* actionExportXML = createAction(tr("Export XML Map"), m_optionExportXml, "layout-export");
+  mnuExport->addAction(actionExportXML);
+
+  QAction* actionExportMapToSVG = createAction(tr("Export Map to SVG"), m_optionExportMapToSVG, "layout-export-map-to-svg");
+  m_layoutMenu->addAction(actionExportMapToSVG);
 
   m_layoutMenu->addSeparator();
 
@@ -163,6 +167,10 @@ void te::layout::MenuPrincipal::onMainMenuTriggered(QAction* action)
   else if(action->objectName().compare(m_optionExit) == 0)
   {
     emit exit();
+  }
+  else if (action->objectName().compare(m_optionExportMapToSVG) == 0)
+  {
+    m_view->exportToSVG();
   }
   else if(action->objectName().compare(m_optionDockInspector) == 0)
   {

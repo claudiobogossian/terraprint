@@ -32,9 +32,9 @@
 #include "../core/property/Property.h"
 
 // TerraLib
-#include <terralib/common/Logger.h>
 #include <terralib/common/TerraLib.h>
-#include <terralib/common/Translator.h>
+#include <terralib/core/logger/Logger.h>
+#include <terralib/core/translator/Translator.h>
 
 #include <QMetaType>
 
@@ -51,7 +51,10 @@ te::layout::Module::Module()
   TerraLib::getInstance().add(m);
 
 // it initializes the Translator support for the TerraLib Intersection Operation support
-  TE_ADD_TEXT_DOMAIN(TE_LAYOUT_TEXT_DOMAIN, TE_LAYOUT_TEXT_DOMAIN_DIR, "ISO-8859-1");
+  TE_ADD_TEXT_DOMAIN(TE_LAYOUT_TEXT_DOMAIN, TE_LAYOUT_TEXT_DOMAIN_DIR);
+
+//defines the encoding of the translation
+  TE_TR_LANGUAGE("ISO-8859-1");
 
   te::layout::initToolFactories(); // init all tool factories
   te::layout::initItemFactories(); // init all item factories

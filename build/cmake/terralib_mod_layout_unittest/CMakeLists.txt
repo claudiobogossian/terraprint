@@ -65,12 +65,12 @@ endif()
 target_link_libraries(terralib_mod_layout_unittest terralib_mod_layout
 												   terralib_mod_color
 												   terralib_mod_common
+												   terralib_mod_core
 												   terralib_mod_dataaccess
 												   terralib_mod_datatype
 												   terralib_mod_geometry
 												   terralib_mod_maptools
 												   terralib_mod_memory
-												   terralib_mod_plugin
 												   terralib_mod_qt_widgets
 												   terralib_mod_srs
 												   terralib_mod_symbology

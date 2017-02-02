@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumBalloonDirectionType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumBalloonDirectionType::EnumBalloonDirectionType() :
   m_none(0),
   m_left(0),
@@ -43,11 +45,11 @@ te::layout::EnumBalloonDirectionType::~EnumBalloonDirectionType()
 
 void te::layout::EnumBalloonDirectionType::init()
 {
-  m_none = createEnum("None", this, TR_LAYOUT("None"));
+  m_none = createEnum("None", this, TE_TR("None"));
 
-  m_left = createEnum("Left", this, TR_LAYOUT("Left"));
+  m_left = createEnum("Left", this, TE_TR("Left"));
 
-  m_right = createEnum("Right", this, TR_LAYOUT("Right"));
+  m_right = createEnum("Right", this, TE_TR("Right"));
 }
 
 te::layout::EnumType* te::layout::EnumBalloonDirectionType::getLeft() const

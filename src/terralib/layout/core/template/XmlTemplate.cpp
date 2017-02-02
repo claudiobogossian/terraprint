@@ -32,6 +32,8 @@
 #include "../serialization/BoostPropertySerializer.h"
 #include "../enum/Enums.h"
 
+#include <terralib/core/translator/Translator.h>
+
 // Boost
 #include <boost/property_tree/xml_parser.hpp>
 #include <boost/property_tree/xml_parser.hpp>
@@ -79,7 +81,7 @@ bool te::layout::XmlTemplate::exportTemplate(const PaperConfig& paperConfig, con
   }
   catch (const boost::property_tree::xml_parser_error& pe)
   {
-    std::string errmsg = TR_LAYOUT("Error parsing: ") + pe.filename() + ": " + pe.message();
+    std::string errmsg = TE_TR("Error parsing: ") + pe.filename() + ": " + pe.message();
     te::common::Exception teException(errmsg);
     throw(teException);
   }
@@ -96,7 +98,7 @@ bool te::layout::XmlTemplate::importTemplate(PaperConfig& paperConfig, std::vect
   }
   catch (const boost::property_tree::xml_parser_error& pe)
   {
-    std::string errmsg = TR_LAYOUT("Error parsing: ") + pe.filename() + ": " + pe.message();
+    std::string errmsg = TE_TR("Error parsing: ") + pe.filename() + ": " + pe.message();
     te::common::Exception teException(errmsg);
     throw(teException);
   }

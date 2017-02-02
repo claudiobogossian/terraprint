@@ -25,7 +25,6 @@
 
 // TerraLib
 #include "SVGDialogOutside.h"
-#include "terralib/common/Logger.h"
 #include "terralib/qt/widgets/utils/DoubleListWidget.h"
 #include "../core/ItemUtils.h"
 #include "../../core/enum/Enums.h"

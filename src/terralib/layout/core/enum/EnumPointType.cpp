@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumPointType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumPointType::EnumPointType() :
   m_noneType(0),
   m_star1(0),
@@ -50,25 +52,25 @@ te::layout::EnumPointType::~EnumPointType()
 
 void te::layout::EnumPointType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_star1 = createEnum("5-Points Star", this, TR_LAYOUT("5-Points Star"));
+  m_star1 = createEnum("5-Points Star", this, TE_TR("5-Points Star"));
 
-  m_star2 = createEnum("6-Points Star", this, TR_LAYOUT("6-Points Star"));
+  m_star2 = createEnum("6-Points Star", this, TE_TR("6-Points Star"));
 
-  m_star3 = createEnum("7-Points Star", this, TR_LAYOUT("7-Points Star"));
+  m_star3 = createEnum("7-Points Star", this, TE_TR("7-Points Star"));
 
-  m_star4 = createEnum("8-Points Star", this, TR_LAYOUT("8-Points Star"));
+  m_star4 = createEnum("8-Points Star", this, TE_TR("8-Points Star"));
 
-  m_circle = createEnum("Circle", this, TR_LAYOUT("Circle"));
+  m_circle = createEnum("Circle", this, TE_TR("Circle"));
 
-  m_x = createEnum("X", this, TR_LAYOUT("X"));
+  m_x = createEnum("X", this, TE_TR("X"));
 
-  m_square = createEnum("Square", this, TR_LAYOUT("Square"));
+  m_square = createEnum("Square", this, TE_TR("Square"));
 
-  m_rhombus = createEnum("Rhombus", this, TR_LAYOUT("Rhombus"));
+  m_rhombus = createEnum("Rhombus", this, TE_TR("Rhombus"));
 
-  m_cross = createEnum("Cross", this, TR_LAYOUT("Cross"));
+  m_cross = createEnum("Cross", this, TE_TR("Cross"));
 }
 
 te::layout::EnumType* te::layout::EnumPointType::getNoneType() const

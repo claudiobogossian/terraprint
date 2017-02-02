@@ -45,10 +45,10 @@ if(Qt5_FOUND)
   add_library(terralib_mod_qt_plugins_layout SHARED ${TERRALIB_FILES})
   
   target_link_libraries(terralib_mod_qt_plugins_layout terralib_mod_layout
-                                                       terralib_mod_plugin
                                                        terralib_mod_qt_apf
                                                        terralib_mod_color
                                                        terralib_mod_common
+													   terralib_mod_core
                                                        terralib_mod_dataaccess
                                                        terralib_mod_datatype
                                                        terralib_mod_geometry

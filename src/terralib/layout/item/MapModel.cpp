@@ -37,6 +37,8 @@
 #include "../core/property/Properties.h"
 #include "../core/property/Property.h"
 
+#include <terralib/core/translator/Translator.h>
+
 // STL
 #include <vector>
 
@@ -52,10 +54,10 @@ te::layout::MapModel::MapModel()
 
 //adding properties
   {
-    std::string value = TR_LAYOUT("Choice");
+    std::string value = TE_TR("Choice");
     Property property(0);
     property.setName("mapChoice");
-    property.setLabel(TR_LAYOUT("Select layers"));
+    property.setLabel(TE_TR("Select layers"));
     property.setValue(value, dataType->getDataTypeMapChoice());
     property.setSerializable(false);
     property.setVisible(false);
@@ -119,7 +121,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
 {
   if (settingsConfig == 0)
   {
-    throw te::common::Exception(TR_LAYOUT("Invalid attribute in MapModel"));
+    throw te::common::Exception(TE_TR("Invalid attribute in MapModel"));
   }
 
   //Reference Settings
@@ -167,10 +169,10 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   SharedProperties sharedProps;
 
   // Grid settings
-  std::string gridValue = TR_LAYOUT("Settings");
+  std::string gridValue = TE_TR("Settings");
   Property prop_gridsettings(0);
   prop_gridsettings.setName(settingsConfig->getGridSettings());
-  prop_gridsettings.setLabel(TR_LAYOUT("Grid Settings"));
+  prop_gridsettings.setLabel(TE_TR("Grid Settings"));
   prop_gridsettings.setMenu(true);
   prop_gridsettings.setPublic(true);
   prop_gridsettings.setValue(gridValue, dataType->getDataTypeGridSettings());
@@ -179,7 +181,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getVisible());
-    property.setLabel(TR_LAYOUT("Visible"));
+    property.setLabel(TE_TR("Visible"));
     property.setComposeWidget(true);
     property.setValue(visible, dataType->getDataTypeBool());
     prop_gridsettings.addSubProperty(property);
@@ -187,7 +189,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getHorizontalLineGap());
-    property.setLabel(TR_LAYOUT("Horizontal Gap"));
+    property.setLabel(TE_TR("Horizontal Gap"));
     property.setComposeWidget(true);
     property.setValue(lneHrzGap, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -195,7 +197,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getVerticalLineGap());
-    property.setLabel(TR_LAYOUT("Vertical Gap"));
+    property.setLabel(TE_TR("Vertical Gap"));
     property.setComposeWidget(true);
     property.setValue(lneVrtGap, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -203,7 +205,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getHorizontalLineInitial());
-    property.setLabel(TR_LAYOUT("Initial Point X"));
+    property.setLabel(TE_TR("Initial Point X"));
     property.setComposeWidget(true);
     property.setValue(m_initialGridPointX, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -211,7 +213,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getVerticalLineInitial());
-    property.setLabel(TR_LAYOUT("Initial Point Y"));
+    property.setLabel(TE_TR("Initial Point Y"));
     property.setComposeWidget(true);
     property.setValue(m_initialGridPointY, dataType->getDataTypeDouble());
     prop_gridsettings.addSubProperty(property);
@@ -220,7 +222,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getBorderIntersections());
-    property.setLabel(TR_LAYOUT("Show Border Intersection"));
+    property.setLabel(TE_TR("Show Border Intersection"));
     property.setValue(showBouderIntersections, dataType->getDataTypeBool());
     property.setVisible(false);
     prop_gridsettings.addSubProperty(property);
@@ -232,7 +234,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
 
     Property property(0);
     property.setName(settingsConfig->getStyle());
-    property.setLabel(TR_LAYOUT("Style"));
+    property.setLabel(TE_TR("Style"));
     property.setComposeWidget(true);
     property.setValue(currentGridStyle->getLabel(), dataType->getDataTypeStringList());
 
@@ -263,7 +265,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
 
     Property property(0);
     property.setName(settingsConfig->getLineStyle());
-    property.setLabel(TR_LAYOUT("Line Style"));
+    property.setLabel(TE_TR("Line Style"));
     property.setComposeWidget(true);
     property.setValue(currentLineStyle->getLabel(), dataType->getDataTypeStringList());
 
@@ -290,7 +292,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getLineColor());
-    property.setLabel(TR_LAYOUT("Line Color"));
+    property.setLabel(TE_TR("Line Color"));
     property.setComposeWidget(true);
     property.setValue(lineColor, dataType->getDataTypeColor());
     property.setVisible(false);
@@ -300,7 +302,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getLineWidth());
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setComposeWidget(true);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     property.setVisible(false);
@@ -311,7 +313,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getFont());
-    property.setLabel(TR_LAYOUT("Font"));
+    property.setLabel(TE_TR("Font"));
     property.setValue(font, dataType->getDataTypeFont());
     property.setVisible(false);
     prop_gridsettings.addSubProperty(property);
@@ -320,7 +322,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getTextColor());
-    property.setLabel(TR_LAYOUT("Text Color"));
+    property.setLabel(TE_TR("Text Color"));
     property.setComposeWidget(true);
     property.setValue(textColor, dataType->getDataTypeColor());
     property.setVisible(false);
@@ -331,7 +333,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getVisibleAllTexts());
-    property.setLabel(TR_LAYOUT("All Texts Visible"));
+    property.setLabel(TE_TR("All Texts Visible"));
     property.setComposeWidget(true);
     property.setValue(visibleAllTexts, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -341,7 +343,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getSuperscriptText());
-    property.setLabel(TR_LAYOUT("Superscript"));
+    property.setLabel(TE_TR("Superscript"));
     property.setComposeWidget(true);
     property.setVisible(false); //need review
     property.setValue(superscriptText, dataType->getDataTypeBool());
@@ -351,7 +353,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getHorizontalLineDisplacement());
-    property.setLabel(TR_LAYOUT("Horizontal Displacement"));
+    property.setLabel(TE_TR("Horizontal Displacement"));
     property.setComposeWidget(true);
     property.setValue(lneHrzDisplacement, dataType->getDataTypeDouble());
     property.setVisible(false);
@@ -361,7 +363,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getVerticalLineDisplacement());
-    property.setLabel(TR_LAYOUT("Vertical Displacement"));
+    property.setLabel(TE_TR("Vertical Displacement"));
     property.setComposeWidget(true);
     property.setValue(lneVrtDisplacement, dataType->getDataTypeDouble());
     property.setVisible(false);
@@ -371,7 +373,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getBottomText());
-    property.setLabel(TR_LAYOUT("Bottom Text Visible"));
+    property.setLabel(TE_TR("Bottom Text Visible"));
     property.setComposeWidget(true);
     property.setValue(bottomText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -380,7 +382,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getLeftText());
-    property.setLabel(TR_LAYOUT("Left Text Visible"));
+    property.setLabel(TE_TR("Left Text Visible"));
     property.setComposeWidget(true);
     property.setValue(leftText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -389,7 +391,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getRightText());
-    property.setLabel(TR_LAYOUT("Right Text Visible"));
+    property.setLabel(TE_TR("Right Text Visible"));
     property.setComposeWidget(true);
     property.setValue(rightText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -398,7 +400,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getTopText());
-    property.setLabel(TR_LAYOUT("Top Text Visible"));
+    property.setLabel(TE_TR("Top Text Visible"));
     property.setComposeWidget(true);
     property.setValue(topText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -407,7 +409,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getBottomRotateText());
-    property.setLabel(TR_LAYOUT("Bottom Text Rotate"));
+    property.setLabel(TE_TR("Bottom Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(bottomRotateText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -416,7 +418,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getLeftRotateText());
-    property.setLabel(TR_LAYOUT("Left Text Rotate"));
+    property.setLabel(TE_TR("Left Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(leftRotateText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -425,7 +427,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getRightRotateText());
-    property.setLabel(TR_LAYOUT("Right Text Rotate"));
+    property.setLabel(TE_TR("Right Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(rightRotateText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -434,7 +436,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getTopRotateText());
-    property.setLabel(TR_LAYOUT("Top Text Rotate"));
+    property.setLabel(TE_TR("Top Text Rotate"));
     property.setComposeWidget(true);
     property.setValue(topRotateText, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -443,7 +445,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getCrossOffset());
-    property.setLabel(TR_LAYOUT("Cross Offset"));
+    property.setLabel(TE_TR("Cross Offset"));
     property.setComposeWidget(true);
     property.setValue(crossOffSet, dataType->getDataTypeDouble());
     property.setVisible(false);
@@ -469,17 +471,17 @@ void te::layout::MapModel::initializeMapSettings()
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  std::string value = TR_LAYOUT("Settings");
+  std::string value = TE_TR("Settings");
   Property pro_mapSettings(0);
   pro_mapSettings.setName("mapSettings");
-  pro_mapSettings.setLabel(TR_LAYOUT("Map Settings"));
+  pro_mapSettings.setLabel(TE_TR("Map Settings"));
   pro_mapSettings.setValue(value, dataType->getDataTypeMapSettings());
   pro_mapSettings.setMenu(true);
 
   {
     Property property;
     property.setName("layers");
-    property.setLabel(TR_LAYOUT("Layers"));
+    property.setLabel(TE_TR("Layers"));
     property.setValue(layerList, dataType->getDataTypeLayerList());
     property.setEditable(false);
     property.setVisible(false);
@@ -490,7 +492,7 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property;
     property.setName("layers_uri");
-    property.setLabel(TR_LAYOUT("URI"));
+    property.setLabel(TE_TR("URI"));
     property.setValue(vString, dataType->getDataTypeStringVector());
     property.setEditable(false);
     property.setVisible(false);
@@ -500,7 +502,7 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property(0);
     property.setName("world_box");
-    property.setLabel(TR_LAYOUT("World Box"));
+    property.setLabel(TE_TR("World Box"));
     property.setValue(worldBox, dataType->getDataTypeEnvelope());
     pro_mapSettings.addSubProperty(property);
   }
@@ -509,7 +511,7 @@ void te::layout::MapModel::initializeMapSettings()
     Property property(0);
     property.setName("srid");
     property.setEditable(false);
-    property.setLabel(TR_LAYOUT("SRID"));
+    property.setLabel(TE_TR("SRID"));
     property.setValue(srid, dataType->getDataTypeInt());
     pro_mapSettings.addSubProperty(property);
   }
@@ -517,7 +519,7 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property(0);
     property.setName("scale");
-    property.setLabel(TR_LAYOUT("Scale"));
+    property.setLabel(TE_TR("Scale"));
     property.setValue(scale, dataType->getDataTypeDouble());
     pro_mapSettings.addSubProperty(property);
   }
@@ -525,7 +527,7 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property;
     property.setName("size_unit");
-    property.setLabel(TR_LAYOUT("Size Unit"));
+    property.setLabel(TE_TR("Size Unit"));
     property.setValue(unit, dataType->getDataTypeStringList());
     property.setVisible(false);
     Variant v;
@@ -545,7 +547,7 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property(0);
     property.setName("fixed_scale");
-    property.setLabel(TR_LAYOUT("Fixed Scale"));
+    property.setLabel(TE_TR("Fixed Scale"));
     property.setValue(fixedScale, dataType->getDataTypeBool());
     pro_mapSettings.addSubProperty(property);
   }
@@ -559,7 +561,7 @@ void te::layout::MapModel::initializePlanarGridSettings()
   PlanarGridSettingsConfigProperties settingsConfig;
 
   Property pPlanarGridSettings = getBasicGridSettings(&settingsConfig);
-  pPlanarGridSettings.setLabel(TR_LAYOUT("Planar Grid Settings"));
+  pPlanarGridSettings.setLabel(TE_TR("Planar Grid Settings"));
 
   bool superscript = false;
 
@@ -567,7 +569,7 @@ void te::layout::MapModel::initializePlanarGridSettings()
   {
     Property property(0);
     property.setName(settingsConfig.getUnit());
-    property.setLabel(TR_LAYOUT("Unit"));
+    property.setLabel(TE_TR("Unit"));
     property.setValue(std::string("km"), dataType->getDataTypeStringList());
     property.setVisible(false);
 
@@ -587,7 +589,7 @@ void te::layout::MapModel::initializePlanarGridSettings()
   {
     Property property(0);
     property.setName(settingsConfig.getSuperscriptText());
-    property.setLabel(TR_LAYOUT("Superscript"));
+    property.setLabel(TE_TR("Superscript"));
     property.setComposeWidget(true);
     property.setVisible(false);
     property.setValue(superscript, dataType->getDataTypeBool());
@@ -608,12 +610,12 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
   GeodesicGridSettingsConfigProperties settingsConfig;
 
   Property pGeodesicGridSettings = getBasicGridSettings(&settingsConfig);
-  pGeodesicGridSettings.setLabel(TR_LAYOUT("Geodesic Grid Settings"));
+  pGeodesicGridSettings.setLabel(TE_TR("Geodesic Grid Settings"));
 
   {
     Property property(0);
     property.setName(settingsConfig.getDegreesText());
-    property.setLabel(TR_LAYOUT("Show Degrees Text"));
+    property.setLabel(TE_TR("Show Degrees Text"));
     property.setValue(showDegreesText, dataType->getDataTypeBool());
     property.setVisible(false);
     pGeodesicGridSettings.addSubProperty(property); // update gridsettings property
@@ -621,7 +623,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
   {
     Property property(0);
     property.setName(settingsConfig.getMinutesText());
-    property.setLabel(TR_LAYOUT("Show Minutes Text"));
+    property.setLabel(TE_TR("Show Minutes Text"));
     property.setValue(showMinutesText, dataType->getDataTypeBool());
     property.setVisible(false);
     pGeodesicGridSettings.addSubProperty(property); // update gridsettings property
@@ -629,7 +631,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
   {
     Property property(0);
     property.setName(settingsConfig.getSecondsText());
-    property.setLabel(TR_LAYOUT("Show Seconds Text"));
+    property.setLabel(TE_TR("Show Seconds Text"));
     property.setValue(showSecondsText, dataType->getDataTypeBool());
     property.setVisible(false);
     pGeodesicGridSettings.addSubProperty(property); // update gridsettings property
@@ -638,7 +640,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
     //seconds precision
     Property property(0);
     property.setName(settingsConfig.getSecondsPrecisionText());
-    property.setLabel(TR_LAYOUT("Seconds Text Precision"));
+    property.setLabel(TE_TR("Seconds Text Precision"));
     property.setValue(secPresicion, dataType->getDataTypeInt());
     property.setVisible(false);
     pGeodesicGridSettings.addSubProperty(property); // update gridsettings property
@@ -651,7 +653,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
 
     Property property(0);
     property.setName(settingsConfig.getTextFormat());
-    property.setLabel(TR_LAYOUT("Text Format"));
+    property.setLabel(TE_TR("Text Format"));
     property.setComposeWidget(true);
     property.setValue(defaultTextFormat->getLabel(), dataType->getDataTypeStringList());
     property.setVisible(false);

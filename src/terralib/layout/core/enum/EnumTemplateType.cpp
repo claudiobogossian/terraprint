@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumTemplateType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumTemplateType::EnumTemplateType() :
   m_noneType(0),
   m_xmlType(0)
@@ -51,9 +53,9 @@ te::layout::EnumTemplateType::~EnumTemplateType()
 
 void te::layout::EnumTemplateType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_xmlType = createEnum("XmlTemplate", this, TR_LAYOUT("XML Template"));
+  m_xmlType = createEnum("XmlTemplate", this, TE_TR("XML Template"));
 }
 
 te::layout::EnumType* te::layout::EnumTemplateType::getNoneType() const

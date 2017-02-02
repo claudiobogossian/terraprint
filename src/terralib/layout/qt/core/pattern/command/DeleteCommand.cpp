@@ -52,28 +52,6 @@ void te::layout::DeleteCommand::init()
 {
   m_scene->clearSelection();
 
-  foreach(QGraphicsItem *item, m_items)
-  {
-    ItemGroup* group = dynamic_cast<ItemGroup*>(item);
-    if (group)
-    {
-      std::vector<std::string> childrenNames;
-      // get names of all children
-      foreach(QGraphicsItem* item, item->childItems())
-      {
-        AbstractItemView* abView = dynamic_cast<AbstractItemView*>(item);
-        if (abView)
-        {
-          const Property& prop_name = abView->getProperty("name");
-          std::string name = te::layout::Property::GetValueAs<std::string>(prop_name);
-
-          childrenNames.push_back(name);
-        }
-      }
-      m_groups[item] = childrenNames; // group with children names
-    }
-  }
-
   int size = m_items.size();
 
   setText(QObject::tr("Delete %1")
@@ -93,17 +71,8 @@ void te::layout::DeleteCommand::undo()
   {
     if(item->scene() != m_scene)
     {
-      ItemGroup* group = dynamic_cast<ItemGroup*>(item);
-      if (group)
-      {
-        QList<QGraphicsItem *> items = childrenItems(group);
-        scene->createItemGroup(items, group);
-      }
-      else
-      {
-        scene->insertItem(item);
-        scene->removeItemStackWithoutScene(item);
-      }
+      scene->insertItem(item);
+      scene->removeItemStackWithoutScene(item);
       item->setSelected(true);
     }
   }
@@ -121,19 +90,10 @@ void te::layout::DeleteCommand::redo()
   {
     if(item->scene() == m_scene)
     {
-      ItemGroup* group = dynamic_cast<ItemGroup*>(item);
-      if (group)
-      {
-        scene->removeItemGroup(group);
-      }
-      else
-      {
-        m_scene->removeItem(item);
-        scene->addItemStackWithoutScene(item);
-      }
+      m_scene->removeItem(item);
+      scene->addItemStackWithoutScene(item);
     }
   }
-
   m_scene->clearSelection();
   m_scene->update();
 }
@@ -144,36 +104,3 @@ QString te::layout::DeleteCommand::createCommandString( int totalItems )
     .arg(totalItems);
 }
 
-QList<QGraphicsItem *> te::layout::DeleteCommand::childrenItems(QGraphicsItem* group)
-{
-  QList<QGraphicsItem *> items;
-
-  Scene* scene = dynamic_cast<Scene*>(m_scene);
-  if (!scene)
-    return items;
-
-  std::vector<std::string> childrenNames;
-  std::map< QGraphicsItem*, std::vector<std::string> >::iterator it;
-  it = m_groups.find(group);
-
-  if (it != m_groups.end())
-  {
-    childrenNames = it->second;
-  }
-
-  std::vector<std::string>::iterator itChild = childrenNames.begin();
-  for (; itChild != childrenNames.end(); ++itChild)
-  {
-    std::string name = (*itChild);
-    AbstractItemView* iView = scene->getItem(name);
-    if (iView)
-    {
-      QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(iView);
-      if (item)
-      {
-        items.append(item);
-      }
-    }
-  }
-  return items;
-}
