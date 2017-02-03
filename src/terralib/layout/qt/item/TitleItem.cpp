@@ -31,7 +31,7 @@
 #include "TitleController.h"
 
 te::layout::TitleItem::TitleItem() 
-  : TextItem()
+  : TextGridItem()
 {
 }
 
@@ -48,9 +48,4 @@ te::layout::AbstractItemController* te::layout::TitleItem::createController() co
 {
   AbstractItemModel* model = createModel();
   return new TitleController(model, (AbstractItemView*)this);
-}
-
-void te::layout::TitleItem::updateGeometry( int position, int charsRemoved, int charsAdded )
-{
-  //we override this function just to avoid the view to call textChanged function from the controller
 }
