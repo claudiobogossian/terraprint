@@ -149,8 +149,7 @@ void te::layout::Scene::insertItem(AbstractItemView* item)
     return;
   }
 
-  QGraphicsItem* qitem = ((QGraphicsItem*)item);
-
+  QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
   insertItem(qitem);
 }
 
@@ -1033,7 +1032,8 @@ void te::layout::Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEv
   if (m_currentItemEdition && m_isEditionMode)
   {
     QPointF pt = mouseEvent->scenePos();
-    QGraphicsItem* qCurrentItem = (QGraphicsItem*)m_currentItemEdition;
+    QGraphicsItem* qCurrentItem = dynamic_cast<QGraphicsItem*>(m_currentItemEdition);
+    pt = qCurrentItem->mapFromScene(pt);
     if (qCurrentItem->contains(pt))
     {
       return; // the same item continues edition

@@ -696,6 +696,12 @@ bool te::layout::AbstractItem::checkRotationArea(const double& x, const double& 
 
 void te::layout::AbstractItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
+  if (isEditionMode() == true)
+  {
+    QGraphicsItem::mousePressEvent(event);
+    return;
+  }
+
   //checks if the item is resizable.
   const Property& property = this->getProperty("resizable");
   if (te::layout::Property::GetValueAs<bool>(property) == true && isZoomAdequateForResize())
@@ -727,6 +733,7 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
   if (isEditionMode() == true)
   {
+    QGraphicsItem::mouseMoveEvent(event);
     return;
   }
 
@@ -787,6 +794,12 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
 void te::layout::AbstractItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
+  if (isEditionMode() == true)
+  {
+    QGraphicsItem::mouseReleaseEvent(event);
+    return;
+  }
+
   if (m_currentAction == te::layout::RESIZE_ACTION)
   {
     m_currentAction = te::layout::NO_ACTION;
