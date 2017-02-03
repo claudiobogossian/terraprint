@@ -224,11 +224,6 @@ void te::layout::AbstractItemController::update(const te::layout::Subject* subje
   refresh();
 }
 
-bool te::layout::AbstractItemController::contains(const te::gm::Coord2D &coord) const
-{
-  return m_model->contains(coord);
-}
-
 void te::layout::AbstractItemController::setView(AbstractItemView* view)
 {
   m_view = view;
