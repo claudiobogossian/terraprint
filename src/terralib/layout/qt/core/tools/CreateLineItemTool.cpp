@@ -35,11 +35,18 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QUndoStack>
+#include <QPainterPath>
+#include <QPixmap>
+#include <QPointF>
+#include <QPolygonF>
 
 te::layout::CreateLineItemTool::CreateLineItemTool(View* view, EnumType* itemType, QObject* parent)
   : AbstractLayoutTool(view, parent)
-  ,m_item(0)
-  ,m_itemType(itemType)
+  , m_item(0)
+  , m_itemType(itemType)
+  , m_drawPoints(false)
+  , m_drawLines(true)
+  , m_drawPolygon(false)
 {
   setCursor(Qt::ArrowCursor);
 
@@ -47,10 +54,16 @@ te::layout::CreateLineItemTool::CreateLineItemTool(View* view, EnumType* itemTyp
   {
     m_itemType = Enums::getInstance().getEnumObjectType()->getLineItem();
   }
+
+  // Setups the draft style
+  m_pen.setStyle(Qt::DashLine);
+  m_pen.setColor(QColor(100, 177, 216));
+  m_brush.setColor(QColor(100, 177, 216));
 }
 
 te::layout::CreateLineItemTool::~CreateLineItemTool()
 {
+
 }
 
 bool te::layout::CreateLineItemTool::mousePressEvent(QMouseEvent* e)
@@ -67,19 +80,13 @@ bool te::layout::CreateLineItemTool::mousePressEvent(QMouseEvent* e)
 
   if (e->button() != Qt::LeftButton)
   {
-    scne->getUndoStack()->endMacro();
-    m_coords.clear();
-    m_view->resetDefaultConfig(true);
+    finalizeCreation();
     return true;
   }
-
-  createItem();
-
+  
   QPointF scenePos = m_view->mapToScene(e->pos());
   te::gm::Point p(scenePos.x(), scenePos.y());
   m_coords.push_back(p);
-  setGeometry(); // update properties with undo/redo
-  m_view->viewport()->update();
   return true;
 }
 
@@ -90,54 +97,95 @@ bool te::layout::CreateLineItemTool::mouseMoveEvent(QMouseEvent* e)
 
 bool te::layout::CreateLineItemTool::mouseReleaseEvent(QMouseEvent* e)
 {
+  /* When the tools need to draw in the pixmap, this function must be called, 
+  so the View itself will call the redraw() method of the current tool. */
+  m_view->makeDraftPixmapDirty();
   return false;
 }
 
 bool te::layout::CreateLineItemTool::keyPressEvent( QKeyEvent* keyEvent )
 {
-  Scene* sc = dynamic_cast<Scene*>(m_view->scene());
-
   if(keyEvent->key() == Qt::Key_Escape)
   {
-    if (sc)
-    {
-      sc->getUndoStack()->endMacro();
-    }
-    
-    m_coords.clear();
-    m_view->resetDefaultConfig(true);
+    finalizeCreation();
   }
   return true;
 }
 
-// The best would be to have a method of drawing lines and only update the item with the geometry at the end
+void te::layout::CreateLineItemTool::drawBuffer(QPaintDevice* device)
+{
+  QPainter p;
+  p.begin(device);
+
+  p.setPen(m_pen);
+  p.setBrush(m_brush);
+
+  QTransform transf = m_view->viewportTransform();
+  p.setTransform(transf);
+
+  draw(p);
+
+  p.end();
+}
+
+void te::layout::CreateLineItemTool::draw(QPainter& p)
+{
+  if (m_drawPoints)
+  {
+    QVector<QPointF> points = getQPoints();
+    p.drawPoints(points);
+  }
+  if (m_drawLines)
+  {
+    QPainterPath path = getQLines();
+    p.drawPath(path);
+  }
+  if (m_drawPolygon)
+  {
+    QPolygonF poly = getQPolygon();
+    p.drawPolygon(poly);
+  }
+}
+
 void te::layout::CreateLineItemTool::setGeometry()
 {
-  AbstractItem* itemView = dynamic_cast<AbstractItem*> (m_item);
+  if (!m_item)
+    return;
 
-  // create lineString only to find the lowerleft
+  AbstractItemView* iView = dynamic_cast<AbstractItemView*>(m_item);
+  if (!iView)
+    return;
+
+  /* First the item must be positioned and have a size, 
+  then have a geometry with internal coordinates */
+
   te::gm::LineString* lineString = new te::gm::LineString(m_coords.size(), te::gm::LineStringType);
   for (unsigned int i = 0; i < m_coords.size(); i++)
   {
     lineString->setPointN(i, m_coords[i]);
   }
-  te::gm::Coord2D lowerLeft = lineString->getMBR()->getLowerLeft();
 
-  // update position
-  Properties properties = createProperties(lowerLeft);
-  itemView->setProperties(properties);
+  const te::gm::Envelope* mbr = lineString->getMBR();
+  te::gm::Coord2D lowerLeft = mbr->getLowerLeft();
+  double width = mbr->getWidth();
+  double height = mbr->getHeight();
+  
+  // update position and size
+  Properties props = createProperties(lowerLeft, width, height);
+  iView->setProperties(props);
 
-  // Update position of points according to the new item position
+  // Update position of points according to the item's internal coordinates
   for (unsigned int i = 0; i < m_coords.size(); i++)
   {
     QPointF point(m_coords[i].getX(), m_coords[i].getY());
-    QPointF point2Item = m_item->mapFromScene(point);
+    QPointF point2Item = m_item->mapFromScene(point); // item's internal coordinate
     lineString->setPointN(i, te::gm::Point(point2Item.x(), point2Item.y()));
   }
-  
+    
   // update geometry
-  properties = createProperties(lineString);
-  itemView->setProperties(properties);
+  props = createProperties(lineString);
+  iView->setProperties(props);
+  m_item->setSelected(true);
 }
 
 te::layout::Properties te::layout::CreateLineItemTool::createProperties(te::gm::LineString* lineString)
@@ -150,11 +198,10 @@ te::layout::Properties te::layout::CreateLineItemTool::createProperties(te::gm::
     property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
     properties.addProperty(property);
   }
-
   return properties;
 }
 
-te::layout::Properties te::layout::CreateLineItemTool::createProperties(const te::gm::Coord2D& coord)
+te::layout::Properties te::layout::CreateLineItemTool::createProperties(const te::gm::Coord2D& coord, double width, double height)
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties properties;
@@ -170,25 +217,138 @@ te::layout::Properties te::layout::CreateLineItemTool::createProperties(const te
     property.setValue(coord.getY(), dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
+  {
+    Property property(0);
+    property.setName("width");
+    property.setValue(width, dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("height");
+    property.setValue(height, dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+
   return properties;
 }
 
 void te::layout::CreateLineItemTool::createItem()
 {
-  Scene* sc = dynamic_cast<Scene*>(m_view->scene());
+  Scene* sc = m_view->getScene();
   if (!sc)
   {
     return;
   }
 
-  if (m_coords.empty())
+  if (!m_coords.empty())
   {
     std::string label = m_itemType->getLabel();
-
     sc->getUndoStack()->beginMacro("Create line item or derived child");
+
     // create a new item
     BuildGraphicsItem buildItem(sc);
-    m_item = buildItem.createItem(m_itemType);
+    m_item = buildItem.createItem(m_itemType); 
+    setGeometry();
+    
+    sc->getUndoStack()->endMacro();
+  }
+}
+
+QVector<QPointF> te::layout::CreateLineItemTool::getQPoints()
+{
+  QVector<QPointF> points;
+
+  std::size_t nPoints = m_coords.size();
+
+  for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
+  {
+    QPointF pt(m_coords[pIdx].getX(), m_coords[pIdx].getY());
+    points.append(pt);
+  }
+  
+  return points;
+}
+
+QPainterPath te::layout::CreateLineItemTool::getQLines()
+{
+  QVector<QPointF> points = getQPoints();
+  QPainterPath path(points.front());
+
+  for (int i = 1; i < points.size(); ++i)
+  {
+    path.lineTo(points[i]);
+  }  
+  return path;
+}
+
+QPolygonF te::layout::CreateLineItemTool::getQPolygon()
+{
+  QPolygonF poly;
+
+  std::size_t nPoints = m_coords.size();
+
+  for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
+  {
+    QPointF pt(m_coords[pIdx].getX(), m_coords[pIdx].getY());
+    poly.push_back(pt);
+  }
+  
+  return poly;
+}
+
+void te::layout::CreateLineItemTool::finalizeCreation()
+{
+  Scene* scene = dynamic_cast<Scene*>(m_view->scene());
+  QPixmap* draftPixmap = m_view->getDraftPixmap();
+
+  if (draftPixmap && scene)
+  {
+    draftPixmap->fill(Qt::transparent);
+    createItem();
+    m_coords.clear();
+    m_view->resetDefaultConfig(true);
+  }
+}
+
+
+void te::layout::CreateLineItemTool::redraw()
+{
+  QPixmap* draftPixmap = m_view->getDraftPixmap();
+  if (draftPixmap)
+  {
+    draftPixmap->fill(Qt::transparent);
+    drawBuffer(draftPixmap);
+  }
+}
+
+void te::layout::CreateLineItemTool::setDrawPoints(bool draw)
+{
+  m_drawPoints = draw;
+  if (draw)
+  {
+    m_drawLines = false;
+    m_drawPolygon = false;
+  }
+}
+
+void te::layout::CreateLineItemTool::setDrawLines(bool draw)
+{
+  m_drawLines = draw;
+  if (draw)
+  {
+    m_drawPoints = false;
+    m_drawPolygon = false;
+  }
+}
+
+void te::layout::CreateLineItemTool::setDrawPolygon(bool draw)
+{
+  m_drawPolygon = draw;
+  if (draw)
+  {
+    m_drawLines = false;
+    m_drawPoints = false;
   }
 }
 

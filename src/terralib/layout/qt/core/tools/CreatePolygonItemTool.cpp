@@ -25,6 +25,7 @@ te::layout::CreatePolygonItemTool::CreatePolygonItemTool(View* view, EnumType* i
   : CreateLineItemTool(view, itemType, parent)
 {
   m_itemType = Enums::getInstance().getEnumObjectType()->getPolygonItem();
+  setDrawPolygon(true);
 }
 
 te::layout::CreatePolygonItemTool::~CreatePolygonItemTool()

@@ -283,6 +283,16 @@ namespace te
         virtual void configLayoutWithDefaultTempFilePath();
 
         void setTempFilePath(const std::string& path);
+        
+        QPixmap* getDraftPixmap() const;
+
+        /*!
+          \brief When the tools need to draw in the pixmap, this function must be called, 
+            so the View itself will call the redraw() method of the current tool.
+
+          \param update View
+        */
+        virtual void makeDraftPixmapDirty(bool update = true);
 
       public slots:
     
@@ -485,6 +495,10 @@ namespace te
 
         virtual void setFullTempFilePath(const QString& newPath);
 
+        virtual void drawDraftPixmap(QPainter * painter);
+
+        virtual void resetDraftPixmap(double width, double height);
+
       protected:
 
         VisualizationArea*                   m_visualizationArea;
@@ -499,7 +513,9 @@ namespace te
         double                               m_height;
         bool                                 m_isMoving;
         bool                                 m_updateItemPos;
-        QPixmap                              m_foreground; //!< This pixmap represents the foreground drawings and is used for double buffering
+        QPixmap                              m_foreground; //!< This pixmap represents the top foreground drawings, like rulers, and is used for double buffering
+        QPixmap*                             m_draft; //!< This pixmap represents the foreground drawings and is used for double buffering
+        bool                                 m_dirtyDraft;
         std::vector<AbstractLayoutTool*>     m_lateRemovalVec;
         bool                                 m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True
         QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item

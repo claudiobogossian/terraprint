@@ -139,6 +139,8 @@ namespace te
           */
           virtual void setCursor(const QCursor& cursor);
 
+          virtual void redraw();
+
         protected:
 
           virtual QCursor createCursor(std::string pathIcon);
