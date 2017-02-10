@@ -249,6 +249,11 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   }
 
   AbstractScene* myScene = this->getScene();
+  if (!myScene)
+  {
+    return;
+  }
+
   te::layout::Utils utils = myScene->getUtils();
 
   //we need to initialize the size of the pen. To do this, we convert the expeted size in Pixels to MM. We also consider the zoom factor

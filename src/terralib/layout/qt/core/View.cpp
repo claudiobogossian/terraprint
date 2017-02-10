@@ -87,6 +87,8 @@ te::layout::View::View( QWidget* widget) :
   m_height(-1),
   m_isMoving(false),
   m_updateItemPos(false),
+  m_draft(0),
+  m_dirtyDraft(false),
   m_mouseEvent(false),
   m_dialogItemToolbar(0),
   m_currentToolbarInsideType(0),
@@ -104,10 +106,21 @@ te::layout::View::View( QWidget* widget) :
   m_verticalRuler = new VerticalRuler;
 
   m_dialogItemToolbar = new DialogItemToolbar(this->viewport());
+
+  // initialize draft pixmap
+  QSize viewportSize = this->viewport()->size();
+  m_draft = new QPixmap(viewportSize);
+  m_draft->fill(Qt::transparent);
 }
 
 te::layout::View::~View()
 {
+  if (m_draft)
+  {
+    delete m_draft;
+    m_draft = 0;
+  }
+
   QList<ToolbarItemInside*> toolbars = m_itemToolbars.values();
   foreach(ToolbarItemInside *inside, toolbars)
   {
@@ -1357,6 +1370,9 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   {
     double scale = transform().m11();
 
+    resetDraftPixmap(painter->device()->width(), painter->device()->height());
+    makeDraftPixmapDirty(false);
+
     m_foreground = QPixmap(painter->device()->width(), painter->device()->height());
     m_foreground.fill(Qt::transparent);
     QPainter painter2(&m_foreground);
@@ -1369,10 +1385,12 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
 
     m_foreground = QPixmap::fromImage(m_foreground.toImage().mirrored());
   }
-
+  
   QRect rectView(0, 0, this->viewport()->width(), this->viewport()->height());
   QPolygonF polygonScene = this->mapToScene(rectView);
 
+  drawDraftPixmap(painter); // draw draft pixmap
+  
   painter->drawPixmap(polygonScene.boundingRect(), m_foreground, m_foreground.rect());
 
   //then we draw the foreground of the scene
@@ -1861,5 +1879,47 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
   emit endedPerformingIO();
 
   return result;
+}
+
+QPixmap* te::layout::View::getDraftPixmap() const
+{
+  return m_draft;
+}
+
+void te::layout::View::drawDraftPixmap(QPainter * painter)
+{
+  if (m_draft && m_dirtyDraft)
+  {
+    QImage mirrored = m_draft->toImage().mirrored();
+    delete m_draft;
+    m_draft = new QPixmap(QPixmap::fromImage(mirrored));
+  }
+
+  QPolygonF draftRegion = this->mapToScene(m_draft->rect());
+  painter->drawPixmap(draftRegion.boundingRect(), *m_draft, m_draft->rect());
+  m_dirtyDraft = false;
+}
+
+void te::layout::View::makeDraftPixmapDirty(bool update)
+{
+  m_dirtyDraft = true;
+  if (m_currentTool)
+  {
+    m_currentTool->redraw(); // draw on draft pixmap
+    if (update)
+    {
+      viewport()->update();
+    }
+  }
+}
+
+void te::layout::View::resetDraftPixmap(double width, double height)
+{
+  if (m_draft)
+  {
+    delete m_draft;
+  }
+  m_draft = new QPixmap(width, height);
+  m_draft->fill(Qt::transparent);
 }
 

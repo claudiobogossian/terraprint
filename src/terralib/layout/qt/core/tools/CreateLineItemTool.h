@@ -20,7 +20,7 @@
 /*!
   \file terralib/layout/qt/core/tools/CreateLineItemTool.h
 
-  \brief This class implements a concrete tool to create line item.
+  \brief This class implements a concrete tool to create line item. Drawing lines and only create the item and update with the geometry at the end.
 */
 
 #ifndef __TERRALIB_LAYOUT_INTERNAL_CREATE_LINE_ITEM_TOOL_H
@@ -36,6 +36,14 @@
 
 //Qt
 #include <QGraphicsItem>
+#include <QPen>
+#include <QBrush>
+
+class QPainterPath;
+class QPointF;
+class QPolygonF;
+class QPainter;
+class QPaintDevice;
 
 namespace te
 {
@@ -49,7 +57,7 @@ namespace te
       /*!
         \class CreateLineItemTool
 
-        \brief This class implements a concrete tool to create line in a QGraphics Item.
+        \brief This class implements a concrete tool to create line item. Drawing lines and only create the item and update with the geometry at the end.
       */
       class TELAYOUTEXPORT CreateLineItemTool : public AbstractLayoutTool
       {
@@ -88,6 +96,8 @@ namespace te
 
           bool keyPressEvent(QKeyEvent* e);
 
+          virtual void redraw();
+
           //@}
         protected:
 
@@ -95,11 +105,39 @@ namespace te
           
           virtual Properties createProperties(te::gm::LineString* lineString);
 
-          virtual Properties createProperties(const te::gm::Coord2D& coord);
+          virtual Properties createProperties(const te::gm::Coord2D& coord, double width, double height);
+          
+          virtual void drawBuffer(QPaintDevice* device);
+
+          virtual void draw(QPainter& p);
+
+          virtual QVector<QPointF> getQPoints();
+
+          virtual QPainterPath getQLines();
+
+          virtual QPolygonF getQPolygon();
+
+          void setDrawPoints(bool draw);
+
+          void setDrawLines(bool draw);
+
+          void setDrawPolygon(bool draw);
+
+          virtual void finalizeCreation();
+
+        protected:
 
           std::vector<te::gm::Point>  m_coords;
           QGraphicsItem*              m_item;
           EnumType*                   m_itemType;
+          QPen                        m_pen;   //!< The pen used to draw the draft shape.
+          QBrush                      m_brush; //!< The brush used to draw the draft shape.
+
+        private:
+
+          bool                        m_drawPoints;
+          bool                        m_drawLines;
+          bool                        m_drawPolygon;
       };
 
   }   // end namespace layout
