@@ -1890,6 +1890,10 @@ void te::layout::View::drawDraftPixmap(QPainter * painter)
 {
   if (m_draft && m_dirtyDraft)
   {
+    if (m_currentTool)
+    {
+      m_currentTool->redraw(); // draw on draft pixmap
+    }
     QImage mirrored = m_draft->toImage().mirrored();
     delete m_draft;
     m_draft = new QPixmap(QPixmap::fromImage(mirrored));
@@ -1902,15 +1906,11 @@ void te::layout::View::drawDraftPixmap(QPainter * painter)
 
 void te::layout::View::makeDraftPixmapDirty(bool update)
 {
-  m_dirtyDraft = true;
-  if (m_currentTool)
+  m_dirtyDraft = true; 
+  if (update)
   {
-    m_currentTool->redraw(); // draw on draft pixmap
-    if (update)
-    {
-      viewport()->update();
-    }
-  }
+    viewport()->update();
+  }  
 }
 
 void te::layout::View::resetDraftPixmap(double width, double height)
