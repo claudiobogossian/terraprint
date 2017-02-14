@@ -154,6 +154,41 @@ void te::layout::PrintScene::showPrintDialog()
   sc->setContext(oldContext);
 }
 
+void te::layout::PrintScene::showQPrinterDialog()
+{
+  if (!m_scene)
+    return;
+
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return;
+
+  ContextObject oldContext = sc->getContext();
+
+  QPrinter* printer = createPrinter();
+  printer->setOutputFormat(QPrinter::NativeFormat);
+
+  QPrintDialog printDialog(printer, (QWidget*)sc->getView());
+  if (printDialog.exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
+  {
+    if (printer)
+    {
+      delete printer;
+      printer = 0;
+    }
+  }
+  else
+  {
+    printPaper(printer);
+  }
+
+  delete printer;
+  printer = 0;
+
+  sc->redrawItems();
+  sc->setContext(oldContext);
+}
+
 void te::layout::PrintScene::printPaper( QPrinter* printer )
 {
   if(!printer)
@@ -242,14 +277,23 @@ void te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
   ContextObject context = createNewContext(printer);
   QRect pageRect = printer->pageRect();
 
+  //this is the physical size in pixels
+  //whe the printer does not have the input paper in its paper list, this size may vary from the size of the input paper
+  int widthPx = printer->width();
+  int heightPx = printer->height();
+
   //Paper size using the printer dpi (Target)
   //Convert Paper Size world to screen coordinate. Uses dpi printer.
   //Adjusts the destination box to use 100% of the paper, including the unprintable area.
-  //In this case, items that are at the edge of the paper mu be cut off.
-  QPointF origin(-pageRect.left(), pageRect.top());
-  QSizeF paperPixelBox = printer->paperSize(QPrinter::DevicePixel);
-  QRectF pxTargetRect(origin, paperPixelBox);
+  //In this case, items that are at the edge of the paper will be cut-off.
+  QPointF origin(-pageRect.left(), -pageRect.top());
+  QSizeF paperPixelBox(widthPx, heightPx);
+  if (paperPixelBox.isValid() == false)
+  {
+    return;
+  }
 
+  QRectF pxTargetRect(origin, paperPixelBox);
   render(printer, pxTargetRect, context);
 }
 
@@ -407,12 +451,22 @@ bool te::layout::PrintScene::render(QPaintDevice* device, const QRectF& pixelTar
   if (!sc)
     return false;
 
-  //It's not necessary to change the scale of View
-
   //Box Paper in the Scene coordinates (Source mm)
   QRectF mmSourceRect = paperRectMM();
 
   sc->setContext(context);
+
+  int dpiX = device->logicalDpiX();
+  int dpiY = device->logicalDpiY();
+
+  int viewportWidth = mmSourceRect.width() / 25.4 *  dpiX;
+  int viewportHeight = mmSourceRect.height() / 25.4 * dpiY;
+
+  //here we make sure the rects are proprotional
+  //we ensure that the drawings will be with the same size as the input
+  QRectF pixelTargetRectCopy(pixelTargetRect);
+  pixelTargetRectCopy.setWidth(viewportWidth);
+  pixelTargetRectCopy.setHeight(viewportHeight);
 
   QPainter painter;
 
@@ -420,9 +474,9 @@ bool te::layout::PrintScene::render(QPaintDevice* device, const QRectF& pixelTar
   painter.setRenderHint(QPainter::Antialiasing);
 
   //Mirroring Y-Axis
-  painter.translate(pixelTargetRect.width() / 2., pixelTargetRect.height() / 2.);
+  //and we ensure that the drawings will start at the top-left of the output paper
   painter.scale(1, -1);
-  painter.translate(-(pixelTargetRect.width() / 2.), -(pixelTargetRect.height() / 2.));
+  painter.translate(0, -pixelTargetRectCopy.height());
 
   sc->deselectAllItems();
 
@@ -434,7 +488,7 @@ bool te::layout::PrintScene::render(QPaintDevice* device, const QRectF& pixelTar
   QBrush copyBackgroundColor = m_scene->backgroundBrush();
 
   m_scene->setBackgroundBrush(newBrush);//transparent
-  m_scene->render(&painter, pixelTargetRect, mmSourceRect);
+  m_scene->render(&painter, pixelTargetRectCopy, mmSourceRect);
   m_scene->setBackgroundBrush(copyBackgroundColor);
 
   painter.end();

@@ -1114,8 +1114,9 @@ void te::layout::View::print()
   disableUpdate();
   
   PrintScene printer(scne);
-  //printer.showPrintPreviewDialog();
-  printer.showPrintDialog();
+  printer.showQPrinterDialog(); //this enables the QPrintDialog for chosing the printer
+  //printer.showPrintPreviewDialog(); //this enables the print preview dialog
+  //printer.showPrintDialog(); //this enables the terraprint dialog for chosing the printer
 
   enableUpdate();
 
