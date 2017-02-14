@@ -82,6 +82,11 @@ namespace te
         virtual void showPrintDialog();
 
         /*!
+        \brief Shows the QPrinterDialog to print the scene. Allows to choose and configure the printer.
+        */
+        virtual void showQPrinterDialog();
+
+        /*!
           \brief Print the scene(only the area corresponding to the paper).
         */
         virtual void print();
