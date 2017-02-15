@@ -165,8 +165,8 @@ void te::layout::ObjectInspectorOutside::itemsInspector(QList<QGraphicsItem*> gr
   }
 
   m_treeWidget->sortItems(0, Qt::AscendingOrder);
+  m_treeWidget->resizeColumnToContents(0);
   m_treeWidget->expandAll();
-  m_treeWidget->adjustSize();
 }
 
 void te::layout::ObjectInspectorOutside::onRemoveProperties( std::vector<std::string> names )
@@ -440,8 +440,8 @@ void te::layout::ObjectInspectorOutside::refreshInspector()
   if (addChild)
   {
     m_treeWidget->sortItems(0, Qt::AscendingOrder);
+    m_treeWidget->resizeColumnToContents(0);
     m_treeWidget->expandAll();
-    m_treeWidget->adjustSize();
   }
   m_isChangingSelection = false;
 }
