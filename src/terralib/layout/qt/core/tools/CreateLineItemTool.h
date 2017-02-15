@@ -36,8 +36,6 @@
 
 //Qt
 #include <QGraphicsItem>
-#include <QPen>
-#include <QBrush>
 
 class QPainterPath;
 class QPointF;
@@ -53,6 +51,7 @@ namespace te
     class View;
     class EnumType;
     class Properties;
+    class RenderGeometries;
 
       /*!
         \class CreateLineItemTool
@@ -78,6 +77,8 @@ namespace te
           
           /*! \brief Destructor. */
           ~CreateLineItemTool();
+
+          virtual void init();
 
           //@}
 
@@ -106,38 +107,15 @@ namespace te
           virtual Properties createProperties(te::gm::LineString* lineString);
 
           virtual Properties createProperties(const te::gm::Coord2D& coord, double width, double height);
-          
-          virtual void drawBuffer(QPaintDevice* device);
-
-          virtual void draw(QPainter& p);
-
-          virtual QVector<QPointF> getQPoints();
-
-          virtual QPainterPath getQLines();
-
-          virtual QPolygonF getQPolygon();
-
-          void setDrawPoints(bool draw);
-
-          void setDrawLines(bool draw);
-
-          void setDrawPolygon(bool draw);
 
           virtual void finalizeCreation();
 
         protected:
 
+          RenderGeometries*           m_render;
           std::vector<te::gm::Point>  m_coords;
           QGraphicsItem*              m_item;
           EnumType*                   m_itemType;
-          QPen                        m_pen;   //!< The pen used to draw the draft shape.
-          QBrush                      m_brush; //!< The brush used to draw the draft shape.
-
-        private:
-
-          bool                        m_drawPoints;
-          bool                        m_drawLines;
-          bool                        m_drawPolygon;
       };
 
   }   // end namespace layout

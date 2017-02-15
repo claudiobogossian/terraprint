@@ -1646,7 +1646,7 @@ void te::layout::View::closeToolbar()
         toolbar = allPButtons.first();
         if (toolbar)
         {
-          toolbar->setParent(0);
+          toolbar->setParent(this);
         }
       }
       m_currentToolbarInsideType = 0;
