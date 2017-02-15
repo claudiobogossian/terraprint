@@ -431,6 +431,7 @@ bool te::layout::PrintScene::exportToSVG(const QString& pathFile)
   generator.setViewBox(pxTargetRect);
   generator.setTitle(tr("Map To SVG"));
   generator.setDescription(tr("TerraPrint (TerraLib 5) - Map to SVG"));
+  generator.setResolution(dpiX);
 
   m_printState = PrintingScene;
 
