@@ -78,62 +78,62 @@
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="26"/>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="84"/>
         <source>Export Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurações de exportação</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="70"/>
         <source>Imagem</source>
-        <translation type="unfinished">Imagem</translation>
+        <translation>Imagem</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="94"/>
         <source>Settings</source>
-        <translation type="unfinished">Configurações</translation>
+        <translation>Configurações</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="107"/>
         <source>DPI:</source>
-        <translation type="unfinished">Resolução (DPI):</translation>
+        <translation>Resolução (DPI):</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="130"/>
         <source>File Format:</source>
-        <translation type="unfinished"></translation>
+        <translation>Formato do Arquivo:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="157"/>
         <source>File:</source>
-        <translation type="unfinished">Arquivo:</translation>
+        <translation>Arquivo:</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="174"/>
         <source>Save As...</source>
-        <translation type="unfinished">Salvar como...</translation>
+        <translation>Salvar como...</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="208"/>
         <source>DPI Information</source>
-        <translation type="unfinished"></translation>
+        <translation>Informações da resolução</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="222"/>
         <source>&amp;Help</source>
-        <translation type="unfinished">&amp;Ajuda</translation>
+        <translation>&amp;Ajuda</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="225"/>
         <source>Alt+H</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="245"/>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="252"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancelar</translation>
+        <translation>Cancelar</translation>
     </message>
 </context>
 <context>
@@ -441,7 +441,7 @@
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="341"/>
         <source>mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="855"/>
@@ -737,7 +737,7 @@
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2400"/>
         <source>0; </source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="2403"/>
@@ -1125,7 +1125,7 @@
         <location filename="../../../src/terralib/layout/qt/ui/MapLayerChoice.ui" line="94"/>
         <location filename="../../../src/terralib/layout/qt/ui/MapLayerChoice.ui" line="118"/>
         <source>mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/MapLayerChoice.ui" line="200"/>
@@ -1256,7 +1256,7 @@
         <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="705"/>
         <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="744"/>
         <source>mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="789"/>
@@ -1399,7 +1399,7 @@
         <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="235"/>
         <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="287"/>
         <source> mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="258"/>
@@ -1445,7 +1445,7 @@
         <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="462"/>
         <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="502"/>
         <source>mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="411"/>
@@ -1649,7 +1649,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/UngroupCommand.cpp" line="78"/>
         <source>Ungroup %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Desagrupa</translation>
     </message>
 </context>
 <context>
@@ -1764,7 +1764,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="324"/>
         <source>Gap</source>
-        <translation type="unfinished"></translation>
+        <translation>Intervalo</translation>
     </message>
     <message>
         <source>Gap in millimeters</source>
@@ -1779,7 +1779,7 @@ nononon</source>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="355"/>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="389"/>
         <source>mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="366"/>
@@ -1976,7 +1976,7 @@ nononon</source>
         <location filename="../../../src/terralib/layout/qt/ui/TextGridSettings.ui" line="265"/>
         <location filename="../../../src/terralib/layout/qt/ui/TextGridSettings.ui" line="521"/>
         <source>mm</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/TextGridSettings.ui" line="246"/>
@@ -2114,32 +2114,32 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="106"/>
         <source>Export Settings</source>
-        <translation type="unfinished"></translation>
+        <translation>Configurações de exportação</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="106"/>
         <source>Please complete the filename.</source>
-        <translation type="unfinished"></translation>
+        <translation>Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="118"/>
         <source>Files</source>
-        <translation type="unfinished"></translation>
+        <translation>Arquivos</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="120"/>
         <source>Save File</source>
-        <translation type="unfinished">Salvar Arquivo</translation>
+        <translation>Salvar Arquivo</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="150"/>
         <source>The DPI chosen is high. Can cause very large files.</source>
-        <translation type="unfinished">A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="154"/>
         <source>The DPI chosen is too high. Can cause very large files.</source>
-        <translation type="unfinished">A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
+        <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
 </context>
 <context>
@@ -2354,7 +2354,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="108"/>
         <source>Export As...</source>
-        <translation type="unfinished"></translation>
+        <translation>Exportar como...</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/default/MenuPrincipal.cpp" line="113"/>
@@ -2500,27 +2500,27 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="379"/>
         <source>Map To SVG</source>
-        <translation type="unfinished"></translation>
+        <translation>Carta para SVG</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="380"/>
         <source>TerraPrint (TerraLib 5) - Map to SVG</source>
-        <translation type="unfinished"></translation>
+        <translation>TerraPrint (Terralib 5) - Carta para SVG</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="656"/>
         <source>Could not export the</source>
-        <translation type="unfinished"></translation>
+        <translation>Não foi possível exportar o</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="656"/>
         <source>Possible cause: the file is already opened by another application.</source>
-        <translation type="unfinished"></translation>
+        <translation>A possível causa: o arquivo está aberto em outra aplicação.</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="657"/>
         <source>exported successfully!</source>
-        <translation type="unfinished"></translation>
+        <translation>exportado com sucesso!</translation>
     </message>
 </context>
 <context>
