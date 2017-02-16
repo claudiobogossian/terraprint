@@ -23,8 +23,8 @@
   \brief
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_OUTSIDE_H
-#define __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_OUTSIDE_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_EXPORT_SETTINGS_OUTSIDE_H
+#define __TERRALIB_LAYOUT_INTERNAL_EXPORT_SETTINGS_OUTSIDE_H
 
 // TerraLib
 #include "../../core/Config.h"
@@ -36,7 +36,7 @@
 #include <QDialog>
 #include <QString>
 
-namespace Ui { class PDFSettings; }
+namespace Ui { class ExportSettings; }
 
 namespace te
 {
@@ -44,15 +44,15 @@ namespace te
   {
     class AbstractOutsideController;
 
-    class TELAYOUTEXPORT PDFSettingsOutside : public QDialog, public AbstractOutsideView
+    class TELAYOUTEXPORT ExportSettingsOutside : public QDialog, public AbstractOutsideView
     {
       Q_OBJECT
 
       public:
 
-        PDFSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
-
-        virtual ~PDFSettingsOutside();
+        ExportSettingsOutside(AbstractOutsideController* controller, QWidget* parent);
+        
+        virtual ~ExportSettingsOutside();
 
         /*!
           \brief Load layers in double widget.
@@ -69,6 +69,12 @@ namespace te
 
         virtual void setCurrentDPI(int dpi);
 
+        virtual void setFixedFileFormat(const std::string& fileFormat);
+
+        bool hasFixedFileFormat();
+
+        QString currentFileFormat();
+
       signals:
 
         void updateProperty(Property prop);
@@ -83,11 +89,14 @@ namespace te
 
         void onSaveAsClicked();
 
-        void onCurrentIndexChanged(const QString & text);
+        void onCurrentDPIIndexChanged(const QString & text);
+
+        void onCurrentFileFormatIndexChanged(const QString & text);
         
       private:
 
-        std::auto_ptr<Ui::PDFSettings> m_ui;
+        std::auto_ptr<Ui::ExportSettings> m_ui;
+        std::string                       m_fixedFileFormat;
         
     };
   }    

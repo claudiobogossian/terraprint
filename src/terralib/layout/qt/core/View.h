@@ -166,11 +166,11 @@ namespace te
           \brief Method that sets View object for the Print function.  
         */
         virtual void exportToPDF();
-
+        
         /*!
         \brief Method that sets View object for the Print function.
         */
-        virtual void exportToSVG();
+        virtual void exportAs(const std::string& fileFormat = "");
 
         /*!
       \brief This method allows to refresh all properties of the selected item (send a signal).

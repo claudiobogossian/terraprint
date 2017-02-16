@@ -18,13 +18,13 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/outside/ColorDialogOutsideFactory.h
+  \file terralib/layout/qt/core/pattern/factory/outside/ExportSettingsOutsideFactory.h
 
   \brief This is the concrete factory for color dialog outside.
  */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_OUTSIDE_FACTORY_H
-#define __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_OUTSIDE_FACTORY_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_EXPORT_SETTINGS_OUTSIDE_FACTORY_H
+#define __TERRALIB_LAYOUT_INTERNAL_EXPORT_SETTINGS_OUTSIDE_FACTORY_H
 
 // TerraLib
 #include "../../../../../core/Config.h"
@@ -43,15 +43,15 @@ namespace te
 
       \sa NewOutsideFactory, ParameterizedAbstractFactory, AbstractOutsideView
     */
-    class TELAYOUTEXPORT PDFSettingsOutsideFactory : public OutsideFactory
+    class TELAYOUTEXPORT ExportSettingsOutsideFactory : public OutsideFactory
     {
       public:
 
         /*! It register the factory in the abstract dictionary. */
-        PDFSettingsOutsideFactory();
+        ExportSettingsOutsideFactory();
 
         /*! \brief Destructor. */
-        ~PDFSettingsOutsideFactory();
+        ~ExportSettingsOutsideFactory();
 
       protected:
 
