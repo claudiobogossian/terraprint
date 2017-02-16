@@ -919,6 +919,7 @@ void te::layout::Scene::exportItemsToImage(std::string dir)
     double scaleY = heightPixels / rectInSceneCS.height();
 
     QImage image(widthPixels, heightPixels, QImage::Format_ARGB32);
+    image.fill(Qt::white); // background
 
     QStyleOptionGraphicsItem styleOption;
     QPainter painter;
