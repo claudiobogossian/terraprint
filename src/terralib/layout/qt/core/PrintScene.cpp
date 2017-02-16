@@ -399,10 +399,6 @@ bool te::layout::PrintScene::exportToImage(const QString& filePath, const QStrin
 
   QImage img(imageSize, QImage::Format_ARGB32);
   img.fill(Qt::white); // background
-  if (fileFormat.compare("PNG") == 0)
-  {
-    img.fill(Qt::transparent); // background
-  }
 
   // set dpi on QImage
   double inch = 0.0254; // 1 inch equals 0.0254 meters
