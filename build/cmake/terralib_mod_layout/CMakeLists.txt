@@ -335,6 +335,13 @@ endif()
 file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
 list(APPEND _qm_files ${translated_files})
 
+#Copying translated files to build translation folder of terralib5_layout
+  add_custom_command(
+    TARGET terralib_mod_layout
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${CMAKE_BINARY_DIR}/share/terralib/translations
+  )
+
 #if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
   #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
 #  add_custom_command(
