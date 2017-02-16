@@ -226,6 +226,9 @@ void te::layout::TempDataStorageEditor::stop()
   {
     m_threadSentinel->interrupt();
     m_threadSentinel->join();
+
+    delete m_threadSentinel;
+    m_threadSentinel = 0;
   }
 
   deleteAllDoneThreads();
