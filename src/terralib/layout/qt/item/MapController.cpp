@@ -637,6 +637,13 @@ bool te::layout::MapController::syncPlanarGridInitProperties(Properties& propert
   //if the list of layers has not been changed, there is nothing to do
   if (properties.contains("layers") == false)
   {
+    // check if initial line has to be recalculate (Ex.: Zoom Out)
+    const Property& pWorldBox = getProperty("world_box", properties);
+    const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+    if (worldBox.isValid())
+    {
+      recalculatePlanarInitialLine(properties);
+    }
     return false;
   }
 
@@ -731,6 +738,13 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
   //if the list of layers has not been changed, there is nothing to do
   if (properties.contains("layers") == false)
   {
+    // check if initial line has to be recalculate (Ex.: Zoom Out)
+    const Property& pWorldBox = getProperty("world_box", properties);
+    const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+    if (worldBox.isValid())
+    {
+      recalculateGeodesicInitialLine(properties);
+    }
     return false;
   }
 
@@ -1033,3 +1047,107 @@ double te::layout::MapController::getInitialCoord(double initialCoord, double di
   return interval * gap;
 }
 
+void te::layout::MapController::recalculatePlanarInitialLine(Properties& properties)
+{
+  /* check if initial line has to be recalculate (Ex.: Zoom Out) */
+
+  PlanarGridSettingsConfigProperties planarGridSettings;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  if (!worldBox.isValid())
+  {
+    return;
+  }
+
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  const Property& pHorizontalLineGap = m_model->getProperty(planarGridSettings.getHorizontalLineGap());
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
+
+  const Property& pVerticalLineGap = m_model->getProperty(planarGridSettings.getVerticalLineGap());
+  double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+
+  const std::string& nHorizontalLineInitial = planarGridSettings.getHorizontalLineInitial();
+  const std::string& nVerticalLineInitial = planarGridSettings.getVerticalLineInitial();
+  recalculateInitialLine(properties, planarBox, horizontalLineGap, verticalLineGap, nHorizontalLineInitial, nVerticalLineInitial);
+}
+
+void te::layout::MapController::recalculateGeodesicInitialLine(Properties& properties)
+{
+  /* check if initial line has to be recalculate (Ex.: Zoom Out) */
+
+  GeodesicGridSettingsConfigProperties geodesicGridSettings;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  if (!worldBox.isValid())
+  {
+    return;
+  }
+
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  const Property& pHorizontalLineGap = m_model->getProperty(geodesicGridSettings.getHorizontalLineGap());
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
+
+  const Property& pVerticalLineGap = m_model->getProperty(geodesicGridSettings.getVerticalLineGap());
+  double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
+  
+  const std::string& nHorizontalLineInitial = geodesicGridSettings.getHorizontalLineInitial();
+  const std::string& nVerticalLineInitial = geodesicGridSettings.getVerticalLineInitial();
+  recalculateInitialLine(properties, geographicBox, horizontalLineGap, verticalLineGap, nHorizontalLineInitial, nVerticalLineInitial, false);
+}
+
+void te::layout::MapController::recalculateInitialLine(Properties& properties, const te::gm::Envelope& worldBox,
+  double horizontalLineGap, double verticalLineGap,
+  const std::string& nHorizontalLineInitial, const std::string& nVerticalLineInitial, bool truncateToInt)
+{
+  if (!worldBox.isValid())
+  {
+    return;
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  //then we calculate the initial coordinates
+  double horizontalLineInitial = (int)(worldBox.getLowerLeftY() / horizontalLineGap);
+  if (!truncateToInt)
+  {
+    horizontalLineInitial = worldBox.getLowerLeftY() / horizontalLineGap;
+  }
+  horizontalLineInitial = horizontalLineInitial * horizontalLineGap;
+  {
+    Property property(0);
+    property.setName(nHorizontalLineInitial);
+    property.setValue(horizontalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+
+  double verticalLineInitial = (int)(worldBox.getLowerLeftX() / verticalLineGap);
+  if (!truncateToInt)
+  {
+    verticalLineInitial = worldBox.getLowerLeftX() / verticalLineGap;
+  }
+  verticalLineInitial = verticalLineInitial * verticalLineGap;
+  {
+    Property property(0);
+    property.setName(nVerticalLineInitial);
+    property.setValue(verticalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+}
