@@ -121,6 +121,12 @@ te::layout::View::~View()
     m_draft = 0;
   }
 
+  if (m_tempDataStorageEditor)
+  {
+    m_tempDataStorageEditor->stop();
+    m_tempDataStorageEditor->deleteDataStorage();
+  }
+
   QList<ToolbarItemInside*> toolbars = m_itemToolbars.values();
   foreach(ToolbarItemInside *inside, toolbars)
   {
@@ -867,12 +873,6 @@ void te::layout::View::hideEvent( QHideEvent * event )
 void te::layout::View::closeEvent( QCloseEvent * event )
 {
   closeToolbar();
-
-  if (m_tempDataStorageEditor)
-  {
-    m_tempDataStorageEditor->stop();
-    m_tempDataStorageEditor->deleteDataStorage();
-  }
 
   QGraphicsView::closeEvent(event);
   
