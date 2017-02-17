@@ -331,11 +331,11 @@ namespace te
         virtual EnumType* getSVGItem() const;
 
         /*!
-        \brief Returns value that represents PDF Settings (MVC Component) type belonging to enumeration.
+        \brief Returns value that represents Export Settings (MVC Component) type belonging to enumeration.
 
         \return enum value
         */
-        virtual EnumType* getPDFSettingsDialog() const;
+        virtual EnumType* getExportSettingsDialog() const;
 
 
         /*!
@@ -426,7 +426,7 @@ namespace te
         EnumType* m_legendChoice; //!< value that represents map layer choice (dialog) type belonging to enumeration
         EnumType* m_starItem; //!< value that represents star type belonging to enumeration
         EnumType* m_svgItem; //!< value that represents SVG type belonging to enumeration
-        EnumType* m_pdfSettingsDialog; //!< value that represents SVG type belonging to enumeration
+        EnumType* m_exportSettingsDialog; //!< value that represents SVG type belonging to enumeration
         EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
         EnumType* m_mapSettingsDialog; //!< value that represents map settings type belonging to enumeration
         EnumType* m_mapLocationSettingsDialog; //!< value that represents map settings type belonging to enumeration

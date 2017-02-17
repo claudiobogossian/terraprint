@@ -30,7 +30,7 @@
 #include "../../core/PaperConfig.h"
 #include "../../core/enum/Enums.h"
 #include "BuildGraphicsOutside.h"
-#include "../outside/PDFSettingsOutside.h"
+#include "../outside/ExportSettingsOutside.h"
 #include "Scene.h"
 #include "PrintPreviewDialog.h"
 #include "../outside/PrintSettingsOutside.h"
@@ -51,10 +51,12 @@
 #include <QSvgGenerator>
 #include <QString>
 
+#include <QPixmap>
+
 te::layout::PrintScene::PrintScene( QGraphicsScene* scene ):
   m_scene(scene),
   m_printState(te::layout::NoPrinter),
-  m_currentPdfDpi(150)
+  m_currentDPI(150)
 {
 }
 
@@ -189,10 +191,10 @@ void te::layout::PrintScene::showQPrinterDialog()
   sc->setContext(oldContext);
 }
 
-void te::layout::PrintScene::printPaper( QPrinter* printer )
+bool te::layout::PrintScene::printPaper( QPrinter* printer )
 {
   if(!printer)
-    return;
+    return false;
 
   if (m_printState == NoPrinter)
   {
@@ -203,7 +205,8 @@ void te::layout::PrintScene::printPaper( QPrinter* printer )
     m_printState = PrintingScene;
   }
   
-  renderSceneOnPrinter(printer);
+  bool result = renderSceneOnPrinter(printer);
+  return result;
 }
 
 QPrinter* te::layout::PrintScene::createPrinter()
@@ -260,19 +263,20 @@ QPrinter* te::layout::PrintScene::createPrinter()
   return printer;
 }
 
-void te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
+bool te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
 {
+  bool result = false;
   if(!m_scene)
-    return;
+    return result;
 
   Scene* sc = dynamic_cast<Scene*>(m_scene);
   if(!sc)
   {
-    return;
+    return result;
   }
 
   if(!printer)
-    return;
+    return result;
   
   ContextObject context = createNewContext(printer);
   QRect pageRect = printer->pageRect();
@@ -290,20 +294,21 @@ void te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
   QSizeF paperPixelBox(widthPx, heightPx);
   if (paperPixelBox.isValid() == false)
   {
-    return;
+    return result;
   }
 
   QRectF pxTargetRect(origin, paperPixelBox);
-  render(printer, pxTargetRect, context);
+  result = render(printer, pxTargetRect, context);
+  return result;
 }
 
-void te::layout::PrintScene::print()
+bool te::layout::PrintScene::print()
 {
   m_printState = PrintingScene;
 
   QPrinter* printer = createPrinter();
     
-  printPaper(printer);
+  bool result = printPaper(printer);
 
   if(printer)
   {
@@ -318,56 +323,19 @@ void te::layout::PrintScene::print()
   }
 
   m_printState = NoPrinter;
+  return result;
 }
 
-bool te::layout::PrintScene::exportToPDF()
+bool te::layout::PrintScene::exportToPDF(const QString& filePath)
 { 
-  Scene* sc = dynamic_cast<Scene*>(m_scene);
-  if (!sc)
-    return false;
-
-  BuildGraphicsOutside build;
-  EnumObjectType* type = Enums::getInstance().getEnumObjectType();
-  QWidget* outside = build.createOutside(type->getPDFSettingsDialog(), sc, (QWidget*) sc->getView());
-  PDFSettingsOutside* pdfSettings = dynamic_cast<PDFSettingsOutside*>(outside);
-  pdfSettings->setCurrentDPI(m_currentPdfDpi);
-    
-  QString fileName;
-  bool    willExport = true;
-  
-  int result = pdfSettings->exec();  
-        
-  if (result == QDialog::Accepted)
-  {
-    std::string txt = pdfSettings->getFilePath();
-    fileName = QString::fromStdString(txt);
-    m_currentPdfDpi = pdfSettings->getDPI();
-  }
-  else if (result == QDialog::Rejected)
-  {
-    willExport = false;
-  }
-      
-  if (pdfSettings)
-  {
-    delete pdfSettings;
-    pdfSettings = 0;
-  }
-
-  if (!willExport || fileName.isEmpty())
-  {
-    return false;
-  }
+  bool result = true;
 
   QPrinter* printer= createPrinter();
 
   printer->setOutputFormat(QPrinter::PdfFormat);
-  printer->setOutputFileName(fileName);
-
-  printer->setResolution(m_currentPdfDpi);
-
-  m_printState = PrintingScene;
-
+  printer->setOutputFileName(filePath);
+  printer->setResolution(m_currentDPI);
+  
   printPaper(printer);
 
   QPrinter::PrinterState state = printer->printerState();
@@ -378,71 +346,152 @@ bool te::layout::PrintScene::exportToPDF()
     printer = 0;
   } 
 
-  QMessageBox msgBox;
   if (state == QPrinter::Error)
-  {
-    msgBox.setIcon(QMessageBox::Critical);
-    msgBox.setText("Could not export the PDF! Possible cause: the file is already opened by another application.");
+  {    
+    result = false;
   }
-  else
-  {
-    msgBox.setIcon(QMessageBox::Information);
-    msgBox.setText("PDF exported successfully!");
-  }
-  msgBox.exec();
-
-  sc->redrawItems();  
-
-  m_printState = NoPrinter;
-
-  return true;
+    
+  return result;
 }
 
-bool te::layout::PrintScene::exportToSVG(const QString& pathFile)
+bool te::layout::PrintScene::exportToSVG(const QString& filePath)
 {
   Scene* sc = dynamic_cast<Scene*>(m_scene);
   if (!sc)
     return false;
 
-  if (pathFile.isEmpty())
+  if (filePath.isEmpty())
   {
     return false;
   }
-
-  QFileInfo fileInfo(pathFile);
-
-  //Box Paper in the Scene (Source)
-  QRectF mmSourceRect = paperRectMM();
-
-  ContextObject context = sc->getContext();
+  
   EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
   double zoom = 100;
-  double dpiX = context.getDpiX();
-  double dpiY = context.getDpiY();
-  context = ContextObject(zoom, dpiX, dpiY, enumMode->getModePrinter());
-
-  QRectF pxTargetRect = sc->sceneTransform().mapRect(mmSourceRect);
-  pxTargetRect = QRectF(0, 0, pxTargetRect.width(), pxTargetRect.height());
+  ContextObject context = ContextObject(zoom, m_currentDPI, m_currentDPI, enumMode->getModePrinter());
+  
+  QRectF pxTargetRect = imagePixelTargetRect(context);
   QSize svgSize(pxTargetRect.width(), pxTargetRect.height());
 
   QSvgGenerator generator;
-  generator.setFileName(pathFile);
+  generator.setFileName(filePath);
   generator.setSize(svgSize);
   generator.setViewBox(pxTargetRect);
   generator.setTitle(tr("Map To SVG"));
   generator.setDescription(tr("TerraPrint (TerraLib 5) - Map to SVG"));
+  generator.setResolution(m_currentDPI);
 
+  bool result = render(&generator, pxTargetRect, context);
+  return result;
+}
+
+bool te::layout::PrintScene::exportToImage(const QString& filePath, const QString& fileFormat)
+{
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return false;
+
+  EnumModeType* enumMode = Enums::getInstance().getEnumModeType();
+  double zoom = 100;
+  ContextObject  context = ContextObject(zoom, m_currentDPI, m_currentDPI, enumMode->getModePrinter());
+  
+  QRectF pxTargetRect = imagePixelTargetRect(context);
+  QSize imageSize(pxTargetRect.width(), pxTargetRect.height());
+
+  QImage img(imageSize, QImage::Format_ARGB32);
+  img.fill(Qt::white); // background
+
+  // set dpi on QImage
+  double inch = 0.0254; // 1 inch equals 0.0254 meters
+  int dpm = m_currentDPI / inch; // DPI to DPM
+  img.setDotsPerMeterX(dpm);
+  img.setDotsPerMeterY(dpm);
+    
+  bool result = render(&img, pxTargetRect, context);
+  if (result)
+  {
+    result = img.save(filePath); // save to image
+  }
+
+  return result;
+}
+
+bool te::layout::PrintScene::exportAs(const std::string& fileFormat)
+{
+  bool result = true;
+
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return false;
+
+  ExportSettingsOutside* exportSettings = createExportSettingsOutside(fileFormat);
+
+  QString filePath;
+  QString currentFileFormat;
+  bool willExport = true;
+
+  int windowResult = exportSettings->exec();
+
+  if (windowResult == QDialog::Accepted)
+  {
+    std::string txt = exportSettings->getFilePath();
+    filePath = QString::fromStdString(txt);
+    m_currentDPI = exportSettings->getDPI();
+    currentFileFormat = exportSettings->currentFileFormat();
+  }
+  else if (windowResult == QDialog::Rejected)
+  {
+    willExport = false;
+  }
+
+  if (exportSettings)
+  {
+    delete exportSettings;
+    exportSettings = 0;
+  }
+
+  if (!willExport || filePath.isEmpty())
+  {
+    return false;
+  }
+  
   m_printState = PrintingScene;
-
-  render(&generator, pxTargetRect, context);
-
-  m_printState = NoPrinter;
-
-  te::qt::widgets::AddFilePathToSettings(fileInfo.absolutePath(), "svg");
+  
+  result = exportTo(filePath, currentFileFormat);
 
   sc->redrawItems();
 
-  return true;
+  QFileInfo fileInfo(filePath);
+  te::qt::widgets::AddFilePathToSettings(fileInfo.absolutePath(), currentFileFormat);
+
+  m_printState = NoPrinter;
+    
+  return result;
+}
+
+bool te::layout::PrintScene::exportTo(const QString& filePath, const QString& fileFormat)
+{
+  bool result = false;
+
+  if (fileFormat.compare("PDF") == 0)
+  {
+    result = exportToPDF(filePath);
+  }
+  else if (fileFormat.compare("SVG") == 0)
+  {
+    result = exportToSVG(filePath);
+  }
+  else if (fileFormat.compare("JPEG") == 0)
+  {
+    result = exportToImage(filePath, fileFormat);
+  }
+  else if (fileFormat.compare("PNG") == 0)
+  {
+    result = exportToImage(filePath, fileFormat);
+  }
+
+  raiseMessage(fileFormat, !result); // window message for user
+
+  return result;
 }
 
 bool te::layout::PrintScene::render(QPaintDevice* device, const QRectF& pixelTargetRect, const ContextObject& context)
@@ -583,4 +632,52 @@ QRectF te::layout::PrintScene::paperRectMM()
   //Box Paper in the Scene coordinates (Source mm)
   QRect mmRect(0, 0, w, h);
   return mmRect;
+}
+
+te::layout::ExportSettingsOutside* te::layout::PrintScene::createExportSettingsOutside(const std::string& fileFormat)
+{
+  ExportSettingsOutside* exportSettings = 0;
+
+  Scene* sc = dynamic_cast<Scene*>(m_scene);
+  if (!sc)
+    return exportSettings;
+
+  BuildGraphicsOutside build;
+  EnumObjectType* type = Enums::getInstance().getEnumObjectType();
+  QWidget* outside = build.createOutside(type->getExportSettingsDialog(), sc, (QWidget*)sc->getView());
+  exportSettings = dynamic_cast<ExportSettingsOutside*>(outside);
+  exportSettings->setCurrentDPI(m_currentDPI);
+  exportSettings->setFixedFileFormat(fileFormat);
+  return exportSettings;
+}
+
+void te::layout::PrintScene::raiseMessage(const QString& fileFormat, bool hasError)
+{
+  QString criticalMessage = tr("Could not export the") + fileFormat + "! "+ tr("Possible cause: the file is already opened by another application.");
+  QString informationMessage = fileFormat + " " + tr("exported successfully!");
+
+  QMessageBox msgBox;
+  if (hasError)
+  {
+    msgBox.setIcon(QMessageBox::Critical);
+    msgBox.setText(criticalMessage);
+  }
+  else
+  {
+    msgBox.setIcon(QMessageBox::Information);
+    msgBox.setText(informationMessage);
+  }
+  msgBox.exec();
+}
+
+QRectF te::layout::PrintScene::imagePixelTargetRect(const ContextObject& context)
+{
+  //Box Paper in the Scene (Source)
+  QRectF mmSourceRect = paperRectMM();
+
+  int viewportWidth = mmSourceRect.width() / 25.4 *  m_currentDPI;
+  int viewportHeight = mmSourceRect.height() / 25.4 * m_currentDPI;
+
+  QRectF pxTargetRect = QRectF(0, 0, viewportWidth, viewportHeight);
+  return pxTargetRect;
 }

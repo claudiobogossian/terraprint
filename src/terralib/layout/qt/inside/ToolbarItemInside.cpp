@@ -47,10 +47,13 @@ te::layout::ToolbarItemInside::ToolbarItemInside() :
 
 te::layout::ToolbarItemInside::~ToolbarItemInside()
 {
-  if (!m_toolbar)
+  if (m_toolbar)
   {
-    delete m_toolbar;
-    m_toolbar = 0;
+    if (!m_toolbar->parent())
+    {
+      delete m_toolbar;
+      m_toolbar = 0;
+    }
   }
 }
 

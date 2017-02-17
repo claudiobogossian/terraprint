@@ -861,19 +861,21 @@ void te::layout::View::resetDefaultConfig(bool toolLateRemoval)
 void te::layout::View::hideEvent( QHideEvent * event )
 {
   QGraphicsView::hideEvent(event);
-  if (m_tempDataStorageEditor)
-  {
-    m_tempDataStorageEditor->stop();
-    m_tempDataStorageEditor->deleteDataStorage();
-  }
   emit hideView();
 }
 
 void te::layout::View::closeEvent( QCloseEvent * event )
 {
   closeToolbar();
-  
+
+  if (m_tempDataStorageEditor)
+  {
+    m_tempDataStorageEditor->stop();
+    m_tempDataStorageEditor->deleteDataStorage();
+  }
+
   QGraphicsView::closeEvent(event);
+  
   emit closeView();
 }
 
@@ -1127,54 +1129,29 @@ void te::layout::View::print()
 
 void te::layout::View::exportToPDF()
 {
-  emit aboutToPerformIO();
-
-  Scene* scne = dynamic_cast<Scene*>(scene());
-
-  resetDefaultConfig();
-
-  // No update Widget while print is running
-  // Rulers aren't print
-  disableUpdate();
-
-  ContextObject oldContext = scne->getContext();
-
-  PrintScene printer(scne);
-  printer.exportToPDF();
-
-  scne->setContext(oldContext);
-
-  enableUpdate();
-
-  emit endedPerformingIO();
+  std::string fileFormat = "PDF";
+  exportAs(fileFormat);
 }
 
-void te::layout::View::exportToSVG()
+void te::layout::View::exportAs(const std::string& fileFormat)
 {
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Export SVG File"), te::qt::widgets::GetFilePathFromSettings("svg"), tr("SVG Files (*.svg)"));
-  if (fileName.isEmpty())
-  {
-    return;
-  }
-  if (fileName.endsWith(".svg") == false)
-  {
-    fileName.append(".svg");
-  }
-
   emit aboutToPerformIO();
 
   Scene* scne = dynamic_cast<Scene*>(scene());
+
   resetDefaultConfig();
 
   // No update Widget while print is running
   // Rulers aren't print
   disableUpdate();
+
   ContextObject oldContext = scne->getContext();
 
   PrintScene printer(scne);
-  printer.exportToSVG(fileName);
+  printer.exportAs(fileFormat); // export as...
 
   scne->setContext(oldContext);
+
   enableUpdate();
 
   emit endedPerformingIO();
@@ -1646,7 +1623,7 @@ void te::layout::View::closeToolbar()
         toolbar = allPButtons.first();
         if (toolbar)
         {
-          toolbar->setParent(0);
+          toolbar->setParent(this);
         }
       }
       m_currentToolbarInsideType = 0;

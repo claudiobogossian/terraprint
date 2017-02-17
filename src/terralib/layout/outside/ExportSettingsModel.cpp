@@ -18,40 +18,46 @@
  */
 
 /*!
-  \file PageSetupModel.h
+  \file ExportSettingsModel.cpp
    
   \brief 
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_MODEL_H 
-#define __TERRALIB_LAYOUT_INTERNAL_PDF_SETTINGS_MODEL_H
-
 // TerraLib
-#include "../core/pattern/mvc/AbstractOutsideModel.h"
-#include "../core/Config.h"
+#include "ExportSettingsModel.h"
+#include "../core/property/Property.h"
+#include "../core/property/Properties.h"
+#include "../core/enum/Enums.h"
 
-namespace te
+te::layout::ExportSettingsModel::ExportSettingsModel() :
+  AbstractOutsideModel()
 {
-  namespace layout
-  {
-    class Properties;
-
-    class TELAYOUTEXPORT PDFSettingsModel : public AbstractOutsideModel
-    {
-    public:
-
-      PDFSettingsModel();
-
-      virtual ~PDFSettingsModel();
-
-      virtual void updateProperties(te::layout::Properties* properties, bool notify = true);
-
-      virtual Properties* getProperties() const;
-
-    };
-  }
+  m_type = Enums::getInstance().getEnumObjectType()->getExportSettingsDialog();
+  m_box = te::gm::Envelope(0., 0., 200., 200.);
 }
 
-#endif
+te::layout::ExportSettingsModel::~ExportSettingsModel()
+{
+
+}
+
+te::layout::Properties* te::layout::ExportSettingsModel::getProperties() const
+{
+  m_properties->clear();
+
+  Property pro_name(m_hashCode);
+  pro_name.setName(m_name);
+
+  m_properties->addProperty(pro_name);
+
+  m_properties->setTypeObj(m_type);
+  return m_properties;
+}
+
+void te::layout::ExportSettingsModel::updateProperties(te::layout::Properties* properties, bool notify)
+{
+
+}
+

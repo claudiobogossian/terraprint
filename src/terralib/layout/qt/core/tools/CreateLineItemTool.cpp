@@ -19,14 +19,14 @@
 
 // TerraLib
 #include "CreateLineItemTool.h"
-#include "../View.h"
-#include "../Scene.h"
-#include "../BuildGraphicsItem.h"
-#include "../../item/LineItem.h"
 #include "../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../core/enum/Enums.h"
-#include "terralib/geometry/Point.h"
+#include "../../item/LineItem.h"
+#include "../View.h"
+#include "../Scene.h"
+#include "../RenderGeometries.h"
+#include "../BuildGraphicsItem.h"
 
 // STL
 #include <string>
@@ -39,14 +39,13 @@
 #include <QPixmap>
 #include <QPointF>
 #include <QPolygonF>
+#include <QPen>
+#include <QBrush>
 
 te::layout::CreateLineItemTool::CreateLineItemTool(View* view, EnumType* itemType, QObject* parent)
   : AbstractLayoutTool(view, parent)
   , m_item(0)
   , m_itemType(itemType)
-  , m_drawPoints(false)
-  , m_drawLines(true)
-  , m_drawPolygon(false)
 {
   setCursor(Qt::ArrowCursor);
 
@@ -54,16 +53,32 @@ te::layout::CreateLineItemTool::CreateLineItemTool(View* view, EnumType* itemTyp
   {
     m_itemType = Enums::getInstance().getEnumObjectType()->getLineItem();
   }
+  
+  m_render = new RenderGeometries(view, te::layout::DRAW_LINE);
 
-  // Setups the draft style
-  m_pen.setStyle(Qt::DashLine);
-  m_pen.setColor(QColor(100, 177, 216));
-  m_brush.setColor(QColor(100, 177, 216));
+  init();
 }
 
 te::layout::CreateLineItemTool::~CreateLineItemTool()
 {
+  if (m_render)
+  {
+    delete m_render;
+    m_render = 0;
+  }
+}
 
+void te::layout::CreateLineItemTool::init()
+{
+  // Setups the draft style
+  QPen pen;
+  pen.setStyle(Qt::SolidLine);
+  pen.setColor(QColor(100, 177, 216));
+  m_render->setPen(pen);
+
+  QBrush brush;
+  brush.setColor(QColor(100, 177, 216));
+  m_render->setBrush(brush);
 }
 
 bool te::layout::CreateLineItemTool::mousePressEvent(QMouseEvent* e)
@@ -110,41 +125,6 @@ bool te::layout::CreateLineItemTool::keyPressEvent( QKeyEvent* keyEvent )
     finalizeCreation();
   }
   return true;
-}
-
-void te::layout::CreateLineItemTool::drawBuffer(QPaintDevice* device)
-{
-  QPainter p;
-  p.begin(device);
-
-  p.setPen(m_pen);
-  p.setBrush(m_brush);
-
-  QTransform transf = m_view->viewportTransform();
-  p.setTransform(transf);
-
-  draw(p);
-
-  p.end();
-}
-
-void te::layout::CreateLineItemTool::draw(QPainter& p)
-{
-  if (m_drawPoints)
-  {
-    QVector<QPointF> points = getQPoints();
-    p.drawPoints(points);
-  }
-  if (m_drawLines)
-  {
-    QPainterPath path = getQLines();
-    p.drawPath(path);
-  }
-  if (m_drawPolygon)
-  {
-    QPolygonF poly = getQPolygon();
-    p.drawPolygon(poly);
-  }
 }
 
 void te::layout::CreateLineItemTool::setGeometry()
@@ -255,48 +235,6 @@ void te::layout::CreateLineItemTool::createItem()
   }
 }
 
-QVector<QPointF> te::layout::CreateLineItemTool::getQPoints()
-{
-  QVector<QPointF> points;
-
-  std::size_t nPoints = m_coords.size();
-
-  for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
-  {
-    QPointF pt(m_coords[pIdx].getX(), m_coords[pIdx].getY());
-    points.append(pt);
-  }
-  
-  return points;
-}
-
-QPainterPath te::layout::CreateLineItemTool::getQLines()
-{
-  QVector<QPointF> points = getQPoints();
-  QPainterPath path(points.front());
-
-  for (int i = 1; i < points.size(); ++i)
-  {
-    path.lineTo(points[i]);
-  }  
-  return path;
-}
-
-QPolygonF te::layout::CreateLineItemTool::getQPolygon()
-{
-  QPolygonF poly;
-
-  std::size_t nPoints = m_coords.size();
-
-  for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
-  {
-    QPointF pt(m_coords[pIdx].getX(), m_coords[pIdx].getY());
-    poly.push_back(pt);
-  }
-  
-  return poly;
-}
-
 void te::layout::CreateLineItemTool::finalizeCreation()
 {
   Scene* scene = dynamic_cast<Scene*>(m_view->scene());
@@ -318,37 +256,10 @@ void te::layout::CreateLineItemTool::redraw()
   if (draftPixmap)
   {
     draftPixmap->fill(Qt::transparent);
-    drawBuffer(draftPixmap);
-  }
-}
-
-void te::layout::CreateLineItemTool::setDrawPoints(bool draw)
-{
-  m_drawPoints = draw;
-  if (draw)
-  {
-    m_drawLines = false;
-    m_drawPolygon = false;
-  }
-}
-
-void te::layout::CreateLineItemTool::setDrawLines(bool draw)
-{
-  m_drawLines = draw;
-  if (draw)
-  {
-    m_drawPoints = false;
-    m_drawPolygon = false;
-  }
-}
-
-void te::layout::CreateLineItemTool::setDrawPolygon(bool draw)
-{
-  m_drawPolygon = draw;
-  if (draw)
-  {
-    m_drawLines = false;
-    m_drawPoints = false;
+    if (m_render)
+    {
+      m_render->drawGeometries(draftPixmap, m_coords);
+    }
   }
 }
 

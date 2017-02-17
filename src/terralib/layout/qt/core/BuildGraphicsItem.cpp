@@ -228,6 +228,7 @@ te::layout::Properties te::layout::BuildGraphicsItem::createPositionProperties(c
 te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type, bool isCopy)
 {
   std::string strName = nameItem(type);
+  int zValue = generateZValueFromScene();
 
   if (isCopy == true)
   {
@@ -237,17 +238,18 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
 
     idProp.setValue(m_id, dataType->getDataTypeInt());
     m_props.updateProperty(idProp);
-
-    strName = nameItem(type);
-
+    
     Property nameProp = m_props.getProperty("name");
     nameProp.setValue(strName, dataType->getDataTypeString());
     m_props.updateProperty(nameProp);
+
+    Property zValueProp = m_props.getProperty("zValue");
+    zValueProp.setValue(zValue, dataType->getDataTypeInt());
+    m_props.updateProperty(zValueProp);
   }
 
   m_name = strName;
-
-  int zValue = generateZValueFromScene();
+  m_zValue = zValue;
 
   Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height, zValue);
   props = collapseProperties(m_props, props);

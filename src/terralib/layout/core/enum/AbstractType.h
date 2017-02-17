@@ -143,6 +143,11 @@ namespace te
     {
       NO_ACTION, RESIZE_ACTION, MOVE_ACTION, ROTATION_ACTION
     };
+
+    enum TELAYOUTEXPORT DrawGeometries
+    {
+      DRAW_POINT, DRAW_LINE, DRAW_POLYGON
+    };
   }
 }
 
