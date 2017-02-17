@@ -341,9 +341,8 @@ list(APPEND _qm_files ${translated_files})
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/share/terralib/translations
   )
-  MESSAGE(${_qm_files})
-  MESSAGE(${_qm_files})
-  #add_custom_command(
+  MESSAGE("QM_FILES: ${_qm_files}")
+    #add_custom_command(
   #  TARGET terralib_mod_layout
   #  POST_BUILD
   #  COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${CMAKE_BINARY_DIR}/share/terralib/translations
