@@ -342,16 +342,13 @@ list(APPEND _qm_files ${translated_files})
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/share/terralib/translations
   )
   
-  foreach(qm_file ${_qm_files})
-  	MESSAGE("QM_FILE: ${qm_file}")
-
-    add_custom_command(
+foreach(qm_file ${_qm_files})
+  add_custom_command(
     TARGET terralib_mod_layout
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy ${qm_file} ${CMAKE_BINARY_DIR}/share/terralib/translations
   )
-
-  endforeach()
+endforeach()
   
 
 #if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
