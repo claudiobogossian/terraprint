@@ -341,11 +341,13 @@ list(APPEND _qm_files ${translated_files})
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/share/terralib/translations
   )
-  add_custom_command(
-    TARGET terralib_mod_layout
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${CMAKE_BINARY_DIR}/share/terralib/translations
-  )
+  MESSAGE(${_qm_files})
+  MESSAGE(${_qm_files})
+  #add_custom_command(
+  #  TARGET terralib_mod_layout
+  #  POST_BUILD
+  #  COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${CMAKE_BINARY_DIR}/share/terralib/translations
+  #)
 
 #if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
   #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
