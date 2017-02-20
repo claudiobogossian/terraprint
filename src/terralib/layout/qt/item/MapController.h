@@ -114,6 +114,26 @@ namespace te
         virtual void changedPropertyLayerURIFromDropEvent(const Properties& beforeProps);
 
         virtual double getInitialCoord(double initialCoord, double distance, double& gap) const;
+
+        virtual void recalculatePlanarInitialLine(Properties& properties);
+
+        virtual void recalculateGeodesicInitialLine(Properties& properties);
+
+        virtual void recalculateInitialLine(Properties& properties, const te::gm::Envelope& worldBox,
+          double horizontalLineGap, double verticalLineGap,
+          const std::string& nHorizontalLineInitial, const std::string& nVerticalLineInitial);
+
+        virtual double adjustHorizontalLineInitial(const te::gm::Envelope& worldBox, double initialX, double gapX);
+
+        virtual double adjustVerticalLineInitial(const te::gm::Envelope& worldBox, double initialY, double gapY);
+
+        virtual bool hasToRecalculatePlanarInitialLine(const Properties& properties);
+
+        virtual bool hasToRecalculateGeodesicInitialLine(const Properties& properties);
+
+        virtual bool horizontalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialX, double gapX);
+
+        virtual bool verticalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialY, double gapY);
     };
   }
 }

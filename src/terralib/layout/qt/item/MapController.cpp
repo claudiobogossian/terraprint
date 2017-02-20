@@ -637,6 +637,11 @@ bool te::layout::MapController::syncPlanarGridInitProperties(Properties& propert
   //if the list of layers has not been changed, there is nothing to do
   if (properties.contains("layers") == false)
   {
+    // check if initial line has to be recalculate (Ex.: Zoom Out)
+    if (hasToRecalculatePlanarInitialLine(properties))
+    {
+      recalculatePlanarInitialLine(properties);
+    }
     return false;
   }
 
@@ -731,6 +736,11 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
   //if the list of layers has not been changed, there is nothing to do
   if (properties.contains("layers") == false)
   {
+    // check if initial line has to be recalculate (Ex.: Zoom Out)
+    if (hasToRecalculateGeodesicInitialLine(properties))
+    {
+      recalculateGeodesicInitialLine(properties);
+    }
     return false;
   }
 
@@ -1033,3 +1043,244 @@ double te::layout::MapController::getInitialCoord(double initialCoord, double di
   return interval * gap;
 }
 
+void te::layout::MapController::recalculatePlanarInitialLine(Properties& properties)
+{
+  /* check if initial line has to be recalculate (Ex.: Zoom Out) */
+
+  PlanarGridSettingsConfigProperties planarGridSettings;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  if (!worldBox.isValid())
+  {
+    return;
+  }
+
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  const Property& pHorizontalLineGap = m_model->getProperty(planarGridSettings.getHorizontalLineGap());
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
+
+  const Property& pVerticalLineGap = m_model->getProperty(planarGridSettings.getVerticalLineGap());
+  double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+
+  const std::string& nHorizontalLineInitial = planarGridSettings.getHorizontalLineInitial();
+  const std::string& nVerticalLineInitial = planarGridSettings.getVerticalLineInitial();
+  recalculateInitialLine(properties, planarBox, horizontalLineGap, verticalLineGap, nHorizontalLineInitial, nVerticalLineInitial);
+}
+
+void te::layout::MapController::recalculateGeodesicInitialLine(Properties& properties)
+{
+  /* check if initial line has to be recalculate (Ex.: Zoom Out) */
+
+  GeodesicGridSettingsConfigProperties geodesicGridSettings;
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  if (!worldBox.isValid())
+  {
+    return;
+  }
+
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  const Property& pHorizontalLineGap = m_model->getProperty(geodesicGridSettings.getHorizontalLineGap());
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
+
+  const Property& pVerticalLineGap = m_model->getProperty(geodesicGridSettings.getVerticalLineGap());
+  double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
+  
+  const std::string& nHorizontalLineInitial = geodesicGridSettings.getHorizontalLineInitial();
+  const std::string& nVerticalLineInitial = geodesicGridSettings.getVerticalLineInitial();
+  recalculateInitialLine(properties, geographicBox, horizontalLineGap, verticalLineGap, nHorizontalLineInitial, nVerticalLineInitial);
+}
+
+void te::layout::MapController::recalculateInitialLine(Properties& properties, const te::gm::Envelope& worldBox,
+  double horizontalLineGap, double verticalLineGap,
+  const std::string& nHorizontalLineInitial, const std::string& nVerticalLineInitial)
+{
+  if (!worldBox.isValid())
+  {
+    return;
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  // get initial coordenates
+  const Property& pHorizontalLineInitial = m_model->getProperty(nHorizontalLineInitial);
+  double horizontalLineInitial = te::layout::Property::GetValueAs<double>(pHorizontalLineInitial);
+
+  const Property& pVerticalLineInitial = m_model->getProperty(nVerticalLineInitial);
+  double verticalLineInitial = te::layout::Property::GetValueAs<double>(pVerticalLineInitial);
+
+  //then we calculate the initial coordinates
+  horizontalLineInitial = adjustHorizontalLineInitial(worldBox, horizontalLineInitial, horizontalLineGap);
+  {
+    Property property(0);
+    property.setName(nHorizontalLineInitial);
+    property.setValue(horizontalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+
+  verticalLineInitial = adjustHorizontalLineInitial(worldBox, verticalLineInitial, verticalLineGap);
+  {
+    Property property(0);
+    property.setName(nVerticalLineInitial);
+    property.setValue(verticalLineInitial, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+}
+
+double te::layout::MapController::adjustHorizontalLineInitial(const te::gm::Envelope& worldBox, double initialX, double gapX)
+{
+  double lowerLeftX = worldBox.getLowerLeftX();
+  double distance = initialX - lowerLeftX;
+  double gapCount = floor(distance / gapX);
+  double newInitialX = initialX - (gapCount * gapX);
+
+  return newInitialX;
+}
+
+double te::layout::MapController::adjustVerticalLineInitial(const te::gm::Envelope& worldBox, double initialY, double gapY)
+{
+  double loweLeftY = worldBox.getLowerLeftY();
+  double distance = initialY - loweLeftY;
+  double gapCount = floor(distance / gapY);
+  double newInitialY = initialY - (gapCount * gapY);
+
+  return newInitialY;
+}
+
+bool te::layout::MapController::hasToRecalculatePlanarInitialLine(const Properties& properties)
+{
+  // check if initial line has to be recalculate (Ex.: Zoom Out)
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  if (!worldBox.isValid())
+  {
+    return false;
+  }
+
+  PlanarGridSettingsConfigProperties planarGridSettings;
+
+  if (properties.contains(planarGridSettings.getHorizontalLineInitial())
+    || properties.contains(planarGridSettings.getVerticalLineInitial()))
+  {
+    return false;
+  }
+
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  const Property& pHorizontalLineGap = m_model->getProperty(planarGridSettings.getHorizontalLineGap());
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
+
+  const Property& pVerticalLineGap = m_model->getProperty(planarGridSettings.getVerticalLineGap());
+  double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
+
+  const Property& pHorizontalLineInitial = m_model->getProperty(planarGridSettings.getHorizontalLineInitial());
+  double horizontalLineInitial = te::layout::Property::GetValueAs<double>(pHorizontalLineInitial);
+
+  const Property& pVerticalLineInitial = m_model->getProperty(planarGridSettings.getVerticalLineInitial());
+  double verticalLineInitial = te::layout::Property::GetValueAs<double>(pVerticalLineInitial);
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+
+  if (horizontalDistanceBiggerThanGap(planarBox, horizontalLineInitial, horizontalLineGap)
+    || verticalDistanceBiggerThanGap(planarBox, verticalLineInitial, verticalLineGap))
+  {
+    return true;
+  }
+
+  return false;
+
+}
+bool te::layout::MapController::hasToRecalculateGeodesicInitialLine(const Properties& properties)
+{
+  // check if initial line has to be recalculate (Ex.: Zoom Out)
+  const Property& pWorldBox = getProperty("world_box", properties);
+  const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  if (!worldBox.isValid())
+  {
+    return false;
+  }
+
+  GeodesicGridSettingsConfigProperties geodesicGridSettings;
+
+  if (properties.contains(geodesicGridSettings.getHorizontalLineInitial())
+    || properties.contains(geodesicGridSettings.getVerticalLineInitial()))
+  {
+    return false;
+  }
+
+  const Property& pSrid = m_model->getProperty("srid");
+  int srid = te::layout::Property::GetValueAs<int>(pSrid);
+
+  const Property& pHorizontalLineGap = m_model->getProperty(geodesicGridSettings.getHorizontalLineGap());
+  double horizontalLineGap = te::layout::Property::GetValueAs<double>(pHorizontalLineGap);
+
+  const Property& pVerticalLineGap = m_model->getProperty(geodesicGridSettings.getVerticalLineGap());
+  double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
+
+  const Property& pHorizontalLineInitial = m_model->getProperty(geodesicGridSettings.getHorizontalLineInitial());
+  double horizontalLineInitial = te::layout::Property::GetValueAs<double>(pHorizontalLineInitial);
+
+  const Property& pVerticalLineInitial = m_model->getProperty(geodesicGridSettings.getVerticalLineInitial());
+  double verticalLineInitial = te::layout::Property::GetValueAs<double>(pVerticalLineInitial);
+
+  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
+  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
+
+  if (horizontalDistanceBiggerThanGap(geographicBox, horizontalLineInitial, horizontalLineGap)
+    || verticalDistanceBiggerThanGap(geographicBox, verticalLineInitial, verticalLineGap))
+  {
+    return true;
+  }
+
+  return false;
+}
+
+bool te::layout::MapController::horizontalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialX, double gapX)
+{
+  bool result = false;
+
+  double lowerLeftX = worldBox.getLowerLeftX();
+  double distance = initialX - lowerLeftX;
+
+  if (distance > gapX)
+  {
+    result = true;
+  }
+
+  return result;
+}
+
+bool te::layout::MapController::verticalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialY, double gapY)
+{
+  bool result = false;
+
+  double loweLeftY = worldBox.getLowerLeftY();
+  double distance = initialY - loweLeftY;
+
+  if (distance > gapY)
+  {
+    result = true;
+  }
+
+  return result;
+}
