@@ -58,7 +58,8 @@ te::layout::GeodesicGridSettingsConfigProperties::GeodesicGridSettingsConfigProp
   m_lneX3(m_prefix + "grid_lneX3"),
   m_lneX4(m_prefix + "grid_lneX4"),
   m_lneY3(m_prefix + "grid_lneY3"),
-  m_lneY4(m_prefix + "grid_lneY4")
+  m_lneY4(m_prefix + "grid_lneY4"),
+  m_geodesicSRID(m_prefix + "geodesic_srid")
 {
   
 }
@@ -199,3 +200,9 @@ std::string te::layout::GeodesicGridSettingsConfigProperties::getLneY4()
 {
   return m_lneY4;
 }
+
+std::string te::layout::GeodesicGridSettingsConfigProperties::getGeodesicSRID()
+{
+  return m_geodesicSRID;
+}
+

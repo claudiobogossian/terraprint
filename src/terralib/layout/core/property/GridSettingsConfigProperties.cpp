@@ -57,7 +57,8 @@ te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties(const std
     m_topRotateText(m_prefix + "grid_topRotateText"),
     m_crossOffset(m_prefix + "grid_crossOffset"),
     m_borderIntersection(m_prefix + "grid_borderIntersections"),
-    m_gridSettings(m_prefix + "grid_settings")
+    m_gridSettings(m_prefix + "grid_settings"),
+    m_planarSRID(m_prefix + "planar_srid")
 {
 
 }
@@ -205,4 +206,9 @@ const std::string& te::layout::GridSettingsConfigProperties::getBorderIntersecti
 const std::string& te::layout::GridSettingsConfigProperties::getGridSettings() const
 {
   return m_gridSettings;
+}
+
+const std::string& te::layout::GridSettingsConfigProperties::getPlanarSRID() const
+{
+  return m_planarSRID;
 }
