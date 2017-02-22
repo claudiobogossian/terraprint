@@ -238,6 +238,9 @@ namespace te
           \param worldBox box that will be reprojected
           \param sourceSRID source SRID source SRID of the box that will be reproject 
           \param targetSRID target SRID target SRID 
+
+          \return If the source SRID was not found or the box is invalid, then the return will be the input box itself. 
+            Otherwise, the box will be reprojected and returned.
         */
         static te::gm::Envelope worldBoxTo(const te::gm::Envelope& worldBox, int sourceSRID, int targetSRID);
 
@@ -284,14 +287,18 @@ namespace te
 
           \param worldBox box that will be reprojected
           \param sourceSRID SRID of the box that will be reproject to planar
+
+          \return If the srid was not found it returns -1, otherwise it returns a valid SRID
         */
         static int toPlanar(const te::gm::Envelope& worldBox, int sourceSRID);
 
         /*!
-        \brief If the SRID is not geographic, it gets a default geographic SRID and return. Otherwise it returns the same SRID passed as parameter.
+          \brief If the SRID is not geographic, it gets a default geographic SRID and return. Otherwise it returns the same SRID passed as parameter.
 
-        \param worldBox box that will be reprojected
-        \param sourceSRID SRID of the box that will be reproject to geographic
+          \param worldBox box that will be reprojected
+          \param sourceSRID SRID of the box that will be reproject to geographic
+
+          \return If the srid was not found it returns -1, otherwise it returns a valid SRID
         */
         static int toGeographic(const te::gm::Envelope& worldBox, int sourceSRID);
 

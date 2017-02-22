@@ -684,6 +684,7 @@ int te::layout::Utils::toPlanar(const te::gm::Envelope& worldBox, int sourceSRID
     return targetSRID;
   }
 
+  targetSRID = sourceSRID;
   std::string unitPtrStr = unitPtr->getName();
   unitPtrStr = te::common::Convert2UCase(unitPtrStr);
 
@@ -695,10 +696,6 @@ int te::layout::Utils::toPlanar(const te::gm::Envelope& worldBox, int sourceSRID
     // Get the id of the projection of destination
     std::pair<std::string, unsigned int> projPlanar = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
     targetSRID = projPlanar.second;
-  }
-  else
-  {
-    targetSRID = sourceSRID;
   }
   return targetSRID;
 }
@@ -715,6 +712,7 @@ int te::layout::Utils::toGeographic(const te::gm::Envelope& worldBox, int source
     return targetSRID;
   }
 
+  targetSRID = sourceSRID;
   std::string unitPtrStr = unitPtr->getName();
   unitPtrStr = te::common::Convert2UCase(unitPtrStr);
 
@@ -724,10 +722,6 @@ int te::layout::Utils::toGeographic(const te::gm::Envelope& worldBox, int source
     // Get the id of the projection of destination 
     std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
     targetSRID = projGeographic.second;
-  }
-  else
-  {
-    targetSRID = sourceSRID;
   }
   return targetSRID;
 }

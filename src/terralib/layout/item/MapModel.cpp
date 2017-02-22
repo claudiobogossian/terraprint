@@ -658,7 +658,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
     To solve, in the initialization of the grids is found the geographic srid and saved. */
     Property property(0);
     property.setName(settingsConfig.getGeodesicSRID());
-    property.setLabel(TR_LAYOUT("Planar SRID"));
+    property.setLabel(TR_LAYOUT("Geodesic SRID"));
     property.setComposeWidget(true);
     property.setValue(geodesicSRID, dataType->getDataTypeInt());
     property.setVisible(false);
