@@ -689,8 +689,12 @@ bool te::layout::MapController::syncPlanarGridInitProperties(Properties& propert
   double horizontalLineGap = 0;
   double verticalLineGap = 0;
 
+  int planarSRID = Utils::toPlanar(worldBox, srid);
+
+  // Optimized way to reproject a box, between source and destination projections.
+
   //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
-  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+  te::gm::Envelope planarBox = Utils::worldBoxTo(worldBox, srid, planarSRID);
 
   //then we calculate the initial coordinates and the gaps
   double horizontalLineInitial = this->getInitialCoord(planarBox.getLowerLeftY(), planarBox.getHeight(), horizontalLineGap);
@@ -722,6 +726,13 @@ bool te::layout::MapController::syncPlanarGridInitProperties(Properties& propert
     property.setName(planarGridSettings.getVerticalLineGap());
     property.setValue(verticalLineGap, dataType->getDataTypeDouble());
     
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(planarGridSettings.getPlanarSRID());
+    property.setValue(planarSRID, dataType->getDataTypeInt()); // set or update the planar SRID
+
     ItemUtils::addOrUpdateProperty(property, properties);
   }
 
@@ -785,8 +796,13 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
     return false;
   }
 
+  int planarSRID = Utils::toPlanar(worldBox, srid);
+  int geodesicSRID = Utils::toGeographic(worldBox, srid);
+   
+  // Optimized way to reproject a box, between source and destination projections.
+
   //if first prepare the world box, ensuring that it is a geographic box. If it is not, we reproject it
-  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
+  te::gm::Envelope geographicBox = Utils::worldBoxTo(worldBox, srid, geodesicSRID);
   
   //then we calculate the initial coordinates and the gaps
   double horizontalLineGap = geographicBox.getHeight() / 4.;
@@ -821,6 +837,20 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
     Property property(0);
     property.setName(geodesicGridSettings.getVerticalLineGap());
     property.setValue(verticalLineGap, dataType->getDataTypeDouble());
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(geodesicGridSettings.getPlanarSRID());
+    property.setValue(planarSRID, dataType->getDataTypeInt()); // set or update the planar SRID
+
+    ItemUtils::addOrUpdateProperty(property, properties);
+  }
+  {
+    Property property(0);
+    property.setName(geodesicGridSettings.getGeodesicSRID());
+    property.setValue(geodesicSRID, dataType->getDataTypeInt()); // set or update the geodesic SRID
 
     ItemUtils::addOrUpdateProperty(property, properties);
   }
@@ -1066,8 +1096,10 @@ void te::layout::MapController::recalculatePlanarInitialLine(Properties& propert
   const Property& pVerticalLineGap = m_model->getProperty(planarGridSettings.getVerticalLineGap());
   double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
 
-  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
-  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+  const Property& pPlanarSRID = m_model->getProperty(planarGridSettings.getPlanarSRID());
+  int planarSRID = te::layout::Property::GetValueAs<int>(pPlanarSRID);
+
+  te::gm::Envelope planarBox = Utils::worldBoxTo(worldBox, srid, planarSRID);
 
   const std::string& nHorizontalLineInitial = planarGridSettings.getHorizontalLineInitial();
   const std::string& nVerticalLineInitial = planarGridSettings.getVerticalLineInitial();
@@ -1087,7 +1119,7 @@ void te::layout::MapController::recalculateGeodesicInitialLine(Properties& prope
   {
     return;
   }
-
+  
   const Property& pSrid = m_model->getProperty("srid");
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
 
@@ -1097,9 +1129,11 @@ void te::layout::MapController::recalculateGeodesicInitialLine(Properties& prope
   const Property& pVerticalLineGap = m_model->getProperty(geodesicGridSettings.getVerticalLineGap());
   double verticalLineGap = te::layout::Property::GetValueAs<double>(pVerticalLineGap);
 
-  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
-  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
-  
+  const Property& pGeodesicSRID = m_model->getProperty(geodesicGridSettings.getGeodesicSRID());
+  int geodesicSRID = te::layout::Property::GetValueAs<int>(pGeodesicSRID);
+
+  te::gm::Envelope geographicBox = Utils::worldBoxTo(worldBox, srid, geodesicSRID);
+    
   const std::string& nHorizontalLineInitial = geodesicGridSettings.getHorizontalLineInitial();
   const std::string& nVerticalLineInitial = geodesicGridSettings.getVerticalLineInitial();
   recalculateInitialLine(properties, geographicBox, horizontalLineGap, verticalLineGap, nHorizontalLineInitial, nVerticalLineInitial);
@@ -1198,8 +1232,11 @@ bool te::layout::MapController::hasToRecalculatePlanarInitialLine(const Properti
   const Property& pVerticalLineInitial = m_model->getProperty(planarGridSettings.getVerticalLineInitial());
   double verticalLineInitial = te::layout::Property::GetValueAs<double>(pVerticalLineInitial);
 
+  const Property& pPlanarSRID = m_model->getProperty(planarGridSettings.getPlanarSRID());
+  int planarSRID = te::layout::Property::GetValueAs<int>(pPlanarSRID);
+
   //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
-  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+  te::gm::Envelope planarBox = Utils::worldBoxTo(worldBox, srid, planarSRID);
 
   if (horizontalDistanceBiggerThanGap(planarBox, horizontalLineInitial, horizontalLineGap)
     || verticalDistanceBiggerThanGap(planarBox, verticalLineInitial, verticalLineGap))
@@ -1243,8 +1280,10 @@ bool te::layout::MapController::hasToRecalculateGeodesicInitialLine(const Proper
   const Property& pVerticalLineInitial = m_model->getProperty(geodesicGridSettings.getVerticalLineInitial());
   double verticalLineInitial = te::layout::Property::GetValueAs<double>(pVerticalLineInitial);
 
-  //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
-  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
+  const Property& pGeodesicSRID = m_model->getProperty(geodesicGridSettings.getGeodesicSRID());
+  int geodesicSRID = te::layout::Property::GetValueAs<int>(pGeodesicSRID);
+
+  te::gm::Envelope geographicBox = Utils::worldBoxTo(worldBox, srid, geodesicSRID);
 
   if (horizontalDistanceBiggerThanGap(geographicBox, horizontalLineInitial, horizontalLineGap)
     || verticalDistanceBiggerThanGap(geographicBox, verticalLineInitial, verticalLineGap))

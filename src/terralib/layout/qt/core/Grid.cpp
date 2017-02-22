@@ -5,11 +5,20 @@
 #include "../../core/WorldTransformer.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
+#include "../../core/property/GridSettingsConfigProperties.h"
 #include "../../core/property/Properties.h"
 
 //terralib
+#include <terralib/maptools/WorldDeviceTransformer.h>
+#include <terralib/srs/SpatialReferenceSystemManager.h>
+#include <terralib/common/StringUtils.h>
 #include <terralib/maptools/Utils.h>
 
+// STL
+#include <iostream>
+#include <utility>
+
+// Qt
 #include <QFont>
 #include <QString>
 

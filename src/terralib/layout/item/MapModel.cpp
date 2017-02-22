@@ -156,6 +156,8 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
 
   std::string itemName = "";
 
+  int planarSRID = -1;
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   SharedProperties sharedProps;
@@ -443,6 +445,18 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
     property.setVisible(false);
     prop_gridsettings.addSubProperty(property);
   }
+  {
+    /* The grids should not always change position, 
+    this could occur if the zone was recalculated at all times. 
+    To solve, in the initialization of the grids is found the planar srid and saved. */
+    Property property(0);
+    property.setName(settingsConfig->getPlanarSRID());
+    property.setLabel(TR_LAYOUT("Planar SRID"));
+    property.setComposeWidget(true);
+    property.setValue(planarSRID, dataType->getDataTypeInt());
+    property.setVisible(false);
+    prop_gridsettings.addSubProperty(property);
+  }
 
   return prop_gridsettings;
 }
@@ -596,6 +610,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
   bool showSecondsText = true;
 
   int secPresicion = 0;
+  int geodesicSRID = -1;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -636,6 +651,18 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
     property.setValue(secPresicion, dataType->getDataTypeInt());
     property.setVisible(false);
     pGeodesicGridSettings.addSubProperty(property); // update gridsettings property
+  }
+  {
+    /* The grids should not always change position,
+    this could occur if the zone was recalculated at all times.
+    To solve, in the initialization of the grids is found the geographic srid and saved. */
+    Property property(0);
+    property.setName(settingsConfig.getGeodesicSRID());
+    property.setLabel(TR_LAYOUT("Planar SRID"));
+    property.setComposeWidget(true);
+    property.setValue(geodesicSRID, dataType->getDataTypeInt());
+    property.setVisible(false);
+    pGeodesicGridSettings.addSubProperty(property);
   }
 
   // Text Format

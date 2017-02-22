@@ -72,6 +72,7 @@ namespace te
         std::string getLneX4();
         std::string getLneY3();
         std::string getLneY4();
+        std::string getGeodesicSRID();
 
       protected:
 
@@ -107,6 +108,7 @@ namespace te
         std::string m_lneX4;
         std::string m_lneY3;
         std::string m_lneY4;
+        std::string m_geodesicSRID;
     };
   }
 }

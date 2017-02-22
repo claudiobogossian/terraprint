@@ -54,7 +54,7 @@
 #include <boost/tokenizer.hpp>
 
 // STL
-#include <math.h> 
+#include <math.h> /* isinf, isnan, isfinite */
 #include <string>
 #include <sstream> 
 #include <exception>
@@ -413,60 +413,48 @@ te::common::UnitOfMeasurePtr te::layout::Utils::unitMeasure( int srid )
   return unitPtr;
 }
 
-void te::layout::Utils::remapToPlanar( te::gm::Envelope* latLongBox, int zone )
+void te::layout::Utils::remapToPlanar(te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID)
 {
-  if(!latLongBox->isValid())
+  if (!latLongBox->isValid())
     return;
-  
+
   try
   {
-    std::string proj4 = te::map::GetUTMProj4FromZone(zone);
-
-    // Get the id of the projection of destination 
-    std::pair<std::string, unsigned int> projMeters = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4); 
-
-    std::string proj4geo = proj4DescToGeodesic();
-
-    // Get the id of the projection source 
-    std::pair<std::string, unsigned int> currentBoxProj = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4geo); 
-
-    // Remapping 
-    int srid = currentBoxProj.second;
-    latLongBox->transform(srid, projMeters.second); 
+    latLongBox->transform(sourceSRID, planarSRID);
   }
-  catch(const te::common::Exception&)
+  catch (const te::common::Exception&)
   {
-    zone = -1;
+    std::cout << "Could not remap box to planar projection!" << std::endl;
   }
 }
 
-void te::layout::Utils::remapToPlanar( te::gm::LinearRing* line, int zone )
+void te::layout::Utils::remapToPlanar(te::gm::LinearRing* line, int sourceSRID, int planarSRID)
 {
-  if(!line)
+  if (!line)
     return;
 
   std::size_t npoints = line->getNPoints();
 
-  for(std::size_t i = 0 ; i < npoints ; ++i)
+  for (std::size_t i = 0; i < npoints; ++i)
   {
     te::gm::Point* p = line->getPointN(i);
     const te::gm::Envelope* env = p->getMBR();
     te::gm::Envelope* en = const_cast<te::gm::Envelope*>(env);
-    remapToPlanar(en, zone);
+    remapToPlanar(en, sourceSRID, planarSRID);
     line->setPoint(i, env->getLowerLeftX(), env->getLowerLeftY());
     p->computeMBR(true);
   }
   line->computeMBR(true);
 }
 
-void te::layout::Utils::remapToPlanar( te::gm::Point* point, int zone )
+void te::layout::Utils::remapToPlanar(te::gm::Point* point, int sourceSRID, int planarSRID)
 {
-  if(!point)
+  if (!point)
     return;
 
   const te::gm::Envelope* env = point->getMBR();
   te::gm::Envelope* en = const_cast<te::gm::Envelope*>(env);
-  remapToPlanar(en, zone);
+  remapToPlanar(en, sourceSRID, planarSRID);
   point->computeMBR(true);
 }
 
@@ -498,6 +486,25 @@ te::gm::Envelope te::layout::Utils::GetWorldBoxInGeographic(const te::gm::Envelo
   return worldBoxGeographic;
 }
 
+te::gm::Envelope te::layout::Utils::worldBoxTo(const te::gm::Envelope& worldBox, int sourceSRID, int targetSRID)
+{
+  te::gm::Envelope copyWorldBox = worldBox;
+
+  // Checks if is Planar Geographic
+  std::string authName = "EPSG"; // Now: So far it is the only one supported by TerraLib 5. Future: Review this line!
+  te::srs::SpatialReferenceSystemManager::getInstance().isGeographic(sourceSRID, authName);
+  te::common::UnitOfMeasurePtr unitPtr = te::srs::SpatialReferenceSystemManager::getInstance().getUnit(sourceSRID, authName);
+
+  // check if srid exist and worldbox is valid
+  if (!unitPtr || !copyWorldBox.isValid())
+  {
+    return copyWorldBox;
+  }
+
+  // Remapping
+  copyWorldBox.transform(sourceSRID, targetSRID);
+  return copyWorldBox;
+}
 
 void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::LinearRing* line )
 {
@@ -664,4 +671,87 @@ std::vector<std::string> te::layout::Utils::Tokenize(const std::string& value, c
   }
 
   return vecString;
+}
+
+int te::layout::Utils::toPlanar(const te::gm::Envelope& worldBox, int sourceSRID)
+{
+  int targetSRID = -1;
+  te::layout::Utils utils(0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(sourceSRID);
+
+  if (!unitPtr || !worldBox.isValid())
+  {
+    return targetSRID;
+  }
+
+  std::string unitPtrStr = unitPtr->getName();
+  unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+  if (unitPtrStr.compare("DEGREE") == 0)
+  {
+    int zone = te::map::CalculatePlanarZone(worldBox);
+    std::string proj4 = te::map::GetUTMProj4FromZone(zone);
+
+    // Get the id of the projection of destination
+    std::pair<std::string, unsigned int> projPlanar = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
+    targetSRID = projPlanar.second;
+  }
+  else
+  {
+    targetSRID = sourceSRID;
+  }
+  return targetSRID;
+}
+
+int te::layout::Utils::toGeographic(const te::gm::Envelope& worldBox, int sourceSRID)
+{
+  int targetSRID = -1;
+  te::gm::Envelope worldBoxPlanar = worldBox;
+  te::layout::Utils utils(0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(sourceSRID);
+
+  if (!unitPtr || !worldBoxPlanar.isValid())
+  {
+    return targetSRID;
+  }
+
+  std::string unitPtrStr = unitPtr->getName();
+  unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+  if (unitPtrStr.compare("DEGREE") != 0)
+  {
+    std::string proj4 = utils.proj4DescToGeodesic();
+    // Get the id of the projection of destination 
+    std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
+    targetSRID = projGeographic.second;
+  }
+  else
+  {
+    targetSRID = sourceSRID;
+  }
+  return targetSRID;
+}
+
+bool te::layout::Utils::isValid(const te::gm::Envelope& box)
+{
+  double lowLeftX = box.getLowerLeftX();
+  double lowLeftY = box.getLowerLeftY();
+  double upperRightX = box.getUpperRightX();
+  double upperRightY = box.getUpperRightY();
+  double w = box.getWidth();
+  double h = box.getHeight();
+
+  if (std::isnan(lowLeftX) || std::isnan(lowLeftY) || std::isnan(upperRightX)
+    || std::isnan(upperRightY) || std::isnan(w) || std::isnan(h))
+  {
+    return false;
+  }
+
+  if (std::isinf(lowLeftX) || std::isinf(lowLeftY) || std::isinf(upperRightX)
+    || std::isinf(upperRightY) || std::isinf(w) || std::isinf(h))
+  {
+    return false;
+  }
+
+  return true;
 }

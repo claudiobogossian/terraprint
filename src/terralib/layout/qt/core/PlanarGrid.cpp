@@ -34,15 +34,15 @@ void te::layout::PlanarGrid::initialize(const te::layout::Properties& gridSettin
   const Property& pSrid = gridSettings.getProperty("srid");
   const Property& pWidth = gridSettings.getProperty("width");
   const Property& pHeight = gridSettings.getProperty("height");
-  //const Property& pFrameThickness = gridSettings.getProperty("frame_thickness");
   const Property& pStyle = gridSettings.getProperty(settingsConfig.getStyle());
   const Property& pIsVisible = gridSettings.getProperty(settingsConfig.getVisible());
+  const Property& pPlanarSRID = gridSettings.getProperty(settingsConfig.getPlanarSRID());
 
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  int planarSRID = te::layout::Property::GetValueAs<int>(pPlanarSRID);
   double width = te::layout::Property::GetValueAs<double>(pWidth);
   double height = te::layout::Property::GetValueAs<double>(pHeight);
-  //double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
   double horizontalLineInitial = te::layout::Property::GetValueAs<double>(gridSettings.getProperty(settingsConfig.getHorizontalLineInitial()));
   double verticalLineInitial = te::layout::Property::GetValueAs<double>(gridSettings.getProperty(settingsConfig.getVerticalLineInitial()));
   double horizontalLineGap = te::layout::Property::GetValueAs<double>(gridSettings.getProperty(settingsConfig.getHorizontalLineGap()));
@@ -70,10 +70,17 @@ void te::layout::PlanarGrid::initialize(const te::layout::Properties& gridSettin
     return;
   }
 
+  // Optimized way to reproject a box, between source and destination projections.
+
   //if first prepare the world box, ensuring that it is a planar box. If it is not, we reproject it
-  te::gm::Envelope planarBox = te::map::GetWorldBoxInPlanar(worldBox, srid);
+  te::gm::Envelope planarBox = Utils::worldBoxTo(worldBox, srid, planarSRID);
 
   te::gm::Envelope referenceBoxMM(0, 0, width, height);
+
+  if (!planarBox.isValid() || !Utils::isValid(planarBox))
+  {
+    return;
+  }
 
   std::vector<te::gm::LineString> verticallLines = calculateVerticalLines(planarBox, referenceBoxMM, gridSettings);
   std::vector<te::gm::LineString> horizontalLines = calculateHorizontalLines(planarBox, referenceBoxMM, gridSettings);

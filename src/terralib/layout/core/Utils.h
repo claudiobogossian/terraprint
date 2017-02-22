@@ -208,29 +208,38 @@ namespace te
         te::common::UnitOfMeasurePtr unitMeasure(int srid);
 
         /*!
-          \brief Map latlong to UTM zone.
-      
-          \param box in latlong
-          \param zone returns UTM zone
+        \brief Map latlong to Planar Projection.
+
+        \param box in latlong
+        \param SRID
         */
-        static void remapToPlanar(te::gm::Envelope* latLongBox, int zone);
+        static void remapToPlanar(te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID);
+        
+        /*!
+        \brief Map latlong LinearRing (line) to Planar Projection.
+
+        \param line line in latlong
+        \param SRID
+        */
+        static void remapToPlanar(te::gm::LinearRing* line, int sourceSRID, int planarSRID);
 
         /*!
-          \brief Map latlong LinearRing (line) to UTM zone.
-      
-          \param line line in latlong
-          \param zone returns UTM zone
-        */
-        static void remapToPlanar(te::gm::LinearRing* line, int zone);
+        \brief Map latlong Point (point) to Planar Projection.
 
-        /*!
-          \brief Map latlong Point (point) to UTM zone.
-      
-          \param zone returns UTM zone    
+        \param SRID
         */
-        static void remapToPlanar(te::gm::Point* point, int zone);
+        static void remapToPlanar(te::gm::Point* point, int sourceSRID, int planarSRID);
 
         static te::gm::Envelope GetWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
+
+        /*!
+          \brief Optimized way to reproject a box, between source and destination projections.
+
+          \param worldBox box that will be reprojected
+          \param sourceSRID source SRID source SRID of the box that will be reproject 
+          \param targetSRID target SRID target SRID 
+        */
+        static te::gm::Envelope worldBoxTo(const te::gm::Envelope& worldBox, int sourceSRID, int targetSRID);
 
         /*!
           \brief Convert LinearRing from one coordinate system to mm
@@ -269,6 +278,29 @@ namespace te
         static double calculateAngle(QPointF p1, QPointF p2);
 
         static std::vector<std::string> Tokenize(const std::string& value, const std::string& separator);
+
+        /*!
+          \brief If the SRID is not planar, it finds a new SRID, calculates a suitable zone and return. Otherwise it returns the same SRID passed as parameter.
+
+          \param worldBox box that will be reprojected
+          \param sourceSRID SRID of the box that will be reproject to planar
+        */
+        static int toPlanar(const te::gm::Envelope& worldBox, int sourceSRID);
+
+        /*!
+        \brief If the SRID is not geographic, it gets a default geographic SRID and return. Otherwise it returns the same SRID passed as parameter.
+
+        \param worldBox box that will be reprojected
+        \param sourceSRID SRID of the box that will be reproject to geographic
+        */
+        static int toGeographic(const te::gm::Envelope& worldBox, int sourceSRID);
+
+        /*!
+          \brief Check if has NaN or #INF.
+
+          \param box
+        */
+        static bool isValid(const te::gm::Envelope& box);
 
       protected:
         
