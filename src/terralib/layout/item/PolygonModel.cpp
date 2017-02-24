@@ -37,7 +37,7 @@ te::layout::PolygonModel::PolygonModel()
 {
   te::color::RGBAColor fillColor = te::color::RGBAColor(255, 255, 255, 255);
   te::color::RGBAColor contourColor = te::color::RGBAColor(0, 0, 0, 255);
-  te::gm::LineString* lineString = new te::gm::LineString(0, te::gm::LineStringType);
+  te::gm::GeometryShrPtr lineString(new te::gm::LineString(0, te::gm::LineStringType));
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -65,7 +65,7 @@ te::layout::PolygonModel::PolygonModel()
     property.setName("geometry");
     property.setLabel(TR_LAYOUT("Geometry"));
     property.setVisible(false);
-    property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
+    property.setValue<te::gm::GeometryShrPtr>(lineString, dataType->getDataTypeGeometry());
     this->m_properties.updateProperty(property);
   }
 

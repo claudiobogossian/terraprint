@@ -57,7 +57,7 @@ void te::layout::LineController::verifyPolygon()
     return;
   }
 
-  te::gm::Geometry* line = getGeometry();;
+  te::gm::GeometryShrPtr line(getGeometry());
 
   if (line->getNPoints() <= 0)
   {
@@ -69,7 +69,7 @@ void te::layout::LineController::verifyPolygon()
   
   Property property;
   property.setName("geometry");
-  property.setValue<te::gm::Geometry*>(line, dataType->getDataTypeGeometry());
+  property.setValue<te::gm::GeometryShrPtr>(line, dataType->getDataTypeGeometry());
   this->setProperty(property);
 }
 
@@ -105,9 +105,9 @@ QPolygonF te::layout::LineController::getQPolygon()
   QPolygonF poly;
 
   const Property& pLine = m_model->getProperty("geometry");
-  const te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(pLine);
+  const te::gm::GeometryShrPtr geometryPtr = te::layout::Property::GetValueAs<te::gm::GeometryShrPtr>(pLine);
 
-  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr);
+  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr.get());
   std::size_t nPoints = lineString->size();
   te::gm::Coord2D const* coordsPtr = lineString->getCoordinates();
   for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
@@ -183,7 +183,7 @@ void te::layout::LineController::setProperties(const te::layout::Properties& pro
   {
     const Property& property = propertiesCopy.getProperty("geometry");
 
-    te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(property);
+    te::gm::GeometryShrPtr geometryPtr = te::layout::Property::GetValueAs<te::gm::GeometryShrPtr>(property);
     const te::gm::Envelope* env = geometryPtr->getMBR();
     double width = env->getWidth();
     double height = env->getHeight();

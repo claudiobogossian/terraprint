@@ -38,7 +38,7 @@ te::layout::LineModel::LineModel()
   : AbstractItemModel()
 {
   te::color::RGBAColor color(0, 0, 0, 255);
-  te::gm::LineString* lineString = new te::gm::LineString(0, te::gm::LineStringType);
+  te::gm::GeometryShrPtr lineString(new te::gm::LineString(0, te::gm::LineStringType));
   double lineWidth = Utils::getLineWidthMinimumValue();
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -94,7 +94,7 @@ te::layout::LineModel::LineModel()
     property.setName("geometry");
     property.setLabel(TR_LAYOUT("Geometry"));
     property.setVisible(false);
-    property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
+    property.setValue<te::gm::GeometryShrPtr>(lineString, dataType->getDataTypeGeometry());
     this->m_properties.addProperty(property);
   }
 
