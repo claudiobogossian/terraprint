@@ -134,7 +134,7 @@ te::dt::AbstractData* te::layout::ConvertStringToFont(te::dt::AbstractData* abst
 
 te::dt::AbstractData* te::layout::ConvertGeometryToString(te::dt::AbstractData* abstractData)
 {
-  te::gm::Geometry* geometry = GetValueAs<te::gm::Geometry*>(abstractData);
+  te::gm::GeometryShrPtr geometry(GetValueAs<te::gm::GeometryShrPtr>(abstractData));
   
   std::string strValue = geometry->asText();
   return CreateData<std::string>(strValue);
@@ -144,8 +144,8 @@ te::dt::AbstractData* te::layout::ConvertStringToGeometry(te::dt::AbstractData* 
 {
   const std::string& strValue = GetValueAs<std::string>(abstractData);
 
-  te::gm::Geometry* geometry = te::gm::WKTReader::read(strValue.c_str());
-  return CreateData<te::gm::Geometry*>(geometry);
+  te::gm::GeometryShrPtr geometry(te::gm::WKTReader::read(strValue.c_str()));
+  return CreateData<te::gm::GeometryShrPtr>(geometry);
 }
 
 te::dt::AbstractData* te::layout::ConvertIntToString(te::dt::AbstractData* abstractData)

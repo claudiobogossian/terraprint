@@ -170,12 +170,14 @@ void te::layout::CreateLineItemTool::setGeometry()
 
 te::layout::Properties te::layout::CreateLineItemTool::createProperties(te::gm::LineString* lineString)
 {
+  te::gm::GeometryShrPtr geometry(lineString);
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties properties;
   {
     Property property(0);
     property.setName("geometry");
-    property.setValue<te::gm::Geometry*>(lineString, dataType->getDataTypeGeometry());
+    property.setValue<te::gm::GeometryShrPtr>(geometry, dataType->getDataTypeGeometry());
     properties.addProperty(property);
   }
   return properties;
