@@ -292,21 +292,6 @@ void te::layout::GridSettingsOutside::load(const std::string& gridName)
     m_ui->tabType->setCurrentIndex(1);
   }
 
-  /*
-  if (!controller->containsGrid(m_planarType))
-  {
-    m_ui->tabType->setTabEnabled(0, false);
-  }
-  
-  if (!controller->containsGrid(m_geodesicType))
-  {
-    m_ui->tabType->setTabEnabled(1, false);
-  }
-  else
-  {
-    m_ui->tbwSettings->setTabEnabled(2, false);
-  }*/
-
   /* Grid */
   
   SharedProperties sharedProps;
