@@ -36,8 +36,8 @@
 #include <QPointF>
 #include "qglobal.h"
 
-te::layout::ArrowItem::ArrowItem()
-  : AbstractItem()
+te::layout::ArrowItem::ArrowItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
 }
 

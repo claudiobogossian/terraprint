@@ -31,7 +31,7 @@
 
 te::layout::AbstractItemView* te::layout::ThreeNorthItemFactory::build(ItemFactoryParamsCreate params)
 {
-  ThreeNorthItem* view = new ThreeNorthItem();
+  ThreeNorthItem* view = new ThreeNorthItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
   view->setProperties(props);

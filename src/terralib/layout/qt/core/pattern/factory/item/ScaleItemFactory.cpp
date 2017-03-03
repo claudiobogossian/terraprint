@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::ScaleItemFactory::build(ItemFactoryParamsCreate params)
 {
-  ScaleItem* view = new ScaleItem();
+  ScaleItem* view = new ScaleItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

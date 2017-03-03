@@ -20,19 +20,19 @@
 // TerraLib
 #include "AbstractItemController.h"
 
-#include "../../enum/EnumDataType.h"
-#include "../../enum/Enums.h"
 #include "AbstractItemModel.h"
 #include "AbstractItemView.h"
-#include "../factory/ItemParamsCreate.h"
 #include "../factory/AbstractItemFactory.h"
-#include "../../property/SharedProperties.h"
+#include "../factory/ItemParamsCreate.h"
+#include "../../ItemInputProxy.h"
 #include "../../AbstractScene.h"
-#include "../../../qt/core/ItemUtils.h"
 #include "../../WarningManager.h"
-#include "../../../qt/core/pattern/command/ChangePropertyCommand.h"
+#include "../../enum/EnumDataType.h"
+#include "../../enum/Enums.h"
+#include "../../property/SharedProperties.h"
 #include "../../../qt/item/AbstractItem.h"
-
+#include "../../../qt/core/ItemUtils.h"
+#include "../../../qt/core/pattern/command/ChangePropertyCommand.h"
 
 // Qt
 #include <QGraphicsItem>
@@ -376,8 +376,8 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
   const Property& pNewObserver = properties.getProperty(sharedPropertiesName.getItemObserver());
   const Property& pCurrentObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
 
-  AbstractScene* scene = m_view->getScene();
-  if (scene == 0)
+  ItemInputProxy* itemInputProxy = m_view->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return false;
   }
@@ -392,14 +392,14 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
   //if this property is being set, we first remove the current association (if it exists)
 
   // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-  AbstractItemView* currentObserver = scene->getItem(strCurrentObserver);
+  AbstractItemView* currentObserver = itemInputProxy->getItem(strCurrentObserver);
   if (currentObserver != 0)
   {
     currentObserver->detach(this->getView());
   }
 
   //and then we make the new association (if there is a valid item)
-  AbstractItemView* newObserver = scene->getItem(strNewObserver);
+  AbstractItemView* newObserver = itemInputProxy->getItem(strNewObserver);
   if (newObserver != 0)
   {
     newObserver->attach(this->getView());

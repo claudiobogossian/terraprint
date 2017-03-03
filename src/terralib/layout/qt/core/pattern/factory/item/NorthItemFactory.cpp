@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::NorthItemFactory::build(ItemFactoryParamsCreate params)
 {
-  NorthItem* view = new NorthItem();
+  NorthItem* view = new NorthItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

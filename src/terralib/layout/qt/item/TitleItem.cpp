@@ -30,8 +30,8 @@
 #include "../../item/TitleModel.h"
 #include "TitleController.h"
 
-te::layout::TitleItem::TitleItem() 
-  : TextGridItem()
+te::layout::TitleItem::TitleItem(te::layout::ItemInputProxy* itemInputProxy) 
+  : TextGridItem(itemInputProxy)
 {
 }
 

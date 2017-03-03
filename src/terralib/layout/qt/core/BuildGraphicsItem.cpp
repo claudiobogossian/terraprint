@@ -254,7 +254,7 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
   Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height, zValue);
   props = collapseProperties(m_props, props);
 
-  return ItemFactoryParamsCreate(props);
+  return ItemFactoryParamsCreate(props, m_scene->getInputItemProxy());
 }
 
 void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)

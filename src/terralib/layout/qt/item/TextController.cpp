@@ -20,6 +20,7 @@
 // TerraLib
 #include "TextController.h"
 
+#include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
@@ -200,13 +201,12 @@ void te::layout::TextController::calculateSize(const te::layout::Properties& pro
   }
 
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
-  QGraphicsScene* qScene = textItem->scene();
-  if (qScene != 0)
+  ItemInputProxy* itemInputProxy = m_view->getItemInputProxy();
+  if (itemInputProxy != 0)
   {
-    Scene* myScene = dynamic_cast<Scene*>(qScene);
-    m_dpiForCalculation = myScene->getContext().getDpiX();
+    m_dpiForCalculation = itemInputProxy->getContext().getDpiX();
 
-    Utils utils = myScene->getUtils();
+    Utils utils = itemInputProxy->getUtils();
     sizeMM.setWidth(utils.pixel2mm(sizePx.width()));
     sizeMM.setHeight(utils.pixel2mm(sizePx.height()));
   }

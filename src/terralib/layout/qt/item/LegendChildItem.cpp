@@ -29,8 +29,8 @@
 #include "LegendChildItem.h"
 #include "../../item/LegendChildModel.h"
 
-te::layout::LegendChildItem::LegendChildItem()
-  : AbstractItem()
+te::layout::LegendChildItem::LegendChildItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {  
  
 }

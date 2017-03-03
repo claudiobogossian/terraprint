@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::RectangleItemFactory::build(ItemFactoryParamsCreate params)
 {
-  RectangleItem* view = new RectangleItem();
+  RectangleItem* view = new RectangleItem(params.getItemInputProxy());
  
   const Properties& props = params.getProperties();
 
