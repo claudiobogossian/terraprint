@@ -31,6 +31,7 @@
 #include "ThreeNorthController.h"
 #include "../core/Scene.h"
 #include "../core/ItemUtils.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../item/ThreeNorthModel.h"
 
@@ -48,8 +49,8 @@
 
 
 
-te::layout::ThreeNorthItem::ThreeNorthItem() 
-  : AbstractItem()
+te::layout::ThreeNorthItem::ThreeNorthItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
 
 }
@@ -204,10 +205,9 @@ void te::layout::ThreeNorthItem::drawTrueNorth(QPainter * painter)
   painter->setPen(pn);
 
   QString qStrUnit("NQ");
-  ItemUtils utils(scene());
   double fontNQ = boundingRect().width() / 7.;
   double test = -boundingRect().height() / 38.;
-  QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNQ),QPointF(- boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
+  QPainterPath textPath = ItemUtils::textToVector(qStrUnit, QFont("Arial", fontNQ),QPointF(- boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
 
   QPainterPath rect_path;
 
@@ -265,9 +265,8 @@ void te::layout::ThreeNorthItem::drawMagneticNorth(QPainter * painter, double an
   north << p5 << p6;
 
   QString qStrUnit("NM");
-  ItemUtils utils(scene());
   double fontNM = boundingRect().width() / 7.;
-  QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNM),QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
+  QPainterPath textPath = ItemUtils::textToVector(qStrUnit, QFont("Arial", fontNM),QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
 
   QPainterPath rect_path;
   rect_path.addPolygon(north);
@@ -320,9 +319,8 @@ void te::layout::ThreeNorthItem::drawMeridianConvergence(QPainter * painter, dou
   star = matrix.map(star);
   star.translate(QPointF(0, boundingRect().center().y() + boundingRect().height() / 2.6));
   QString qStrUnit("NG");
-  ItemUtils utils(scene());
   double fontNG = boundingRect().width() / 7.;
-  QPainterPath textPath = utils.textToVector(qStrUnit, QFont("Arial", fontNG), QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
+  QPainterPath textPath = ItemUtils::textToVector(qStrUnit, QFont("Arial", fontNG), QPointF(-boundingRect().height() / 38., boundingRect().center().y() + boundingRect().height() / 2.3), 0);
 
   QPainterPath rect_path;
 
@@ -396,7 +394,6 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
   QString qangleM = QString::fromStdString(strangleMerC);
   string font = "Arial";
   double fontd = boundingRect().width() / 7.;
-  ItemUtils utils(scene());
 
   stringstream ssN;
   ssN << angleMagN;
@@ -410,24 +407,21 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
   double angle_meridian = te::layout::Property::GetValueAs<double>(this->getProperty("angle_meridian_convergence"));
 
   //Convert to degree, minute and second
+  std::string dmsAngleMer = Utils::convertDecimalToDegree(angleMerC, true, true, true, 3);
+  std::string dmsAngleMag = Utils::convertDecimalToDegree(angleMagN, true, true, true, 3);
 
-  Utils util = ((Scene*) this->scene())->getUtils(); 
-    
-  std::string dmsAngleMer = util.convertDecimalToDegree(angleMerC, true, true, true, 3);
-  std::string dmsAngleMag = util.convertDecimalToDegree(angleMagN, true, true, true, 3);
-
-  QString dmsAngleMerC = utils.convert2QString(dmsAngleMer);
-  QString dmsAngleMagN = utils.convert2QString(dmsAngleMag);
+  QString dmsAngleMerC = ItemUtils::convert2QString(dmsAngleMer);
+  QString dmsAngleMagN = ItemUtils::convert2QString(dmsAngleMag);
 
   //Paths Magnetic North and Meridian Convergence
   QPainterPath anglePathMagN;
   QPainterPath anglePathMerC;
 
   double dpi = 96.;
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  if (myScene != 0)
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy != 0)
   {
-    dpi = myScene->getContext().getDpiY();
+    dpi = itemInputProxy->getContext().getDpiY();
   }
 
   if (te::layout::Property::GetValueAs<bool>(this->getProperty("meridian_convergence")) == true && te::layout::Property::GetValueAs<bool>(this->getProperty("magnetic_north")) == true){
@@ -451,8 +445,8 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
       double font = boundingRect().width() / 7.;
 
       //Set Text
-      anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
-      anglePathMagN = utils.textToVector(dmsAngleMagN, QFont("Arial", font));
+      anglePathMerC = ItemUtils::textToVector(dmsAngleMerC, QFont("Arial", font));
+      anglePathMagN = ItemUtils::textToVector(dmsAngleMagN, QFont("Arial", font));
 
       QRectF mcRect = anglePathMerC.boundingRect();
       QRectF mnRect = anglePathMagN.boundingRect();
@@ -608,7 +602,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
       QRectF mcRect = anglePathMerC.boundingRect();
       QRectF mnRect = anglePathMagN.boundingRect();
 
-      anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
+      anglePathMerC = ItemUtils::textToVector(dmsAngleMerC, QFont("Arial", font));
 
       //Convergencia Magnetica
 
@@ -619,7 +613,7 @@ void te::layout::ThreeNorthItem::drawArc(QPainter * painter)
       else{
         double maxWidth = 0.;
         double font = boundingRect().width() / 7.;
-        anglePathMerC = utils.textToVector(dmsAngleMerC, QFont("Arial", font));
+        anglePathMerC = ItemUtils::textToVector(dmsAngleMerC, QFont("Arial", font));
 
         QRectF mcRect = anglePathMerC.boundingRect();
 

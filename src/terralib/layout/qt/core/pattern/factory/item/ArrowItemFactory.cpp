@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::ArrowItemFactory::build(ItemFactoryParamsCreate params)
 {
-  ArrowItem* view = new ArrowItem();
+  ArrowItem* view = new ArrowItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

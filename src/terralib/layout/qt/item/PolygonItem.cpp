@@ -38,8 +38,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::PolygonItem::PolygonItem()
-  : LineItem()
+te::layout::PolygonItem::PolygonItem(te::layout::ItemInputProxy* inputItemProxy)
+  : LineItem(inputItemProxy)
 { 
   
 }

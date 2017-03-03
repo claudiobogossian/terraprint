@@ -32,7 +32,7 @@
 
 te::layout::AbstractItemView* te::layout::MapLocationItemFactory::build(ItemFactoryParamsCreate params)
 {
-  MapLocationItem* view = new MapLocationItem();
+  MapLocationItem* view = new MapLocationItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

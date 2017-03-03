@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::TextItemFactory::build(ItemFactoryParamsCreate params)
 {
-  TextItem* view = new TextItem();
+  TextItem* view = new TextItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

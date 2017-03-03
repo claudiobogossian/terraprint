@@ -32,6 +32,7 @@
 #include "../core/PlanarGrid.h"
 #include "../core/GeodesicGrid.h"
 #include "../core/ItemUtils.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/WorldTransformer.h"
@@ -52,9 +53,9 @@
 #include <QMouseEvent>
 #include <QPaintEngine>
 
-te::layout::MapItem::MapItem()
+te::layout::MapItem::MapItem(te::layout::ItemInputProxy* itemInputProxy)
   : QObject()
-  , AbstractItem()
+  , AbstractItem(itemInputProxy)
   , m_currentEditionMode(0)
   , m_planarGrid(new te::layout::PlanarGrid())
   , m_geodesicGrid(new te::layout::GeodesicGrid())
@@ -88,14 +89,14 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   }
   else
   {
-    Scene* myScene = dynamic_cast<Scene*>(this->scene());
-    if (myScene == 0)
+    ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+    if (itemInputProxy == 0)
     {
       return;
     }
 
     //we first calculate the size in pixels
-    Utils utils = myScene->getUtils();
+    Utils utils = itemInputProxy->getUtils();
 
     QRectF boxMM = boundingRect();
     te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
@@ -199,10 +200,15 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
   
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  Utils utils(myScene);
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return;
+  }
 
-  ContextObject context = myScene->getContext();
+  Utils utils = itemInputProxy->getUtils();
+
+  ContextObject context = itemInputProxy->getContext();
   double zoom = context.getZoom();  
   double zoomFactor = (double)zoom / 100.;
 
@@ -655,7 +661,12 @@ QCursor te::layout::MapItem::createCursor(std::string pathIcon)
 QPixmap& te::layout::MapItem::getDraftPixmap()
 {
   //we first calculate the size in pixels
-  Utils utils = ((Scene*) this->scene())->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return m_screenDraft;
+  }
+  Utils utils = itemInputProxy->getUtils();
 
   QRectF boxMM = boundingRect();
   te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());

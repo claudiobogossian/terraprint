@@ -21,17 +21,18 @@
 #include "MapController.h"
 #include "MapItem.h"
 #include "../core/Grid.h"
+#include "../core/Scene.h"
 #include "../core/pattern/command/ChangePropertyCommand.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
-#include "../core/Value.h"
-#include "../core/Scene.h"
+#include "../../core/Value.h"
 
-#include "terralib/maptools/Utils.h"
+#include <terralib/maptools/Utils.h>
 
 // STL
 #include <set>
@@ -946,13 +947,13 @@ te::layout::AbstractProxyProject* te::layout::MapController::getAbstractProxyPro
     return project;
   }
 
-  Scene* scene = dynamic_cast<Scene*>(view->scene());
-  if (!scene)
+  ItemInputProxy* itemInputProxy = m_view->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return project;
   }
 
-  Value<AbstractProxyProject* >* value = scene->getContextValues<AbstractProxyProject *>("proxy_project");
+  Value<AbstractProxyProject* >* value = itemInputProxy->getContextValues<AbstractProxyProject *>("proxy_project");
   if (value)
   {
     project = value->get();

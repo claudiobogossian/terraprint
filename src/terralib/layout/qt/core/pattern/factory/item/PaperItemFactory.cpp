@@ -33,7 +33,7 @@
 
 te::layout::AbstractItemView* te::layout::PaperItemFactory::build(ItemFactoryParamsCreate params)
 {
-  PaperItem* view = new PaperItem();
+  PaperItem* view = new PaperItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::PolygonItemFactory::build(ItemFactoryParamsCreate params)
 {
-  PolygonItem* view = new PolygonItem();
+  PolygonItem* view = new PolygonItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

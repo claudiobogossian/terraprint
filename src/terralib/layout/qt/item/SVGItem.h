@@ -61,7 +61,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        SVGItem();
+        SVGItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor

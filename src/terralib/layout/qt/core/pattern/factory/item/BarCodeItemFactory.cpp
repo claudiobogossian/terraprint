@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::BarCodeItemFactory::build(ItemFactoryParamsCreate params)
 {
-  BarCodeItem* view = new BarCodeItem();
+  BarCodeItem* view = new BarCodeItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
   view->setProperties(props);

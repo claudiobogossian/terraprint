@@ -37,8 +37,8 @@
 #include <QPen>
 #include <QRectF>
 
-te::layout::RectangleItem::RectangleItem()
-  : AbstractItem()
+te::layout::RectangleItem::RectangleItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
 
 }

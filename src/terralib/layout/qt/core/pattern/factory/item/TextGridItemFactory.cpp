@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::TextGridItemFactory::build(ItemFactoryParamsCreate params)
 {
-  TextGridItem* view = new TextGridItem();
+  TextGridItem* view = new TextGridItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

@@ -31,8 +31,9 @@ te::layout::ItemFactoryParamsCreate::ItemFactoryParamsCreate(const ItemFactoryPa
   this->operator=(rhs);
 }
 
-te::layout::ItemFactoryParamsCreate::ItemFactoryParamsCreate(const Properties& props):
-  m_props(props)
+te::layout::ItemFactoryParamsCreate::ItemFactoryParamsCreate(const Properties& props, te::layout::ItemInputProxy* itemInputProxy)
+  : m_props(props)
+  , m_itemInputProxy(itemInputProxy)
 {
 
 }
@@ -50,10 +51,16 @@ te::common::AbstractParameters* te::layout::ItemFactoryParamsCreate::clone() con
 void te::layout::ItemFactoryParamsCreate::reset() throw(te::common::Exception)
 {
   m_props.clear();
+  m_itemInputProxy = 0;
 }
 
 const te::layout::Properties& te::layout::ItemFactoryParamsCreate::getProperties() const
 {
   return m_props;
+}
+
+te::layout::ItemInputProxy* te::layout::ItemFactoryParamsCreate::getItemInputProxy() const
+{
+  return m_itemInputProxy;
 }
 

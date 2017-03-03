@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::LineItemFactory::build(ItemFactoryParamsCreate params)
 {  
-  LineItem* view = new LineItem();
+  LineItem* view = new LineItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

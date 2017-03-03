@@ -51,8 +51,8 @@
 #include <QtSvg/QSvgRenderer>
 #include "AbstractItem.h"
 
-te::layout::SVGItem::SVGItem()
-  : AbstractItem()
+te::layout::SVGItem::SVGItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
     
 }
