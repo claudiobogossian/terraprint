@@ -23,6 +23,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 #include "Config.h"
 #include "Value.h"
+#include "AbstractScene.h"
 
 #include <string>
 
