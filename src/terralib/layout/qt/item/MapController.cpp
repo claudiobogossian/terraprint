@@ -362,8 +362,18 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
   //if both values are set, we do nothing
   if(properties.contains("srid") == true && properties.contains("world_box") == true)
   {
-    //there is nothing to calculate
-    return false;
+    const Property& propSRID = properties.getProperty("srid");
+    const Property& propBox = properties.getProperty("world_box");
+
+    int numSRID = te::layout::Property::GetValueAs<int>(propSRID);
+    const te::gm::Envelope& box = Property::GetValueAs<te::gm::Envelope >(propBox);
+
+    //there is nothing to calculate because the current srid is planar
+    int checkSRID = Utils::toPlanar(box, numSRID);
+    if (checkSRID == numSRID)
+    {
+      return false;
+    }
   }
 
   //if one of theme is not set, we calculate both values
@@ -379,7 +389,9 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
 
     int currentSrid = layer->getSRID();
     if (srid <= 0)
-      srid = currentSrid;
+    {
+      srid = Utils::toPlanar(currentEnvelope, currentSrid);
+    }
     if (currentSrid != srid)
       currentEnvelope.transform(currentSrid, srid);
 
