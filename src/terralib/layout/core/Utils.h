@@ -55,6 +55,11 @@ namespace te
     class WorldDeviceTransformer;
   }
 
+  namespace srs
+  {
+    class Converter;
+  }
+
   namespace layout
   {
     class PaperConfig;
@@ -216,6 +221,14 @@ namespace te
         static void remapToPlanar(te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID);
         
         /*!
+        \brief Map latlong to Planar Projection.
+
+        \param box in latlong
+        \param SRID
+        */
+        static void remapToPlanar(te::srs::Converter* converter, te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID);
+
+        /*!
         \brief Map latlong LinearRing (line) to Planar Projection.
 
         \param line line in latlong
@@ -229,7 +242,7 @@ namespace te
         \param SRID
         */
         static void remapToPlanar(te::gm::Point* point, int sourceSRID, int planarSRID);
-
+                
         static te::gm::Envelope GetWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
 
         /*!
@@ -308,6 +321,13 @@ namespace te
           \param box
         */
         static bool isValid(const te::gm::Envelope& box);
+
+        /*!
+        \brief Get default planar SRID.
+
+        \param worldBox By the center of the box will know if it is north or south
+        */
+        static int planarSRID(const te::gm::Envelope& worldBox);
 
       protected:
         
