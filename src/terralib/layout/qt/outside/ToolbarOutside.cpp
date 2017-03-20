@@ -560,7 +560,7 @@ QToolButton* te::layout::ToolbarOutside::createSendBackwardToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createRecomposeToolButton()
 {
-  QToolButton *btn = createToolButton(tr("Recompose"), tr("Recompose"), "layout-recompose");
+  QToolButton *btn = createToolButton(tr("Recompose"), tr("Recompose"), "layout-adjust-by-margin");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
