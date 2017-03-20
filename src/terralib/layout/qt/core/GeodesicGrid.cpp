@@ -116,6 +116,7 @@ void te::layout::GeodesicGrid::initialize(const te::layout::Properties& gridSett
 
   m_size = recfFull.size();
   m_origin = rectGrid.topLeft();
+  m_final = rectGrid.bottomRight();
 }
 
 std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines(const te::gm::Envelope& planarBox, const te::gm::Envelope& geographicBox, const te::gm::Envelope& boxMM, const Properties& gridSettings)

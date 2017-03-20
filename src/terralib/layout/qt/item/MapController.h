@@ -134,6 +134,8 @@ namespace te
         virtual bool horizontalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialX, double gapX);
 
         virtual bool verticalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialY, double gapY);
+
+        virtual te::gm::Envelope calculateOutsideBoundingBox(const QPointF& originGrid, const QPointF& finalGrid, const QSizeF& mapSize);
     };
   }
 }

@@ -76,6 +76,8 @@ namespace te
 
         QPointF getOrigin() const;
 
+        QPointF getFinal() const;
+
         virtual void initialize(const te::layout::Properties& gridSettings) = 0;
 
         virtual void drawGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const;
@@ -126,6 +128,7 @@ namespace te
       double m_defaultRotation; //!< Stores the default rotation of the texts
       QSizeF m_size;
       QPointF m_origin;
+      QPointF m_final;
 
       QPainterPath m_gridLines; //!< Stores all the grid lines
       QPainterPath m_gridText; //!< Stores all the texts
