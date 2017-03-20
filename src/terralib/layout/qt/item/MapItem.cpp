@@ -316,7 +316,7 @@ void  te::layout::MapItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 
   te::gm::Coord2D currentCoordMM(event->pos().x(), event->pos().y());
   te::gm::Coord2D clickedCoordMM(m_clickedPointMM.getX(), m_clickedPointMM.getY());
-
+  
   te::gm::Envelope currentBoxMM(0, 0, boundingRect().width(), boundingRect().height());
   te::gm::Envelope currentBoxPx(0, 0, m_screenCache.width(), m_screenCache.height());
 
@@ -398,7 +398,10 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
   te::gm::Coord2D m_clickedCoordMM(m_clickedPointMM.getX(), m_clickedPointMM.getY());
   te::gm::Coord2D currentCoordMM(event->pos().x(), event->pos().y());
 
-  te::gm::Envelope currentBoxMM(0, 0, boundingRect().width(), boundingRect().height());
+  const Property& pMapLocalBox = getProperty("map_local_box");
+  const te::gm::Envelope& mapLocaBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
+
+  te::gm::Envelope currentBoxMM = mapLocaBox;
 
   //sets the transformer from MM to World
   te::layout::WorldTransformer transformer(currentBoxMM, worldBox);
