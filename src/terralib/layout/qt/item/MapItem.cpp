@@ -32,6 +32,8 @@
 #include "../core/PlanarGrid.h"
 #include "../core/GeodesicGrid.h"
 #include "../core/ItemUtils.h"
+#include "../../core/property/PlanarGridSettingsConfigProperties.h"
+#include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
@@ -268,7 +270,10 @@ void te::layout::MapItem::drawGrid(QPainter* painter)
 
     painter->save();
     painter->translate(dx, dy);
-    m_planarGrid->drawGrid(painter, properties);
+
+    PlanarGridSettingsConfigProperties settingsConfig;
+    m_planarGrid->drawGrid(painter, properties, settingsConfig);
+
     painter->restore();
   }
 
@@ -282,7 +287,10 @@ void te::layout::MapItem::drawGrid(QPainter* painter)
 
     painter->save();
     painter->translate(dx, dy);
-    m_geodesicGrid->drawGrid(painter, properties);
+
+    GeodesicGridSettingsConfigProperties settingsConfig;
+    m_geodesicGrid->drawGrid(painter, properties, settingsConfig);
+
     painter->restore();
   }
 }

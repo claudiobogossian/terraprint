@@ -59,7 +59,7 @@ QPointF te::layout::Grid::getOrigin() const
   return m_origin;
 }
 
-void te::layout::Grid::drawGrid(QPainter* painter, const te::layout::Properties& properties) const
+void te::layout::Grid::drawGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const
 {
   if (m_gridLines.isEmpty() || m_gridText.isEmpty())
   {
@@ -70,11 +70,11 @@ void te::layout::Grid::drawGrid(QPainter* painter, const te::layout::Properties&
 
   painter->setRenderHint(QPainter::Antialiasing, true);
 
-  configPainterForGrid(painter, properties);
+  configPainterForGrid(painter, properties, settingsConfig);
 
   painter->drawPath(m_gridLines);
 
-  configTextPainter(painter, properties);
+  configTextPainter(painter, properties, settingsConfig);
 
   QPen pen = painter->pen();
   pen.setWidthF(0);
@@ -854,10 +854,8 @@ void te::layout::Grid::calculateTexts(const Properties& properties)
 }
 
 
-void te::layout::Grid::configPainterForGrid(QPainter* painter, const te::layout::Properties& properties) const
+void te::layout::Grid::configPainterForGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
-
   const Property& pLineStyle = properties.getProperty(settingsConfig.getLineStyle());
   const Property& pLineColor = properties.getProperty(settingsConfig.getLineColor());
   const Property& pLineWidth = properties.getProperty(settingsConfig.getLineWidth());
@@ -869,7 +867,7 @@ void te::layout::Grid::configPainterForGrid(QPainter* painter, const te::layout:
   EnumLineStyleType* lineStyle = Enums::getInstance().getEnumLineStyleType();
   EnumType* currentLineStyle = Enums::getInstance().getEnumLineStyleType()->getEnum(lineStyleName);
 
-  QPen pen;
+  QPen pen = painter->pen();
 
   if (currentLineStyle)
   {
@@ -902,10 +900,8 @@ void te::layout::Grid::configPainterForGrid(QPainter* painter, const te::layout:
   painter->setPen(pen);
 }
 
-void te::layout::Grid::configTextPainter(QPainter* painter, const te::layout::Properties& properties) const
+void te::layout::Grid::configTextPainter(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
-
   const Property& pTextFontFamily = properties.getProperty(settingsConfig.getFont());
   const Property& pTextColor = properties.getProperty(settingsConfig.getTextColor());
 
