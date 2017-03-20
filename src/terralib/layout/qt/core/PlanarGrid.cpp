@@ -119,6 +119,7 @@ void te::layout::PlanarGrid::initialize(const te::layout::Properties& gridSettin
 
   m_size = recfFull.size();
   m_origin = rectGrid.topLeft();
+  m_final = rectGrid.bottomRight();
 }
 
 double te::layout::PlanarGrid::getUnit(const std::string& strUnit) const

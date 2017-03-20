@@ -47,6 +47,7 @@ void te::layout::Grid::clear()
 
   m_size = QSizeF();
   m_origin = QPointF();
+  m_final = QPointF();
 }
 
 QSizeF te::layout::Grid::getSize() const
@@ -57,6 +58,11 @@ QSizeF te::layout::Grid::getSize() const
 QPointF te::layout::Grid::getOrigin() const
 {
   return m_origin;
+}
+
+QPointF te::layout::Grid::getFinal() const
+{
+  return m_final;
 }
 
 void te::layout::Grid::drawGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const

@@ -907,45 +907,38 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
   geodesicGrid->initialize(fullProperties);
 
   QPointF planarOriginPoint = planarGrid->getOrigin();
+  QPointF planarFinalPoint = planarGrid->getFinal();
   QSizeF planarSize = planarGrid->getSize();
 
   QPointF geodesicOriginPoint = geodesicGrid->getOrigin();
+  QPointF geodesicFinalPoint = geodesicGrid->getFinal();
   QSizeF geodesicSize = geodesicGrid->getSize();
 
-  QPointF mapOriginPoint;
-  QSizeF fullSize;
+  QSizeF mapSize(mapWidth, mapHeight);
 
-  if (planarSize.isValid() && planarSize.isEmpty() == false)
-  {
-    fullSize = fullSize.expandedTo(planarSize);
-  }
+  QPointF gridOriginPoint(qMax(planarOriginPoint.x(), geodesicOriginPoint.x()), qMax(planarOriginPoint.y(), geodesicOriginPoint.y()));
+  QPointF gridFinalPoint(qMax(planarFinalPoint.x(), geodesicFinalPoint.x()), qMax(planarFinalPoint.y(), geodesicFinalPoint.y()));
 
-  if (geodesicSize.isValid() && geodesicSize.isEmpty() == false)
-  {
-    fullSize = fullSize.expandedTo(geodesicSize);
-  }
+  // Calculate the entire bounding rect of the item (map plus grid)
+  te::gm::Envelope outsideBoundingBox = calculateOutsideBoundingBox(gridOriginPoint, gridFinalPoint, mapSize);
 
-  mapOriginPoint = QPointF(qMax(planarOriginPoint.x(), geodesicOriginPoint.x()), qMax(planarOriginPoint.y(), geodesicOriginPoint.y()));
+  // new map bounding rect
+  te::gm::Envelope newMapLocalBox(gridOriginPoint.x(), gridOriginPoint.y(), gridOriginPoint.x() + mapWidth, gridOriginPoint.y() + mapHeight);
 
-  if (fullSize.isValid() && fullSize.isEmpty() == false)
-  {
-    te::gm::Envelope mapLocalBox(mapOriginPoint.x(), mapOriginPoint.y(), mapOriginPoint.x() + mapWidth, mapOriginPoint.y() + mapHeight);
+  Property pNewWidth;
+  pNewWidth.setName("width");
+  pNewWidth.setValue(outsideBoundingBox.getWidth(), dataType->getDataTypeDouble());
+  ItemUtils::addOrUpdateProperty(pNewWidth, properties);
 
-    Property pWidth;
-    pWidth.setName("width");
-    pWidth.setValue(fullSize.width(), dataType->getDataTypeDouble());
-    ItemUtils::addOrUpdateProperty(pWidth, properties);
+  Property pNewHeight;
+  pNewHeight.setName("height");
+  pNewHeight.setValue(outsideBoundingBox.getHeight(), dataType->getDataTypeDouble());
+  ItemUtils::addOrUpdateProperty(pNewHeight, properties);
 
-    Property pHeight;
-    pHeight.setName("height");
-    pHeight.setValue(fullSize.height(), dataType->getDataTypeDouble());
-    ItemUtils::addOrUpdateProperty(pHeight, properties);
-
-    Property pNewMapLocalBox;
-    pNewMapLocalBox.setName("map_local_box");
-    pNewMapLocalBox.setValue(mapLocalBox, dataType->getDataTypeEnvelope());
-    ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
-  }
+  Property pNewMapLocalBox;
+  pNewMapLocalBox.setName("map_local_box");
+  pNewMapLocalBox.setValue(newMapLocalBox, dataType->getDataTypeEnvelope());
+  ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
 
   return true;
 }
@@ -1335,4 +1328,19 @@ bool te::layout::MapController::verticalDistanceBiggerThanGap(const te::gm::Enve
   }
 
   return result;
+}
+
+te::gm::Envelope te::layout::MapController::calculateOutsideBoundingBox(const QPointF& originGrid, const QPointF& finalGrid, const QSizeF& mapSize)
+{
+  double width = mapSize.width();
+  double height = mapSize.height();
+
+  if (finalGrid.x() > 0. || finalGrid.y() > 0.)
+  {
+    width += (originGrid.x() + originGrid.x());
+    height += (originGrid.y() + originGrid.y());
+  }
+
+  te::gm::Envelope newBoundingBox(0, 0, width, height);
+  return newBoundingBox;
 }
