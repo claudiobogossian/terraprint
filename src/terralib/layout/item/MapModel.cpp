@@ -63,6 +63,8 @@ te::layout::MapModel::MapModel()
     m_properties.addProperty(property);
   }
 
+  /* map_local_box property (millimeter) is one to one with the 
+    world_box (projection system) when pass by transformation */
   {
     Property property(0);
     property.setName("map_local_box");
@@ -505,6 +507,8 @@ void te::layout::MapModel::initializeMapSettings()
     pro_mapSettings.addSubProperty(property);
   }
 
+  /* map_local_box property (millimeter) is one to one with the
+    world_box (projection system) when pass by transformation */
   {
     Property property(0);
     property.setName("world_box");
