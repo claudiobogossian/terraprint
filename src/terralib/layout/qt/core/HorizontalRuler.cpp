@@ -79,6 +79,8 @@ void te::layout::HorizontalRuler::drawRuler( QGraphicsView* view, QPainter* pain
 
   paperConfig->getPaperSize(w, h);
 
+  m_originPoint = QPointF(ll.x(), ll.y());
+
   //Horizontal Ruler
   QRectF rfH(QPointF(ll.x(), ur.y()), QPointF(ur.x(), ur.y() - m_height * zoomFactor));
   QRectF rfBackH(QPointF(ll.x() + (m_cornerSize * zoomFactor), ur.y()), QPointF(ur.x(), ur.y() - (m_height - 1.5) * zoomFactor));
