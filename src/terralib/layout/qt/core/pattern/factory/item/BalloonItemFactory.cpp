@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::BalloonItemFactory::build(ItemFactoryParamsCreate params)
 {
-  BalloonItem* view = new BalloonItem();
+  BalloonItem* view = new BalloonItem(params.getItemInputProxy());
  
   const Properties& props = params.getProperties();
 

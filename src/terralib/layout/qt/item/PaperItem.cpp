@@ -34,8 +34,8 @@
 #include <terralib/color/RGBAColor.h>
 
 
-te::layout::PaperItem::PaperItem()
-  : AbstractItem()
+te::layout::PaperItem::PaperItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {  
   this->setFlags(QGraphicsItem::ItemSendsGeometryChanges);
   this->setAcceptHoverEvents(false);

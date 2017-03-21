@@ -31,7 +31,7 @@
 
 te::layout::AbstractItemView* te::layout::PointItemFactory::build(ItemFactoryParamsCreate params)
 {
-  PointItem* view = new PointItem();
+  PointItem* view = new PointItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

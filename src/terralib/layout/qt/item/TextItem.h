@@ -73,7 +73,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        TextItem();
+        TextItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor

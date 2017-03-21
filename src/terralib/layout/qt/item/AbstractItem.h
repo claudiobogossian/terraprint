@@ -72,6 +72,7 @@ namespace te
     class AbstractItemModel;
     class AbstractScene;
     class Context;
+    class ItemInputProxy;
     /*!
     \brief Abstract class that represents a graphic item.  
       Its coordinate system is the same of scene (millimeters). Knows rotate and resize. Stores a pixmap drawn by model.
@@ -95,7 +96,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        AbstractItem();
+        AbstractItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -246,7 +247,6 @@ namespace te
         int                               m_hotPointSizePixels;
         int                               m_selectionLineWidthPixels;
         int                               m_rotationHotPointSizePixels;
-
     };
   } // end namespace layout
 } // end namespace te

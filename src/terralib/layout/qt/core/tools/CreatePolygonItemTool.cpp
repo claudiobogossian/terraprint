@@ -20,11 +20,16 @@
 // TerraLib
 #include "CreatePolygonItemTool.h"
 #include "../../../core/enum/Enums.h"
+#include "../RenderGeometries.h"
 
 te::layout::CreatePolygonItemTool::CreatePolygonItemTool(View* view, EnumType* itemType, QObject* parent)
   : CreateLineItemTool(view, itemType, parent)
 {
   m_itemType = Enums::getInstance().getEnumObjectType()->getPolygonItem();
+  if (m_render)
+  {
+    m_render->setTypeGeometry(te::layout::DRAW_POLYGON);
+  }
 }
 
 te::layout::CreatePolygonItemTool::~CreatePolygonItemTool()

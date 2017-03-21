@@ -18,38 +18,37 @@
  */
 
 /*!
-  \file terralib/layout/qt/core/pattern/factory/outside/ColorDialogOutsideFactory.cpp
+  \file terralib/layout/qt/core/pattern/factory/outside/ExportSettingsOutsideFactory.cpp
 
   \brief This is the concrete factory for arrow item.
 */
 
 // TerraLib
-#include "PDFSettingsOutsideFactory.h"
+#include "ExportSettingsOutsideFactory.h"
 
 #include "../../../../../core/enum/Enums.h"
-
-#include "../../../../../outside/PDFSettingsModel.h"
+#include "../../../../../outside/ExportSettingsModel.h"
 #include "../../../../../core/pattern/mvc/AbstractOutsideController.h"
-#include "../../../../outside/PDFSettingsOutside.h"
+#include "../../../../outside/ExportSettingsOutside.h"
 
-te::layout::AbstractOutsideView* te::layout::PDFSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
+te::layout::AbstractOutsideView* te::layout::ExportSettingsOutsideFactory::build(OutsideFactoryParamsCreate params)
 {
-  PDFSettingsModel* model = new PDFSettingsModel();
+  ExportSettingsModel* model = new ExportSettingsModel();
 
   AbstractOutsideController* controller = new AbstractOutsideController(model);
-  PDFSettingsOutside* view = new PDFSettingsOutside(controller, params.getParent());
+  ExportSettingsOutside* view = new ExportSettingsOutside(controller, params.getParent());
   controller->setView(view);
 
   return view;
 }
 
-te::layout::PDFSettingsOutsideFactory::PDFSettingsOutsideFactory() :
-  OutsideFactory(Enums::getInstance().getEnumObjectType()->getPDFSettingsDialog()->getName())
+te::layout::ExportSettingsOutsideFactory::ExportSettingsOutsideFactory() :
+OutsideFactory(Enums::getInstance().getEnumObjectType()->getExportSettingsDialog()->getName())
 {
 
 }
 
-te::layout::PDFSettingsOutsideFactory::~PDFSettingsOutsideFactory()
+te::layout::ExportSettingsOutsideFactory::~ExportSettingsOutsideFactory()
 {
 
 }

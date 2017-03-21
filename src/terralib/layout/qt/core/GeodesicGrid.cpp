@@ -42,41 +42,43 @@ void te::layout::GeodesicGrid::initialize(const te::layout::Properties& gridSett
   const Property& pStyle = gridSettings.getProperty(settingsConfig.getStyle());
   const Property& pFrameThickness = gridSettings.getProperty("frame_thickness");
   const Property& pIsVisible = gridSettings.getProperty(settingsConfig.getVisible());
+  const Property& pPlanarSRID = gridSettings.getProperty(settingsConfig.getPlanarSRID());
+  const Property& pGeodesicSRID = gridSettings.getProperty(settingsConfig.getGeodesicSRID());
 
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
+  int planarSRID = te::layout::Property::GetValueAs<int>(pPlanarSRID);
+  int geodesicSRID = te::layout::Property::GetValueAs<int>(pGeodesicSRID);
   double width = te::layout::Property::GetValueAs<double>(pWidth);
   double height = te::layout::Property::GetValueAs<double>(pHeight);
   const std::string& style = pStyle.getOptionByCurrentChoice().toString();
   double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
   bool isVisible = te::layout::Property::GetValueAs<bool>(pIsVisible);
 
-  if (isVisible == false)
+  if (isVisible == false || planarSRID == -1)
   {
     return;
   }
 
-
-  //if first prepare the world box, ensuring that it is a geographic box. If it is not, we reproject it
-  te::gm::Envelope geographicBox = Utils::GetWorldBoxInGeographic(worldBox, srid);
-
-  // Box necessario para desenhar a curvatura
-  te::gm::Envelope planarBox = geographicBox;
-  int zone = te::map::CalculatePlanarZone(geographicBox);
-  if (zone < 0 || zone > 60)
+  if (worldBox.isValid() == false || Utils::isValid(worldBox) == false)
   {
     return;
   }
 
-  if (width == 0 || height == 0)
-  {
-    return;
-  }
+  // Optimized way to reproject a box, between source and destination projections.
 
-  Utils::remapToPlanar(&planarBox, zone);
-
+  //Box required to draw curvature
+  te::gm::Envelope planarBox = Utils::worldBoxTo(worldBox, srid, planarSRID);
+  te::gm::Envelope geographicBox = Utils::worldBoxTo(planarBox, planarSRID, geodesicSRID);
+    
   te::gm::Envelope referenceBoxMM(0, 0, width, height);
   
+  if (!planarBox.isValid() || !geographicBox.isValid()
+    || !Utils::isValid(planarBox) || !Utils::isValid(geographicBox))
+  {
+    return;
+  }
+
   std::vector<te::gm::LineString> verticallLines = calculateVerticalLines(planarBox, geographicBox, referenceBoxMM, gridSettings);
   std::vector<te::gm::LineString> horizontalLines = calculateHorizontalLines(planarBox, geographicBox, referenceBoxMM, gridSettings);
 
@@ -114,6 +116,7 @@ void te::layout::GeodesicGrid::initialize(const te::layout::Properties& gridSett
 
   m_size = recfFull.size();
   m_origin = rectGrid.topLeft();
+  m_final = rectGrid.bottomRight();
 }
 
 std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines(const te::gm::Envelope& planarBox, const te::gm::Envelope& geographicBox, const te::gm::Envelope& boxMM, const Properties& gridSettings)
@@ -134,6 +137,8 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines
   const Property& pBottomRotate = gridSettings.getProperty(settingsConfig.getBottomRotateText());
   const Property& pTextFontFamily = gridSettings.getProperty(settingsConfig.getFont());
   const Property& pSecPrecisionText = gridSettings.getProperty(settingsConfig.getSecondsPrecisionText());
+  const Property& pPlanarSRID = gridSettings.getProperty(settingsConfig.getPlanarSRID());
+  const Property& pGeodesicSRID = gridSettings.getProperty(settingsConfig.getGeodesicSRID());
 
   Font txtFont = te::layout::Property::GetValueAs<Font>(pTextFontFamily);
   //  std::string fontFamily = pFontFamily.getValue().toString();
@@ -148,6 +153,8 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines
   double horizontalDisplacement = te::layout::Property::GetValueAs<double>(pHorizontalDisplacement);
   bool bTopRotate = te::layout::Property::GetValueAs<bool>(pTopRotate);
   bool bBottomRotate = te::layout::Property::GetValueAs<bool>(pBottomRotate);
+  int planarSRID = te::layout::Property::GetValueAs<int>(pPlanarSRID);
+  int geodesicSRID = te::layout::Property::GetValueAs<int>(pGeodesicSRID);
 
   int secPrecision = te::layout::Property::GetValueAs<int>(pSecPrecisionText);
 
@@ -155,8 +162,7 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines
   WorldTransformer transf = Utils::getTransformGeo(planarBox, boxMM);
   transf.setMirroring(false);
 
-  int zone = te::map::CalculatePlanarZone(geographicBox);
-  if (zone < 0 || zone > 60)
+  if (planarSRID == -1 || geodesicSRID == -1)
   {
     return verticalLines;
   }
@@ -189,7 +195,7 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines
 
     // Line curvature: of latlong to planar;
     // Draw line: planar to mm
-    Utils::remapToPlanar(line, zone);
+    Utils::remapToPlanar(line, geodesicSRID, planarSRID);
     Utils::convertToMillimeter(transf, line);
 
     //here we clip the line using the boundaries of the item in MM
@@ -287,6 +293,8 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
   const Property& pVerticalDisplacement = gridSettings.getProperty(settingsConfig.getVerticalLineDisplacement());
   const Property& pLeftRotate = gridSettings.getProperty(settingsConfig.getLeftRotateText());
   const Property& pRightRotate = gridSettings.getProperty(settingsConfig.getRightRotateText());
+  const Property& pPlanarSRID = gridSettings.getProperty(settingsConfig.getPlanarSRID());
+  const Property& pGeodesicSRID = gridSettings.getProperty(settingsConfig.getGeodesicSRID());
 
   const Property& pSecPrecisionText = gridSettings.getProperty(settingsConfig.getSecondsPrecisionText());
 
@@ -301,6 +309,8 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
   bool bLeftRotate = te::layout::Property::GetValueAs<bool>(pLeftRotate);
   bool bRightRotate = te::layout::Property::GetValueAs<bool>(pRightRotate);
   Font txtFont = te::layout::Property::GetValueAs<Font>(pTextFontFamily);
+  int planarSRID = te::layout::Property::GetValueAs<int>(pPlanarSRID);
+  int geodesicSRID = te::layout::Property::GetValueAs<int>(pGeodesicSRID);
 
   int secPrecision = te::layout::Property::GetValueAs<int>(pSecPrecisionText);
 
@@ -308,8 +318,7 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
   WorldTransformer transf = Utils::getTransformGeo(planarBox, boxMM);
   transf.setMirroring(false);
 
-  int zone = te::map::CalculatePlanarZone(geographicBox);
-  if (zone < 0 || zone > 60)
+  if (planarSRID == -1 || geodesicSRID == -1)
   {
     return horizontalLines;
   }
@@ -319,7 +328,7 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
 
   QFont ft(qFontName, txtFont.getPointSize());
 
-  double y1 = initVerticalLines(geographicBox, gridSettings, settingsConfig);
+  double y1 = initHorizontalLines(geographicBox, gridSettings, settingsConfig);
   double y2 = geographicBox.getUpperRightY();
 
   y1 -= 3 * horizontalLineGap;
@@ -328,13 +337,12 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
   for (; y1 <= y2; y1 += horizontalLineGap)
   {
     te::gm::Envelope env(geographicBox.getLowerLeftX() - 3 * verticalLineGap, y1, geographicBox.getUpperRightX() + 3 * verticalLineGap, y1);
-
     te::gm::LinearRing* line = 0;
     line = Utils::addCoordsInX(env, y1, horizontalLineGap);
 
     // Line curvature: of latlong to planar;
     // Draw line: planar to mm
-    Utils::remapToPlanar(line, zone);
+    Utils::remapToPlanar(line, geodesicSRID, planarSRID);
     Utils::convertToMillimeter(transf, line);
 
     //here we clip the line using the boundaries of the item in MM

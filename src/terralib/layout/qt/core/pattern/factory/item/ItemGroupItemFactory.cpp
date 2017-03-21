@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::ItemGroupItemFactory::build(ItemFactoryParamsCreate params)
 {
-  ItemGroup* view = new ItemGroup();
+  ItemGroup* view = new ItemGroup(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

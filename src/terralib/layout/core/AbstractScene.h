@@ -29,12 +29,15 @@
 #define __TERRALIB_LAYOUT_INTERNAL_ABSTRACT_SCENE_H
 
 // TerraLib
-#include "terralib/geometry/Envelope.h"
-#include "../core/ContextObject.h"
 #include "Config.h"
+#include "Value.h"
+#include "../core/ContextObject.h"
+
+#include <terralib/geometry/Envelope.h>
 
 // STL
 #include <string>
+#include <map>
 
 namespace te
 {
@@ -43,6 +46,7 @@ namespace te
     class AbstractItemView;
     class ItemUtils;
     class Utils;
+    class ItemInputProxy;
 
   /*!
       \class AbstractScene
@@ -99,6 +103,11 @@ namespace te
 
         virtual AbstractItemView* getItem(const std::string& name) = 0;
 
+        virtual te::layout::ItemInputProxy* getInputItemProxy() = 0;
+
+        template <typename T>
+        Value<T>* getContextValues(const std::string& name) const;
+
       protected:
         
     /*!
@@ -117,7 +126,29 @@ namespace te
       protected:
 
         te::gm::Envelope  m_box; //!< scene box.
+        std::map<std::string, ValueBase*>     m_contextValues;
     };
+
+    template <typename T>
+    inline te::layout::Value<T>* te::layout::AbstractScene::getContextValues(const std::string& name) const
+    {
+      Value<T>* value = 0;
+
+      if (m_contextValues.empty())
+        return value;
+
+      for (std::map<std::string, ValueBase*>::const_iterator it = m_contextValues.begin(); it != m_contextValues.end(); ++it)
+      {
+        std::string key = it->first;
+        if (key.compare(name) == 0)
+        {
+          value = dynamic_cast<Value<T>*>(it->second);
+          break;
+        }
+      }
+      return value;
+    }
+
   }
 }
 

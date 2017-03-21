@@ -65,6 +65,8 @@ te::layout::MapModel::MapModel()
     m_properties.addProperty(property);
   }
 
+  /* map_local_box property (millimeter) is one to one with the 
+    world_box (projection system) when pass by transformation */
   {
     Property property(0);
     property.setName("map_local_box");
@@ -78,12 +80,6 @@ te::layout::MapModel::MapModel()
   initializeGeodesicGridSettings();
 
 //updating properties
-  {
-    Property property(0);
-    property.setName("background_color");
-    property.setValue(backgroundColor, dataType->getDataTypeColor());
-    this->m_properties.updateProperty(property);
-  }
   {
     Property property(0);
     property.setName("show_frame");
@@ -163,6 +159,8 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   double crossOffSet = 2.;
 
   std::string itemName = "";
+
+  int planarSRID = -1;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -451,6 +449,18 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
     property.setVisible(false);
     prop_gridsettings.addSubProperty(property);
   }
+  {
+    /* The grids should not always change position, 
+    this could occur if the zone was recalculated at all times. 
+    To solve, in the initialization of the grids is found the planar srid and saved. */
+    Property property(0);
+    property.setName(settingsConfig->getPlanarSRID());
+    property.setLabel(TE_TR("Planar SRID"));
+    property.setComposeWidget(true);
+    property.setValue(planarSRID, dataType->getDataTypeInt());
+    property.setVisible(false);
+    prop_gridsettings.addSubProperty(property);
+  }
 
   return prop_gridsettings;
 }
@@ -499,6 +509,8 @@ void te::layout::MapModel::initializeMapSettings()
     pro_mapSettings.addSubProperty(property);
   }
 
+  /* map_local_box property (millimeter) is one to one with the
+    world_box (projection system) when pass by transformation */
   {
     Property property(0);
     property.setName("world_box");
@@ -604,6 +616,7 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
   bool showSecondsText = true;
 
   int secPresicion = 0;
+  int geodesicSRID = -1;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -644,6 +657,18 @@ void te::layout::MapModel::initializeGeodesicGridSettings()
     property.setValue(secPresicion, dataType->getDataTypeInt());
     property.setVisible(false);
     pGeodesicGridSettings.addSubProperty(property); // update gridsettings property
+  }
+  {
+    /* The grids should not always change position,
+    this could occur if the zone was recalculated at all times.
+    To solve, in the initialization of the grids is found the geographic srid and saved. */
+    Property property(0);
+    property.setName(settingsConfig.getGeodesicSRID());
+    property.setLabel(TE_TR("Geodesic SRID"));
+    property.setComposeWidget(true);
+    property.setValue(geodesicSRID, dataType->getDataTypeInt());
+    property.setVisible(false);
+    pGeodesicGridSettings.addSubProperty(property);
   }
 
   // Text Format

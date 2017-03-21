@@ -47,6 +47,7 @@ namespace te
     class AbstractScene;
     class Properties;
     class Property;
+    class ItemInputProxy;
 
     /*!
       \brief Abstract class to represent an observable. "Model" part of MVC component. 
@@ -60,7 +61,7 @@ namespace te
         /*!
           \brief Constructor
         */ 
-        AbstractItemView();
+        AbstractItemView(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -146,6 +147,8 @@ namespace te
         */
         bool isUndoEnabled();
 
+        virtual ItemInputProxy* getItemInputProxy() const;
+
     protected:
 
       virtual void enterEditionMode() = 0;
@@ -170,7 +173,8 @@ namespace te
         bool                    m_isEditionMode;
         bool                    m_subSelected;
         bool                    m_useResizePixmap; //!< use or not pixmap for resizing
-        bool                    m_undoEnabled; // set properties will or not generate an UndoCommand on the stack      
+        bool                    m_undoEnabled; // set properties will or not generate an UndoCommand on the stack
+        ItemInputProxy*         m_itemInputProxy;
     };
   }
 }

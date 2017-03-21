@@ -64,7 +64,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/outside/SystematicScaleOutsideFactory.h"
 #include "pattern/factory/outside/TextGridSettingsOutsideFactory.h"
 #include "pattern/factory/outside/ToolbarOutsideFactory.h"
-#include "pattern/factory/outside/PDFSettingsOutsideFactory.h"
+#include "pattern/factory/outside/ExportSettingsOutsideFactory.h"
 #include "pattern/factory/outside/MapSettingsOutsideFactory.h"
 #include "pattern/factory/outside/ScaleSettingsOutsideFactory.h"
 #include "pattern/factory/outside/NorthSettingsOutsideFactory.h"
@@ -134,7 +134,7 @@ namespace te
         static SystematicScaleOutsideFactory SystematicScaleOutsideFactory_instance;
         static TextGridSettingsOutsideFactory TextGridSettingsOutsideFactory_instance;
         static ToolbarOutsideFactory ToolbarOutsideFactory_instance;
-        static PDFSettingsOutsideFactory PDFSettingsOutsideFactory_instance;
+        static ExportSettingsOutsideFactory ExportSettingsOutsideFactory_instance;
         static MapSettingsOutsideFactory MapSettingsOutsideFactory_instance;
         static ScaleSettingsOutsideFactory ScaleSettingsOutsideFactory_instance;
         static NorthSettingsOutsideFactory NorthSettingsOutsideFactory_instance;

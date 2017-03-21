@@ -31,8 +31,8 @@
 #include "../../item/EllipseModel.h"
 #include "terralib/color/RGBAColor.h"
 
-te::layout::EllipseItem::EllipseItem()
-: AbstractItem()
+te::layout::EllipseItem::EllipseItem(te::layout::ItemInputProxy* itemInputProxy)
+: AbstractItem(itemInputProxy)
 {
 }
 

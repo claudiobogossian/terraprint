@@ -31,9 +31,8 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_MODEL_H
 
 // TerraLib
-#include "TitleModel.h"
 #include "../core/Config.h"
-
+#include "TextModel.h"
 
 namespace te
 {

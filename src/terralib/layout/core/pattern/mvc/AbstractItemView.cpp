@@ -6,12 +6,13 @@
 #include "../../property/Properties.h"
 #include "../../property/Property.h"
 
-te::layout::AbstractItemView::AbstractItemView()
+te::layout::AbstractItemView::AbstractItemView(te::layout::ItemInputProxy* itemInputProxy)
   : m_controller(0)
   , m_isEditionMode(false)
   , m_subSelected(false)
   , m_useResizePixmap(true)
   , m_undoEnabled(true)
+  , m_itemInputProxy(itemInputProxy)
 {
 
 }
@@ -118,3 +119,9 @@ bool te::layout::AbstractItemView::isUndoEnabled()
 {
   return m_undoEnabled;
 }
+
+te::layout::ItemInputProxy* te::layout::AbstractItemView::getItemInputProxy() const
+{
+  return m_itemInputProxy;
+}
+

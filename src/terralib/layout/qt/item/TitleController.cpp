@@ -20,35 +20,37 @@
 // TerraLib
 #include "TitleController.h"
 
-#include "../../core/enum/EnumAlignmentType.h"
-#include "../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../core/property/TextGridSettingsConfigProperties.h"
-#include "../../qt/core/Scene.h"
-#include "../../qt/item/TitleItem.h"
-
-#include <QGraphicsTextItem>
-#include <QTextDocument>
-#include <QFontMetricsF>
-#include <QTextCursor>
-#include <QTextTable>
+#include "../../core/enum/EnumDataType.h"
+#include "../../core/enum/Enums.h"
+#include "../../core/property/Properties.h"
+#include "../../core/property/Property.h"
 
 te::layout::TitleController::TitleController(AbstractItemModel* model, AbstractItemView* view)
-  : TextController(model, view)
-  , m_table(0)
+  : TextGridController(model, view)
 {
+  //here we initialize the empty text matrix
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  int numRows = 2;
+  int numColumns = 1;
+
+  Properties properties;
+  {
+    Property property;
+    property.setName("num_rows");
+    property.setValue(numRows, dataType->getDataTypeInt());
+    properties.addProperty(property);
+  }
+  {
+    Property property;
+    property.setName("num_columns");
+    property.setValue(numColumns, dataType->getDataTypeInt());
+    properties.addProperty(property);
+  }
+
+  setProperties(properties);
 }
 
 te::layout::TitleController::~TitleController()
 {
-}
-
-QSizeF te::layout::TitleController::updateView()
-{
-  QRectF boundingRect;
-  return boundingRect.size();
-}
-
-void te::layout::TitleController::textChanged()
-{
-  
 }

@@ -121,7 +121,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
       property.setName("angle_meridian_convergence");
       property.setLabel(TE_TR("Angle Meridian Convergence"));
       property.setValue(meridian_convergence, dataType->getDataTypeDouble());
-      property.setMenu(true);
+      property.setMenu(false);
       this->m_properties.addProperty(property);
     }
 
@@ -131,7 +131,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
       property.setLabel(TE_TR("Angle Magnetic North"));
       property.setValue(magnetic_north, dataType->getDataTypeDouble());
       property.setVisible(magneticVisible);
-      property.setMenu(magneticMenu);
+      property.setMenu(false);
       this->m_properties.addProperty(property);
     }
 
@@ -155,7 +155,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
       property.setName("date");
       property.setLabel(TE_TR("Date"));
       property.setValue(date, dataType->getDataTypeInt());
-      property.setMenu(dateMenu);
+      property.setMenu(false);
       property.setVisible(dateVisible);
       m_properties.addProperty(property);
     }

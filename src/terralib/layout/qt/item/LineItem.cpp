@@ -42,8 +42,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::LineItem::LineItem()
-  : AbstractItem()
+te::layout::LineItem::LineItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
     setFlag(QGraphicsItem::ItemClipsToShape);
 }

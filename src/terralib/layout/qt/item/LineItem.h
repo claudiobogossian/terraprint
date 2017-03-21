@@ -50,7 +50,7 @@ namespace te
     {
       public:
 
-        LineItem();
+        LineItem(te::layout::ItemInputProxy* itemInputProxy);
 
         virtual ~LineItem ();
 

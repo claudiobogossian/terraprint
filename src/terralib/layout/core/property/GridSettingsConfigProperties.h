@@ -72,7 +72,7 @@ namespace te
         const std::string& getCrossOffset() const;
         const std::string& getBorderIntersections() const;
         const std::string& getGridSettings() const;
-
+        const std::string& getPlanarSRID() const;
               
       protected:
 
@@ -123,6 +123,7 @@ namespace te
 
         std::string m_borderIntersection;
         std::string m_gridSettings;
+        std::string m_planarSRID;
     };
   }
 }

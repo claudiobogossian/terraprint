@@ -34,8 +34,8 @@
 // Qt
 #include <QStyleOptionGraphicsItem>
 
-te::layout::BarCodeItem::BarCodeItem() 
-  : TextItem()
+te::layout::BarCodeItem::BarCodeItem(te::layout::ItemInputProxy* itemInputProxy)
+  : TextItem(itemInputProxy)
 {
  
 }

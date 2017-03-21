@@ -31,8 +31,8 @@
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
-te::layout::NorthItem::NorthItem() 
-  : AbstractItem()
+te::layout::NorthItem::NorthItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
 
 }

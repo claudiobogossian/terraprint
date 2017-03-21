@@ -37,8 +37,8 @@
 
 
 
-te::layout::MapLocationItem::MapLocationItem() 
-  : MapItem()
+te::layout::MapLocationItem::MapLocationItem(te::layout::ItemInputProxy* itemInputProxy)
+  : MapItem(itemInputProxy)
 {
 
 }

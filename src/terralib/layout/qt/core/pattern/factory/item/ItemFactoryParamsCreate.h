@@ -40,6 +40,8 @@ namespace te
 {
   namespace layout
   {
+    class ItemInputProxy;
+
     /*!
       \brief Parameters to create a new item object (MVC graphic Object).  
     
@@ -59,7 +61,7 @@ namespace te
 
           \param Properties of a item that will be constructed.
         */
-        explicit ItemFactoryParamsCreate(const Properties& props);
+        explicit ItemFactoryParamsCreate(const Properties& props, te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -72,9 +74,12 @@ namespace te
         
         const Properties& getProperties() const;
 
+        te::layout::ItemInputProxy* getItemInputProxy() const;
+
       protected:
 
-        Properties  m_props; //!< Properties of a graphic object.
+        Properties                  m_props; //!< Properties of a graphic object.
+        te::layout::ItemInputProxy* m_itemInputProxy;
     };
   }
 }
