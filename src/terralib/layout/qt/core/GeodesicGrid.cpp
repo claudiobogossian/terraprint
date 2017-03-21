@@ -328,7 +328,7 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
 
   QFont ft(qFontName, txtFont.getPointSize());
 
-  double y1 = initVerticalLines(geographicBox, gridSettings, settingsConfig);
+  double y1 = initHorizontalLines(geographicBox, gridSettings, settingsConfig);
   double y2 = geographicBox.getUpperRightY();
 
   y1 -= 3 * horizontalLineGap;
