@@ -38,8 +38,8 @@
 #include <QTextCursor>
 #include <QTextTableCell>
 
-te::layout::TextGridItem::TextGridItem() 
-  : TextItem()
+te::layout::TextGridItem::TextGridItem(te::layout::ItemInputProxy* itemInputProxy)
+  : TextItem(itemInputProxy)
 {
 }
 

@@ -31,7 +31,7 @@
 
 te::layout::AbstractItemView* te::layout::MapItemFactory::build(ItemFactoryParamsCreate params)
 {
-  MapItem* view = new MapItem();
+  MapItem* view = new MapItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

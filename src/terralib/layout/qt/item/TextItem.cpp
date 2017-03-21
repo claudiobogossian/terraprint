@@ -27,13 +27,15 @@
 
 // TerraLib
 #include "TextItem.h"
-#include "../../item/TextModel.h"
+
 #include "TextController.h"
-#include "../../qt/core/Scene.h"
 #include "../core/ItemUtils.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
+#include "../../item/TextModel.h"
+#include "../../qt/core/Scene.h"
 
 // STL
 #include <string>
@@ -51,9 +53,9 @@
 #include <QClipboard>
 #include <QTimer>
 
-te::layout::TextItem::TextItem()
+te::layout::TextItem::TextItem(te::layout::ItemInputProxy* itemInputProxy)
   : QObject()
-  , AbstractItem()
+  , AbstractItem(itemInputProxy)
   , m_document(0)
   , m_textCursor(0)
   , m_cursorTimer(0)
@@ -105,8 +107,8 @@ QRectF te::layout::TextItem::boundingRect() const
     return AbstractItem::boundingRect();
   }
 
-  AbstractScene* myScene = this->getScene();
-  if (myScene == 0)
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return AbstractItem::boundingRect();
   }
@@ -117,7 +119,7 @@ QRectF te::layout::TextItem::boundingRect() const
   const Property& pDy = this->getProperty("dy");
   double dy = te::layout::Property::GetValueAs<double>(pDy);
 
-  Utils utils = myScene->getUtils();
+  Utils utils = itemInputProxy->getUtils();
 
   QSizeF documentSizePx = m_document->size();
 
@@ -136,8 +138,8 @@ void te::layout::TextItem::refresh()
 
 void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  AbstractScene* myScene = this->getScene();
-  if (myScene == 0)
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return;
   }
@@ -146,12 +148,12 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   //we must set some transformation in order to prepare the item to be rendered on the screen or in other output device
   //we must first aquire some information about the current dpi and the zoom
-  double dpiFactor = myScene->getContext().getDpiX() / textController->getDpiForCalculation();
+  double dpiFactor = itemInputProxy->getContext().getDpiX() / textController->getDpiForCalculation();
 
   //the we aquire information about the bounding rect references in pixels and in millimeters
   QRectF boxMM = this->boundingRect();
 
-  Utils utils = myScene->getUtils();
+  Utils utils = itemInputProxy->getUtils();
   double widthPx = utils.mm2pixel(boxMM.width());
   double heightPx = utils.mm2pixel(boxMM.height());
 
@@ -215,8 +217,8 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
     return;
   }
 
-  AbstractScene* myScene = this->getScene();
-  if (myScene == 0)
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return;
   }
@@ -231,7 +233,7 @@ void te::layout::TextItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
   double xPosMM = event->pos().x() - dx;
   double yPosMM = boundingRect().height() - event->pos().y() + dy;
 
-  Utils utils = myScene->getUtils();
+  Utils utils = itemInputProxy->getUtils();
   double xPos = utils.mm2pixel(xPosMM);
   double yPos = utils.mm2pixel(yPosMM);
 
@@ -258,13 +260,13 @@ void te::layout::TextItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
     return;
   }
 
-  AbstractScene* myScene = this->getScene();
-  if (myScene == 0)
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return;
   }
   
-  Utils utils = myScene->getUtils();
+  Utils utils = itemInputProxy->getUtils();
 
   double xPos = utils.mm2pixel(event->pos().x());
   double yPos = utils.mm2pixel(boundingRect().height()) - utils.mm2pixel(event->pos().y());

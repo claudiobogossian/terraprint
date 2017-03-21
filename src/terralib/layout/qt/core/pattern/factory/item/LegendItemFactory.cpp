@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::LegendItemFactory::build(ItemFactoryParamsCreate params)
 {  
-  LegendItem* view = new LegendItem();
+  LegendItem* view = new LegendItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

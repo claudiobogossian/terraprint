@@ -37,8 +37,48 @@
 #include <terralib/core/translator/Translator.h>
 
 te::layout::TitleModel::TitleModel()
-  : TextModel()
+  : TextGridModel()
 {
+  int numRows = 2;
+  int numColumns = 1;
+
+  std::vector< std::vector<std::string> > textMatrix;
+  textMatrix.resize(numRows);
+  textMatrix[0].resize(numColumns);
+  textMatrix[1].resize(numColumns);
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  {
+    Property property;
+    property.setName("text_matrix");
+    property.setLabel(TE_TR("Text Matrix"));
+    property.setValue(textMatrix, dataType->getDataTypeStringMatrix());
+
+    m_properties.updateProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("num_rows");
+    property.setLabel(TE_TR("Number of Rows"));
+    property.setValue(numRows, dataType->getDataTypeInt());
+    property.setVisible(false);
+
+    m_properties.completelyUpdateProperty(property);
+  }
+
+  {
+    Property property;
+    property.setName("num_columns");
+    property.setLabel(TE_TR("Number of Columns"));
+    property.setValue(numColumns, dataType->getDataTypeInt());
+    property.setVisible(false);
+
+    m_properties.completelyUpdateProperty(property);
+  }
+
+
+  /*
   TextGridSettingsConfigProperties propertyNames;
 
   std::string title("Title");
@@ -198,6 +238,7 @@ te::layout::TitleModel::TitleModel()
   }
   
   reparentProperties(Enums::getInstance().getEnumObjectType()->getTitleItem());
+  */
 }
 
 te::layout::TitleModel::~TitleModel()

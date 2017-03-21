@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::SVGItemFactory::build(ItemFactoryParamsCreate params)
 {
-  SVGItem* view = new SVGItem();
+  SVGItem* view = new SVGItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

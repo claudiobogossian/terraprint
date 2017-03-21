@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::ImageItemFactory::build(ItemFactoryParamsCreate params)
 {
-  ImageItem* view = new ImageItem();
+  ImageItem* view = new ImageItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
   

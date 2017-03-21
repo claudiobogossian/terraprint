@@ -69,7 +69,7 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_legendChoice(0),
   m_starItem(0),
   m_svgItem(0),
-  m_pdfSettingsDialog(0),
+  m_exportSettingsDialog(0),
   m_threeNorthItem(0),
   m_mapSettingsDialog(0),
   m_scaleSettingsDialog(0),
@@ -302,10 +302,10 @@ te::layout::EnumObjectType::~EnumObjectType()
     m_svgItem = 0;
   } 
 
-  if (m_pdfSettingsDialog)
+  if (m_exportSettingsDialog)
   {
-    delete m_pdfSettingsDialog;
-    m_pdfSettingsDialog = 0;
+    delete m_exportSettingsDialog;
+    m_exportSettingsDialog = 0;
   }
 
   if(m_threeNorthItem)
@@ -413,7 +413,7 @@ void te::layout::EnumObjectType::init()
 
   m_svgItem = createEnum("SVG_Item", this, TE_TR("SVG Item"));
 
-  m_pdfSettingsDialog = createEnum("PDF_Settings", this, TE_TR("PDF Settings"));
+  m_exportSettingsDialog = createEnum("Export_Settings", this, TE_TR("Export Settings"));
 
   m_threeNorthItem = createEnum("Three_North_Item", this, TE_TR("Three North Item"));
 
@@ -621,9 +621,9 @@ te::layout::EnumType* te::layout::EnumObjectType::getSVGDialog() const
   return m_svgDialog;
 }
 
-te::layout::EnumType* te::layout::EnumObjectType::getPDFSettingsDialog() const
+te::layout::EnumType* te::layout::EnumObjectType::getExportSettingsDialog() const
 {
-  return m_pdfSettingsDialog;
+  return m_exportSettingsDialog;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getThreeNorthItem() const

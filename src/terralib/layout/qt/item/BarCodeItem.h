@@ -46,7 +46,7 @@ namespace te
     {
       public:
 
-        BarCodeItem();
+        BarCodeItem(te::layout::ItemInputProxy* itemInputProxy);
 
         virtual ~BarCodeItem();
         

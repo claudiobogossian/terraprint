@@ -57,7 +57,7 @@ void te::layout::LineController::verifyPolygon()
     return;
   }
 
-  te::gm::Geometry* line = getGeometry();;
+  te::gm::GeometryShrPtr line(getGeometry());
 
   if (line->getNPoints() <= 0)
   {
@@ -69,7 +69,7 @@ void te::layout::LineController::verifyPolygon()
   
   Property property;
   property.setName("geometry");
-  property.setValue<te::gm::Geometry*>(line, dataType->getDataTypeGeometry());
+  property.setValue<te::gm::GeometryShrPtr>(line, dataType->getDataTypeGeometry());
   this->setProperty(property);
 }
 
@@ -105,9 +105,9 @@ QPolygonF te::layout::LineController::getQPolygon()
   QPolygonF poly;
 
   const Property& pLine = m_model->getProperty("geometry");
-  const te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(pLine);
+  const te::gm::GeometryShrPtr geometryPtr = te::layout::Property::GetValueAs<te::gm::GeometryShrPtr>(pLine);
 
-  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr);
+  te::gm::LineString const* lineString = dynamic_cast< te::gm::LineString const * > (geometryPtr.get());
   std::size_t nPoints = lineString->size();
   te::gm::Coord2D const* coordsPtr = lineString->getCoordinates();
   for (std::size_t pIdx = 0; pIdx < nPoints; ++pIdx)
@@ -123,7 +123,7 @@ QPolygonF te::layout::LineController::recalculatePolygon()
   QPolygonF poly = getQPolygon();
   QRectF polygonRect = poly.boundingRect();
 
-  if (poly.empty())
+  if (poly.empty() || !polygonRect.isValid())
   {
     return poly;
   }
@@ -175,34 +175,32 @@ bool te::layout::LineController::isGeometrySizeChange()
   return true;
 }
 
-
-
 void te::layout::LineController::setProperties(const te::layout::Properties& properties)
 {
-    Properties propertiesCopy = properties; 
+  Properties propertiesCopy = properties; 
     
-    if (propertiesCopy.contains("geometry"))
-    {
-        const Property& property = propertiesCopy.getProperty("geometry");
+  if (propertiesCopy.contains("geometry"))
+  {
+    const Property& property = propertiesCopy.getProperty("geometry");
 
-        te::gm::Geometry* geometryPtr = te::layout::Property::GetValueAs<te::gm::Geometry*>(property);
-        const te::gm::Envelope* env = geometryPtr->getMBR();
-        double width = env->getWidth();
-        double height = env->getHeight();
-        EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-        {
-            Property property(0);
-            property.setName("width");
-            property.setValue(width, dataType->getDataTypeDouble());
-            propertiesCopy.addProperty(property);
-        }
-        {
-            Property property(0);
-            property.setName("height");
-            property.setValue(height, dataType->getDataTypeDouble());
-            propertiesCopy.addProperty(property);
-        }
-    
+    te::gm::GeometryShrPtr geometryPtr = te::layout::Property::GetValueAs<te::gm::GeometryShrPtr>(property);
+    const te::gm::Envelope* env = geometryPtr->getMBR();
+    double width = env->getWidth();
+    double height = env->getHeight();
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    {
+      Property property(0);
+      property.setName("width");
+      property.setValue(width, dataType->getDataTypeDouble());
+      propertiesCopy.addProperty(property);
     }
-    AbstractItemController::setProperties(propertiesCopy);
+    {
+      Property property(0);
+      property.setName("height");
+      property.setValue(height, dataType->getDataTypeDouble());
+      propertiesCopy.addProperty(property);
+    }
+    
+  }
+  AbstractItemController::setProperties(propertiesCopy);
 }

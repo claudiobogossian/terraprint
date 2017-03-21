@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        RectangleItem();
+        RectangleItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor

@@ -29,7 +29,7 @@
 #define __TERRALIB_LAYOUT_INTERNAL_VALUE_H
 
 // TerraLib
-#include "../../core/Config.h"
+#include "Config.h"
 
 namespace te
 {
@@ -54,7 +54,7 @@ namespace te
     };
 
     template <typename T>
-    class TELAYOUTEXPORT Value : public ValueBase
+    class Value : public ValueBase
     {
     public:
       /*!

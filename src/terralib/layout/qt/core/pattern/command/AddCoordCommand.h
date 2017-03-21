@@ -18,67 +18,74 @@
  */
 
 /*!
-  \file TextGridItem.h
+  \file AddCommand.h
    
-  \brief Class daughter of te::layout::TitleItem representing a grid with cells which can be inserted texts.
+  \brief Undo/Redo for add one components.
 
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_ITEM_H 
-#define __TERRALIB_LAYOUT_INTERNAL_TEXT_GRID_ITEM_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_ADD_COORD_COMMAND_H 
+#define __TERRALIB_LAYOUT_INTERNAL_ADD_COORD_COMMAND_H
 
 // TerraLib
-#include "TextItem.h"
-#include "../../core/Config.h"
+#include "../../../../core/Config.h"
+#include "../../../../core/enum/AbstractType.h"
+#include <terralib/geometry/Point.h>
+
+// Qt
+#include <QUndoCommand>
+#include <QString>
 
 namespace te
 {
   namespace layout
   {
-    class AbstractItemController;
-    class AbstractItemModel;
-
+    class View;
     /*!
-      \brief Class that represents a matrix of texts
+      \brief Undo/Redo for add one components.
     
       \ingroup layout
-
-      \sa te::layout::TitleItem
     */
-    class TELAYOUTEXPORT TextGridItem : public TextItem
+    class TELAYOUTEXPORT AddCoordCommand : public QUndoCommand
     {
       public:
 
         /*!
           \brief Constructor
 
-          \param controller "Controller" part of MVC component
-          \param o "Model" part of MVC component
+          \param item
+          \param parent
         */
-        TextGridItem(te::layout::ItemInputProxy* itemInputProxy);
+        AddCoordCommand(View* view, const std::vector<te::gm::Point>& coords, DrawGeometries type, QUndoCommand *parent = 0);
 
         /*!
           \brief Destructor
-         */
-        virtual ~TextGridItem();
+        */
+        virtual ~AddCoordCommand();
 
         /*!
-        \brief Reimplemented from QGraphicsTextItem
+          \brief Reimplemented from QUndoCommand
         */
-        virtual void keyPressEvent(QKeyEvent * event);
+        virtual void undo();
 
-        void documentEditionFinished();
-
-        virtual void updateBlockEditionRange();
+        /*!
+          \brief Reimplemented from QUndoCommand
+        */
+        virtual void redo();
 
       protected:
 
-        virtual AbstractItemModel* createModel() const;
+        virtual QString createCommandString(const std::vector<te::gm::Point>& coords);
 
-        virtual AbstractItemController* createController() const;
+      protected:
+
+        View*                       m_view;
+        std::vector<te::gm::Point>  m_coords;
+        DrawGeometries              m_geometryType;
     };
   }
 }
 
 #endif
+

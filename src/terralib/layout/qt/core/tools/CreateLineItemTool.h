@@ -20,7 +20,7 @@
 /*!
   \file terralib/layout/qt/core/tools/CreateLineItemTool.h
 
-  \brief This class implements a concrete tool to create line item.
+  \brief This class implements a concrete tool to create line item. Drawing lines and only create the item and update with the geometry at the end.
 */
 
 #ifndef __TERRALIB_LAYOUT_INTERNAL_CREATE_LINE_ITEM_TOOL_H
@@ -37,6 +37,12 @@
 //Qt
 #include <QGraphicsItem>
 
+class QPainterPath;
+class QPointF;
+class QPolygonF;
+class QPainter;
+class QPaintDevice;
+
 namespace te
 {
   namespace layout
@@ -45,11 +51,12 @@ namespace te
     class View;
     class EnumType;
     class Properties;
+    class RenderGeometries;
 
       /*!
         \class CreateLineItemTool
 
-        \brief This class implements a concrete tool to create line in a QGraphics Item.
+        \brief This class implements a concrete tool to create line item. Drawing lines and only create the item and update with the geometry at the end.
       */
       class TELAYOUTEXPORT CreateLineItemTool : public AbstractLayoutTool
       {
@@ -71,6 +78,8 @@ namespace te
           /*! \brief Destructor. */
           ~CreateLineItemTool();
 
+          virtual void init();
+
           //@}
 
           /** @name AbstractLayoutTool Methods
@@ -88,6 +97,8 @@ namespace te
 
           bool keyPressEvent(QKeyEvent* e);
 
+          virtual void redraw();
+
           //@}
         protected:
 
@@ -95,8 +106,13 @@ namespace te
           
           virtual Properties createProperties(te::gm::LineString* lineString);
 
-          virtual Properties createProperties(const te::gm::Coord2D& coord);
+          virtual Properties createProperties(const te::gm::Coord2D& coord, double width, double height);
 
+          virtual void finalizeCreation();
+
+        protected:
+
+          RenderGeometries*           m_render;
           std::vector<te::gm::Point>  m_coords;
           QGraphicsItem*              m_item;
           EnumType*                   m_itemType;

@@ -59,7 +59,7 @@ namespace te
     {
       public:
 
-        ItemGroup();
+        ItemGroup(te::layout::ItemInputProxy* itemInputProxy);
 
         virtual ~ItemGroup();
 

@@ -46,7 +46,7 @@ namespace te
     {
     public:
 
-      LegendChildItem();
+      LegendChildItem(te::layout::ItemInputProxy* itemInputProxy);
 
       virtual ~LegendChildItem();
 

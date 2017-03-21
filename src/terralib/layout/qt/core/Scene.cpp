@@ -53,7 +53,9 @@
 #include "../../core/ContextObject.h"
 #include "../../core/WorldTransformer.h"
 #include "ItemUtils.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/Utils.h"
+
 
 // STL
 #include <algorithm>
@@ -76,6 +78,7 @@
 
 te::layout::Scene::Scene( QObject* object): 
   QGraphicsScene(object),
+  AbstractScene(),
   m_undoStack(0),
   m_align(0),
   m_moveOrResizeWatched(false),
@@ -83,7 +86,8 @@ te::layout::Scene::Scene( QObject* object):
   m_currentItemEdition(0),
   m_isEditionMode(false),
   m_context(0,0,0,0),
-  m_increasedUnprintableArea(40.)
+  m_increasedUnprintableArea(40.),
+  m_itemInputProxy(0)
 {
   m_backgroundColor = QColor(109,109,109);
   setBackgroundBrush(QBrush(m_backgroundColor));
@@ -93,6 +97,8 @@ te::layout::Scene::Scene( QObject* object):
   
   m_undoStack = new QUndoStack(this);
   connect(m_undoStack, SIGNAL(indexChanged(int)), this, SLOT(onUndoStackHasChanged()));
+
+  m_itemInputProxy = new te::layout::ItemInputProxy(this);
 }
 
 te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* object ) :
@@ -104,8 +110,10 @@ te::layout::Scene::Scene( AlignItems* align, PaperConfig* paperConfig, QObject* 
   m_currentItemEdition(0),
   m_isEditionMode(false),
   m_context(0, 0, 0, 0),  
-  m_increasedUnprintableArea(40.)
+  m_increasedUnprintableArea(40.),
+  m_itemInputProxy(0)
 {
+  m_itemInputProxy = new te::layout::ItemInputProxy(this);
 }
 
 te::layout::Scene::~Scene()
@@ -140,6 +148,8 @@ te::layout::Scene::~Scene()
       it->second = 0;
     }
   }
+
+  delete m_itemInputProxy;
 }
 
 void te::layout::Scene::insertItem(AbstractItemView* item)
@@ -149,8 +159,7 @@ void te::layout::Scene::insertItem(AbstractItemView* item)
     return;
   }
 
-  QGraphicsItem* qitem = ((QGraphicsItem*)item);
-
+  QGraphicsItem* qitem = dynamic_cast<QGraphicsItem*>(item);
   insertItem(qitem);
 }
 
@@ -920,6 +929,7 @@ void te::layout::Scene::exportItemsToImage(std::string dir)
     double scaleY = heightPixels / rectInSceneCS.height();
 
     QImage image(widthPixels, heightPixels, QImage::Format_ARGB32);
+    image.fill(Qt::white); // background
 
     QStyleOptionGraphicsItem styleOption;
     QPainter painter;
@@ -1033,7 +1043,8 @@ void te::layout::Scene::mouseDoubleClickEvent(QGraphicsSceneMouseEvent * mouseEv
   if (m_currentItemEdition && m_isEditionMode)
   {
     QPointF pt = mouseEvent->scenePos();
-    QGraphicsItem* qCurrentItem = (QGraphicsItem*)m_currentItemEdition;
+    QGraphicsItem* qCurrentItem = dynamic_cast<QGraphicsItem*>(m_currentItemEdition);
+    pt = qCurrentItem->mapFromScene(pt);
     if (qCurrentItem->contains(pt))
     {
       return; // the same item continues edition
@@ -1802,6 +1813,11 @@ void te::layout::Scene::addChangePropertiesCommandToStack(const std::map<QGraphi
   {
     m_undoStack->endMacro(); // end only one block of commands on stack
   }
+}
+
+te::layout::ItemInputProxy* te::layout::Scene::getInputItemProxy()
+{
+  return m_itemInputProxy;
 }
 
 void te::layout::Scene::changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable)

@@ -297,7 +297,7 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PDFSettingsOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ExportSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/DoubleTreeWidgetOutside.h
                                  #Base Layout
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MainLayout.h
@@ -381,14 +381,30 @@ endif()
 file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
 list(APPEND _qm_files ${translated_files})
 
-if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
-  #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
+#Creating build directory translation and copying translated files to build translation folder of terralib5_layout
   add_custom_command(
     TARGET terralib_mod_layout
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${terralib_DIR}/share/terralib/translations
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/share/terralib/translations
   )
-endif()
+  
+foreach(qm_file ${_qm_files})
+  add_custom_command(
+    TARGET terralib_mod_layout
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${qm_file} ${CMAKE_BINARY_DIR}/share/terralib/translations
+  )
+endforeach()
+  
+
+#if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
+  #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
+#  add_custom_command(
+#    TARGET terralib_mod_layout
+#    POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${terralib_DIR}/share/terralib/translations
+#  )
+#endif()
 
 install(
   FILES ${mo_input_dir}/telayout.mo

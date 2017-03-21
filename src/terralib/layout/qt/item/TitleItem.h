@@ -29,8 +29,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TITLE_ITEM_H
 
 // TerraLib
-#include "TextItem.h"
 #include "../../core/Config.h"
+
+#include "TextGridItem.h"
 
 namespace te
 {
@@ -43,7 +44,7 @@ namespace te
       \ingroup layout
       \sa te::layout::TextItem
     */
-    class TELAYOUTEXPORT TitleItem : public TextItem
+    class TELAYOUTEXPORT TitleItem : public TextGridItem
     {
       public:
 
@@ -53,18 +54,14 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        TitleItem();
+        TitleItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
          */
         virtual ~TitleItem();
 
-      protected slots:
-
-        virtual void updateGeometry( int position, int charsRemoved, int charsAdded );
-
-      protected:
+    protected:
 
         virtual AbstractItemModel* createModel() const;
 

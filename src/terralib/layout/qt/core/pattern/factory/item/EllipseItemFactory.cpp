@@ -30,7 +30,7 @@
 
 te::layout::AbstractItemView* te::layout::EllipseItemFactory::build(ItemFactoryParamsCreate params)
 {
-  EllipseItem* view = new EllipseItem();
+  EllipseItem* view = new EllipseItem(params.getItemInputProxy());
 
   const Properties& props = params.getProperties();
 

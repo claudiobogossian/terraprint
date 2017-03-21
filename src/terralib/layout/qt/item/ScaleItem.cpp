@@ -37,8 +37,8 @@
 // STL
 #include <iostream>
 
-te::layout::ScaleItem::ScaleItem()
-  : AbstractItem()
+te::layout::ScaleItem::ScaleItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
   , m_scale(0)
   , m_gapX(0)
   , m_gapY(0)

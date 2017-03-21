@@ -35,8 +35,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 // Qt
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ImageItem::ImageItem()
-  : AbstractItem()
+te::layout::ImageItem::ImageItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
 
 }

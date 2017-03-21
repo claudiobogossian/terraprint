@@ -150,6 +150,11 @@ QTextDocument* te::layout::TextGridController::createTextDocument(const te::layo
   int numRows = (int)textMatrix.size();
   int numColumns = (int)textMatrix[0].size();
 
+  if (numRows == 0 || numColumns == 0)
+  {
+    return textDocument;
+  }
+
   QTextCursor cursor(textDocument);
   cursor.movePosition(QTextCursor::Start);
 

@@ -37,8 +37,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ItemGroup::ItemGroup()
-  : AbstractItem()
+te::layout::ItemGroup::ItemGroup(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
   , m_stacksBehindParent(false)
   , m_isSubSelectionAllowed(true)
 {

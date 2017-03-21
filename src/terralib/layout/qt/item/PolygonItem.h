@@ -47,7 +47,7 @@ namespace te
     {
       public:
 
-        PolygonItem();
+        PolygonItem(te::layout::ItemInputProxy* imputItemProxy);
 
         virtual ~PolygonItem ();
 

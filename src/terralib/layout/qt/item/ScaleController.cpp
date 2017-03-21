@@ -21,14 +21,14 @@
 #include "ScaleController.h"
 #include "ScaleItem.h"
 
-#include "../../core/enum/EnumDataType.h"
-#include "../../core/enum/Enums.h"
-#include "../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../core/pattern/proxy/AbstractProxyProject.h"
-#include "../core/Value.h"
 #include "../core/Scene.h"
-#include "../../core/property/SharedProperties.h"
+#include "../../core/enum/Enums.h"
+#include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/EnumScaleType.h"
+#include "../../core/property/SharedProperties.h"
+#include "../../core/pattern/mvc/AbstractItemModel.h"
+
+
 
 // STL
 #include <algorithm>
@@ -623,19 +623,6 @@ te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properti
 
 double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit, double scale)
 {
-  //if somehow the item is invalid, we do nothing
-  ScaleItem* view = dynamic_cast<ScaleItem*>(m_view);
-  if (view == 0)
-  {
-    return 0;
-  }
-
-  if (!view->scene())
-    return 0;
-
-  Scene* sc = dynamic_cast<Scene*>(view->scene());
-  ItemUtils utils = sc->getItemUtils();
-  
   double value = 0.;
   double width = 0;
 

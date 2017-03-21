@@ -39,8 +39,8 @@
 #include <algorithm>    // std::max and std::min
 #include <cmath>
 
-te::layout::BalloonItem::BalloonItem()
-  : TextItem()
+te::layout::BalloonItem::BalloonItem(te::layout::ItemInputProxy* itemInputProxy)
+  : TextItem(itemInputProxy)
 {
 
 }

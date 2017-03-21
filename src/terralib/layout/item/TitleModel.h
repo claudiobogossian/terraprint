@@ -31,8 +31,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TITLE_MODEL_H
 
 // TerraLib
-#include "TextModel.h"
 #include "../core/Config.h"
+
+#include "TextGridModel.h"
 
 namespace te
 {
@@ -47,7 +48,7 @@ namespace te
 
       \sa te::layout::TextModel
     */
-    class TELAYOUTEXPORT TitleModel : public TextModel
+    class TELAYOUTEXPORT TitleModel : public TextGridModel
     {
       public:
 
