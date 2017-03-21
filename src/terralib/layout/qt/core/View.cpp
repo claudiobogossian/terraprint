@@ -1725,17 +1725,20 @@ QRect te::layout::View::checkToolBarPosition(QGraphicsItem* item, const QRect& r
     QPointF ptGlobal = viewport()->mapToGlobal(itemPos);
     QRectF viewportVisible = viewportVisibleRect();
     QPointF visibleCenter = viewportVisibleRectCenter();
+    double halfWidth = dockSize.width() / 2;
+    double halfHeight = dockSize.height() / 2;
 
     double y = ptGlobal.y() + dockSize.height();
+    double x1 = ptGlobal.x() - halfWidth;
+    double x2 = ptGlobal.x() + dockSize.width();
 
     // check if center of the item is on below of the viewport
     // or if center of the item is above of the viewport
-    if (y > viewportVisible.y() && y < this->size().height())
+    if (y > viewportVisible.y() && y < this->size().height()
+      && x1 > viewportVisible.x() && x2 < viewportVisible.topRight().x())
     {
       // put the toolbar in the center of the item
-      double halfWidth = dockSize.width() / 2;
-      double halfHeight = dockSize.height() / 2;
-      newRect = QRect(ptGlobal.x() - halfWidth, ptGlobal.y(), dockSize.width(), dockSize.height());
+      newRect = QRect(x1, ptGlobal.y(), dockSize.width(), dockSize.height());
     }
     else
     {
