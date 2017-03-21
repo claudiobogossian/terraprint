@@ -83,6 +83,8 @@ void te::layout::VerticalRuler::drawRuler( QGraphicsView* view, QPainter* painte
 
   paperConfig->getPaperSize(w, h);
   
+  m_originPoint = QPointF(ll.x(), ll.y());
+
   //Vertical Ruler
   QRectF rfV(QPointF(ll.x(), ll.y()), QPointF(ll.x() + m_height * zoomFactor, ur.y()));
   QRectF rfBackV(QPointF(ll.x(), ll.y()), QPointF(ll.x() + (m_cornerSize - 1.5) * zoomFactor, ur.y() - ((m_height) * zoomFactor)));

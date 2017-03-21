@@ -294,6 +294,10 @@ namespace te
         */
         virtual void makeDraftPixmapDirty(bool update = true);
 
+        QRectF viewportVisibleRect();
+
+        QPointF viewportVisibleRectCenter();
+
       public slots:
     
         /*!
@@ -498,6 +502,10 @@ namespace te
         virtual void drawDraftPixmap(QPainter * painter);
 
         virtual void resetDraftPixmap(double width, double height);
+
+        virtual QWidget* superParent(QWidget* widget);
+
+        virtual QRect checkToolBarPosition(QGraphicsItem* item, const QRect& rect);
 
       protected:
 
