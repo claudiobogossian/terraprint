@@ -336,13 +336,18 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
     zoom = previousZoom();
   }
 
-  setZoom(zoom);
+  ViewportAnchor anchor = transformationAnchor();
+  ViewportAnchor anchorResize = resizeAnchor();
 
-  if (isLimitExceeded(zoom) == false)
-  {
-    QGraphicsView::wheelEvent(event);
-  }
+  // Note that the effect of this property is noticeable 
+  // when only a part of the scene is visible (i.e., when there are scroll bars). 
+  setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+  setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+
+  setZoom(zoom);
   
+  setResizeAnchor(anchorResize);
+  setTransformationAnchor(anchor);
   setViewportUpdateMode(mode);
 }
 
