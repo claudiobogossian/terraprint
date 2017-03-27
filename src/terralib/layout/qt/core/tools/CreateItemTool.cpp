@@ -29,6 +29,7 @@
 #include "../BuildGraphicsItem.h"
 #include "../../../core/property/SharedProperties.h"
 #include "../../item/MapItem.h"
+#include "../../../core/enum/Enums.h"
 
 // Qt
 #include <QtGui/QMouseEvent>
@@ -124,15 +125,25 @@ bool te::layout::CreateItemTool::mouseReleaseEvent(QMouseEvent* e)
 
   // create a new item
   BuildGraphicsItem buildItem(sc);
-  QGraphicsItem* item = buildItem.createItem(m_itemType, coord, size.width(), size.height());
+  QGraphicsItem* item = 0;
+
+  if (m_properties.getProperties().size() > 0)
+  {
+    Properties props = m_properties;
+    addProperties(props, size, coord);
+    item = buildItem.buildItem(props);
+  }
+  else
+  {
+    item = buildItem.createItem(m_itemType, coord, size.width(), size.height());
+  }
+
   if (!item)
     return false;
 
   connectItemWithLastMapItem(item, sc);
 
   m_view->resetDefaultConfig(true);
-
-  //sc->update();
 
   return true;
 }
@@ -172,4 +183,58 @@ void te::layout::CreateItemTool::connectItemWithLastMapItem(QGraphicsItem* item,
   property.setName(sharedProps.getItemObserver());
   property.setValue(itemName, dataType->getDataTypeItemObserver());
   itemView->setProperty(property);
+}
+
+void te::layout::CreateItemTool::setProperties(const te::layout::Properties& properties)
+{
+  m_properties = properties;
+}
+
+te::layout::Properties te::layout::CreateItemTool::getProperties()
+{
+  return m_properties;
+}
+
+void te::layout::CreateItemTool::reset()
+{
+  m_properties.clear();
+}
+
+void te::layout::CreateItemTool::addProperties(te::layout::Properties& properties, const QSize& size, const te::gm::Coord2D& coord)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  QSize newSize = size;
+  te::gm::Coord2D newCoord = coord;
+
+  if(!properties.contains("x"))
+  {
+    Property property(0);
+    property.setName("x");
+    property.setValue(newCoord.getX(), dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+
+  if (!properties.contains("y"))
+  {
+    Property property(0);
+    property.setName("y");
+    property.setValue(newCoord.getY(), dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+
+  if (!properties.contains("width"))
+  {
+    Property property(0);
+    property.setName("width");
+    property.setValue(newSize.width(), dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
+
+  if (!properties.contains("height"))
+  {
+    Property property(0);
+    property.setName("height");
+    property.setValue(newSize.height(), dataType->getDataTypeDouble());
+    properties.addProperty(property);
+  }
 }
