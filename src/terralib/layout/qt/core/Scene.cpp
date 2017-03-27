@@ -871,13 +871,12 @@ bool te::layout::Scene::buildTemplate( VisualizationArea* vzArea, EnumType* type
   return true;
 }
 
-void te::layout::Scene::buildItem(te::layout::Properties props,std::string &name, bool isCopy)
+QGraphicsItem* te::layout::Scene::buildItem(const te::layout::Properties& props, std::string &name, bool isCopy, bool addUndo)
 {
   BuildGraphicsItem build(this);
-
-  build.buildItem(props, false, isCopy);
+  QGraphicsItem* item = build.buildItem(props, addUndo, isCopy);
   name = build.getNewName();
-
+  return item;
 }
 
 void te::layout::Scene::redrawSelectionMap()

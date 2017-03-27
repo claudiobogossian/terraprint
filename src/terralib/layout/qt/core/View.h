@@ -85,6 +85,7 @@ namespace te
     class ToolbarItemInside;
     class DialogItemToolbar;
     class TempDataStorageEditor;
+		class Properties;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -231,6 +232,8 @@ namespace te
         virtual void createPolygonItem();
 
         virtual void createItem(EnumType* itemType);
+
+        virtual QGraphicsItem* createItem(EnumType* itemType, const te::layout::Properties& properties);
 
         virtual ContextObject getContext();
 

@@ -370,7 +370,7 @@ namespace te
 
         Utils getUtils();
 
-        void buildItem(te::layout::Properties props, std::string &name, bool isCopy = false);
+        QGraphicsItem* buildItem(const te::layout::Properties& props, std::string &name, bool isCopy = false, bool addUndo = false);
 
         /*!
         \brief Returns the current subselected item. If there is not any subselected item, return 0.
