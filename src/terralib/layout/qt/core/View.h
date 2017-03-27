@@ -232,8 +232,14 @@ namespace te
         virtual void createPolygonItem();
 
         virtual void createItem(EnumType* itemType);
+        /*!
+          \brief Creates a new item from a set of properties, is possible check if creation tool will be used or not.
 
-        virtual QGraphicsItem* createItem(EnumType* itemType, const te::layout::Properties& properties);
+          \param itemType Type of the new item
+          \param properties set of properties
+          \param useTool if true will be used, false otherwise
+        */
+        virtual void createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool = true);
 
         virtual ContextObject getContext();
 

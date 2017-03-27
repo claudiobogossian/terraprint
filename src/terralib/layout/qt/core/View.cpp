@@ -49,6 +49,7 @@
 #include "../../core/property/SharedProperties.h"
 #include "tempDataStorage/TempDataStorageEditor.h"
 #include "tempDataStorage/TempFileInfo.h"
+#include "tools/CreateItemTool.h"
 
 #include "terralib/geometry/Envelope.h"
 #include "terralib/qt/widgets/Utils.h"
@@ -1321,12 +1322,33 @@ void te::layout::View::createItem(EnumType* itemType)
   viewport()->installEventFilter(m_currentTool);
 }
 
-QGraphicsItem* te::layout::View::createItem(EnumType* itemType, const te::layout::Properties& properties)
+void te::layout::View::createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool)
 {
-  Scene* sc = getScene();
-  std::string name = "";
-  QGraphicsItem* item = sc->buildItem(properties, name, false, true);
-  return item;
+  resetDefaultConfig();
+
+  if (useTool)
+  {
+    EnumToolType* tools = Enums::getInstance().getEnumToolType();
+
+    std::string toolName = tools->getCreateItemTool()->getName();
+    ToolFactoryParamsCreate params(this, itemType);
+
+    m_currentTool = te::layout::ToolFactory::make(toolName, params);
+
+    CreateItemTool* tool = dynamic_cast<CreateItemTool*>(m_currentTool);
+    if (tool)
+    {
+      tool->setProperties(properties);
+    }
+    setInteractive(false);
+    viewport()->installEventFilter(m_currentTool);
+  }
+  else
+  {
+    Scene* sc = getScene();
+    std::string name = "";
+    sc->buildItem(properties, name, false, true);
+  }
 }
 
 void te::layout::View::applyScale(double horizontalScale, double verticalScale)
