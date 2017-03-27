@@ -371,7 +371,9 @@ QList<QGraphicsItem*> te::layout::Scene::getListUngroupedItems(const QList<QGrap
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
     if (view == 0)
     {
-      listUngroupedItems.append(item);
+			/*It can be a map with custom items, 
+			which can be loaded into another plugin that uses layout module. 
+			It may be that in the plugin version, there is no custom item. Example: a different Legend Item. */
       continue;
     }
     
