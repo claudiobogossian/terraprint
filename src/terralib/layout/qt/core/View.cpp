@@ -1321,6 +1321,14 @@ void te::layout::View::createItem(EnumType* itemType)
   viewport()->installEventFilter(m_currentTool);
 }
 
+QGraphicsItem* te::layout::View::createItem(EnumType* itemType, const te::layout::Properties& properties)
+{
+  Scene* sc = getScene();
+  std::string name = "";
+  QGraphicsItem* item = sc->buildItem(properties, name, false, true);
+  return item;
+}
+
 void te::layout::View::applyScale(double horizontalScale, double verticalScale)
 {
   if((horizontalScale <= 0)||(verticalScale <= 0))
