@@ -606,7 +606,7 @@ void te::layout::View::paste()
     prop.updateProperty(pro_name);
     std::string newName;
 
-    nscene->buildItem(prop, newName, true);
+    nscene->buildItem(prop, newName, true, true);
 
     newNames[oldName] = newName;
   }
@@ -657,7 +657,7 @@ void te::layout::View::paste()
     prop.updateProperty(pro_name);
     std::string newName;
 
-    nscene->buildItem(prop, newName, true);
+    nscene->buildItem(prop, newName, true, true);
 
   }
   if (m_cutObject ==  false)

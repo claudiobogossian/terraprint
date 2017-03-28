@@ -69,11 +69,17 @@ void te::layout::DeleteCommand::undo()
 
   foreach( QGraphicsItem *item, m_items ) 
   {
+    AbstractItemView* obs = dynamic_cast<AbstractItemView*>(item);
+    if (!obs)
+      continue;
+
     if(item->scene() != m_scene)
     {
+      obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
       scene->insertItem(item);
       scene->removeItemStackWithoutScene(item);
       item->setSelected(true);
+      obs->setUndoEnabled(true); // set properties will generate an UndoCommand on the Stack
     }
   }
   m_scene->update();
