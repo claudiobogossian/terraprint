@@ -241,3 +241,36 @@ void te::layout::Properties::reparentProperties(const std::string& parentClass)
     it->setParent(parentClass);
   }
 }
+
+bool te::layout::Properties::equals(const Properties& properties) const
+{
+  bool result = true;
+
+  if (m_properties.size() != properties.getProperties().size())
+  {
+    return false;
+  }
+
+  for (std::vector<Property>::const_iterator it = m_properties.begin(); it != m_properties.end(); ++it)
+  {
+    Property prop = (*it);
+    std::string name = prop.getName();
+    if (properties.contains(name) == true)
+    {
+      Property otherProp = properties.getProperty(name);
+      // will also check values of the sub properties
+      if (prop.equals(otherProp) == false)
+      {
+        result = false;
+        break;
+      }
+    }
+    else
+    {
+      result = false;
+      break;
+    }
+  }
+  return result;
+}
+

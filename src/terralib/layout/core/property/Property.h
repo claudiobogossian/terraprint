@@ -195,6 +195,16 @@ namespace te
         virtual bool containsSubProperty(const std::string& name) const;
 
         virtual const te::layout::Property& getSubProperty( const std::string& name ) const;
+
+        /*!
+        \brief Checks if the values of the current property is equals of the values of the other property.
+          Will also check values of the sub properties.
+          It also checks whether the number of properties and sub-properties is equal between sets.
+
+        \param property
+        \return true if equals, false otherwise
+        */
+        virtual bool equals(const Property& property) const;
         
         /*!
           \brief Sets true if property will be used in a menu, false otherwise.

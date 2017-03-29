@@ -159,37 +159,6 @@ QString te::layout::ChangePropertyCommand::createCommandString( QGraphicsItem* i
     .arg(pos.x()).arg(pos.y());
 }
 
-bool te::layout::ChangePropertyCommand::equals( Properties props1, Properties props2 )
-{
-  bool result = true;
-
-  if(props1.getProperties().size() != props2.getProperties().size())
-    return false;
-
-  std::vector<Property> prop1 = props1.getProperties();
-  std::vector<Property> prop2 = props2.getProperties();
-
-  for(unsigned int i = 0 ; i < props1.getProperties().size() ; ++i)
-  {
-    Property proper1 = prop1[i];
-    Property proper2 = prop2[i];
-
-    if(proper1 == proper2)
-    {
-      if(proper1.getValue()->toString() == proper2.getValue()->toString())
-      {
-        continue;
-      }
-      else
-      {
-        result = false;
-        break;
-      }
-    }
-  }
-  return result;
-}
-
 bool te::layout::ChangePropertyCommand::checkItem( QGraphicsItem* item, Properties props )
 {
   if(!item)
@@ -201,7 +170,7 @@ bool te::layout::ChangePropertyCommand::checkItem( QGraphicsItem* item, Properti
     return false;
 
   const Properties& propsModel = obs->getProperties();
-  if(equals(props, propsModel))
+  if (props.equals(propsModel) == true)
     return false;
 
   obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
