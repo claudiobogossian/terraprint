@@ -32,6 +32,7 @@
 #include <QGraphicsTextItem>
 #include <QTextDocument>
 #include <QTextCursor>
+#include <QColor>
 
 te::layout::TextController::TextController(AbstractItemModel* model, AbstractItemView* view)
   : AbstractItemController(model, view)
@@ -235,5 +236,13 @@ void te::layout::TextController::refresh()
   textItem->setDocument(textDocument);
 
   AbstractItemController::refresh();
+}
+
+QColor te::layout::TextController::getCurrentTextColor()
+{
+  const te::layout::Property& pTextColor = getProperty("color");
+  const te::color::RGBAColor& textColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pTextColor);
+  QColor qTextColor(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), textColor.getAlpha());
+  return qTextColor;
 }
 

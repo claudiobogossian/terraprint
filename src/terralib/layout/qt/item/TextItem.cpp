@@ -52,6 +52,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTimer>
+#include <QColor>
 
 te::layout::TextItem::TextItem(te::layout::ItemInputProxy* itemInputProxy)
   : QObject()
@@ -161,6 +162,11 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   
   //if we are in edition mode, we must draw the cursor position and the selection
   QAbstractTextDocumentLayout::PaintContext context;
+
+  // set text color
+  QColor qTextColor = textController->getCurrentTextColor();
+  context.palette.setColor(QPalette::Text, qTextColor);
+
   if (isEditionMode())
   {
     //we define the position
