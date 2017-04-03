@@ -61,8 +61,8 @@ te::layout::LegendModel::LegendModel()
   te::color::RGBAColor fontLegendColor(0, 0, 0, 255);
   te::color::RGBAColor fontTitleColor(0, 0, 0, 255);
   double borderDisplacement = 3.;
-  double displacementBetweenSymbols = 5.;
-  double displacementBetweenTitleAndSymbols = 4.;
+  double displacementBetweenSymbols = 1.;
+  double displacementBetweenTitles = 4.;
   double displacementBetweenSymbolsAndText = 1.;
   double symbolSize = 7.;
   std::string itemName = "";
@@ -70,6 +70,7 @@ te::layout::LegendModel::LegendModel()
   int rows = 4;
   int columns = 1;
   double offset = 2.;
+  double groupingOffset = 0.;
   double lineWidth = Utils::getLineWidthMinimumValue();
 
   double width = 100.;
@@ -173,9 +174,9 @@ te::layout::LegendModel::LegendModel()
   }
   {
     Property property(0);
-    property.setName("displacement_between_title_and_symbols");
-    property.setLabel(TE_TR("Displacement Between Title And Symbols"));
-    property.setValue(displacementBetweenTitleAndSymbols, dataType->getDataTypeDouble());
+    property.setName("displacement_between_titles");
+    property.setLabel(TE_TR("Displacement Between Titles"));
+    property.setValue(displacementBetweenTitles, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   {
@@ -204,6 +205,13 @@ te::layout::LegendModel::LegendModel()
     property.setName("offset_between_columns");
     property.setLabel(TE_TR("Offset Between Columns"));
     property.setValue(offset, dataType->getDataTypeDouble());
+    prop_legend_body.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("grouping_offset_pair");
+    property.setLabel(TE_TR("Grouping Offset Pair"));
+    property.setValue(groupingOffset, dataType->getDataTypeDouble());
     prop_legend_body.addSubProperty(property);
   }
   m_properties.addProperty(prop_legend_body);
