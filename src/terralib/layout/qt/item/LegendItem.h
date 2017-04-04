@@ -121,9 +121,9 @@ namespace te
 
         virtual te::qt::widgets::Canvas* createCanvas(QRectF rectMM, te::se::Symbolizer*symbol);
         
-        virtual void drawLabel(QPainter* painter, const QPointF& point, const QFont& font, const QColor& fontColor, std::string text);
+        virtual void drawLabel(QPainter* painter, const QPointF& point, const QFont& font, const QColor& fontColor, const std::string& text);
 
-        virtual void drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers, double symbolSize);
+        virtual void drawSymbolizers(QPainter* painter, double& x1, double& y1, const std::vector<te::se::Symbolizer*>& symbolizers, double symbolSize);
 
         virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 

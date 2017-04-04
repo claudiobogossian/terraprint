@@ -672,10 +672,10 @@ void te::layout::LegendChoiceOutside::initCombo(QWidget* widget, const std::stri
   combo->blockSignals(false);
 }
 
-void te::layout::LegendChoiceOutside::addComboOptions(QComboBox* combo, std::vector<Variant> options)
+void te::layout::LegendChoiceOutside::addComboOptions(QComboBox* combo, const std::vector<Variant>& options)
 {
   QStringList list;
-  for (std::vector<Variant>::iterator it = options.begin(); it != options.end(); ++it)
+  for (std::vector<Variant>::const_iterator it = options.begin(); it != options.end(); ++it)
   {
     std::string value = (*it).toString();
     QString qValue = ItemUtils::convert2QString(value);

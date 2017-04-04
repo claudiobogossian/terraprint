@@ -203,7 +203,7 @@ void te::layout::LegendItem::drawSimple(QPainter* painter, te::map::AbstractLaye
   }
 }
 
-void te::layout::LegendItem::drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers, double symbolSize)
+void te::layout::LegendItem::drawSymbolizers(QPainter* painter, double& x1, double& y1, const std::vector<te::se::Symbolizer*>& symbolizers, double symbolSize)
 {
   foreach(te::se::Symbolizer* symbol, symbolizers)
   {
@@ -315,7 +315,7 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
   }  
 }
 
-void te::layout::LegendItem::drawLabel(QPainter* painter, const QPointF& point, const QFont& font, const QColor& fontColor, std::string text)
+void te::layout::LegendItem::drawLabel(QPainter* painter, const QPointF& point, const QFont& font, const QColor& fontColor, const std::string& text)
 {
   painter->save();
 
@@ -328,7 +328,8 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, const QPointF& point, 
   painter->setFont(font);
   painter->setBrush(fontColor);
 
-  ItemUtils::drawText(point, painter, font, text);
+  std::string newText = text;
+  ItemUtils::drawText(point, painter, font, newText);
 
   painter->restore();
 }

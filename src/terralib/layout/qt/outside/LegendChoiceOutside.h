@@ -149,7 +149,7 @@ namespace te
 
         QFont font2QFont(Font font);
 
-        virtual void addComboOptions(QComboBox* combo, std::vector<Variant> options);
+        virtual void addComboOptions(QComboBox* combo, const std::vector<Variant>& options);
 
         virtual void loadDoubleListWidget();
 
