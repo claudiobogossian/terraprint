@@ -51,7 +51,7 @@
 te::layout::LegendModel::LegendModel()
   : AbstractItemModel()
 {
-  std::string name = "";
+  std::string nameSettings = "Settings";
   std::string mapName = "";
   std::string legendBody = "";
   Font fontLegend;
@@ -92,15 +92,6 @@ te::layout::LegendModel::LegendModel()
   }
 
   {
-    Property property(0);
-    property.setName("legendChoice");
-    property.setLabel(TE_TR("Select the legend"));
-    property.setValue(name, dataType->getDataTypeLegendChoice());
-    property.setMenu(true);
-    property.setVisible(false);
-    m_properties.addProperty(property);
-  }
-  {
     Property property;
     property.setName("layers_uri");
     property.setLabel(TE_TR("URI"));
@@ -108,6 +99,15 @@ te::layout::LegendModel::LegendModel()
     property.setEditable(false);
     property.setVisible(false);
     property.setSerializable(false);
+    m_properties.addProperty(property);
+  }
+  {
+    Property property;
+    property.setName("visible_layers_uri");
+    property.setLabel(TE_TR("Visible URI"));
+    property.setValue(vString, dataType->getDataTypeStringVector());
+    property.setEditable(false);
+    property.setVisible(false);
     m_properties.addProperty(property);
   }
   // Observer pattern relationship. Associate: != 0 / Dissociate : == 0.
@@ -119,13 +119,22 @@ te::layout::LegendModel::LegendModel()
     property.setValue(itemName, dataType->getDataTypeItemObserver());
     m_properties.addProperty(property);
   }
+
+  // Legend Configuration
+  
+  Property prop_settings(0);
+  prop_settings.setName("legendChoice");
+  prop_settings.setLabel(TE_TR("Legend Settings"));
+  prop_settings.setValue(nameSettings, dataType->getDataTypeLegendChoice());
+  prop_settings.setMenu(true);
+  prop_settings.setVisible(true);  
   {
     Property property(0);
     property.setName("font_title");
     property.setLabel(TE_TR("Font Title"));
     property.setValue(fontTitle, dataType->getDataTypeFont());
     property.setMenu(true);
-    m_properties.addProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
@@ -133,22 +142,15 @@ te::layout::LegendModel::LegendModel()
     property.setLabel(TE_TR("Font Title Color"));
     property.setValue(fontTitleColor, dataType->getDataTypeColor());
     property.setMenu(true);
-    m_properties.addProperty(property);
+    prop_settings.addSubProperty(property);
   }
-
-  // Legend Configuration
-
-  Property prop_legend_body(0);
-  prop_legend_body.setName("legend_body");
-  prop_legend_body.setLabel(TE_TR("Legend Body"));
-  prop_legend_body.setValue(legendBody, dataType->getDataTypeGroup());
   {
     Property property(0);
     property.setName("font_legend");
     property.setLabel(TE_TR("Font Legend"));
     property.setValue(fontLegend, dataType->getDataTypeFont());
     property.setMenu(true);
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
@@ -156,65 +158,65 @@ te::layout::LegendModel::LegendModel()
     property.setLabel(TE_TR("Font Legend Color"));
     property.setValue(fontLegendColor, dataType->getDataTypeColor());
     property.setMenu(true);
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("border_displacement");
     property.setLabel(TE_TR("Border Displacement"));
     property.setValue(borderDisplacement, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_symbols");
     property.setLabel(TE_TR("Displacement Between Symbols"));
     property.setValue(displacementBetweenSymbols, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_titles");
     property.setLabel(TE_TR("Displacement Between Titles"));
     property.setValue(displacementBetweenTitles, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("displacement_between_symbols_and_texts");
     property.setLabel(TE_TR("Displacement Between Symbols And Texts"));
     property.setValue(displacementBetweenSymbolsAndText, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("symbol_size");
     property.setLabel(TE_TR("Symbol Size"));
     property.setValue(symbolSize, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("rows");
     property.setLabel(TE_TR("Rows"));
     property.setValue(rows, dataType->getDataTypeInt());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("offset_between_columns");
     property.setLabel(TE_TR("Offset Between Columns"));
     property.setValue(offset, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("grouping_offset_pair");
     property.setLabel(TE_TR("Grouping Offset Pair"));
     property.setValue(groupingOffset, dataType->getDataTypeDouble());
-    prop_legend_body.addSubProperty(property);
+    prop_settings.addSubProperty(property);
   }
-  m_properties.addProperty(prop_legend_body);
+  m_properties.addProperty(prop_settings);
 
   //updating properties
   {

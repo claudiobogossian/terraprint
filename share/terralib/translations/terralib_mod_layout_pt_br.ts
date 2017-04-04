@@ -1016,32 +1016,131 @@
 <context>
     <name>LegendChoice</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="14"/>
         <source>Legend Choice</source>
-        <translation>Escolha da Legenda</translation>
+        <translation type="vanished">Escolha da Legenda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="69"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="99"/>
+        <source>Connected To:</source>
+        <translation>Conectado à:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="134"/>
+        <source>Settings</source>
+        <translation>Configurações</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="87"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="93"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="144"/>
+        <source>Symbol size:</source>
+        <translation>Tamanho do Símbolo:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="231"/>
+        <source>Layer Title Color:</source>
+        <translation>Cor da fonte das camadas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="224"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="269"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="379"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="424"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="293"/>
+        <source>Rows:</source>
+        <translation>Linhas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="329"/>
+        <source>Hierarchy Font:</source>
+        <translation>Fonte dos nomes da hierarquia:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="174"/>
+        <source>Layer Title Font:</source>
+        <translation>Fonte dos nomes das camadas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="167"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="484"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="514"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="544"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="591"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="621"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="651"/>
+        <source>mm</source>
+        <translation>mm</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="386"/>
+        <source>Hierarchy Color:</source>
+        <translation>Cor da fonte da hierarquia:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="451"/>
+        <source>Displacement</source>
+        <translation>Deslocamento</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="491"/>
+        <source>Between Symbols:</source>
+        <translation>Entre símbolos:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="461"/>
+        <source>Border:</source>
+        <translation>Borda:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="521"/>
+        <source>Between Titles:</source>
+        <translation>Entre nome das camadas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="568"/>
+        <source>Between Columns:</source>
+        <translation>Entre colunas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="628"/>
+        <source>Between Symbols and Texts:</source>
+        <translation>Entre símbolos e textos:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="26"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="68"/>
+        <source>Legend Settings</source>
+        <translation>Configurações de Legenda</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="598"/>
+        <source>Between Hierarchy Pair:</source>
+        <translation>Entre o par de cada hierarquia:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="680"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="96"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="683"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="116"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="703"/>
         <source>OK</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="710"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -2065,7 +2164,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/propertyeditor/editor/ColorEditor.cpp" line="192"/>
         <source>Select Color</source>
-        <translation type="unfinished"></translation>
+        <translation>Selecionar cor</translation>
     </message>
 </context>
 <context>
@@ -2161,14 +2260,37 @@ nononon</source>
 <context>
     <name>te::layout::LegendChoiceOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="55"/>
         <source>Available Layer Legends</source>
-        <translation>Legendas Disponíveis</translation>
+        <translation type="vanished">Legendas Disponíveis</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="58"/>
         <source>Selected Layer Legends</source>
-        <translation>Legendas Selecionadas</translation>
+        <translation type="vanished">Legendas Selecionadas</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="71"/>
+        <source>Available Layer</source>
+        <translation>Camada Disponível</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="72"/>
+        <source>Selected Layer</source>
+        <translation>Camada Selecionada</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="119"/>
+        <source>Legend Settings</source>
+        <translation>Configurações de Legenda</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="119"/>
+        <source>No changes made.</source>
+        <translation>Nenhuma mudança efetuada.</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="805"/>
+        <source>Color</source>
+        <translation>Cor</translation>
     </message>
 </context>
 <context>

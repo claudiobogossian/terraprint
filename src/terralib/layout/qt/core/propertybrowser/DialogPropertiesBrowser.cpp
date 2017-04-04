@@ -571,13 +571,6 @@ void te::layout::DialogPropertiesBrowser::onShowLegendChoiceDlg()
     return;
   }
 
-  std::list<te::map::AbstractLayerPtr> listLayers = m_proxyProject->getAllLayers();
-  model->setLayers(listLayers);
-
-  std::vector<te::layout::Properties> properties;
-  properties.push_back(m_allProperties);
-  model->setPropertiesLegends(properties);
-
   legendChoice->init();
   legendChoice->show();
 }

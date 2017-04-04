@@ -27,19 +27,25 @@
 #define __TERRALIB_LAYOUT_INTERNAL_LEGEND_CHOICE_OUTSIDE_H
 
 // TerraLib
+#include "terralib/qt/widgets/utils/DoubleListWidget.h"
 #ifndef Q_MOC_RUN
 #include "../../core/pattern/mvc/AbstractOutsideView.h"
 #include "../../core/Config.h"
 #include "../../core/property/Property.h"
+#include <terralib/color/RGBAColor.h>
 #endif
-#include "DoubleTreeWidgetOutside.h"
 
 // STL
 #include <map>
 #include <memory>
+#include <list>
 
 // Qt
 #include <QDialog>
+
+class QKeyEvent;
+class QString;
+class QComboBox;
 
 namespace Ui { class LegendChoice; }
 
@@ -48,6 +54,7 @@ namespace te
   namespace layout
   {
     class AbstractOutsideController;
+    class Variant;
 
     class TELAYOUTEXPORT LegendChoiceOutside : public QDialog, public AbstractOutsideView
     {
@@ -68,32 +75,94 @@ namespace te
 
         virtual te::gm::Coord2D getPosition();
 
+        virtual Property getSavedLayers();
+
       signals:
 
         void updateProperty(Property prop);
 
         void updateProperties(std::vector<Property> props);
 
-        protected slots:
+      protected slots:
 
         void onOkPushButtonClicked();
 
         void onCancelPushButtonClicked();
 
-    protected:
+        void on_m_btnLayerTitleFont_clicked();
 
-      std::vector<std::string> intersectionLayersTitle(std::vector<std::string> output);
+        void on_m_btnHierarchyFont_clicked();
 
-    private:
+        void on_m_btnLayerTitleColor_clicked();
 
-      std::auto_ptr<Ui::LegendChoice> m_ui;
-      std::auto_ptr<DoubleTreeWidgetOutside> m_widget;
+        void on_m_btnHierarchyFontColor_clicked();
 
-      te::map::AbstractLayerPtr m_selectedLayer;  //!< Layer 
-      std::vector<std::string> m_selectedProps; //!< Selected properties related to the selected Layer
-      std::vector<std::string> m_layersOnTheRight; //!< Layers on the right in the DoubleList Widget
+        void on_m_txtSymbolSize_editingFinished();
 
-      std::list<te::map::AbstractLayerPtr> m_layersSelected; //!< Vector that will store selected layers (on the rigth DoubleList Widget)
+        void on_m_txtRows_editingFinished();
+
+        void on_m_txtDisplacementBetweenSymbols_editingFinished();
+
+        void on_m_txtDisplacementBorder_editingFinished();
+
+        void on_m_txtDisplacementBetweenTitles_editingFinished();
+
+        void on_m_txtDisplacementBetweenColumns_editingFinished();
+
+        void on_m_txtDisplacementBetweenSymbolsAndTexts_editingFinished();
+
+        void on_m_txtDisplacementHierarchyPair_editingFinished();
+
+        void on_m_cmbConnectedTo_currentIndexChanged(const QString & text);
+
+      protected:
+
+        std::vector<std::string> intersectionLayersTitle(const std::vector<std::string>& output);
+
+        virtual std::list<te::map::AbstractLayerPtr> getLayers();
+
+        virtual std::list<te::map::AbstractLayerPtr> getSelectedLayers();
+
+        virtual Property getProperty(const std::string& name);
+
+        virtual void load();
+
+        virtual void keyPressEvent(QKeyEvent * e);
+
+        void initDouble(QWidget* widget, const std::string& nameComponent);
+
+        void initCombo(QWidget* widget, const std::string& nameComponent);
+
+        void initInt(QWidget* widget, const std::string& nameComponent);
+
+        void initColor(QWidget* widget, const std::string& nameComponent);
+
+        void initTextEdit(QWidget* widget, const std::string& nameComponent, const std::string& nameFontComponent);
+
+        QString fontHTML(const Property& prop, const std::string& nameFontColorComponent);
+
+        te::color::RGBAColor configColor(QWidget* widget);
+
+        virtual Font configFont(QWidget* widget, const std::string& nameFontComponent, const std::string& nameFontColorComponent);
+
+        Font qFont2Font(QFont qFont);
+
+        QFont font2QFont(Font font);
+
+        virtual void addComboOptions(QComboBox* combo, std::vector<Variant> options);
+
+        virtual void loadDoubleListWidget();
+
+      private:
+
+        std::auto_ptr<Ui::LegendChoice> m_ui;
+        std::auto_ptr<te::qt::widgets::DoubleListWidget> m_widget;
+
+        te::map::AbstractLayerPtr m_selectedLayer;  //!< Layer 
+        std::vector<std::string> m_selectedProps; //!< Selected properties related to the selected Layer
+        std::vector<std::string> m_layersOnTheRight; //!< Layers on the right in the DoubleList Widget
+
+        std::list<te::map::AbstractLayerPtr> m_layersSelected; //!< Vector that will store selected layers (on the rigth DoubleList Widget)
     };
   }   
 }    

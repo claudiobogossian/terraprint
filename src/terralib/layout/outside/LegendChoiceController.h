@@ -28,9 +28,19 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_LEGEND_CHOICE_CONTROLLER_H 
 #define __TERRALIB_LAYOUT_INTERNAL_LEGEND_CHOICE_CONTROLLER_H
 
-// TerraLib
 #include "../core/pattern/mvc/AbstractOutsideController.h"
+#include "../core/pattern/proxy/AbstractProxyProject.h"
+#include "../qt/core/Scene.h"
 #include "../core/Config.h"
+
+// TerraLib
+#include <terralib/maptools/AbstractLayer.h>
+
+// STL
+#include <list>
+
+// Qt
+class QStringList;
 
 namespace te
 {
@@ -42,9 +52,26 @@ namespace te
     {
       public:
 
-        LegendChoiceController(AbstractOutsideModel* o);
+        LegendChoiceController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o);
 
         virtual ~LegendChoiceController();
+
+        virtual Property getProperty(std::string name);
+
+        virtual std::list<te::map::AbstractLayerPtr> getlistLayers();
+
+        virtual std::list<te::map::AbstractLayerPtr> searchLayers(const std::string& name = "");
+
+        virtual std::list<te::map::AbstractLayerPtr> getSelectedlayers();
+
+        virtual std::string searchLayerToURI(te::map::AbstractLayerPtr layer);
+
+        virtual QStringList getItemNames(const QStringList& list, const EnumType* type);
+
+      private:
+
+        Scene * m_scene;
+        AbstractProxyProject * m_proxy;
     };
   }
 }

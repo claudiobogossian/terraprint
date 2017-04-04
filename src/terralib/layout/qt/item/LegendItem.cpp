@@ -448,7 +448,7 @@ void te::layout::LegendItem::refreshLegendProperties()
   LegendController* controller = dynamic_cast<LegendController*>(getController());
   if (controller)
   {
-    m_layerList = controller->searchLayersFromURI();
+    m_layerList = controller->searchVisibleLayersFromURI();
   }
 }
 
