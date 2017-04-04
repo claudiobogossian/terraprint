@@ -31,9 +31,6 @@
 // TerraLib
 #include "../core/pattern/mvc/AbstractOutsideModel.h"
 #include "../core/Config.h"
-#include "terralib/maptools/AbstractLayer.h"
-#include "../core/property/Property.h"
-#include "../core/property/Properties.h"
 
 namespace te
 {
@@ -48,32 +45,6 @@ namespace te
       LegendChoiceModel();
 
       virtual ~LegendChoiceModel();
-
-      virtual void updateProperties(te::layout::Properties properties, bool notify = true);
-
-      virtual Properties* getProperties() const;
-
-      virtual void setPropertiesLegends(std::vector<te::layout::Properties> properties);
-
-      virtual void setLayers(std::list<te::map::AbstractLayerPtr> layers);
-
-      virtual std::list<te::map::AbstractLayerPtr> getLayers();
-
-      virtual std::list<te::map::AbstractLayerPtr> getSelectedLayers();
-
-      virtual std::vector<Property> getLayerProperties();
-
-      virtual void refresh();
-
-    protected:
-
-      virtual std::list<te::map::AbstractLayerPtr> searchLayers();
-
-      std::list<te::map::AbstractLayerPtr>  m_layers;
-      std::vector<te::layout::Properties>   m_mapProperties;
-      std::list<te::map::AbstractLayerPtr>  m_selectedLayers;
-      std::vector<Property>                 m_layerProperties;
-
     };
   }
 }

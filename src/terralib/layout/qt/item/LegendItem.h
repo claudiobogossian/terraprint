@@ -121,25 +121,27 @@ namespace te
 
         virtual te::qt::widgets::Canvas* createCanvas(QRectF rectMM, te::se::Symbolizer*symbol);
         
-        virtual void drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text);
+        virtual void drawLabel(QPainter* painter, const QPointF& point, const QFont& font, const QColor& fontColor, const std::string& text);
 
-        virtual void drawTitle(QPainter* painter, double& x1, double& y1, std::string title);
-
-        virtual void drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers);
+        virtual void drawSymbolizers(QPainter* painter, double& x1, double& y1, const std::vector<te::se::Symbolizer*>& symbolizers, double symbolSize);
 
         virtual std::string getLabel(std::string propertyName, te::map::GroupingType type, te::map::GroupingItem* item);
 
         virtual void resizeMark(te::qt::widgets::Canvas* geomCanvas, te::se::Symbolizer*symbol, int pxWidth, int pxHeight);
 
-        virtual void verticalAdjustmentBetweenPairs(double& y1, std::string label, double symbolSize);
+        virtual void verticalAdjustmentBetweenPairs(double& y1, std::string label, double symbolSize, const QFont& font);
 
-        virtual QPointF verticalLegendTextAdjustment(double x1, double y1, std::string text);
+        virtual QPointF verticalTextAdjustment(double x1, double y1, std::string text, const QFont& font);
 
         virtual QRectF verticalLegendGeomAdjustment(QRectF geom);
 
         virtual void initXY(double& x1, double& y1);
 
         virtual void verifyLimitRows(double& x1, double& y1);
+
+        virtual void drawGrouping(te::map::Grouping* grouping, QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1);
+
+        virtual void drawSimple(QPainter* painter, te::map::AbstractLayerPtr layer, const std::string& title, double& x1, double& y1, double symbolSize);
       
       protected:
 
@@ -150,12 +152,14 @@ namespace te
         double                                m_symbolSize;
         std::list<te::map::AbstractLayerPtr>  m_layerList;
         int                                   m_borderDisplacement;
-        int                                   m_dispBetweenTitleAndSymbols;
+        int                                   m_dispBetweenTitles;
         int                                   m_rows;
         int                                   m_countColumns;
         int                                   m_countRows;
         double                                m_offsetBetweenColumns;
         double                                m_penWidth;
+        double                                m_groupingOffsetPair;
+        double                                m_hierarchyFactor;
 
         QColor                                m_qFontLegendColor;
         QFont                                 m_qFontLegend;
