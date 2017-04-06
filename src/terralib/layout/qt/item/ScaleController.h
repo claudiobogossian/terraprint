@@ -86,10 +86,14 @@ namespace te
 
       protected:
 
-        virtual Property checkScaleWidthAndUnit(const Properties& properties);
+        virtual bool syncScaleWidthUnitGap(te::layout::Properties& properties);
 
-        virtual bool changeScaleWidthAfterConnection();
+        virtual bool syncScaleWidthGap(te::layout::Properties& properties);
 
+        virtual bool syncScaleUnit(te::layout::Properties& properties);
+
+        virtual bool syncScaleAndUnitGap(te::layout::Properties& properties);
+        
         virtual Property calculateScaleWidthInMM(const Properties& properties);
 
         virtual Property calculateScaleWidthInUnit(const Properties& properties);
@@ -98,7 +102,7 @@ namespace te
 
         virtual double strToUnit(std::string& strUnit);
 
-        virtual Properties checkByBreaks(const Properties& properties);
+        virtual void checkByBreaks(Properties& properties);
 
         virtual double getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit = "", double scale = 0);
     };
