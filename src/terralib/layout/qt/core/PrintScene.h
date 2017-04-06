@@ -100,7 +100,7 @@ namespace te
 
       protected:
 
-        virtual QPrinter* createPrinter();
+        virtual void initPrinter(QPrinter* printer);
 
         virtual bool renderSceneOnPrinter(QPrinter* printer);
 
