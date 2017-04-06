@@ -127,6 +127,16 @@ void te::layout::MapLayerChoiceOutside::init()
   m_widget->setInputValues(namesToInput);
   m_widget->setOutputValues(namesToOutput);
   m_widget->blockSignals(false);
+
+  m_ui->cmbScale->blockSignals(true);
+  connect(m_ui->cmbScale->lineEdit(), SIGNAL(editingFinished()), SLOT(onCmbScale_editingFinished()));
+
+  /* This enum specifies what the QComboBox should do when a new string is entered by the user. */
+  m_ui->cmbScale->setInsertPolicy(QComboBox::NoInsert);
+
+  m_ui->cmbScale->lineEdit()->setValidator(new  QDoubleValidator(this));
+
+  m_ui->cmbScale->blockSignals(false);
 }
 
 te::layout::Property te::layout::MapLayerChoiceOutside::getSavedLayers()
@@ -318,11 +328,35 @@ void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished()
 
 void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QString & text)
 {
+  changeCmbScale(text);
+}
+
+void te::layout::MapLayerChoiceOutside::onCmbScale_editingFinished()
+{
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->cmbScale->lineEdit()->isModified())
+  {
+    return;
+  }
+
+  QString text = m_ui->cmbScale->currentText();  
+  changeCmbScale(text);
+
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  m_ui->cmbScale->lineEdit()->setModified(false);
+}
+
+void te::layout::MapLayerChoiceOutside::changeCmbScale(const QString & text)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
 
   QString copyText = text;
   copyText.remove('.');
-  double inputValue = (double)copyText.remove('.').toInt();
+  double inputValue = copyText.remove('.').toDouble();
 
   if (inputValue > 0.0)
   {
@@ -331,8 +365,9 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
       std::string currentValue = boost::lexical_cast<std::string>(inputValue);
       string formatedString = formatScaleValue(currentValue);
 
-      m_ui->cmbScale->setItemText(m_ui->cmbScale->currentIndex(), ItemUtils::convert2QString(formatedString));
-      m_ui->cmbScale->setItemData(m_ui->cmbScale->currentIndex(), QVariant(inputValue));
+      QString newValue = ItemUtils::convert2QString(formatedString);
+
+      m_ui->cmbScale->setEditText(newValue);
 
       Property prop = controller->getProperty("scale");
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -350,12 +385,12 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
       QVariant selectedValue = m_ui->cmbScale->itemData(m_ui->cmbScale->currentIndex());
 
-      if (selectedValue.toDouble() == 0.0){
+      if (selectedValue.toDouble() == 0.0)
+      {
         return;
       }
 
       prop.setValue(selectedValue.toDouble(), dataType->getDataTypeDouble());
-
       emit updateWidgetProperty(prop);
     }
   }
@@ -616,23 +651,6 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox()
 
   m_ui->cmbScale->blockSignals(true);
 
-  if (controller)
-  {
-    Property initialProp = controller->getProperty("scale");
-
-    int currentScale = (int)te::layout::Property::GetValueAs<double>(initialProp);
-
-    std::string stringValue = formatScaleValue(boost::lexical_cast<std::string>(currentScale));
-
-    Property scaleValue = controller->getProperty("scale");
-
-    double dValue = te::layout::Property::GetValueAs<double>(scaleValue);
-
-    QVariant vScale = dValue;
-
-    m_ui->cmbScale->addItem(stringValue.c_str(), vScale);
-  }
-
   m_ui->cmbScale->addItem("1.000", QVariant((double)1000));
   m_ui->cmbScale->addItem("2.000", QVariant((double)2000));
   m_ui->cmbScale->addItem("2.500", QVariant((double)2500));
@@ -654,6 +672,16 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox()
   m_ui->cmbScale->addItem("25.000.000", QVariant((double)25000000));
   m_ui->cmbScale->addItem("50.000.000", QVariant((double)50000000));
   m_ui->cmbScale->addItem("100.000.000", QVariant((double)100000000));
+
+  if (controller)
+  {
+    // set current scale value
+    Property scaleProp = controller->getProperty("scale");
+    int currentScale = (int)te::layout::Property::GetValueAs<double>(scaleProp);
+    std::string stringValue = formatScaleValue(boost::lexical_cast<std::string>(currentScale));
+    QString newValue = ItemUtils::convert2QString(stringValue);
+    m_ui->cmbScale->setEditText(newValue);
+  }
 
   m_ui->cmbScale->blockSignals(false);
 }
