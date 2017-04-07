@@ -55,6 +55,7 @@ void te::layout::ExportSettingsOutside::init()
 {
   m_ui->lblDPIInformation->clear();
   m_ui->lblDPIInformation->setText("DPI: 150");
+  m_ui->lblDPIInformation->setWordWrap(true); // multiple lines, label text is wrapped where necessary at word-breaks
 
   m_ui->txtEdtFile->setEnabled(false);
   m_ui->cmbDPI->setEditable(false);
