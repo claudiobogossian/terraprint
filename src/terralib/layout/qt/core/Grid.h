@@ -108,15 +108,15 @@ namespace te
 
         virtual void calculateSuperScriptText(const QPointF& point, const QFont& font, const std::string& text, int rotate);
 
-        virtual void calculateTopTexts(const Properties& properties);
+        virtual void calculateTopTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig);
 
-        virtual void calculateBottomTexts(const Properties& properties);
+        virtual void calculateBottomTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig);
 
-        virtual void calculateLeftTexts(const Properties& properties);
+        virtual void calculateLeftTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig);
 
-        virtual void calculateRightTexts(const Properties& properties);
+        virtual void calculateRightTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig);
 
-        virtual void calculateTexts(const Properties& properties);
+        virtual void calculateTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig);
 
         virtual void configPainterForGrid(QPainter* painter, const te::layout::Properties& pGridSettings, const GridSettingsConfigProperties& settingsConfig) const;
 
