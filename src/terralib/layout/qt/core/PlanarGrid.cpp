@@ -101,7 +101,7 @@ void te::layout::PlanarGrid::initialize(const te::layout::Properties& gridSettin
     }
   }
 
-  calculateTexts(gridSettings);
+  calculateTexts(gridSettings, settingsConfig);
 
   QRectF rectGrid = m_gridLines.boundingRect();
   QRectF rectTexts = m_gridText.boundingRect();

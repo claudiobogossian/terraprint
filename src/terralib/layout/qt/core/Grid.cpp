@@ -643,9 +643,8 @@ void te::layout::Grid::calculateSuperScriptText(const QPointF& point, const QFon
 }
 
 
-void te::layout::Grid::calculateTopTexts(const Properties& properties)
+void te::layout::Grid::calculateTopTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig)
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
   const Property& pTopRotateText = properties.getProperty(settingsConfig.getTopRotateText());
   const Property& pFont = properties.getProperty(settingsConfig.getFont());
 
@@ -687,9 +686,8 @@ void te::layout::Grid::calculateTopTexts(const Properties& properties)
   }
 }
 
-void te::layout::Grid::calculateBottomTexts(const Properties& properties)
+void te::layout::Grid::calculateBottomTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig)
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
   const Property& pBottomRotateText = properties.getProperty(settingsConfig.getBottomRotateText());
   const Property& pFont = properties.getProperty(settingsConfig.getFont());
 
@@ -731,9 +729,8 @@ void te::layout::Grid::calculateBottomTexts(const Properties& properties)
   }
 }
 
-void te::layout::Grid::calculateLeftTexts(const Properties& properties)
+void te::layout::Grid::calculateLeftTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig)
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
   const Property& pLeftRotateText = properties.getProperty(settingsConfig.getLeftRotateText());
   const Property& pFont = properties.getProperty(settingsConfig.getFont());
 
@@ -777,9 +774,8 @@ void te::layout::Grid::calculateLeftTexts(const Properties& properties)
   }
 }
 
-void te::layout::Grid::calculateRightTexts(const Properties& properties)
+void te::layout::Grid::calculateRightTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig)
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
   const Property& pRightRotateText = properties.getProperty(settingsConfig.getRightRotateText());
   const Property& pFont = properties.getProperty(settingsConfig.getFont());
 
@@ -817,10 +813,8 @@ void te::layout::Grid::calculateRightTexts(const Properties& properties)
   }
 }
 
-void te::layout::Grid::calculateTexts(const Properties& properties)
+void te::layout::Grid::calculateTexts(const Properties& properties, const GridSettingsConfigProperties& settingsConfig)
 {
-  PlanarGridSettingsConfigProperties settingsConfig;
-
   const Property& pVisibleAllTexts = properties.getProperty(settingsConfig.getVisibleAllTexts());
   const Property& pLeftText = properties.getProperty(settingsConfig.getLeftText());
   const Property& pRightText = properties.getProperty(settingsConfig.getRightText());
@@ -840,25 +834,24 @@ void te::layout::Grid::calculateTexts(const Properties& properties)
 
   if(leftText == true)
   {
-    calculateLeftTexts(properties);
+    calculateLeftTexts(properties, settingsConfig);
   }
 
   if(rightText == true)
   {
-    calculateRightTexts(properties);
+    calculateRightTexts(properties, settingsConfig);
   }
 
   if(bottomText == true)
   {
-    calculateBottomTexts(properties);
+    calculateBottomTexts(properties, settingsConfig);
   }
 
   if(topText == true)
   {
-    calculateTopTexts(properties);
+    calculateTopTexts(properties, settingsConfig);
   }
 }
-
 
 void te::layout::Grid::configPainterForGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const
 {
