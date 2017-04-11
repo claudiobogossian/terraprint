@@ -35,6 +35,7 @@
 #include "PrintPreviewDialog.h"
 #include "../outside/PrintSettingsOutside.h"
 #include <terralib/qt/widgets/Utils.h>
+#include <terralib/qt/widgets/utils/ScopedCursor.h>
 
 // STL
 #include <sstream>
@@ -284,6 +285,8 @@ bool te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
 
   if(!printer)
     return result;
+
+  te::qt::widgets::ScopedCursor cursor(Qt::WaitCursor);
   
   ContextObject context = createNewContext(printer);
   QRect pageRect = printer->pageRect();
