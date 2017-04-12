@@ -92,6 +92,15 @@ namespace te
 
         virtual bool validateGaps();
 
+        /*
+        \brief Disable all sides of resize.
+
+        \param if true resize will be apply, false otherwise
+        */
+        void setResize(bool resize);
+
+      protected:
+
         double  m_scale;
         double  m_gapX;
         double  m_gapY;
