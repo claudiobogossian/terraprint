@@ -10,9 +10,17 @@ te::layout::AbstractItemView::AbstractItemView(te::layout::ItemInputProxy* itemI
   : m_controller(0)
   , m_isEditionMode(false)
   , m_subSelected(false)
-  , m_useResizePixmap(true)
   , m_undoEnabled(true)
   , m_itemInputProxy(itemInputProxy)
+  , m_useResizePixmap(true)
+  , m_isResizeTPTopRight(true)
+  , m_isResizeTPTopLeft(true)
+  , m_isResizeTPLowerRight(true)
+  , m_isResizeTPLowerLeft(true)
+  , m_isResizeTPRight(true)
+  , m_isResizeTPLeft(true)
+  , m_isResizeTPTop(true)
+  , m_isResizeTPLower(true)
 {
 
 }
@@ -123,5 +131,117 @@ bool te::layout::AbstractItemView::isUndoEnabled()
 te::layout::ItemInputProxy* te::layout::AbstractItemView::getItemInputProxy() const
 {
   return m_itemInputProxy;
+}
+
+bool te::layout::AbstractItemView::isUseResizePixmap()
+{
+  return m_useResizePixmap;
+}
+
+bool te::layout::AbstractItemView::isResizeTopRight()
+{
+  return m_isResizeTPTopRight;
+}
+
+bool te::layout::AbstractItemView::isResizeTopLeft()
+{
+  return m_isResizeTPTopLeft;
+}
+
+bool te::layout::AbstractItemView::isResizeLowerRight()
+{
+  return m_isResizeTPLowerRight;
+}
+
+bool te::layout::AbstractItemView::isResizeLowerLeft()
+{
+  return m_isResizeTPLowerLeft;
+}
+
+bool te::layout::AbstractItemView::isResizeRight()
+{
+  return m_isResizeTPRight;
+}
+
+bool te::layout::AbstractItemView::isResizeLeft()
+{
+  return m_isResizeTPLeft;
+}
+
+bool te::layout::AbstractItemView::isResizeTop()
+{
+  return m_isResizeTPTop;
+}
+
+bool te::layout::AbstractItemView::isResizeLower()
+{
+  return m_isResizeTPLower;
+}
+
+bool te::layout::AbstractItemView::canResize(const LayoutAlign& sides)
+{
+  bool result = true;
+  switch (sides)
+  {
+  case TPTopRight:
+    if (!m_isResizeTPTopRight)
+    {
+      result = false;
+    }
+    break;
+
+  case TPTopLeft:
+    if (!m_isResizeTPTopLeft)
+    {
+      result = false;
+    }
+    break;
+
+  case TPLowerRight:
+    if (!m_isResizeTPLowerRight)
+    {
+      result = false;
+    }
+    break;
+
+  case TPLowerLeft:
+    if (!m_isResizeTPLowerLeft)
+    {
+      result = false;
+    }
+    break;
+
+  case TPRight:
+    if (!m_isResizeTPRight)
+    {
+      result = false;
+    };
+    break;
+
+  case TPLeft:
+    if (!m_isResizeTPLeft)
+    {
+      result = false;
+    }
+    break;
+
+  case TPTop:
+    if (!m_isResizeTPTop)
+    {
+      result = false;
+    }
+    break;
+
+  case TPLower:
+    if (!m_isResizeTPLower)
+    {
+      result = false;
+    }
+    break;
+
+  default:
+    break;
+  }
+  return result;
 }
 

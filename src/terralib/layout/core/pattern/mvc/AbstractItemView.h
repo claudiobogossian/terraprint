@@ -149,6 +149,31 @@ namespace te
 
         virtual ItemInputProxy* getItemInputProxy() const;
 
+        bool isUseResizePixmap();
+
+        bool isResizeTopRight();
+        
+        bool isResizeTopLeft();
+        
+        bool isResizeLowerRight();
+        
+        bool isResizeLowerLeft();
+        
+        bool isResizeRight();
+        
+        bool isResizeLeft();
+        
+        bool isResizeTop();
+        
+        bool isResizeLower();
+
+        /*
+          \brief Checks whether the side can be resized 
+
+          \return if true can resize, false otherwise
+        */
+        bool canResize(const LayoutAlign& sides);
+
     protected:
 
       virtual void enterEditionMode() = 0;
@@ -172,9 +197,19 @@ namespace te
 
         bool                    m_isEditionMode;
         bool                    m_subSelected;
-        bool                    m_useResizePixmap; //!< use or not pixmap for resizing
         bool                    m_undoEnabled; // set properties will or not generate an UndoCommand on the stack
         ItemInputProxy*         m_itemInputProxy;
+
+        // Resize mode
+        bool                    m_useResizePixmap; //!< use or not pixmap for resizing
+        bool                    m_isResizeTPTopRight;
+        bool                    m_isResizeTPTopLeft;
+        bool                    m_isResizeTPLowerRight;
+        bool                    m_isResizeTPLowerLeft;
+        bool                    m_isResizeTPRight;
+        bool                    m_isResizeTPLeft;
+        bool                    m_isResizeTPTop;
+        bool                    m_isResizeTPLower;
     };
   }
 }
