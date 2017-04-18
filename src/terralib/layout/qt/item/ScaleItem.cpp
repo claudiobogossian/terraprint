@@ -45,7 +45,9 @@ te::layout::ScaleItem::ScaleItem(te::layout::ItemInputProxy* itemInputProxy)
   , m_scaleUnitGapX(0)
   , m_numberOfBreaks(0)
 {  
-  m_useResizePixmap = false;  // no use pixmap for resizing
+  m_useResizePixmap = false;
+  setResize(false); // Disable all sides of resize
+  m_isResizeTPRight = true;
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
 }
@@ -613,5 +615,17 @@ bool te::layout::ScaleItem::validateGaps()
 
   return true;
 
+}
+
+void te::layout::ScaleItem::setResize(bool resize)
+{
+  m_isResizeTPLeft = resize;
+  m_isResizeTPRight = resize;
+  m_isResizeTPTop = resize;
+  m_isResizeTPLower = resize;
+  m_isResizeTPTopLeft = resize;
+  m_isResizeTPTopRight = resize;
+  m_isResizeTPLowerLeft = resize;
+  m_isResizeTPLowerRight = resize;
 }
 

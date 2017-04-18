@@ -93,12 +93,16 @@ namespace te
         virtual bool syncScaleUnit(te::layout::Properties& properties);
 
         virtual bool syncScaleAndUnitGap(te::layout::Properties& properties);
+
+        virtual bool syncBreaksByWidth(te::layout::Properties& properties);
         
         virtual Property calculateScaleWidthInMM(const Properties& properties);
 
         virtual Property calculateScaleWidthInUnit(const Properties& properties);
 
         virtual Property calculateScaleUnit(const Properties& properties);
+        
+        virtual int calculateNewNumBreaks(const Properties& properties, double & biggerBreak);
 
         virtual double strToUnit(std::string& strUnit);
 
