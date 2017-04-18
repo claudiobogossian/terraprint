@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>407</width>
-    <height>216</height>
+    <width>409</width>
+    <height>259</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
   <property name="maximumSize">
    <size>
-    <width>407</width>
-    <height>216</height>
+    <width>409</width>
+    <height>400</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -30,8 +30,8 @@
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout_3">
-     <item>
+    <layout class="QGridLayout" name="gridLayout_8">
+     <item row="0" column="0">
       <widget class="QFrame" name="frame_2">
        <property name="styleSheet">
         <string notr="true">QWidget { background: white }</string>
@@ -88,7 +88,7 @@
        </layout>
       </widget>
      </item>
-     <item>
+     <item row="1" column="0">
       <widget class="QGroupBox" name="grpSettings">
        <property name="title">
         <string>Settings</string>
@@ -96,22 +96,22 @@
        <property name="flat">
         <bool>true</bool>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout_2">
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
-            <item>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_5">
+          <item row="0" column="0">
+           <layout class="QGridLayout" name="gridLayout_7">
+            <item row="0" column="0">
              <widget class="QLabel" name="lblDPI">
               <property name="text">
                <string>DPI:</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="1">
              <widget class="QComboBox" name="cmbDPI"/>
             </item>
-            <item>
+            <item row="0" column="2">
              <spacer name="horizontalSpacer">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -124,17 +124,17 @@
               </property>
              </spacer>
             </item>
-            <item>
+            <item row="0" column="3">
              <widget class="QLabel" name="lblFileFormat">
               <property name="text">
                <string>File Format:</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="4">
              <widget class="QComboBox" name="cmbFileFormat"/>
             </item>
-            <item>
+            <item row="0" column="5">
              <spacer name="horizontalSpacer_4">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -149,16 +149,16 @@
             </item>
            </layout>
           </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout">
-            <item>
+          <item row="1" column="0">
+           <layout class="QGridLayout" name="gridLayout_6">
+            <item row="0" column="0">
              <widget class="QLabel" name="lblFile">
               <property name="text">
                <string>File:</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="1">
              <widget class="QLineEdit" name="txtEdtFile">
               <property name="minimumSize">
                <size>
@@ -168,14 +168,14 @@
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="2">
              <widget class="QPushButton" name="pBtnSaveAs">
               <property name="text">
                <string>Save As...</string>
               </property>
              </widget>
             </item>
-            <item>
+            <item row="0" column="3">
              <spacer name="horizontalSpacer_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -190,12 +190,18 @@
             </item>
            </layout>
           </item>
-          <item>
+          <item row="2" column="0">
            <widget class="QLabel" name="lblDPIInformation">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="minimumSize">
              <size>
               <width>361</width>
-              <height>0</height>
+              <height>40</height>
              </size>
             </property>
             <property name="maximumSize">
@@ -205,7 +211,10 @@
              </size>
             </property>
             <property name="text">
-             <string>DPI Information</string>
+             <string/>
+            </property>
+            <property name="wordWrap">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
@@ -214,7 +223,7 @@
        </layout>
       </widget>
      </item>
-     <item>
+     <item row="2" column="0">
       <layout class="QGridLayout" name="gridLayout">
        <item row="0" column="0">
         <widget class="QPushButton" name="helpPushButton">
