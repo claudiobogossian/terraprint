@@ -26,7 +26,7 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_CONFIG_H
 #define __TERRALIB_LAYOUT_INTERNAL_CONFIG_H
 
-#include "terralib/core/Utils/Platform.h"
+#include "terralib/core/utils/Platform.h"
 
 #define TE_LAYOUT_MODULE_NAME "te.layout"
 
