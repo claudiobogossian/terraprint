@@ -33,6 +33,9 @@
 #include "../../../../core/enum/AbstractType.h"
 #include <terralib/geometry/Point.h>
 
+// STL
+#include <vector>
+
 // Qt
 #include <QUndoCommand>
 #include <QString>
