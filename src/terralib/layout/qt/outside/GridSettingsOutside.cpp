@@ -92,6 +92,9 @@ te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* 
   m_ui->pbPlanarLineColor->setDefault(false);
   m_ui->pbPlanarLineColor->setAutoDefault(false);
 
+  //removing this tab because it has not been implemented yet
+  m_ui->tbwSettings->removeTab(2);
+
   init();
 }
 
