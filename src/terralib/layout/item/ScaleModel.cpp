@@ -214,7 +214,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("displacementBetweenScaleAndText");
-    property.setLabel(TR_LAYOUT("Displacement Between Scale And Text"));
+    property.setLabel(TE_TR("Displacement Between Scale And Text"));
     property.setValue(displacement, dataType->getDataTypeDouble());
     property.setVisible(false);
     m_properties.addProperty(property);
