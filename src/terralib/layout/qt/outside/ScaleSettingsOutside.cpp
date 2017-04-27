@@ -29,6 +29,7 @@
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../../core/property/SharedProperties.h"
+#include "../../core/Constants.h"
 #include "ScaleSettingsController.h"
 #include "../core/ItemUtils.h"
 #include "ui_ScaleSettings.h"
@@ -52,6 +53,19 @@ te::layout::ScaleSettingsOutside::ScaleSettingsOutside(AbstractOutsideController
   m_ui->setupUi(this);
 
   init();
+
+  /* In a QLineEdit, when you click the Enter button, an editFinished signal is triggered,
+  however in a window there are buttons set as default, other events such as DynamicPropertyChange
+  are sent to these buttons, and causes QLineEdit to lose focus for a short time.
+  This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method.
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked.
+  By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
+  m_ui->helpPushButton->setDefault(false);
+  m_ui->helpPushButton->setAutoDefault(false);
+  m_ui->pBtnCancel->setDefault(false);
+  m_ui->pBtnCancel->setAutoDefault(false);
+  m_ui->pbtnFont->setDefault(false);
+  m_ui->pbtnFont->setAutoDefault(false);
 }
 
 te::layout::ScaleSettingsOutside::~ScaleSettingsOutside()
@@ -61,7 +75,11 @@ te::layout::ScaleSettingsOutside::~ScaleSettingsOutside()
 
 void te::layout::ScaleSettingsOutside::init()
 { 
-  
+  QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.9, MILLIMETER_PRECISION, this);
+  validator->setNotation(QDoubleValidator::StandardNotation);
+  m_ui->txtScaleGapX->setValidator(validator);
+  m_ui->txtScaleGapY->setValidator(validator);
+ 
 }
 
 void te::layout::ScaleSettingsOutside::load()
@@ -225,6 +243,14 @@ void te::layout::ScaleSettingsOutside::on_chkOnlyFirstAndLastValue_clicked()
 
 void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->txtScaleGapXInUnit->isModified())
+  {
+    return;
+  }
+
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
@@ -251,8 +277,6 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
       return;
     }
 
-
-
     if (unitStr == "(m)" || unitStr == "m"){
       prop.setValue(scaleGapXInUnit, dataType->getDataTypeDouble(), true, 0);
     }
@@ -262,11 +286,23 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapXInUnit_editingFinished()
 
     emit updateProperty(prop);
     initDouble(m_ui->txtScaleGapX, "scale_width_rect_gap");
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->txtScaleGapXInUnit->setModified(false);
   }
 }
 
 void te::layout::ScaleSettingsOutside::on_txtScaleGapX_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->txtScaleGapX->isModified())
+  {
+    return;
+  }
+
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
@@ -286,11 +322,23 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapX_editingFinished()
     prop.setValue(scaleGapX, dataType->getDataTypeDouble());
     emit updateProperty(prop);
     initDouble(m_ui->txtScaleGapXInUnit, "scale_in_unit_width_rect_gap");
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->txtScaleGapX->setModified(false);
   }
 }
 
 void te::layout::ScaleSettingsOutside::on_txtScaleGapY_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->txtScaleGapY->isModified())
+  {
+    return;
+  }
+
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
@@ -309,11 +357,23 @@ void te::layout::ScaleSettingsOutside::on_txtScaleGapY_editingFinished()
 
     prop.setValue(scaleGapY, dataType->getDataTypeDouble());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->txtScaleGapY->setModified(false);
   }
 }
 
 void te::layout::ScaleSettingsOutside::on_txtNumberOfBreaks_editingFinished()
 {
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->txtNumberOfBreaks->isModified())
+  {
+    return;
+  }
+
   ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
   if (controller)
   {
@@ -332,6 +392,10 @@ void te::layout::ScaleSettingsOutside::on_txtNumberOfBreaks_editingFinished()
 
     prop.setValue(numberOfBreaks, dataType->getDataTypeInt());
     emit updateProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus */
+    m_ui->txtNumberOfBreaks->setModified(false);
   }
 }
 

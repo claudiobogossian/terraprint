@@ -176,6 +176,7 @@ void te::layout::TempDataStorageEditor::verifySentinelThread()
         break;
       }
 
+      boost::mutex::scoped_lock lock(m_mutex);
       if (m_requestIOEnterAccess && m_idsDone.empty())
       {
         m_requestIOEnterAccess = false;
@@ -192,6 +193,7 @@ void te::layout::TempDataStorageEditor::verifySentinelThread()
 
 void te::layout::TempDataStorageEditor::deleteAllDoneThreads()
 {
+  boost::mutex::scoped_lock lock(m_mutex);
   if (m_idsDone.empty())
   {
     return;
@@ -224,14 +226,28 @@ void te::layout::TempDataStorageEditor::stop()
   {
     m_threadSentinel->interrupt();
     m_threadSentinel->join();
+
+    delete m_threadSentinel;
+    m_threadSentinel = 0;
   }
 
   deleteAllDoneThreads();
 
+  boost::mutex::scoped_lock lock(m_mutex);
   if (m_requestIOEnterAccess && m_idsDone.empty())
   {
     m_requestIOEnterAccess = false;
     emit requestIOEndAccess();
   }
+}
+
+te::layout::AbstractTempDataStorageInfo* te::layout::TempDataStorageEditor::getTempDataStorageInfo()
+{
+  return m_info;
+}
+
+bool te::layout::TempDataStorageEditor::deleteDataStorage()
+{
+  return m_tempDataStorage->deleteDataStorage();
 }
 

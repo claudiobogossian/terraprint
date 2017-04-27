@@ -36,7 +36,7 @@ te::layout::TextModel::TextModel()
   : AbstractItemModel()
 {
   Font font;
-  std::string text = "Text Item";
+  std::string text = "";
   te::color::RGBAColor color(0, 0, 0, 255);
   double width = 40.;
   double height = 20.;
@@ -107,7 +107,7 @@ te::layout::TextModel::TextModel()
     {
       EnumType* enumType = enumAlignmentType.getEnum(i);
 
-      if(enumType == enumAlignmentType.getNoneType() || enumType == currentAlignmentType)
+      if(enumType == enumAlignmentType.getNoneType() || enumType == currentAlignmentType || enumType == enumAlignmentType.getAlignmentJustifyType())
         continue;
 
       Variant v;

@@ -27,17 +27,22 @@
 
 // TerraLib
 #include "LegendChildItem.h"
+#include "../../item/LegendChildModel.h"
 
-te::layout::LegendChildItem::LegendChildItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::LegendChildItem::LegendChildItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {  
  
 }
 
-
 te::layout::LegendChildItem::~LegendChildItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::LegendChildItem::createModel() const
+{
+  return new LegendChildModel();
 }
 
 void te::layout::LegendChildItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )

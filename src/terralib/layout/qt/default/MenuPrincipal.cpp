@@ -66,7 +66,8 @@ te::layout::MenuPrincipal::MenuPrincipal(te::layout::View* view, QMenu* parentMe
   m_optionDockInspector("mnu_dock_inspector"),
   m_optionDockProperties("mnu_dock_properties"),
   m_optionDockToolbar("mnu_dock_toolbar"),
-  m_optionDockEditTemplate("mnu_dock_edit_template")
+  m_optionDockEditTemplate("mnu_dock_edit_template"),
+  m_optionExportAs("mnu_export_as")
 {
   init();
 }
@@ -93,19 +94,19 @@ void te::layout::MenuPrincipal::createMainMenu()
   QAction* actionNew = createAction(tr("New"), m_optionNew, "layout-new");
   m_layoutMenu->addAction(actionNew);
 
-  QAction* actionSave = createAction(tr("Update Map"), m_optionUpdate, "layout-save");
-  m_layoutMenu->addAction(actionSave);
-
   m_layoutMenu->addSeparator();
 
   QMenu* mnuImport = m_layoutMenu->addMenu(tr("Import Map"));
   QMenu* mnuExport = m_layoutMenu->addMenu(tr("Export Map"));
 
-  QAction* actionImportJSON = createAction(tr("Import Xml Map"), m_optionImportXml, "layout-import");
-  mnuImport->addAction(actionImportJSON);
+  QAction* actionImportXML = createAction(tr("Import Xml Map"), m_optionImportXml, "layout-import");
+  mnuImport->addAction(actionImportXML);
 
-  QAction* actionExportJSON = createAction(tr("Export XML Map"), m_optionExportXml, "layout-export");
-  mnuExport->addAction(actionExportJSON);
+  QAction* actionExportXML = createAction(tr("Export XML Map"), m_optionExportXml, "layout-export");
+  mnuExport->addAction(actionExportXML);
+
+  QAction* actionExportMapToSVG = createAction(tr("Export As..."), m_optionExportAs, "");
+  m_layoutMenu->addAction(actionExportMapToSVG);
 
   m_layoutMenu->addSeparator();
 
@@ -145,13 +146,15 @@ void te::layout::MenuPrincipal::onMainMenuTriggered(QAction* action)
   }
   else if(action->objectName().compare(m_optionImportXml) == 0)
   {
+    bool cancel = false;
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->importTemplate(enumTemplate->getXmlType());
+    m_view->importTemplate(enumTemplate->getXmlType(), cancel);
   }
   else if(action->objectName().compare(m_optionExportXml) == 0)
   {
+    bool cancel = false;
     te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-    m_view->exportProperties(enumTemplate->getXmlType());
+    m_view->exportTemplate(enumTemplate->getXmlType(), cancel);
   }
   else if(action->objectName().compare(m_optionPageConfig) == 0)
   {    
@@ -163,8 +166,11 @@ void te::layout::MenuPrincipal::onMainMenuTriggered(QAction* action)
   }
   else if(action->objectName().compare(m_optionExit) == 0)
   {
-    m_view->close();
     emit exit();
+  }
+  else if (action->objectName().compare(m_optionExportAs) == 0)
+  {
+    m_view->exportAs();
   }
   else if(action->objectName().compare(m_optionDockInspector) == 0)
   {

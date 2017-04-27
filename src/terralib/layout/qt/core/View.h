@@ -85,6 +85,7 @@ namespace te
     class ToolbarItemInside;
     class DialogItemToolbar;
     class TempDataStorageEditor;
+		class Properties;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -166,6 +167,11 @@ namespace te
           \brief Method that sets View object for the Print function.  
         */
         virtual void exportToPDF();
+        
+        /*!
+        \brief Method that sets View object for the Print function.
+        */
+        virtual void exportAs(const std::string& fileFormat = "");
 
         /*!
       \brief This method allows to refresh all properties of the selected item (send a signal).
@@ -207,14 +213,14 @@ namespace te
         \param type type of template. Ex .: JSON type
         \return true if exported, false otherwise
         */
-        virtual bool exportProperties(EnumType* type);
+        virtual bool exportTemplate(EnumType* type, bool & cancel);
 
         /*!
         \brief Method that import a template and build all objects. Ex.: JSON.
 
         \return true if exported, false otherwise
         */
-        virtual bool importTemplate(EnumType* type);
+        virtual bool importTemplate(EnumType* type, bool & cancel);
 
         /*!
         \brief Method that instantiates and shows the Page Setup window.
@@ -226,6 +232,14 @@ namespace te
         virtual void createPolygonItem();
 
         virtual void createItem(EnumType* itemType);
+        /*!
+          \brief Creates a new item from a set of properties, is possible check if creation tool will be used or not.
+
+          \param itemType Type of the new item
+          \param properties set of properties
+          \param useTool if true will be used, false otherwise
+        */
+        virtual void createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool = true);
 
         virtual ContextObject getContext();
 
@@ -275,7 +289,23 @@ namespace te
 
         virtual QString getTempFileName();
 
-        virtual void configLayoutWithTempFile();
+        virtual void configLayoutWithDefaultTempFilePath();
+
+        void setTempFilePath(const std::string& path);
+        
+        QPixmap* getDraftPixmap() const;
+
+        /*!
+          \brief When the tools need to draw in the pixmap, this function must be called, 
+            so the View itself will call the redraw() method of the current tool.
+
+          \param update View
+        */
+        virtual void makeDraftPixmapDirty(bool update = true);
+
+        QRectF viewportVisibleRect();
+
+        QPointF viewportVisibleRectCenter();
 
       public slots:
     
@@ -466,6 +496,26 @@ namespace te
 
         virtual bool importTempFile(EnumType* type, const QString& fullTempPath);
 
+        virtual bool zoomByKey(QKeyEvent* keyEvent);
+
+        virtual bool existDirTempFile(const QString& newPath);
+
+        virtual bool createDirToTempFile(const QString& newPath);
+
+        virtual bool loadTempFile(const QString& newPath);
+
+        virtual bool configTempFilePath(const QString& newPath);
+
+        virtual void setFullTempFilePath(const QString& newPath);
+
+        virtual void drawDraftPixmap(QPainter * painter);
+
+        virtual void resetDraftPixmap(double width, double height);
+
+        virtual QWidget* superParent(QWidget* widget);
+
+        virtual QRect checkToolBarPosition(QGraphicsItem* item, const QRect& rect);
+
       protected:
 
         VisualizationArea*                   m_visualizationArea;
@@ -480,7 +530,9 @@ namespace te
         double                               m_height;
         bool                                 m_isMoving;
         bool                                 m_updateItemPos;
-        QPixmap                              m_foreground; //!< This pixmap represents the foreground drawings and is used for double buffering
+        QPixmap                              m_foreground; //!< This pixmap represents the top foreground drawings, like rulers, and is used for double buffering
+        QPixmap*                             m_draft; //!< This pixmap represents the foreground drawings and is used for double buffering
+        bool                                 m_dirtyDraft;
         std::vector<AbstractLayoutTool*>     m_lateRemovalVec;
         bool                                 m_mouseEvent; //!< if False yet happened mouseRelease, otherwise True
         QMap<EnumType*, ToolbarItemInside*>  m_itemToolbars; //!< toolbars to be displayed when editing an item

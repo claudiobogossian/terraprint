@@ -42,49 +42,56 @@ namespace te
     {
       public:
 
-        GridSettingsConfigProperties();
-
         virtual ~GridSettingsConfigProperties();
         
-        std::string getName();
-        std::string getVisible();
-        std::string getLneHrzGap();
-        std::string getLneVrtGap();
-        std::string getInitialGridPointX();
-        std::string getInitialGridPointY();
-        std::string getStyle();
-        std::string getLineStyle();
-        std::string getLineColor();
-        std::string getLineWidth();
-        std::string getFont();
-        std::string getFontCorner();
-        std::string getTextColor();
-        std::string getVisibleAllTexts();
-        std::string getSuperscriptText();
-        std::string getLneVrtDisplacement();
-        std::string getLneHrzDisplacement();
-        std::string getBottomText();
-        std::string getLeftText();
-        std::string getRightText();
-        std::string getTopText();
-        std::string getBottomRotateText();
-        std::string getLeftRotateText();
-        std::string getRightRotateText();
-        std::string getTopRotateText();
-        std::string getCrossOffset();
-        std::string getBouderIntersections();
+        const std::string& getName() const;
+        const std::string& getVisible() const;
+        const std::string& getHorizontalLineGap() const;
+        const std::string& getVerticalLineGap() const;
+        const std::string& getHorizontalLineInitial() const;
+        const std::string& getVerticalLineInitial() const;
+        const std::string& getStyle() const;
+        const std::string& getLineStyle() const;
+        const std::string& getLineColor() const;
+        const std::string& getLineWidth() const;
+        const std::string& getFont() const;
+        const std::string& getFontCorner() const;
+        const std::string& getTextColor() const;
+        const std::string& getVisibleAllTexts() const;
+        const std::string& getSuperscriptText() const;
+        const std::string& getHorizontalLineDisplacement() const;
+        const std::string& getVerticalLineDisplacement() const;        
+        const std::string& getBottomText() const;
+        const std::string& getLeftText() const;
+        const std::string& getRightText() const;
+        const std::string& getTopText() const;
+        const std::string& getBottomRotateText() const;
+        const std::string& getLeftRotateText() const;
+        const std::string& getRightRotateText() const;
+        const std::string& getTopRotateText() const;
+        const std::string& getCrossOffset() const;
+        const std::string& getBorderIntersections() const;
+        const std::string& getGridSettings() const;
+        const std::string& getPlanarSRID() const;
               
       protected:
+
+        //! Protected constructor
+        GridSettingsConfigProperties(const std::string& prefix);
+
+      protected:
+
+        std::string m_prefix;
 
         std::string m_name;
 
         /* Grid */
 
         std::string m_visible;
-        std::string m_lneHrzGap;
-        std::string m_lneVrtGap;
-        std::string m_initialGridPointX; 
-        std::string m_initialGridPointY; 
+        std::string m_horizontalLineGap;
+        std::string m_verticalLineGap;
+        std::string m_horizontalLineInitial;
+        std::string m_verticalLineInitial;
 
         /* Just one is visible */
         std::string m_style;
@@ -102,8 +109,8 @@ namespace te
         /*Text: Advanced configuration*/
         std::string m_visibleAllTexts;
         std::string m_superscriptText;
-        std::string m_lneVrtDisplacement;
-        std::string m_lneHrzDisplacement;
+        std::string m_horizontalLineDisplacement;
+        std::string m_verticalLineDisplacement;
         std::string m_bottomText;
         std::string m_leftText;
         std::string m_rightText;
@@ -114,7 +121,9 @@ namespace te
         std::string m_topRotateText;
         std::string m_crossOffset;
 
-        std::string m_bouderIntersection;
+        std::string m_borderIntersection;
+        std::string m_gridSettings;
+        std::string m_planarSRID;
     };
   }
 }

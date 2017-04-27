@@ -48,6 +48,7 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
     /*!
     \brief Class that represents text. This object is of type QGraphicsTextItem. He is directly editable via user interaction. 
     His transformation matrix is inverted, that is, the inverse of the matrix of the scene, so its coordinate system is screen (pixel), 
@@ -72,7 +73,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        TextItem(AbstractItemController* controller);
+        TextItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -97,6 +98,10 @@ namespace te
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         /*!
         \brief Reimplemented from QGraphicsTextItem

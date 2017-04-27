@@ -40,17 +40,20 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
 
     class TELAYOUTEXPORT LegendChildItem : public AbstractItem
     {
     public:
 
-      LegendChildItem(AbstractItemController* controller);
+      LegendChildItem(te::layout::ItemInputProxy* itemInputProxy);
 
       virtual ~LegendChildItem();
 
     protected:
 
+      virtual AbstractItemModel* createModel() const;
+      
       virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
     };
   }

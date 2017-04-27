@@ -20,6 +20,7 @@
 // TerraLib
 #include "TextController.h"
 
+#include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/enum/EnumAlignmentType.h"
@@ -31,9 +32,10 @@
 #include <QGraphicsTextItem>
 #include <QTextDocument>
 #include <QTextCursor>
+#include <QColor>
 
-te::layout::TextController::TextController(AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::TextController::TextController(AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
   , m_dpiForCalculation(96.)
 {
 }
@@ -55,7 +57,27 @@ void te::layout::TextController::setProperties(const te::layout::Properties& pro
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
   Properties propertiesCopy(properties);
   
-  if (needUpdateBox(properties))
+  bool hasName = properties.contains("name");
+  bool hasText = properties.contains("text");
+  if (hasName && !hasText)
+  {
+    const Property& propName = properties.getProperty("name");
+    const Property& propText = getProperty("text");
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    std::string name = te::layout::Property::GetValueAs<std::string>(propName);
+    std::string text = te::layout::Property::GetValueAs<std::string>(propText);
+
+    if (name.compare("") != 0 && text.compare("") == 0)
+    {
+      Property propText(0);
+      propText.setName("text");
+      propText.setValue(name, dataType->getDataTypeString());
+      propertiesCopy.addProperty(propText);
+    }
+  }
+
+  if (needUpdateBox(propertiesCopy))
   {
     TextItem* textItem = dynamic_cast<TextItem*>(m_view);
     QSizeF sizeMM;
@@ -131,24 +153,28 @@ QTextDocument* te::layout::TextController::createTextDocument(const te::layout::
   QFont qFont = ItemUtils::convertToQfont(te::layout::Property::GetValueAs<Font>(pFont));
   EnumAlignmentType enumAligmentType;
   const std::string& label = pAligment.getOptionByCurrentChoice().toString();
-  EnumType* currentAligmentType = enumAligmentType.searchLabel(label);
+  EnumType* currentAligmentType = enumAligmentType.getEnum(label);
 
   QTextOption textOption;
-  if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+
+  if (currentAligmentType)
   {
-    textOption.setAlignment(Qt::AlignLeft);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
-  {
-    textOption.setAlignment(Qt::AlignRight);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
-  {
-    textOption.setAlignment(Qt::AlignCenter);
-  }
-  else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
-  {
-    textOption.setAlignment(Qt::AlignJustify);
+    if (currentAligmentType == enumAligmentType.getAlignmentLeftType())
+    {
+      textOption.setAlignment(Qt::AlignLeft);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentRightType())
+    {
+      textOption.setAlignment(Qt::AlignRight);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentCenterType())
+    {
+      textOption.setAlignment(Qt::AlignCenter);
+    }
+    else if (currentAligmentType == enumAligmentType.getAlignmentJustifyType())
+    {
+      textOption.setAlignment(Qt::AlignJustify);
+    }
   }
 
   QTextDocument* textDocument = new QTextDocument();
@@ -176,13 +202,12 @@ void te::layout::TextController::calculateSize(const te::layout::Properties& pro
   }
 
   TextItem* textItem = dynamic_cast<TextItem*>(m_view);
-  QGraphicsScene* qScene = textItem->scene();
-  if (qScene != 0)
+  ItemInputProxy* itemInputProxy = m_view->getItemInputProxy();
+  if (itemInputProxy != 0)
   {
-    Scene* myScene = dynamic_cast<Scene*>(qScene);
-    m_dpiForCalculation = myScene->getContext().getDpiX();
+    m_dpiForCalculation = itemInputProxy->getContext().getDpiX();
 
-    Utils utils = myScene->getUtils();
+    Utils utils = itemInputProxy->getUtils();
     sizeMM.setWidth(utils.pixel2mm(sizePx.width()));
     sizeMM.setHeight(utils.pixel2mm(sizePx.height()));
   }
@@ -211,5 +236,13 @@ void te::layout::TextController::refresh()
   textItem->setDocument(textDocument);
 
   AbstractItemController::refresh();
+}
+
+QColor te::layout::TextController::getCurrentTextColor()
+{
+  const te::layout::Property& pTextColor = getProperty("color");
+  const te::color::RGBAColor& textColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pTextColor);
+  QColor qTextColor(textColor.getRed(), textColor.getGreen(), textColor.getBlue(), textColor.getAlpha());
+  return qTextColor;
 }
 

@@ -21,7 +21,7 @@
   \file terralib/layout/qt/outside/MapLayerChoiceOutside.cpp
 
   \brief A dialog configure the input layer to address geocoding operation
-*/
+*/ 
 
 // TerraLib
 #include "MapLayerChoiceOutside.h"
@@ -30,6 +30,7 @@
 #include "../../outside/MapLayerChoiceModel.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractOutsideModel.h"
+#include "../../core/Constants.h"
 #include "../../core/pattern/mvc/AbstractOutsideController.h"
 #include "../core/ItemUtils.h"
 #include "ui_MapLayerChoice.h"
@@ -44,6 +45,7 @@
 #include <QGridLayout>
 #include <QMessageBox>
 #include <QString>
+#include <QKeyEvent>
 
 te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideController* controller, QWidget* parent)
   : QDialog(parent),
@@ -61,11 +63,23 @@ te::layout::MapLayerChoiceOutside::MapLayerChoiceOutside(AbstractOutsideControll
   m_widget->setLeftLabel(tr("Available Layer"));
   m_widget->setRightLabel(tr("Selected Layer"));
 
-  
-  m_ui->lneHeight->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneHeight));
-  m_ui->lneWidth->setValidator(new QDoubleValidator(0.0, 99999.999, 9, m_ui->lneWidth));
+  m_ui->cmbUnit->blockSignals(true);
   m_ui->cmbUnit->setItemData(0, QVariant("Centimeter"));
   m_ui->cmbUnit->setItemData(1, QVariant("Millimeter"));
+  m_ui->cmbUnit->blockSignals(false);
+
+  /* In a QLineEdit, when you click the Enter button, an editFinished signal is triggered, 
+  however in a window there are buttons set as default, other events such as DynamicPropertyChange 
+  are sent to these buttons, and causes QLineEdit to lose focus for a short time. 
+  This causes the editingFinished to be called 2x, since QEditLine's "lost focus" also calls this method. 
+  To prevent such calls, no button is default in this window, just as it does not become default when clicked.
+  By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
+  m_ui->pBtnOK->setDefault(false);
+  m_ui->pBtnOK->setAutoDefault(false);
+  m_ui->pBtnCancel->setDefault(false);
+  m_ui->pBtnCancel->setAutoDefault(false);
+  m_ui->helpPushButton->setDefault(false);
+  m_ui->helpPushButton->setAutoDefault(false);
 }
 
 te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
@@ -75,7 +89,6 @@ te::layout::MapLayerChoiceOutside::~MapLayerChoiceOutside()
 
 void te::layout::MapLayerChoiceOutside::init()
 {
-
   AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
   MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
   if(!model)
@@ -107,27 +120,28 @@ void te::layout::MapLayerChoiceOutside::init()
     connect(m_ui->pBtnOK, SIGNAL(clicked()), this, SLOT(onOkPushButtonPressed()));
     connect(m_ui->pBtnCancel, SIGNAL(clicked()), this, SLOT(onCancelPushButtonPressed()));
   }
-
-
+  
   namesToInput = intersectionLayersTitle(namesToOutput);
   
+  m_widget->blockSignals(true);
   m_widget->setInputValues(namesToInput);
   m_widget->setOutputValues(namesToOutput);
+  m_widget->blockSignals(false);
 
+  m_ui->cmbScale->blockSignals(true);
+  connect(m_ui->cmbScale->lineEdit(), SIGNAL(editingFinished()), SLOT(onCmbScale_editingFinished()));
+
+  /* This enum specifies what the QComboBox should do when a new string is entered by the user. */
+  m_ui->cmbScale->setInsertPolicy(QComboBox::NoInsert);
+
+  m_ui->cmbScale->lineEdit()->setValidator(new  QDoubleValidator(this));
+
+  m_ui->cmbScale->blockSignals(false);
 }
 
-
 te::layout::Property te::layout::MapLayerChoiceOutside::getSavedLayers()
-{
-  AbstractOutsideModel* abstractModel = const_cast<AbstractOutsideModel*>(m_controller->getModel());
-  MapLayerChoiceModel* model = dynamic_cast<MapLayerChoiceModel*>(abstractModel);
-  if(!model)
-  {
-    //return;
-  }
-  
+{  
   m_layersOnTheRight = m_widget->getOutputValues();
-
 
   std::list<te::map::AbstractLayerPtr> layerListMap = getLayers();//model->getLayers();
 
@@ -211,16 +225,12 @@ std::vector<std::string> te::layout::MapLayerChoiceOutside::intersectionLayersTi
       namesToInput.push_back(layer->getTitle());
     }
   }
-
   return namesToInput;
 }
 
-std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getLayers(){
-
+std::list<te::map::AbstractLayerPtr> te::layout::MapLayerChoiceOutside::getLayers()
+{
   std::list<te::map::AbstractLayerPtr> currentLayers;
-  if (!m_controller)
-    return currentLayers;
-
   MapLayerChoiceController* controllerlayers = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (!controllerlayers)
     currentLayers;
@@ -248,7 +258,15 @@ te::layout::Property te::layout::MapLayerChoiceOutside::getProperty(std::string 
   return   controller->getProperty(name);
 }
 
-void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished(){
+void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished()
+{
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->lneWidth->isModified())
+  {
+    return;
+  }
 
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
@@ -267,11 +285,23 @@ void te::layout::MapLayerChoiceOutside::on_lneWidth_editingFinished(){
     prop.setValue(widthSize, dataType->getDataTypeDouble());
 
     emit updateWidgetProperty(prop);
-  }
 
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus (the editingFinished is automatically
+    called in the "lost focus") */
+    m_ui->lneWidth->setModified(false);
+  }
 }
 
-void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
+void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished()
+{
+  /* Avoid executing unnecessary code in the editingFinished method 
+    when QLineEdit loses focus (the editingFinished is automatically 
+    called in the "lost focus") */
+  if (!m_ui->lneHeight->isModified())
+  {
+    return;
+  }
 
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller){
@@ -288,18 +318,45 @@ void te::layout::MapLayerChoiceOutside::on_lneHeight_editingFinished(){
     Property prop = controller->getProperty("height");
     prop.setValue(heightSize, dataType->getDataTypeDouble());
     emit updateWidgetProperty(prop);
+
+    /* Avoid executing unnecessary code in the editingFinished method
+    when QLineEdit loses focus (the editingFinished is automatically
+    called in the "lost focus") */
+    m_ui->lneHeight->setModified(false);
   }
 }
 
+void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QString & text)
+{
+  changeCmbScale(text);
+}
 
+void te::layout::MapLayerChoiceOutside::onCmbScale_editingFinished()
+{
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  if (!m_ui->cmbScale->lineEdit()->isModified())
+  {
+    return;
+  }
 
-void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QString & text){
+  QString text = m_ui->cmbScale->currentText();  
+  changeCmbScale(text);
 
+  /* Avoid executing unnecessary code in the editingFinished method
+  when QLineEdit loses focus (the editingFinished is automatically
+  called in the "lost focus") */
+  m_ui->cmbScale->lineEdit()->setModified(false);
+}
+
+void te::layout::MapLayerChoiceOutside::changeCmbScale(const QString & text)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
 
   QString copyText = text;
   copyText.remove('.');
-  double inputValue = (double)copyText.remove('.').toInt();
+  double inputValue = copyText.remove('.').toDouble();
 
   if (inputValue > 0.0)
   {
@@ -308,8 +365,9 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
       std::string currentValue = boost::lexical_cast<std::string>(inputValue);
       string formatedString = formatScaleValue(currentValue);
 
-      m_ui->cmbScale->setItemText(m_ui->cmbScale->currentIndex(), ItemUtils::convert2QString(formatedString));
-      m_ui->cmbScale->setItemData(m_ui->cmbScale->currentIndex(), QVariant(inputValue));
+      QString newValue = ItemUtils::convert2QString(formatedString);
+
+      m_ui->cmbScale->setEditText(newValue);
 
       Property prop = controller->getProperty("scale");
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -327,21 +385,19 @@ void te::layout::MapLayerChoiceOutside::on_cmbScale_currentIndexChanged(const QS
       EnumDataType* dataType = Enums::getInstance().getEnumDataType();
       QVariant selectedValue = m_ui->cmbScale->itemData(m_ui->cmbScale->currentIndex());
 
-      if (selectedValue.toDouble() == 0.0){
+      if (selectedValue.toDouble() == 0.0)
+      {
         return;
       }
 
       prop.setValue(selectedValue.toDouble(), dataType->getDataTypeDouble());
-
       emit updateWidgetProperty(prop);
-
     }
   }
-
 }
 
-void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QString & text){
-
+void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QString & text)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
   {
@@ -349,7 +405,6 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
     std::string mm = "Millimeter";
 
     std::string selectedUnit = ItemUtils::convert2StdString(m_ui->cmbUnit->itemData(m_ui->cmbUnit->currentIndex()).toString());
-    //std::string stdText = ItemUtils::convert2StdString(text);
 
     Property prop = controller->getProperty("size_unit");
     if (selectedUnit != prop.getOptionByCurrentChoice().convertToString())
@@ -357,18 +412,42 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
       if (selectedUnit == cm)
       {
         double cmWidth = mm2cm(m_ui->lneWidth->text().toDouble());
-        m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(cmWidth).c_str()));
+        m_ui->lneWidth->setText(QString::number(cmWidth, 'f', CENTIMETER_PRECISION));
 
         double cmHeight = mm2cm(m_ui->lneHeight->text().toDouble());
-        m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(cmHeight).c_str()));
+        m_ui->lneHeight->setText(QString::number(cmHeight, 'f', CENTIMETER_PRECISION));
+
+        QString qUnit("cm");
+
+        m_ui->lblUnitW->setText(qUnit);
+        m_ui->lblUnitH->setText(qUnit);
+
+        QDoubleValidator* validator = new QDoubleValidator(0.0, 9999999999, CENTIMETER_PRECISION, this);
+        validator->setNotation(QDoubleValidator::StandardNotation);
+
+        m_ui->lneWidth->setValidator(validator);
+        m_ui->lneHeight->setValidator(validator);
+
       }
       if (selectedUnit == mm)
       {
         double mmWidth = cm2mm(m_ui->lneWidth->text().toDouble());
-        m_ui->lneWidth->setText(QString(boost::lexical_cast<std::string>(mmWidth).c_str()));
+        m_ui->lneWidth->setText(QString::number(mmWidth, 'f', MILLIMETER_PRECISION));
 
         double mmHeight = cm2mm(m_ui->lneHeight->text().toDouble());
-        m_ui->lneHeight->setText(QString(boost::lexical_cast<std::string>(mmHeight).c_str()));
+        m_ui->lneHeight->setText(QString::number(mmHeight, 'f', MILLIMETER_PRECISION));
+
+        QString qUnit("mm");
+
+        m_ui->lblUnitW->setText(qUnit);
+        m_ui->lblUnitH->setText(qUnit);
+
+        QDoubleValidator* validator = new QDoubleValidator(0.0, 999999999.99, MILLIMETER_PRECISION, this);
+        validator->setNotation(QDoubleValidator::StandardNotation);
+
+        m_ui->lneWidth->setValidator(validator);
+        m_ui->lneHeight->setValidator(validator);
+
       }
     }
 
@@ -383,8 +462,8 @@ void te::layout::MapLayerChoiceOutside::on_cmbUnit_currentIndexChanged(const QSt
   }
 }
 
-void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked(){
-
+void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked()
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (controller)
   {
@@ -399,20 +478,48 @@ void  te::layout::MapLayerChoiceOutside::on_ckbFixedScale_clicked(){
   }
 }
 
-
-
 void te::layout::MapLayerChoiceOutside::load()
 {
-
   loadScaleCombobox();
   initDouble(m_ui->lneHeight, "height");
   initDouble(m_ui->lneWidth, "width");
   initCombo(m_ui->cmbUnit, "size_unit");
   initCombo(m_ui->cmbScale, "scale");
   initBool(m_ui->ckbFixedScale, "fixed_scale");
+  if (m_ui->cmbUnit->currentIndex() == 0)
+  {
+    QString qUnit("cm");
+    m_ui->lblUnitW->setText(qUnit);
+    m_ui->lblUnitH->setText(qUnit);
+
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 9999999999, CENTIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+    
+    m_ui->lneWidth->blockSignals(true);
+    m_ui->lneHeight->blockSignals(true);
+    m_ui->lneWidth->setValidator(validator);
+    m_ui->lneHeight->setValidator(validator);
+    m_ui->lneWidth->blockSignals(false);
+    m_ui->lneHeight->blockSignals(false);
+  }
+  else
+  {
+    QString qUnit("mm");
+    m_ui->lblUnitW->setText(qUnit);
+    m_ui->lblUnitH->setText(qUnit);
+
+    QDoubleValidator* validator = new QDoubleValidator(0.0, 9999999999, MILLIMETER_PRECISION, this);
+    validator->setNotation(QDoubleValidator::StandardNotation);
+
+    m_ui->lneWidth->blockSignals(true);
+    m_ui->lneHeight->blockSignals(true);
+    m_ui->lneWidth->setValidator(validator);
+    m_ui->lneHeight->setValidator(validator);
+    m_ui->lneWidth->blockSignals(false);
+    m_ui->lneHeight->blockSignals(false);
+  }
 
 }
-
 
 void te::layout::MapLayerChoiceOutside::onOkPushButtonPressed()
 {
@@ -433,8 +540,6 @@ void te::layout::MapLayerChoiceOutside::onCancelPushButtonPressed()
   reject();
   emit closeWidget();
 }
-
-
 
 void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string nameComponent)
 {
@@ -457,26 +562,21 @@ void te::layout::MapLayerChoiceOutside::initDouble(QWidget* widget, std::string 
   else
   {
     Property prop = controller->getProperty(nameComponent);
-    if (prop.isNull())
-    {
-      convert << 0;
-    }
-    else
-    {
-      double number = te::layout::Property::GetValueAs<double>(prop);
-      convert << number;
-    }
+    double number = te::layout::Property::GetValueAs<double>(prop);
+    convert << number;
   }
 
   QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
   if (edit)
   {
+    edit->blockSignals(true);
     edit->setText(convert.str().c_str());
+    edit->blockSignals(false);
   }
 }
 
-void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string nameComponent){
-
+void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string nameComponent)
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
   if (!controller)
     return;
@@ -487,6 +587,8 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
 
   if (!combo)
     return;
+
+  combo->blockSignals(true);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -514,7 +616,6 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
     QString qText = ItemUtils::convert2QString(txt);
 
     variant.setValue(qText);
-
   }
 
   QString value = variant.toString();
@@ -523,12 +624,10 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
   if (nameComponent == "size_unit"){
 
     index = combo->findData(variant);
-
   }
   else{
 
     index = combo->findData(variant, Qt::DisplayRole);
-
   }
 
   if (index == -1)
@@ -543,32 +642,14 @@ void te::layout::MapLayerChoiceOutside::initCombo(QWidget* widget, std::string n
   {
     combo->setCurrentIndex(index);
   }
+  combo->blockSignals(false);
 }
 
-
-
-
-void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
-
+void te::layout::MapLayerChoiceOutside::loadScaleCombobox()
+{
   MapLayerChoiceController* controller = dynamic_cast<MapLayerChoiceController*>(m_controller);
-  if (controller)
-  {
-    Property initialProp = controller->getProperty("scale");
-    if (initialProp.isNull())
-      return;
 
-    int currentScale = (int)te::layout::Property::GetValueAs<double>(initialProp);
-
-    std::string stringValue = formatScaleValue(boost::lexical_cast<std::string>(currentScale));
-
-    Property scaleValue = controller->getProperty("scale");
-
-    double dValue = te::layout::Property::GetValueAs<double>(scaleValue);
-
-    QVariant vScale = dValue;
-
-    m_ui->cmbScale->addItem(stringValue.c_str(), vScale);
-  }
+  m_ui->cmbScale->blockSignals(true);
 
   m_ui->cmbScale->addItem("1.000", QVariant((double)1000));
   m_ui->cmbScale->addItem("2.000", QVariant((double)2000));
@@ -591,18 +672,29 @@ void te::layout::MapLayerChoiceOutside::loadScaleCombobox(){
   m_ui->cmbScale->addItem("25.000.000", QVariant((double)25000000));
   m_ui->cmbScale->addItem("50.000.000", QVariant((double)50000000));
   m_ui->cmbScale->addItem("100.000.000", QVariant((double)100000000));
+
+  if (controller)
+  {
+    // set current scale value
+    Property scaleProp = controller->getProperty("scale");
+    int currentScale = (int)te::layout::Property::GetValueAs<double>(scaleProp);
+    std::string stringValue = formatScaleValue(boost::lexical_cast<std::string>(currentScale));
+    QString newValue = ItemUtils::convert2QString(stringValue);
+    m_ui->cmbScale->setEditText(newValue);
+  }
+
+  m_ui->cmbScale->blockSignals(false);
 }
 
-
-double te::layout::MapLayerChoiceOutside::mm2cm(double mmSize){
+double te::layout::MapLayerChoiceOutside::mm2cm(double mmSize)
+{
   return mmSize / 10.;
 }
 
-double  te::layout::MapLayerChoiceOutside::cm2mm(double cmSize){
+double  te::layout::MapLayerChoiceOutside::cm2mm(double cmSize)
+{
   return cmSize * 10.;
 }
-
-
 
 void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string nameComponent)
 {
@@ -611,19 +703,19 @@ void te::layout::MapLayerChoiceOutside::initBool(QWidget* widget, std::string na
     return;
 
   Property prop = controller->getProperty(nameComponent);
-  if (prop.isNull())
-    return;
 
   QCheckBox* chk = dynamic_cast<QCheckBox*>(widget);
 
   if (chk)
   {
+    chk->blockSignals(true);
     chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
+    chk->blockSignals(false);
   }
 }
 
-std::string  te::layout::MapLayerChoiceOutside::formatScaleValue(std::string inputValue){
-
+std::string  te::layout::MapLayerChoiceOutside::formatScaleValue(std::string inputValue)
+{
   string formatedValue = inputValue;
 
   string formatedString = "";
@@ -650,3 +742,18 @@ std::string  te::layout::MapLayerChoiceOutside::formatScaleValue(std::string inp
   }
   return formatedString;
 }
+
+void te::layout::MapLayerChoiceOutside::keyPressEvent(QKeyEvent * e)
+{
+  /* Qt Doc: If the user presses the Esc key in a dialog, QDialog::reject() will be called.
+  This will cause the window to close: The close event cannot be ignored. */
+  if (e->key() != Qt::Key_Escape)
+  {
+    QDialog::keyPressEvent(e);
+  }
+  else 
+  {
+    e->ignore();
+  }
+}
+

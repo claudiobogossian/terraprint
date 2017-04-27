@@ -60,7 +60,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        NorthItem(AbstractItemController* controller);
+        NorthItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -73,6 +73,8 @@ namespace te
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
         
       protected:
+
+        virtual AbstractItemModel* createModel() const;
 
         virtual void drawNorthArrow1(QPainter * painter);
         virtual void drawNorthArrow2(QPainter * painter);

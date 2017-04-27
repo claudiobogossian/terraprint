@@ -38,8 +38,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::PolygonItem::PolygonItem(AbstractItemController* controller)
-  : LineItem(controller)
+te::layout::PolygonItem::PolygonItem(te::layout::ItemInputProxy* inputItemProxy)
+  : LineItem(inputItemProxy)
 { 
   
 }
@@ -49,9 +49,19 @@ te::layout::PolygonItem::~PolygonItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::PolygonItem::createModel() const
+{
+  return new PolygonModel();
+}
+
+te::layout::AbstractItemController* te::layout::PolygonItem::createController() const
+{
+  return LineItem::createController();
+}
+
 void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  LineController* controller = dynamic_cast<LineController*>(m_controller);
+  LineController* controller = dynamic_cast<LineController*>(getController());
   if (!controller)
   {
     return;
@@ -64,8 +74,8 @@ void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGr
     return;
   }
 
-  const Property& pColor = m_controller->getProperty("contour_color");
-  const Property& pFillColor = m_controller->getProperty("fill_color");
+  const Property& pColor = this->getProperty("contour_color");
+  const Property& pFillColor = this->getProperty("fill_color");
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(pColor);
@@ -73,7 +83,7 @@ void te::layout::PolygonItem::drawItem( QPainter * painter, const QStyleOptionGr
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QBrush brush(qFillColor);

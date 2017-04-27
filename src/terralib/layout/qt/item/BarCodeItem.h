@@ -46,12 +46,17 @@ namespace te
     {
       public:
 
-        BarCodeItem(AbstractItemController* controller);
+        BarCodeItem(te::layout::ItemInputProxy* itemInputProxy);
 
         virtual ~BarCodeItem();
         
         virtual void paint( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
-                
+
+    protected:
+
+      virtual AbstractItemModel* createModel() const;
+
+      virtual AbstractItemController* createController() const;
     };
   }
 }

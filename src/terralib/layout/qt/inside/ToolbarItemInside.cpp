@@ -47,10 +47,13 @@ te::layout::ToolbarItemInside::ToolbarItemInside() :
 
 te::layout::ToolbarItemInside::~ToolbarItemInside()
 {
-  if (!m_toolbar)
+  if (m_toolbar)
   {
-    delete m_toolbar;
-    m_toolbar = 0;
+    if (!m_toolbar->parent())
+    {
+      delete m_toolbar;
+      m_toolbar = 0;
+    }
   }
 }
 
@@ -60,7 +63,7 @@ te::layout::EnumType* te::layout::ToolbarItemInside::getItemType()
   if (!m_item)
     return itemType;
 
-  itemType = m_item->getController()->getProperties().getTypeObj();
+  itemType = m_item->getProperties().getTypeObj();
   return itemType;
 }
 

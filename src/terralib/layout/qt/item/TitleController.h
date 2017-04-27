@@ -28,12 +28,9 @@
 #define __TERRALIB_LAYOUT_INTERNAL_TITLE_CONTROLLER_H
 
 // TerraLib
-#include "TextController.h"
 #include "../../core/Config.h"
 
-
-class QSizeF;
-class QTextTable;
+#include "TextGridController.h"
 
 namespace te
 {
@@ -46,7 +43,7 @@ namespace te
     \ingroup layout
     \sa te::layout::TextController1
     */
-    class TELAYOUTEXPORT TitleController : public TextController
+    class TELAYOUTEXPORT TitleController : public TextGridController
     {
       public:
 
@@ -56,29 +53,14 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        TitleController(AbstractItemModel* model);
+        TitleController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
         */ 
         virtual ~TitleController();
 
-        /*!
-          \brief Updates the view with the current configuration of the model
-          \return The new size of the view
-        */
-        virtual QSizeF updateView();
-
-        /*!
-          \brief This function will be called by the view every time the item´s text was changed
-         */
-        virtual void textChanged();
-
-    protected:
-
-      QTextTable* m_table;
-
     };
   }
 }
-#endif //__TERRALIB_LAYOUT_INTERNAL_TEXT_CONTROLLER_H
+#endif //__TERRALIB_LAYOUT_INTERNAL_TITLE_CONTROLLER_H

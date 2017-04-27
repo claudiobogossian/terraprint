@@ -64,7 +64,7 @@ namespace te
           \param objectName Object name that owns these properties
           \param type Object type that owns these properties
         */ 
-        Properties(const std::string& objectName, EnumType* type = 0, int hashCode = 0);
+        explicit Properties(const std::string& objectName, EnumType* type = 0, int hashCode = 0);
 
         /*!
           \brief Destructor
@@ -194,6 +194,16 @@ namespace te
 
         virtual void reparentProperties(const std::string& parentClass);
 
+        /*!
+        \brief Checks if the values of the current set of properties is equals of the values of the other set of properties.
+           Will also check values of the sub properties.
+           It also checks whether the number of properties and sub-properties is equal between sets.
+
+        \param properties
+        \return true if equals, false otherwise
+        */
+        virtual bool equals(const Properties& properties) const;
+        
       protected:
 
         std::vector<Property> m_properties; //!< set of properties for this object

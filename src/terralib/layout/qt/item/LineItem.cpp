@@ -27,11 +27,12 @@
 
 // TerraLib
 #include "LineItem.h"
+#include "../../item/LineModel.h"
+#include "LineController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/property/Property.h"
-#include "LineController.h"
 // STL
 #include <vector>
 
@@ -41,8 +42,8 @@
 #include <QStyleOptionGraphicsItem>
 #include <QObject>
 
-te::layout::LineItem::LineItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::LineItem::LineItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
     setFlag(QGraphicsItem::ItemClipsToShape);
 }
@@ -52,9 +53,20 @@ te::layout::LineItem::~LineItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::LineItem::createModel() const
+{
+  return new LineModel();
+}
+
+te::layout::AbstractItemController* te::layout::LineItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new LineController(model, (AbstractItemView*)this);
+}
+
 void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  LineController* controller = dynamic_cast<LineController*>(m_controller);
+  LineController* controller = dynamic_cast<LineController*>(getController());
   if (!controller)
   {
     return;
@@ -66,17 +78,18 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
     return;
   }
 
-  const Property& pColor = m_controller->getProperty("color");
+  const Property& pColor = this->getProperty("color");
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(pColor);
   QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   painter->save();
   QPen penStyle = searchStyle();
   QPen pn(qColor, lnew, penStyle.style());
   painter->setPen(pn);
+  painter->setRenderHint(QPainter::Antialiasing, true);
 
   QPainterPath path;
   path.addPolygon(poly);
@@ -88,37 +101,40 @@ void te::layout::LineItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
 QPen te::layout::LineItem::searchStyle()
 {
-  const Property& pLineStyle = m_controller->getProperty("line_style_type");
+  const Property& pLineStyle = this->getProperty("line_style_type");
   QPen penStyle;
 
   EnumLineStyleType lineStyle;
 
   const std::string& label = pLineStyle.getOptionByCurrentChoice().toString();
-  EnumType* currentLineStyle = lineStyle.searchLabel(label);
+  EnumType* currentLineStyle = lineStyle.getEnum(label);
 
-  if(currentLineStyle == lineStyle.getStyleSolid())
+  if (currentLineStyle)
   {
-    penStyle.setStyle(Qt::SolidLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDash())
-  {
-    penStyle.setStyle(Qt::DashLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDot())
-  {
-    penStyle.setStyle(Qt::DotLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDashDot())
-  {
-    penStyle.setStyle(Qt::DashDotLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleDashDotDot())
-  {
-    penStyle.setStyle(Qt::DashDotDotLine);
-  }
-  if(currentLineStyle == lineStyle.getStyleCustomDash())
-  {
-    penStyle.setStyle(Qt::CustomDashLine);
+    if (currentLineStyle == lineStyle.getStyleSolid())
+    {
+      penStyle.setStyle(Qt::SolidLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDash())
+    {
+      penStyle.setStyle(Qt::DashLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDot())
+    {
+      penStyle.setStyle(Qt::DotLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDashDot())
+    {
+      penStyle.setStyle(Qt::DashDotLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleDashDotDot())
+    {
+      penStyle.setStyle(Qt::DashDotDotLine);
+    }
+    if (currentLineStyle == lineStyle.getStyleCustomDash())
+    {
+      penStyle.setStyle(Qt::CustomDashLine);
+    }
   }
 
   return penStyle;

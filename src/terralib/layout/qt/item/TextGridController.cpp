@@ -33,8 +33,8 @@
 #include <QTextDocument>
 #include <QTextTable>
 
-te::layout::TextGridController::TextGridController(AbstractItemModel* model)
-  : TextController(model)
+te::layout::TextGridController::TextGridController(AbstractItemModel* model, AbstractItemView* view)
+  : TextController(model, view)
 {
   //here we initialize the empty text matrix
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
@@ -148,6 +148,11 @@ QTextDocument* te::layout::TextGridController::createTextDocument(const te::layo
 
   int numRows = (int)textMatrix.size();
   int numColumns = (int)textMatrix[0].size();
+
+  if (numRows == 0 || numColumns == 0)
+  {
+    return textDocument;
+  }
 
   QTextCursor cursor(textDocument);
   cursor.movePosition(QTextCursor::Start);

@@ -44,16 +44,21 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
 
     class LineItem : public AbstractItem
     {
       public:
 
-        LineItem(AbstractItemController* controller);
+        LineItem(te::layout::ItemInputProxy* itemInputProxy);
 
         virtual ~LineItem ();
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 

@@ -3,12 +3,13 @@
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/Utils.h"
 #include "../core/Scene.h"
 
-te::layout::AbstractItem::AbstractItem(AbstractItemController* controller)
+te::layout::AbstractItem::AbstractItem(te::layout::ItemInputProxy* itemInputProxy)
   : QGraphicsItem()
-  , AbstractItemView(controller)
+  , AbstractItemView(itemInputProxy)
   , m_enumSides(TPNoneSide)
   , m_currentAction(te::layout::NO_ACTION)
   , m_marginResizePrecision(5.)
@@ -38,8 +39,8 @@ QRectF te::layout::AbstractItem::boundingRect() const
   }
 
   //models stores size information in item CS. 
-  double width = te::layout::Property::GetValueAs<double>(m_controller->getProperty("width"));
-  double height = te::layout::Property::GetValueAs<double>(m_controller->getProperty("height"));
+  double width = te::layout::Property::GetValueAs<double>(this->getProperty("width"));
+  double height = te::layout::Property::GetValueAs<double>(this->getProperty("height"));
 
   QRectF boundingRect(0, 0, width, height);
   return boundingRect;
@@ -99,10 +100,11 @@ void te::layout::AbstractItem::setItemRotation(double angle)
 
 void te::layout::AbstractItem::setItemPosition(double x, double y)
 {
+  this->prepareGeometryChange();
   this->setPos(x, y);
 }
 
-void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget /*= 0 */)
+void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
   Q_UNUSED(option);
   Q_UNUSED(widget);
@@ -127,7 +129,7 @@ void te::layout::AbstractItem::paint(QPainter * painter, const QStyleOptionGraph
 
   //Draws the item
   drawItem(painter, option, widget);
-  if (m_controller->getWarningManager()->hasWarning() && (m_isPrinting == false))
+  if (getController()->getWarningManager()->hasWarning() && (m_isPrinting == false))
   {
     drawWarningAlert(painter);
   }
@@ -187,7 +189,7 @@ void te::layout::AbstractItem::drawBackground(QPainter * painter)
     return;
   }
 
-  const Property& pBackgroundColor = m_controller->getProperty("background_color");
+  const Property& pBackgroundColor = this->getProperty("background_color");
   const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pBackgroundColor);
   QColor qBackgroundColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
@@ -213,13 +215,13 @@ void te::layout::AbstractItem::drawFrame(QPainter * painter)
     return;
   }
 
-  if (te::layout::Property::GetValueAs<bool>(m_controller->getProperty("show_frame")) == false)
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_frame")) == false)
   {
     return;
   }
 
-  const Property& pFrameColor = m_controller->getProperty("frame_color");
-  const Property& pFrameThickness = m_controller->getProperty("frame_thickness");
+  const Property& pFrameColor = this->getProperty("frame_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
   const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
   double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
@@ -247,11 +249,16 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
     return;
   }
 
-  AbstractScene* myScene = this->getScene();
-  te::layout::Utils utils = myScene->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return;
+  }
+
+  te::layout::Utils utils = itemInputProxy->getUtils();
 
   //we need to initialize the size of the pen. To do this, we convert the expeted size in Pixels to MM. We also consider the zoom factor
-  int zoom = myScene->getContext().getZoom();
+  int zoom = itemInputProxy->getContext().getZoom();
   double zoomFactor = zoom / 100.;
 
   double penWidthSelectionMM = utils.pixel2mm(m_selectionLineWidthPixels) / zoomFactor;
@@ -268,7 +275,7 @@ void te::layout::AbstractItem::drawSelection(QPainter* painter)
   //if the item is not resizable, or
   //if the rect is too small to fit two hot points in the same axis plus a gap between them, we do not draw the hot points
   bool drawHotPoints = true;
-  const Property& pResizable = m_controller->getProperty("resizable");
+  const Property& pResizable = this->getProperty("resizable");
   if (te::layout::Property::GetValueAs<bool>(pResizable) == false)
   {
     drawHotPoints = false;
@@ -328,10 +335,15 @@ void te::layout::AbstractItem::drawEdition(QPainter* painter)
     return;
   }
 
-  AbstractScene* myScene = this->getScene();
-  te::layout::Utils utils = myScene->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return;
+  }
+  
+  te::layout::Utils utils = itemInputProxy->getUtils();
 
-  int zoom = myScene->getContext().getZoom();
+  int zoom = itemInputProxy->getContext().getZoom();
   double zoomFactor = zoom / 100.;
 
   double penWidthSelectionMM = utils.pixel2mm(m_selectionLineWidthPixels) / zoomFactor;
@@ -366,16 +378,10 @@ QRectF te::layout::AbstractItem::qRectToQPolygonMap(QRectF rect)
 
 QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant & value)
 {
-  if (change == QGraphicsItem::ItemPositionHasChanged)
+  if (change == QGraphicsItem::ItemSceneHasChanged)
   {
-    if (m_currentAction == te::layout::NO_ACTION)
-    {
-      m_controller->itemPositionChanged(this->pos().x(), this->pos().y());
-    }
-  }
-  else if (change == QGraphicsItem::ItemZValueHasChanged)
-  {
-    m_controller->itemZValueChanged(this->zValue());
+    Scene* myScene = dynamic_cast<Scene*>(this->scene());
+    getController()->sceneHasChanged(myScene);
   }
 
   return QGraphicsItem::itemChange(change, value);
@@ -383,7 +389,7 @@ QVariant te::layout::AbstractItem::itemChange(QGraphicsItem::GraphicsItemChange 
 
 void te::layout::AbstractItem::hoverMoveEvent(QGraphicsSceneHoverEvent * event)
 {
-  if (isEditionMode() == false && te::layout::Property::GetValueAs<bool>(m_controller->getProperty("resizable")))
+  if (isEditionMode() == false && te::layout::Property::GetValueAs<bool>(this->getProperty("resizable")))
   {
     if (isZoomAdequateForResize())
     {
@@ -487,12 +493,17 @@ void te::layout::AbstractItem::drawWarningAlert(QPainter * painter)
 
 bool te::layout::AbstractItem::isZoomAdequateForResize() const
 {
-  AbstractScene* myScene = this->getScene();
-  te::layout::Utils utils = myScene->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    throw te::common::Exception("The scene is invalid in AbstractItem::isZoomAdequateForResize");
+  }
+
+  te::layout::Utils utils = itemInputProxy->getUtils();
 
   //We convert the expeted size in Pixels to MM. We also consider the zoom factor
   QRectF boxMM = this->boundingRect();
-  int zoom = myScene->getContext().getZoom();
+  int zoom = itemInputProxy->getContext().getZoom();
   double zoomFactor = zoom / 100.;
   double hotPointSizeMM = utils.pixel2mm(m_hotPointSizePixels) / zoomFactor;    
   double minItemSizeMM = hotPointSizeMM * 4;
@@ -508,12 +519,17 @@ bool te::layout::AbstractItem::isZoomAdequateForResize() const
 
 bool te::layout::AbstractItem::isZoomAdequateForRotation() const
 {
-  AbstractScene* myScene = this->getScene();
-  te::layout::Utils utils = myScene->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return false;
+  }
+
+  te::layout::Utils utils = itemInputProxy->getUtils();
 
   //We convert the expeted size in Pixels to MM. We also consider the zoom factor
   QRectF boxMM = this->boundingRect();
-  int zoom = myScene->getContext().getZoom();
+  int zoom = itemInputProxy->getContext().getZoom();
   double zoomFactor = zoom / 100.;
   double rotationSizeMM = utils.pixel2mm(m_rotationHotPointSizePixels) / zoomFactor;
   double minItemSizeMM = rotationSizeMM * 3;
@@ -527,8 +543,7 @@ bool te::layout::AbstractItem::isZoomAdequateForRotation() const
   return false;
 }
 
-
-void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const double& y/*, QPainter * painter*/)
+void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const double& y)
 {
   QRectF rectAdjusted = boundingRect();
   QRectF remapRect = qRectToQPolygonMap(rectAdjusted);
@@ -547,7 +562,7 @@ void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const d
 
   QPoint tipPoint = QCursor::pos();
 
-  std::vector<std::string> warningVect = m_controller->getWarningManager()->getWarnings();
+  std::vector<std::string> warningVect = getController()->getWarningManager()->getWarnings();
 
   std::string warningsMsg = "";
 
@@ -573,11 +588,16 @@ void te::layout::AbstractItem::checkTouchesWarningAlert(const double& x, const d
 
 bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double& y)
 {
-  AbstractScene* myScene = this->getScene();
-  te::layout::Utils utils = myScene->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return false;
+  }
+
+  te::layout::Utils utils = itemInputProxy->getUtils();
 
   //we need to initialize the size of the pen. To do this, we convert the expeted size in Pixels to MM. We also consider the zoom factor
-  int zoom = myScene->getContext().getZoom();
+  int zoom = itemInputProxy->getContext().getZoom();
   double zoomFactor = zoom / 100.;
 
   double hotPointSizeMM = utils.pixel2mm(m_hotPointSizePixels) / zoomFactor;
@@ -632,7 +652,7 @@ bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double&
   }
   else
   {
-    const Property& pKeepAspect = m_controller->getProperty("keep_aspect");
+    const Property& pKeepAspect = this->getProperty("keep_aspect");
     bool keepAspect = te::layout::Property::GetValueAs<bool>(pKeepAspect);
     if (keepAspect == false)
     {
@@ -663,19 +683,31 @@ bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double&
   {
     return false;
   }
+  else
+  {
+    if (!canResize(m_enumSides))
+    {
+      m_enumSides = TPNoneSide;
+      return false;
+    }
+  }
 
   return true;
 }
-
 
 bool te::layout::AbstractItem::checkRotationArea(const double& x, const double& y)
 {
   QRectF boxMM = this->boundingRect();
 
-  AbstractScene* myScene = this->getScene();
-  Utils utils = this->getScene()->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return false;
+  }
 
-  int zoom = myScene->getContext().getZoom();
+  Utils utils = itemInputProxy->getUtils();
+
+  int zoom = itemInputProxy->getContext().getZoom();
   double zoomFactor = zoom / 100.;
 
   double rotationHotPointSizeMM = utils.pixel2mm(m_rotationHotPointSizePixels) / zoomFactor;
@@ -696,8 +728,14 @@ bool te::layout::AbstractItem::checkRotationArea(const double& x, const double& 
 
 void te::layout::AbstractItem::mousePressEvent(QGraphicsSceneMouseEvent * event)
 {
+  if (isEditionMode() == true)
+  {
+    QGraphicsItem::mousePressEvent(event);
+    return;
+  }
+
   //checks if the item is resizable.
-  const Property& property = m_controller->getProperty("resizable");
+  const Property& property = this->getProperty("resizable");
   if (te::layout::Property::GetValueAs<bool>(property) == true && isZoomAdequateForResize())
   {
     //If so, checks if the resize operation must be started
@@ -727,6 +765,7 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 {
   if (isEditionMode() == true)
   {
+    QGraphicsItem::mouseMoveEvent(event);
     return;
   }
 
@@ -735,7 +774,7 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
     this->setOpacity(0.5);
     m_finalCoord = event->pos();
     this->prepareGeometryChange();
-    m_rect = m_controller->calculateResize(m_enumSides, m_initialCoord, m_finalCoord);
+    m_rect = getController()->calculateResize(m_enumSides, m_initialCoord, m_finalCoord);
 
     QGraphicsScene* scene = this->scene();
     QGraphicsView* view = scene->views().first();
@@ -749,7 +788,6 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
     QPoint tipPoint = QCursor::pos();
     QToolTip::showText(tipPoint, txt, view);
-
   }
   else if (m_currentAction == te::layout::ROTATION_ACTION)
   {
@@ -787,25 +825,33 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
 void te::layout::AbstractItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * event)
 {
+  if (isEditionMode() == true)
+  {
+    QGraphicsItem::mouseReleaseEvent(event);
+    return;
+  }
+
   if (m_currentAction == te::layout::RESIZE_ACTION)
   {
     m_currentAction = te::layout::NO_ACTION;
     m_finalCoord = event->pos();
-    m_controller->resize(m_enumSides, m_initialCoord, m_finalCoord);
+    this->prepareGeometryChange();
+    getController()->resize(m_enumSides, m_initialCoord, m_finalCoord);
+    m_enumSides = TPNoneSide;
     this->setOpacity(1.);
   }
   else if (m_currentAction == te::layout::MOVE_ACTION)
   {
     m_currentAction = te::layout::NO_ACTION;
     this->setOpacity(1.);
-    m_controller->itemPositionChanged(this->pos().x(), this->pos().y());
+    getController()->itemPositionChanged(this->pos().x(), this->pos().y());
   }
   else if (m_currentAction == te::layout::ROTATION_ACTION)
   {
     m_currentAction = te::layout::NO_ACTION;
 
     double rotation = getItemRotation();
-    m_controller->rotated(rotation);
+    getController()->rotated(rotation);
   }
 
   QGraphicsItem::mouseReleaseEvent(event);
@@ -821,7 +867,13 @@ void te::layout::AbstractItem::drawItemResized(QPainter * painter, const QStyleO
 
 void te::layout::AbstractItem::setPixmap()
 {
-  Utils utils = this->getScene()->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return;
+  }
+
+  Utils utils = itemInputProxy->getUtils();
 
   QRectF itemBounding = boundingRect();
   te::gm::Envelope box(0, 0, itemBounding.width(), itemBounding.height());
@@ -874,4 +926,17 @@ te::layout::ItemAction te::layout::AbstractItem::getCurrentAction()
 void te::layout::AbstractItem::prepareGeometryChange()
 {
   QGraphicsItem::prepareGeometryChange();
+}
+
+void te::layout::AbstractItem::addUndoCommandToStack(QUndoCommand* command)
+{
+  te::layout::AbstractScene* absScene = getScene();
+  if (absScene)
+  {
+    Scene* scene = dynamic_cast<Scene*>(absScene);
+    if (scene)
+    {
+      scene->addUndoStack(command);
+    }
+  }
 }

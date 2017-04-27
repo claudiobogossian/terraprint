@@ -49,6 +49,7 @@
 #include "../../core/property/SharedProperties.h"
 #include "tempDataStorage/TempDataStorageEditor.h"
 #include "tempDataStorage/TempFileInfo.h"
+#include "tools/CreateItemTool.h"
 
 #include "terralib/geometry/Envelope.h"
 #include "terralib/qt/widgets/Utils.h"
@@ -59,7 +60,6 @@
 #include <QKeyEvent>
 #include <QGraphicsRectItem>
 #include <QGraphicsItem>
-#include <QDebug>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QPainterPath>
@@ -72,6 +72,7 @@
 #include <QLayout>
 #include <QDir>
 #include <QString>
+#include <QUndoStack>
 
 // STL
 #include <memory>
@@ -87,6 +88,8 @@ te::layout::View::View( QWidget* widget) :
   m_height(-1),
   m_isMoving(false),
   m_updateItemPos(false),
+  m_draft(0),
+  m_dirtyDraft(false),
   m_mouseEvent(false),
   m_dialogItemToolbar(0),
   m_currentToolbarInsideType(0),
@@ -104,10 +107,27 @@ te::layout::View::View( QWidget* widget) :
   m_verticalRuler = new VerticalRuler;
 
   m_dialogItemToolbar = new DialogItemToolbar(this->viewport());
+
+  // initialize draft pixmap
+  QSize viewportSize = this->viewport()->size();
+  m_draft = new QPixmap(viewportSize);
+  m_draft->fill(Qt::transparent);
 }
 
 te::layout::View::~View()
 {
+  if (m_draft)
+  {
+    delete m_draft;
+    m_draft = 0;
+  }
+
+  if (m_tempDataStorageEditor)
+  {
+    m_tempDataStorageEditor->stop();
+    m_tempDataStorageEditor->deleteDataStorage();
+  }
+
   QList<ToolbarItemInside*> toolbars = m_itemToolbars.values();
   foreach(ToolbarItemInside *inside, toolbars)
   {
@@ -317,13 +337,18 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
     zoom = previousZoom();
   }
 
-  setZoom(zoom);
+  ViewportAnchor anchor = transformationAnchor();
+  ViewportAnchor anchorResize = resizeAnchor();
 
-  if (isLimitExceeded(zoom) == false)
-  {
-    QGraphicsView::wheelEvent(event);
-  }
+  // Note that the effect of this property is noticeable 
+  // when only a part of the scene is visible (i.e., when there are scroll bars). 
+  setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+  setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+
+  setZoom(zoom);
   
+  setResizeAnchor(anchorResize);
+  setTransformationAnchor(anchor);
   setViewportUpdateMode(mode);
 }
 
@@ -396,6 +421,54 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
   {
     cutSelectedItens();
   }
+  else
+  {
+    zoomByKey(keyEvent); // Keys Plus and Minus
+  }
+}
+
+bool te::layout::View::zoomByKey(QKeyEvent* keyEvent)
+{
+  bool result = false;
+
+  Scene* scne = dynamic_cast<Scene*>(scene());
+  if (!scne)
+  {
+    return false;
+  }
+
+  int zoom = 0;
+
+  /* In edit mode not apply the zoom */
+  if (scne->isEditionMode())
+  {
+    return result;
+  }
+  
+  if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Plus))
+  {
+    //Zooming In
+    zoom = nextZoom();
+    result = true;
+  }
+  else if ((keyEvent->modifiers() & Qt::ControlModifier) && (keyEvent->key() == Qt::Key_Minus))
+  {
+    // Zooming Out
+    zoom = previousZoom();
+    result = true;
+  }
+
+  if (zoom != 0)
+  {
+    ViewportUpdateMode mode = viewportUpdateMode();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
+
+    setZoom(zoom);
+
+    setViewportUpdateMode(mode);
+  }
+
+  return result;
 }
 
 void te::layout::View::copyToClipboard()
@@ -407,7 +480,7 @@ void te::layout::View::copyToClipboard()
   foreach(QGraphicsItem* item, graphicsItems)
   {
     AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
-    Properties itemProperties = view->getController()->getProperties();
+    const Properties& itemProperties = view->getProperties();
     propertiesList.push_back(itemProperties);
 
   }
@@ -461,7 +534,7 @@ void te::layout::View::paste()
   std::vector<Properties> mapItens;
   std::vector<Properties> otherItens;
 
-  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapCompositionItem();
+  te::layout::EnumType* mapCompositionType = Enums::getInstance().getEnumObjectType()->getMapItem();
 
   for (int i = 0; i < p.size(); i++){
 
@@ -533,7 +606,7 @@ void te::layout::View::paste()
     prop.updateProperty(pro_name);
     std::string newName;
 
-    nscene->buildItem(prop, newName, true);
+    nscene->buildItem(prop, newName, true, true);
 
     newNames[oldName] = newName;
   }
@@ -584,7 +657,7 @@ void te::layout::View::paste()
     prop.updateProperty(pro_name);
     std::string newName;
 
-    nscene->buildItem(prop, newName, true);
+    nscene->buildItem(prop, newName, true, true);
 
   }
   if (m_cutObject ==  false)
@@ -707,14 +780,15 @@ void te::layout::View::createItemGroup()
   Scene* sc = dynamic_cast<Scene*>(scene());
   QList<QGraphicsItem*> graphicsItems = this->scene()->selectedItems();
 
-  if (graphicsItems.isEmpty())
+  //if the list is empty or there is only one item, we do not need to do anything
+  if (graphicsItems.isEmpty() || graphicsItems.size() == 1)
   {
     return;
   }
 
   if(sc)
   {
-    QGraphicsItem* group = sc->createItemGroup(graphicsItems);
+    QGraphicsItem* group = sc->createGroup();
 
     if(!group)
       return;
@@ -738,12 +812,23 @@ void te::layout::View::destroyItemGroup()
   {
     if (item)
     {
+      te::layout::AbstractItemView* absItemView = dynamic_cast<te::layout::AbstractItemView*>(item);
+      if (absItemView == 0)
+      {
+        continue;
+      }
+
+      if (absItemView->getProperties().getTypeObj()->getName() != Enums::getInstance().getEnumObjectType()->getItemGroup()->getName())
+      {
+        continue;
+      }
+
       te::layout::ItemGroup* group = dynamic_cast<te::layout::ItemGroup*>(item);
       if(group)
       {
         if(sc)
         {
-          sc->destroyItemGroup(group);
+          sc->removeGroup(group);
         }
       }
     }
@@ -788,18 +873,15 @@ void te::layout::View::resetDefaultConfig(bool toolLateRemoval)
 void te::layout::View::hideEvent( QHideEvent * event )
 {
   QGraphicsView::hideEvent(event);
-  if (m_tempDataStorageEditor)
-  {
-    m_tempDataStorageEditor->stop();
-  }
   emit hideView();
 }
 
 void te::layout::View::closeEvent( QCloseEvent * event )
 {
   closeToolbar();
-  
+
   QGraphicsView::closeEvent(event);
+  
   emit closeView();
 }
 
@@ -1040,8 +1122,9 @@ void te::layout::View::print()
   disableUpdate();
   
   PrintScene printer(scne);
-  //printer.showPrintPreviewDialog();
-  printer.showPrintDialog();
+  printer.showQPrinterDialog(); //this enables the QPrintDialog for chosing the printer
+  //printer.showPrintPreviewDialog(); //this enables the print preview dialog
+  //printer.showPrintDialog(); //this enables the terraprint dialog for chosing the printer
 
   enableUpdate();
 
@@ -1051,6 +1134,12 @@ void te::layout::View::print()
 }
 
 void te::layout::View::exportToPDF()
+{
+  std::string fileFormat = "PDF";
+  exportAs(fileFormat);
+}
+
+void te::layout::View::exportAs(const std::string& fileFormat)
 {
   emit aboutToPerformIO();
 
@@ -1065,7 +1154,7 @@ void te::layout::View::exportToPDF()
   ContextObject oldContext = scne->getContext();
 
   PrintScene printer(scne);
-  printer.exportToPDF();
+  printer.exportAs(fileFormat); // export as...
 
   scne->setContext(oldContext);
 
@@ -1233,6 +1322,35 @@ void te::layout::View::createItem(EnumType* itemType)
   viewport()->installEventFilter(m_currentTool);
 }
 
+void te::layout::View::createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool)
+{
+  resetDefaultConfig();
+
+  if (useTool)
+  {
+    EnumToolType* tools = Enums::getInstance().getEnumToolType();
+
+    std::string toolName = tools->getCreateItemTool()->getName();
+    ToolFactoryParamsCreate params(this, itemType);
+
+    m_currentTool = te::layout::ToolFactory::make(toolName, params);
+
+    CreateItemTool* tool = dynamic_cast<CreateItemTool*>(m_currentTool);
+    if (tool)
+    {
+      tool->setProperties(properties);
+    }
+    setInteractive(false);
+    viewport()->installEventFilter(m_currentTool);
+  }
+  else
+  {
+    Scene* sc = getScene();
+    std::string name = "";
+    sc->buildItem(properties, name, false, true);
+  }
+}
+
 void te::layout::View::applyScale(double horizontalScale, double verticalScale)
 {
   if((horizontalScale <= 0)||(verticalScale <= 0))
@@ -1265,6 +1383,9 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
   {
     double scale = transform().m11();
 
+    resetDraftPixmap(painter->device()->width(), painter->device()->height());
+    makeDraftPixmapDirty(false);
+
     m_foreground = QPixmap(painter->device()->width(), painter->device()->height());
     m_foreground.fill(Qt::transparent);
     QPainter painter2(&m_foreground);
@@ -1277,32 +1398,35 @@ void te::layout::View::drawForeground( QPainter * painter, const QRectF & rect )
 
     m_foreground = QPixmap::fromImage(m_foreground.toImage().mirrored());
   }
-
+  
   QRect rectView(0, 0, this->viewport()->width(), this->viewport()->height());
   QPolygonF polygonScene = this->mapToScene(rectView);
 
+  drawDraftPixmap(painter); // draw draft pixmap
+  
   painter->drawPixmap(polygonScene.boundingRect(), m_foreground, m_foreground.rect());
 
   //then we draw the foreground of the scene
   QGraphicsView::drawForeground(painter, rect);
 }
 
-bool te::layout::View::exportProperties( EnumType* type )
+bool te::layout::View::exportTemplate(EnumType* type, bool & cancel)
 {
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if (!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
-
-  bool is_export = false;
 
   QString fileName = QFileDialog::getSaveFileName(this, tr("Save File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if(fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
+    cancel = true;
     return is_export;
   }
   if (fileName.endsWith(".xml") == false)
@@ -1337,26 +1461,37 @@ bool te::layout::View::exportProperties( EnumType* type )
   return is_export;
 }
 
-bool te::layout::View::importTemplate( EnumType* type )
+bool te::layout::View::importTemplate(EnumType* type, bool & cancel)
 {  
+  cancel = false;
+  bool is_export = false;
   Scene* scne = dynamic_cast<Scene*>(scene());
   if(!scne)
-    return false;
+    return is_export;
 
   emit aboutToPerformIO();
 
   QString fileName = QFileDialog::getOpenFileName(this, tr("Import File"), 
     te::qt::widgets::GetFilePathFromSettings("map"), tr("XML Files (*.xml)"));
 
-  if(fileName.isEmpty())
+  if (fileName.isEmpty() || fileName.isNull())
   {
     emit endedPerformingIO();
-    return false;
+    cancel = true;
+    return is_export;
   }
 
   std::string j_name = ItemUtils::convert2StdString(fileName); 
 
-  bool result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  bool result = false;
+  try
+  {
+    result = scne->buildTemplate(m_visualizationArea, type, j_name);
+  }  
+  catch (const te::common::Exception& e)
+  {
+    QMessageBox::information(this, tr("Information"), ItemUtils::convert2QString(e.what()));
+  }
 
   emit endedPerformingIO();
 
@@ -1523,7 +1658,7 @@ void te::layout::View::closeToolbar()
         toolbar = allPButtons.first();
         if (toolbar)
         {
-          toolbar->setParent(0);
+          toolbar->setParent(this);
         }
       }
       m_currentToolbarInsideType = 0;
@@ -1554,14 +1689,102 @@ void te::layout::View::positioningToolbarOnTheScreen(AbstractItemView* item)
     QPointF pos(qitem->scenePos().x(), qitem->scenePos().y() + boundRect.height());
     QPoint itemPos = mapFromScene(pos);
     QPoint ptGlobal = viewport()->mapToGlobal(itemPos);
-
+        
     // total size with margins and borders
     QSize dockSize = m_dialogItemToolbar->size();
 
-    // Place the dock on top of the item
+    // Place the dock on top left of the item
     QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dialogItemToolbar->height() + space), dockSize.width(), dockSize.height());
+
+    // Check if the position of the toolbar is inside the viewport
+    rect = checkToolBarPosition(qitem, rect);
+
     m_dialogItemToolbar->setGeometry(rect);
   }
+}
+
+QWidget* te::layout::View::superParent(QWidget* widget)
+{
+  if (widget->parentWidget())
+  {
+    widget = superParent(widget->parentWidget());
+  }
+  return widget;
+}
+
+QRectF te::layout::View::viewportVisibleRect()
+{
+  QRectF viewportVisibleRectangle = viewport()->rect();
+  QWidget* super = superParent(viewport()); // get bigger widget
+  QRectF viewportParentRect = super->rect();
+
+  double originX = viewportParentRect.width() - viewportVisibleRectangle.width();
+  double originY = viewportParentRect.height() - viewportVisibleRectangle.height();
+  viewportVisibleRectangle = QRectF(originX, originY, viewportVisibleRectangle.width(), viewportVisibleRectangle.height());
+  return viewportVisibleRectangle;
+}
+
+QPointF te::layout::View::viewportVisibleRectCenter()
+{
+  QRectF viewportRect = viewportVisibleRect();
+  QPointF visibleRectCenter(viewportRect.x() + (viewportRect.width() / 2), viewportRect.y() + (viewportRect.height() / 2));
+  return visibleRectCenter;
+}
+
+QRect te::layout::View::checkToolBarPosition(QGraphicsItem* item, const QRect& rect)
+{
+  // Check if the position of the toolbar is inside the viewport
+
+  QRectF boundRect = item->boundingRect();
+  boundRect = item->mapRectToScene(boundRect);
+
+  // total size with margins and borders
+  QSize dockSize = m_dialogItemToolbar->size();
+
+  QPointF topOriginPoint(rect.x(), rect.y() - dockSize.height());
+
+  QPointF hrzOriginPoint = m_horizontalRuler->getOriginPoint();
+  hrzOriginPoint = mapFromScene(hrzOriginPoint);
+  hrzOriginPoint = viewport()->mapToGlobal(hrzOriginPoint.toPoint());
+
+  QPointF originViewPoint(0, 0);
+  originViewPoint = viewport()->mapToGlobal(originViewPoint.toPoint());
+
+  QRect newRect(rect);
+
+  // The toolbar can not be positioned above or more to the left of the rulers
+  if (hrzOriginPoint.x() > topOriginPoint.x() || topOriginPoint.y() < originViewPoint.y())
+  {
+    QPointF itemCenter = boundRect.center();
+    QPoint itemPos = mapFromScene(itemCenter);
+    QPointF ptGlobal = viewport()->mapToGlobal(itemPos);
+    QRectF viewportVisible = viewportVisibleRect();
+    QPointF visibleCenter = viewportVisibleRectCenter();
+    double halfWidth = dockSize.width() / 2;
+    double halfHeight = dockSize.height() / 2;
+
+    double y = ptGlobal.y() + dockSize.height();
+    double x1 = ptGlobal.x() - halfWidth;
+    double x2 = ptGlobal.x() + dockSize.width();
+
+    // check if center of the item is on below of the viewport
+    // or if center of the item is above of the viewport
+    if (y > viewportVisible.y() && y < this->size().height()
+      && x1 > viewportVisible.x() && x2 < viewportVisible.topRight().x())
+    {
+      // put the toolbar in the center of the item
+      newRect = QRect(x1, ptGlobal.y(), dockSize.width(), dockSize.height());
+    }
+    else
+    {
+      // put the toolbar in the center of the viewport
+      double halfItemWidth = dockSize.width() / 2;
+      double halfItemHeight = dockSize.height() / 2;
+      newRect = QRect(visibleCenter.x(), visibleCenter.y(), dockSize.width(), dockSize.height());
+    }
+  }
+
+  return newRect;
 }
 
 void te::layout::View::onScrollBarValueChanged(int value)
@@ -1576,54 +1799,135 @@ void te::layout::View::onShowDialogWindow(EnumType* type, QList<QGraphicsItem*> 
   emit showDialogWindow(type, itemList);
 }
 
-void te::layout::View::configLayoutWithTempFile()
+void te::layout::View::configLayoutWithDefaultTempFilePath()
 {
-  // init or read temporary file data storage
-
-  Scene* scene = getScene();
-
+  // init or read temporary file data storage 
   // User folder path
   // Whether a directory separator is added to the end or not, depends on the operating system.
   QString newPath = QDir(QDir::tempPath()).filePath("TerraPrint");
-  
-  QDir dir(newPath);
-  if (!dir.exists())
+  configTempFilePath(newPath);
+}
+
+bool te::layout::View::configTempFilePath(const QString& newPath)
+{
+  bool result = false;
+  if (!existDirTempFile(newPath))
   {
-    emit aboutToPerformIO();
-    bool result = dir.mkpath(newPath); // create a new path or directory
-    emit endedPerformingIO();
-    if (!result)
+    if (!createDirToTempFile(newPath))
     {
-      return;
-    }
-  }
-  else
-  {
-    QString pathToLoad = newPath + "/" + m_tempFileName;
-    QFile file(pathToLoad);
-    if (file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-      file.close();
-      te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
-      importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+      return result;
     }
   }
 
-  m_fullTempPath = newPath + "/" + m_tempFileName;
-  configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+  result = loadTempFile(newPath);
+  if (result)
+  {
+    configTempFileDataStorage(m_fullTempPath); // init temp data storage 
+  }
+  return result;
+}
+
+bool te::layout::View::existDirTempFile(const QString& newPath)
+{
+  QDir dir(newPath);
+  return dir.exists();
+}
+
+bool te::layout::View::createDirToTempFile(const QString& newPath)
+{
+  QDir dir(newPath);
+  
+  emit aboutToPerformIO();
+  bool result = dir.mkpath(newPath); // create a new path or directory
+  emit endedPerformingIO();
+  
+  return result;
+}
+
+bool te::layout::View::loadTempFile(const QString& newPath)
+{
+  bool result = false;
+
+  QString pathToLoad(newPath);
+
+  QString subString = newPath.mid(newPath.length() - 1, newPath.length());
+  if (subString.compare("/") != 0)
+  {
+    pathToLoad = newPath + "/" + m_tempFileName;
+  }
+  else
+  {
+    pathToLoad = newPath + m_tempFileName;
+  }
+
+  QFile file(pathToLoad);
+  if (file.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    result = true;
+    file.close();    
+  }
+  else if (file.open(QIODevice::ReadWrite | QIODevice::Text)) // Create a file if it does not exist
+  {
+    result = true;
+    file.close();
+  }
+
+  if (result)
+  {
+    if (m_fullTempPath.compare(pathToLoad) != 0)
+    {
+      // delete current temp file
+      if (m_tempDataStorageEditor)
+      {
+        m_tempDataStorageEditor->deleteDataStorage();
+      }
+    }
+
+    setFullTempFilePath(pathToLoad); // change TempFileInfo path
+    newTemplate(); // reset scene
+    te::layout::EnumTemplateType* enumTemplate = te::layout::Enums::getInstance().getEnumTemplateType();
+    importTempFile(enumTemplate->getXmlType(), pathToLoad); // load temp file
+  }
+  
+  return result;
 }
 
 void te::layout::View::configTempFileDataStorage(const QString& fullNewPath)
 {
   Scene* scene = getScene();
+  if (scene)
+  {
+    if (!m_tempDataStorageEditor)
+    {
+      std::string path = ItemUtils::convert2StdString(fullNewPath);
+      EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
+      TempFileInfo* info = new TempFileInfo(scene, path);
+      m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+    }
+  }  
+}
 
-  std::string path = ItemUtils::convert2StdString(fullNewPath);
-  EnumTempDataStorageType* type = Enums::getInstance().getEnumTempDataStorageType();
-  TempFileInfo* info = new TempFileInfo(scene, path);
-  m_tempDataStorageEditor = new TempDataStorageEditor(scene->getUndoStack(), type->getTempFileType(), info);
+void te::layout::View::setTempFilePath(const std::string& path)
+{
+  // init or read temporary file data storage 
+  QString qNewPath(ItemUtils::convert2QString(path));
+  configTempFilePath(qNewPath);
+}
 
-  connect(m_tempDataStorageEditor, SIGNAL(requestIOEnterAccess()), this, SLOT(onRequestIOEnterAccessTempDataStorage()));
-  connect(m_tempDataStorageEditor, SIGNAL(requestIOEndAccess()), this, SLOT(onRequestIOEndAccessTempDataStorage()));
+void te::layout::View::setFullTempFilePath(const QString& newPath)
+{
+  m_fullTempPath = newPath;
+  if (m_tempDataStorageEditor)
+  {
+    AbstractTempDataStorageInfo* abInfo = m_tempDataStorageEditor->getTempDataStorageInfo();
+    TempFileInfo* info = dynamic_cast<TempFileInfo*>(abInfo);
+    if (info)
+    {      
+      // change TempFileInfo path
+      std::string newPath = ItemUtils::convert2StdString(m_fullTempPath);
+      info->setPath(newPath);
+    }
+  }
 }
 
 void te::layout::View::onRequestIOEnterAccessTempDataStorage()
@@ -1676,5 +1980,47 @@ bool te::layout::View::importTempFile(EnumType* type, const QString& fullTempPat
   emit endedPerformingIO();
 
   return result;
+}
+
+QPixmap* te::layout::View::getDraftPixmap() const
+{
+  return m_draft;
+}
+
+void te::layout::View::drawDraftPixmap(QPainter * painter)
+{
+  if (m_draft && m_dirtyDraft)
+  {
+    if (m_currentTool)
+    {
+      m_currentTool->redraw(); // draw on draft pixmap
+    }
+    QImage mirrored = m_draft->toImage().mirrored();
+    delete m_draft;
+    m_draft = new QPixmap(QPixmap::fromImage(mirrored));
+  }
+
+  QPolygonF draftRegion = this->mapToScene(m_draft->rect());
+  painter->drawPixmap(draftRegion.boundingRect(), *m_draft, m_draft->rect());
+  m_dirtyDraft = false;
+}
+
+void te::layout::View::makeDraftPixmapDirty(bool update)
+{
+  m_dirtyDraft = true; 
+  if (update)
+  {
+    viewport()->update();
+  }  
+}
+
+void te::layout::View::resetDraftPixmap(double width, double height)
+{
+  if (m_draft)
+  {
+    delete m_draft;
+  }
+  m_draft = new QPixmap(width, height);
+  m_draft->fill(Qt::transparent);
 }
 

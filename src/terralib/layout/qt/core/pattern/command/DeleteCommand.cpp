@@ -27,31 +27,35 @@
 
 // TerraLib
 #include "DeleteCommand.h"
+#include "../../../../core/pattern/mvc/AbstractItemView.h"
+#include "../../../item/ItemGroup.h"
 #include "../../Scene.h"
 
 // Qt
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-te::layout::DeleteCommand::DeleteCommand( QGraphicsScene* scene, const QList<QGraphicsItem*>& listItems, QUndoCommand *parent /*= 0*/ ) :
+te::layout::DeleteCommand::DeleteCommand( QGraphicsScene* scene, const QList<QGraphicsItem*>& listItems, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_scene(scene),
   m_items(listItems)
 {
-  foreach( QGraphicsItem *item, m_items ) 
-  {
-    item->setSelected(false);
-  }
-
-  int size = m_items.size();
-
-  setText(QObject::tr("Delete %1")
-    .arg(createCommandString(size)));
+  init();
 }
 
 te::layout::DeleteCommand::~DeleteCommand()
 {
   
+}
+
+void te::layout::DeleteCommand::init()
+{
+  m_scene->clearSelection();
+
+  int size = m_items.size();
+
+  setText(QObject::tr("Delete %1")
+    .arg(createCommandString(size)));
 }
 
 void te::layout::DeleteCommand::undo()
@@ -61,17 +65,23 @@ void te::layout::DeleteCommand::undo()
   if(!scene)
     return;
 
+  m_scene->clearSelection();
+
   foreach( QGraphicsItem *item, m_items ) 
   {
-    item->setSelected(false);
+    AbstractItemView* obs = dynamic_cast<AbstractItemView*>(item);
+    if (!obs)
+      continue;
 
     if(item->scene() != m_scene)
     {
+      obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
       scene->insertItem(item);
       scene->removeItemStackWithoutScene(item);
+      item->setSelected(true);
+      obs->setUndoEnabled(true); // set properties will generate an UndoCommand on the Stack
     }
   }
-
   m_scene->update();
 }
 
@@ -90,6 +100,8 @@ void te::layout::DeleteCommand::redo()
       scene->addItemStackWithoutScene(item);
     }
   }
+  m_scene->clearSelection();
+  m_scene->update();
 }
 
 QString te::layout::DeleteCommand::createCommandString( int totalItems )
@@ -97,6 +109,4 @@ QString te::layout::DeleteCommand::createCommandString( int totalItems )
   return QObject::tr("%1")
     .arg(totalItems);
 }
-
-
 

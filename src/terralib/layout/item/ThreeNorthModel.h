@@ -61,23 +61,6 @@ namespace te
       \brief Destructor
       */
       virtual ~ThreeNorthModel();
-
-      double calculateMeridianConvergence(const double &latitude, const double &longitude, const double &longitudeSource);
-
-      /*!
-      \brief Sets the new value of the given property
-      */
-      virtual void setProperty(const Property& property);
-
-      /*!
-      \brief Sets the new values of the given properties
-      */
-      virtual void setProperties(const Properties& properties);
-
-    protected:
-
-      virtual void calculateThreeNorth(Properties& properties);
-
     };
   }
 }

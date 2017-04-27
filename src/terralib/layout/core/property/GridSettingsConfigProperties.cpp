@@ -28,34 +28,37 @@
 // TerraLib
 #include "GridSettingsConfigProperties.h"
 
-te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties() :
-m_name("grid_name"),
-m_visible("grid_visible"),
-m_lneHrzGap("grid_lneHrzGap"),
-m_lneVrtGap("grid_lneVrtGap"),
-m_initialGridPointX("grid_initialGridPointX"),
-m_initialGridPointY("grid_initialGridPointY"),
-m_style("grid_style"),
-m_lineStyle("grid_lineStyle"),
-m_lineColor("grid_lineColor"),
-m_lineWidth("grid_lineWidth"),
-m_font("grid_font"),
-m_fontCorner("grid_font_corner"),
-m_textColor("grid_textColor"),
-m_visibleAllTexts("grid_visibleAllTexts"),
-m_superscriptText("grid_superscriptText"),
-m_lneVrtDisplacement("grid_lneVrtDisplacement"),
-m_lneHrzDisplacement("grid_lneHrzDisplacement"),
-m_bottomText("grid_bottomText"),
-m_leftText("grid_leftText"),
-m_rightText("grid_rightText"),
-m_topText("grid_topText"),
-m_bottomRotateText("grid_bottomRotateText"),
-m_leftRotateText("grid_leftRotateText"),
-m_rightRotateText("grid_rightRotateText"),
-m_topRotateText("grid_topRotateText"),
-m_crossOffset("grid_crossOffset"),
-m_bouderIntersection("grid_bouderIntersections_geodesic")
+te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties(const std::string& prefix) 
+  : m_prefix(prefix + "_"),
+    m_name(m_prefix + "grid_name"),
+    m_visible(m_prefix + "grid_visible"),
+    m_horizontalLineGap(m_prefix + "grid_horizontalLineGap"),
+    m_verticalLineGap(m_prefix + "grid_verticalLineGap"),
+    m_horizontalLineInitial(m_prefix + "grid_horizontalLineInitial"),
+    m_verticalLineInitial(m_prefix + "grid_verticalLineInitial"),
+    m_style(m_prefix + "grid_style"),
+    m_lineStyle(m_prefix + "grid_lineStyle"),
+    m_lineColor(m_prefix + "grid_lineColor"),
+    m_lineWidth(m_prefix + "grid_lineWidth"),
+    m_font(m_prefix + "grid_font"),
+    m_fontCorner(m_prefix + "grid_font_corner"),
+    m_textColor(m_prefix + "grid_textColor"),
+    m_visibleAllTexts(m_prefix + "grid_visibleAllTexts"),
+    m_superscriptText(m_prefix + "grid_superscriptText"),
+    m_horizontalLineDisplacement(m_prefix + "grid_horizontalLineDisplacement"),
+    m_verticalLineDisplacement(m_prefix + "grid_verticalLineDisplacement"),
+    m_bottomText(m_prefix + "grid_bottomText"),
+    m_leftText(m_prefix + "grid_leftText"),
+    m_rightText(m_prefix + "grid_rightText"),
+    m_topText(m_prefix + "grid_topText"),
+    m_bottomRotateText(m_prefix + "grid_bottomRotateText"),
+    m_leftRotateText(m_prefix + "grid_leftRotateText"),
+    m_rightRotateText(m_prefix + "grid_rightRotateText"),
+    m_topRotateText(m_prefix + "grid_topRotateText"),
+    m_crossOffset(m_prefix + "grid_crossOffset"),
+    m_borderIntersection(m_prefix + "grid_borderIntersections"),
+    m_gridSettings(m_prefix + "grid_settings"),
+    m_planarSRID(m_prefix + "planar_srid")
 {
 
 }
@@ -65,137 +68,147 @@ te::layout::GridSettingsConfigProperties::~GridSettingsConfigProperties()
 
 }
 
-std::string te::layout::GridSettingsConfigProperties::getName()
+const std::string& te::layout::GridSettingsConfigProperties::getName() const
 {
   return m_name;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getVisible()
+const std::string& te::layout::GridSettingsConfigProperties::getVisible() const
 {
   return m_visible;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLneHrzGap()
+const std::string& te::layout::GridSettingsConfigProperties::getHorizontalLineGap() const
 {
-  return m_lneHrzGap;
+  return m_horizontalLineGap;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLneVrtGap()
+const std::string& te::layout::GridSettingsConfigProperties::getVerticalLineGap() const
 {
-  return m_lneVrtGap;
+  return m_verticalLineGap;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getInitialGridPointX()
+const std::string& te::layout::GridSettingsConfigProperties::getHorizontalLineInitial() const
 {
-  return m_initialGridPointX;
+  return m_horizontalLineInitial;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getInitialGridPointY()
+const std::string& te::layout::GridSettingsConfigProperties::getVerticalLineInitial() const
 {
-  return m_initialGridPointY;
+  return m_verticalLineInitial;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getStyle()
+const std::string& te::layout::GridSettingsConfigProperties::getStyle() const
 {
   return m_style;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLineStyle()
+const std::string& te::layout::GridSettingsConfigProperties::getLineStyle() const
 {
   return m_lineStyle;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLineColor()
+const std::string& te::layout::GridSettingsConfigProperties::getLineColor() const
 {
   return m_lineColor;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLineWidth()
+const std::string& te::layout::GridSettingsConfigProperties::getLineWidth() const
 {
   return m_lineWidth;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getFont()
+const std::string& te::layout::GridSettingsConfigProperties::getFont() const
 {
   return m_font;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getFontCorner()
+const std::string& te::layout::GridSettingsConfigProperties::getFontCorner() const
 {
   return m_fontCorner;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getTextColor()
+const std::string& te::layout::GridSettingsConfigProperties::getTextColor() const
 {
   return m_textColor;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getVisibleAllTexts()
+const std::string& te::layout::GridSettingsConfigProperties::getVisibleAllTexts() const
 {
   return m_visibleAllTexts;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getSuperscriptText()
+const std::string& te::layout::GridSettingsConfigProperties::getSuperscriptText() const
 {
   return m_superscriptText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLneVrtDisplacement()
+const std::string& te::layout::GridSettingsConfigProperties::getHorizontalLineDisplacement() const
 {
-  return m_lneVrtDisplacement;
+  return m_horizontalLineDisplacement;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLneHrzDisplacement()
+const std::string& te::layout::GridSettingsConfigProperties::getVerticalLineDisplacement() const
 {
-  return m_lneHrzDisplacement;
+  return m_verticalLineDisplacement;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getBottomText()
+const std::string& te::layout::GridSettingsConfigProperties::getBottomText() const
 {
   return m_bottomText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLeftText()
+const std::string& te::layout::GridSettingsConfigProperties::getLeftText() const
 {
   return m_leftText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getRightText()
+const std::string& te::layout::GridSettingsConfigProperties::getRightText() const
 {
   return m_rightText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getTopText()
+const std::string& te::layout::GridSettingsConfigProperties::getTopText() const
 {
   return m_topText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getBottomRotateText()
+const std::string& te::layout::GridSettingsConfigProperties::getBottomRotateText() const
 {
   return m_bottomRotateText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getLeftRotateText()
+const std::string& te::layout::GridSettingsConfigProperties::getLeftRotateText() const
 {
   return m_leftRotateText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getRightRotateText()
+const std::string& te::layout::GridSettingsConfigProperties::getRightRotateText() const
 {
   return m_rightRotateText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getTopRotateText()
+const std::string& te::layout::GridSettingsConfigProperties::getTopRotateText() const
 {
   return m_topRotateText;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getCrossOffset()
+const std::string& te::layout::GridSettingsConfigProperties::getCrossOffset() const
 {
   return m_crossOffset;
 }
 
-std::string te::layout::GridSettingsConfigProperties::getBouderIntersections()
+const std::string& te::layout::GridSettingsConfigProperties::getBorderIntersections() const
 {
-  return m_bouderIntersection;
+  return m_borderIntersection;
+}
+
+const std::string& te::layout::GridSettingsConfigProperties::getGridSettings() const
+{
+  return m_gridSettings;
+}
+
+const std::string& te::layout::GridSettingsConfigProperties::getPlanarSRID() const
+{
+  return m_planarSRID;
 }

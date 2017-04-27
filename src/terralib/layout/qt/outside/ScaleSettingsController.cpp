@@ -62,7 +62,7 @@ te::layout::Property te::layout::ScaleSettingsController::getScaleProperty(std::
   ScaleItem* scaleItem = dynamic_cast<ScaleItem*>(item);
   if (scaleItem)
   {
-    prop = scaleItem->getController()->getProperty(name);
+    prop = scaleItem->getProperty(name);
   }
   return prop;
 }
@@ -77,12 +77,12 @@ QStringList te::layout::ScaleSettingsController::getItemNames(QStringList list, 
       AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
       if (view)
       {
-        const Property& prop_name = view->getController()->getProperty("name");
+        const Property& prop_name = view->getProperty("name");
 
         std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
         QString txt = ItemUtils::convert2QString(value);
 
-        const Properties& prop_type = view->getController()->getProperties();
+        const Properties& prop_type = view->getProperties();
 
         if (txt.compare("") != 0 && prop_type.getTypeObj() == type)
         {

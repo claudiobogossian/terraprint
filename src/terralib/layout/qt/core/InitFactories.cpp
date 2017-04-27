@@ -34,11 +34,8 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/item/BalloonItemFactory.h"
 #include "pattern/factory/item/BarCodeItemFactory.h"
 #include "pattern/factory/item/EllipseItemFactory.h"
-#include "pattern/factory/item/GridGeodesicItemFactory.h"
-#include "pattern/factory/item/GridPlanarItemFactory.h"
 #include "pattern/factory/item/ImageItemFactory.h"
 #include "pattern/factory/item/ItemGroupItemFactory.h"
-#include "pattern/factory/item/MapCompositionItemFactory.h"
 #include "pattern/factory/item/LegendChildItemFactory.h"
 #include "pattern/factory/item/LegendItemFactory.h"
 #include "pattern/factory/item/MapItemFactory.h"
@@ -67,7 +64,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "pattern/factory/outside/SystematicScaleOutsideFactory.h"
 #include "pattern/factory/outside/TextGridSettingsOutsideFactory.h"
 #include "pattern/factory/outside/ToolbarOutsideFactory.h"
-#include "pattern/factory/outside/PDFSettingsOutsideFactory.h"
+#include "pattern/factory/outside/ExportSettingsOutsideFactory.h"
 #include "pattern/factory/outside/MapSettingsOutsideFactory.h"
 #include "pattern/factory/outside/ScaleSettingsOutsideFactory.h"
 #include "pattern/factory/outside/NorthSettingsOutsideFactory.h"
@@ -137,7 +134,7 @@ namespace te
         static SystematicScaleOutsideFactory SystematicScaleOutsideFactory_instance;
         static TextGridSettingsOutsideFactory TextGridSettingsOutsideFactory_instance;
         static ToolbarOutsideFactory ToolbarOutsideFactory_instance;
-        static PDFSettingsOutsideFactory PDFSettingsOutsideFactory_instance;
+        static ExportSettingsOutsideFactory ExportSettingsOutsideFactory_instance;
         static MapSettingsOutsideFactory MapSettingsOutsideFactory_instance;
         static ScaleSettingsOutsideFactory ScaleSettingsOutsideFactory_instance;
         static NorthSettingsOutsideFactory NorthSettingsOutsideFactory_instance;
@@ -158,11 +155,8 @@ namespace te
         static BalloonItemFactory BalloonItemFactory_instance;
         static BarCodeItemFactory BarCodeItemFactory_instance;
         static EllipseItemFactory EllipseItemFactory_instance;
-        static GridGeodesicItemFactory GridGeodesicItemFactory_instance;
-        static GridPlanarItemFactory GridPlanarItemFactory_instance;
         static ImageItemFactory ImageItemFactory_instance;
         static ItemGroupItemFactory ItemGroupItemFactory_instance;
-        static MapCompositionItemFactory MapCompositionItemFactory_instance;
         static LegendChildItemFactory LegendChildItemFactory_instance;
         static LegendItemFactory LegendItemFactory_instance;
         static MapItemFactory MapItemFactory_instance;

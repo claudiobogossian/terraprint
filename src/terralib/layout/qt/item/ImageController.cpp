@@ -23,8 +23,8 @@
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 
 
-te::layout::ImageController::ImageController( te::layout::AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::ImageController::ImageController( te::layout::AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 
 }

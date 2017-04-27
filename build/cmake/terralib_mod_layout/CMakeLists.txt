@@ -297,7 +297,7 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/PDFSettingsOutside.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ExportSettingsOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/DoubleTreeWidgetOutside.h
                                  #Base Layout
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/default/MainLayout.h
@@ -379,25 +379,32 @@ else()
   endif()
 endif()
 file(GLOB translated_files "${TERRALIB_ABSOLUTE_ROOT_DIR}/share/terralib/translations/*.qm")
+list(APPEND _qm_files ${translated_files})
 
-#Copying translated files to build translation folder, to be installed with it
-file(COPY ${translated_files} DESTINATION "${CMAKE_BINARY_DIR}/share/terralib/translations")
+#Creating build directory translation and copying translated files to build translation folder of terralib5_layout
+  add_custom_command(
+    TARGET terralib_mod_layout
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/share/terralib/translations
+  )
+  
+foreach(qm_file ${_qm_files})
+  add_custom_command(
+    TARGET terralib_mod_layout
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${qm_file} ${CMAKE_BINARY_DIR}/share/terralib/translations
+  )
+endforeach()
+  
 
-#Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
-if (WIN32)
-  file(COPY ${translated_files} DESTINATION "${terralib_DIR}/share/terralib/translations/")
-endif()
-
-#This should be on TerraLib 5 folder, not here. (Need to copy this to layout install folder, but from terralib 5 folder)
-#list(APPEND _qm_files "${terralib_DIR}/../../../share/terralib/translations/qt_property_browser_pt_br.qm")
-
-#This should be on TerraLib 5 folder, not here. (Need to copy this to layout install folder, but from terralib 5 folder)
-list(APPEND _qm_files "${CMAKE_BINARY_DIR}/share/terralib/translations/qt_pt_br.qm")
-list(APPEND _qm_files "${CMAKE_BINARY_DIR}/share/terralib/translations/qt_property_browser_pt_br.qm")
-list(APPEND _qm_files "${CMAKE_BINARY_DIR}/share/terralib/translations/terralib_mod_qt_plugins_layout_pt_br.qm")
-
-#This is not this mod responsability
-#list(APPEND _qm_files "${terralib_DIR}/share/terralib/translations/terralib_mod_qt_plugins_layout_pt_br.qm")
+#if (${TERRALIB_MOD_QT_PLUGINS_LAYOUT_ENABLED})
+  #Copying translated files to build translation folder of terralib to be used on execution of application on IDE environment
+#  add_custom_command(
+#    TARGET terralib_mod_layout
+#    POST_BUILD
+#    COMMAND ${CMAKE_COMMAND} -E copy ${_qm_files} ${terralib_DIR}/share/terralib/translations
+#  )
+#endif()
 
 install(
   FILES ${mo_input_dir}/telayout.mo

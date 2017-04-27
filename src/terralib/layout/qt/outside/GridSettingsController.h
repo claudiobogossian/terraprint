@@ -52,13 +52,13 @@ namespace te
 
         virtual ~GridSettingsController();
                 
-        virtual Property getProperty(std::string name, EnumType* enumType);
+        virtual Property getProperty(std::string name);
 
         virtual QStringList getItemNames(QStringList list, const EnumType* type);
                 
-        virtual bool containsGrid(EnumType* enumType);
+        virtual bool containsGrid();
 
-        virtual AbstractItemView* searchGrid(EnumType* enumType);
+        virtual AbstractItemView* searchGrid();
 
       protected:
 

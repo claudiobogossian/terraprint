@@ -28,8 +28,9 @@
 // TerraLib
 #include "PlanarGridSettingsConfigProperties.h"
 
-te::layout::PlanarGridSettingsConfigProperties::PlanarGridSettingsConfigProperties() :
-  m_unit("grid_unitPlanar_planar")
+te::layout::PlanarGridSettingsConfigProperties::PlanarGridSettingsConfigProperties() 
+  : GridSettingsConfigProperties("planar")
+  , m_unit(m_prefix + "grid_unit")
 {
   
 }
@@ -39,7 +40,7 @@ te::layout::PlanarGridSettingsConfigProperties::~PlanarGridSettingsConfigPropert
 
 }
 
-std::string te::layout::PlanarGridSettingsConfigProperties::getUnit()
+const std::string& te::layout::PlanarGridSettingsConfigProperties::getUnit() const
 {
   return m_unit;
 }

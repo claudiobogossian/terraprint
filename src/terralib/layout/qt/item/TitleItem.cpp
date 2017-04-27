@@ -27,9 +27,11 @@
 
 // TerraLib
 #include "TitleItem.h"
+#include "../../item/TitleModel.h"
+#include "TitleController.h"
 
-te::layout::TitleItem::TitleItem(AbstractItemController* controller) 
-  : TextItem(controller)
+te::layout::TitleItem::TitleItem(te::layout::ItemInputProxy* itemInputProxy) 
+  : TextGridItem(itemInputProxy)
 {
 }
 
@@ -37,7 +39,13 @@ te::layout::TitleItem::~TitleItem()
 {
 }
 
-void te::layout::TitleItem::updateGeometry( int position, int charsRemoved, int charsAdded )
+te::layout::AbstractItemModel* te::layout::TitleItem::createModel() const
 {
-  //we override this function just to avoid the view to call textChanged function from the controller
+  return new TitleModel();
+}
+
+te::layout::AbstractItemController* te::layout::TitleItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new TitleController(model, (AbstractItemView*)this);
 }

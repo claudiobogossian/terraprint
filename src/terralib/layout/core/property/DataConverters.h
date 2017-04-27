@@ -28,6 +28,9 @@ TerraLib Team at <terralib-team@terralib.org>.
 #ifndef __TERRALIB_LAYOUT_INTERNAL_DATACONVERTERS_H
 #define __TERRALIB_LAYOUT_INTERNAL_DATACONVERTERS_H
 
+#include <boost/lexical_cast.hpp>
+#include <terralib/layout/core/property/DataTypesUtils.h>
+
 namespace te
 {
   namespace dt

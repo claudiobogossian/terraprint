@@ -30,7 +30,6 @@
 
 // TerraLib
 #include "terralib/common/AbstractParameters.h"
-#include "terralib/geometry/Coord2D.h"
 #include "../../../../../core/property/Properties.h"
 #include "../../../../../core/Config.h"
 
@@ -41,59 +40,28 @@ namespace te
 {
   namespace layout
   {
-    class Properties;
-    /*!
-    \brief Parameters to create a new item object (MVC graphic Object).  
-    
-    \ingroup layout
+    class ItemInputProxy;
 
-    \sa te::common::AbstractParameters
+    /*!
+      \brief Parameters to create a new item object (MVC graphic Object).  
+    
+      \ingroup layout
+
+      \sa te::common::AbstractParameters
     */
     class TELAYOUTEXPORT ItemFactoryParamsCreate : public te::common::AbstractParameters
     {
       public:
         
-
         /*! \brief Copy constructor. */
         ItemFactoryParamsCreate(const ItemFactoryParamsCreate& rhs);
-
-        /*!
+        
+        /*
           \brief Constructor
 
-          \param 
-          \param
-          \param
-          \param
-        */ 
-        ItemFactoryParamsCreate(std::string name, int id, te::gm::Coord2D coord = te::gm::Coord2D(), double width = 0, double heigth = 0);
-
-        /*!
-        \brief Constructor
-
-        \param
-        \param
+          \param Properties of a item that will be constructed.
         */
-        ItemFactoryParamsCreate(std::string name, te::gm::Coord2D coord = te::gm::Coord2D(), double width = 0, double heigth = 0);
-
-        /*!
-        \brief Constructor
-
-        \param
-        \param
-        \param
-        \param
-        */
-        ItemFactoryParamsCreate(std::string name, te::gm::Coord2D coord, Properties props);
-
-        /*!
-        \brief Constructor
-
-        \param
-        \param
-        \param
-        \param
-        */
-        ItemFactoryParamsCreate(Properties props);
+        explicit ItemFactoryParamsCreate(const Properties& props, te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -103,27 +71,15 @@ namespace te
         te::common::AbstractParameters* clone() const;
 
         void reset() throw(te::common::Exception);
-
-        std::string getName() const;
-
-        Properties getProperties() const;
-
-        te::gm::Coord2D getCoord() const;
         
-        int getId() const;
+        const Properties& getProperties() const;
 
-        double getWidth() const;
-
-        double getHeight() const;
+        te::layout::ItemInputProxy* getItemInputProxy() const;
 
       protected:
 
-        std::string           m_name;
-        Properties            m_props; //!< Properties of a graphic object.
-        te::gm::Coord2D       m_coord; //!< Coordinate of a graphic object.
-        int                   m_id; //!< Id of a graphic object.
-        double                m_width;
-        double                m_height;
+        Properties                  m_props; //!< Properties of a graphic object.
+        te::layout::ItemInputProxy* m_itemInputProxy;
     };
   }
 }

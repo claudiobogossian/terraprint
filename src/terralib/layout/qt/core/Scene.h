@@ -36,7 +36,6 @@
 #include "../../core/AbstractScene.h"
 #include "../../core/Config.h"
 #include "AlignItems.h"
-#include "Value.h"
 
 // STL
 #include <string>
@@ -82,6 +81,7 @@ namespace te
     class Utils;
     class AbstractProxyProject;
     class ItemGroup;
+    class ItemInputProxy;
 
   /*!
     \brief Class representing the scene. This scene is child of QGraphicsScene, part of Graphics View Framework. 
@@ -166,6 +166,22 @@ namespace te
         */
         virtual bool removeItemByName(std::string name);
     
+        /*!
+        \brief Create a group with existing items. A command Undo/Redo of type AddGroupCommand is created.
+
+        \param list of objects
+
+        \return items group of objects
+        */
+        virtual QGraphicsItem* createGroup(EnumType* groupType = 0);
+
+        /*!
+        \brief Method that just remove from scene a object grouping, but the individual objects continue to exist. A command Undo/Redo of type UngroupCommand is created.
+
+        \param group list of objects
+        */
+        virtual bool removeGroup(te::layout::ItemGroup* group = 0);
+
     /*!
           \brief Groups objects and creates a QGraphicsItem object. A command Undo/Redo of type AddCommand is created.
       
@@ -173,14 +189,14 @@ namespace te
       
       \return items group of objects
         */
-        virtual QGraphicsItem* createItemGroup( const QList<QGraphicsItem *> & items, EnumType* groupType = 0 );
+        virtual QGraphicsItem* createItemGroup( const QList<QGraphicsItem *> & items, QGraphicsItem* itemGroup = 0, EnumType* groupType = 0 );
 
     /*!
-          \brief Method that delete object grouping, but the individual objects continue to exist.
+          \brief Method that just remove from scene a object grouping, but the individual objects continue to exist.
       
       \param group list of objects
         */
-        virtual void destroyItemGroup(te::layout::ItemGroup* group );
+        virtual bool removeItemGroup(te::layout::ItemGroup* group);
         
     /*!
           \brief Method that insert command Undo/Redo of type AddCommand in the Undo/Redo stack.
@@ -354,7 +370,7 @@ namespace te
 
         Utils getUtils();
 
-        void buildItem(te::layout::Properties props, std::string &name, bool isCopy = false);
+        QGraphicsItem* buildItem(const te::layout::Properties& props, std::string &name, bool isCopy = false, bool addUndo = false);
 
         /*!
         \brief Returns the current subselected item. If there is not any subselected item, return 0.
@@ -365,9 +381,6 @@ namespace te
 
         void setProxyProject(AbstractProxyProject* proxyProject);
 
-        template <typename T>
-        Value<T>* getContextValues(std::string name);
-
         static bool zValueLessThan(QGraphicsItem* item1, QGraphicsItem* item2);
 
         /*!
@@ -376,6 +389,24 @@ namespace te
         \return list of properties
         */
         virtual bool getItemsProperties(std::vector<te::layout::Properties>& properties, std::map< std::string, std::vector<std::string> >& mapGroups);
+
+        /*
+          \brief Update multiple items with the same values of the same properties (setProperties).
+                The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
+        */
+        virtual void addChangePropertiesCommandToStack(QList<QGraphicsItem*> items, const Properties& properties);
+
+        /*
+        \brief Update multiple items with different values and properties that are the same or different (setProperties).
+              The Undo/Redo will be a single block, so the changes made will be undone at once on all indicated items.
+        */
+        virtual void addChangePropertiesCommandToStack(const std::map<QGraphicsItem*, te::layout::Properties>& map);
+        
+        virtual te::layout::ItemInputProxy* getInputItemProxy();
+
+      public slots:
+
+        void onUndoStackHasChanged();
 
       signals:
 
@@ -404,7 +435,9 @@ namespace te
           \brief Issued when the scene context changes, like Zoom and DPI
           */
          void contextUpdated();
-        
+
+         void undoStackHasChanged();
+
       protected:
 
         /*!
@@ -454,7 +487,7 @@ namespace te
 
         virtual void applyProportionAllItems(QSize oldPaper, QSize newPaper);
 
-        virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemController* controller);
+        virtual void updateBoxFromProperties(te::gm::Envelope box, AbstractItemView* view);
 
         virtual bool enterEditionMode();
 
@@ -489,11 +522,7 @@ namespace te
         virtual void searchSelectedChildItemsInResizeMode(QGraphicsItem* item);
 
         virtual void searchSelectedItemsInMoveMode();
-
-        virtual void addUndoCommandForMove();
-
-        virtual void addUndoCommandForResize();
-
+        
         virtual QList<QGraphicsItem*> getListUngroupedItems(const QList<QGraphicsItem *> & items, EnumType* groupType);
 
         /*!
@@ -502,6 +531,10 @@ namespace te
         \param list of graphic objects
         */
         virtual void sortByZValue(QList<QGraphicsItem *> & listItems);
+
+        void changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable);
+
+        void destroyItemsWithoutScene();
                 
     protected:
 
@@ -516,30 +549,10 @@ namespace te
         AbstractItemView*                     m_currentItemEdition;
         bool                                  m_isEditionMode;
         ContextObject                         m_context;
-        std::map<std::string, ValueBase*>     m_contextValues;
         double                                m_increasedUnprintableArea;
         std::map<QGraphicsItem*, Properties>  m_resizeWatches;
+        te::layout::ItemInputProxy*           m_itemInputProxy;
     };
-
-    template <typename T>
-    inline te::layout::Value<T>* te::layout::Scene::getContextValues(std::string name)
-    {
-      Value<T>* value = 0;
-
-      if (m_contextValues.empty())
-        return value;
-
-      for (std::map<std::string, ValueBase*>::iterator it = m_contextValues.begin(); it != m_contextValues.end(); ++it)
-      {
-        std::string key = it->first;
-        if (key.compare(name) == 0)
-        {
-          value = dynamic_cast<Value<T>*>(it->second);
-          break;
-        }
-      }
-      return value;
-    }
   }
 }
 

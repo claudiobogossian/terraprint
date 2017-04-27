@@ -59,7 +59,7 @@ namespace te
           \param controller "Controller" part of MVM component
           \param o "Model" part of MVM component
         */ 
-        LineController(AbstractItemModel* model);
+        LineController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
@@ -72,6 +72,8 @@ namespace te
 
         virtual te::gm::Geometry* getGeometry();
 
+        virtual void setProperties(const te::layout::Properties& properties);
+
       protected:
 
         virtual QPolygonF recalculatePolygon();
@@ -79,6 +81,8 @@ namespace te
         virtual void verifyPolygon();
 
         bool isGeometrySizeChange();
+
+
     };
   }
 }

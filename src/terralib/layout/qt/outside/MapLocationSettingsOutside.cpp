@@ -72,8 +72,12 @@ te::layout::MapLocationSettingsOutside::MapLocationSettingsOutside(AbstractOutsi
   loadColor(m_ui->frameFillColor, "reference_box_fill_color");
   loadColor(m_ui->frameContourColor, "reference_box_contour_color");
 
+  /* By default the enter is to signal that the value has been modified, so no button should be default and get focus.*/
+  m_ui->cColorButton->setDefault(false);
+  m_ui->cColorButton->setAutoDefault(false);
+  m_ui->colorButton->setDefault(false);
+  m_ui->colorButton->setAutoDefault(false);
 }
-
 
 te::layout::MapLocationSettingsOutside::~MapLocationSettingsOutside()
 {
@@ -88,7 +92,6 @@ void te::layout::MapLocationSettingsOutside::init()
 
   initCombo(m_ui->cmbConnected, sharedProps.getItemObserver());
 }
-
 
 void te::layout::MapLocationSettingsOutside::load()
 {
@@ -119,13 +122,11 @@ void te::layout::MapLocationSettingsOutside::onCancelPushButtonPressed()
   reject();
 }
 
-
 void te::layout::MapLocationSettingsOutside::updateWidgetProperty(Property prop)
 {
   emit updateProperty(prop);
  
 }
-
 
 void te::layout::MapLocationSettingsOutside::initCombo(QWidget* widget, std::string nameComponent)
 {
@@ -226,7 +227,6 @@ void te::layout::MapLocationSettingsOutside::on_cmbConnected_currentIndexChanged
   if (!controller)
     return;
 
-
   SharedProperties sharedProps;
 
   Property pConnected = controller->getProperty(sharedProps.getItemObserver());
@@ -235,14 +235,11 @@ void te::layout::MapLocationSettingsOutside::on_cmbConnected_currentIndexChanged
 
   pConnected.setValue(text.toStdString(), dataType->getDataTypeItemObserver());
 
-  emit updateProperty(pConnected);
-
-  
+  emit updateProperty(pConnected);  
 }
 
 void te::layout::MapLocationSettingsOutside::on_colorButton_pressed()
 {
-
   te::color::RGBAColor color = configColor(m_ui->frameFillColor);
   MapLocationSettingsController* controller = dynamic_cast<MapLocationSettingsController*>(m_controller);
   if (controller)
@@ -253,7 +250,6 @@ void te::layout::MapLocationSettingsOutside::on_colorButton_pressed()
     prop.setValue(color, dataType->getDataTypeColor());
     emit updateProperty(prop);
   }
-
 }
 
 void te::layout::MapLocationSettingsOutside::on_cColorButton_pressed()
@@ -266,8 +262,7 @@ void te::layout::MapLocationSettingsOutside::on_cColorButton_pressed()
     Property prop = controller->getProperty("reference_box_contour_color");
     prop.setValue(color, dataType->getDataTypeColor());
     emit updateProperty(prop);
-  }
-  
+  }  
 }
 
 te::color::RGBAColor te::layout::MapLocationSettingsOutside::configColor(QWidget* widget)
@@ -310,7 +305,5 @@ void te::layout::MapLocationSettingsOutside::loadColor(QWidget* widget, std::str
     paltt.setColor(widget->backgroundRole(), color);
     widget->setPalette(paltt);
     widget->setAutoFillBackground(true);
-
   }
-
 }

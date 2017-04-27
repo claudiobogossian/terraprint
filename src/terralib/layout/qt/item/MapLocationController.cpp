@@ -22,8 +22,8 @@
 
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 
-te::layout::MapLocationController::MapLocationController(AbstractItemModel* model)
-  : MapController(model)
+te::layout::MapLocationController::MapLocationController(AbstractItemModel* model, AbstractItemView* view)
+  : MapController(model, view)
 {
 
 }

@@ -82,6 +82,7 @@ void te::layout::PropertiesCentralController::setObjectInspector(ObjectInspector
   if (m_objectInspectorOutside)
   {
     connect(m_view->scene(), SIGNAL(deleteFinalized(std::vector<std::string>)), this, SLOT(onDeleteFinalized(std::vector<std::string>)));
+    connect(m_view->scene(), SIGNAL(undoStackHasChanged()), this, SLOT(onUndoStackHasChanged()));
     connect(m_objectInspectorOutside, SIGNAL(selectionChanged(QList<QGraphicsItem*>)), this, SLOT(onSelectionChanged(QList<QGraphicsItem*>)));
   }
 }
@@ -210,6 +211,16 @@ void te::layout::PropertiesCentralController::onDeleteFinalized(std::vector<std:
   //Refresh Inspector Object window
   if (m_objectInspectorOutside)
     m_objectInspectorOutside->itemsInspector(allItems);
+}
+
+void te::layout::PropertiesCentralController::onUndoStackHasChanged()
+{
+  QList<QGraphicsItem*> allItems = m_view->scene()->items();
+  //Refresh Inspector Object window
+  if (m_objectInspectorOutside)
+  {
+    m_objectInspectorOutside->itemsInspector(allItems);
+  }
 }
 
 void te::layout::PropertiesCentralController::onShowContextMenu(QPointF scenePoint, QPointF globalPoint)

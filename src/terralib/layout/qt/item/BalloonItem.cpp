@@ -27,11 +27,11 @@
 
 // TerraLib
 #include "BalloonItem.h"
-#include "TextItem.h"
+#include "../../item/BalloonModel.h"
+#include "BalloonController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
 #include "../../core/enum/EnumBalloonDirectionType.h"
 #include "../../core/enum/EnumBalloonType.h"
 
@@ -39,8 +39,8 @@
 #include <algorithm>    // std::max and std::min
 #include <cmath>
 
-te::layout::BalloonItem::BalloonItem(AbstractItemController* controller)
-: TextItem(controller)
+te::layout::BalloonItem::BalloonItem(te::layout::ItemInputProxy* itemInputProxy)
+  : TextItem(itemInputProxy)
 {
 
 }
@@ -48,6 +48,17 @@ te::layout::BalloonItem::BalloonItem(AbstractItemController* controller)
 te::layout::BalloonItem::~BalloonItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::BalloonItem::createModel() const
+{
+  return new BalloonModel();
+}
+
+te::layout::AbstractItemController* te::layout::BalloonItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new BalloonController(model, (AbstractItemView*)this);
 }
 
 QRectF te::layout::BalloonItem::boundingRect() const
@@ -62,39 +73,38 @@ void te::layout::BalloonItem::drawItem( QPainter * painter, const QStyleOptionGr
     TextItem::drawItem(painter, option, widget);
     return;
   }
-
-
-  const Property& pBalloonType = m_controller->getProperty("balloon_type");
+  
+  const Property& pBalloonType = this->getProperty("balloon_type");
 
   EnumBalloonType balloonEnum;
 
   const std::string& label = pBalloonType.getOptionByCurrentChoice().toString();
-  EnumType* currentBalloonType = balloonEnum.searchLabel(label);
+  EnumType* currentBalloonType = balloonEnum.getEnum(label);
 
-
-  if (currentBalloonType == balloonEnum.getRectangleBalloon())
+  if (currentBalloonType)
   {
-    drawRectangleBalloon(painter);
+    if (currentBalloonType == balloonEnum.getRectangleBalloon())
+    {
+      drawRectangleBalloon(painter);
+    }
+
+    if (currentBalloonType == balloonEnum.getRoundedRectangleBalloon())
+    {
+      drawRoundedRectangleBalloon(painter);
+    }
+
+    if (currentBalloonType == balloonEnum.getEllipseBalloon())
+    {
+      drawEllipseBalloon(painter);
+    }
   }
-
-  if (currentBalloonType == balloonEnum.getRoundedRectangleBalloon())
-  {
-    drawRoundedRectangleBalloon(painter);
-  }
-
-
-  if (currentBalloonType == balloonEnum.getEllipseBalloon())
-  {
-    drawEllipseBalloon(painter);
-  }
-
 
   TextItem::drawItem(painter, option, widget);
 }
 
 void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter)
 {
-  const Property& pMarginSize = m_controller->getProperty("margin_size");
+  const Property& pMarginSize = this->getProperty("margin_size");
   double margin = te::layout::Property::GetValueAs<double>(pMarginSize);
  
   painter->save();
@@ -132,7 +142,7 @@ void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter)
 
 void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
 {
-  const Property& pMarginSize = m_controller->getProperty("margin_size");
+  const Property& pMarginSize = this->getProperty("margin_size");
   double margin = te::layout::Property::GetValueAs<double>(pMarginSize);
 
   painter->save();
@@ -154,7 +164,6 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   QRectF rightTopRect(fullRect.topRight().x() - margin, fullRect.topRight().y() - margin, margin, margin);
   QRectF rightBottomRect(fullRect.bottomRight().x() - margin, fullRect.bottomRight().y(), margin, margin);
 
-
   qPath.moveTo(leftBottomRect.topRight());
   qPath.quadTo(leftBottomRect.topLeft(), leftBottomRect.bottomLeft());
   qPath.lineTo(leftTopRect.topLeft());
@@ -168,7 +177,6 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   qPath.lineTo(rightBottomRect.topLeft().x() - margin, rightBottomRect.topLeft().y());
   qPath.lineTo(leftBottomRect.topRight());
 
-
   setBalloonDirection(qPath);
 
   painter->drawPath(qPath);
@@ -179,13 +187,13 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
 
 void te::layout::BalloonItem::setPainterParameters(QPainter* painter)
 {
-  const Property& colorProperty = m_controller->getProperty("color");
+  const Property& colorProperty = this->getProperty("color");
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor> (colorProperty);
 
-  const Property& pFillColor = m_controller->getProperty("fill_color");
-  const Property& pContourColor = m_controller->getProperty("contour_color");
+  const Property& pFillColor = this->getProperty("fill_color");
+  const Property& pContourColor = this->getProperty("contour_color");
 
-  const Property& pContourThickness = m_controller->getProperty("contour_thickness");
+  const Property& pContourThickness = this->getProperty("contour_thickness");
   double contourThickness = te::layout::Property::GetValueAs<double>(pContourThickness);
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
@@ -206,14 +214,13 @@ void te::layout::BalloonItem::setPainterParameters(QPainter* painter)
 
 void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
 {
-  const Property& pMarginSize = m_controller->getProperty("margin_size");
+  const Property& pMarginSize = this->getProperty("margin_size");
   double margin = te::layout::Property::GetValueAs<double>(pMarginSize);
 
   painter->save();
   setPainterParameters(painter);
 
   QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
-
 
   QPointF p2 = QPointF(adjustedBoundbox.x(), adjustedBoundbox.y() + adjustedBoundbox.height());
   QPointF p3 = QPointF(adjustedBoundbox.x() + adjustedBoundbox.width(), adjustedBoundbox.y() + (margin * 2));
@@ -235,20 +242,22 @@ void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
 
 void  te::layout::BalloonItem::setBalloonDirection(QPainterPath& qpainterpath)
 {
-  const Property& pWidth = m_controller->getProperty("width");
+  const Property& pWidth = this->getProperty("width");
   double width = te::layout::Property::GetValueAs<double>(pWidth);
 
   EnumBalloonDirectionType balloonDirection;
-  const Property& pDirection = m_controller->getProperty("balloon_direction");
+  const Property& pDirection = this->getProperty("balloon_direction");
   const std::string& label = pDirection.getOptionByCurrentChoice().toString();
-  EnumType* currentBalloonDirectionType = balloonDirection.searchLabel(label);
+  EnumType* currentBalloonDirectionType = balloonDirection.getEnum(label);
 
-  if (currentBalloonDirectionType == balloonDirection.getLeft())
+  if (currentBalloonDirectionType)
   {
-
-    QTransform transform;
-    transform.scale(-1, 1);
-    transform.translate(-width, 0);
-    qpainterpath = transform.map(qpainterpath);
+    if (currentBalloonDirectionType == balloonDirection.getLeft())
+    {
+      QTransform transform;
+      transform.scale(-1, 1);
+      transform.translate(-width, 0);
+      qpainterpath = transform.map(qpainterpath);
+    }
   }
 }

@@ -259,26 +259,26 @@ QToolButton* te::layout::ToolbarOutside::createMapToolButton()
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
   const ItemIconManager& iconManager = toolbarController->getIconManager();
 
-  QToolButton *btnMap = createToolButton(tr("Map"), tr("Map Objects"), "");
+  QToolButton *btnMap = createToolButton(tr("Map related components"), tr("Map related components"), "");
 
   QMenu* menu = new QMenu(btnMap);
 
-  QAction* actionDefaultMenu = createAction(tr("Default Map Object"), m_actionMapDefault, iconManager.getIconNameAsQString(itemType->getMapCompositionItem()->getName()), "", menu);
+  QAction* actionDefaultMenu = createAction(tr("Insert Map"), m_actionMapDefault, iconManager.getIconNameAsQString(itemType->getMapItem()->getName()), "", menu);
   menu->addAction(actionDefaultMenu);
   
-  QAction* actionLegend = createAction(tr("Default Legend"), m_actionLegendDefault, iconManager.getIconNameAsQString(itemType->getLegendItem()->getName()), "", menu);
+  QAction* actionLegend = createAction(tr("Insert Legend"), m_actionLegendDefault, iconManager.getIconNameAsQString(itemType->getLegendItem()->getName()), "", menu);
   menu->addAction(actionLegend);
 
-  QAction* actionScale = createAction(tr("Scale Object"), m_actionScale, iconManager.getIconNameAsQString(itemType->getScaleItem()->getName()), "", menu);
+  QAction* actionScale = createAction(tr("Insert Graphic Scale"), m_actionScale, iconManager.getIconNameAsQString(itemType->getScaleItem()->getName()), "", menu);
   menu->addAction(actionScale);
 
-  QAction* actionNorth = createAction(tr("North Object"), m_actionNorth, iconManager.getIconNameAsQString(itemType->getNorthItem()->getName()), "", menu);
+  QAction* actionNorth = createAction(tr("Insert North"), m_actionNorth, iconManager.getIconNameAsQString(itemType->getNorthItem()->getName()), "", menu);
   menu->addAction(actionNorth);
 
-  QAction* actionThreeNorth = createAction(tr("Three North Object"), m_actionThreeNorth, iconManager.getIconNameAsQString(itemType->getThreeNorthItem()->getName()), "", menu);
+  QAction* actionThreeNorth = createAction(tr("Insert Three North"), m_actionThreeNorth, iconManager.getIconNameAsQString(itemType->getThreeNorthItem()->getName()), "", menu);
   menu->addAction(actionThreeNorth);
 
-  QAction* actionMapLocation = createAction(tr("Map Location Object"), m_actionMapLocation, iconManager.getIconNameAsQString(itemType->getMapLocationItem()->getName()), "", menu);
+  QAction* actionMapLocation = createAction(tr("Insert Map Location"), m_actionMapLocation, iconManager.getIconNameAsQString(itemType->getMapLocationItem()->getName()), "", menu);
   menu->addAction(actionMapLocation);
   
   btnMap->setMenu(menu);

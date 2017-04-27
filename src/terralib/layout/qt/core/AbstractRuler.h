@@ -36,6 +36,7 @@
 #include <QPainter>
 #include <QColor>
 #include <QFont>
+#include <QPointF>
 
 namespace te
 {
@@ -96,6 +97,8 @@ namespace te
 
         virtual void drawRuler(QGraphicsView* view, QPainter* painter, double scale) = 0;
 
+        virtual QPointF getOriginPoint();
+
       protected:
 
         virtual void drawText(QPoint p, std::string txt, double angle, QPainter* painter);
@@ -111,8 +114,8 @@ namespace te
         double              m_longLine;
         double              m_mediumLine;
         double              m_smallLine;
-        int                  m_blockSize;
-        int                  m_middleBlockSize;
+        int                 m_blockSize;
+        int                 m_middleBlockSize;
         int                 m_smallBlockSize;
         double              m_height;
         double              m_cornerSize;
@@ -123,6 +126,7 @@ namespace te
         QColor              m_backgroundRulerColor;
         QColor              m_penColor;
         double              m_penWidth;
+        QPointF             m_originPoint;
     };
   }
 }

@@ -20,24 +20,27 @@
 // TerraLib
 #include "AbstractItemController.h"
 
-#include "../../enum/EnumDataType.h"
-#include "../../enum/Enums.h"
 #include "AbstractItemModel.h"
 #include "AbstractItemView.h"
-#include "../factory/ItemParamsCreate.h"
 #include "../factory/AbstractItemFactory.h"
-#include "../../property/SharedProperties.h"
+#include "../factory/ItemParamsCreate.h"
+#include "../../ItemInputProxy.h"
 #include "../../AbstractScene.h"
-#include "../../../qt/core/ItemUtils.h"
 #include "../../WarningManager.h"
+#include "../../enum/EnumDataType.h"
+#include "../../enum/Enums.h"
+#include "../../property/SharedProperties.h"
+#include "../../../qt/item/AbstractItem.h"
+#include "../../../qt/core/ItemUtils.h"
+#include "../../../qt/core/pattern/command/ChangePropertyCommand.h"
 
 // Qt
 #include <QGraphicsItem>
 
-te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model)
+te::layout::AbstractItemController::AbstractItemController(AbstractItemModel* model, AbstractItemView* view)
   : Observer()
   , m_model(model)
-  , m_view(0)
+  , m_view(view)
   , m_marginResizePrecision(2.)
   , m_warningManager(new WarningManager())
   , m_resizableDefaultState(false)
@@ -160,9 +163,26 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       m_view->prepareGeometryChange();
     }
   }
+
+  Properties oldProperties = m_model->getProperties();
+
   m_model->setProperties(propertiesCopy);
 
   validateItem();
+
+  /* add command in scene undo stack */
+
+  const Properties& newProperties = m_model->getProperties();
+
+  AbstractItem* item = dynamic_cast<AbstractItem*>(m_view);
+  if (item)
+  {
+    if (item->isUndoEnabled() && item->getScene())
+    {
+      QUndoCommand* command = new ChangePropertyCommand(item, oldProperties, newProperties);
+      m_view->addUndoCommandToStack(command);
+    }
+  }
 }
 
 void te::layout::AbstractItemController::attach(te::layout::AbstractItemController* controller)
@@ -204,37 +224,19 @@ void te::layout::AbstractItemController::update(const te::layout::Subject* subje
   refresh();
 }
 
-bool te::layout::AbstractItemController::contains(const te::gm::Coord2D &coord) const
-{
-  return m_model->contains(coord);
-}
-
 void te::layout::AbstractItemController::setView(AbstractItemView* view)
 {
   m_view = view;
-  refresh(); // controller could be refresh your view
 }
 
-void te::layout::AbstractItemController::resized(const double& width, const double& height)
+void te::layout::AbstractItemController::mergeProperties(const te::layout::Properties& propertiesToMerge, te::layout::Properties& baseProperties)
 {
-  Properties properties;
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  const std::vector<Property> vecProperties = propertiesToMerge.getProperties();
+  for (std::size_t i = 0; i < vecProperties.size(); ++i)
   {
-    Property property(0);
-    property.setName("width");
-    property.setValue(width, dataType->getDataTypeDouble());
-    properties.addProperty(property);
+    ItemUtils::addOrUpdateProperty(vecProperties.at(i), baseProperties);
   }
-
-  {
-    Property property(0);
-    property.setName("height");
-    property.setValue(height, dataType->getDataTypeDouble());
-    properties.addProperty(property);
-  }
-  setProperties(properties);
 }
-
 
 void te::layout::AbstractItemController::rotated(const double& degree)
 {
@@ -270,7 +272,7 @@ void te::layout::AbstractItemController::itemPositionChanged(double x, double y)
     property.setValue(y, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
-  m_model->setProperties(properties);
+  setProperties(properties);
 }
 
 void te::layout::AbstractItemController::itemZValueChanged(int index)
@@ -280,7 +282,7 @@ void te::layout::AbstractItemController::itemZValueChanged(int index)
     Property property(0);
     property.setName("zValue");
     property.setValue(index, dataType->getDataTypeInt());
-    m_model->setProperty(property);
+    setProperty(property);
   }
 }
 
@@ -302,40 +304,27 @@ void te::layout::AbstractItemController::refresh()
 
 bool te::layout::AbstractItemController::syncItemPos(Properties& properties)
 {
-  if (properties.getProperties().empty())
-  {
-    return false;
-  }
-
   if (properties.contains("x") == false && properties.contains("y") == false)
   {
     return false;
   }
-
-  Property prop_x = m_model->getProperty("x");
-  if (properties.contains("x"))
-  {
-    prop_x = properties.getProperty("x");
-  }
-
-  Property prop_y = m_model->getProperty("y");
-  if (properties.contains("y"))
-  {
-    prop_y = properties.getProperty("y");
-  }
-
-  double x = te::layout::Property::GetValueAs<double>(prop_x);
-  double y = te::layout::Property::GetValueAs<double>(prop_y);
-  QPointF newPos(x, y);
-
   QGraphicsItem* gItem = dynamic_cast<QGraphicsItem*>(m_view);
-  if (gItem != 0)
+  if (gItem == 0)
   {
-    if (gItem->pos() != newPos)
-    {
-      m_view->setItemPosition(x, y);
-      return true;
-    }
+    return false;
+  }
+
+  const Property& pX = getProperty("x", properties);
+  const Property& pY = getProperty("y", properties);
+
+  double x = te::layout::Property::GetValueAs<double>(pX);
+  double y = te::layout::Property::GetValueAs<double>(pY);
+
+  QPointF newPos(x, y);
+  if (gItem->pos().x() != newPos.x() || gItem->pos().y() != newPos.y())
+  {
+    m_view->setItemPosition(x, y);
+    return true;
   }
 
   return false;
@@ -379,11 +368,16 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
     return false;
   }
 
+  if (m_model->getProperties().contains(sharedPropertiesName.getItemObserver()) == false)
+  {
+    return false;
+  }
+
   const Property& pNewObserver = properties.getProperty(sharedPropertiesName.getItemObserver());
   const Property& pCurrentObserver = m_model->getProperty(sharedPropertiesName.getItemObserver());
 
-  AbstractScene* scene = m_view->getScene();
-  if (scene == 0)
+  ItemInputProxy* itemInputProxy = m_view->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return false;
   }
@@ -398,17 +392,17 @@ bool te::layout::AbstractItemController::syncItemAssociation(Properties& propert
   //if this property is being set, we first remove the current association (if it exists)
 
   // Observer pattern relationship. Associate: != 0 / Dissociate: == 0.
-  AbstractItemView* currentObserver = scene->getItem(strCurrentObserver);
+  AbstractItemView* currentObserver = itemInputProxy->getItem(strCurrentObserver);
   if (currentObserver != 0)
   {
-    currentObserver->getController()->detach(this);
+    currentObserver->detach(this->getView());
   }
 
   //and then we make the new association (if there is a valid item)
-  AbstractItemView* newObserver = scene->getItem(strNewObserver);
+  AbstractItemView* newObserver = itemInputProxy->getItem(strNewObserver);
   if (newObserver != 0)
   {
-    newObserver->getController()->attach(this);
+    newObserver->attach(this->getView());
   }
 
   return true;
@@ -421,117 +415,10 @@ QRectF te::layout::AbstractItemController::resize(te::layout::LayoutAlign grabbe
     return QRectF();
   }
 
-  AbstractItemView* currentView = getView();
-  QGraphicsItem* currentItem = dynamic_cast<QGraphicsItem*>(currentView);
-
-  QPointF oldItemPos = currentItem->mapToScene(QPoint(0, 0));
-  QRectF oldItemRec = currentItem->boundingRect();
   QRectF newRect = calculateResize(grabbedPoint, initialCoord, finalCoord);
-
-  double oldItemWidth = oldItemRec.width();
-  double oldItemHeight = oldItemRec.height();
-
-  //calculates the porcentage of the new size in comparisson with the old size
-  double itemWidthFactor = newRect.width() / oldItemWidth;
-  double itemHeightFactor = newRect.height() / oldItemHeight;
-
-  //if the item has children, we must resize them first
-  QList<QGraphicsItem*> qChildrenList = currentItem->childItems();
-  QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
-  while(itChild != qChildrenList.end())
-  {
-    QGraphicsItem* qChild = *itChild;
-    AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
-    childView->getController()->scaleItem(itemWidthFactor, itemHeightFactor);
- 
-    ++itChild;
-  }
-
-  //update the bounding box of the item
   updateBoundingRect(newRect);
 
-  //we normalize the box and position so the item bounding rect can start at 0,0
-  if (qChildrenList.isEmpty() == false)
-  {
-    ItemUtils::normalizeChildrenPosition(currentItem);
-
-    newRect = currentItem->boundingRect();
-    updateBoundingRect(newRect);
-  }
-
-  //we normalize the parent
-  if (currentItem->parentItem() != 0)
-  {
-    QGraphicsItem* qParentItem = currentItem->parentItem();
-    AbstractItemView* parentView = dynamic_cast<AbstractItemView*>(qParentItem);
-
-    QRectF newParentRect = qParentItem->boundingRect();
-
-    ItemUtils::normalizeChildrenPosition(qParentItem);
-  }
-
-  newRect = currentItem->boundingRect();
-
   return newRect;
-}
-
-void te::layout::AbstractItemController::scaleItem(double widthFactor, double heightFactor)
-{
-  QGraphicsItem* qItem = dynamic_cast<QGraphicsItem*>(this->m_view);
-
-  //if the item has children, we must resize them first
-  QList<QGraphicsItem*> qChildrenList = qItem->childItems();
-  if (qChildrenList.isEmpty() == false)
-  {
-    QList<QGraphicsItem*>::iterator itChild = qChildrenList.begin();
-    while (itChild != qChildrenList.end())
-    {
-      QGraphicsItem* qChild = *itChild;
-      AbstractItemView* childView = dynamic_cast<AbstractItemView*>(qChild);
-      childView->getController()->scaleItem(widthFactor, heightFactor);
-
-      ++itChild;
-    }
-
-    if (qChildrenList.isEmpty() == false)
-    {
-      ItemUtils::normalizeChildrenPosition(qItem);
-
-      QRectF newRect = qItem->boundingRect();
-      updateBoundingRect(newRect);
-    }
-
-    return;
-  }
-
-  QGraphicsItem* qParentItem = qItem->parentItem();
-
-  //if we have a parent, our CS must me revative to it.
-  //if we dont have a parent, we consider the scene
-  QPointF oldItemPos(0, 0);
-  if (qParentItem != 0)
-  {
-    oldItemPos = qParentItem->mapToScene(QPoint(0, 0));
-  }
-
-  QRectF oldChildRect = qItem->boundingRect();
-  QPointF oldChildPos = qItem->mapToScene(QPoint(0, 0));
-
-  double oldDistanceFromOriginX = oldChildPos.x() - oldItemPos.x();
-  double oldDistanceFromOriginY = oldChildPos.y() - oldItemPos.y();
-
-  double newDistanceFromOriginX = oldItemPos.x() + (oldDistanceFromOriginX * widthFactor);
-  double newDistanceFromOriginY = oldItemPos.y() + (oldDistanceFromOriginY * heightFactor);
-
-  double newChildWidth = oldChildRect.width() * widthFactor;
-  double newChildHeight = oldChildRect.height() * heightFactor;
-
-  QPointF newChildPoint(newDistanceFromOriginX, newDistanceFromOriginY);
-  newChildPoint = qItem->mapFromScene(newChildPoint);
-
-  QRectF newChildRect(newChildPoint.x(), newChildPoint.y(), newChildWidth, newChildHeight);
-
-  this->m_view->getController()->updateBoundingRect(newChildRect);
 }
 
 QRectF te::layout::AbstractItemController::calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord)
@@ -675,6 +562,10 @@ void te::layout::AbstractItemController::updateBoundingRect(QRectF rect)
   setProperties(props);
 }
 
+void te::layout::AbstractItemController::sceneHasChanged(Scene* scene)
+{
+
+}
 
 te::layout::WarningManager* te::layout::AbstractItemController::getWarningManager()
 {

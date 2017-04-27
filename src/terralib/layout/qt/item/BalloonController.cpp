@@ -18,15 +18,17 @@ TerraLib Team at <terralib-team@terralib.org>.
 */
 
 // TerraLib
-
 #include "BalloonController.h"
+#include "../../core/enum/Enums.h"
+#include "../../core/property/Properties.h"
 
-#include "../core/pattern/command/ChangePropertyCommand.h"
-#include "../../core/enum/EnumAlignmentType.h"
-#include "../../core/pattern/mvc/AbstractItemModel.h"
+te::layout::BalloonController::BalloonController(AbstractItemModel* model, AbstractItemView* view)
+: TextController(model, view)
+{
 
-te::layout::BalloonController::BalloonController(AbstractItemModel* model)
-: TextController(model)
+}
+
+te::layout::BalloonController::~BalloonController()
 {
 
 }
@@ -60,7 +62,6 @@ void te::layout::BalloonController::calculateSize(const te::layout::Properties& 
 
 }
 
-
 bool  te::layout::BalloonController::needUpdateBox(const te::layout::Properties& properties)
 {
   if (properties.contains("text") == false && properties.contains("font") == false && properties.contains("margin_size") == false)
@@ -69,3 +70,32 @@ bool  te::layout::BalloonController::needUpdateBox(const te::layout::Properties&
   }
   return true;
 }
+
+void te::layout::BalloonController::setProperties(const Properties& properties)
+{
+  //we first copy the properties that are being set
+  Properties propertiesCopy(properties);
+
+  bool hasName = properties.contains("name");
+  bool hasText = properties.contains("text");
+  if (hasName && !hasText)
+  {
+    const Property& propName = properties.getProperty("name");
+    const Property& propText = getProperty("text");
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    std::string name = te::layout::Property::GetValueAs<std::string>(propName); 
+    std::string text = te::layout::Property::GetValueAs<std::string>(propText);
+
+    if (name.compare("") != 0 && text.compare("") == 0)
+    {
+      Property propText(0);
+      propText.setName("text");
+      propText.setValue(name, dataType->getDataTypeString());
+      propertiesCopy.addProperty(propText);
+    }
+  }
+
+  TextController::setProperties(propertiesCopy);
+}
+

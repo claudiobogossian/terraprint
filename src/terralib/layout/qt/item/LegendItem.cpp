@@ -27,7 +27,10 @@
 
 // TerraLib
 #include "LegendItem.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../item/LegendModel.h"
+#include "LegendController.h"
+
+#include "../../core/ItemInputProxy.h"
 #include "../../core/pattern/singleton/Context.h"
 #include "terralib/maptools/GroupingItem.h"
 #include "terralib/maptools/Grouping.h"
@@ -38,13 +41,12 @@
 #include "terralib/qt/widgets/canvas/Canvas.h"
 #include "../core/Scene.h"
 #include "../core/ItemUtils.h"
-#include "LegendController.h"
 
 // Qt
 #include <QPixmap>
 
-te::layout::LegendItem::LegendItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::LegendItem::LegendItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
   , m_currentMaxHeight(0)
   , m_maxWidth(0)
   , m_displacementBetweenSymbols(0)
@@ -67,14 +69,19 @@ te::layout::LegendItem::~LegendItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::LegendItem::createModel() const
+{
+  return new LegendModel();
+}
+
+te::layout::AbstractItemController* te::layout::LegendItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new LegendController(model, (AbstractItemView*)this);
+}
+
 void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-  
   if(m_layerList.empty() == true)
   {
     return;
@@ -120,7 +127,7 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
 
   painter->save();
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(m_qFontTitleColor, lnew, Qt::SolidLine);
@@ -140,12 +147,6 @@ void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1
 
 void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1)
 {
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-  
   te::map::Grouping* grouping = layer->getGrouping();
 
   if (grouping != 0 && grouping->isVisible() == true)
@@ -288,15 +289,9 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
 
 void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text)
 {
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-
   painter->save();
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(fontColor, lnew, Qt::SolidLine);
@@ -314,11 +309,12 @@ te::qt::widgets::Canvas* te::layout::LegendItem::createCanvas(QRectF rectMM, te:
 {
   te::qt::widgets::Canvas* geomCanvas = 0;
 
-  if (!scene())
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
     return geomCanvas;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  Utils utils = sc->getUtils();
+  }
+  Utils utils = itemInputProxy->getUtils();
 
   te::gm::Envelope box(0, 0, rectMM.width(), rectMM.height());
   box = utils.viewportBox(box);
@@ -373,12 +369,6 @@ std::string te::layout::LegendItem::getLabel(std::string propertyName, te::map::
 
 void te::layout::LegendItem::resizeMark(te::qt::widgets::Canvas* geomCanvas, te::se::Symbolizer*symbol, int pxWidth, int pxHeight)
 {
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils itemUtils = sc->getItemUtils();
-
   // Resize mark (image) depending on the zoom 
   te::se::PointSymbolizer* pointSymbol = dynamic_cast<te::se::PointSymbolizer*>(symbol);
   if (pointSymbol)
@@ -386,7 +376,7 @@ void te::layout::LegendItem::resizeMark(te::qt::widgets::Canvas* geomCanvas, te:
     // Gets the new graphic size 
     std::size_t width = static_cast<std::size_t>(pxWidth);
     std::size_t height = static_cast<std::size_t>(pxHeight);
-    te::color::RGBAColor** rgba = itemUtils.changePointMarkSize(pointSymbol, width, height);
+    te::color::RGBAColor** rgba = ItemUtils::changePointMarkSize(pointSymbol, width, height);
     if (rgba)
     {
       geomCanvas->setPointPattern(rgba, pxWidth, pxHeight);
@@ -396,23 +386,17 @@ void te::layout::LegendItem::resizeMark(te::qt::widgets::Canvas* geomCanvas, te:
 
 void te::layout::LegendItem::refreshLegendProperties()
 {
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-
-  const Property& pFontColor = m_controller->getProperty("font_legend_color");
-  const Property& pLegendFont = m_controller->getProperty("font_legend");
-  const Property& pDisplacementBetweenSymbols = m_controller->getProperty("displacement_between_symbols");
-  const Property& pDisplacementBetweenSymbolsAndText = m_controller->getProperty("displacement_between_symbols_and_texts");
-  const Property& pSymbolSize = m_controller->getProperty("symbol_size");
-  const Property& pBorderDisplacement = m_controller->getProperty("border_displacement");
-  const Property& pDispBetweenTitleAndSymbols = m_controller->getProperty("displacement_between_title_and_symbols");
-  const Property& pFontTitleColor = m_controller->getProperty("font_title_color");
-  const Property& pTitleFont = m_controller->getProperty("font_title");
-  const Property& pRows = m_controller->getProperty("rows");
-  const Property& pOffsetBetweenColumns = m_controller->getProperty("offset_between_columns");
+  const Property& pFontColor = this->getProperty("font_legend_color");
+  const Property& pLegendFont = this->getProperty("font_legend");
+  const Property& pDisplacementBetweenSymbols = this->getProperty("displacement_between_symbols");
+  const Property& pDisplacementBetweenSymbolsAndText = this->getProperty("displacement_between_symbols_and_texts");
+  const Property& pSymbolSize = this->getProperty("symbol_size");
+  const Property& pBorderDisplacement = this->getProperty("border_displacement");
+  const Property& pDispBetweenTitleAndSymbols = this->getProperty("displacement_between_title_and_symbols");
+  const Property& pFontTitleColor = this->getProperty("font_title_color");
+  const Property& pTitleFont = this->getProperty("font_title");
+  const Property& pRows = this->getProperty("rows");
+  const Property& pOffsetBetweenColumns = this->getProperty("offset_between_columns");
 
   const te::color::RGBAColor& fontLegendColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFontColor);
   const Font& fontLegend = te::layout::Property::GetValueAs<Font>(pLegendFont);
@@ -427,11 +411,11 @@ void te::layout::LegendItem::refreshLegendProperties()
   m_offsetBetweenColumns = te::layout::Property::GetValueAs<double>(pOffsetBetweenColumns);
 
   m_qFontLegendColor.setRgb(fontLegendColor.getRed(), fontLegendColor.getGreen(), fontLegendColor.getBlue(), fontLegendColor.getAlpha());
-  m_qFontLegend = utils.convertToQfont(fontLegend);
+  m_qFontLegend = ItemUtils::convertToQfont(fontLegend);
   m_qFontTitleColor.setRgb(fontTitleColor.getRed(), fontTitleColor.getGreen(), fontTitleColor.getBlue(), fontTitleColor.getAlpha());
-  m_qFontTitle = utils.convertToQfont(fontTitle);
+  m_qFontTitle = ItemUtils::convertToQfont(fontTitle);
 
-  LegendController* controller = dynamic_cast<LegendController*>(m_controller);
+  LegendController* controller = dynamic_cast<LegendController*>(getController());
   if (controller)
   {
     m_layerList = controller->searchLayersFromURI();

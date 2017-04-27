@@ -48,10 +48,11 @@
 // Qt
 #include <QGraphicsItem>
 #include <QUndoCommand> 
+#include <QPointF>
 
 te::layout::BuildGraphicsItem::BuildGraphicsItem(Scene* scene, QObject* parent) :
-  QObject(parent),
-  m_scene(scene)
+  AbstractBuildGraphicsItem(scene),
+  QObject(parent)
 {
   if (m_scene)
   {
@@ -117,41 +118,11 @@ QGraphicsItem* te::layout::BuildGraphicsItem::createItem(te::layout::EnumType* i
 
   ItemFactoryParamsCreate params = createParams(itemType, isCopy);
 
-  std::string name = itemType->getName();
+  std::string factoryName = itemType->getName();
 
-  if (isCopy == true)
-  {
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-    Property idProp = m_props.getProperty("id");
-
-    idProp.setValue(m_id, dataType->getDataTypeInt());
-    m_props.updateProperty(idProp);
-
-    Property nameProp = m_props.getProperty("name");
-    nameProp.setValue(nameItem(itemType), dataType->getDataTypeString());
-    m_props.updateProperty(nameProp);
-
-  }
-
-  AbstractItemView* abstractItem = te::layout::ItemFactory::make(name, params);
+  AbstractItemView* abstractItem = te::layout::ItemFactory::make(factoryName, params);
   item = dynamic_cast<QGraphicsItem*>(abstractItem);
-
-  if (!item)
-  {
-    return item;
-  }
-
-  if (m_scene)
-  {
-    m_scene->insertItem(item);
-  }
-
-  if (m_props.getProperties().empty() == false)
-  { 
-    abstractItem->getController()->setProperties(m_props);
-  }
-  
+    
   afterBuild(item, addUndo);
 
   showImgDlg(item);
@@ -198,7 +169,7 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
 
   QPointF pointInSceneCS(m_coord.x, m_coord.y);
 
-  // tool for create items could be with size
+  // If the item does not have width and height, after created it will be centralized
   if (m_width == 0 && m_height == 0)
   {
     double width = item->boundingRect().width();
@@ -208,19 +179,17 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
     pointInItemCS.setX(pointInItemCS.x() - (width / 2.));
     pointInItemCS.setY(pointInItemCS.y() - (height / 2.));
     pointInSceneCS = item->mapToScene(pointInItemCS);
+
+    AbstractItemView* abstractItem = dynamic_cast<AbstractItemView*>(item);
+    Properties propsPostion = createPositionProperties(pointInSceneCS);
+    abstractItem->setProperties(propsPostion);
   }
 
-  item->setPos(pointInSceneCS);
-
-  if (!m_props.getProperties().empty())
+  if (m_scene)
   {
-    int zValue = findZValue(m_props);
-    if (zValue > -1)
-    {
-      item->setZValue(zValue);
-    }
+    m_scene->insertItem(item);
   }
-
+      
   if (item)
   {
     if (m_scene)
@@ -234,33 +203,58 @@ void te::layout::BuildGraphicsItem::afterBuild(QGraphicsItem* item, bool addUndo
   }
 }
 
+te::layout::Properties te::layout::BuildGraphicsItem::createPositionProperties(const QPointF& pos)
+{
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = pos.x();
+  double y = pos.y();
+
+  Properties properties;
+  {
+    Property prop_x(0);
+    prop_x.setName("x");
+    prop_x.setValue(x, dataType->getDataTypeDouble());
+    properties.addProperty(prop_x);
+
+    Property prop_y(0);
+    prop_y.setName("y");
+    prop_y.setValue(y, dataType->getDataTypeDouble());
+    properties.addProperty(prop_y);
+  }
+  return properties;
+}
+
 te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(te::layout::EnumType* type, bool isCopy)
 {
   std::string strName = nameItem(type);
+  int zValue = generateZValueFromScene();
 
   if (isCopy == true)
   {
-    m_name = strName;
-    return ItemFactoryParamsCreate(strName, m_id, m_coord, m_width, m_height);
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+    Property idProp = m_props.getProperty("id");
+
+    idProp.setValue(m_id, dataType->getDataTypeInt());
+    m_props.updateProperty(idProp);
+    
+    Property nameProp = m_props.getProperty("name");
+    nameProp.setValue(strName, dataType->getDataTypeString());
+    m_props.updateProperty(nameProp);
+
+    Property zValueProp = m_props.getProperty("zValue");
+    zValueProp.setValue(zValue, dataType->getDataTypeInt());
+    m_props.updateProperty(zValueProp);
   }
 
-  if (m_props.getProperties().empty())
-  {
-    m_name = strName;
-    return ItemFactoryParamsCreate(strName, m_id, m_coord, m_width, m_height);
-  }
+  m_name = strName;
+  m_zValue = zValue;
 
-  std::string name = findName(m_props);
-  if (name.empty())
-  {
-    m_name = strName;
-    Properties pEmpty;
-    return ItemFactoryParamsCreate(strName, m_coord, pEmpty);
-  }  
+  Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height, zValue);
+  props = collapseProperties(m_props, props);
 
-  Properties pEmpty;
-  m_name = name;
-  return ItemFactoryParamsCreate(name, m_id, m_coord, m_width, m_height);
+  return ItemFactoryParamsCreate(props, m_scene->getInputItemProxy());
 }
 
 void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
@@ -272,13 +266,13 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   }
   EnumDataType* enumData = Enums::getInstance().getEnumDataType();
   te::layout::EnumObjectType* enumObj = te::layout::Enums::getInstance().getEnumObjectType();
-  te::layout::EnumType* enumType = abstractItem->getController()->getProperties().getTypeObj();
+  te::layout::EnumType* enumType = abstractItem->getProperties().getTypeObj();
   if (enumType == enumObj->getImageItem())
   {
     ImageItem* imageItem = dynamic_cast<ImageItem*> (item);
     if (imageItem)
     {
-      Property prop = abstractItem->getController()->getProperty("file_name");
+      Property prop = abstractItem->getProperty("file_name");
 
       if (prop.getValue()->toString().compare("") != 0)
         return;
@@ -296,8 +290,80 @@ void te::layout::BuildGraphicsItem::showImgDlg(QGraphicsItem* item)
   }
 }
 
-
 std::string te::layout::BuildGraphicsItem::getNewName()
 {
   return m_name;
+}
+
+te::layout::Properties te::layout::BuildGraphicsItem::convertToProperties(const std::string& name, int id, const te::gm::Coord2D& coord, 
+  double width, double height, int zValue)
+{
+  Properties props;
+  
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  double x = coord.getX();
+  double y = coord.getY();
+
+  Property prop_name(0);
+  prop_name.setName("name");
+  prop_name.setValue(name, dataType->getDataTypeString());
+  props.addProperty(prop_name);
+
+  Property prop_id(0);
+  prop_id.setName("id");
+  prop_id.setValue(id, dataType->getDataTypeInt());
+  props.addProperty(prop_id);
+
+  Property prop_x(0);
+  prop_x.setName("x");
+  prop_x.setValue(x, dataType->getDataTypeDouble());
+  props.addProperty(prop_x);
+
+  Property prop_y(0);
+  prop_y.setName("y");
+  prop_y.setValue(y, dataType->getDataTypeDouble());
+  props.addProperty(prop_y);
+
+  if (width > 0)
+  {
+    Property prop_width(0);
+    prop_width.setName("width");
+    prop_width.setValue(width, dataType->getDataTypeDouble());
+    props.addProperty(prop_width);
+  }
+
+  if (height > 0)
+  {
+    Property prop_height(0);
+    prop_height.setName("height");
+    prop_height.setValue(height, dataType->getDataTypeDouble());
+    props.addProperty(prop_height);
+  }
+
+  Property prop_zValue(0);
+  prop_zValue.setName("zValue");
+  prop_zValue.setValue(zValue, dataType->getDataTypeInt());
+  props.addProperty(prop_zValue);
+  
+  return props;
+}
+
+te::layout::Properties te::layout::BuildGraphicsItem::collapseProperties(const Properties& properties, const Properties& newProperties)
+{
+  Properties propertiesCopy = properties;
+  Properties newPropertiesCopy = newProperties;
+
+  std::vector<Property>::const_iterator it = newProperties.getProperties().begin();
+
+  for (; it != newProperties.getProperties().end(); ++it)
+  {
+    Property prop = (*it);
+    if (!propertiesCopy.contains(prop.getName()))
+    {
+      propertiesCopy.addProperty(prop);
+    }
+  }
+
+  return propertiesCopy;
 }

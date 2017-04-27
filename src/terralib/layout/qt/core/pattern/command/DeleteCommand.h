@@ -31,6 +31,11 @@
 // TerraLib
 #include "../../../../core/Config.h"
 
+// STL
+#include <map>
+#include <vector>
+#include <string>
+
 // Qt
 #include <QUndoCommand>
 #include <QString>
@@ -77,9 +82,13 @@ namespace te
 
       protected:
 
+        virtual void init();
+
         virtual QString createCommandString(int totalItems);
 
-        QGraphicsScene* m_scene;
+      protected:
+        
+        QGraphicsScene*       m_scene;
         QList<QGraphicsItem*> m_items;
     };
   }

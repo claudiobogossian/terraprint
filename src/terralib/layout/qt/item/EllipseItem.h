@@ -62,7 +62,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        EllipseItem(AbstractItemController* controller);
+        EllipseItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -70,6 +70,8 @@ namespace te
         virtual ~EllipseItem();
 
     protected:
+
+        virtual AbstractItemModel* createModel() const;
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
     };

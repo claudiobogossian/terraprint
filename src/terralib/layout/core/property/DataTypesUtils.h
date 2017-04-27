@@ -18,7 +18,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 */
 
 /*!
-\file DataTypes.h
+\file DataTypesUtils.h
 
 \brief This file defines the enum and typedefs for all basic types in the layout module
 
@@ -38,7 +38,7 @@ namespace te
 {
   namespace layout
   {
-    void RegisterLayoutTypes();
+    void registerLayoutTypes();
 
     template<typename T> 
     te::dt::AbstractData* CreateData(const T& value)

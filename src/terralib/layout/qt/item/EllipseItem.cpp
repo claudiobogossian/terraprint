@@ -27,11 +27,12 @@
 
 // TerraLib
 #include "EllipseItem.h"
-#include "terralib/color/RGBAColor.h"
 #include "../../core/pattern/mvc/AbstractItemController.h"
+#include "../../item/EllipseModel.h"
+#include "terralib/color/RGBAColor.h"
 
-te::layout::EllipseItem::EllipseItem(AbstractItemController* controller)
-: AbstractItem(controller)
+te::layout::EllipseItem::EllipseItem(te::layout::ItemInputProxy* itemInputProxy)
+: AbstractItem(itemInputProxy)
 {
 }
 
@@ -40,12 +41,17 @@ te::layout::EllipseItem::~EllipseItem()
 
 }
 
+te::layout::AbstractItemModel* te::layout::EllipseItem::createModel() const
+{
+  return new EllipseModel();
+}
+
 void te::layout::EllipseItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
   painter->save();
 
-  const Property& pFillColor = m_controller->getProperty("fill_color");
-  const Property& pContourColor = m_controller->getProperty("contour_color");
+  const Property& pFillColor = this->getProperty("fill_color");
+  const Property& pContourColor = this->getProperty("contour_color");
 
   const te::color::RGBAColor& fillColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFillColor);
   const te::color::RGBAColor& contourColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pContourColor);
@@ -53,7 +59,7 @@ void te::layout::EllipseItem::drawItem( QPainter * painter, const QStyleOptionGr
   QColor qFillColor(fillColor.getRed(), fillColor.getGreen(), fillColor.getBlue(), fillColor.getAlpha());
   QColor qContourColor(contourColor.getRed(), contourColor.getGreen(), contourColor.getBlue(), contourColor.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QBrush brush(qFillColor);

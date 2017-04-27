@@ -29,11 +29,17 @@
 #include "MapItem.h"
 #include "MapController.h"
 
+#include "../core/PlanarGrid.h"
+#include "../core/GeodesicGrid.h"
+#include "../core/ItemUtils.h"
+#include "../../core/property/PlanarGridSettingsConfigProperties.h"
+#include "../../core/property/GeodesicGridSettingsConfigProperties.h"
+#include "../../core/ItemInputProxy.h"
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../core/ItemUtils.h"
 #include "../../core/WorldTransformer.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../../item/MapModel.h"
 #include "../../qt/core/Scene.h"
 #include <terralib/qt/widgets/layer/explorer/TreeItem.h>
 #include <terralib/qt/widgets/layer/explorer/LayerItem.h>
@@ -49,16 +55,31 @@
 #include <QMouseEvent>
 #include <QPaintEngine>
 
-te::layout::MapItem::MapItem(AbstractItemController* controller)
+te::layout::MapItem::MapItem(te::layout::ItemInputProxy* itemInputProxy)
   : QObject()
-  , AbstractItem(controller)
+  , AbstractItem(itemInputProxy)
   , m_currentEditionMode(0)
+  , m_planarGrid(new te::layout::PlanarGrid())
+  , m_geodesicGrid(new te::layout::GeodesicGrid())
 {
   this->setAcceptDrops(true);
 }
 
 te::layout::MapItem::~MapItem()
 {
+  delete m_planarGrid;
+  delete m_geodesicGrid;
+}
+
+te::layout::AbstractItemModel* te::layout::MapItem::createModel() const
+{
+  return new MapModel();
+}
+
+te::layout::AbstractItemController* te::layout::MapItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new MapController(model, (AbstractItemView*)this);
 }
 
 void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
@@ -66,17 +87,18 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   if (m_isPrinting == true)
   {
     drawMapOnPainter(painter);
+    drawGrid(painter);
   }
   else
   {
-    Scene* myScene = dynamic_cast<Scene*>(this->scene());
-    if (myScene == 0)
+    ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+    if (itemInputProxy == 0)
     {
       return;
     }
 
     //we first calculate the size in pixels
-    Utils utils = myScene->getUtils();
+    Utils utils = itemInputProxy->getUtils();
 
     QRectF boxMM = boundingRect();
     te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
@@ -88,20 +110,36 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
     {
       if (m_screenGreaterCache.width() < sizeInPixels.width() || m_screenGreaterCache.height() < sizeInPixels.height())
       {
-        const Property& property = m_controller->getProperty("background_color");
+        const Property& property = this->getProperty("background_color");
         const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
         QColor qColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
 
         m_screenGreaterCache = QPixmap(sizeInPixels);
         m_screenGreaterCache.fill(qColor); //this is done to solve a printing problem. For some reason, the transparency is not being considered by the printer in Linux
 
-        drawMapOnDevice(&m_screenGreaterCache);
+        QPainter cachePainter;
+        cachePainter.begin(&m_screenGreaterCache);
+
+        double xFactor = sizeInPixels.width() / boxMM.width();
+        double yFactor = sizeInPixels.height() / boxMM.height();
+
+        QTransform transform;
+        transform.scale(xFactor, -yFactor);
+        transform.translate(-boxMM.x(), -boxMM.height() - boxMM.y());
+        cachePainter.setTransform(transform);
+
+        drawMapOnPainter(&cachePainter);
+        drawGrid(&cachePainter);
+
+        cachePainter.end();
       }
 
       m_screenCache = m_screenGreaterCache.scaled(sizeInPixels, Qt::KeepAspectRatio, Qt::SmoothTransformation);
     }
-    
+
     te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenCache);
+
+    //draft pixmap is used for edition feedback
     if (m_screenDraft.isNull() == false)
     {
       te::layout::ItemUtils::drawPixmap(this->boundingRect(), painter, m_screenDraft);
@@ -109,55 +147,87 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   }
 }
 
-void te::layout::MapItem::drawMapOnDevice(QPaintDevice* device)
+void te::layout::MapItem::drawFrame(QPainter * painter)
 {
-  const Property& pSrid = m_controller->getProperty("srid");
-  const Property& pWorldBox = m_controller->getProperty("world_box");
-  const Property& pScale = m_controller->getProperty("scale");
-  const Property& property = m_controller->getProperty("background_color");
+  if (!painter)
+  {
+    return;
+  }
 
-  int srid = te::layout::Property::GetValueAs<int>(pSrid);
-  const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
-  double scale = te::layout::Property::GetValueAs<double>(pScale);
-  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
+  if (m_currentAction == te::layout::RESIZE_ACTION || m_currentAction == te::layout::MOVE_ACTION)
+  {
+    return;
+  }
 
-  //here we render the layers on the given device
-  te::qt::widgets::Canvas canvas(device);
-  canvas.setBackgroundColor(color);
-  canvas.setWindow(envelope.m_llx, envelope.m_lly, envelope.m_urx, envelope.m_ury);
-  canvas.clear();
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_frame")) == false)
+  {
+    return;
+  }
 
-  drawLayers(&canvas, envelope);
+  const Property& pMapLocalBox = this->getProperty("map_local_box");
+  const Property& pFrameColor = this->getProperty("frame_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
+
+  const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
+  const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
+
+  QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
+
+  QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
+
+  painter->save();
+  QPen pen(qFrameColor, frameThickness, Qt::SolidLine);
+  painter->setPen(pen);
+  painter->setBrush(Qt::NoBrush);
+  painter->setRenderHint(QPainter::Antialiasing, true);
+
+  //draws the frame
+  painter->drawRect(qBoundingRect);
+
+  painter->restore();
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 {
-  const Property& pWorldBox = m_controller->getProperty("world_box");
-  const Property& property = m_controller->getProperty("background_color");
+  const Property& pWorldBox = this->getProperty("world_box");
+  const Property& pMapLocalBox = this->getProperty("map_local_box");
+  const Property& property = this->getProperty("background_color");
 
   const te::gm::Envelope& envelope = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
+  const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
   const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
 
   //here we render the layers on the given device
   painter->save();
   painter->setClipRect(this->getAdjustedBoundingRect(painter));
   
-  QColor qFillColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-  painter->fillRect(this->getAdjustedBoundingRect(painter), qFillColor);
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return;
+  }
 
+  Utils utils = itemInputProxy->getUtils();
 
-  Scene* myScene = dynamic_cast<Scene*>(this->scene());
-  Utils utils(myScene);
+  ContextObject context = itemInputProxy->getContext();
+  double zoom = context.getZoom();  
+  double zoomFactor = (double)zoom / 100.;
 
-  QRectF qBoundingRect = boundingRect();
-  int deviceWidth = utils.mm2pixel(qBoundingRect.width());
-  int deviceHeight = utils.mm2pixel(qBoundingRect.height());
+  //QRectF qBoundingRect = boundingRect();
+  QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
+  int deviceWidth = utils.mm2pixel(qBoundingRect.width()) * zoomFactor;
+  int deviceHeight = utils.mm2pixel(qBoundingRect.height()) * zoomFactor;
   QRectF qrectDevice = painter->transform().mapRect(qBoundingRect);
+
+  QColor qFillColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+  painter->fillRect(qBoundingRect, qFillColor);
 
   painter->setTransform(QTransform());
 
   painter->setViewport(qrectDevice.x(), qrectDevice.y(), deviceWidth, deviceHeight);
   painter->setWindow(0, 0, deviceWidth, deviceHeight);
+  painter->setClipRect(0, 0, deviceWidth, deviceHeight);
 
   //then we create the canvas and initialize it
   te::qt::widgets::Canvas canvas(painter);
@@ -171,9 +241,9 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 
 void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope)
 {
-  const Property& pSrid = m_controller->getProperty("srid");  
-  const Property& pScale = m_controller->getProperty("scale");
-  const Property& pLayerList = m_controller->getProperty("layers");
+  const Property& pSrid = this->getProperty("srid");
+  const Property& pScale = this->getProperty("scale");
+  const Property& pLayerList = this->getProperty("layers");
   
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
   double scale = te::layout::Property::GetValueAs<double>(pScale);
@@ -187,20 +257,42 @@ void te::layout::MapItem::drawLayers(te::qt::widgets::Canvas* canvas, const te::
   }
 }
 
-QVariant te::layout::MapItem::itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value )
+void te::layout::MapItem::drawGrid(QPainter* painter)
 {
-  if(change == QGraphicsItem::ItemSceneHasChanged)
+  const te::gm::Envelope& mapLocaBox = te::layout::Property::GetValueAs<te::gm::Envelope>(getProperty("map_local_box"));
+  if (m_planarGrid != 0)
   {
-    Scene* myScene = dynamic_cast<Scene*>(this->scene());
-    if(myScene != 0)
-    {
-      //contextUpdated(myScene->getContext());
+    const Properties& properties = this->getProperties();
+    QPointF originPoint = m_planarGrid->getOrigin();
 
-      //we dont want AbstractItem to handle this event, so we 'jump' to its father
-      return QGraphicsItem::itemChange(change, value);
-    }
+    double dx = mapLocaBox.getLowerLeftX() - originPoint.x();
+    double dy = mapLocaBox.getLowerLeftY() - originPoint.y();
+
+    painter->save();
+    painter->translate(dx, dy);
+
+    PlanarGridSettingsConfigProperties settingsConfig;
+    m_planarGrid->drawGrid(painter, properties, settingsConfig);
+
+    painter->restore();
   }
-  return AbstractItem::itemChange(change, value);
+
+  if (m_geodesicGrid != 0)
+  {
+    const Properties& properties = this->getProperties();
+    QPointF originPoint = m_geodesicGrid->getOrigin();
+
+    double dx = mapLocaBox.getLowerLeftX() - originPoint.x();
+    double dy = mapLocaBox.getLowerLeftY() - originPoint.y();
+
+    painter->save();
+    painter->translate(dx, dy);
+
+    GeodesicGridSettingsConfigProperties settingsConfig;
+    m_geodesicGrid->drawGrid(painter, properties, settingsConfig);
+
+    painter->restore();
+  }
 }
 
 void te::layout::MapItem::mousePressEvent ( QGraphicsSceneMouseEvent * event )
@@ -224,7 +316,7 @@ void  te::layout::MapItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * event )
 
   te::gm::Coord2D currentCoordMM(event->pos().x(), event->pos().y());
   te::gm::Coord2D clickedCoordMM(m_clickedPointMM.getX(), m_clickedPointMM.getY());
-
+  
   te::gm::Envelope currentBoxMM(0, 0, boundingRect().width(), boundingRect().height());
   te::gm::Envelope currentBoxPx(0, 0, m_screenCache.width(), m_screenCache.height());
 
@@ -293,20 +385,23 @@ void  te::layout::MapItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * event 
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if (mapController == 0)
   {
     m_clickedPointMM = te::gm::Point();
     return;
   }
 
-  const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pWorldBox = this->getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
 
   te::gm::Coord2D m_clickedCoordMM(m_clickedPointMM.getX(), m_clickedPointMM.getY());
   te::gm::Coord2D currentCoordMM(event->pos().x(), event->pos().y());
 
-  te::gm::Envelope currentBoxMM(0, 0, boundingRect().width(), boundingRect().height());
+  const Property& pMapLocalBox = getProperty("map_local_box");
+  const te::gm::Envelope& mapLocaBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
+
+  te::gm::Envelope currentBoxMM = mapLocaBox;
 
   //sets the transformer from MM to World
   te::layout::WorldTransformer transformer(currentBoxMM, worldBox);
@@ -407,7 +502,7 @@ void te::layout::MapItem::dropEvent( QGraphicsSceneDragDropEvent * event )
     listLayers.push_back(layer);
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if(mapController != 0)
   {
     mapController->addLayers(listLayers);
@@ -422,7 +517,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if (mapController == 0)
   {
     return;
@@ -434,7 +529,7 @@ void te::layout::MapItem::wheelEvent ( QGraphicsSceneWheelEvent * event )
     zoomIn = false;
   }
 
-  const Property& pWorldBox = m_controller->getProperty("world_box");
+  const Property& pWorldBox = this->getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
 
   te::gm::Coord2D coordMM(event->pos().x(), event->pos().y());
@@ -475,6 +570,8 @@ void te::layout::MapItem::refresh()
 {
   m_screenGreaterCache = QPixmap();
   m_screenCache = QPixmap();
+
+  te::layout::AbstractItem::refresh();
 }
 
 bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
@@ -482,7 +579,7 @@ bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
   //here we define the current edition mode, and each mode will now handle the mouse/keyboard events
   //this modes are used in the edition mode
 
-  const Property& pFixedScale = m_controller->getProperty("fixed_scale");
+  const Property& pFixedScale = this->getProperty("fixed_scale");
   bool fixedScale = te::layout::Property::GetValueAs<bool>(pFixedScale);
 
   EnumModeType* mode = Enums::getInstance().getEnumModeType();
@@ -575,7 +672,12 @@ QCursor te::layout::MapItem::createCursor(std::string pathIcon)
 QPixmap& te::layout::MapItem::getDraftPixmap()
 {
   //we first calculate the size in pixels
-  Utils utils = ((Scene*) this->scene())->getUtils();
+  ItemInputProxy* itemInputProxy = this->getItemInputProxy();
+  if (itemInputProxy == 0)
+  {
+    return m_screenDraft;
+  }
+  Utils utils = itemInputProxy->getUtils();
 
   QRectF boxMM = boundingRect();
   te::gm::Envelope boxViewport(0, 0, boxMM.width(), boxMM.height());
@@ -599,16 +701,26 @@ void te::layout::MapItem::redraw()
 
 void te::layout::MapItem::recompose()
 {
-  if (m_controller == 0)
+  if (getController() == 0)
   {
     return;
   }
 
-  MapController* mapController = dynamic_cast<MapController*>(m_controller);
+  MapController* mapController = dynamic_cast<MapController*>(getController());
   if (mapController == 0)
   {
     return;
   }
 
   mapController->recomposeExtent();
+}
+
+te::layout::Grid* te::layout::MapItem::getPlanarGrid() const
+{
+  return m_planarGrid;
+}
+
+te::layout::Grid* te::layout::MapItem::getGeodesicGrid() const
+{
+  return m_geodesicGrid;
 }

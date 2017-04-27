@@ -25,26 +25,17 @@
 
 // TerraLib
 #include "MapItemFactory.h"
-#include "../../../../item/MapController.h"
-#include "../../../../../core/enum/Enums.h"
-#include "../../../../../item/MapModel.h"
 #include "../../../../item/MapItem.h"
+#include "../../../../../core/enum/Enums.h"
+
 
 te::layout::AbstractItemView* te::layout::MapItemFactory::build(ItemFactoryParamsCreate params)
 {
-  Properties      props = params.getProperties(); 
+  MapItem* view = new MapItem(params.getItemInputProxy());
 
-  MapModel* model = new MapModel();
-  MapController* controller = new MapController(model);
-  MapItem* view = new MapItem(controller);
-  controller->setView(view);
+  const Properties& props = params.getProperties();
 
-  if(props.getProperties().empty())
-  {
-    props = convertToProperties(params);
-  }
-  controller->setProperties(props);
-
+  view->setProperties(props);
   return view;
 }
 

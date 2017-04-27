@@ -146,3 +146,7 @@ QSize te::layout::AbstractLayoutTool::verifyToleranceSize(double width, double h
   return size;
 }
 
+void te::layout::AbstractLayoutTool::redraw()
+{
+
+}

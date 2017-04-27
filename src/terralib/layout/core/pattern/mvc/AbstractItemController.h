@@ -44,6 +44,7 @@
 #include <QMap>
 #include <QSize>
 
+class QGraphicsItem;
 class QVariant;
 
 namespace te
@@ -55,6 +56,7 @@ namespace te
     class AbstractItemView;
     class Property;
     class Properties;
+    class Scene;
 
     /*!
       \brief Abstract class to represent an observable. "Model" part of MVC component. 
@@ -67,7 +69,7 @@ namespace te
         /*
           \brief Constructor
         */ 
-        explicit AbstractItemController(AbstractItemModel* model);
+        explicit AbstractItemController(AbstractItemModel* model, AbstractItemView* view);
         
         virtual ~AbstractItemController();
 
@@ -77,6 +79,13 @@ namespace te
         virtual AbstractItemView* getView() const;
 
         virtual void setView(AbstractItemView* view);
+
+        /*!
+        \brief Merge the given propertiesToMerge list into baseProperties list
+               If a property if found in both lists, it will consider the property inside propertiesToMerge as being the most updated
+        */
+
+        virtual void mergeProperties(const te::layout::Properties& propertiesToMerge, te::layout::Properties& baseProperties);
 
         /*!
           \brief Gets the given property
@@ -118,16 +127,6 @@ namespace te
         */ 
         virtual void update(const Subject* subject);
 
-        /*!
-        \brief Checks if the coordinate is contained within the bounding rectangle.
-
-        \param coord coordinated to be verified
-        \return true if contains, false otherwise
-        */
-        virtual bool contains(const te::gm::Coord2D &coord) const;
-
-        virtual void resized(const double& width, const double& height);
-
         virtual void rotated(const double& degree);
 
         virtual void itemPositionChanged(double x, double y);
@@ -136,8 +135,6 @@ namespace te
 
         virtual QRectF resize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
 
-        virtual void scaleItem(double widthFactor, double heightFactor);
-
         double getMarginResizePrecision();
 
         virtual QRectF calculateResize(te::layout::LayoutAlign grabbedPoint, QPointF initialCoord, QPointF finalCoord);
@@ -145,6 +142,10 @@ namespace te
         virtual WarningManager* getWarningManager();
 
         virtual void validateItem();
+
+        virtual void updateBoundingRect(QRectF rect);
+
+        virtual void sceneHasChanged(Scene* scene);
         
       protected:
 
@@ -171,9 +172,7 @@ namespace te
         virtual bool syncItemAssociation(Properties& properties);
 
         virtual bool isLimitExceeded(QRectF resizeRect);
-
-        virtual void updateBoundingRect(QRectF rect);
-
+        
       protected:
                   
         AbstractItemModel*                m_model; //!< The model of the view

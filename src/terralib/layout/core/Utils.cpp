@@ -30,16 +30,6 @@
 
 #include "enum/EnumDataType.h"
 #include "enum/Enums.h"
-
-#include "WorldTransformer.h"
-#include "terralib/geometry/Polygon.h"
-#include "terralib/geometry/Enums.h"
-#include "terralib/geometry/LinearRing.h"
-#include "terralib/geometry/Point.h"
-#include "terralib/maptools/Utils.h"
-#include "terralib/maptools/WorldDeviceTransformer.h"
-#include "terralib/srs/SpatialReferenceSystemManager.h"
-#include "terralib/common/Translator.h"
 #include "../core/ContextObject.h"
 #include "enum/AbstractType.h"
 #include "pattern/singleton/Context.h"
@@ -48,16 +38,30 @@
 #include "property/Properties.h"
 #include "property/Property.h"
 #include "../qt/core/Scene.h"
+#include "WorldTransformer.h"
+
+// TerraLib
+#include "terralib/geometry/Polygon.h"
+#include "terralib/geometry/Enums.h"
+#include "terralib/geometry/LinearRing.h"
+#include "terralib/geometry/Point.h"
+#include "terralib/maptools/Utils.h"
+#include "terralib/maptools/WorldDeviceTransformer.h"
+#include "terralib/srs/SpatialReferenceSystemManager.h"
+#include "terralib/srs/Converter.h"
+#include "terralib/common/Translator.h"
 #include "terralib/common/StringUtils.h"
 
 //boost
 #include <boost/tokenizer.hpp>
 
 // STL
-#include <math.h> 
+#include <math.h> /* isinf, isnan, isfinite */
 #include <string>
 #include <sstream> 
 #include <exception>
+#include <memory> /* unique_ptr */
+#include <algorithm> /* min, max */
 
 double te::layout::Utils::m_lineWidthMinimumValue = 0.3;
 
@@ -388,18 +392,15 @@ double te::layout::Utils::convertDegreeToDecimal()
   return 0;
 }
 
-
 std::string te::layout::Utils::proj4DescToGeodesic()
 {
+  // EPSG:4326
   std::string proj4;
   proj4 += "+proj=longlat";
-  proj4 += " +ellps=aust_SA";
-  proj4 += " +towgs84=-57,1,-41,0,0,0,0";
+  proj4 += " +datum=WGS84";
   proj4 += " +no_defs ";
-
   return proj4;
 }
-
 
 te::common::UnitOfMeasurePtr te::layout::Utils::unitMeasure( int srid )
 {
@@ -413,61 +414,144 @@ te::common::UnitOfMeasurePtr te::layout::Utils::unitMeasure( int srid )
   return unitPtr;
 }
 
-void te::layout::Utils::remapToPlanar( te::gm::Envelope* latLongBox, int zone )
+void te::layout::Utils::remapToPlanar(te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID)
 {
-  if(!latLongBox->isValid())
+  if (!latLongBox->isValid())
     return;
-  
+
   try
   {
-    std::string proj4 = te::map::GetUTMProj4FromZone(zone);
-
-    // Get the id of the projection of destination 
-    std::pair<std::string, unsigned int> projMeters = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4); 
-
-    std::string proj4geo = proj4DescToGeodesic();
-
-    // Get the id of the projection source 
-    std::pair<std::string, unsigned int> currentBoxProj = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4geo); 
-
-    // Remapping 
-    int srid = currentBoxProj.second;
-    latLongBox->transform(srid, projMeters.second); 
+    latLongBox->transform(sourceSRID, planarSRID);
   }
-  catch(const te::common::Exception&)
+  catch (const te::common::Exception&)
   {
-    zone = -1;
+    std::cout << "Could not remap box to planar projection!" << std::endl;
   }
 }
 
-void te::layout::Utils::remapToPlanar( te::gm::LinearRing* line, int zone )
+void te::layout::Utils::remapToPlanar(te::srs::Converter* converter, te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID)
 {
-  if(!line)
+  if (!latLongBox->isValid())
     return;
 
+  double x1 = 0;
+  double y1 = 0;
+  double x2 = 0;
+  double y2 = 0;
+  double x3 = 0;
+  double y3 = 0;
+  double x4 = 0;
+  double y4 = 0;
+
+  // convert the four corners
+  converter->convert(latLongBox->m_llx, latLongBox->m_lly, x1, y1);
+  converter->convert(latLongBox->m_urx, latLongBox->m_lly, x2, y2);
+  converter->convert(latLongBox->m_urx, latLongBox->m_ury, x3, y3);
+  converter->convert(latLongBox->m_llx, latLongBox->m_ury, x4, y4);
+
+  // evaluate the minimum box that includes all four corner
+  latLongBox->m_llx = std::min(std::min(x1, x4), std::min(x2, x3));
+  latLongBox->m_urx = std::max(std::max(x1, x4), std::max(x2, x3));
+  latLongBox->m_lly = std::min(std::min(y1, y4), std::min(y2, y3));
+  latLongBox->m_ury = std::max(std::max(y1, y4), std::max(y2, y3));
+}
+
+void te::layout::Utils::remapToPlanar(te::gm::LinearRing* line, int sourceSRID, int planarSRID)
+{
+  if (!line)
+    return;
+
+  /* Optimization so that the convert object is created only once, decreasing the execution time of this method,
+  since it will no longer use the Envelope::transform method (for each point). */
+
+  std::unique_ptr<te::srs::Converter> converter(new te::srs::Converter());
+  
+  try
+  {
+    converter->setSourceSRID(sourceSRID);
+    converter->setTargetSRID(planarSRID);
+  }
+  catch (te::common::Exception& /* ex */)
+  {
+    return;
+  }
+
+  double x = 0;
+  double y = 0;
+
+  // convert the four corners
   std::size_t npoints = line->getNPoints();
 
-  for(std::size_t i = 0 ; i < npoints ; ++i)
+  for (std::size_t i = 0; i < npoints; ++i)
   {
     te::gm::Point* p = line->getPointN(i);
     const te::gm::Envelope* env = p->getMBR();
     te::gm::Envelope* en = const_cast<te::gm::Envelope*>(env);
-    remapToPlanar(en, zone);
-    line->setPoint(i, env->getLowerLeftX(), env->getLowerLeftY());
+    converter->convert(p->getX(), p->getY(), x, y);
+    line->setPoint(i, x, y);
     p->computeMBR(true);
   }
   line->computeMBR(true);
+  line->setSRID(planarSRID);
 }
 
-void te::layout::Utils::remapToPlanar( te::gm::Point* point, int zone )
+void te::layout::Utils::remapToPlanar(te::gm::Point* point, int sourceSRID, int planarSRID)
 {
-  if(!point)
+  if (!point)
     return;
 
   const te::gm::Envelope* env = point->getMBR();
   te::gm::Envelope* en = const_cast<te::gm::Envelope*>(env);
-  remapToPlanar(en, zone);
+  remapToPlanar(en, sourceSRID, planarSRID);
   point->computeMBR(true);
+}
+
+te::gm::Envelope te::layout::Utils::GetWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid)
+{
+  te::gm::Envelope worldBoxGeographic = worldBox;
+
+  //About units names (SI): terralib5\resources\json\uom.json 
+  te::layout::Utils utils(0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(srid);
+
+  if (!unitPtr)
+    return worldBoxGeographic;
+
+  std::string unitPtrStr = unitPtr->getName();
+  unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+  if (unitPtrStr.compare("DEGREE") != 0)
+  {
+    std::string proj4 = utils.proj4DescToGeodesic();
+
+    // Get the id of the projection of destination 
+    std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
+
+    // Remapping 
+    worldBoxGeographic.transform(srid, projGeographic.second);
+  }
+
+  return worldBoxGeographic;
+}
+
+te::gm::Envelope te::layout::Utils::worldBoxTo(const te::gm::Envelope& worldBox, int sourceSRID, int targetSRID)
+{
+  te::gm::Envelope copyWorldBox = worldBox;
+
+  // Checks if is Planar Geographic
+  std::string authName = "EPSG"; // Now: So far it is the only one supported by TerraLib 5. Future: Review this line!
+  te::srs::SpatialReferenceSystemManager::getInstance().isGeographic(sourceSRID, authName);
+  te::common::UnitOfMeasurePtr unitPtr = te::srs::SpatialReferenceSystemManager::getInstance().getUnit(sourceSRID, authName);
+
+  // check if srid exist and worldbox is valid
+  if (!unitPtr || !copyWorldBox.isValid())
+  {
+    return copyWorldBox;
+  }
+
+  // Remapping
+  copyWorldBox.transform(sourceSRID, targetSRID);
+  return copyWorldBox;
 }
 
 void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::LinearRing* line )
@@ -488,6 +572,7 @@ void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::Li
   }
 
   line->computeMBR(true);
+  line->setSRID(TE_UNKNOWN_SRS);
 }
 
 void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::Polygon* poly )
@@ -507,6 +592,7 @@ void te::layout::Utils::convertToMillimeter( WorldTransformer transf, te::gm::Po
   }
 
   poly->computeMBR(true);
+  poly->setSRID(TE_UNKNOWN_SRS);
 }
 
 te::layout::Properties te::layout::Utils::convertToProperties(const te::layout::PaperConfig& paperConfig)
@@ -635,4 +721,91 @@ std::vector<std::string> te::layout::Utils::Tokenize(const std::string& value, c
   }
 
   return vecString;
+}
+
+int te::layout::Utils::toPlanar(const te::gm::Envelope& worldBox, int sourceSRID)
+{
+  int targetSRID = TE_UNKNOWN_SRS;
+  te::layout::Utils utils(0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(sourceSRID);
+
+  if (!unitPtr || !worldBox.isValid())
+  {
+    return targetSRID;
+  }
+
+  targetSRID = sourceSRID;
+  std::string unitPtrStr = unitPtr->getName();
+  unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+  if (unitPtrStr.compare("DEGREE") == 0)
+  {
+    // Get the id of the projection of destination
+    targetSRID = planarSRID(worldBox);
+  }
+  return targetSRID;
+}
+
+int te::layout::Utils::toGeographic(const te::gm::Envelope& worldBox, int sourceSRID)
+{
+  int targetSRID = TE_UNKNOWN_SRS;
+  te::gm::Envelope worldBoxPlanar = worldBox;
+  te::layout::Utils utils(0);
+  te::common::UnitOfMeasurePtr unitPtr = utils.unitMeasure(sourceSRID);
+
+  if (!unitPtr || !worldBoxPlanar.isValid())
+  {
+    return targetSRID;
+  }
+
+  targetSRID = sourceSRID;
+  std::string unitPtrStr = unitPtr->getName();
+  unitPtrStr = te::common::Convert2UCase(unitPtrStr);
+
+  if (unitPtrStr.compare("DEGREE") != 0)
+  {
+    std::string proj4 = utils.proj4DescToGeodesic();
+    // Get the id of the projection of destination 
+    std::pair<std::string, unsigned int> projGeographic = te::srs::SpatialReferenceSystemManager::getInstance().getIdFromP4Txt(proj4);
+    targetSRID = projGeographic.second;
+  }
+  return targetSRID;
+}
+
+bool te::layout::Utils::isValid(const te::gm::Envelope& box)
+{
+  double lowLeftX = box.getLowerLeftX();
+  double lowLeftY = box.getLowerLeftY();
+  double upperRightX = box.getUpperRightX();
+  double upperRightY = box.getUpperRightY();
+  double w = box.getWidth();
+  double h = box.getHeight();
+
+  if (std::isnan(lowLeftX) || std::isnan(lowLeftY) || std::isnan(upperRightX)
+    || std::isnan(upperRightY) || std::isnan(w) || std::isnan(h))
+  {
+    return false;
+  }
+
+  if (std::isinf(lowLeftX) || std::isinf(lowLeftY) || std::isinf(upperRightX)
+    || std::isinf(upperRightY) || std::isinf(w) || std::isinf(h))
+  {
+    return false;
+  }
+
+  return true;
+}
+
+int te::layout::Utils::planarSRID(const te::gm::Envelope& worldBox)
+{
+  int srid = TE_UNKNOWN_SRS;
+  int zone = te::map::CalculatePlanarZone(worldBox); // get zone number
+  double hemisphere = worldBox.getCenter().getY(); // lat (y) < 0 is south
+
+  if (hemisphere > 0)
+    srid = 32600 + zone; // 32600 - WGS 84 / UTM grid system (northern hemisphere)
+  else
+    srid = 32700 + zone; // 32700 - WGS 84 / UTM grid system (southern hemisphere)
+
+  return srid;
 }

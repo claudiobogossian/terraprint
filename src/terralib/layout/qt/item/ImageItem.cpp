@@ -27,23 +27,34 @@ TerraLib Team at <terralib-team@terralib.org>.
 
 // TerraLib
 #include "ImageItem.h"
+#include "../../item/ImageModel.h"
+#include "ImageController.h"
 
 #include "../../core/enum/EnumDataType.h"
 #include "../../core/enum/Enums.h"
-#include "../../core/pattern/mvc/AbstractItemController.h"
-
-
 // Qt
 #include <QStyleOptionGraphicsItem>
 
-te::layout::ImageItem::ImageItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ImageItem::ImageItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
 {
+
 }
 
 te::layout::ImageItem::~ImageItem()
 {
 
+}
+
+te::layout::AbstractItemModel* te::layout::ImageItem::createModel() const
+{
+  return new ImageModel();
+}
+
+te::layout::AbstractItemController* te::layout::ImageItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ImageController(model, (AbstractItemView*)this);
 }
 
 const std::string& te::layout::ImageItem::getFileName() const
@@ -69,11 +80,11 @@ void te::layout::ImageItem::setFileName(const std::string& fileName)
 
 void te::layout::ImageItem::drawItem(QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget)
 {
-  const Property& pFrameColor = m_controller->getProperty("frame_color");
+  const Property& pFrameColor = this->getProperty("frame_color");
   const te::color::RGBAColor& framwColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
   QColor qContourColor(framwColor.getRed(), framwColor.getGreen(), framwColor.getBlue(), framwColor.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QPen pen(qContourColor, lnew, Qt::SolidLine);
@@ -113,12 +124,12 @@ void te::layout::ImageItem::adjustSize()
   double factor = width / height;
   if (factor < 1)
   {
-    height = te::layout::Property::GetValueAs<double>(m_controller->getProperty("height"));
+    height = te::layout::Property::GetValueAs<double>(this->getProperty("height"));
     width = height * factor;
   }
   else
   {
-    width = te::layout::Property::GetValueAs<double>(m_controller->getProperty("width"));
+    width = te::layout::Property::GetValueAs<double>(this->getProperty("width"));
     height = width / factor;
   }
 
@@ -137,5 +148,5 @@ void te::layout::ImageItem::adjustSize()
     property.setValue(height, dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
-  m_controller->setProperties(properties);
+  this->setProperties(properties);
 }

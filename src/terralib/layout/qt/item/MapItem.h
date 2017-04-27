@@ -62,6 +62,7 @@ namespace te
   {
     class AbstractItemController;
     class EnumType;
+    class Grid;
 
     /*!
     \brief This class is a proxy MapDisplay. This makes it possible to add a MapDisplay as item of a scene. 
@@ -87,7 +88,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */
-        MapItem(AbstractItemController* controller);
+        MapItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -107,18 +108,25 @@ namespace te
 
         virtual void recompose();
 
+        virtual te::layout::Grid* getPlanarGrid() const;
+
+        virtual te::layout::Grid* getGeodesicGrid() const;
+
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         /*!
           \brief For any specific drawing, the item must reimplement this function
         */
         virtual void drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 
-
         /*!
-        \brief Draws the map in the given device
+        \brief Draws the frame of the item
         */
-        virtual void drawMapOnDevice(QPaintDevice* device);
+        virtual void drawFrame(QPainter* painter);
 
         /*!
         \brief Draws the map in the given painter
@@ -131,9 +139,9 @@ namespace te
         virtual void drawLayers(te::qt::widgets::Canvas* canvas, const te::gm::Envelope& envelope);
 
         /*!
-          \brief Reimplemented from QGraphicsItem to capture changes in the item
+        \brief Draws the grid using the given QPainter
         */
-        virtual QVariant itemChange ( QGraphicsItem::GraphicsItemChange change, const QVariant & value );
+        virtual void drawGrid(QPainter* painter);
 
         /*!
            \brief Reimplemented from QGraphicsProxyWidget
@@ -180,6 +188,8 @@ namespace te
         QPixmap                         m_screenGreaterCache; //!< A cache to avoid unnecessary full redraw. Its size may be greater than the current needed size
         QPixmap                         m_screenDraft; //!< A pixmap to be used as a draft during the edition of the item. Used by pan and zoom area
         te::gm::Point                   m_clickedPointMM; //!< The current clicked coord. Is valid only during the mouse click. When the mouse button is released, it is reset to its default value
+        Grid*                           m_planarGrid; //!< A planar grid that is drawn above the MapItem
+        Grid*                           m_geodesicGrid; //!< A geodesic grid that is drawn above the MapItem
     };
   }
 }

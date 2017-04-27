@@ -39,10 +39,7 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_toolbar(0),
   m_gridSettings(0),
   m_northSettings(0),
-  m_gridPlanarItem(0),
-  m_gridGeodesicItem(0),
   m_itemGroup(0),
-  m_mapCompositionItem(0),
   m_scaleItem(0),
   m_pageSetup(0),
   m_imageItem(0),
@@ -70,7 +67,7 @@ te::layout::EnumObjectType::EnumObjectType() :
   m_legendChoice(0),
   m_starItem(0),
   m_svgItem(0),
-  m_pdfSettingsDialog(0),
+  m_exportSettingsDialog(0),
   m_threeNorthItem(0),
   m_mapSettingsDialog(0),
   m_scaleSettingsDialog(0),
@@ -141,28 +138,10 @@ te::layout::EnumObjectType::~EnumObjectType()
     m_northSettings = 0;
   }
 
-  if(m_gridPlanarItem)
-  {
-    delete m_gridPlanarItem;
-    m_gridPlanarItem = 0;
-  }
-
-  if(m_gridGeodesicItem)
-  {
-    delete m_gridGeodesicItem;
-    m_gridGeodesicItem = 0;
-  }
-  
   if(m_itemGroup)
   {
     delete m_itemGroup;
     m_itemGroup = 0;
-  }
-
-  if (m_mapCompositionItem)
-  {
-    delete m_mapCompositionItem;
-    m_mapCompositionItem = 0;
   }
 
   if(m_scaleItem)
@@ -321,10 +300,10 @@ te::layout::EnumObjectType::~EnumObjectType()
     m_svgItem = 0;
   } 
 
-  if (m_pdfSettingsDialog)
+  if (m_exportSettingsDialog)
   {
-    delete m_pdfSettingsDialog;
-    m_pdfSettingsDialog = 0;
+    delete m_exportSettingsDialog;
+    m_exportSettingsDialog = 0;
   }
 
   if(m_threeNorthItem)
@@ -376,15 +355,9 @@ void te::layout::EnumObjectType::init()
   
   m_northSettings = createEnum("North_Settings", this, TR_LAYOUT("North Settings"));
 
-  m_gridPlanarItem = createEnum("Grid_Planar_Item", this, TR_LAYOUT("Grid Planar Item"));
-
-  m_gridGeodesicItem = createEnum("Grid_Geodesic_Item", this, TR_LAYOUT("Grid Geodesic Item"));
-
   m_textItem = createEnum("Text_Item", this, TR_LAYOUT("Text Item"));
 
   m_itemGroup = createEnum("Item_Group", this, TR_LAYOUT("Item Group"));
-
-  m_mapCompositionItem = createEnum("Map_Composition_Item", this, TR_LAYOUT("Map Composition Item"));
 
   m_scaleItem = createEnum("Scale_Item", this, TR_LAYOUT("Scale Item"));
 
@@ -438,7 +411,7 @@ void te::layout::EnumObjectType::init()
 
   m_svgItem = createEnum("SVG_Item", this, TR_LAYOUT("SVG Item"));
 
-  m_pdfSettingsDialog = createEnum("PDF_Settings", this, TR_LAYOUT("PDF Settings"));
+  m_exportSettingsDialog = createEnum("Export_Settings", this, TR_LAYOUT("Export Settings"));
 
   m_threeNorthItem = createEnum("Three_North_Item", this, TR_LAYOUT("Three North Item"));
 
@@ -526,24 +499,9 @@ te::layout::EnumType* te::layout::EnumObjectType::getNorthSettings() const
   return m_northSettings;
 }
 
-te::layout::EnumType* te::layout::EnumObjectType::getGridPlanarItem() const
-{
-  return m_gridPlanarItem;
-}
-
-te::layout::EnumType* te::layout::EnumObjectType::getGridGeodesicItem() const
-{
-  return m_gridGeodesicItem;
-}
-
 te::layout::EnumType* te::layout::EnumObjectType::getItemGroup() const
 {
   return m_itemGroup;
-}
-
-te::layout::EnumType* te::layout::EnumObjectType::getMapCompositionItem() const
-{
-  return m_mapCompositionItem;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getScaleItem() const
@@ -661,9 +619,9 @@ te::layout::EnumType* te::layout::EnumObjectType::getSVGDialog() const
   return m_svgDialog;
 }
 
-te::layout::EnumType* te::layout::EnumObjectType::getPDFSettingsDialog() const
+te::layout::EnumType* te::layout::EnumObjectType::getExportSettingsDialog() const
 {
-  return m_pdfSettingsDialog;
+  return m_exportSettingsDialog;
 }
 
 te::layout::EnumType* te::layout::EnumObjectType::getThreeNorthItem() const

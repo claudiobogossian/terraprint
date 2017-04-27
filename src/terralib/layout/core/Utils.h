@@ -55,6 +55,11 @@ namespace te
     class WorldDeviceTransformer;
   }
 
+  namespace srs
+  {
+    class Converter;
+  }
+
   namespace layout
   {
     class PaperConfig;
@@ -122,7 +127,7 @@ namespace te
           \param gap distance between the points on the x axis
           \return
         */ 
-        virtual te::gm::LinearRing* addCoordsInX(te::gm::Envelope box, double axisCoord, double gap);
+        static te::gm::LinearRing* addCoordsInX(te::gm::Envelope box, double axisCoord, double gap);
 
         /*!
           \brief Creates a line with n points in y axis. Method used to create the grid lines on a map. Vertical line.
@@ -132,7 +137,7 @@ namespace te
           \param gap distance between the points on the y axis
           \return
         */ 
-        virtual te::gm::LinearRing* addCoordsInY(te::gm::Envelope box, double axisCoord, double gap);
+        static te::gm::LinearRing* addCoordsInY(te::gm::Envelope box, double axisCoord, double gap);
 
         /*!
           \brief Converts the box world (mm) to screen coordinates (pixel).
@@ -148,7 +153,7 @@ namespace te
           \param box in geo coordinates     
           \return box in mm
         */ 
-        te::layout::WorldTransformer getTransformGeo(te::gm::Envelope boxgeo, te::gm::Envelope boxmm);
+        static te::layout::WorldTransformer getTransformGeo(te::gm::Envelope boxgeo, te::gm::Envelope boxmm);
 
         /*!
           \brief Converts decimal geo coordinates to degrees.
@@ -159,7 +164,7 @@ namespace te
           \param bSeconds true if should appear in the return string, false otherwise
           \return string value in degree
         */ 
-        virtual std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds,  int precision = 0);
+        static std::string convertDecimalToDegree(const double& value, bool bDegrees, bool bMinutes, bool bSeconds,  int precision = 0);
 
         /*!
         \brief Converts decimal geo coordinates to degrees, using the ANP pattern.
@@ -170,12 +175,12 @@ namespace te
         \param bSeconds true if should appear in the return string, false otherwise
         \return string value in degree
         */
-        virtual std::string convertDecimalToDegreeANP(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision = 0);
+        static std::string convertDecimalToDegreeANP(const double& value, bool bDegrees, bool bMinutes, bool bSeconds, int precision = 0);
 
         /*!
         \brief Concatenates the given 'lpadValue' to the left of the given 'text' until it reaches the given 'length'
         */
-        virtual std::string lpadString(std::string& text, size_t length, char lpadValue);
+        static std::string lpadString(std::string& text, size_t length, char lpadValue);
 
         /*!
           \brief Converts degree geo coordinates to decimal.
@@ -197,7 +202,7 @@ namespace te
      
           \return wkt
         */
-        std::string proj4DescToGeodesic();
+        static std::string proj4DescToGeodesic();
 
         /*!
           \brief Returns a UnitOfMeasurePtr pointer.
@@ -208,27 +213,49 @@ namespace te
         te::common::UnitOfMeasurePtr unitMeasure(int srid);
 
         /*!
-          \brief Map latlong to UTM zone.
-      
-          \param box in latlong
-          \param zone returns UTM zone
+        \brief Map latlong to Planar Projection.
+
+        \param box in latlong
+        \param SRID
         */
-        virtual void remapToPlanar(te::gm::Envelope* latLongBox, int zone);
+        static void remapToPlanar(te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID);
+        
+        /*!
+        \brief Map latlong to Planar Projection.
+
+        \param box in latlong
+        \param SRID
+        */
+        static void remapToPlanar(te::srs::Converter* converter, te::gm::Envelope* latLongBox, int sourceSRID, int planarSRID);
 
         /*!
-          \brief Map latlong LinearRing (line) to UTM zone.
-      
-          \param line line in latlong
-          \param zone returns UTM zone
+        \brief Map latlong LinearRing (line) to Planar Projection.
+
+        \param line line in latlong
+        \param SRID
         */
-        virtual void remapToPlanar(te::gm::LinearRing* line, int zone);
+        static void remapToPlanar(te::gm::LinearRing* line, int sourceSRID, int planarSRID);
 
         /*!
-          \brief Map latlong Point (point) to UTM zone.
-      
-          \param zone returns UTM zone    
+        \brief Map latlong Point (point) to Planar Projection.
+
+        \param SRID
         */
-        virtual void remapToPlanar(te::gm::Point* point, int zone);
+        static void remapToPlanar(te::gm::Point* point, int sourceSRID, int planarSRID);
+                
+        static te::gm::Envelope GetWorldBoxInGeographic(const te::gm::Envelope& worldBox, int srid);
+
+        /*!
+          \brief Optimized way to reproject a box, between source and destination projections.
+
+          \param worldBox box that will be reprojected
+          \param sourceSRID source SRID source SRID of the box that will be reproject 
+          \param targetSRID target SRID target SRID 
+
+          \return If the source SRID was not found or the box is invalid, then the return will be the input box itself. 
+            Otherwise, the box will be reprojected and returned.
+        */
+        static te::gm::Envelope worldBoxTo(const te::gm::Envelope& worldBox, int sourceSRID, int targetSRID);
 
         /*!
           \brief Convert LinearRing from one coordinate system to mm
@@ -236,7 +263,7 @@ namespace te
           \param Object with logic for transforming
           \param line LinearRing pointer in one coordinate system
         */
-        virtual void convertToMillimeter(WorldTransformer transf, te::gm::LinearRing* line); 
+        static void convertToMillimeter(WorldTransformer transf, te::gm::LinearRing* line); 
 
         /*!
           \brief Convert Polygon from one coordinate system to mm
@@ -244,7 +271,7 @@ namespace te
           \param Object with logic for transforming
           \param line LinearRing pointer in one coordinate system
         */
-        virtual void convertToMillimeter(WorldTransformer transf, te::gm::Polygon* poly); 
+        static void convertToMillimeter(WorldTransformer transf, te::gm::Polygon* poly); 
 
         /*!
           \brief Converts from PaperConfig to Properties
@@ -267,6 +294,40 @@ namespace te
         static double calculateAngle(QPointF p1, QPointF p2);
 
         static std::vector<std::string> Tokenize(const std::string& value, const std::string& separator);
+
+        /*!
+          \brief If the SRID is not planar, it finds a new SRID, calculates a suitable zone and return. Otherwise it returns the same SRID passed as parameter.
+
+          \param worldBox box that will be reprojected
+          \param sourceSRID SRID of the box that will be reproject to planar
+
+          \return If the srid was not found it returns -1, otherwise it returns a valid SRID
+        */
+        static int toPlanar(const te::gm::Envelope& worldBox, int sourceSRID);
+
+        /*!
+          \brief If the SRID is not geographic, it gets a default geographic SRID and return. Otherwise it returns the same SRID passed as parameter.
+
+          \param worldBox box that will be reprojected
+          \param sourceSRID SRID of the box that will be reproject to geographic
+
+          \return If the srid was not found it returns -1, otherwise it returns a valid SRID
+        */
+        static int toGeographic(const te::gm::Envelope& worldBox, int sourceSRID);
+
+        /*!
+          \brief Check if has NaN or #INF.
+
+          \param box
+        */
+        static bool isValid(const te::gm::Envelope& box);
+
+        /*!
+        \brief Get default planar SRID.
+
+        \param worldBox By the center of the box will know if it is north or south
+        */
+        static int planarSRID(const te::gm::Envelope& worldBox);
 
       protected:
         

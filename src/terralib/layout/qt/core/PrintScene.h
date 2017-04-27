@@ -40,12 +40,15 @@
 class QGraphicsScene;
 class QPrinter;
 class QPainter;
+class QPaintDevice;
+class QString;
 
 namespace te
 {
   namespace layout
   {
     class PaperConfig;
+    class ExportSettingsOutside;
     /*!
     \brief Class responsible for printing the entire content or part of the scene. As the scene is upside down, it is necessary to invert the y of the painter before printing.
     
@@ -80,32 +83,63 @@ namespace te
         virtual void showPrintDialog();
 
         /*!
-          \brief Print the scene(only the area corresponding to the paper).
+        \brief Shows the QPrinterDialog to print the scene. Allows to choose and configure the printer.
         */
-        virtual void print();
+        virtual void showQPrinterDialog();
 
         /*!
-          \brief Export scene to pdf(only the area corresponding to the paper).
+          \brief Print the scene(only the area corresponding to the paper).
         */
-        virtual bool exportToPDF();
+        virtual bool print();
+
+        virtual bool exportAs(const std::string& fileFormat = "");
 
       protected slots:
 
-        virtual void printPaper(QPrinter* printer);
+        virtual bool printPaper(QPrinter* printer);
 
       protected:
 
-        virtual QPrinter* createPrinter();
+        virtual void initPrinter(QPrinter* printer);
 
-        virtual void renderScene( QPainter* newPainter, QPrinter* printer );
+        virtual bool renderSceneOnPrinter(QPrinter* printer);
 
         virtual ContextObject createNewContext(QPrinter* printer);
 
         virtual te::layout::LayoutAbstractPaperType changePageSizeType(QPrinter* printer, PaperConfig* paperConfig);
 
+        virtual bool render(QPaintDevice* device, const QRectF& pixelTargetRect, const ContextObject& context);
+
+        QRectF paperRectMM();
+
+        /*!
+        \brief Export scene to pdf(only the area corresponding to the paper).
+        */
+        virtual bool exportToPDF(const QString& filePath);
+
+        /*!
+        \brief Export scene to SVG (only the area corresponding to the paper).
+        */
+        virtual bool exportToSVG(const QString& filePath);
+
+        /*!
+        \brief Export scene to SVG (only the area corresponding to the paper).
+        */
+        virtual bool exportToImage(const QString& filePath, const QString& fileFormat);
+
+        ExportSettingsOutside* createExportSettingsOutside(const std::string& fileFormat = "");
+
+        virtual bool exportTo(const QString& filePath, const QString& fileFormat);
+
+        virtual void raiseMessage(const QString& fileFormat, bool hasError);
+
+        QRectF imagePixelTargetRect(const ContextObject& context);
+        
+      protected:
+
         QGraphicsScene*           m_scene;
         te::layout::PrinterScene  m_printState;
-        int                       m_currentPdfDpi;
+        int                       m_currentDPI;
     };
   }
 }

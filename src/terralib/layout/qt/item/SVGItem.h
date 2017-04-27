@@ -41,6 +41,7 @@ namespace te
   namespace layout
   {
     class AbstractItemController;
+    class AbstractItemModel;
     /*!
     \brief Class that represents a graphic SVG. 
         Its coordinate system is the same of scene (millimeters). 
@@ -60,7 +61,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        SVGItem(AbstractItemController* controller);
+        SVGItem(te::layout::ItemInputProxy* itemInputProxy);
 
         /*!
           \brief Destructor
@@ -68,6 +69,10 @@ namespace te
         virtual ~SVGItem();
 
       protected:
+
+        virtual AbstractItemModel* createModel() const;
+
+        virtual AbstractItemController* createController() const;
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
 

@@ -38,7 +38,7 @@
 #include <QGraphicsScene>
 #include <QGraphicsItem>
 
-te::layout::AddCommand::AddCommand( QGraphicsItem* item, QUndoCommand *parent /*= 0*/ ) :
+te::layout::AddCommand::AddCommand( QGraphicsItem* item, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_scene(0),
   m_item(item)
@@ -71,7 +71,7 @@ void te::layout::AddCommand::undo()
   if (!abstractItem)
     return;
 
-  const Property& pName = abstractItem->getController()->getProperty("name");
+  const Property& pName = abstractItem->getProperty("name");
   std::string nameItem = te::layout::Property::GetValueAs<std::string>(pName);
 
   m_scene->removeItem(m_item);
@@ -90,15 +90,22 @@ void te::layout::AddCommand::redo()
   if(!scene || !m_item)
     return;
 
+  AbstractItemView* obs = dynamic_cast<AbstractItemView*>(m_item);
+
+  if (!obs)
+    return;
+
   /* Checks if the item is already 
      added to the scene */
   if(m_item->scene() == m_scene)
     return;
     
+  obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
   scene->insertItem(m_item);
   scene->removeItemStackWithoutScene(m_item);
-
   m_item->setPos(m_initialPosition);
+  obs->setUndoEnabled(true); // set properties will generate an UndoCommand on the Stack
+
   m_scene->clearSelection();
   m_scene->update();
 }
@@ -113,13 +120,10 @@ QString te::layout::AddCommand::createCommandString( QGraphicsItem* item, const 
   if(!obs)
     return QObject::tr("%1");
   
-  std::string name = obs->getController()->getProperties().getTypeObj()->getName();
+  std::string name = obs->getProperties().getTypeObj()->getName();
   QString qName = ItemUtils::convert2QString(name);
 
   return QObject::tr("%1 at (%2, %3)")
     .arg(qName)
     .arg(pos.x()).arg(pos.y());
 }
-
-
-

@@ -26,8 +26,11 @@
 #ifndef __TERRALIB_LAYOUT_INTERNAL_CREATE_ITEM_TOOL_H
 #define __TERRALIB_LAYOUT_INTERNAL_CREATE_ITEM_TOOL_H
 
-//TerraLib
 #include "RubberBandTool.h"
+#include "../../../core/property/Properties.h"
+
+//TerraLib
+#include "terralib/geometry/Coord2D.h"
 
 //STL
 #include <vector>
@@ -83,11 +86,23 @@ namespace te
           bool mouseReleaseEvent(QMouseEvent* e);
 
           void connectItemWithLastMapItem(QGraphicsItem* item, Scene* sc);
+
+          void setProperties(const te::layout::Properties& properties);
+
+          Properties getProperties();
+
+          void reset();
           
+        protected:
+
+          void addProperties(te::layout::Properties& properties, const QSize& size, const te::gm::Coord2D& coord);
+
           //@}
         protected:
           
-          EnumType* m_itemType;
+          EnumType*     m_itemType;
+          Properties    m_properties;
+
       };
 
   }   // end namespace layout

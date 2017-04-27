@@ -31,19 +31,23 @@
 #include "../../core/enum/EnumScaleType.h"
 #include "../core/ItemUtils.h"
 #include "../core/Scene.h"
-#include "../item/ScaleController.h"
+#include "../../item/ScaleModel.h"
+#include "ScaleController.h"
 
 // STL
 #include <iostream>
 
-te::layout::ScaleItem::ScaleItem(AbstractItemController* controller)
-  : AbstractItem(controller)
+te::layout::ScaleItem::ScaleItem(te::layout::ItemInputProxy* itemInputProxy)
+  : AbstractItem(itemInputProxy)
   , m_scale(0)
   , m_gapX(0)
   , m_gapY(0)
   , m_scaleUnitGapX(0)
+  , m_numberOfBreaks(0)
 {  
-  m_useResizePixmap = false;  // no use pixmap for resizing
+  m_useResizePixmap = false;
+  setResize(false); // Disable all sides of resize
+  m_isResizeTPRight = true;
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
 }
@@ -51,6 +55,17 @@ te::layout::ScaleItem::ScaleItem(AbstractItemController* controller)
 te::layout::ScaleItem::~ScaleItem()
 {
   
+}
+
+te::layout::AbstractItemModel* te::layout::ScaleItem::createModel() const
+{
+  return new ScaleModel();
+}
+
+te::layout::AbstractItemController* te::layout::ScaleItem::createController() const
+{
+  AbstractItemModel* model = createModel();
+  return new ScaleController(model, (AbstractItemView*)this);
 }
 
 bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)
@@ -79,29 +94,32 @@ bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)
 
 void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& property = m_controller->getProperty("scale_type");
+  const Property& property = this->getProperty("scale_type");
 
   EnumScaleType enumScale;
 
   const std::string& label = property.getOptionByCurrentChoice().toString();
-  EnumType* currentScaleType = enumScale.searchLabel(label);
+  EnumType* currentScaleType = enumScale.getEnum(label);
 
   if (validateGaps() == false)
   {
     return;
   }
 
-  if(currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
+  if (currentScaleType)
   {
-    drawDoubleAlternatingScaleBar(painter);
-  }
-  if(currentScaleType == enumScale.getAlternatingScaleBarType())
-  {
-    drawAlternatingScaleBar(painter);
-  }
-  if(currentScaleType == enumScale.getHollowScaleBarType())
-  {
-    drawHollowScaleBar(painter);
+    if (currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
+    {
+      drawDoubleAlternatingScaleBar(painter);
+    }
+    if (currentScaleType == enumScale.getAlternatingScaleBarType())
+    {
+      drawAlternatingScaleBar(painter);
+    }
+    if (currentScaleType == enumScale.getHollowScaleBarType())
+    {
+      drawHollowScaleBar(painter);
+    }
   }
 }
 
@@ -113,7 +131,7 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  ScaleController* controller = dynamic_cast<ScaleController*>(m_controller);
+  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
   if (!controller)
     return;
 
@@ -135,14 +153,14 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   QColor secondRect = white;
   QColor changeColor;
 
-  const Property& prop_only_first = m_controller->getProperty("only_first_and_last_value");
+  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
   bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
 
-  const Property& prop_font_color = m_controller->getProperty("font_color");
+  const Property& prop_font_color = this->getProperty("font_color");
   const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   double displacementBetweenScaleAndText = 2.;
@@ -161,12 +179,13 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
   ss_value.precision(15);
 
   double initialGap = 0;
-  double gap = controller->getGap(initialGap, m_font);
+  double gap = controller->getGap(initialGap, m_font, m_numberOfBreaks, m_gapX, strCurrentUnit);
   x1 += initialGap;
 
   double firstTextWidth = 0;
 
-  for (; (x1 + gap) <= boundRect.topRight().x(); x1 += width)
+  x1 += displacementBetweenScaleAndText;
+  for(int i = 0; i <= m_numberOfBreaks; ++i, x1 += width)
   {
     if (width == 0)
       width = m_gapX;
@@ -183,12 +202,12 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     if (value == 0)
     {
       firstTextWidth = textRect.width();
-      x1 += displacementBetweenScaleAndText + textRect.width();
+      //x1 += displacementBetweenScaleAndText + textRect.width();
     }
 
     QRectF newBoxFirst;
     
-    if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
+    if(i < m_numberOfBreaks)
     {
       painter->setPen(Qt::NoPen);
 
@@ -204,8 +223,11 @@ void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
     }
 
     coordText = QPointF(x1, newBoxSecond.topLeft().y() - textRect.height() - displacementBetweenScaleAndText);
-    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
-      boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
+    //rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
+//                         boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
+    rectScale = QRectF(displacementBetweenScaleAndText + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
+                       boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText, m_gapY * 2);
+      
 
     QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
     coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
@@ -259,7 +281,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  ScaleController* controller = dynamic_cast<ScaleController*>(m_controller);
+  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
   if (!controller)
     return;
   
@@ -283,14 +305,14 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
   QColor secondRect = white;
   QColor changeColor;
   
-  const Property& prop_only_first = m_controller->getProperty("only_first_and_last_value");
+  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
   bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
 
-  const Property& prop_font_color = m_controller->getProperty("font_color");
+  const Property& prop_font_color = this->getProperty("font_color");
   const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QFont qFont = ItemUtils::convertToQfont(m_font);
@@ -311,7 +333,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
   double firstTextWidth = 0;
 
-  for (; (x1 + gap) <= boundRect.topRight().x(); x1 += width)
+  for (int i = 0; i <= m_numberOfBreaks; ++i, x1 += width)
   {
     if (width == 0)
       width = m_gapX;
@@ -333,7 +355,7 @@ void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
 
     QRectF newBoxFirst;
 
-    if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
+    if (i < m_numberOfBreaks)
     {
       painter->setPen(Qt::NoPen);
       painter->setBrush(QBrush(secondRect));
@@ -397,7 +419,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  ScaleController* controller = dynamic_cast<ScaleController*>(m_controller);
+  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
   if (!controller)
     return;
 
@@ -419,16 +441,16 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
   QColor secondRect = white;
   QColor changeColor;
   
-  const Property& prop_only_first = m_controller->getProperty("only_first_and_last_value");
+  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
   bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
 
-  const Property& prop_font_color = m_controller->getProperty("font_color");
+  const Property& prop_font_color = this->getProperty("font_color");
   const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
   QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
   double displacementBetweenScaleAndText = 2.;
 
-  const Property& lineWidth = m_controller->getProperty("line_width");
+  const Property& lineWidth = this->getProperty("line_width");
   double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
 
   QFont qFont = ItemUtils::convertToQfont(m_font);
@@ -450,7 +472,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
   double firstTextWidth = 0;
 
-  for (; (x1 + gap) <= boundRect.topRight().x(); x1 += width)
+  for (int i = 0; i <= m_numberOfBreaks; ++i, x1 += width)
   {
     if (width == 0)
       width = m_gapX;
@@ -473,7 +495,7 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
     rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
       boundRect.x() + lineHrz.x2() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
 
-    if ((x1 + m_gapX + gap) <= boundRect.topRight().x())
+    if (i < m_numberOfBreaks)
     {
       QPen penScale(black, lnew, Qt::SolidLine);
       penScale.setColor(firstRect);
@@ -539,26 +561,28 @@ void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
 
 void te::layout::ScaleItem::refreshScaleProperties()
 {
-  const Property& pScale = m_controller->getProperty("scale");
-  const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
-  const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
-  const Property& pTextFont = m_controller->getProperty("font");
-  const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
+  const Property& pScale = this->getProperty("scale");
+  const Property& pScaleGapX = this->getProperty("scale_width_rect_gap");
+  const Property& pScaleGapY = this->getProperty("scale_height_rect_gap");
+  const Property& pTextFont = this->getProperty("font");
+  const Property& pScaleUnitGapX = this->getProperty("scale_in_unit_width_rect_gap");
+  const Property& pNumberOfBreaks = this->getProperty("number_of_breaks");
 
   m_scale = te::layout::Property::GetValueAs<double>(pScale);
   m_gapX = te::layout::Property::GetValueAs<double>(pScaleGapX);
   m_gapY = te::layout::Property::GetValueAs<double>(pScaleGapY);
   m_font = te::layout::Property::GetValueAs<Font>(pTextFont);
   m_scaleUnitGapX = te::layout::Property::GetValueAs<double>(pScaleUnitGapX);
+  m_numberOfBreaks = te::layout::Property::GetValueAs<int>(pNumberOfBreaks);
 }
 
 
 bool te::layout::ScaleItem::validateGaps()
 {
 
-  const Property& pScaleGapX = m_controller->getProperty("scale_width_rect_gap");
-  const Property& pScaleGapY = m_controller->getProperty("scale_height_rect_gap");
-  const Property& pScaleUnitGapX = m_controller->getProperty("scale_in_unit_width_rect_gap");
+  const Property& pScaleGapX = this->getProperty("scale_width_rect_gap");
+  const Property& pScaleGapY = this->getProperty("scale_height_rect_gap");
+  const Property& pScaleUnitGapX = this->getProperty("scale_in_unit_width_rect_gap");
 
   m_gapX = te::layout::Property::GetValueAs<double>(pScaleGapX);
   m_gapY = te::layout::Property::GetValueAs<double>(pScaleGapY);
@@ -591,5 +615,17 @@ bool te::layout::ScaleItem::validateGaps()
 
   return true;
 
+}
+
+void te::layout::ScaleItem::setResize(bool resize)
+{
+  m_isResizeTPLeft = resize;
+  m_isResizeTPRight = resize;
+  m_isResizeTPTop = resize;
+  m_isResizeTPLower = resize;
+  m_isResizeTPTopLeft = resize;
+  m_isResizeTPTopRight = resize;
+  m_isResizeTPLowerLeft = resize;
+  m_isResizeTPLowerRight = resize;
 }
 

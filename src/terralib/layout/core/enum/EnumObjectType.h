@@ -126,34 +126,13 @@ namespace te
           \return enum value      
         */
         virtual EnumType* getGridSettings() const;
-        
-        /*!
-          \brief Returns value that represents grid planar type belonging to enumeration.
-      
-          \return enum value      
-        */
-        virtual EnumType* getGridPlanarItem() const;
-        
-        /*!
-          \brief Returns value that represents grid geodesic type belonging to enumeration.
-      
-          \return enum value      
-        */
-        virtual EnumType* getGridGeodesicItem() const;
-                
+
         /*!
           \brief Returns value that represents item group (MVC Component) type belonging to enumeration.
       
           \return enum value      
         */
         virtual EnumType* getItemGroup() const;
-
-        /*!
-        \brief Returns value that represents item group (MVC Component) type belonging to enumeration.
-
-        \return enum value
-        */
-        virtual EnumType* getMapCompositionItem() const;
 
         /*!
           \brief Returns value that represents scale (MVC Component) type belonging to enumeration.
@@ -352,11 +331,11 @@ namespace te
         virtual EnumType* getSVGItem() const;
 
         /*!
-        \brief Returns value that represents PDF Settings (MVC Component) type belonging to enumeration.
+        \brief Returns value that represents Export Settings (MVC Component) type belonging to enumeration.
 
         \return enum value
         */
-        virtual EnumType* getPDFSettingsDialog() const;
+        virtual EnumType* getExportSettingsDialog() const;
 
 
         /*!
@@ -416,11 +395,8 @@ namespace te
         EnumType* m_objectInspectorWindow; //!< value that represents object inspector widget (MVC widget) type belonging to enumeration
         EnumType* m_toolbar; //!< value that represents toolbar widget (MVC widget) type belonging to enumeration
         EnumType* m_gridSettings; //!< value that represents GridSettings window (MVC dialog) type belonging to enumeration
-        EnumType* m_gridPlanarItem; //!< value that represents grid planar type belonging to enumeration
-        EnumType* m_gridGeodesicItem; //!< value that represents grid geodesic type belonging to enumeration
         EnumType* m_northSettings; //!< value that represents NorthSettings window (MVC dialog) type belonging to enumeration
         EnumType* m_itemGroup; //!< value that represents item group (MVC Component) type belonging to enumeration
-        EnumType* m_mapCompositionItem; //!< value that represents map composition (MVC Component) type belonging to enumeration
         EnumType* m_movingItemGroup; //!< value that represents moving item group (MVC Component) type belonging to enumeration
         EnumType* m_scaleItem; //!< value that represents scale (MVC Component) type belonging to enumeration
         EnumType* m_pageSetup; //!< value that represents page setup window (MVC dialog) type belonging to enumeration
@@ -450,7 +426,7 @@ namespace te
         EnumType* m_legendChoice; //!< value that represents map layer choice (dialog) type belonging to enumeration
         EnumType* m_starItem; //!< value that represents star type belonging to enumeration
         EnumType* m_svgItem; //!< value that represents SVG type belonging to enumeration
-        EnumType* m_pdfSettingsDialog; //!< value that represents SVG type belonging to enumeration
+        EnumType* m_exportSettingsDialog; //!< value that represents SVG type belonging to enumeration
         EnumType* m_threeNorthItem; //!< value that represents Three North type belonging to enumeration
         EnumType* m_mapSettingsDialog; //!< value that represents map settings type belonging to enumeration
         EnumType* m_mapLocationSettingsDialog; //!< value that represents map settings type belonging to enumeration

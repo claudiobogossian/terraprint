@@ -76,10 +76,7 @@ namespace te
 
         \param factoryKey The key that identifies the factory.
         */
-        ItemFactory(const std::string& factoryKey);
-
-        virtual te::layout::Properties convertToProperties(const ItemFactoryParamsCreate& params);
-        
+        ItemFactory(const std::string& factoryKey);        
     };
   }
 }

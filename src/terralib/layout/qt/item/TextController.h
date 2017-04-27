@@ -32,6 +32,7 @@
 #include "../../core/pattern/mvc/AbstractItemController.h"
 
 class QTextDocument;
+class QColor;
 
 namespace te
 {
@@ -53,7 +54,7 @@ namespace te
           \param controller "Controller" part of MVC component
           \param o "Model" part of MVC component
         */ 
-        TextController(AbstractItemModel* model);
+        TextController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
@@ -77,6 +78,8 @@ namespace te
         virtual void calculateSize(const te::layout::Properties& properties, QSizeF& sizeMM, double& dx, double& dy);
 
         virtual bool needUpdateBox(const te::layout::Properties& properties);
+
+        virtual QColor getCurrentTextColor();
 
     protected:
 

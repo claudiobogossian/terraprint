@@ -59,7 +59,7 @@ namespace te
           \param controller "Controller" part of MVM component
           \param o "Model" part of MVM component
         */ 
-        ScaleController(AbstractItemModel* model);
+        ScaleController(AbstractItemModel* model, AbstractItemView* view);
 
         /*!
           \brief Destructor
@@ -72,11 +72,11 @@ namespace te
 
         virtual double getUnitValue(std::string strUnit);
 
-        virtual double getGap(double& initialGap, Font font, int numberOfBreaks = 0, double scaleWidthX = 0, std::string strUnit = "");
+        virtual double getGap(double& initialGap, Font font, int numberOfBreaks = 0, double scaleWidthX = 0, std::string strUnit = "", double scale = 0);
 
         virtual QPainterPath getLastText();
 
-        virtual QPainterPath getLastTextByBreaks(int numberOfBreaks, Font font, double scaleWidthX = 0, std::string strUnit = "");
+        virtual QPainterPath getLastTextByBreaks(int numberOfBreaks, Font font, double scaleWidthX, std::string strUnit, double scale);
 
         virtual void setProperty(const Property& property);
 
@@ -86,21 +86,29 @@ namespace te
 
       protected:
 
-        virtual Property checkScaleWidthAndUnit(const Properties& properties);
+        virtual bool syncScaleWidthUnitGap(te::layout::Properties& properties);
 
-        virtual bool changeScaleWidthAfterConnection();
+        virtual bool syncScaleWidthGap(te::layout::Properties& properties);
 
+        virtual bool syncScaleUnit(te::layout::Properties& properties);
+
+        virtual bool syncScaleAndUnitGap(te::layout::Properties& properties);
+
+        virtual bool syncBreaksByWidth(te::layout::Properties& properties);
+        
         virtual Property calculateScaleWidthInMM(const Properties& properties);
 
         virtual Property calculateScaleWidthInUnit(const Properties& properties);
 
         virtual Property calculateScaleUnit(const Properties& properties);
+        
+        virtual int calculateNewNumBreaks(const Properties& properties, double & biggerBreak);
 
         virtual double strToUnit(std::string& strUnit);
 
-        virtual Properties checkByBreaks(const Properties& properties);
+        virtual void checkByBreaks(Properties& properties);
 
-        virtual double getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit = "");
+        virtual double getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit = "", double scale = 0);
     };
   }
 }

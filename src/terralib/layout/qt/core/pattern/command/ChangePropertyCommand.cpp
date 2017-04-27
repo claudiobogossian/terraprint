@@ -29,7 +29,6 @@
 #include "ChangePropertyCommand.h"
 #include "../../../../core/pattern/mvc/AbstractItemView.h"
 #include "../../../../core/pattern/mvc/AbstractItemModel.h"
-#include "../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../outside/PropertiesOutside.h"
 #include "../../ItemUtils.h"
 
@@ -38,7 +37,7 @@
 #include <QPointF>
 
 te::layout::ChangePropertyCommand::ChangePropertyCommand( QGraphicsItem* item, Properties oldProperties, 
-  Properties newProperties, PropertiesOutside* outside /*= 0*/, QUndoCommand *parent /*= 0 */ ) :
+  Properties newProperties, PropertiesOutside* outside, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_item(item),
   m_oldProperties(oldProperties),
@@ -49,7 +48,7 @@ te::layout::ChangePropertyCommand::ChangePropertyCommand( QGraphicsItem* item, P
 }
 
 te::layout::ChangePropertyCommand::ChangePropertyCommand( std::vector<QGraphicsItem*> items, std::vector<Properties> allOld, 
-  std::vector<Properties> allNew, PropertiesOutside* outside /*= 0*/, QUndoCommand *parent /*= 0 */ ) :
+  std::vector<Properties> allNew, PropertiesOutside* outside, QUndoCommand *parent ) :
   QUndoCommand(parent),
   m_item(0),
   m_outside(outside),
@@ -152,43 +151,12 @@ QString te::layout::ChangePropertyCommand::createCommandString( QGraphicsItem* i
 
   QPointF pos = m_item->scenePos();
 
-  std::string name = absView->getController()->getProperties().getTypeObj()->getName();
+  std::string name = absView->getProperties().getTypeObj()->getName();
   QString qName = ItemUtils::convert2QString(name);
 
   return QObject::tr("%1 at (%2, %3)")
     .arg(qName)
     .arg(pos.x()).arg(pos.y());
-}
-
-bool te::layout::ChangePropertyCommand::equals( Properties props1, Properties props2 )
-{
-  bool result = true;
-
-  if(props1.getProperties().size() != props2.getProperties().size())
-    return false;
-
-  std::vector<Property> prop1 = props1.getProperties();
-  std::vector<Property> prop2 = props2.getProperties();
-
-  for(unsigned int i = 0 ; i < props1.getProperties().size() ; ++i)
-  {
-    Property proper1 = prop1[i];
-    Property proper2 = prop2[i];
-
-    if(proper1 == proper2)
-    {
-      if(proper1.getValue() == proper2.getValue())
-      {
-        continue;
-      }
-      else
-      {
-        result = false;
-        break;
-      }
-    }
-  }
-  return result;
 }
 
 bool te::layout::ChangePropertyCommand::checkItem( QGraphicsItem* item, Properties props )
@@ -201,16 +169,13 @@ bool te::layout::ChangePropertyCommand::checkItem( QGraphicsItem* item, Properti
   if(!obs)
     return false;
 
-  AbstractItemController* controller = obs->getController();
-
-  if(!controller)
+  const Properties& propsModel = obs->getProperties();
+  if (props.equals(propsModel) == true)
     return false;
 
-  const Properties& propsModel = controller->getProperties();  
-  if(equals(props, propsModel))
-    return false;
-
-  controller->setProperties(props);
+  obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
+  obs->setProperties(props);
+  obs->setUndoEnabled(true); // set properties will generate an UndoCommand on the Stack
   obs->refresh();
 
   return true;
@@ -226,5 +191,3 @@ bool te::layout::ChangePropertyCommand::checkVectors()
 
   return true;
 }
-
-

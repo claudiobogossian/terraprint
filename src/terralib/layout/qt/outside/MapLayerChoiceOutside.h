@@ -43,6 +43,8 @@
 // Qt
 #include <QDialog>
 
+class QKeyEvent;
+
 namespace Ui { class MapLayerChoice; }
 
 namespace te
@@ -81,8 +83,6 @@ namespace te
         void updateProperties(std::vector<Property> props);
         
         void closeWidget();
-
-
         
       protected slots:
 
@@ -102,10 +102,20 @@ namespace te
 
        virtual void on_cmbScale_currentIndexChanged(const QString & text);
 
+       /*
+          \brief Connected to edit line of editable combobox (scale combobox).
+       */
+       virtual void onCmbScale_editingFinished();
+
       protected:
 
         std::vector<std::string> intersectionLayersTitle(std::vector<std::string> output);
+
         virtual Property getProperty(std::string name);
+
+        virtual void keyPressEvent(QKeyEvent * e);
+
+        virtual void changeCmbScale(const QString & text);
 
       private:
 

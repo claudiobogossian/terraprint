@@ -20,13 +20,14 @@
 // TerraLib
 #include "LegendController.h"
 #include "LegendItem.h"
+#include "../core/Scene.h"
+#include "../../core/ItemInputProxy.h"
+#include "../../core/Value.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../core/pattern/proxy/AbstractProxyProject.h"
-#include "../core/Value.h"
-#include "../core/Scene.h"
 
-te::layout::LegendController::LegendController(te::layout::AbstractItemModel* model)
-  : AbstractItemController(model)
+te::layout::LegendController::LegendController(te::layout::AbstractItemModel* model, AbstractItemView* view)
+  : AbstractItemController(model, view)
 {
 }
 
@@ -103,14 +104,14 @@ te::layout::AbstractProxyProject* te::layout::LegendController::getAbstractProxy
     return project;
   }
 
-  Scene* scene = dynamic_cast<Scene*>(view->scene());
-  if (!scene)
+  ItemInputProxy* itemInputProxy = m_view->getItemInputProxy();
+  if (itemInputProxy == 0)
   {
     return project;
   }
 
   std::list<te::map::AbstractLayerPtr> allLayerList;
-  Value<AbstractProxyProject* >* value = scene->getContextValues<AbstractProxyProject *>("proxy_project");
+  Value<AbstractProxyProject* >* value = itemInputProxy->getContextValues<AbstractProxyProject *>("proxy_project");
   if (value)
   {
     project = value->get();
