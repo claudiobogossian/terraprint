@@ -28,8 +28,6 @@
 #include "../../core/property/SharedProperties.h"
 #include "../../core/pattern/mvc/AbstractItemModel.h"
 
-
-
 // STL
 #include <algorithm>
 #include <cmath>
@@ -53,15 +51,8 @@ void te::layout::ScaleController::update(const Subject* subject)
       return;
     }
 
-    if (changeScaleWidthAfterConnection())
-    {
-      AbstractItemController::update(subject);
-      return;
-    }
-
     scaleItem->refreshScaleProperties();
     AbstractItemController::update(subject);
-
     return;
   }
 
@@ -253,8 +244,6 @@ void te::layout::ScaleController::setProperty(const te::layout::Property& proper
 
 void te::layout::ScaleController::setProperties(const te::layout::Properties& properties)
 {
-
-
   //if somehow the item is invalid, we do nothing
   ScaleItem* view = dynamic_cast<ScaleItem*>(m_view);
   if (view == 0)
@@ -265,67 +254,55 @@ void te::layout::ScaleController::setProperties(const te::layout::Properties& pr
 
   te::layout::Properties propertiesCopy = properties;
 
-  calculateNewRectSize(propertiesCopy);
+  bool resultScaleAndUnitGap = syncScaleAndUnitGap(propertiesCopy); // if scale change, so gap unit value will change too
 
-  Property pScaleInUnit = getProperty("scale_in_unit_width_rect_gap", propertiesCopy);
+  syncScaleWidthUnitGap(propertiesCopy); // in some unit, ex.: km or m
 
-  Property newProperty = checkScaleWidthAndUnit(propertiesCopy);
-  if (!newProperty.isNull())
+  if (!resultScaleAndUnitGap) // if scale change and gap unit value recalculate, the scale width gap (mm) still the same
   {
-    propertiesCopy.addProperty(newProperty);
+    syncScaleWidthGap(propertiesCopy); // in mm
   }
 
-  Properties newProperties = checkByBreaks(propertiesCopy);
-  
-  const Property& pUnit = getProperty("Unit");
-
-  std::string unit = te::layout::Property::GetValueAs<std::string>(pUnit);
-
-  Property prop;
-
-  if (!pScaleInUnit.getUsePrecision() )
+  if (!syncBreaksByWidth(propertiesCopy))
   {
-    pScaleInUnit.setUsePrecision(true);
-
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-    if (unit == "(m)" || unit == "m"){
-      pScaleInUnit.setPrecision(0);
-      prop.setName("scale_in_unit_width_rect_gap");
-      prop.setValue(pScaleInUnit.getValue()->clone(), dataType->getDataTypeDouble(), true, 0);
-    }
-    else{
-      pScaleInUnit.setPrecision(0);
-      prop.setName("scale_in_unit_width_rect_gap");
-      prop.setValue(pScaleInUnit.getValue()->clone(), dataType->getDataTypeDouble(), true, 1);
-    }
-    newProperties.completelyUpdateProperty(prop);
-    newProperties.addProperty(prop);
-  }
-
-  if (!newProperties.getProperties().empty())
-  {
-    std::vector<Property> props = newProperties.getProperties();
-    for (std::vector<Property>::iterator it = props.begin(); it != props.end(); ++it)
+    propertiesCopy.removeProperty("width");
+    if (propertiesCopy.getProperties().size() == 0)
     {
-      newProperty = (*it);
-      propertiesCopy.addProperty(newProperty);
+      return;
     }
   }
+
+  checkByBreaks(propertiesCopy); // recalculate width by breaks
+
+  syncScaleUnit(propertiesCopy); // check if change unit and update gap unit property
 
   //we finally set the properties into the model
   AbstractItemController::setProperties(propertiesCopy);
 }
 
-te::layout::Property te::layout::ScaleController::checkScaleWidthAndUnit(const Properties& properties)
+bool te::layout::ScaleController::syncScaleWidthUnitGap(te::layout::Properties& properties)
 {
-  Property newProperty;
+  bool result = false;
+  // in some unit, ex.: km or m
+  if (properties.contains("scale_in_unit_width_rect_gap"))
+    return result;
 
-  // If both are being updated, so no calculation will be made
-  if (properties.contains("scale_width_rect_gap") && properties.contains("scale_in_unit_width_rect_gap"))
+  if (properties.contains("scale_width_rect_gap"))
   {
-    return newProperty;
+    // recalculate 'scale in unit width rect gap'
+    Property newProperty = calculateScaleWidthInUnit(properties);
+    properties.addProperty(newProperty);
+    result = true;
   }
+  return result;
+}
+
+bool te::layout::ScaleController::syncScaleWidthGap(te::layout::Properties& properties)
+{
+  bool result = false;
+  // in mm
+  if (properties.contains("scale_width_rect_gap"))
+    return result;
 
   if (properties.contains("scale_in_unit_width_rect_gap"))
   {
@@ -336,19 +313,81 @@ te::layout::Property te::layout::ScaleController::checkScaleWidthAndUnit(const P
     double scaleInUnitFromModel = te::layout::Property::GetValueAs<double>(pScaleInUnitFromModel);
     if (scaleInUnit != scaleInUnitFromModel)
     {
-      newProperty = calculateScaleWidthInMM(properties);
+      // recalculate 'scale width rect gap'
+      Property newProperty = calculateScaleWidthInMM(properties);
+      properties.addProperty(newProperty);
+      result = true;
     }
   }
-  else if(properties.contains("Unit"))
-  {
-    newProperty = calculateScaleUnit(properties);
-  }
-  else if (properties.contains("scale_width_rect_gap"))
-  {
-    newProperty = calculateScaleWidthInUnit(properties);
-  }
+  return result;
+}
 
-  return newProperty;
+bool te::layout::ScaleController::syncScaleUnit(te::layout::Properties& properties)
+{
+  bool result = false;
+  // check if change unit and update gap unit property
+
+  if (properties.contains("Unit"))
+  {
+    // recalculate 'scale in unit width rect gap'
+    Property newProperty = calculateScaleUnit(properties);
+    if (properties.contains("scale_in_unit_width_rect_gap"))
+    {
+      properties.updateProperty(newProperty);
+    }
+    else
+    {
+      properties.addProperty(newProperty);
+    }
+    result = true;
+  }
+  return result;
+}
+
+bool te::layout::ScaleController::syncScaleAndUnitGap(te::layout::Properties& properties)
+{
+  bool result = false;
+  // if scale change, so gap unit value will change too
+  if (properties.contains("scale_in_unit_width_rect_gap"))
+    return result;
+
+  if (properties.contains("scale"))
+  {
+    // recalculate 'scale in unit width rect gap'
+    Property newProperty = calculateScaleWidthInUnit(properties);
+    properties.addProperty(newProperty);
+    result = true;
+  }
+  return result;
+}
+
+bool te::layout::ScaleController::syncBreaksByWidth(te::layout::Properties& properties)
+{
+  bool result = false;
+    
+  // in some unit, ex.: km or m
+  if (properties.contains("number_of_breaks"))
+    return result;
+
+  if (properties.contains("width"))
+  {
+    const Property& pWidth = properties.getProperty("width");
+    double width = te::layout::Property::GetValueAs<double>(pWidth);
+    double biggerBreak = 0;
+    int newNumBreaks = calculateNewNumBreaks(properties, biggerBreak);
+
+    if (width < biggerBreak || newNumBreaks <= 0)
+    {
+      return result;
+    }
+
+    Property pNumberOfBreaks = getProperty("number_of_breaks");    
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    pNumberOfBreaks.setValue(newNumBreaks, dataType->getDataTypeInt());
+    properties.addProperty(pNumberOfBreaks);
+    result = true;
+  }
+  return result;
 }
 
 te::layout::Property te::layout::ScaleController::calculateScaleWidthInMM(const Properties& properties)
@@ -393,8 +432,8 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   }
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  const Property& pScale = m_model->getProperty("scale");
-  const Property& pCurrentScaleWidth = properties.getProperty("scale_width_rect_gap");
+  const Property& pScale = getProperty("scale", properties);
+  const Property& pCurrentScaleWidth = getProperty("scale_width_rect_gap", properties);
 
   double scale = te::layout::Property::GetValueAs<double>(pScale);
   double gapX = te::layout::Property::GetValueAs<double>(pCurrentScaleWidth);
@@ -406,7 +445,6 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
   
   double valueDouble = (spacing * mmToCm) / unit;
   double value = valueDouble;
-
 
   const Property& pNewUnit = getProperty("Unit");
   std::string unitStr = "("+ pNewUnit.getOptionByCurrentChoice().toString() + ")";
@@ -422,7 +460,6 @@ te::layout::Property te::layout::ScaleController::calculateScaleWidthInUnit(cons
     prop.setValue(value, dataType->getDataTypeDouble(), true, 1);
   }
 
-
   return prop;
 }
 
@@ -434,11 +471,9 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
     return prop;
   }
 
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-
-  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
+  
+  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap", properties);
   const Property& pNewUnit = properties.getProperty("Unit");
   const Property& pUnit = getProperty("Unit");
 
@@ -467,8 +502,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
   {
     scaleInUnitDouble = scaleInUnit / unit;
   }
-
-
+  
   const Property& pNewUnitString = getProperty("Unit");
   
   std::string unitStr = "(" + pNewUnit.getOptionByCurrentChoice().toString() + ")";
@@ -484,8 +518,7 @@ te::layout::Property te::layout::ScaleController::calculateScaleUnit(const Prope
     prop = pScaleInUnit;
     prop.setValue(scaleInUnit, dataType->getDataTypeDouble(), true, 1);
   }
-
-
+  
   return prop;
 }
 
@@ -499,64 +532,9 @@ double te::layout::ScaleController::strToUnit(std::string& strUnit)
   return unit;
 }
 
-bool te::layout::ScaleController::changeScaleWidthAfterConnection()
-{
-  bool change = false;
-
-  SharedProperties sharedProps;
-  const Property& pConnection = getProperty(sharedProps.getItemObserver());
-  const Property& pScaleWidth = getProperty("scale_width_rect_gap");
-  const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap");
-  const Property& pScale = getProperty("scale");
-
-  double scale = te::layout::Property::GetValueAs<double>(pScale);
-  double scaleInUnit = te::layout::Property::GetValueAs<double>(pScaleInUnit);
-  double gapX = te::layout::Property::GetValueAs<double>(pScaleWidth);
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  std::string strUnit;
-  double unit = getCurrentUnit(strUnit);
-  double spacing = scale / 100.;
-  double mmToCm = gapX / 10.;
-
-  double valueDouble = (spacing * mmToCm) / unit;
-  double value = valueDouble;
-
-  const Property& pNewUnit = getProperty("Unit");
-  std::string unitStr = "(" + pNewUnit.getOptionByCurrentChoice().toString() + ")";
-
-  if (unitStr == "(m)" || unitStr == "m"){
-    value = qRound(valueDouble);
-  }
-  else{
-    value = std::ceil(valueDouble * 2) / 2.0;
-  }
-
-
-  if ((value != scaleInUnit) && value > 0)
-  {
-    Property prop;
-
-    if (unitStr == "(m)" || unitStr == "m"){
-      prop.setName("scale_in_unit_width_rect_gap");
-      prop.setValue(value, dataType->getDataTypeDouble(), true, 0);
-    }
-    else{
-      prop.setName("scale_in_unit_width_rect_gap");
-      prop.setValue(value, dataType->getDataTypeDouble(), true, 1);
-    }
-
-
-    setProperty(prop);
-    change = true;
-  }
-  return change;
-}
-
-te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properties& properties)
-{
-  Properties props;
+void te::layout::ScaleController::checkByBreaks(Properties& properties)
+{ 
+  // recalculate width by breaks
   
   bool hasNewNumberOfBreaks = properties.contains("number_of_breaks");
   bool hasNewByBreaks = properties.contains("by_breaks");
@@ -568,11 +546,25 @@ te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properti
       && hasNewScaleWidth == false && hasNewScaleInUnit == false
       && hasNewTextFont == false)
   {
-    return props;
+    return;
+  }
+
+  bool hasNewWidth = properties.contains("width");
+
+  if ((hasNewByBreaks && hasNewWidth) || hasNewWidth)
+  {
+    return;
+  }
+
+  const Property& pByBreaks = getProperty("by_breaks", properties);
+  bool byBreaks = te::layout::Property::GetValueAs<bool>(pByBreaks);
+
+  if (!byBreaks)
+  {
+    return;
   }
 
   const Property& pNumberOfBreaks = getProperty("number_of_breaks", properties);
-  const Property& pByBreaks = getProperty("by_breaks", properties);
   const Property& pScaleWidth = getProperty("scale_width_rect_gap", properties);
   const Property& pScaleInUnit = getProperty("scale_in_unit_width_rect_gap", properties);
   const Property& pTextFont = getProperty("font", properties);
@@ -582,7 +574,6 @@ te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properti
   Property pResizable = getProperty("resizable");
 
   int numberOfBreaks = te::layout::Property::GetValueAs<int>(pNumberOfBreaks);
-  bool byBreaks = te::layout::Property::GetValueAs<bool>(pByBreaks);
   double currentWidth = te::layout::Property::GetValueAs<double>(pCurrentWidth);
   double scaleWidth = te::layout::Property::GetValueAs<double>(pScaleWidth);
   double scaleInUnit = te::layout::Property::GetValueAs<double>(pScaleInUnit);
@@ -590,35 +581,22 @@ te::layout::Properties te::layout::ScaleController::checkByBreaks(const Properti
   std::string strUnit = te::layout::Property::GetValueAs<std::string>(pUnit);
   double scale = te::layout::Property::GetValueAs<double>(pScale);
 
-  bool resizable = te::layout::Property::GetValueAs<bool>(pResizable);
   double width = 0;
-
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  resizable = !byBreaks;
-  pResizable.setValue(resizable, dataType->getDataTypeBool());
-  props.addProperty(pResizable);
-
-  if (!byBreaks)
-  {
-    return props;
-  }
   
   strUnit = "(" + strUnit + ")";
 
   width = getFullWidthByBreaks(numberOfBreaks, scaleWidth, scaleInUnit, font, strUnit, scale);
   if (width <= 0)
   {
-    return props;
+    return;
   }
 
   if (width != currentWidth)
   {
     pCurrentWidth.setValue(width, dataType->getDataTypeDouble());
-    props.addProperty(pCurrentWidth);
+    properties.addProperty(pCurrentWidth);
   }
-
-  return props;
 }
 
 double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, double scaleGapX, int scaleUnitGapX, Font font, std::string strUnit, double scale)
@@ -626,7 +604,8 @@ double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, dou
   double value = 0.;
   double width = 0;
 
-  double displacementBetweenScaleAndText = 2.;
+  const Property& pDisplacement = getProperty("displacementBetweenScaleAndText");
+  double displacementBetweenScaleAndText = te::layout::Property::GetValueAs<double>(pDisplacement);
   std::stringstream ss_value;
   ss_value.precision(15);
 
@@ -643,7 +622,6 @@ double te::layout::ScaleController::getFullWidthByBreaks(int numberOfBreaks, dou
 
   return width;
 }
-
 
 void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& properties)
 {
@@ -752,3 +730,36 @@ void te::layout::ScaleController::calculateNewRectSize(te::layout::Properties& p
     properties.addProperty(pCopyHeight);
   }
 }
+
+int te::layout::ScaleController::calculateNewNumBreaks(const Properties& properties, double & biggerBreak)
+{
+  double initialGap = 0;
+
+  const Property& pDisplacement = getProperty("displacementBetweenScaleAndText");
+  const Property& pScaleWidth = getProperty("scale_width_rect_gap");
+  const Property& pWidth = properties.getProperty("width");
+  const Property& pTextFont = getProperty("font", properties);
+  const Property& pUnit = getProperty("Unit", properties);
+  const Property& pScale = getProperty("scale", properties);
+  Property pNumberOfBreaks = getProperty("number_of_breaks", properties);
+
+  double scaleWidth = te::layout::Property::GetValueAs<double>(pScaleWidth);
+  double displacementBetweenScaleAndText = te::layout::Property::GetValueAs<double>(pDisplacement);
+  double width = te::layout::Property::GetValueAs<double>(pWidth);
+  int numberOfBreaks = te::layout::Property::GetValueAs<int>(pNumberOfBreaks);
+  Font font = te::layout::Property::GetValueAs<Font>(pTextFont);
+  std::string strUnit = te::layout::Property::GetValueAs<std::string>(pUnit);
+  double scale = te::layout::Property::GetValueAs<double>(pScale);
+
+  strUnit = "(" + strUnit + ")";
+
+  double finalGap = getGap(initialGap, font, numberOfBreaks, scaleWidth, strUnit, scale);
+
+  // calculate: width - (initialGap + finalGap + (2*displacementBetweenScaleAndText)) to remove spaces
+  double newWidth = width - (initialGap + finalGap + (2*displacementBetweenScaleAndText));
+  int newBreaks = (int)(newWidth / scaleWidth);
+  biggerBreak = ((initialGap + finalGap) / width) + scaleWidth;
+
+  return newBreaks;
+}
+

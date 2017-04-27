@@ -54,6 +54,7 @@ te::layout::ScaleModel::ScaleModel()
   int numberOfBreaks = 1;
   te::color::RGBAColor fontColor(0, 0, 0, 255);
   double lineWidth = Utils::getLineWidthMinimumValue();
+  double displacement = 2.;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -207,6 +208,15 @@ te::layout::ScaleModel::ScaleModel()
     property.setName("number_of_breaks");
     property.setLabel(TE_TR("Number of graphical scale breaks"));
     property.setValue(numberOfBreaks, dataType->getDataTypeInt());
+    m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("displacementBetweenScaleAndText");
+    property.setLabel(TR_LAYOUT("Displacement Between Scale And Text"));
+    property.setValue(displacement, dataType->getDataTypeDouble());
+    property.setVisible(false);
     m_properties.addProperty(property);
   }
 

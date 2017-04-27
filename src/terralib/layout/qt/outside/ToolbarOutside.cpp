@@ -198,6 +198,9 @@ void te::layout::ToolbarOutside::createToolbar()
   this->addSeparator();
   
   createViewAreaToolButton();
+
+  //Due to the refactrtoing, all the map tools need some revision.For this reason, this toolbutton is being temporarily disabled
+  //createMapToolsToolButton();
   this->addSeparator();
 
   createMapToolButton();  
@@ -226,11 +229,11 @@ void te::layout::ToolbarOutside::createToolbar()
   createAlignCenterHorizontalToolButton();
   createAlignCenterVerticalToolButton();
   this->addSeparator();
-  
-  createExportToPDFButton();
-  this->addSeparator();
 
   createObjectToImageButton();
+  this->addSeparator();
+
+  createExportToPDFButton();
   this->addSeparator();
 
   createSceneZoomCombobox();
@@ -238,7 +241,6 @@ void te::layout::ToolbarOutside::createToolbar()
 
   createExitButton();
   this->addSeparator();
-
 }
 
 QToolButton* te::layout::ToolbarOutside::createMapToolButton()
@@ -310,13 +312,13 @@ QToolButton* te::layout::ToolbarOutside::createMapToolsToolButton()
   QAction* actionSystematic = createAction(tr("Systematic Scale"), m_actionMapSystematicScale, "layout-systematic-map", "", menu);
   menu->addAction(actionSystematic);
 
-  QAction* actionTextGrid = createAction(tr("Text grid as text component"), m_actionMapCreateTextGrid, "layout-createtext-as-obj", "", menu);
+  QAction* actionTextGrid = createAction(tr("Text Grid as Object"), m_actionMapCreateTextGrid, "layout-createtext-as-obj", "", menu);
   menu->addAction(actionTextGrid);
 
-  QAction* actionTextMap = createAction(tr("Text map as text component"), m_actionMapCreateMapText, "layout-createmap-text-as-objs", "", menu);
+  QAction* actionTextMap = createAction(tr("Text Map as Object"), m_actionMapCreateMapText, "layout-createmap-text-as-objs", "", menu);
   menu->addAction(actionTextMap);
 
-  QAction* actionLegend = createAction(tr("Legend as text component"), m_actionMapCreateLegendChildAsObject, "layout-legend-child", "", menu);
+  QAction* actionLegend = createAction(tr("Legend as Object"), m_actionMapCreateLegendChildAsObject, "layout-legend-child", "", menu);
   menu->addAction(actionLegend);
 
   btnMapTools->setMenu(menu);
@@ -348,29 +350,29 @@ QToolButton* te::layout::ToolbarOutside::createGeometryToolButton()
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
   const ItemIconManager& iconManager = toolbarController->getIconManager();
 
-  QToolButton *btnGeometry = createToolButton(tr("Geometry components"), tr("Geometries components"), "");
+  QToolButton *btnGeometry = createToolButton(tr("Geometry Tools"), tr("Geometries Objects"), "");
 
   QMenu* menu = new QMenu(btnGeometry);
 
-  QAction* actionRectagle = createAction(tr("Insert Rectangle"), m_actionRectangle, iconManager.getIconNameAsQString(itemType->getRectangleItem()->getName()), "", menu);
+  QAction* actionRectagle = createAction(tr("Rectangle Object"), m_actionRectangle, iconManager.getIconNameAsQString(itemType->getRectangleItem()->getName()), "", menu);
   menu->addAction(actionRectagle);
 
-  QAction* actionArrow = createAction(tr("Insert Arrow"), m_actionArrow, iconManager.getIconNameAsQString(itemType->getArrowItem()->getName()), "", menu);
+  QAction* actionArrow = createAction(tr("Arrow Object"), m_actionArrow, iconManager.getIconNameAsQString(itemType->getArrowItem()->getName()), "", menu);
   menu->addAction(actionArrow);
 
-  QAction* actionEllipse = createAction(tr("Insert Ellipse"), m_actionEllipse, iconManager.getIconNameAsQString(itemType->getEllipseItem()->getName()), "", menu);
+  QAction* actionEllipse = createAction(tr("Ellipse Object"), m_actionEllipse, iconManager.getIconNameAsQString(itemType->getEllipseItem()->getName()), "", menu);
   menu->addAction(actionEllipse);
 
-  QAction* actionPoint = createAction(tr("Insert Point"), m_actionPoint, iconManager.getIconNameAsQString(itemType->getPointItem()->getName()), "", menu);
+  QAction* actionPoint = createAction(tr("Point Object"), m_actionPoint, iconManager.getIconNameAsQString(itemType->getPointItem()->getName()), "", menu);
   menu->addAction(actionPoint);
 
-  QAction* actionLine = createAction(tr("Insert Line"), m_actionLine, iconManager.getIconNameAsQString(itemType->getLineItem()->getName()), "", menu);
+  QAction* actionLine = createAction(tr("Line Object"), m_actionLine, iconManager.getIconNameAsQString(itemType->getLineItem()->getName()), "", menu);
   menu->addAction(actionLine);
 
-  QAction* actionPolygon = createAction(tr("Insert Polygon"), m_actionPolygon, iconManager.getIconNameAsQString(itemType->getPolygonItem()->getName()), "", menu);
+  QAction* actionPolygon = createAction(tr("Polygon Object"), m_actionPolygon, iconManager.getIconNameAsQString(itemType->getPolygonItem()->getName()), "", menu);
   menu->addAction(actionPolygon);
 
-  QAction* actionSVG = createAction(tr("Insert SVG"), m_actionSVG, iconManager.getIconNameAsQString(itemType->getSVGItem()->getName()), "", menu);
+  QAction* actionSVG = createAction(tr("SVG Object"), m_actionSVG, iconManager.getIconNameAsQString(itemType->getSVGItem()->getName()), "", menu);
   menu->addAction(actionSVG);
 
   btnGeometry->setMenu(menu);
@@ -392,13 +394,13 @@ QToolButton* te::layout::ToolbarOutside::createViewAreaToolButton()
 
   QMenu* menu = new QMenu(btnViewArea);
 
-  QAction* actionPan = createAction(tr("Pan Tool on paper"), m_actionViewPan, "layout-paper-pan", "Pan tool on paper", menu);
+  QAction* actionPan = createAction(tr("Pan Tool"), m_actionViewPan, "layout-paper-pan", "", menu);
   menu->addAction(actionPan);
   
-  QAction* actionZoomIn = createAction(tr("Zoom In on paper"), m_actionViewZoomIn, "layout-paper-zoom-in", "Zoom in on paper", menu);
+  QAction* actionZoomIn = createAction(tr("Zoom In"), m_actionViewZoomIn, "layout-paper-zoom-in", "", menu);
   menu->addAction(actionZoomIn);
   
-  QAction* actionZoomOut = createAction(tr("Zoom Out on paper"), m_actionViewZoomOut, "layout-paper-zoom-out", "Zoom out on paper", menu);
+  QAction* actionZoomOut = createAction(tr("Zoom Out"), m_actionViewZoomOut, "layout-paper-zoom-out", "", menu);
   menu->addAction(actionZoomOut);
 
   btnViewArea->setMenu(menu);
@@ -445,7 +447,7 @@ QToolButton* te::layout::ToolbarOutside::createItemTools()
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
   const ItemIconManager& iconManager = toolbarController->getIconManager();
 
-  QToolButton *btnTools = createToolButton(tr("Components Tools"), tr("Components Tools"), "");
+  QToolButton *btnTools = createToolButton(tr("Item Tools"), tr("Item Tools"), "");
 
   QMenu* menu = new QMenu(btnTools);
 
@@ -589,24 +591,28 @@ QToolButton* te::layout::ToolbarOutside::createTextToolButton()
   EnumObjectType* itemType = Enums::getInstance().getEnumObjectType();
   const ItemIconManager& iconManager = toolbarController->getIconManager();
 
-  QToolButton *btn = createToolButton(tr("Text related components"), tr("Text related components"), "");
+
+  QToolButton *btn = createToolButton(tr("Text Tools"), tr("Text Tools"), "");
 
   QMenu* menu = new QMenu(btn);
 
-  QAction* actionTxtDefault = createAction(tr("Insert Text"), m_actionTextDefault, iconManager.getIconNameAsQString(itemType->getTextItem()->getName()), "", menu);
+  QAction* actionTxtDefault = createAction(tr("Default Text Object"), m_actionTextDefault, iconManager.getIconNameAsQString(itemType->getTextItem()->getName()), "", menu);
   menu->addAction(actionTxtDefault);
   
-  QAction* actionTitle = createAction(tr("Insert Title"), m_actionTitle, iconManager.getIconNameAsQString(itemType->getTitleItem()->getName()), "", menu);
+  QAction* actionTitle = createAction(tr("Title Object"), m_actionTitle, iconManager.getIconNameAsQString(itemType->getTitleItem()->getName()), "", menu);
   menu->addAction(actionTitle);
 
-  QAction* actionStringGrid = createAction(tr("Insert Text Table"), m_actionStringGrid, "layout-grid", "", menu);
+  QAction* actionStringGrid = createAction(tr("Text Grid Object"), m_actionStringGrid, "layout-grid", "", menu);
   menu->addAction(actionStringGrid);
 
-  QAction* actionImage = createAction(tr("Insert Image"), m_actionImage, iconManager.getIconNameAsQString(itemType->getImageItem()->getName()), "", menu);
+  QAction* actionImage = createAction(tr("Image Object"), m_actionImage, iconManager.getIconNameAsQString(itemType->getImageItem()->getName()), "", menu);
   menu->addAction(actionImage);
 
-  QAction* actionBalloon = createAction(tr("Insert Balloon"), m_actionBalloon, "layout-ballon", "", menu);
+  QAction* actionBalloon = createAction(tr("Balloon Object"), m_actionBalloon, "layout-ballon", "", menu);
   menu->addAction(actionBalloon);
+  /*
+  QAction* actionBarCode = createAction(tr("BarCode Object"), m_actionBarCode, "layout-barcode", "", menu);
+  menu->addAction(actionBarCode);*/
 
   btn->setMenu(menu);
   btn->setPopupMode(QToolButton::MenuButtonPopup);
@@ -713,7 +719,7 @@ QToolButton* te::layout::ToolbarOutside::createAlignCenterVerticalToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createRemoveObjectToolButton()
 {
-  QToolButton *btn = createToolButton(tr("Remove Component"), tr("Remove Component"), "layout-empty-trash");
+  QToolButton *btn = createToolButton(tr("Remove Object"), tr("Remove Object"), "layout-empty-trash");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);
@@ -791,7 +797,7 @@ QToolButton* te::layout::ToolbarOutside::createDrawMapToolButton()
 
 QToolButton* te::layout::ToolbarOutside::createObjectToImageButton()
 {
-  QToolButton *btn = createToolButton(tr("Components To Images"), tr("Export all selected components to images"), "layout-object-to-image");
+  QToolButton *btn = createToolButton(tr("Object To Image"), tr("Export all selected objects to image"), "layout-object-to-image");
   btn->setCheckable(false);
 
   ToolbarController* controller = dynamic_cast<ToolbarController*>(m_controller);

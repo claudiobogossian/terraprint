@@ -46,12 +46,15 @@
 #include <QAbstractTextDocumentLayout>
 #include <QTextCursor>
 #include <QPainter>
+#include <QPaintDevice>
+#include <QPaintEngine>
 #include <QTextOption>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 #include <QApplication>
 #include <QClipboard>
 #include <QTimer>
+#include <QColor>
 
 te::layout::TextItem::TextItem(te::layout::ItemInputProxy* itemInputProxy)
   : QObject()
@@ -148,7 +151,18 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
 
   //we must set some transformation in order to prepare the item to be rendered on the screen or in other output device
   //we must first aquire some information about the current dpi and the zoom
+
+  //But there is one exception: SVG already handles this transformation. 
+  //For this reason, we do not scale the text if the output device is SVG
   double dpiFactor = itemInputProxy->getContext().getDpiX() / textController->getDpiForCalculation();
+  if (painter->device() && painter->device()->paintEngine())
+  {
+    QPaintEngine::Type type = painter->device()->paintEngine()->type();
+    if (type == QPaintEngine::SVG)
+    {
+        dpiFactor = 96. / textController->getDpiForCalculation();
+    }
+  }
 
   //the we aquire information about the bounding rect references in pixels and in millimeters
   QRectF boxMM = this->boundingRect();
@@ -161,6 +175,11 @@ void te::layout::TextItem::drawItem( QPainter * painter, const QStyleOptionGraph
   
   //if we are in edition mode, we must draw the cursor position and the selection
   QAbstractTextDocumentLayout::PaintContext context;
+
+  // set text color
+  QColor qTextColor = textController->getCurrentTextColor();
+  context.palette.setColor(QPalette::Text, qTextColor);
+
   if (isEditionMode())
   {
     //we define the position

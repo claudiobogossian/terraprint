@@ -90,15 +90,22 @@ void te::layout::AddCommand::redo()
   if(!scene || !m_item)
     return;
 
+  AbstractItemView* obs = dynamic_cast<AbstractItemView*>(m_item);
+
+  if (!obs)
+    return;
+
   /* Checks if the item is already 
      added to the scene */
   if(m_item->scene() == m_scene)
     return;
     
+  obs->setUndoEnabled(false); // set properties will not generate an UndoCommand on the Stack
   scene->insertItem(m_item);
   scene->removeItemStackWithoutScene(m_item);
-
   m_item->setPos(m_initialPosition);
+  obs->setUndoEnabled(true); // set properties will generate an UndoCommand on the Stack
+
   m_scene->clearSelection();
   m_scene->update();
 }

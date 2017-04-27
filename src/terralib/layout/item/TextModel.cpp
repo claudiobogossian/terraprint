@@ -109,7 +109,7 @@ te::layout::TextModel::TextModel()
     {
       EnumType* enumType = enumAlignmentType.getEnum(i);
 
-      if(enumType == enumAlignmentType.getNoneType() || enumType == currentAlignmentType)
+      if(enumType == enumAlignmentType.getNoneType() || enumType == currentAlignmentType || enumType == enumAlignmentType.getAlignmentJustifyType())
         continue;
 
       Variant v;

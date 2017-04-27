@@ -98,7 +98,7 @@ void te::layout::GeodesicGrid::initialize(const te::layout::Properties& gridSett
     }
   }
 
-  calculateTexts(gridSettings);
+  calculateTexts(gridSettings, settingsConfig);
 
   QRectF rectGrid = m_gridLines.boundingRect();
   QRectF rectTexts = m_gridText.boundingRect();

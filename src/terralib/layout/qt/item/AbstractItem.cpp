@@ -683,10 +683,17 @@ bool te::layout::AbstractItem::checkTouchesCorner(const double& x, const double&
   {
     return false;
   }
+  else
+  {
+    if (!canResize(m_enumSides))
+    {
+      m_enumSides = TPNoneSide;
+      return false;
+    }
+  }
 
   return true;
 }
-
 
 bool te::layout::AbstractItem::checkRotationArea(const double& x, const double& y)
 {
@@ -781,7 +788,6 @@ void te::layout::AbstractItem::mouseMoveEvent(QGraphicsSceneMouseEvent * event)
 
     QPoint tipPoint = QCursor::pos();
     QToolTip::showText(tipPoint, txt, view);
-
   }
   else if (m_currentAction == te::layout::ROTATION_ACTION)
   {
@@ -829,7 +835,9 @@ void te::layout::AbstractItem::mouseReleaseEvent(QGraphicsSceneMouseEvent * even
   {
     m_currentAction = te::layout::NO_ACTION;
     m_finalCoord = event->pos();
+    this->prepareGeometryChange();
     getController()->resize(m_enumSides, m_initialCoord, m_finalCoord);
+    m_enumSides = TPNoneSide;
     this->setOpacity(1.);
   }
   else if (m_currentAction == te::layout::MOVE_ACTION)

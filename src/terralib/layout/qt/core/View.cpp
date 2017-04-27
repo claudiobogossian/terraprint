@@ -49,6 +49,7 @@
 #include "../../core/property/SharedProperties.h"
 #include "tempDataStorage/TempDataStorageEditor.h"
 #include "tempDataStorage/TempFileInfo.h"
+#include "tools/CreateItemTool.h"
 
 #include "terralib/geometry/Envelope.h"
 #include "terralib/qt/widgets/Utils.h"
@@ -336,13 +337,18 @@ void te::layout::View::wheelEvent(QWheelEvent *event)
     zoom = previousZoom();
   }
 
-  setZoom(zoom);
+  ViewportAnchor anchor = transformationAnchor();
+  ViewportAnchor anchorResize = resizeAnchor();
 
-  if (isLimitExceeded(zoom) == false)
-  {
-    QGraphicsView::wheelEvent(event);
-  }
+  // Note that the effect of this property is noticeable 
+  // when only a part of the scene is visible (i.e., when there are scroll bars). 
+  setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
+  setResizeAnchor(QGraphicsView::AnchorUnderMouse);
+
+  setZoom(zoom);
   
+  setResizeAnchor(anchorResize);
+  setTransformationAnchor(anchor);
   setViewportUpdateMode(mode);
 }
 
@@ -600,7 +606,7 @@ void te::layout::View::paste()
     prop.updateProperty(pro_name);
     std::string newName;
 
-    nscene->buildItem(prop, newName, true);
+    nscene->buildItem(prop, newName, true, true);
 
     newNames[oldName] = newName;
   }
@@ -651,7 +657,7 @@ void te::layout::View::paste()
     prop.updateProperty(pro_name);
     std::string newName;
 
-    nscene->buildItem(prop, newName, true);
+    nscene->buildItem(prop, newName, true, true);
 
   }
   if (m_cutObject ==  false)
@@ -1316,6 +1322,35 @@ void te::layout::View::createItem(EnumType* itemType)
   viewport()->installEventFilter(m_currentTool);
 }
 
+void te::layout::View::createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool)
+{
+  resetDefaultConfig();
+
+  if (useTool)
+  {
+    EnumToolType* tools = Enums::getInstance().getEnumToolType();
+
+    std::string toolName = tools->getCreateItemTool()->getName();
+    ToolFactoryParamsCreate params(this, itemType);
+
+    m_currentTool = te::layout::ToolFactory::make(toolName, params);
+
+    CreateItemTool* tool = dynamic_cast<CreateItemTool*>(m_currentTool);
+    if (tool)
+    {
+      tool->setProperties(properties);
+    }
+    setInteractive(false);
+    viewport()->installEventFilter(m_currentTool);
+  }
+  else
+  {
+    Scene* sc = getScene();
+    std::string name = "";
+    sc->buildItem(properties, name, false, true);
+  }
+}
+
 void te::layout::View::applyScale(double horizontalScale, double verticalScale)
 {
   if((horizontalScale <= 0)||(verticalScale <= 0))
@@ -1654,14 +1689,102 @@ void te::layout::View::positioningToolbarOnTheScreen(AbstractItemView* item)
     QPointF pos(qitem->scenePos().x(), qitem->scenePos().y() + boundRect.height());
     QPoint itemPos = mapFromScene(pos);
     QPoint ptGlobal = viewport()->mapToGlobal(itemPos);
-
+        
     // total size with margins and borders
     QSize dockSize = m_dialogItemToolbar->size();
 
-    // Place the dock on top of the item
+    // Place the dock on top left of the item
     QRect rect(ptGlobal.x(), ptGlobal.y() - (m_dialogItemToolbar->height() + space), dockSize.width(), dockSize.height());
+
+    // Check if the position of the toolbar is inside the viewport
+    rect = checkToolBarPosition(qitem, rect);
+
     m_dialogItemToolbar->setGeometry(rect);
   }
+}
+
+QWidget* te::layout::View::superParent(QWidget* widget)
+{
+  if (widget->parentWidget())
+  {
+    widget = superParent(widget->parentWidget());
+  }
+  return widget;
+}
+
+QRectF te::layout::View::viewportVisibleRect()
+{
+  QRectF viewportVisibleRectangle = viewport()->rect();
+  QWidget* super = superParent(viewport()); // get bigger widget
+  QRectF viewportParentRect = super->rect();
+
+  double originX = viewportParentRect.width() - viewportVisibleRectangle.width();
+  double originY = viewportParentRect.height() - viewportVisibleRectangle.height();
+  viewportVisibleRectangle = QRectF(originX, originY, viewportVisibleRectangle.width(), viewportVisibleRectangle.height());
+  return viewportVisibleRectangle;
+}
+
+QPointF te::layout::View::viewportVisibleRectCenter()
+{
+  QRectF viewportRect = viewportVisibleRect();
+  QPointF visibleRectCenter(viewportRect.x() + (viewportRect.width() / 2), viewportRect.y() + (viewportRect.height() / 2));
+  return visibleRectCenter;
+}
+
+QRect te::layout::View::checkToolBarPosition(QGraphicsItem* item, const QRect& rect)
+{
+  // Check if the position of the toolbar is inside the viewport
+
+  QRectF boundRect = item->boundingRect();
+  boundRect = item->mapRectToScene(boundRect);
+
+  // total size with margins and borders
+  QSize dockSize = m_dialogItemToolbar->size();
+
+  QPointF topOriginPoint(rect.x(), rect.y() - dockSize.height());
+
+  QPointF hrzOriginPoint = m_horizontalRuler->getOriginPoint();
+  hrzOriginPoint = mapFromScene(hrzOriginPoint);
+  hrzOriginPoint = viewport()->mapToGlobal(hrzOriginPoint.toPoint());
+
+  QPointF originViewPoint(0, 0);
+  originViewPoint = viewport()->mapToGlobal(originViewPoint.toPoint());
+
+  QRect newRect(rect);
+
+  // The toolbar can not be positioned above or more to the left of the rulers
+  if (hrzOriginPoint.x() > topOriginPoint.x() || topOriginPoint.y() < originViewPoint.y())
+  {
+    QPointF itemCenter = boundRect.center();
+    QPoint itemPos = mapFromScene(itemCenter);
+    QPointF ptGlobal = viewport()->mapToGlobal(itemPos);
+    QRectF viewportVisible = viewportVisibleRect();
+    QPointF visibleCenter = viewportVisibleRectCenter();
+    double halfWidth = dockSize.width() / 2;
+    double halfHeight = dockSize.height() / 2;
+
+    double y = ptGlobal.y() + dockSize.height();
+    double x1 = ptGlobal.x() - halfWidth;
+    double x2 = ptGlobal.x() + dockSize.width();
+
+    // check if center of the item is on below of the viewport
+    // or if center of the item is above of the viewport
+    if (y > viewportVisible.y() && y < this->size().height()
+      && x1 > viewportVisible.x() && x2 < viewportVisible.topRight().x())
+    {
+      // put the toolbar in the center of the item
+      newRect = QRect(x1, ptGlobal.y(), dockSize.width(), dockSize.height());
+    }
+    else
+    {
+      // put the toolbar in the center of the viewport
+      double halfItemWidth = dockSize.width() / 2;
+      double halfItemHeight = dockSize.height() / 2;
+      newRect = QRect(visibleCenter.x(), visibleCenter.y(), dockSize.width(), dockSize.height());
+    }
+  }
+
+  return newRect;
 }
 
 void te::layout::View::onScrollBarValueChanged(int value)

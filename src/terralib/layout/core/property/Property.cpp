@@ -361,6 +361,45 @@ const te::layout::Property& te::layout::Property::getSubProperty( const std::str
   throw te::common::Exception("Property::The given sub property name was not found in the sub property list");
 }
 
+bool te::layout::Property::equals(const Property& property) const
+{
+  bool result = true;
+
+  if (m_subProperty.size() != property.getSubProperty().size())
+  {
+    return false;
+  }
+  
+  if (this->getValue()->toString() == property.getValue()->toString())
+  {
+    for (std::vector<Property>::const_iterator it = m_subProperty.begin(); it != m_subProperty.end(); ++it)
+    {
+      Property prop = (*it);
+      std::string name = prop.getName();
+      if (property.containsSubProperty(name) == true)
+      {
+        Property otherProp = property.getSubProperty(name);
+        // will also check values of the sub properties
+        if (prop.equals(otherProp) == false)
+        {
+          result = false;
+          break;
+        }
+      }
+      else
+      {
+        result = false;
+        break;
+      }
+    }
+  }
+  else
+  {
+    result = false;
+  }
+  return result;
+}
+
 void te::layout::Property::clear()
 {
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();

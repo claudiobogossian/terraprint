@@ -85,6 +85,7 @@ namespace te
     class ToolbarItemInside;
     class DialogItemToolbar;
     class TempDataStorageEditor;
+		class Properties;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -231,6 +232,14 @@ namespace te
         virtual void createPolygonItem();
 
         virtual void createItem(EnumType* itemType);
+        /*!
+          \brief Creates a new item from a set of properties, is possible check if creation tool will be used or not.
+
+          \param itemType Type of the new item
+          \param properties set of properties
+          \param useTool if true will be used, false otherwise
+        */
+        virtual void createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool = true);
 
         virtual ContextObject getContext();
 
@@ -293,6 +302,10 @@ namespace te
           \param update View
         */
         virtual void makeDraftPixmapDirty(bool update = true);
+
+        QRectF viewportVisibleRect();
+
+        QPointF viewportVisibleRectCenter();
 
       public slots:
     
@@ -498,6 +511,10 @@ namespace te
         virtual void drawDraftPixmap(QPainter * painter);
 
         virtual void resetDraftPixmap(double width, double height);
+
+        virtual QWidget* superParent(QWidget* widget);
+
+        virtual QRect checkToolBarPosition(QGraphicsItem* item, const QRect& rect);
 
       protected:
 

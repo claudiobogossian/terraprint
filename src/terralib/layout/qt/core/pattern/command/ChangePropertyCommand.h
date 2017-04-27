@@ -97,9 +97,7 @@ namespace te
       protected:
 
         virtual QString createCommandString(QGraphicsItem* item);
-
-        virtual bool equals(Properties  props1, Properties props2);
-
+        
         virtual bool checkItem(QGraphicsItem* item, Properties props); 
 
         virtual bool checkVectors();

@@ -35,6 +35,7 @@
 #include "PrintPreviewDialog.h"
 #include "../outside/PrintSettingsOutside.h"
 #include <terralib/qt/widgets/Utils.h>
+#include <terralib/qt/widgets/utils/ScopedCursor.h>
 
 // STL
 #include <sstream>
@@ -75,8 +76,10 @@ void te::layout::PrintScene::showPrintPreviewDialog()
 
   ContextObject oldContext = sc->getContext();
 
-  QPrinter* printer = createPrinter();
+  QPrinter* printer = new QPrinter(QPrinter::HighResolution);
   printer->setOutputFormat(QPrinter::NativeFormat);
+
+  initPrinter(printer);
 
   PrintPreviewDialog *preview = new PrintPreviewDialog(printer, (QWidget*) sc->getView());
   connect(preview, SIGNAL(paintRequested(QPrinter*)), SLOT(printPaper(QPrinter*)));
@@ -116,8 +119,10 @@ void te::layout::PrintScene::showPrintDialog()
 
   ContextObject oldContext = sc->getContext();
 
-  QPrinter* printer = createPrinter();
+  QPrinter* printer = new QPrinter(QPrinter::HighResolution);
   printer->setOutputFormat(QPrinter::NativeFormat);
+
+  initPrinter(printer);
 
   BuildGraphicsOutside build;
   EnumObjectType* type = Enums::getInstance().getEnumObjectType();
@@ -167,8 +172,10 @@ void te::layout::PrintScene::showQPrinterDialog()
 
   ContextObject oldContext = sc->getContext();
 
-  QPrinter* printer = createPrinter();
+  QPrinter* printer = new QPrinter(QPrinter::HighResolution);
   printer->setOutputFormat(QPrinter::NativeFormat);
+
+  initPrinter(printer);
 
   QPrintDialog printDialog(printer, (QWidget*)sc->getView());
   if (printDialog.exec() == QDialog::Rejected || m_printState == te::layout::PrintingScene)
@@ -209,28 +216,31 @@ bool te::layout::PrintScene::printPaper( QPrinter* printer )
   return result;
 }
 
-QPrinter* te::layout::PrintScene::createPrinter()
+void te::layout::PrintScene::initPrinter(QPrinter* printer)
 {
-  QPrinter* printer = 0;
+  if(printer == 0)
+  {
+    return;
+  }
 
   if(!m_scene)
-    return printer;
+    return;
 
   Scene* sc = dynamic_cast<Scene*>(m_scene);
   if(!sc)
-    return printer;
+    return;
 
   PaperConfig* config = sc->getPaperConfig();
 
   if(!config)
-    return printer;
+    return;
 
   double w = 0;
   double h = 0;
   config->getPaperSize(w, h);
 
-  printer = new QPrinter(QPrinter::HighResolution);
   printer->setFullPage(true);
+  printer->setPageMargins(0., 0., 0., 0., QPrinter::Millimeter);
 
   QSizeF sf(w, h);
 
@@ -253,14 +263,12 @@ QPrinter* te::layout::PrintScene::createPrinter()
     sf.setWidth(h);
   }
 
-  printer->pageRect(QPrinter::Millimeter);
-
   if (changePageSizeType(printer, config) == te::layout::Custom)
   {
-    printer->setPaperSize(sf, QPrinter::Millimeter);
-  }
     
-  return printer;
+  }
+
+  printer->setPaperSize(sf, QPrinter::Millimeter);
 }
 
 bool te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
@@ -277,6 +285,8 @@ bool te::layout::PrintScene::renderSceneOnPrinter(QPrinter* printer)
 
   if(!printer)
     return result;
+
+  te::qt::widgets::ScopedCursor cursor(Qt::WaitCursor);
   
   ContextObject context = createNewContext(printer);
   QRect pageRect = printer->pageRect();
@@ -306,8 +316,9 @@ bool te::layout::PrintScene::print()
 {
   m_printState = PrintingScene;
 
-  QPrinter* printer = createPrinter();
-    
+  QPrinter* printer = new QPrinter(QPrinter::HighResolution);
+  initPrinter(printer);
+
   bool result = printPaper(printer);
 
   if(printer)
@@ -330,12 +341,13 @@ bool te::layout::PrintScene::exportToPDF(const QString& filePath)
 { 
   bool result = true;
 
-  QPrinter* printer= createPrinter();
-
+  QPrinter* printer = new QPrinter(QPrinter::HighResolution);
   printer->setOutputFormat(QPrinter::PdfFormat);
   printer->setOutputFileName(filePath);
   printer->setResolution(m_currentDPI);
-  
+
+  initPrinter(printer);
+
   printPaper(printer);
 
   QPrinter::PrinterState state = printer->printerState();
@@ -578,6 +590,10 @@ te::layout::ContextObject te::layout::PrintScene::createNewContext( QPrinter* pr
 
 te::layout::LayoutAbstractPaperType te::layout::PrintScene::changePageSizeType(QPrinter* printer, PaperConfig* paperConfig)
 {
+  double width = 0;
+  double height = 0;
+  paperConfig->getPaperSize(width, height);
+  QSizeF paperSize(width, height);
   te::layout::LayoutAbstractPaperType type = te::layout::Custom;
 
   if (paperConfig->getPaperType() == te::layout::A0)

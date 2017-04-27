@@ -186,3 +186,8 @@ void te::layout::AbstractRuler::adapterRulerMarks(double zoomFactor, int &value)
     value = value + (m_blockSize * 6); // less than 25%
   }
 }
+
+QPointF te::layout::AbstractRuler::getOriginPoint()
+{
+  return m_originPoint;
+}

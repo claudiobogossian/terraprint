@@ -92,6 +92,9 @@ te::layout::GridSettingsOutside::GridSettingsOutside(AbstractOutsideController* 
   m_ui->pbPlanarLineColor->setDefault(false);
   m_ui->pbPlanarLineColor->setAutoDefault(false);
 
+  //removing this tab because it has not been implemented yet
+  m_ui->tbwSettings->removeTab(2);
+
   init();
 }
 
@@ -1790,17 +1793,14 @@ void te::layout::GridSettingsOutside::initInt( QWidget* widget, std::string name
 
   std::ostringstream convert;
   Property prop = controller->getProperty(nameComponent);
-  if (!prop.isNull())
-  {
-    convert << te::layout::Property::GetValueAs<int>(prop);
+  convert << te::layout::Property::GetValueAs<int>(prop);
 
-    QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
-    if (edit)
-    {
-      std::string txt = convert.str();
-      QString qText = ItemUtils::convert2QString(txt);
-      edit->setText(qText);
-    }
+  QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
+  if(edit)
+  {
+    std::string txt = convert.str();
+    QString qText = ItemUtils::convert2QString(txt);
+    edit->setText(qText);
   }
 }
 
@@ -1813,27 +1813,24 @@ void te::layout::GridSettingsOutside::initDouble( QWidget* widget, std::string n
   std::ostringstream convert;
   convert.precision(15);
   Property prop = controller->getProperty(nameComponent);
-  if (!prop.isNull())
-  {
-    double number = te::layout::Property::GetValueAs<double>(prop);
-    convert << number;
+  double number = te::layout::Property::GetValueAs<double>(prop);
+  convert << number;
 
-    QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
-    if (edit)
+  QLineEdit* edit = dynamic_cast<QLineEdit*>(widget);
+  if (edit)
+  {
+    std::string txt = convert.str();
+    QString qText = ItemUtils::convert2QString(txt);
+    edit->setText(qText);
+  }
+  else
+  {
+    QDoubleSpinBox* spin = dynamic_cast<QDoubleSpinBox*>(widget);
+    if (spin)
     {
-      std::string txt = convert.str();
-      QString qText = ItemUtils::convert2QString(txt);
-      edit->setText(qText);
-    }
-    else
-    {
-      QDoubleSpinBox* spin = dynamic_cast<QDoubleSpinBox*>(widget);
-      if (spin)
-      {
-        spin->blockSignals(true);
-        spin->setValue(number);
-        spin->blockSignals(false);
-      }
+      spin->blockSignals(true);
+      spin->setValue(number);
+      spin->blockSignals(false);
     }
   }
 }
@@ -1845,14 +1842,12 @@ void te::layout::GridSettingsOutside::initBool( QWidget* widget, std::string nam
     return;
 
   Property prop = controller->getProperty(nameComponent);
-  if (!prop.isNull())
-  {
-    QCheckBox* chk = dynamic_cast<QCheckBox*>(widget);
 
-    if (chk)
-    {
-      chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
-    }
+  QCheckBox* chk = dynamic_cast<QCheckBox*>(widget);
+  
+  if(chk)
+  {
+    chk->setChecked(te::layout::Property::GetValueAs<bool>(prop));
   }
 }
 
@@ -1863,22 +1858,20 @@ void te::layout::GridSettingsOutside::initColor( QWidget* widget, std::string na
     return;
 
   Property prop = controller->getProperty(nameComponent);
-  if (!prop.isNull())
-  {
-    const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
-    QColor qcolor(color.getRed(), color.getGreen(), color.getBlue());
+    
+  const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop);
+  QColor qcolor(color.getRed(), color.getGreen(), color.getBlue());
 
-    if (!qcolor.isValid())
-      return;
+  if(!qcolor.isValid())  
+    return;
 
-    if (!widget)
-      return;
+  if(!widget)
+    return;
 
-    QPalette paltt(widget->palette());
-    paltt.setColor(widget->backgroundRole(), qcolor);
-    widget->setPalette(paltt);
-    widget->setAutoFillBackground(true);
-  }
+  QPalette paltt(widget->palette());
+  paltt.setColor(widget->backgroundRole(), qcolor);
+  widget->setPalette(paltt);
+  widget->setAutoFillBackground(true);
 }
 
 void te::layout::GridSettingsOutside::addComboOptions(QComboBox* combo, std::vector<Variant> options)
