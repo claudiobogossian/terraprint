@@ -49,7 +49,6 @@
 #include "terralib/maptools/WorldDeviceTransformer.h"
 #include "terralib/srs/SpatialReferenceSystemManager.h"
 #include "terralib/srs/Converter.h"
-#include "terralib/common/Translator.h"
 #include "terralib/common/StringUtils.h"
 
 //boost

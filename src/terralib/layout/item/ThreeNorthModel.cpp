@@ -36,6 +36,8 @@
 #include "../core/property/SharedProperties.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 #ifdef GEOGRAPHICLIB_ENABLED
   #include <GeographicLib/MagneticModel.hpp>
 #endif
@@ -73,7 +75,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("line_width");
-      property.setLabel(TR_LAYOUT("Line Width"));
+      property.setLabel(TE_TR("Line Width"));
       property.setVisible(false);
       property.setValue(lineWidth, dataType->getDataTypeDouble());
       this->m_properties.addProperty(property);
@@ -82,7 +84,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName(sharedProps.getItemObserver());
-      property.setLabel(TR_LAYOUT("Connection with"));
+      property.setLabel(TE_TR("Connection with"));
       property.setComposeWidget(true);
       property.setValue(itemName, dataType->getDataTypeItemObserver());
       m_properties.addProperty(property);
@@ -91,7 +93,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("color");
-      property.setLabel(TR_LAYOUT("color"));
+      property.setLabel(TE_TR("color"));
       property.setValue(color, dataType->getDataTypeColor());
       this->m_properties.addProperty(property);
     }
@@ -99,7 +101,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("meridian_convergence");
-      property.setLabel(TR_LAYOUT("Meridian Convergence"));
+      property.setLabel(TE_TR("Meridian Convergence"));
       property.setValue<bool>(true, dataType->getDataTypeBool());
       property.setMenu(true);
       this->m_properties.addProperty(property);
@@ -107,7 +109,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("magnetic_north");
-      property.setLabel(TR_LAYOUT("Magnetic North"));
+      property.setLabel(TE_TR("Magnetic North"));
       property.setValue(magneticValue, dataType->getDataTypeBool());
       property.setVisible(magneticVisible);
       property.setMenu(magneticMenu);
@@ -117,7 +119,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
    {
       Property property(0);
       property.setName("angle_meridian_convergence");
-      property.setLabel(TR_LAYOUT("Angle Meridian Convergence"));
+      property.setLabel(TE_TR("Angle Meridian Convergence"));
       property.setValue(meridian_convergence, dataType->getDataTypeDouble());
       property.setMenu(false);
       this->m_properties.addProperty(property);
@@ -126,7 +128,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
    {
       Property property(0);
       property.setName("angle_magnetic_north");
-      property.setLabel(TR_LAYOUT("Angle Magnetic North"));
+      property.setLabel(TE_TR("Angle Magnetic North"));
       property.setValue(magnetic_north, dataType->getDataTypeDouble());
       property.setVisible(magneticVisible);
       property.setMenu(false);
@@ -151,7 +153,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("date");
-      property.setLabel(TR_LAYOUT("Date"));
+      property.setLabel(TE_TR("Date"));
       property.setValue(date, dataType->getDataTypeInt());
       property.setMenu(false);
       property.setVisible(dateVisible);
@@ -161,7 +163,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("world_box");
-      property.setLabel(TR_LAYOUT("World Box"));
+      property.setLabel(TE_TR("World Box"));
       property.setValue(wbox, dataType->getDataTypeEnvelope());
       m_properties.addProperty(property);
     }
@@ -169,7 +171,7 @@ te::layout::ThreeNorthModel::ThreeNorthModel()
     {
       Property property(0);
       property.setName("srid");
-      property.setLabel(TR_LAYOUT("SRID"));
+      property.setLabel(TE_TR("SRID"));
       property.setValue(srid, dataType->getDataTypeInt());
       m_properties.addProperty(property);
     }

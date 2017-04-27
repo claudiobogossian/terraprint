@@ -40,6 +40,9 @@ namespace te
   namespace layout
   {
     class AbstractProxyProject;
+    class AbstractItemModel;
+    class Properties;
+
     /*!
     \brief Class that represents legend controller.
     
@@ -65,11 +68,21 @@ namespace te
 
         virtual void update(const Subject* subject);
 
-        virtual std::list<te::map::AbstractLayerPtr>  searchLayersFromURI();
+        virtual std::list<te::map::AbstractLayerPtr> searchLayersFromURI();
+
+        virtual std::list<te::map::AbstractLayerPtr> searchVisibleLayersFromURI();
+
+        virtual void setProperties(const Properties& properties);
 
       protected:
 
+        virtual Properties checkToUpdate(const AbstractItemModel* subjectModel);
+
+        virtual bool someExistsVisibleList(const std::vector<std::string>& layersNewUri, const std::vector<std::string>& layersVisibleUri);
+
         virtual AbstractProxyProject* getAbstractProxyProject();
+
+        virtual void resetSettings(Properties& properties);
     };
   }
 }

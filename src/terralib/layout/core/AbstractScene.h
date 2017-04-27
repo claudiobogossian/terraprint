@@ -37,6 +37,7 @@
 
 // STL
 #include <string>
+#include <map>
 
 namespace te
 {

@@ -25,7 +25,6 @@
 
 // TerraLib
 #include "MapLayerChoiceOutside.h"
-#include "terralib/common/Logger.h"
 #include "terralib/qt/widgets/utils/DoubleListWidget.h"
 #include "../../outside/MapLayerChoiceModel.h"
 #include "../../core/enum/Enums.h"

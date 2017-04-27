@@ -36,7 +36,9 @@ te::layout::AbstractOutsideView* te::layout::LegendChoiceOutsideFactory::build(O
 {
   LegendChoiceModel* model = new LegendChoiceModel();
 
-  LegendChoiceController* controller = new LegendChoiceController(model);
+  Scene * scene = params.getScene();
+  AbstractProxyProject * proxy = params.getProxyProject();
+  LegendChoiceController* controller = new LegendChoiceController(scene, proxy, model);
   LegendChoiceOutside* view = new LegendChoiceOutside(controller, params.getParent());
   controller->setView(view);
 

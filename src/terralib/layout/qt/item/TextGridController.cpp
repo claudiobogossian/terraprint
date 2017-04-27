@@ -27,6 +27,7 @@
 #include "../../qt/item/AbstractItem.h"
 #include "../../qt/item/TextItem.h"
 
+#include <terralib/core/translator/Translator.h>
 
 #include <QGraphicsTextItem>
 #include <QTextCursor>
@@ -94,7 +95,7 @@ void te::layout::TextGridController::setProperties(const te::layout::Properties&
     {
       Property property;
       property.setName("num_columns");
-      property.setLabel(TR_LAYOUT("Number of Columns"));
+      property.setLabel(TE_TR("Number of Columns"));
       property.setValue(numColumns, dataType->getDataTypeInt());
 
       propertiesCopy.addProperty(property);

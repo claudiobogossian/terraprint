@@ -34,6 +34,8 @@
 #include "../../../qt/core/ItemUtils.h"
 #include "../../../qt/core/pattern/command/ChangePropertyCommand.h"
 
+#include <terralib/core/translator/Translator.h>
+
 // Qt
 #include <QGraphicsItem>
 
@@ -144,7 +146,7 @@ void te::layout::AbstractItemController::setProperties(const te::layout::Propert
       //if it has rotation, we be turn-off the resizable property
       Property property(0);
       property.setName("resizable");
-      property.setLabel(TR_LAYOUT("Resizable"));
+      property.setLabel(TE_TR("Resizable"));
       property.setValue(enableResize, dataType->getDataTypeBool());
       propertiesCopy.addProperty(property);
 

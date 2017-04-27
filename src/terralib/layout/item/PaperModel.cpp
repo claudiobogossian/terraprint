@@ -29,6 +29,8 @@
 #include "PaperModel.h"
 #include "../core/enum/Enums.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::PaperModel::PaperModel() 
   : AbstractItemModel()
 {
@@ -51,49 +53,49 @@ te::layout::PaperModel::PaperModel()
   {
     Property property(0);
     property.setName("paper_color");
-    property.setLabel(TR_LAYOUT("Paper Color"));
+    property.setLabel(TE_TR("Paper Color"));
     property.setValue(paperColor, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("shadow_color");
-    property.setLabel(TR_LAYOUT("Shadow Color"));
+    property.setLabel(TE_TR("Shadow Color"));
     property.setValue(shadowColor, dataType->getDataTypeColor());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("shadow_padding");
-    property.setLabel(TR_LAYOUT("Shadow padding"));
+    property.setLabel(TE_TR("Shadow padding"));
     property.setValue(shadowPadding, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_width");
-    property.setLabel(TR_LAYOUT("Paper width"));
+    property.setLabel(TE_TR("Paper width"));
     property.setValue(paperWidth, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_height");
-    property.setLabel(TR_LAYOUT("Paper height"));
+    property.setLabel(TE_TR("Paper height"));
     property.setValue(paperHeight, dataType->getDataTypeDouble());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_type");
-    property.setLabel(TR_LAYOUT("Paper type"));
+    property.setLabel(TE_TR("Paper type"));
     property.setValue<int>((int)paperType, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
   {
     Property property(0);
     property.setName("paper_orientation");
-    property.setLabel(TR_LAYOUT("Orientation"));
+    property.setLabel(TE_TR("Orientation"));
     property.setValue<int>((int)paperOrientation, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }
@@ -133,9 +135,9 @@ te::layout::PaperModel::PaperModel()
   //Visible Properties
   {
     Property property(0);
-    std::string value = TR_LAYOUT("Setup");
+    std::string value = TE_TR("Setup");
     property.setName("page_setup");
-    property.setLabel(TR_LAYOUT("Page Setup"));
+    property.setLabel(TE_TR("Page Setup"));
     property.setValue(value, dataType->getDataTypePageSetup());
     property.setMenu(true);
     m_properties.addProperty(property);

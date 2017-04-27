@@ -33,6 +33,8 @@
 #include "terralib/maptools/Canvas.h"
 #include "../core/enum/Enums.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::BarCodeModel::BarCodeModel() 
 {
   
@@ -56,7 +58,7 @@ te::layout::BarCodeModel::BarCodeModel()
   {
     Property property(0);
     property.setName("barcodesize");
-    property.setLabel(TR_LAYOUT("Barcode Size"));
+    property.setLabel(TE_TR("Barcode Size"));
     property.setValue(size, dataType->getDataTypeInt());
     m_properties.addProperty(property);
   }

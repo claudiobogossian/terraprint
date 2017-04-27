@@ -29,11 +29,14 @@
 
 #include "../qt/core/InitFactories.h"
 #include "property/DataTypesUtils.h"
+#include "../core/property/Property.h"
 
 // TerraLib
-#include <terralib/common/Logger.h>
 #include <terralib/common/TerraLib.h>
-#include <terralib/common/Translator.h>
+#include <terralib/core/logger/Logger.h>
+#include <terralib/core/translator/Translator.h>
+
+#include <QMetaType>
 
 const te::layout::Module& sm_module = te::layout::Module::getInstance();
 
@@ -48,14 +51,22 @@ te::layout::Module::Module()
   TerraLib::getInstance().add(m);
 
 // it initializes the Translator support for the TerraLib Intersection Operation support
-  TE_ADD_TEXT_DOMAIN(TE_LAYOUT_TEXT_DOMAIN, TE_LAYOUT_TEXT_DOMAIN_DIR, "ISO-8859-1");
+  TE_ADD_TEXT_DOMAIN(TE_LAYOUT_TEXT_DOMAIN, TE_LAYOUT_TEXT_DOMAIN_DIR);
+
+//defines the encoding of the translation
+  TE_TR_LANGUAGE("ISO-8859-1");
 
   te::layout::initToolFactories(); // init all tool factories
   te::layout::initItemFactories(); // init all item factories
   te::layout::initTemplateFactories(); // init all template factories
+  te::layout::initEditorFactories(); // init all editors factories
+  te::layout::initTreeItemFactories(); // init all tree items factories
+  te::layout::initRenderFactories(); // init all renders factories
 
-  //registrar todos os tipos de dados
   te::layout::registerLayoutTypes();
+
+  // Register the type Property to use in QVariant. 
+  qRegisterMetaType<te::layout::Property>("te::layout::Property");
 }
 
 te::layout::Module::~Module()

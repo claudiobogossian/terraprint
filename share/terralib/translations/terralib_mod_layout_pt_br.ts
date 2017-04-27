@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="pt_BR">
+<TS version="2.1" language="pt_BR">
 <context>
     <name>DoubleTreeWidget</name>
     <message>
@@ -473,7 +473,7 @@
         <source>Bottom Text</source>
         <translation>Textos Inferiores</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="916"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="923"/>
         <location filename="../../../src/terralib/layout/qt/ui/GridSettings.ui" line="930"/>
@@ -982,7 +982,7 @@
         <source>Coordinate</source>
         <translation>Coordenada</translation>
     </message>
-    <message utf8="true">
+    <message>
         <location filename="../../../src/terralib/layout/qt/ui/InputCoordWidgetForm.ui" line="85"/>
         <source>º</source>
         <translation>º</translation>
@@ -1016,32 +1016,131 @@
 <context>
     <name>LegendChoice</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="14"/>
         <source>Legend Choice</source>
-        <translation>Escolha da Legenda</translation>
+        <translation type="vanished">Escolha da Legenda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="69"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="99"/>
+        <source>Connected To:</source>
+        <translation>Conectado à:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="134"/>
+        <source>Settings</source>
+        <translation>Configurações</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="87"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="93"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="144"/>
+        <source>Symbol size:</source>
+        <translation>Tamanho do Símbolo:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="231"/>
+        <source>Layer Title Color:</source>
+        <translation>Cor da fonte das camadas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="224"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="269"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="379"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="424"/>
+        <source>...</source>
+        <translation>...</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="293"/>
+        <source>Rows:</source>
+        <translation>Linhas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="329"/>
+        <source>Hierarchy Font:</source>
+        <translation>Fonte dos nomes da hierarquia:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="174"/>
+        <source>Layer Title Font:</source>
+        <translation>Fonte dos nomes das camadas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="167"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="484"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="514"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="544"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="591"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="621"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="651"/>
+        <source>mm</source>
+        <translation>mm</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="386"/>
+        <source>Hierarchy Color:</source>
+        <translation>Cor da fonte da hierarquia:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="451"/>
+        <source>Displacement</source>
+        <translation>Deslocamento</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="491"/>
+        <source>Between Symbols:</source>
+        <translation>Entre símbolos:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="461"/>
+        <source>Border:</source>
+        <translation>Borda:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="521"/>
+        <source>Between Titles:</source>
+        <translation>Entre nome das camadas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="568"/>
+        <source>Between Columns:</source>
+        <translation>Entre colunas:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="628"/>
+        <source>Between Symbols and Texts:</source>
+        <translation>Entre símbolos e textos:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="26"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="68"/>
+        <source>Legend Settings</source>
+        <translation>Configurações de Legenda</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="598"/>
+        <source>Between Hierarchy Pair:</source>
+        <translation>Entre o par de cada hierarquia:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="680"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="96"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="683"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="116"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="703"/>
         <source>OK</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/ui/LegendChoice.ui" line="710"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -2061,6 +2160,14 @@ nononon</source>
     </message>
 </context>
 <context>
+    <name>te::layout::ColorEditor</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertyeditor/editor/ColorEditor.cpp" line="192"/>
+        <source>Select Color</source>
+        <translation>Selecionar cor</translation>
+    </message>
+</context>
+<context>
     <name>te::layout::DialogPropertiesBrowser</name>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="331"/>
@@ -2153,14 +2260,37 @@ nononon</source>
 <context>
     <name>te::layout::LegendChoiceOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="55"/>
         <source>Available Layer Legends</source>
-        <translation>Legendas Disponíveis</translation>
+        <translation type="vanished">Legendas Disponíveis</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="58"/>
         <source>Selected Layer Legends</source>
-        <translation>Legendas Selecionadas</translation>
+        <translation type="vanished">Legendas Selecionadas</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="71"/>
+        <source>Available Layer</source>
+        <translation>Camada Disponível</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="72"/>
+        <source>Selected Layer</source>
+        <translation>Camada Selecionada</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="119"/>
+        <source>Legend Settings</source>
+        <translation>Configurações de Legenda</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="119"/>
+        <source>No changes made.</source>
+        <translation>Nenhuma mudança efetuada.</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/outside/LegendChoiceOutside.cpp" line="805"/>
+        <source>Color</source>
+        <translation>Cor</translation>
     </message>
 </context>
 <context>
@@ -2182,22 +2312,22 @@ nononon</source>
         <translation type="obsolete">Planos Selecionados</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="63"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="62"/>
         <source>Available Layer</source>
         <translation>Camada Disponível</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="64"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="63"/>
         <source>Selected Layer</source>
         <translation>Camada Selecionada</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="500"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="502"/>
         <source>Map Settings</source>
         <translation>Configurações do Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="500"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="502"/>
         <source>Set Width and Height.</source>
         <translation>Configure Largura e Altura.</translation>
     </message>
@@ -2387,7 +2517,7 @@ nononon</source>
 </context>
 <context>
     <name>te::layout::ObjectInspectorDock</name>
-    <message id="0">
+    <message>
         <location filename="../../../src/terralib/layout/qt/default/ObjectInspectorDock.cpp" line="38"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>
@@ -2396,17 +2526,17 @@ nononon</source>
 <context>
     <name>te::layout::ObjectInspectorOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ObjectInspectorOutside.cpp" line="64"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ObjectInspectorOutside.cpp" line="66"/>
         <source>Object Inspector</source>
         <translation>Inspetor de Objetos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ObjectInspectorOutside.cpp" line="73"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ObjectInspectorOutside.cpp" line="75"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ObjectInspectorOutside.cpp" line="74"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ObjectInspectorOutside.cpp" line="76"/>
         <source>Type</source>
         <translation>Tipo</translation>
     </message>
@@ -2559,7 +2689,7 @@ nononon</source>
 <context>
     <name>te::layout::SVGDialogOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="220"/>
+        <location filename="../../../src/terralib/layout/qt/outside/SVGDialogOutside.cpp" line="219"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
@@ -3100,33 +3230,33 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1386"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1388"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1387"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1438"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1389"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1440"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1412"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1414"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1417"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1419"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1437"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1439"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1456"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1458"/>
         <source>Information</source>
         <translation>Informação</translation>
     </message>
@@ -3135,17 +3265,17 @@ nononon</source>
         <translation type="obsolete">Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1475"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1477"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1482"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1484"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1493"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1495"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>

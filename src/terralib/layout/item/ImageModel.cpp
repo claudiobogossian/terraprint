@@ -35,6 +35,8 @@
 #include "../core/enum/Enums.h"
 #include "../core/Utils.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::ImageModel::ImageModel()
   : AbstractItemModel()
 {
@@ -48,7 +50,7 @@ te::layout::ImageModel::ImageModel()
   {
     Property property(0);
     property.setName("line_width");
-    property.setLabel(TR_LAYOUT("Line Width"));
+    property.setLabel(TE_TR("Line Width"));
     property.setVisible(false);
     property.setValue(lineWidth, dataType->getDataTypeDouble());
     this->m_properties.addProperty(property);
@@ -57,7 +59,7 @@ te::layout::ImageModel::ImageModel()
   {
     Property property(0);
     property.setName("file_name");
-    property.setLabel(TR_LAYOUT("File Name"));
+    property.setLabel(TE_TR("File Name"));
     property.setValue(fileName, dataType->getDataTypeImage());
     property.setMenu(true);
     m_properties.addProperty(property);

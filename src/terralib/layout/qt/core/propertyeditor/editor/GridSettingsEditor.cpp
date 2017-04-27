@@ -169,7 +169,7 @@ void te::layout::GridSettingsEditor::showSettings()
     m_gridSettings = dynamic_cast<GridSettingsOutside*>(widget);
   }
 
-  m_gridSettings->load();
+  m_gridSettings->load("");
   m_gridSettings->show(); // modeless dialog
   m_gridSettings->raise(); // top of the parent widget's stack
 }

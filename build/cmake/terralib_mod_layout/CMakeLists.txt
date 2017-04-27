@@ -321,9 +321,9 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/tempDataStorage/TempDataStorageEditor.h
                                  #Property Editor
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/tree/PropertyTree.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/PropertyDelegate.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/tree/PropertyDelegate.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/DoubleSpinBoxEditor.h
-                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/SpinBoxEditor.h
+                                 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/IntSpinBoxEditor.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/BoolCheckBoxEditor.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/StringLineEditor.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertyeditor/editor/StringListComboBoxEditor.h
@@ -345,12 +345,12 @@ endif()
 
 target_link_libraries(terralib_mod_layout  terralib_mod_color
                                            terralib_mod_common
+										   terralib_mod_core
                                            terralib_mod_dataaccess
                                            terralib_mod_datatype
                                            terralib_mod_geometry
                                            terralib_mod_maptools
                                            terralib_mod_memory
-                                           terralib_mod_plugin
                                            terralib_mod_qt_widgets
                                            terralib_mod_srs
                                            terralib_mod_symbology

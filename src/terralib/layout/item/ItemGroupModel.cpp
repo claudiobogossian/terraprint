@@ -31,6 +31,7 @@
 #include "../core/enum/EnumDataType.h"
 #include "../core/enum/Enums.h"
 
+#include <terralib/core/translator/Translator.h>
 
 te::layout::ItemGroupModel::ItemGroupModel()
   : AbstractItemModel()
@@ -41,7 +42,7 @@ te::layout::ItemGroupModel::ItemGroupModel()
   {
     Property property(0);
     property.setName("resizable");
-    property.setLabel(TR_LAYOUT("Resizable"));
+    property.setLabel(TE_TR("Resizable"));
     property.setValue<bool>(true, dataType->getDataTypeBool());
     m_properties.updateProperty(property);
   }

@@ -77,12 +77,12 @@ bool te::layout::example::propertyeditor::ProxyLayers::loadShapesToLayers(QStrin
 
 bool te::layout::example::propertyeditor::ProxyLayers::createLayer(QString fileName)
 {
-  std::map<std::string, std::string> connInfo;
-  connInfo["URI"] = ItemUtils::convert2StdString(fileName);
+  std::string connInfo("file://" + ItemUtils::convert2StdString(fileName));
+
+  //te::core::URI
   
   // Creates and connects data source
-  std::auto_ptr<te::da::DataSource> datasource = te::da::DataSourceFactory::make("OGR");
-  datasource->setConnectionInfo(connInfo);
+  std::unique_ptr<te::da::DataSource> datasource = te::da::DataSourceFactory::make("OGR", connInfo);
   datasource->open();
 
   // Get the number of data set types that belongs to the data source
@@ -148,7 +148,6 @@ te::map::AbstractLayerPtr te::layout::example::propertyeditor::ProxyLayers::cont
 te::map::AbstractLayerPtr te::layout::example::propertyeditor::ProxyLayers::getLayerFromURI(std::string uri)
 {
   te::map::AbstractLayerPtr layer;
-  std::string uriInfo = "URI";
 
   std::list<te::map::AbstractLayerPtr> layers = getAllLayers();
 
@@ -159,20 +158,16 @@ te::map::AbstractLayerPtr te::layout::example::propertyeditor::ProxyLayers::getL
     te::map::AbstractLayerPtr layerPtr = (*it);
     if (!layerPtr)
       continue;
+
     const std::string& id = it->get()->getDataSourceId();
 
     te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
-    const std::map<std::string, std::string>& connInfo = info->getConnInfo();
+    const std::string& uriFromLayer = info->getConnInfo().uri();
 
-    std::string uriFromLayer = "";
-    for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
+    if (uriFromLayer.compare(uri) == 0)
     {
-      uriFromLayer = it->second;
-      if (uriFromLayer.compare(uri) == 0)
-      {
-        layer = layerPtr;
-        break;
-      }
+      layer = layerPtr;
+      break;
     }
   }
   return layer;
@@ -181,23 +176,13 @@ te::map::AbstractLayerPtr te::layout::example::propertyeditor::ProxyLayers::getL
 std::string te::layout::example::propertyeditor::ProxyLayers::getURIFromLayer(te::map::AbstractLayerPtr layer)
 {
   std::string uri;
-  std::string uriInfo = "URI";
-
   const std::string& id = layer->getDataSourceId();
 
   te::da::DataSourceInfoPtr info = te::da::DataSourceInfoManager::getInstance().get(id);
   if (info)
   {
-    const std::map<std::string, std::string>& connInfo = info->getConnInfo();
-    for (std::map<std::string, std::string>::const_iterator it = connInfo.begin(); it != connInfo.end(); ++it)
-    {
-      std::string nameURI = it->first;
-      if (nameURI.compare(uriInfo) == 0)
-      {
-        uri = it->second;
-        break;
-      }
-    }
+    return info->getConnInfo().uri();
+
   }
   return uri;
 }

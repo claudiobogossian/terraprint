@@ -85,7 +85,7 @@ void te::layout::qtest::PropertyEditorTest::on_test_create_property_tree()
   
   std::vector<Property> props;
   AbstractItemView* view = dynamic_cast<AbstractItemView*>(m_rectItem.get());
-  Properties itemProperties = view->getController()->getProperties();
+  Properties itemProperties = view->getProperties();
   props = itemProperties.getProperties();
 
   tree->load(props);

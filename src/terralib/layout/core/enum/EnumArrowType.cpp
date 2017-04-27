@@ -28,6 +28,8 @@
 // TerraLib
 #include "EnumArrowType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 te::layout::EnumArrowType::EnumArrowType() :
   m_noneType(0),
   m_rightArrow(0),
@@ -44,13 +46,13 @@ te::layout::EnumArrowType::~EnumArrowType()
 
 void te::layout::EnumArrowType::init()
 {
-  m_noneType = createEnum("None", this, TR_LAYOUT("None"));
+  m_noneType = createEnum("None", this, TE_TR("None"));
 
-  m_rightArrow = createEnum("Right Arrow", this, TR_LAYOUT("Right Arrow"));
+  m_rightArrow = createEnum("Right Arrow", this, TE_TR("Right Arrow"));
 
-  m_leftArrow = createEnum("Left Arrow", this, TR_LAYOUT("Left Arrow"));
+  m_leftArrow = createEnum("Left Arrow", this, TE_TR("Left Arrow"));
 
-  m_doubleArrow = createEnum("Double Arrow", this, TR_LAYOUT("Double Arrow"));
+  m_doubleArrow = createEnum("Double Arrow", this, TE_TR("Double Arrow"));
 
 }
 

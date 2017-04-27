@@ -25,22 +25,24 @@
   \ingroup layout
 */
 
-// TerraLib
 #include "LegendItem.h"
 #include "../../item/LegendModel.h"
 #include "LegendController.h"
-
 #include "../../core/ItemInputProxy.h"
 #include "../../core/pattern/singleton/Context.h"
+#include "../core/Scene.h"
+#include "../core/ItemUtils.h"
+
+// TerraLib
 #include "terralib/maptools/GroupingItem.h"
 #include "terralib/maptools/Grouping.h"
 #include "terralib/maptools/Canvas.h"
 #include "terralib/maptools/CanvasConfigurer.h"
+#include "terralib/qt/widgets/canvas/Canvas.h"
 #include "terralib/se/Symbolizer.h"
 #include "terralib/se/PointSymbolizer.h"
-#include "terralib/qt/widgets/canvas/Canvas.h"
-#include "../core/Scene.h"
-#include "../core/ItemUtils.h"
+#include "terralib/se/Style.h"
+#include "terralib/se/Rule.h"
 
 // Qt
 #include <QPixmap>
@@ -53,12 +55,14 @@ te::layout::LegendItem::LegendItem(te::layout::ItemInputProxy* itemInputProxy)
   , m_displacementBetweenSymbolsAndText(0)
   , m_symbolSize(0)
   , m_borderDisplacement(0)
-  , m_dispBetweenTitleAndSymbols(0)
+  , m_dispBetweenTitles(0)
   , m_rows(0)
   , m_countColumns(0)
   , m_countRows(0)
   , m_offsetBetweenColumns(0)
   , m_penWidth(1.)
+  , m_groupingOffsetPair(0)
+  , m_hierarchyFactor(0.8)
 {
   //The text size or length that exceeds the sides will be cut
   setFlag(QGraphicsItem::ItemClipsToShape);
@@ -101,85 +105,109 @@ void te::layout::LegendItem::drawItem( QPainter * painter, const QStyleOptionGra
   {
     const te::map::AbstractLayerPtr layer = (*it);
 
-    std::string title = layer->getTitle();
-
     verifyLimitRows(x1, y1);
-    drawTitle(painter, x1, y1, title);
     drawLegend(painter, layer, x1, y1);
   }
 }
 
-void te::layout::LegendItem::drawTitle(QPainter* painter, double& x1, double& y1, std::string title)
-{
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-
-  QString qFontName = m_qFontTitle.family();
-  std::string fontName = ItemUtils::convert2StdString(qFontName);
-  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, m_qFontTitle.pointSize(), title);
-
-  y1 -= textBoundary.height();
-
-  QPoint ptTitle(x1, y1);
-
-  painter->save();
-
-  const Property& lineWidth = this->getProperty("line_width");
-  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
-
-  QPen pen(m_qFontTitleColor, lnew, Qt::SolidLine);
-  painter->setPen(pen);
-
-  painter->setFont(m_qFontTitle);
-  painter->setBrush(m_qFontTitleColor);
-
-  m_maxWidth = qMax(textBoundary.width(), m_maxWidth);
-
-  ItemUtils::drawText(ptTitle, painter, m_qFontTitle, title);
-
-  painter->restore();
-
-  y1 -= (textBoundary.height() + m_dispBetweenTitleAndSymbols);
-}
-
 void te::layout::LegendItem::drawLegend(QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1)
 {
+  std::string title = layer->getTitle();
   te::map::Grouping* grouping = layer->getGrouping();
-
-  if (grouping != 0 && grouping->isVisible() == true)
+  if (grouping)
   {
-    std::string propertyName = grouping->getPropertyName();
-    const std::vector<te::map::GroupingItem*>& items = grouping->getGroupingItems();
-    te::map::GroupingType type = grouping->getType();
-
-    for (unsigned int i = 0; i < items.size(); ++i)
-    {
-      te::map::GroupingItem* item = items[i];
-      verifyLimitRows(x1, y1);
-      
-      std::string label = getLabel(propertyName, type, item);
-      verticalAdjustmentBetweenPairs(y1, label, m_symbolSize);
-
-      QPointF pt = verticalLegendTextAdjustment(x1, y1, label);
-      drawLabel(painter, pt, m_qFontLegend, m_qFontLegendColor, label);
-
-      const std::vector<te::se::Symbolizer*>& symbolizers = item->getSymbolizers();
-
-      drawSymbolizers(painter, x1, y1, symbolizers);
-
-      y1 -= m_displacementBetweenSymbols;
-    }
-  }  
+    drawSimple(painter, layer, title, x1, y1, m_symbolSize); // symbol with title
+    drawGrouping(grouping, painter, layer, x1, y1); // legend (grouping)
+  }
+  else
+  {
+    drawSimple(painter, layer, title, x1, y1, m_symbolSize); // symbol with title
+  }
 }
 
-void te::layout::LegendItem::drawSymbolizers(QPainter* painter, double& x1, double& y1, std::vector<te::se::Symbolizer*> symbolizers)
+void te::layout::LegendItem::drawGrouping(te::map::Grouping* grouping, QPainter* painter, te::map::AbstractLayerPtr layer, double& x1, double& y1)
+{
+  if (!grouping)
+    return;
+
+  if (grouping->isVisible() == false)
+    return;
+  
+  std::string propertyName = grouping->getPropertyName();
+  const std::vector<te::map::GroupingItem*>& items = grouping->getGroupingItems();
+  te::map::GroupingType type = grouping->getType();
+  double symbolSize = m_symbolSize * m_hierarchyFactor;
+
+  double hierarchyOffset = m_symbolSize + m_groupingOffsetPair;
+
+  // hierarchy offset
+  x1 += hierarchyOffset;
+
+  for (unsigned int i = 0; i < items.size(); ++i)
+  {
+    te::map::GroupingItem* item = items[i];
+    verifyLimitRows(x1, y1);
+
+    std::string label = getLabel(propertyName, type, item);
+    verticalAdjustmentBetweenPairs(y1, label, m_symbolSize, m_qFontLegend);
+
+    QPointF pt = verticalTextAdjustment(x1, y1, label, m_qFontLegend);
+    drawLabel(painter, pt, m_qFontLegend, m_qFontLegendColor, label);
+
+    const std::vector<te::se::Symbolizer*>& symbolizers = item->getSymbolizers();
+
+    drawSymbolizers(painter, x1, y1, symbolizers, symbolSize);
+
+    if (i == (items.size() - 1))
+    {
+      y1 -= m_dispBetweenTitles;
+    }
+    else
+    {
+      y1 -= m_displacementBetweenSymbols;
+    }
+  }
+
+  // remove hierarchy offset
+  x1 -= hierarchyOffset;
+}
+
+void te::layout::LegendItem::drawSimple(QPainter* painter, te::map::AbstractLayerPtr layer, const std::string& title, double& x1, double& y1, double symbolSize)
+{
+  // Gets the associated layer style
+  te::se::Style* style = layer->getStyle();
+  if (style == 0)
+    return;
+  
+  if (style->getRules().empty())
+    return;
+
+  const te::se::Rule* rule = style->getRule(0);
+  const std::vector<te::se::Symbolizer*>& symbolizers = rule->getSymbolizers();
+
+  verticalAdjustmentBetweenPairs(y1, title, symbolSize, m_qFontTitle);
+
+  QPointF pt = verticalTextAdjustment(x1, y1, title, m_qFontTitle);
+  drawLabel(painter, pt, m_qFontTitle, m_qFontTitleColor, title);
+
+  drawSymbolizers(painter, x1, y1, symbolizers, symbolSize);
+
+  te::map::Grouping* grouping = layer->getGrouping();
+  if (grouping)
+  {
+    y1 -= m_displacementBetweenSymbols;
+  }
+  else
+  {
+    y1 -= m_dispBetweenTitles;
+  }
+}
+
+void te::layout::LegendItem::drawSymbolizers(QPainter* painter, double& x1, double& y1, const std::vector<te::se::Symbolizer*>& symbolizers, double symbolSize)
 {
   foreach(te::se::Symbolizer* symbol, symbolizers)
   {
-    QRectF geomRect(x1, y1, m_symbolSize, m_symbolSize);
+    QRectF geomRect(x1, y1, symbolSize, symbolSize);
     geomRect = verticalLegendGeomAdjustment(geomRect);
 
     te::gm::Geometry* geom = createGeometry(geomRect, symbol);
@@ -287,7 +315,7 @@ void te::layout::LegendItem::drawGeometry(QPainter* painter, QRectF geomRect, te
   }  
 }
 
-void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont font, QColor fontColor, std::string text)
+void te::layout::LegendItem::drawLabel(QPainter* painter, const QPointF& point, const QFont& font, const QColor& fontColor, const std::string& text)
 {
   painter->save();
 
@@ -300,7 +328,8 @@ void te::layout::LegendItem::drawLabel(QPainter* painter, QPointF point, QFont f
   painter->setFont(font);
   painter->setBrush(fontColor);
 
-  ItemUtils::drawText(point, painter, font, text);
+  std::string newText = text;
+  ItemUtils::drawText(point, painter, font, newText);
 
   painter->restore();
 }
@@ -392,11 +421,12 @@ void te::layout::LegendItem::refreshLegendProperties()
   const Property& pDisplacementBetweenSymbolsAndText = this->getProperty("displacement_between_symbols_and_texts");
   const Property& pSymbolSize = this->getProperty("symbol_size");
   const Property& pBorderDisplacement = this->getProperty("border_displacement");
-  const Property& pDispBetweenTitleAndSymbols = this->getProperty("displacement_between_title_and_symbols");
+  const Property& pDispBetweenTitles = this->getProperty("displacement_between_titles");
   const Property& pFontTitleColor = this->getProperty("font_title_color");
   const Property& pTitleFont = this->getProperty("font_title");
   const Property& pRows = this->getProperty("rows");
   const Property& pOffsetBetweenColumns = this->getProperty("offset_between_columns");
+  const Property& pGroupingOffsetPair = this->getProperty("grouping_offset_pair");
 
   const te::color::RGBAColor& fontLegendColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFontColor);
   const Font& fontLegend = te::layout::Property::GetValueAs<Font>(pLegendFont);
@@ -404,11 +434,12 @@ void te::layout::LegendItem::refreshLegendProperties()
   m_displacementBetweenSymbolsAndText = te::layout::Property::GetValueAs<double>(pDisplacementBetweenSymbolsAndText);
   m_symbolSize = te::layout::Property::GetValueAs<double>(pSymbolSize);
   m_borderDisplacement = te::layout::Property::GetValueAs<double>(pBorderDisplacement);
-  m_dispBetweenTitleAndSymbols = te::layout::Property::GetValueAs<double>(pDispBetweenTitleAndSymbols);
+  m_dispBetweenTitles = te::layout::Property::GetValueAs<double>(pDispBetweenTitles);
   const te::color::RGBAColor& fontTitleColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFontTitleColor);
   const Font& fontTitle = te::layout::Property::GetValueAs<Font>(pTitleFont);
   m_rows = te::layout::Property::GetValueAs<int>(pRows);
   m_offsetBetweenColumns = te::layout::Property::GetValueAs<double>(pOffsetBetweenColumns);
+  m_groupingOffsetPair = te::layout::Property::GetValueAs<double>(pGroupingOffsetPair);
 
   m_qFontLegendColor.setRgb(fontLegendColor.getRed(), fontLegendColor.getGreen(), fontLegendColor.getBlue(), fontLegendColor.getAlpha());
   m_qFontLegend = ItemUtils::convertToQfont(fontLegend);
@@ -418,11 +449,11 @@ void te::layout::LegendItem::refreshLegendProperties()
   LegendController* controller = dynamic_cast<LegendController*>(getController());
   if (controller)
   {
-    m_layerList = controller->searchLayersFromURI();
+    m_layerList = controller->searchVisibleLayersFromURI();
   }
 }
 
-void te::layout::LegendItem::verticalAdjustmentBetweenPairs(double& y1, std::string label, double symbolSize)
+void te::layout::LegendItem::verticalAdjustmentBetweenPairs(double& y1, std::string label, double symbolSize, const QFont& font)
 {
   if (!scene())
     return;
@@ -430,9 +461,9 @@ void te::layout::LegendItem::verticalAdjustmentBetweenPairs(double& y1, std::str
   Scene* sc = dynamic_cast<Scene*>(scene());
   ItemUtils utils = sc->getItemUtils();
 
-  QString qFontName = m_qFontLegend.family();
+  QString qFontName = font.family();
   std::string fontName = ItemUtils::convert2StdString(qFontName);
-  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, m_qFontLegend.pointSize(), label);
+  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, font.pointSize(), label);
 
   double maxWidth = textBoundary.width() + m_symbolSize + m_displacementBetweenSymbolsAndText + m_borderDisplacement;
   m_maxWidth = qMax(maxWidth, m_maxWidth);
@@ -441,7 +472,7 @@ void te::layout::LegendItem::verticalAdjustmentBetweenPairs(double& y1, std::str
   y1 -= m_currentMaxHeight;
 }
 
-QPointF te::layout::LegendItem::verticalLegendTextAdjustment(double x1, double y1, std::string text)
+QPointF te::layout::LegendItem::verticalTextAdjustment(double x1, double y1, std::string text, const QFont& font)
 {
   QPointF pt(x1, y1);
 
@@ -454,9 +485,9 @@ QPointF te::layout::LegendItem::verticalLegendTextAdjustment(double x1, double y
   x1 += m_symbolSize + m_displacementBetweenSymbolsAndText;
   pt.setX(x1);
 
-  QString qFontName = m_qFontLegend.family();
+  QString qFontName = font.family();
   std::string fontName = ItemUtils::convert2StdString(qFontName);
-  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, m_qFontLegend.pointSize(), text);
+  QRectF textBoundary = utils.getMinimumTextBoundary(fontName, font.pointSize(), text);
   if (textBoundary.height() != m_currentMaxHeight)
   {
     // if the symbol is bigger than the font, then the text is to be centered
@@ -491,7 +522,9 @@ void te::layout::LegendItem::verifyLimitRows(double& x1, double& y1)
     m_countRows = 0;
     double x = 0;
     initXY(x, y1);
-    x1 += m_maxWidth + m_offsetBetweenColumns;
+    // m_symbolSize + m_groupingOffsetPair: used for grouping hierarchy offset 
+    double hierarchyOffset = m_symbolSize + m_groupingOffsetPair;
+    x1 += m_maxWidth + m_offsetBetweenColumns + hierarchyOffset;
     m_countColumns++;
   }
   m_countRows++;

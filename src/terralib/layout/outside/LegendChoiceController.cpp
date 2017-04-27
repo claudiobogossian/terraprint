@@ -27,9 +27,16 @@
 
 // TerraLib
 #include "LegendChoiceController.h"
+#include "../core/property/Property.h"
+#include "../qt/item/LegendItem.h"
 
-te::layout::LegendChoiceController::LegendChoiceController(AbstractOutsideModel* o) :
-  AbstractOutsideController(o)
+// Qt
+#include <QStringList>
+
+te::layout::LegendChoiceController::LegendChoiceController(Scene * scene, AbstractProxyProject * proxy, AbstractOutsideModel* o) :
+  AbstractOutsideController(o),
+  m_scene(scene),
+  m_proxy(proxy)
 {
   
 }
@@ -38,3 +45,107 @@ te::layout::LegendChoiceController::~LegendChoiceController()
 {
 
 }
+
+te::layout::Property te::layout::LegendChoiceController::getProperty(std::string name)
+{
+  Property prop;
+
+  QList<QGraphicsItem*> items = m_scene->selectedItems();
+  if (items.isEmpty())
+    return prop;
+
+  QGraphicsItem* item = items.first();
+  LegendItem* legendItem = dynamic_cast<LegendItem*>(item);
+  if (legendItem)
+  {
+    prop = legendItem->getProperty(name);
+  }
+  return prop;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceController::getlistLayers()
+{
+  std::list<te::map::AbstractLayerPtr> list;
+
+  if (m_proxy)
+  {
+    list = searchLayers();
+  }
+
+  return list;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceController::searchLayers(const std::string& name)
+{
+  std::string propertyName = name;
+  if (name.empty())
+  {
+    propertyName = "layers_uri";
+  }
+
+  Property prop = getProperty(propertyName);
+  const std::vector<std::string>& vlayersCurrentUri = te::layout::Property::GetValueAs< std::vector<std::string> >(prop);
+
+  std::list<te::map::AbstractLayerPtr> layerList;
+
+  if (!m_proxy)
+  {
+    return layerList;
+  }
+
+  // search layers 
+  for (std::vector<std::string>::const_iterator it = vlayersCurrentUri.begin(); it != vlayersCurrentUri.end(); ++it)
+  {
+    std::string uri = (*it);
+    te::map::AbstractLayerPtr layer = m_proxy->getLayerFromURI(uri);
+    if (layer)
+    {
+      layerList.push_back(layer);
+    }
+  }
+  return layerList;
+}
+
+std::list<te::map::AbstractLayerPtr> te::layout::LegendChoiceController::getSelectedlayers()
+{
+  std::string name = "visible_layers_uri";
+  std::list<te::map::AbstractLayerPtr> selectedLayers = searchLayers(name);
+
+  return selectedLayers;
+}
+
+QStringList te::layout::LegendChoiceController::getItemNames(const QStringList& list, const EnumType* type)
+{
+  QStringList newList = list;
+
+  QList<QGraphicsItem*> items = m_scene->items();
+  foreach(QGraphicsItem* item, items)
+  {
+    if (item)
+    {
+      AbstractItemView* view = dynamic_cast<AbstractItemView*>(item);
+      if (view)
+      {
+        const Property& prop_name = view->getProperty("name");
+
+        std::string value = te::layout::Property::GetValueAs<std::string>(prop_name);
+        QString txt = ItemUtils::convert2QString(value);
+
+        const Properties& prop_type = view->getProperties();
+
+        if (txt.compare("") != 0 && prop_type.getTypeObj() == type)
+        {
+          newList.append(txt);
+        }
+      }
+    }
+  }
+
+  return newList;
+}
+
+std::string te::layout::LegendChoiceController::searchLayerToURI(te::map::AbstractLayerPtr layer)
+{
+  return m_proxy->getURIFromLayer(layer);
+}
+

@@ -43,18 +43,6 @@ if(Qt5_FOUND)
   set(TERRALIB_FILES ${TERRALIB_SRC_FILES} ${TERRALIB_HDR_FILES})
 
   add_library(terralib_mod_qt_plugins_layout SHARED ${TERRALIB_FILES})
-  
-  target_link_libraries(terralib_mod_qt_plugins_layout terralib_mod_layout
-                                                       terralib_mod_plugin
-                                                       terralib_mod_qt_apf
-                                                       terralib_mod_color
-                                                       terralib_mod_common
-                                                       terralib_mod_dataaccess
-                                                       terralib_mod_datatype
-                                                       terralib_mod_geometry
-                                                       terralib_mod_maptools
-                                                       terralib_mod_qt_widgets
-                                                       ${QTPROPERTYBROWSER_LIBRARY})
 
   qt5_use_modules(terralib_mod_qt_plugins_layout Widgets Svg)
 
@@ -75,15 +63,20 @@ else()
   set(TERRALIB_FILES ${TERRALIB_SRC_FILES} ${TERRALIB_HDR_FILES} ${TERRALIB_GEN_SRC_FILES})
 
   add_library(terralib_mod_qt_plugins_layout SHARED ${TERRALIB_FILES})
- 
-  target_link_libraries(terralib_mod_qt_plugins_layout terralib_mod_layout
-                                                       terralib_mod_plugin
-                                                       terralib_mod_qt_apf
-                                                       ${QT_LIBRARIES}
-                                                       ${QTPROPERTYBROWSER_LIBRARY})
 
 endif()
 
+target_link_libraries(terralib_mod_qt_plugins_layout terralib_mod_layout
+                                                       terralib_mod_qt_apf
+                                                       terralib_mod_color
+                                                       terralib_mod_common
+													   terralib_mod_core
+                                                       terralib_mod_dataaccess
+                                                       terralib_mod_datatype
+                                                       terralib_mod_geometry
+                                                       terralib_mod_maptools
+                                                       terralib_mod_qt_widgets
+                                                       ${QTPROPERTYBROWSER_LIBRARY})
 set_target_properties(terralib_mod_qt_plugins_layout
                       PROPERTIES VERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
                                  SOVERSION ${TERRALIB_LAYOUT_VERSION_MAJOR}.${TERRALIB_LAYOUT_VERSION_MINOR}
