@@ -1322,33 +1322,18 @@ void te::layout::View::createItem(EnumType* itemType)
   viewport()->installEventFilter(m_currentTool);
 }
 
-void te::layout::View::createItem(EnumType* itemType, const te::layout::Properties& properties, bool useTool)
+void te::layout::View::setCurrentTool(AbstractLayoutTool* currentTool)
 {
   resetDefaultConfig();
-
-  if (useTool)
-  {
-    EnumToolType* tools = Enums::getInstance().getEnumToolType();
-
-    std::string toolName = tools->getCreateItemTool()->getName();
-    ToolFactoryParamsCreate params(this, itemType);
-
-    m_currentTool = te::layout::ToolFactory::make(toolName, params);
-
-    CreateItemTool* tool = dynamic_cast<CreateItemTool*>(m_currentTool);
-    if (tool)
+  
+  if(currentTool)
     {
-      tool->setProperties(properties);
+      m_currentTool = currentTool;
+
+      setInteractive(false);
+
+      viewport()->installEventFilter(m_currentTool);
     }
-    setInteractive(false);
-    viewport()->installEventFilter(m_currentTool);
-  }
-  else
-  {
-    Scene* sc = getScene();
-    std::string name = "";
-    sc->buildItem(properties, name, false, true);
-  }
 }
 
 void te::layout::View::applyScale(double horizontalScale, double verticalScale)

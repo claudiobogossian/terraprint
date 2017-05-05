@@ -226,7 +226,7 @@ void te::layout::CreateItemTool::addProperties(te::layout::Properties& propertie
   {
     Property property(0);
     property.setName("width");
-    property.setValue(newSize.width(), dataType->getDataTypeDouble());
+    property.setValue(double(newSize.width()), dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
 
@@ -234,7 +234,7 @@ void te::layout::CreateItemTool::addProperties(te::layout::Properties& propertie
   {
     Property property(0);
     property.setName("height");
-    property.setValue(newSize.height(), dataType->getDataTypeDouble());
+    property.setValue(double(newSize.height()), dataType->getDataTypeDouble());
     properties.addProperty(property);
   }
 }

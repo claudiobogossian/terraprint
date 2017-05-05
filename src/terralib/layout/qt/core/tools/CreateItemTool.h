@@ -83,7 +83,7 @@ namespace te
           
           bool mouseMoveEvent(QMouseEvent* e);
 
-          bool mouseReleaseEvent(QMouseEvent* e);
+          virtual bool mouseReleaseEvent(QMouseEvent* e);
 
           void connectItemWithLastMapItem(QGraphicsItem* item, Scene* sc);
 
