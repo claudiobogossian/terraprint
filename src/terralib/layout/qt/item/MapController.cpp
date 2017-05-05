@@ -914,17 +914,13 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
   QPointF geodesicFinalPoint = geodesicGrid->getFinal();
   QSizeF geodesicSize = geodesicGrid->getSize();
 
-  double w = qMax(planarSize.width(), geodesicSize.width());
-  double h = qMax(planarSize.height(), geodesicSize.height());
-  QSizeF entireSize(w, h);
-
   QSizeF mapSize(mapWidth, mapHeight);
 
   QPointF gridOriginPoint(qMax(planarOriginPoint.x(), geodesicOriginPoint.x()), qMax(planarOriginPoint.y(), geodesicOriginPoint.y()));
   QPointF gridFinalPoint(qMax(planarFinalPoint.x(), geodesicFinalPoint.x()), qMax(planarFinalPoint.y(), geodesicFinalPoint.y()));
 
   // Calculate the entire bounding rect of the item (map plus grid)
-  te::gm::Envelope outsideBoundingBox = calculateOutsideBoundingBox(gridOriginPoint, gridFinalPoint, entireSize, mapSize);
+  te::gm::Envelope outsideBoundingBox = calculateGridOutsideBoundingBox(planarGrid, geodesicGrid, mapSize);
 
   // new map bounding rect
   te::gm::Envelope newMapLocalBox(gridOriginPoint.x(), gridOriginPoint.y(), gridOriginPoint.x() + mapWidth, gridOriginPoint.y() + mapHeight);
@@ -1334,20 +1330,34 @@ bool te::layout::MapController::verticalDistanceBiggerThanGap(const te::gm::Enve
   return result;
 }
 
-te::gm::Envelope te::layout::MapController::calculateOutsideBoundingBox(const QPointF& originGrid, const QPointF& finalGrid, const QSizeF& entireSize, const QSizeF& mapSize)
+te::gm::Envelope te::layout::MapController::calculateGridOutsideBoundingBox(Grid* planarGrid, Grid* geodesicGrid, const QSizeF& mapSize)
 {
-  double width = entireSize.width();
-  double height = entireSize.height();
+  // Sum the map size with the text borders
 
-  if (width < mapSize.width())
-  {
-    width = mapSize.width();
-  }
-  if (height < mapSize.height())
-  {
-    height = mapSize.height();
-  }
+  double planarSmallerTextWidth = planarGrid->smallerTextWidth();
+  double planarLargerTextWidth = planarGrid->largerTextWidth();
+  double planarSmallerTextHeight = planarGrid->smallerTextHeight();
+  double planarLargerTextHeight = planarGrid->largerTextHeight();
 
+  double geodesicSmallerTextWidth = geodesicGrid->smallerTextWidth();
+  double geodesicLargerTextWidth = geodesicGrid->largerTextWidth();
+  double geodesicSmallerTextHeight = geodesicGrid->smallerTextHeight();
+  double geodesicLargerTextHeight = geodesicGrid->largerTextHeight();
+
+  double maxSmallerTextWidth = qMax(planarSmallerTextWidth, geodesicSmallerTextWidth);
+  double maxLargerTextWidth = qMax(planarLargerTextWidth, geodesicLargerTextWidth);
+
+  double maxSmallerTextHeight = qMax(planarSmallerTextHeight, geodesicSmallerTextHeight);
+  double maxLargerTextHeight = qMax(planarLargerTextHeight, geodesicLargerTextHeight);
+
+  double width = mapSize.width();
+  double height = mapSize.height();
+
+  // calcule bouding rect of the item (map size plus texts grids all around)
+  width += maxLargerTextWidth + maxSmallerTextWidth;
+  height += maxLargerTextHeight + maxSmallerTextHeight;
+  
   te::gm::Envelope newBoundingBox(0, 0, width, height);
   return newBoundingBox;
 }
+

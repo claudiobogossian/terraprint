@@ -915,3 +915,62 @@ void te::layout::Grid::configTextPainter(QPainter* painter, const te::layout::Pr
   painter->setBrush(brush);
 }
 
+double te::layout::Grid::smallerTextWidth()
+{
+  double originX = m_origin.x();
+  double sizeW = m_size.width();
+  double finalX = m_final.x();
+  double finalTextX = sizeW - finalX;
+
+  double small = qMin(originX, finalTextX);
+
+  if (small < 0)
+    small = 0;
+
+  return small;
+}
+
+double te::layout::Grid::largerTextWidth()
+{
+  double originX = m_origin.x();
+  double sizeW = m_size.width();
+  double finalX = m_final.x();
+  double finalTextX = sizeW - finalX;
+
+  double larger = qMax(originX, finalTextX);
+
+  if (larger < 0)
+    larger = 0;
+
+  return larger;
+}
+
+double te::layout::Grid::smallerTextHeight()
+{
+  double originY = m_origin.y();
+  double sizeH = m_size.height();
+  double finalY = m_final.y();
+  double finalTextY = sizeH - finalY;
+
+  double small = qMin(originY, finalTextY);
+
+  if (small < 0)
+    small = 0;
+
+  return small;
+}
+
+double te::layout::Grid::largerTextHeight()
+{
+  double originY = m_origin.y();
+  double sizeH = m_size.height();
+  double finalY = m_final.y();
+  double finalTextY = sizeH - finalY;
+
+  double larger = qMax(originY, finalTextY);
+
+  if (larger < 0)
+    larger = 0;
+
+  return larger;
+}

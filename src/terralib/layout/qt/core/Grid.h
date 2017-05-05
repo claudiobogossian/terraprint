@@ -82,6 +82,14 @@ namespace te
 
         virtual void drawGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const;
 
+        virtual double smallerTextWidth();
+
+        virtual double largerTextWidth();
+
+        virtual double smallerTextHeight();
+
+        virtual double largerTextHeight();
+
     protected:
 
         //! Initializes the horizontal lines parameters
