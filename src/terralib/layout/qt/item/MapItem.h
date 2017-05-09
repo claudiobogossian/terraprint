@@ -112,6 +112,10 @@ namespace te
 
         virtual te::layout::Grid* getGeodesicGrid() const;
 
+        virtual bool isDirty();
+
+        virtual void makeDirty(bool dirty);
+
       protected:
 
         virtual AbstractItemModel* createModel() const;
@@ -190,6 +194,7 @@ namespace te
         te::gm::Point                   m_clickedPointMM; //!< The current clicked coord. Is valid only during the mouse click. When the mouse button is released, it is reset to its default value
         Grid*                           m_planarGrid; //!< A planar grid that is drawn above the MapItem
         Grid*                           m_geodesicGrid; //!< A geodesic grid that is drawn above the MapItem
+        bool                            m_dirty;
     };
   }
 }

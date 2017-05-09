@@ -61,6 +61,7 @@ te::layout::MapItem::MapItem(te::layout::ItemInputProxy* itemInputProxy)
   , m_currentEditionMode(0)
   , m_planarGrid(new te::layout::PlanarGrid())
   , m_geodesicGrid(new te::layout::GeodesicGrid())
+  , m_dirty(true)
 {
   this->setAcceptDrops(true);
 }
@@ -568,10 +569,14 @@ void te::layout::MapItem::leaveEditionMode()
 
 void te::layout::MapItem::refresh()
 {
-  m_screenGreaterCache = QPixmap();
-  m_screenCache = QPixmap();
+  if (m_dirty)
+  {
+    m_screenGreaterCache = QPixmap();
+    m_screenCache = QPixmap();
 
-  te::layout::AbstractItem::refresh();
+    te::layout::AbstractItem::refresh();
+  }
+  m_dirty = true;
 }
 
 bool te::layout::MapItem::changeCurrentTool(EnumType* tool)
@@ -724,3 +729,13 @@ te::layout::Grid* te::layout::MapItem::getGeodesicGrid() const
 {
   return m_geodesicGrid;
 }
+
+bool te::layout::MapItem::isDirty()
+{
+  return m_dirty;
+}
+void te::layout::MapItem::makeDirty(bool dirty)
+{
+  m_dirty = dirty;
+}
+

@@ -211,6 +211,9 @@ void te::layout::MapController::setProperties(const te::layout::Properties& prop
   {
   }  
 
+  // Checks if the view part does not need to be redrawn
+  checkPropertiesToNotRefresh(propertiesCopy);
+
   //we finally set the properties into the model
   AbstractItemController::setProperties(propertiesCopy);
 }
@@ -423,58 +426,27 @@ bool te::layout::MapController::syncSridAndEnvelope(Properties& properties)
 
 bool te::layout::MapController::adjustMapSizeProperties(Properties& properties)
 {
+  /*
+  \brief Objective: calculate the new map size (without grids) if the item has been resized 
+         (the result will be the aspect ratio between the outside (grids) and the inside (map size).
+  */
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   //here we sync all properties related to the map
   bool containsMapLocalBox = properties.contains("map_local_box");
   bool containsWidth = properties.contains("width");
   bool containsHeight = properties.contains("height");
-
-  //if the map local box is being set, we just need to reset the overall width and height
-  if (containsMapLocalBox == true)
+   
+  // if it has the 3 properties, so remains the same
+  if (containsMapLocalBox == true && containsWidth == true && containsHeight == true)
   {
-    const Property& pMapLocalBox = getProperty("map_local_box", properties);
-    const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
-    double resetWidth = mapLocalBox.getWidth();
-    double resetHeight = mapLocalBox.getHeight();
-
-    Property pWidth;
-    pWidth.setName("width");
-    pWidth.setValue(resetWidth, dataType->getDataTypeDouble());
-    ItemUtils::addOrUpdateProperty(pWidth, properties);
-
-    Property pHeight;
-    pHeight.setName("height");
-    pHeight.setValue(resetHeight, dataType->getDataTypeDouble());
-    ItemUtils::addOrUpdateProperty(pHeight, properties);
-
     return true;
   }
 
-  //if there were no chances, we just reset the width and height of the item based of the size of the map
-  if (containsMapLocalBox == false && containsWidth == false && containsHeight == false)
+  // if it is not a resize, so remains the same
+  if(containsWidth == false && containsHeight == false) 
   {
-    const Property& pMapLocalBox = getProperty("map_local_box", properties);
-    const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
-    double resetWidth = mapLocalBox.getWidth();
-    double resetHeight = mapLocalBox.getHeight();
-    te::gm::Envelope resetMapLocalBox(0, 0, resetWidth, resetHeight);
-
-    Property pWidth;
-    pWidth.setName("width");
-    pWidth.setValue(resetWidth, dataType->getDataTypeDouble());
-    ItemUtils::addOrUpdateProperty(pWidth, properties);
-
-    Property pHeight;
-    pHeight.setName("height");
-    pHeight.setValue(resetHeight, dataType->getDataTypeDouble());
-    ItemUtils::addOrUpdateProperty(pHeight, properties);
-
-    Property pNewMapLocalBox;
-    pNewMapLocalBox.setName("map_local_box");
-    pNewMapLocalBox.setValue(resetMapLocalBox, dataType->getDataTypeEnvelope());
-    ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
-
     return true;
   }
 
@@ -518,9 +490,12 @@ bool te::layout::MapController::adjustMapSizeProperties(Properties& properties)
   return true;
 }
 
-
 bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
 {
+  /*
+  \brief Objective: we must ensure that the aspect of the world box is proportional to the width and height.
+  */
+
   //here we sync all properties related to the map
   bool containsWorldBox = properties.contains("world_box");
   bool containsWidth = properties.contains("width");
@@ -528,6 +503,12 @@ bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
 
   //if there were no chances, we dont need to do nothing
   if (containsWorldBox == false && containsWidth == false && containsHeight == false)
+  {
+    //there is nothing to update
+    return false;
+  }
+
+  if (containsWorldBox == true && containsWidth == true && containsHeight == true)
   {
     //there is nothing to update
     return false;
@@ -581,6 +562,9 @@ bool te::layout::MapController::syncMapSizeProperties(Properties& properties)
 
 bool te::layout::MapController::syncMapScaleProperties(Properties& properties)
 {
+  /*
+  \brief Objective: we must ensure proportion, that the calculate of the world box based on the scale or otherwise.
+  */
 
   //here we sync all properties related to the map
   bool containsWorldBox = properties.contains("world_box");
@@ -595,9 +579,14 @@ bool te::layout::MapController::syncMapScaleProperties(Properties& properties)
     return false;
   }
 
+  if (containsWorldBox == true && containsWidth == true && containsHeight == true && containsScale == true)
+  {
+    //there is nothing to update
+    return false;
+  }
+
   //if the size is not being set, we must consider the current size of the item
-  const Property& pWidth = getProperty("width", properties);
-  const Property& pHeight = getProperty("height", properties);
+  const Property& pMapLocalBox = getProperty("map_local_box", properties);
 
   //if the world_box is not being set, we must consider the current world_box of the item
   const Property& pWorldBox = getProperty("world_box", properties);
@@ -606,8 +595,9 @@ bool te::layout::MapController::syncMapScaleProperties(Properties& properties)
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  double widthMM = te::layout::Property::GetValueAs<double>(pWidth);
-  double heightMM = te::layout::Property::GetValueAs<double>(pHeight);
+  const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
+  double widthMM = mapLocalBox.getWidth();
+  double heightMM = mapLocalBox.getHeight();
   te::gm::Envelope worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   int srid = te::layout::Property::GetValueAs<int>(pSrid);
 
@@ -875,6 +865,10 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
 
 bool te::layout::MapController::syncGridReferenceProperties(Properties& properties)
 {
+  /*
+    \brief Objective: calculate the entire bounding rect of the item (map plus grid) and new map bounding rect x1/y1.
+  */
+
   MapItem* mapItem = dynamic_cast<MapItem*>(m_view);
   if (mapItem == 0)
   {
@@ -885,6 +879,11 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
 
   mergeProperties(properties, fullProperties);
 
+  const Property& pWidthOld = getProperty("width", fullProperties);
+  double oldWidth = Property::GetValueAs<double>(pWidthOld);
+  const Property& pHeightOld = getProperty("height", fullProperties);
+  double oldHeight = Property::GetValueAs<double>(pHeightOld);
+
   const Property& pMapLocalBox = getProperty("map_local_box", fullProperties);
   const te::gm::Envelope& mapLocalBox = Property::GetValueAs<te::gm::Envelope >(pMapLocalBox);
   double mapWidth = mapLocalBox.getWidth();
@@ -892,6 +891,8 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
+  // Today grids search for width/height properties, but think that properties is the size of the map (not the entire item, just the inside rect)
+  // In the future, the best will be grids search for: map_local_box
   Property pWidth;
   pWidth.setName("width");
   pWidth.setValue(mapWidth, dataType->getDataTypeDouble());
@@ -901,7 +902,7 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
   pHeight.setName("height");
   pHeight.setValue(mapHeight, dataType->getDataTypeDouble());
   ItemUtils::addOrUpdateProperty(pHeight, fullProperties);
-
+  
   te::layout::Grid* planarGrid = mapItem->getPlanarGrid();
   planarGrid->initialize(fullProperties);
 
@@ -927,20 +928,29 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
   // new map bounding rect
   te::gm::Envelope newMapLocalBox(gridOriginPoint.x(), gridOriginPoint.y(), gridOriginPoint.x() + mapWidth, gridOriginPoint.y() + mapHeight);
 
-  Property pNewWidth;
-  pNewWidth.setName("width");
-  pNewWidth.setValue(outsideBoundingBox.getWidth(), dataType->getDataTypeDouble());
-  ItemUtils::addOrUpdateProperty(pNewWidth, properties);
+  if (oldWidth != outsideBoundingBox.getWidth())
+  {
+    Property pNewWidth;
+    pNewWidth.setName("width");
+    pNewWidth.setValue(outsideBoundingBox.getWidth(), dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pNewWidth, properties);
+  }
 
-  Property pNewHeight;
-  pNewHeight.setName("height");
-  pNewHeight.setValue(outsideBoundingBox.getHeight(), dataType->getDataTypeDouble());
-  ItemUtils::addOrUpdateProperty(pNewHeight, properties);
+  if (oldHeight != outsideBoundingBox.getHeight())
+  {
+    Property pNewHeight;
+    pNewHeight.setName("height");
+    pNewHeight.setValue(outsideBoundingBox.getHeight(), dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pNewHeight, properties);
+  }
 
-  Property pNewMapLocalBox;
-  pNewMapLocalBox.setName("map_local_box");
-  pNewMapLocalBox.setValue(newMapLocalBox, dataType->getDataTypeEnvelope());
-  ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
+  if (!mapLocalBox.equals(newMapLocalBox))
+  {
+    Property pNewMapLocalBox;
+    pNewMapLocalBox.setName("map_local_box");
+    pNewMapLocalBox.setValue(newMapLocalBox, dataType->getDataTypeEnvelope());
+    ItemUtils::addOrUpdateProperty(pNewMapLocalBox, properties);
+  }
 
   return true;
 }
@@ -1084,11 +1094,14 @@ double te::layout::MapController::getInitialCoord(double initialCoord, double di
 void te::layout::MapController::recalculatePlanarInitialLine(Properties& properties)
 {
   /* check if initial line has to be recalculate (Ex.: Zoom Out) */
-
+  if (!properties.contains("world_box"))
+  {
+    return;
+  }
   PlanarGridSettingsConfigProperties planarGridSettings;
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  const Property& pWorldBox = getProperty("world_box", properties);
+  const Property& pWorldBox = properties.getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   if (!worldBox.isValid())
   {
@@ -1117,11 +1130,14 @@ void te::layout::MapController::recalculatePlanarInitialLine(Properties& propert
 void te::layout::MapController::recalculateGeodesicInitialLine(Properties& properties)
 {
   /* check if initial line has to be recalculate (Ex.: Zoom Out) */
-
+  if (!properties.contains("world_box"))
+  {
+    return;
+  }
   GeodesicGridSettingsConfigProperties geodesicGridSettings;
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  const Property& pWorldBox = getProperty("world_box", properties);
+  const Property& pWorldBox = properties.getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   if (!worldBox.isValid())
   {
@@ -1210,7 +1226,11 @@ double te::layout::MapController::adjustVerticalLineInitial(const te::gm::Envelo
 bool te::layout::MapController::hasToRecalculatePlanarInitialLine(const Properties& properties)
 {
   // check if initial line has to be recalculate (Ex.: Zoom Out)
-  const Property& pWorldBox = getProperty("world_box", properties);
+  if (!properties.contains("world_box"))
+  {
+    return false;
+  }
+  const Property& pWorldBox = properties.getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   if (!worldBox.isValid())
   {
@@ -1258,7 +1278,11 @@ bool te::layout::MapController::hasToRecalculatePlanarInitialLine(const Properti
 bool te::layout::MapController::hasToRecalculateGeodesicInitialLine(const Properties& properties)
 {
   // check if initial line has to be recalculate (Ex.: Zoom Out)
-  const Property& pWorldBox = getProperty("world_box", properties);
+  if (!properties.contains("world_box"))
+  {
+    return false;
+  }
+  const Property& pWorldBox = properties.getProperty("world_box");
   const te::gm::Envelope& worldBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pWorldBox);
   if (!worldBox.isValid())
   {
@@ -1346,3 +1370,35 @@ te::gm::Envelope te::layout::MapController::calculateOutsideBoundingBox(const QP
   te::gm::Envelope newBoundingBox(0, 0, width, height);
   return newBoundingBox;
 }
+
+void te::layout::MapController::checkPropertiesToNotRefresh(const Properties& properties)
+{
+  /*
+  \brief Checks whether modified properties should or should not cause item redraw
+  */
+
+  // check move item
+  MapItem* view = dynamic_cast<MapItem*>(m_view);
+  if (!view)
+  {
+    return;
+  }
+
+  if (properties.getProperties().size() > 2)
+  {
+    return;
+  }
+
+  if (properties.contains("x") && properties.contains("y"))
+  {
+    view->makeDirty(false);
+  }
+  else if (properties.getProperties().size() == 1)
+  {
+    if (properties.contains("x") || properties.contains("y"))
+    {
+      view->makeDirty(false);
+    }
+  }
+}
+
