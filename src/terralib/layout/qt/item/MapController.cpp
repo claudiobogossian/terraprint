@@ -879,9 +879,9 @@ bool te::layout::MapController::syncGridReferenceProperties(Properties& properti
 
   mergeProperties(properties, fullProperties);
 
-  Property pWidthOld = getProperty("width", fullProperties);
+  const Property& pWidthOld = getProperty("width", fullProperties);
   double oldWidth = Property::GetValueAs<double>(pWidthOld);
-  Property pHeightOld = getProperty("height", fullProperties);
+  const Property& pHeightOld = getProperty("height", fullProperties);
   double oldHeight = Property::GetValueAs<double>(pHeightOld);
 
   const Property& pMapLocalBox = getProperty("map_local_box", fullProperties);
