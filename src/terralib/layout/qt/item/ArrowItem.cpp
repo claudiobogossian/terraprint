@@ -100,7 +100,7 @@ void te::layout::ArrowItem::drawRightArrow( QPainter * painter )
   painter->setRenderHint( QPainter::Antialiasing, true );
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
 
   double w1 = rectAdjusted.width() / 2.;
   double w2 = rectAdjusted.width() / 100.;
@@ -152,7 +152,7 @@ void te::layout::ArrowItem::drawLeftArrow(QPainter * painter)
   painter->setRenderHint( QPainter::Antialiasing, true );
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
 
   double w2 = rectAdjusted.width() / 2.;
   double w3 = rectAdjusted.width() - rectAdjusted.width() / 100.;
@@ -204,7 +204,7 @@ void te::layout::ArrowItem::drawDoubleArrow(QPainter * painter)
   painter->setRenderHint( QPainter::Antialiasing, true );
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
 
   double w2 = rectAdjusted.width() / 4.;
   double w3 = rectAdjusted.width() - rectAdjusted.width() / 4.;

@@ -80,7 +80,7 @@ void te::layout::SVGItem::drawItem( QPainter * painter, const QStyleOptionGraphi
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
-  QRectF boundRect = getAdjustedBoundingRect(painter);
+  QRectF boundRect = getAdjustedRect(painter, boundingRect());
   QTransform transform;
   transform.translate(0., boundRect.y() + boundRect.height());
   transform.scale(1., -1.);

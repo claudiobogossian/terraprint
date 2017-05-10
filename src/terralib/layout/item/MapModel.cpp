@@ -160,6 +160,11 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
 
   int planarSRID = -1;
 
+  bool showFrame = false;
+  double frameThickness = 0.5; //in mm
+  te::color::RGBAColor frameColor(0, 0, 0, 255);
+  
+
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
   SharedProperties sharedProps;
@@ -457,6 +462,32 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
     property.setComposeWidget(true);
     property.setValue(planarSRID, dataType->getDataTypeInt());
     property.setVisible(false);
+    prop_gridsettings.addSubProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName(settingsConfig->getShowFrame());
+    property.setLabel(TR_LAYOUT("Show Frame"));
+    property.setValue<bool>(showFrame, dataType->getDataTypeBool());
+    prop_gridsettings.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName(settingsConfig->getFrameThickness());
+    property.setLabel(TR_LAYOUT("Frame Thickness"));
+    property.setValue(frameThickness, dataType->getDataTypeDouble());
+    property.setVisible(false);
+    property.setEditable(false);
+    prop_gridsettings.addSubProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName(settingsConfig->getFrameColor());
+    property.setLabel(TR_LAYOUT("Frame Color"));
+    property.setValue(frameColor, dataType->getDataTypeColor());
+    property.setMenu(true);
     prop_gridsettings.addSubProperty(property);
   }
 

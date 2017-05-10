@@ -58,7 +58,10 @@ te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties(const std
     m_crossOffset(m_prefix + "grid_crossOffset"),
     m_borderIntersection(m_prefix + "grid_borderIntersections"),
     m_gridSettings(m_prefix + "grid_settings"),
-    m_planarSRID(m_prefix + "planar_srid")
+    m_planarSRID(m_prefix + "planar_srid"),
+    m_showFrame(m_prefix + "grid_showFrame"),
+    m_frameThickness(m_prefix + "grid_frameThickness"),
+    m_frameColor(m_prefix + "grid_frameColor")
 {
 
 }
@@ -211,4 +214,19 @@ const std::string& te::layout::GridSettingsConfigProperties::getGridSettings() c
 const std::string& te::layout::GridSettingsConfigProperties::getPlanarSRID() const
 {
   return m_planarSRID;
+}
+
+const std::string& te::layout::GridSettingsConfigProperties::getShowFrame() const
+{
+  return  m_showFrame;
+}
+
+const std::string& te::layout::GridSettingsConfigProperties::getFrameThickness() const
+{
+  return m_frameThickness;
+}
+
+const std::string& te::layout::GridSettingsConfigProperties::getFrameColor() const
+{
+  return m_frameColor;
 }

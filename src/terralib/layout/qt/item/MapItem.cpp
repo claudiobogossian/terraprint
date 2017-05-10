@@ -165,27 +165,67 @@ void te::layout::MapItem::drawFrame(QPainter * painter)
   }
 
   const Property& pMapLocalBox = this->getProperty("map_local_box");
-  const Property& pFrameColor = this->getProperty("frame_color");
-  const Property& pFrameThickness = this->getProperty("frame_thickness");
-
   const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
-  const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
-  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
-  QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
+  //draws the frame sorrounding the Map
+  {
+    
+    const Property& pFrameColor = this->getProperty("frame_color");
+    const Property& pFrameThickness = this->getProperty("frame_thickness");
 
-  QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
+    const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+    double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
-  painter->save();
-  QPen pen(qFrameColor, frameThickness, Qt::SolidLine);
-  painter->setPen(pen);
-  painter->setBrush(Qt::NoBrush);
-  painter->setRenderHint(QPainter::Antialiasing, true);
+    QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
+    QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
 
-  //draws the frame
-  painter->drawRect(qBoundingRect);
+    AbstractItem::drawFrame(painter, qBoundingRect, qFrameColor, frameThickness);
+  }
 
-  painter->restore();
+  PlanarGridSettingsConfigProperties planarConfig;
+  GeodesicGridSettingsConfigProperties geodesicConfig;
+
+  //draws the frame sorrounding the Planar Grid
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty(planarConfig.getShowFrame())) == true)
+  {
+    te::layout::Grid* planarGrid = this->getPlanarGrid();
+    double x = mapLocalBox.getLowerLeftX() - planarGrid->getOrigin().x();
+    double y = mapLocalBox.getLowerLeftY() - planarGrid->getOrigin().y();
+
+    QPointF origin(x, y);
+    QRectF planarRect(origin, planarGrid->getSize());
+
+    const Property& pFrameColor = this->getProperty(planarConfig.getFrameColor());
+    const Property& pFrameThickness = this->getProperty(planarConfig.getFrameThickness());
+
+    const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+    double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
+
+    QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
+
+    AbstractItem::drawFrame(painter, planarRect, qFrameColor, frameThickness);
+  }
+
+  //draws the frame sorrounding the Geodesic Grid
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty(geodesicConfig.getShowFrame())) == true)
+  {
+    te::layout::Grid* geodesicGrid = this->getGeodesicGrid();
+    double x = mapLocalBox.getLowerLeftX() - geodesicGrid->getOrigin().x();
+    double y = mapLocalBox.getLowerLeftY() - geodesicGrid->getOrigin().y();
+
+    QPointF origin(x, y);
+    QRectF geodesicRect(origin, geodesicGrid->getSize());
+
+    const Property& pFrameColor = this->getProperty(geodesicConfig.getFrameColor());
+    const Property& pFrameThickness = this->getProperty(geodesicConfig.getFrameThickness());
+
+    const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+    double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
+
+    QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
+
+    AbstractItem::drawFrame(painter, geodesicRect, qFrameColor, frameThickness);
+  }
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
@@ -200,7 +240,7 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 
   //here we render the layers on the given device
   painter->save();
-  painter->setClipRect(this->getAdjustedBoundingRect(painter));
+  painter->setClipRect(this->getAdjustedRect(painter, boundingRect()));
   
   ItemInputProxy* itemInputProxy = this->getItemInputProxy();
   if (itemInputProxy == 0)
