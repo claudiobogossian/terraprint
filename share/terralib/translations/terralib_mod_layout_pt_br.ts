@@ -111,27 +111,26 @@
         <translation>Salvar como...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="208"/>
         <source>DPI Information</source>
-        <translation>Informações da resolução</translation>
+        <translation type="obsolete">Informações da resolução</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="222"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="231"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="225"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="234"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="245"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="254"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="252"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ExportSettings.ui" line="261"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
@@ -1609,18 +1608,18 @@ nononon</source>
         <translation>Adicionar %1</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="109"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="114"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="116"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="121"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCoordCommand.cpp" line="81"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="144"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="150"/>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/DeleteCommand.cpp" line="103"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/DeleteCommand.cpp" line="109"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/UngroupCommand.cpp" line="127"/>
         <source>%1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="119"/>
+        <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddCommand.cpp" line="126"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/AddGroupCommand.cpp" line="124"/>
         <location filename="../../../src/terralib/layout/qt/core/pattern/command/ChangePropertyCommand.cpp" line="157"/>
         <source>%1 at (%2, %3)</source>
@@ -2112,32 +2111,32 @@ nononon</source>
 <context>
     <name>te::layout::ExportSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="106"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="107"/>
         <source>Export Settings</source>
         <translation>Configurações de exportação</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="106"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="107"/>
         <source>Please complete the filename.</source>
         <translation>Por favor, complete o nome do arquivo.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="118"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="119"/>
         <source>Files</source>
         <translation>Arquivos</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="120"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="121"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="150"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="151"/>
         <source>The DPI chosen is high. Can cause very large files.</source>
         <translation>A resolução escolhida está alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="154"/>
+        <location filename="../../../src/terralib/layout/qt/outside/ExportSettingsOutside.cpp" line="155"/>
         <source>The DPI chosen is too high. Can cause very large files.</source>
         <translation>A resolução escolhida está muito alta. Esta escolha pode resultar em arquivos muito grandes.</translation>
     </message>
@@ -2145,7 +2144,7 @@ nononon</source>
 <context>
     <name>te::layout::GridSettingsOutside</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/GridSettingsOutside.cpp" line="263"/>
+        <location filename="../../../src/terralib/layout/qt/outside/GridSettingsOutside.cpp" line="266"/>
         <source>Color</source>
         <translation>Cor</translation>
     </message>
@@ -2192,12 +2191,12 @@ nononon</source>
         <translation>Camada Selecionada</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="500"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="535"/>
         <source>Map Settings</source>
         <translation>Configurações do Mapa</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="500"/>
+        <location filename="../../../src/terralib/layout/qt/outside/MapLayerChoiceOutside.cpp" line="535"/>
         <source>Set Width and Height.</source>
         <translation>Configure Largura e Altura.</translation>
     </message>
@@ -2498,27 +2497,27 @@ nononon</source>
 <context>
     <name>te::layout::PrintScene</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="379"/>
+        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="391"/>
         <source>Map To SVG</source>
         <translation>Carta para SVG</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="380"/>
+        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="392"/>
         <source>TerraPrint (TerraLib 5) - Map to SVG</source>
         <translation>TerraPrint (Terralib 5) - Carta para SVG</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="656"/>
+        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="672"/>
         <source>Could not export the</source>
         <translation>Não foi possível exportar o</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="656"/>
+        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="672"/>
         <source>Possible cause: the file is already opened by another application.</source>
         <translation>A possível causa: o arquivo está aberto em outra aplicação.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="657"/>
+        <location filename="../../../src/terralib/layout/qt/core/PrintScene.cpp" line="673"/>
         <source>exported successfully!</source>
         <translation>exportado com sucesso!</translation>
     </message>
@@ -3100,33 +3099,33 @@ nononon</source>
 <context>
     <name>te::layout::View</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1386"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1423"/>
         <source>Save File</source>
         <translation>Salvar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1387"/>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1438"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1424"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1475"/>
         <source>XML Files (*.xml)</source>
         <translation>Arquivos XML (*.xml)</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1412"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1449"/>
         <source>Template exported successfully!</source>
         <translation>Modelo exportado com sucesso!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1417"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1454"/>
         <source>Error exporting template!</source>
         <translation>Erro ao exportar o modelo!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1437"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1474"/>
         <source>Import File</source>
         <translation>Importar Arquivo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1456"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1493"/>
         <source>Information</source>
         <translation>Informação</translation>
     </message>
@@ -3135,17 +3134,17 @@ nononon</source>
         <translation type="obsolete">Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1475"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1512"/>
         <source>Select at least one component!</source>
         <translation>Selecione pelo menos um objeto!</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1482"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1519"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1493"/>
+        <location filename="../../../src/terralib/layout/qt/core/View.cpp" line="1530"/>
         <source>Successfully exported images!</source>
         <translation>Imagens exportadas com sucesso!</translation>
     </message>
