@@ -81,6 +81,14 @@ te::layout::AbstractItemModel::AbstractItemModel()
 
   {
     Property property(0);
+    property.setName("show_frame");
+    property.setLabel(TR_LAYOUT("Show Frame"));
+    property.setValue<bool>(false, dataType->getDataTypeBool());
+    this->m_properties.addProperty(property);
+  }
+
+  {
+    Property property(0);
     property.setName("frame_color");
     property.setLabel(TR_LAYOUT("Frame Color"));
     property.setValue(frameColor, dataType->getDataTypeColor());
@@ -96,14 +104,6 @@ te::layout::AbstractItemModel::AbstractItemModel()
     property.setVisible(false);
     property.setEditable(false);
     m_properties.addProperty(property);
-  }
-
-  {
-    Property property(0);
-    property.setName("show_frame");
-    property.setLabel(TR_LAYOUT("Show Frame"));
-    property.setValue<bool>(false, dataType->getDataTypeBool());
-    this->m_properties.addProperty(property);
   }
 
   {

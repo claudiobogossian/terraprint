@@ -74,10 +74,6 @@ namespace te
         const std::string& getGridSettings() const;
         const std::string& getPlanarSRID() const;
 
-        const std::string& getShowFrame() const;
-        const std::string& getFrameThickness() const;
-        const std::string& getFrameColor() const;
-              
       protected:
 
         //! Protected constructor
@@ -128,10 +124,6 @@ namespace te
         std::string m_borderIntersection;
         std::string m_gridSettings;
         std::string m_planarSRID;
-
-        std::string m_showFrame;
-        std::string m_frameThickness;
-        std::string m_frameColor;
     };
   }
 }
