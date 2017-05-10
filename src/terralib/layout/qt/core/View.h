@@ -85,7 +85,8 @@ namespace te
     class ToolbarItemInside;
     class DialogItemToolbar;
     class TempDataStorageEditor;
-		class Properties;
+    class Properties;
+    class PaperConfig;
 
   /*!
     \brief Class representing the view. This view is child of QGraphicsView, part of Graphics View Framework. 
@@ -102,8 +103,7 @@ namespace te
     class TELAYOUTEXPORT View : public QGraphicsView, public AbstractView
     {
       Q_OBJECT //for slots/signals
-
-
+        
       public:
 
     /*!
@@ -306,6 +306,11 @@ namespace te
         QRectF viewportVisibleRect();
 
         QPointF viewportVisibleRectCenter();
+
+        /*
+        \brief Set paper configuration with orientation, page or custom page different of the default.
+        */
+        virtual void setPaperConfig(const PaperConfig& paperConfig);
 
       public slots:
     
