@@ -159,20 +159,14 @@ void te::layout::MapItem::drawFrame(QPainter * painter)
     return;
   }
 
-  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_frame")) == false)
-  {
-    return;
-  }
-
-  const Property& pMapLocalBox = this->getProperty("map_local_box");
-  const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
-
   //draws the frame sorrounding the Map
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_map_frame")) == true)
   {
-    
-    const Property& pFrameColor = this->getProperty("frame_color");
-    const Property& pFrameThickness = this->getProperty("frame_thickness");
+    const Property& pMapLocalBox = this->getProperty("map_local_box");
+    const Property& pFrameColor = this->getProperty("map_frame_color");
+    const Property& pFrameThickness = this->getProperty("map_frame_thickness");
 
+    const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
     const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
     double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
 
@@ -182,50 +176,7 @@ void te::layout::MapItem::drawFrame(QPainter * painter)
     AbstractItem::drawFrame(painter, qBoundingRect, qFrameColor, frameThickness);
   }
 
-  PlanarGridSettingsConfigProperties planarConfig;
-  GeodesicGridSettingsConfigProperties geodesicConfig;
-
-  //draws the frame sorrounding the Planar Grid
-  if (te::layout::Property::GetValueAs<bool>(this->getProperty(planarConfig.getShowFrame())) == true)
-  {
-    te::layout::Grid* planarGrid = this->getPlanarGrid();
-    double x = mapLocalBox.getLowerLeftX() - planarGrid->getOrigin().x();
-    double y = mapLocalBox.getLowerLeftY() - planarGrid->getOrigin().y();
-
-    QPointF origin(x, y);
-    QRectF planarRect(origin, planarGrid->getSize());
-
-    const Property& pFrameColor = this->getProperty(planarConfig.getFrameColor());
-    const Property& pFrameThickness = this->getProperty(planarConfig.getFrameThickness());
-
-    const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
-    double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
-
-    QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
-
-    AbstractItem::drawFrame(painter, planarRect, qFrameColor, frameThickness);
-  }
-
-  //draws the frame sorrounding the Geodesic Grid
-  if (te::layout::Property::GetValueAs<bool>(this->getProperty(geodesicConfig.getShowFrame())) == true)
-  {
-    te::layout::Grid* geodesicGrid = this->getGeodesicGrid();
-    double x = mapLocalBox.getLowerLeftX() - geodesicGrid->getOrigin().x();
-    double y = mapLocalBox.getLowerLeftY() - geodesicGrid->getOrigin().y();
-
-    QPointF origin(x, y);
-    QRectF geodesicRect(origin, geodesicGrid->getSize());
-
-    const Property& pFrameColor = this->getProperty(geodesicConfig.getFrameColor());
-    const Property& pFrameThickness = this->getProperty(geodesicConfig.getFrameThickness());
-
-    const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
-    double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
-
-    QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
-
-    AbstractItem::drawFrame(painter, geodesicRect, qFrameColor, frameThickness);
-  }
+  AbstractItem::drawFrame(painter);
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
