@@ -1237,9 +1237,8 @@
 <context>
     <name>NorthSettings</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="32"/>
         <source>Dialog</source>
-        <translation>Diálogo</translation>
+        <translation type="obsolete">Diálogo</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="85"/>
@@ -1281,6 +1280,11 @@
         <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="95"/>
         <source>Settings</source>
         <translation>Configurações</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="32"/>
+        <source>North Settings</source>
+        <translation>Configurações do Norte</translation>
     </message>
     <message>
         <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="108"/>
@@ -2064,7 +2068,7 @@ nononon</source>
     <message>
         <location filename="../../../src/terralib/layout/qt/core/propertybrowser/ColorEditWidget.cpp" line="30"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation>...</translation>
     </message>
 </context>
 <context>
