@@ -49,7 +49,9 @@ class QtProperty;
 class QtVariantPropertyManager;
 class QtBrowserItem;
 
+class QColor;
 class QGraphicsItem;
+class QVariant;
 class QWidget;
 
 namespace te
@@ -119,6 +121,8 @@ namespace te
       protected slots:
 
         void propertyEditorValueChanged(QtProperty *property, const QVariant &value);
+
+        void propertyEditorValueChanged(QtProperty *property, const QColor& value);
 
         void onChangeFilter(const QString& filter);
 

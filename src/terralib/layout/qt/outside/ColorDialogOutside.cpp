@@ -43,6 +43,8 @@ te::layout::ColorDialogOutside::ColorDialogOutside(AbstractOutsideController* co
   m_okClicked(false)
 {
   connect(this, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(onCurrentColorChanged(const QColor&)));
+
+  this->setOption(QColorDialog::ShowAlphaChannel, true);
 }
 
 te::layout::ColorDialogOutside::~ColorDialogOutside()
