@@ -2060,34 +2060,42 @@ nononon</source>
     </message>
 </context>
 <context>
+    <name>te::layout::ColorEditWidget</name>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/ColorEditWidget.cpp" line="30"/>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+</context>
+<context>
     <name>te::layout::DialogPropertiesBrowser</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="331"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="357"/>
         <source>Open Directory</source>
         <translation>Abrir Diretório</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="350"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="376"/>
         <source>Images</source>
         <translation>Imagens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="363"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="389"/>
         <source>Select an Image File</source>
         <translation>Selecione um Arquivo de Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="371"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="397"/>
         <source>Error</source>
         <translation>Erro</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="371"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="397"/>
         <source>The selected image cannot be loaded.</source>
         <translation>A imagem selecionada não pôde ser carregada.</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="434"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/DialogPropertiesBrowser.cpp" line="460"/>
         <source>Select Font</source>
         <translation>Selecione a Fonte</translation>
     </message>
@@ -2294,22 +2302,22 @@ nononon</source>
 <context>
     <name>te::layout::MenuBuilder</name>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="159"/>
         <source>Copy</source>
         <translation>Copiar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="126"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="162"/>
         <source>Cut</source>
         <translation>Recortar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="132"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="166"/>
         <source>Paste</source>
         <translation>Colar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="137"/>
+        <location filename="../../../src/terralib/layout/qt/core/propertybrowser/MenuBuilder.cpp" line="171"/>
         <source>Remove</source>
         <translation>Remover</translation>
     </message>
