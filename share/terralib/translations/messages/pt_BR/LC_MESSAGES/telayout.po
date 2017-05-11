@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-05-10 11:38-0300\n"
-"PO-Revision-Date: 2017-05-10 11:38-0300\n"
+"POT-Creation-Date: 2017-05-11 15:29-0300\n"
+"PO-Revision-Date: 2017-05-11 15:30-0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: pt_BR\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: core/enum/EnumBalloonDirectionType.cpp:46 core/enum/EnumBalloonType.cpp:47
 #: core/enum/EnumDataType.cpp:213 core/enum/EnumDataType.cpp:247
 #: core/enum/EnumGridStyleType.cpp:60 core/enum/EnumModeType.cpp:112
-#: core/enum/EnumNorthArrowType.cpp:47 core/enum/EnumObjectType.cpp:336
+#: core/enum/EnumNorthArrowType.cpp:48 core/enum/EnumObjectType.cpp:336
 #: core/enum/EnumPointType.cpp:53 core/enum/EnumRectangleType.cpp:47
 #: core/enum/EnumScaleType.cpp:65 core/enum/EnumTempDataStorageType.cpp:54
 #: core/enum/EnumTemplateType.cpp:54 core/enum/EnumToolType.cpp:77
@@ -264,17 +264,23 @@ msgstr "Interação com Editor de Texto"
 msgid "Arrow Cursor"
 msgstr "Ponteiro"
 
-#: core/enum/EnumNorthArrowType.cpp:49
+#: core/enum/EnumNorthArrowType.cpp:50
 msgid "North Arrow 1"
 msgstr "Seta de Norte 1"
 
-#: core/enum/EnumNorthArrowType.cpp:51
+#: core/enum/EnumNorthArrowType.cpp:52
 msgid "North Arrow 2"
 msgstr "Seta de Norte 2"
 
-#: core/enum/EnumNorthArrowType.cpp:53
+#: core/enum/EnumNorthArrowType.cpp:54
 msgid "North Arrow 3"
 msgstr "Seta de Norte 3"
+
+#: core/enum/EnumNorthArrowType.cpp:56
+#, fuzzy
+#| msgid "North Arrow 1"
+msgid "North Arrow 4"
+msgstr "Seta de Norte 1"
 
 #: core/enum/EnumObjectType.cpp:338
 msgid "Rectangle Item"
@@ -1018,6 +1024,22 @@ msgstr "Plano"
 #: qt/item/MapController.cpp:998
 msgid " Without Projection"
 msgstr "Sem projeção"
+
+#: qt/item/NorthItem.cpp:216
+msgid "N"
+msgstr "N"
+
+#: qt/item/NorthItem.cpp:217
+msgid "S"
+msgstr "S"
+
+#: qt/item/NorthItem.cpp:218
+msgid "E"
+msgstr "L"
+
+#: qt/item/NorthItem.cpp:219
+msgid "W"
+msgstr "O"
 
 #: qt/outside/ObjectInspectorOutside.cpp:313
 msgid "Delete "

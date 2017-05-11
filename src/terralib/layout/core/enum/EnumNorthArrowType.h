@@ -87,6 +87,13 @@ namespace te
           \return enum value      
         */
         virtual EnumType* getNorthArrowType3() const;
+
+        /*!
+        \brief Returns value that represents north arrow type 4 belonging to enumeration.
+
+        \return enum value
+        */
+        virtual EnumType* getNorthArrowType4() const;
     
       protected:
 
@@ -101,6 +108,7 @@ namespace te
         EnumType* m_northArrow1; //!< value that represents north arrow type 1 belonging to enumeration
         EnumType* m_northArrow2; //!< value that represents north arrow type 2 belonging to enumeration
         EnumType* m_northArrow3; //!< value that represents north arrow type 3 belonging to enumeration
+        EnumType* m_northArrow4; //!< value that represents north arrow type 4 belonging to enumeration
  
     };
   }
