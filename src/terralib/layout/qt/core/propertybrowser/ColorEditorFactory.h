@@ -33,8 +33,8 @@
 #include <QMap>
 #include <QWidget>
 
-#include <QtPropertyBrowser\qteditorfactory.h>
-#include <QtPropertyBrowser\qtpropertymanager.h>
+#include <QtPropertyBrowser/qteditorfactory.h>
+#include <QtPropertyBrowser/qtpropertymanager.h>
 
 namespace te
 {
