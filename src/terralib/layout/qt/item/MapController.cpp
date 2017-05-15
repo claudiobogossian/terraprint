@@ -1334,29 +1334,32 @@ te::gm::Envelope te::layout::MapController::calculateGridOutsideBoundingBox(Grid
 {
   // Sum the map size with the text borders
 
-  double planarSmallerTextWidth = planarGrid->smallerTextWidth();
-  double planarLargerTextWidth = planarGrid->largerTextWidth();
-  double planarSmallerTextHeight = planarGrid->smallerTextHeight();
-  double planarLargerTextHeight = planarGrid->largerTextHeight();
+  // Get planar grid data
 
-  double geodesicSmallerTextWidth = geodesicGrid->smallerTextWidth();
-  double geodesicLargerTextWidth = geodesicGrid->largerTextWidth();
-  double geodesicSmallerTextHeight = geodesicGrid->smallerTextHeight();
-  double geodesicLargerTextHeight = geodesicGrid->largerTextHeight();
+  double biggestPlanarLeftText = planarGrid->getLeftSide();
+  double biggestPlanarRightText = planarGrid->getRightSide();
+  double biggestPlanarBottomText = planarGrid->getBottomSide();
+  double biggestPlanarTopText = planarGrid->getTopSide();
 
-  double maxSmallerTextWidth = qMax(planarSmallerTextWidth, geodesicSmallerTextWidth);
-  double maxLargerTextWidth = qMax(planarLargerTextWidth, geodesicLargerTextWidth);
+  // Get geodesic grid data
 
-  double maxSmallerTextHeight = qMax(planarSmallerTextHeight, geodesicSmallerTextHeight);
-  double maxLargerTextHeight = qMax(planarLargerTextHeight, geodesicLargerTextHeight);
+  double biggestGeodesicLeftText = geodesicGrid->getLeftSide();
+  double biggestGeodesicRightText = geodesicGrid->getRightSide();
+  double biggestGeodesicBottomText = geodesicGrid->getBottomSide();
+  double biggestGeodesicTopText = geodesicGrid->getTopSide();
 
+  double biggestLeftText = qMax(biggestPlanarLeftText, biggestGeodesicLeftText);
+  double biggestRightText = qMax(biggestPlanarRightText, biggestGeodesicRightText);
+  double biggestTopText = qMax(biggestPlanarTopText, biggestGeodesicTopText);
+  double biggestBottomText = qMax(biggestPlanarBottomText, biggestGeodesicBottomText);
+    
   double width = mapSize.width();
   double height = mapSize.height();
 
   // calcule bouding rect of the item (map size plus texts grids all around)
-  width += maxLargerTextWidth + maxSmallerTextWidth;
-  height += maxLargerTextHeight + maxSmallerTextHeight;
-  
+  width += biggestLeftText + biggestRightText;
+  height += biggestTopText + biggestBottomText;
+    
   te::gm::Envelope newBoundingBox(0, 0, width, height);
   return newBoundingBox;
 }
