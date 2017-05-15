@@ -239,8 +239,17 @@ std::vector<te::gm::LineString> te::layout::PlanarGrid::calculateVerticalLines(c
 
     QRectF rectF(textObject.boundingRect());
 
-    calculateTop(line.p2(), rectF, convert, bTopRotate, verticalLineDisplacement);
-    calculateBottom(line.p1(), rectF, convert, bBottomRotate, verticalLineDisplacement);
+    te::gm::Envelope topBound =  calculateTop(line.p2(), rectF, convert, bTopRotate, verticalLineDisplacement);
+    if (topBound.getHeight() > m_biggestTopText)
+    {
+      m_biggestTopText = topBound.getHeight() + verticalLineDisplacement;
+    }
+
+    te::gm::Envelope bottomBound = calculateBottom(line.p1(), rectF, convert, bBottomRotate, verticalLineDisplacement);
+    if (bottomBound.getHeight() > m_biggestBottomText)
+    {
+      m_biggestBottomText = bottomBound.getHeight() + verticalLineDisplacement;
+    }
   }
 
   return verticalLines;
@@ -347,8 +356,17 @@ std::vector<te::gm::LineString> te::layout::PlanarGrid::calculateHorizontalLines
 
     QRectF rectF(textObject.boundingRect());
 
-    calculateLeft(line.p1(), rectF, convert, bLeftRotate, horizontalLineDisplacement);
-    calculateRight(line.p2(), rectF, convert, bRightRotate, horizontalLineDisplacement);
+    te::gm::Envelope leftBound = calculateLeft(line.p1(), rectF, convert, bLeftRotate, horizontalLineDisplacement);
+    if (leftBound.getWidth() > m_biggestLeftText)
+    {
+      m_biggestLeftText = leftBound.getWidth() + horizontalLineDisplacement;
+    }
+
+    te::gm::Envelope rightBound =  calculateRight(line.p2(), rectF, convert, bRightRotate, horizontalLineDisplacement);
+    if (rightBound.getWidth() > m_biggestRightText)
+    {
+      m_biggestRightText = rightBound.getWidth() + horizontalLineDisplacement;
+    }
   }
 
   return horizontalLines;
