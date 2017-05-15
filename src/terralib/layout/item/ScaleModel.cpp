@@ -39,17 +39,17 @@
 te::layout::ScaleModel::ScaleModel()
   : AbstractItemModel()
 {
-  double width = 70.;
-  double height = 30.;
+  double width = 75.;
+  double height = 25.;
   double scale = 250000.;
   double scaleGapX = 28.;
-  double scaleGapY = 5.;
+  double scaleGapY = 3.;
   std::string itemName = "";
   Font font;
-  double scaleUnitGapX = 7.0;
+  double scaleUnitGapX = 10.0;
   bool onlyFirstAndLastValue = false;
   bool byBreaks = true;
-  int numberOfBreaks = 1;
+  int numberOfBreaks = 2;
   te::color::RGBAColor fontColor(0, 0, 0, 255);
   double lineWidth = Utils::getLineWidthMinimumValue();
   double displacement = 2.;
