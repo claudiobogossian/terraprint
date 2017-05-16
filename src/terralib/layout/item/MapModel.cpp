@@ -149,6 +149,8 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
 
   double crossOffSet = 2.;
 
+  bool syncGaps = true;
+
   std::string itemName = "";
 
   int planarSRID = -1;
@@ -449,6 +451,15 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
     property.setLabel(TR_LAYOUT("Planar SRID"));
     property.setComposeWidget(true);
     property.setValue(planarSRID, dataType->getDataTypeInt());
+    property.setVisible(false);
+    prop_gridsettings.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName(settingsConfig->getSyncGaps());
+    property.setLabel(TR_LAYOUT("Sync Gaps"));
+    property.setComposeWidget(true);
+    property.setValue(syncGaps, dataType->getDataTypeBool());
     property.setVisible(false);
     prop_gridsettings.addSubProperty(property);
   }

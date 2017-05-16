@@ -73,6 +73,7 @@ namespace te
         const std::string& getBorderIntersections() const;
         const std::string& getGridSettings() const;
         const std::string& getPlanarSRID() const;
+        const std::string& getSyncGaps() const;
 
       protected:
 
@@ -124,6 +125,8 @@ namespace te
         std::string m_borderIntersection;
         std::string m_gridSettings;
         std::string m_planarSRID;
+
+        std::string m_syncGaps;
     };
   }
 }

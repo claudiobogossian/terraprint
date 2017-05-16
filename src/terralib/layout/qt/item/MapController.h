@@ -42,6 +42,8 @@ namespace te
     class Property;
     class Properties;
     class Grid;
+    class GridSettingsConfigProperties;
+
     /*!
     \brief Class that represents text controller.
     
@@ -110,6 +112,14 @@ namespace te
 
         virtual bool syncGridReferenceProperties(Properties& properties);
 
+        virtual bool syncFixedGapsProperties(Properties& properties);
+
+        virtual bool syncGapsProperties(Properties& properties);
+
+        virtual bool changeFixedGapsProperties(Properties& properties, const GridSettingsConfigProperties& settingsConfig);
+
+        virtual bool changeGapsProperties(Properties& properties, const GridSettingsConfigProperties& settingsConfig);
+        
         virtual AbstractProxyProject* getAbstractProxyProject();
 
         virtual void changedPropertyLayerURIFromDropEvent(const Properties& beforeProps);
