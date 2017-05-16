@@ -53,6 +53,7 @@ te::layout::ScaleModel::ScaleModel()
   te::color::RGBAColor fontColor(0, 0, 0, 255);
   double lineWidth = Utils::getLineWidthMinimumValue();
   double displacement = 2.;
+  bool drawTextsBelowTheBar = true;
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -215,6 +216,13 @@ te::layout::ScaleModel::ScaleModel()
     property.setLabel(TR_LAYOUT("Displacement Between Scale And Text"));
     property.setValue(displacement, dataType->getDataTypeDouble());
     property.setVisible(false);
+    m_properties.addProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("draw_texts_below_the_bar");
+    property.setLabel(TR_LAYOUT("Draw texts below the bar"));
+    property.setValue(drawTextsBelowTheBar, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
 

@@ -94,467 +94,210 @@ bool te::layout::ScaleItem::isLimitExceeded(QRectF resizeRect)
 
 void te::layout::ScaleItem::drawItem( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
-  const Property& property = this->getProperty("scale_type");
-
-  EnumScaleType enumScale;
-
-  const std::string& label = property.getOptionByCurrentChoice().toString();
-  EnumType* currentScaleType = enumScale.getEnum(label);
-
   if (validateGaps() == false)
   {
     return;
   }
 
-  if (currentScaleType)
+  const Property& property = this->getProperty("scale_type");
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+
+  EnumScaleType enumScale;
+  EnumType* currentScaleType = enumScale.getEnum(label);
+  if (currentScaleType == 0)
   {
+    return;
+  }
+
+  const Property& pDisplacement = getProperty("displacementBetweenScaleAndText");
+  const Property& pBreakWidth = getProperty("scale_width_rect_gap");
+  const Property& pBreakHeight = getProperty("scale_height_rect_gap");
+  const Property& pDrawTextsBelowTheBar = getProperty("draw_texts_below_the_bar");
+
+  double displacementBetweenScaleAndText = Property::GetValueAs<double>(pDisplacement);
+  double breakWidth = Property::GetValueAs<double>(pBreakWidth);
+  double breakHeight = Property::GetValueAs<double>(pBreakHeight);
+  bool drawTextsBelowTheBar = Property::GetValueAs<bool>(pDrawTextsBelowTheBar);
+
+  double breakInitialX = displacementBetweenScaleAndText;
+  double breakInitialY = 2 + breakHeight + displacementBetweenScaleAndText;
+
+  double textInitialX = displacementBetweenScaleAndText;
+  double textInitialY = 2;
+
+  //if the texts are not set to be drawn below the bar, we put it above
+  if (drawTextsBelowTheBar == false)
+  {
+    breakInitialY = 2;
+    textInitialY = 2 + breakHeight + displacementBetweenScaleAndText;
+
     if (currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
     {
-      drawDoubleAlternatingScaleBar(painter);
-    }
-    if (currentScaleType == enumScale.getAlternatingScaleBarType())
-    {
-      drawAlternatingScaleBar(painter);
-    }
-    if (currentScaleType == enumScale.getHollowScaleBarType())
-    {
-      drawHollowScaleBar(painter);
+      //this bar has the double of the height of the other bars
+      textInitialY += breakHeight;
     }
   }
+
+  drawBreaks(painter, m_numberOfBreaks, breakInitialX, breakInitialY, breakWidth, breakHeight);
+  drawTexts(painter, m_numberOfBreaks, textInitialX, textInitialY, breakWidth, breakHeight);
 }
 
-void te::layout::ScaleItem::drawDoubleAlternatingScaleBar( QPainter * painter )
+void te::layout::ScaleItem::drawBreaks(QPainter * painter, int numberOfBreaks, double initialX, double initialY, double width, double height)
 {
-  if (!scene())
+  const Property& property = this->getProperty("scale_type");
+  const std::string& label = property.getOptionByCurrentChoice().toString();
+
+  EnumScaleType enumScale;
+  EnumType* currentScaleType = enumScale.getEnum(label);
+  if (currentScaleType == 0)
+  {
     return;
+  }
 
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-
-  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
-  if (!controller)
-    return;
-
-  QRectF boundRect = boundingRect();
+  const Property& pLineWidth = this->getProperty("line_width");
+  double lineWidth = te::layout::Property::GetValueAs<double>(pLineWidth);
 
   painter->save();
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  
-  std::string strCurrentUnit;
-  double unit = controller->getCurrentUnit(strCurrentUnit);
-  
-  double value = 0.;
-  double width = 0.;
-  double x1 = boundRect.bottomLeft().x();
 
-  QColor black(0, 0, 0, 255);
-  QColor white(255, 255, 255, 255);
-  QColor firstRect = black;
-  QColor secondRect = white;
-  QColor changeColor;
+  QRectF breaksRect;
 
-  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
-  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
-
-  const Property& prop_font_color = this->getProperty("font_color");
-  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
-  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
-
-  const Property& lineWidth = this->getProperty("line_width");
-  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
-
-  double displacementBetweenScaleAndText = 2.;
-  
-  QFont qFont = ItemUtils::convertToQfont(m_font);
-
-  ItemUtils::ConfigurePainterForTexts(painter, m_font);
-
-  QPointF unitCoord(0, 0);
-
-  QPointF coordText;
-  QRectF rectScale;
-  QRectF newBoxSecond;
-  
-  std::stringstream ss_value;
-  ss_value.precision(15);
-
-  double initialGap = 0;
-  double gap = controller->getGap(initialGap, m_font, m_numberOfBreaks, m_gapX, strCurrentUnit);
-  x1 += initialGap;
-
-  double firstTextWidth = 0;
-
-  x1 += displacementBetweenScaleAndText;
-  for(int i = 0; i <= m_numberOfBreaks; ++i, x1 += width)
+  for (int i = 0; i < numberOfBreaks; ++i)
   {
-    if (width == 0)
-      width = m_gapX;
-    else
-      value += m_scaleUnitGapX;
+    double currentX = initialX + (i * width);
+    double currentY = initialY;
 
-    ss_value.str(std::string()); // clear
-    ss_value.clear();
-    ss_value << value;
-
-    const std::string& text = ss_value.str();
-    QRectF textRect = utils.getMinimumTextBoundary(m_font.getFamily(), m_font.getPointSize(), text);
-
-    if (value == 0)
+    QColor firstRectColor(Qt::black);
+    QColor secondRectColor(Qt::white);
+    if (i % 2 != 0)
     {
-      firstTextWidth = textRect.width();
-      //x1 += displacementBetweenScaleAndText + textRect.width();
+      firstRectColor = Qt::white;
+      secondRectColor = Qt::black;
     }
 
-    QRectF newBoxFirst;
-    
-    if(i < m_numberOfBreaks)
+    if (currentScaleType == enumScale.getDoubleAlternatingScaleBarType())
     {
       painter->setPen(Qt::NoPen);
 
-      //Down rect
-      painter->setBrush(QBrush(secondRect));
-      newBoxSecond = QRectF(x1, boundRect.bottomRight().y() - (m_gapY * 2) - 5, m_gapX, m_gapY);
-      painter->drawRect(newBoxSecond);
+      //Lower break
+      painter->setBrush(QBrush(secondRectColor));
+      QRectF lowerBreakRect(currentX, currentY, width, height);
+      painter->drawRect(lowerBreakRect);
 
-      //Up rect
-      painter->setBrush(QBrush(firstRect));
-      newBoxFirst = QRectF(x1, boundRect.bottomRight().y() - m_gapY - 5, m_gapX, m_gapY);
-      painter->drawRect(newBoxFirst);
+      //Upper break
+      painter->setBrush(QBrush(firstRectColor));
+      QRectF upperBreakRect(currentX, currentY + height, width, height);
+      painter->drawRect(upperBreakRect);
+
+      breaksRect = breaksRect.unite(lowerBreakRect);
+      breaksRect = breaksRect.unite(upperBreakRect);
     }
-
-    coordText = QPointF(x1, newBoxSecond.topLeft().y() - textRect.height() - displacementBetweenScaleAndText);
-    //rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
-//                         boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
-    rectScale = QRectF(displacementBetweenScaleAndText + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
-                       boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText, m_gapY * 2);
-      
-
-    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
-    coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
-
-    QPen penScale(black, lnew, Qt::SolidLine);
-    painter->setPen(penScale);
-    painter->setBrush(QBrush(textColor));
-    
-    if (only_first_and_last)
-    {
-      if (value == 0)
-      {
-        ItemUtils::drawText(coordText, painter, qFont, text);
-      }
-    }
-    else
-    {
-      ItemUtils::drawText(coordText, painter, qFont, text);
-    }
-
-    unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
-    unitCoord.setY(coordText.ry() - 0.5);
-
-    changeColor = firstRect;
-    firstRect = secondRect;
-    secondRect = changeColor;
-  }
-
-  if (only_first_and_last)
-  {
-    // last text
-    ItemUtils::drawText(coordText, painter, qFont, ss_value.str());
-  }
-
-  //Rect around scale
-  painter->setBrush(Qt::NoBrush);
-  painter->drawRect(rectScale);
-
-  //middle-bottom text
-  painter->setBrush(QBrush(textColor));
-  ItemUtils::drawText(unitCoord, painter, qFont, strCurrentUnit);
-
-  painter->restore();
-}
-
-void te::layout::ScaleItem::drawAlternatingScaleBar( QPainter * painter )
-{
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-
-  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
-  if (!controller)
-    return;
-  
-  QRectF boundRect = boundingRect();
-
-  painter->save();
-  painter->setRenderHint(QPainter::Antialiasing, true);
-
-  double displacementBetweenScaleAndText = 2.;
-  
-  std::string strCurrentUnit;
-  double unit = controller->getCurrentUnit(strCurrentUnit);
-
-  double value = 0.;
-  double width = 0.;
-  double x1 = boundRect.bottomLeft().x();
-
-  QColor black(0, 0, 0, 255);
-  QColor white(255, 255, 255, 255);
-  QColor firstRect = black;
-  QColor secondRect = white;
-  QColor changeColor;
-  
-  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
-  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
-
-  const Property& prop_font_color = this->getProperty("font_color");
-  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
-  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
-
-  const Property& lineWidth = this->getProperty("line_width");
-  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
-
-  QFont qFont = ItemUtils::convertToQfont(m_font);
-
-  ItemUtils::ConfigurePainterForTexts(painter, m_font);
-
-  QPointF unitCoord(0, 0);
-
-  QPointF coordText;
-  QRectF rectScale;
-  QRectF newBoxSecond;
-  std::stringstream ss_value;
-  ss_value.precision(15);
-
-  double initialGap = 0;
-  double gap = controller->getGap(initialGap, m_font);
-  x1 += initialGap;
-
-  double firstTextWidth = 0;
-
-  for (int i = 0; i <= m_numberOfBreaks; ++i, x1 += width)
-  {
-    if (width == 0)
-      width = m_gapX;
-    else
-      value += m_scaleUnitGapX;
-
-    ss_value.str(std::string()); // clear
-    ss_value.clear();
-    ss_value << value;
-
-    const std::string& text = ss_value.str();
-    QRectF textRect = utils.getMinimumTextBoundary(m_font.getFamily(), m_font.getPointSize(), text);
-
-    if (value == 0)
-    {
-      firstTextWidth = textRect.width();
-      x1 += displacementBetweenScaleAndText + textRect.width();
-    }
-
-    QRectF newBoxFirst;
-
-    if (i < m_numberOfBreaks)
+    else if (currentScaleType == enumScale.getAlternatingScaleBarType())
     {
       painter->setPen(Qt::NoPen);
-      painter->setBrush(QBrush(secondRect));
-      newBoxSecond = QRectF(x1, boundRect.bottomRight().y() - m_gapY - 5, m_gapX, m_gapY);
-      painter->drawRect(newBoxSecond);
+      painter->setBrush(QBrush(firstRectColor));
+
+      QRectF breakRect(currentX, currentY, width, height);
+      painter->drawRect(breakRect);
+
+      breaksRect = breaksRect.unite(breakRect);
     }
-
-    coordText = QPointF(x1, newBoxSecond.topLeft().y() - textRect.height() - displacementBetweenScaleAndText);
-    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - m_gapY - 5,
-      boundRect.x() + newBoxSecond.right() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY);
-
-    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
-    coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
-
-    QPen penScale(black, lnew, Qt::SolidLine);
-    painter->setPen(penScale);
-    painter->setBrush(QBrush(textColor));
-
-    if (only_first_and_last)
+    else if (currentScaleType == enumScale.getHollowScaleBarType())
     {
-      if (value == 0)
-      {
-        ItemUtils::drawText(coordText, painter, qFont, text);
-      }
-    }
-    else
-    {
-      ItemUtils::drawText(coordText, painter, qFont, text);
-    }
+      QRectF breakRect(currentX, currentY, width, height);
 
-    unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
-    unitCoord.setY(coordText.ry() - 0.5);
-
-    changeColor = firstRect;
-    firstRect = secondRect;
-    secondRect = changeColor;
-  }
-
-  if (only_first_and_last)
-  {
-    // last text
-    ItemUtils::drawText(coordText, painter, qFont, ss_value.str());
-  }
-
-  //Rect around scale
-  painter->setBrush(Qt::NoBrush);
-  painter->drawRect(rectScale);
-
-  //middle-bottom text
-  painter->setBrush(QBrush(textColor));
-  ItemUtils::drawText(unitCoord, painter, qFont, strCurrentUnit);
-
-  painter->restore();
-}
-
-void te::layout::ScaleItem::drawHollowScaleBar( QPainter * painter )
-{
-  if (!scene())
-    return;
-
-  Scene* sc = dynamic_cast<Scene*>(scene());
-  ItemUtils utils = sc->getItemUtils();
-
-  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
-  if (!controller)
-    return;
-
-  QRectF boundRect = boundingRect();
-
-  painter->save();
-  painter->setRenderHint(QPainter::Antialiasing, true);
-  
-  std::string strCurrentUnit;
-  double unit = controller->getCurrentUnit(strCurrentUnit);
-  
-  double value = 0.;
-  double width = 0.;
-  double x1 = boundRect.bottomLeft().x();
-
-  QColor black(0, 0, 0, 255);
-  QColor white(255, 255, 255, 255);
-  QColor firstRect = black;
-  QColor secondRect = white;
-  QColor changeColor;
-  
-  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
-  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
-
-  const Property& prop_font_color = this->getProperty("font_color");
-  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
-  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
-
-  double displacementBetweenScaleAndText = 2.;
-
-  const Property& lineWidth = this->getProperty("line_width");
-  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
-
-  QFont qFont = ItemUtils::convertToQfont(m_font);
-
-  ItemUtils::ConfigurePainterForTexts(painter, m_font);
-
-  QPointF unitCoord(0, 0);
-
-  QPointF coordText;
-  QRectF rectScale;
-  QLineF lineVrt;
-  QLineF lineHrz;
-  std::stringstream ss_value;
-  ss_value.precision(15);
-
-  double initialGap = 0;
-  double gap = controller->getGap(initialGap, m_font);
-  x1 += initialGap;
-
-  double firstTextWidth = 0;
-
-  for (int i = 0; i <= m_numberOfBreaks; ++i, x1 += width)
-  {
-    if (width == 0)
-      width = m_gapX;
-    else
-      value += m_scaleUnitGapX;
-
-    ss_value.str(std::string()); // clear
-    ss_value.clear();
-    ss_value << value;
-
-    const std::string& text = ss_value.str();
-    QRectF textRect = utils.getMinimumTextBoundary(m_font.getFamily(), m_font.getPointSize(), text);
-
-    if (value == 0)
-    {
-      firstTextWidth = textRect.width();
-      x1 += displacementBetweenScaleAndText + textRect.width();
-    }
-
-    rectScale = QRectF(displacementBetweenScaleAndText + firstTextWidth + initialGap + boundRect.x(), boundRect.bottomRight().y() - (m_gapY * 2) - 5,
-      boundRect.x() + lineHrz.x2() - initialGap - displacementBetweenScaleAndText - firstTextWidth, m_gapY * 2);
-
-    if (i < m_numberOfBreaks)
-    {
-      QPen penScale(black, lnew, Qt::SolidLine);
-      penScale.setColor(firstRect);
+      QPen penScale(Qt::black, lineWidth, Qt::SolidLine);
       painter->setPen(penScale);
       painter->setBrush(Qt::NoBrush);
 
       //horizontal line
-      lineHrz = QLineF(x1, rectScale.center().y(), x1 + m_gapX, rectScale.center().y());
-      painter->drawLine(lineHrz);
-
-      penScale.setColor(black);
-      painter->setPen(penScale);
-      //vertical line
-      lineVrt = QLineF(x1, rectScale.topRight().y(), x1, rectScale.bottomRight().y());
-      painter->drawLine(lineVrt);
-    }
-
-    coordText = QPointF(x1, lineVrt.y1() - textRect.height() - displacementBetweenScaleAndText);
-
-    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont, coordText, 0);
-    coordText.setX(coordText.rx() - (textObject.boundingRect().width() / 2));
-
-    QPen penScale(black, lnew, Qt::SolidLine);
-    painter->setPen(penScale);
-    painter->setBrush(QBrush(textColor));
-    
-    if (only_first_and_last)
-    {
-      if (value == 0)
+      if (i % 2 == 0)
       {
-        ItemUtils::drawText(coordText, painter, qFont, text);
+        QLineF horizontalLine(currentX, breakRect.center().y(), currentX + width, breakRect.center().y());
+        painter->drawLine(horizontalLine);
       }
-    }
-    else
-    {
-      ItemUtils::drawText(coordText, painter, qFont, text);
-    }
 
-    unitCoord.setX(coordText.rx() + textObject.boundingRect().width() + 2.5);
-    unitCoord.setY(coordText.ry() - 0.5);
+      //vertical line
+      QLineF verticalLine(currentX, breakRect.topRight().y(), currentX, breakRect.bottomRight().y());
+      painter->drawLine(verticalLine);
 
-    changeColor = firstRect;
-    firstRect = secondRect;
-    secondRect = changeColor;
+      breaksRect = breaksRect.unite(breakRect);
+    }
   }
 
-  if (only_first_and_last)
-  {
-    // last text
-    ItemUtils::drawText(coordText, painter, qFont, ss_value.str());
-  }
-
-  //Rect around scale
+  // Draws a rect surrouding the breaks
+  QPen pen(Qt::black, lineWidth);
+  painter->setPen(pen);
   painter->setBrush(Qt::NoBrush);
-  painter->drawRect(rectScale);
+  painter->drawRect(breaksRect);
 
-  //middle-bottom text
+  painter->restore();
+}
+
+void te::layout::ScaleItem::drawTexts(QPainter * painter, int numberOfBreaks, double initialX, double initialY, double width, double height)
+{
+  ScaleController* controller = dynamic_cast<ScaleController*>(getController());
+  if (controller == 0)
+    return;
+
+
+  const Property& pLineWidth = this->getProperty("line_width");
+  double lineWidth = te::layout::Property::GetValueAs<double>(pLineWidth);
+
+  const Property& prop_font_color = this->getProperty("font_color");
+  const te::color::RGBAColor& backgroundColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(prop_font_color);
+  QColor textColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
+
+  const Property& prop_only_first = this->getProperty("only_first_and_last_value");
+  bool only_first_and_last = te::layout::Property::GetValueAs<bool>(prop_only_first);
+
+  std::string strCurrentUnit;
+  double unit = controller->getCurrentUnit(strCurrentUnit);
+
+  QFont qFont = ItemUtils::convertToQfont(m_font);
+
+  painter->save();
+
+  QPen penScale(Qt::black, lineWidth, Qt::SolidLine);
+  painter->setPen(penScale);
   painter->setBrush(QBrush(textColor));
-  ItemUtils::drawText(unitCoord, painter, qFont, strCurrentUnit);
+
+  ItemUtils::ConfigurePainterForTexts(painter, m_font);
+
+  for (int i = 0; i <= numberOfBreaks; ++i)
+  {
+    if (only_first_and_last == true && i != 0 && i != numberOfBreaks)
+    {
+      continue;
+    }
+
+    double currentX = initialX + (i * width);
+    double currentY = initialY;
+    double currentScaleValue = i * m_scaleUnitGapX;
+
+    //formatting the number and converting it to string
+    std::stringstream ss_value;
+    ss_value.precision(15);
+    ss_value << currentScaleValue;
+    std::string text = ss_value.str();
+
+    //centering the text in the current position
+    QPainterPath textObject = ItemUtils::textToVector(text.c_str(), qFont);
+    double xAdjust = textObject.boundingRect().width() / 2.;
+
+    currentX -= xAdjust;
+
+    //if we are in the last text, we must also draw the unit
+    //we ajust only the number to the center of the break end
+    //but we draw the number and the text related to the current unit
+    if (i == numberOfBreaks)
+    {
+      //is the last
+      text += " " + strCurrentUnit;
+    }
+
+    QPointF textPosition(currentX, currentY);
+    ItemUtils::drawText(textPosition, painter, qFont, text);
+  }
 
   painter->restore();
 }
