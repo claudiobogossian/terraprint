@@ -1705,102 +1705,132 @@ nononon</source>
         <translation type="obsolete">Configurações do PDF</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="32"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="20"/>
         <source>Scale Settings</source>
         <translation>Configurações da Escala</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="82"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="73"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="96"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="87"/>
         <source>Scale settings</source>
         <translation>Configurações da escala</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="106"/>
         <source>Settings</source>
-        <translation>Configurações</translation>
+        <translation type="obsolete">Configurações</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="123"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="118"/>
         <source>Connected to:</source>
         <translation>Conectado à:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="144"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="150"/>
         <source>Type:</source>
         <translation>Tipo:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="169"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="189"/>
         <source>Scale:</source>
         <translation>Escala:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="196"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="236"/>
         <source>Font:</source>
         <translation>Fonte:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="249"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="291"/>
         <source>...</source>
         <translation>...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="267"/>
         <source>Gap in units</source>
-        <translation>Intervalo em unidades</translation>
+        <translation type="obsolete">Intervalo em unidades</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="275"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="338"/>
         <source>Unit:</source>
         <translation>Unidade:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="296"/>
         <source>Scale Gap X In Unit:</source>
-        <translation>Intervalo horizontal em unidade:</translation>
+        <translation type="obsolete">Intervalo horizontal em unidade:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="324"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="316"/>
         <source>Gap</source>
         <translation>Intervalo</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="651"/>
+        <source>Close</source>
+        <translation>Fechar</translation>
     </message>
     <message>
         <source>Gap in millimeters</source>
         <translation type="obsolete">Intervalo em milímetros</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="332"/>
         <source>Scale Gap X:</source>
-        <translation>Intervalo horizontal:</translation>
+        <translation type="obsolete">Intervalo horizontal:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="355"/>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="389"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="465"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="486"/>
         <source>mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="366"/>
         <source>Scale Gap Y:</source>
-        <translation>Intervalo vertical:</translation>
+        <translation type="obsolete">Intervalo vertical:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="405"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="544"/>
         <source>By Breaks</source>
         <translation>Por quebras</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="416"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="553"/>
         <source>Number of graphical scale breaks:</source>
         <translation>Número de quebras na escala gráfica:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="448"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="524"/>
+        <source>Draw texts below the bar</source>
+        <translation>Desenhar os textos abaixo da barra</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="99"/>
+        <source>Properties</source>
+        <translation>Propriedades</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="360"/>
+        <source>Gap X In Unit:</source>
+        <translation>Intervalo em Unidades do Mapa:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="382"/>
+        <source>Gap X:</source>
+        <translation>Intervalo em X:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="404"/>
+        <source>Gap Y:</source>
+        <translation>Intervalor em Y:</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="508"/>
+        <source>Options</source>
+        <translation>Opções</translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="537"/>
         <source>Only the first and the last value</source>
         <translation>Apenas o primeiro e o último valor</translation>
     </message>
@@ -1821,19 +1851,18 @@ nononon</source>
         <translation type="obsolete">Informação de DPI</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="466"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="628"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="469"/>
+        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="631"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/ScaleSettings.ui" line="489"/>
         <source>Cancel</source>
-        <translation>Cancelar</translation>
+        <translation type="obsolete">Cancelar</translation>
     </message>
 </context>
 <context>
