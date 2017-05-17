@@ -123,6 +123,9 @@ void te::layout::ColorDialogOutside::accept()
   model->setColorProperty(prop_color); // refresh property value
 
   emit updateProperty(prop_color);
+
+  // Temporarily, this window will close when the "ok" button is pressed
+  close();
 }
 
 void te::layout::ColorDialogOutside::onCurrentColorChanged( const QColor & color )
