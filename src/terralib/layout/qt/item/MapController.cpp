@@ -169,6 +169,16 @@ void te::layout::MapController::setProperties(const te::layout::Properties& prop
   //we first copy the properties that are being set
   te::layout::Properties propertiesCopy(properties);
 
+  // now we sync gaps by changing one another must be of the same value (if fixed gaps is active)
+  if (syncGapsProperties(propertiesCopy) == true)
+  {
+  }
+
+  // now we sync fixed gaps (if true, gaps will be sync. Changing one another must be of the same value)
+  if (syncFixedGapsProperties(propertiesCopy) == true)
+  {
+  }
+
   //the first thing we need to do is adjust the size of the map (without the grids) and the size total size (with the grids)
   if (adjustMapSizeProperties(propertiesCopy) == true)
   {
@@ -818,11 +828,17 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
   te::gm::Envelope geographicBox = Utils::worldBoxTo(worldBox, srid, geodesicSRID);
   
   //then we calculate the initial coordinates and the gaps
-  double horizontalLineGap = geographicBox.getHeight() / 4.;
-  double horizontalLineInitial = geographicBox.getLowerLeftY();
-  
+  double horizontalLineGap = geographicBox.getHeight() / 4.;  
   double verticalLineGap = geographicBox.getWidth() / 4.;
+
+  double horizontalLineInitial = geographicBox.getLowerLeftY();
   double verticalLineInitial = geographicBox.getLowerLeftX();
+
+  double lineGap = horizontalLineGap;
+  if (verticalLineGap < horizontalLineGap)
+  {
+    lineGap = verticalLineGap;
+  }
 
   {
     Property property(0);
@@ -834,7 +850,7 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
   {
     Property property(0);
     property.setName(geodesicGridSettings.getHorizontalLineGap());
-    property.setValue(horizontalLineGap, dataType->getDataTypeDouble());
+    property.setValue(lineGap, dataType->getDataTypeDouble());
 
     ItemUtils::addOrUpdateProperty(property, properties);
   }
@@ -849,7 +865,7 @@ bool te::layout::MapController::syncGeodesicGridInitProperties(Properties& prope
   {
     Property property(0);
     property.setName(geodesicGridSettings.getVerticalLineGap());
-    property.setValue(verticalLineGap, dataType->getDataTypeDouble());
+    property.setValue(lineGap, dataType->getDataTypeDouble());
 
     ItemUtils::addOrUpdateProperty(property, properties);
   }
@@ -1362,5 +1378,98 @@ te::gm::Envelope te::layout::MapController::calculateGridOutsideBoundingBox(Grid
     
   te::gm::Envelope newBoundingBox(0, 0, width, height);
   return newBoundingBox;
+}
+
+bool te::layout::MapController::syncFixedGapsProperties(Properties& properties)
+{
+  GeodesicGridSettingsConfigProperties geodesicGridSettings;
+  if (!changeFixedGapsProperties(properties, geodesicGridSettings))
+  {
+    PlanarGridSettingsConfigProperties planarGridSettings;
+    return changeFixedGapsProperties(properties, planarGridSettings);
+  }
+  return true;
+}
+
+bool te::layout::MapController::changeFixedGapsProperties(Properties& properties, const GridSettingsConfigProperties& settingsConfig)
+{
+  if (properties.contains(settingsConfig.getGridSettings()) || properties.getProperties().size() > 1)
+  {
+    return false;
+  }
+  
+  if (!properties.contains(settingsConfig.getSyncGaps()))
+  {
+    return false;
+  }
+  
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+
+  const Property& pSyncGaps = properties.getProperty(settingsConfig.getSyncGaps());
+  bool syncGaps = te::layout::Property::GetValueAs<bool>(pSyncGaps);
+  if (syncGaps)
+  {
+    const Property& pHorizontalGap = getProperty(settingsConfig.getHorizontalLineGap());
+    double horizontalGap = te::layout::Property::GetValueAs<double>(pHorizontalGap);
+
+    Property pVerticalGap = getProperty(settingsConfig.getVerticalLineGap());
+    pVerticalGap.setValue(horizontalGap, dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pVerticalGap, properties);
+    return true;
+  }
+  return false;
+}
+
+bool te::layout::MapController::syncGapsProperties(Properties& properties)
+{
+  GeodesicGridSettingsConfigProperties geodesicGridSettings;  
+  if (!changeGapsProperties(properties, geodesicGridSettings))
+  {
+    PlanarGridSettingsConfigProperties planarGridSettings;
+    return changeGapsProperties(properties, planarGridSettings);
+  }
+  return true;
+}
+
+bool te::layout::MapController::changeGapsProperties(Properties& properties, const GridSettingsConfigProperties& settingsConfig)
+{
+  if (properties.contains(settingsConfig.getGridSettings()) || properties.getProperties().size() > 1)
+  {
+    return false;
+  }
+
+  const Property& pSyncGaps = getProperty(settingsConfig.getSyncGaps());
+  bool syncGaps = te::layout::Property::GetValueAs<bool>(pSyncGaps);
+
+  std::string lineGapChangedName = "";
+  std::string lineGapToChangeName = "";
+
+  if (properties.contains(settingsConfig.getHorizontalLineGap()))
+  {
+    lineGapChangedName = settingsConfig.getHorizontalLineGap();
+    lineGapToChangeName = settingsConfig.getVerticalLineGap();
+  }
+  else if (properties.contains(settingsConfig.getVerticalLineGap()))
+  {
+    lineGapChangedName = settingsConfig.getVerticalLineGap();
+    lineGapToChangeName = settingsConfig.getHorizontalLineGap();
+  }
+  else
+  {
+    return false;
+  }
+
+  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+  if (syncGaps)
+  {
+    const Property& pGapChanged = properties.getProperty(lineGapChangedName);
+    double gapChanged = te::layout::Property::GetValueAs<double>(pGapChanged);
+
+    Property pGapToChange = getProperty(lineGapToChangeName);
+    pGapToChange.setValue(gapChanged, dataType->getDataTypeDouble());
+    ItemUtils::addOrUpdateProperty(pGapToChange, properties);
+    return true;
+  }
+  return false;
 }
 

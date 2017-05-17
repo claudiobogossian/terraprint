@@ -25,6 +25,7 @@
 te::layout::Grid::Grid()
   : m_maxGaps(30)
   , m_defaultRotation(90.)
+  , m_size(0, 0)
   , m_biggestLeftText(0.)
   , m_biggestRightText(0.)
   , m_biggestTopText(0.)
@@ -49,7 +50,7 @@ void te::layout::Grid::clear()
   m_rightTexts.clear();
   m_leftTexts.clear();
 
-  m_size = QSizeF();
+  m_size = QSizeF(0, 0);
   m_origin = QPointF();
   m_final = QPointF();
 
