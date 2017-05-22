@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>416</width>
-    <height>200</height>
+    <width>475</width>
+    <height>195</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -16,22 +16,13 @@
     <verstretch>0</verstretch>
    </sizepolicy>
   </property>
-  <property name="minimumSize">
-   <size>
-    <width>416</width>
-    <height>200</height>
-   </size>
-  </property>
-  <property name="maximumSize">
-   <size>
-    <width>416</width>
-    <height>200</height>
-   </size>
-  </property>
   <property name="windowTitle">
    <string>North Settings</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetFixedSize</enum>
+   </property>
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout_5">
      <item>
@@ -113,18 +104,6 @@
             </item>
             <item>
              <widget class="QFrame" name="colorNorth">
-              <property name="minimumSize">
-               <size>
-                <width>27</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>100</width>
-                <height>20</height>
-               </size>
-              </property>
               <property name="palette">
                <palette>
                 <active>
@@ -590,18 +569,6 @@
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>140</width>
-                <height>20</height>
-               </size>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>16777215</width>
-                <height>16777215</height>
-               </size>
-              </property>
              </widget>
             </item>
             <item>
@@ -685,12 +652,6 @@
                 <height>20</height>
                </size>
               </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>20</height>
-               </size>
-              </property>
               <property name="baseSize">
                <size>
                 <width>28</width>
@@ -706,12 +667,6 @@
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
-              </property>
-              <property name="maximumSize">
-               <size>
-                <width>60</width>
-                <height>20</height>
-               </size>
               </property>
              </widget>
             </item>
