@@ -59,7 +59,7 @@ std::list<te::map::AbstractLayerPtr> te::layout::LayerService::decodeURI2LayerLi
   std::list<te::map::AbstractLayerPtr> layerList;
 
     // search layers
-    for (unsigned int i=0;i< layerURIList.size(); i++)
+    for (size_t i=0;i< layerURIList.size(); ++i)
     {
       std::string uri =  layerURIList[i];
       te::map::AbstractLayerPtr layer = proxyProject->getLayerFromURI(uri);
