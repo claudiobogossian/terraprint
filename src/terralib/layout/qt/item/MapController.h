@@ -136,6 +136,14 @@ namespace te
         virtual bool verticalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialY, double gapY);
 
         virtual te::gm::Envelope calculateOutsideBoundingBox(const QPointF& originGrid, const QPointF& finalGrid, const QSizeF& mapSize);
+
+        /*
+          \brief Checks if the view part does not need to be redrawn
+
+          \properties properties that will be updated
+        */
+
+        virtual void checkPropertiesToNotRefresh(const Properties& properties);
     };
   }
 }
