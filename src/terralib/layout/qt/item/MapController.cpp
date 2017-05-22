@@ -31,6 +31,7 @@
 #include "../../core/property/PlanarGridSettingsConfigProperties.h"
 #include "../../core/property/GeodesicGridSettingsConfigProperties.h"
 #include "../../core/Value.h"
+#include "../../core/service/LayerService.h"
 
 #include <terralib/core/translator/Translator.h>
 #include <terralib/maptools/Utils.h>
@@ -261,16 +262,8 @@ te::layout::Property te::layout::MapController::syncLayersFromURIs(const Propert
       return prop;
     }
 
-    // search layers 
-    for (std::vector<std::string>::iterator it = vString.begin(); it != vString.end(); ++it)
-    {
-      std::string uri = (*it);
-      te::map::AbstractLayerPtr layer = project->getLayerFromURI(uri);
-      if (layer)
-      {
-        layerList.push_back(layer);
-      }
-    }
+    layerList = LayerService::decodeURI2LayerList(project, vString);
+
     prop = m_model->getProperty("layers");
     prop.setValue(layerList, dataType->getDataTypeLayerList());
   }
@@ -294,13 +287,8 @@ te::layout::Property te::layout::MapController::syncURIsFromLayers(const Propert
       return prop;
     }
 
-    // search layer info (uri)
-    for (std::list<te::map::AbstractLayerPtr>::const_iterator it = layerList.begin(); it != layerList.end(); ++it)
-    {
-      te::map::AbstractLayerPtr layer = (*it);
-      std::string uri = project->getURIFromLayer(layer);
-      vString.push_back(uri);
-    }
+    vString = LayerService::encodeLayerList2URI(project, layerList);
+
     prop = m_model->getProperty("layers_uri");
     prop.setValue(vString, dataType->getDataTypeStringVector());
   }
