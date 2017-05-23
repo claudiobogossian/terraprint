@@ -69,6 +69,8 @@ void te::layout::ColorDialogOutside::init()
   color.setBlue(rgbColor.getBlue());
   color.setAlpha(rgbColor.getAlpha());
 
+  m_currentColor = color;
+
   setCurrentColor(color);
 }
 
@@ -112,6 +114,8 @@ void te::layout::ColorDialogOutside::accept()
   
   if(color == m_currentColor)
   {
+    // Temporarily, this window will close when the "ok" button is pressed
+    close();
     return;
   }
 
