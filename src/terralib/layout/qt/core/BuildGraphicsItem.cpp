@@ -251,7 +251,17 @@ te::layout::ItemFactoryParamsCreate te::layout::BuildGraphicsItem::createParams(
   m_name = strName;
   m_zValue = zValue;
 
+  //we first get the basic properties
   Properties props = convertToProperties(strName, m_id, m_coord, m_width, m_height, zValue);
+
+  //then we append the default properties
+  Properties defaultProperties = m_scene->getDefaultPropertiesForItem(type->getName());
+  if (defaultProperties.getProperties().empty() == false)
+  {
+    props = collapseProperties(defaultProperties, props);
+  }
+
+  //and finally we append the properties received by parameters
   props = collapseProperties(m_props, props);
 
   return ItemFactoryParamsCreate(props, m_scene->getInputItemProxy());
@@ -351,14 +361,12 @@ te::layout::Properties te::layout::BuildGraphicsItem::convertToProperties(const 
 
 te::layout::Properties te::layout::BuildGraphicsItem::collapseProperties(const Properties& properties, const Properties& newProperties)
 {
-  Properties propertiesCopy = properties;
-  Properties newPropertiesCopy = newProperties;
+  Properties propertiesCopy(properties);
 
   std::vector<Property>::const_iterator it = newProperties.getProperties().begin();
-
   for (; it != newProperties.getProperties().end(); ++it)
   {
-    Property prop = (*it);
+    const Property& prop = (*it);
     if (!propertiesCopy.contains(prop.getName()))
     {
       propertiesCopy.addProperty(prop);
