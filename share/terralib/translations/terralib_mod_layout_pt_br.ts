@@ -1248,78 +1248,72 @@
         <translation type="obsolete">Diálogo</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="85"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="78"/>
         <source>North visualization settings</source>
         <translation>Configurações de visualização do Norte</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="71"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="64"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="705"/>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="744"/>
-        <source>mm</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="789"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="708"/>
         <source>OK</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="796"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="715"/>
         <source>Cancel</source>
         <translation>Cancelar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="766"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="685"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="769"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="688"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="95"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="88"/>
         <source>Settings</source>
         <translation>Configurações</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="32"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="20"/>
         <source>North Settings</source>
         <translation>Configurações do Norte</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="108"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="101"/>
         <source>Type:</source>
         <translation>Tipo:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="608"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="579"/>
         <source>Color...</source>
         <translation>Cor...</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="657"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="626"/>
         <source>Width:</source>
         <translation>Largura:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="664"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="633"/>
         <source>Height:</source>
         <translation>Altura:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="637"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="608"/>
         <source>Millimeters</source>
         <translation>Milímetros</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="644"/>
+        <location filename="../../../src/terralib/layout/qt/ui/NorthSettings.ui" line="615"/>
         <source>Centimeters</source>
         <translation>Centímetros</translation>
     </message>
@@ -1371,114 +1365,114 @@
         <translation>Configuração da página</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="77"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="79"/>
         <source>Imagem</source>
         <translation>Imagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="91"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="93"/>
         <source>Configure page properties</source>
         <translation>Configurar as propriedades da página</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="107"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="109"/>
         <source>Paper</source>
         <translation>Papel</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="118"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="120"/>
         <source>Size</source>
         <translation>Tamanho</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="145"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="147"/>
         <source>Source</source>
         <translation>Origem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="176"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="178"/>
         <source>Custom</source>
         <translation>Customizar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="206"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="208"/>
         <source>width</source>
         <translation>largura</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="235"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="287"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="237"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="289"/>
         <source> mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="258"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="260"/>
         <source>height</source>
         <translation>altura</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="319"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="321"/>
         <source>Orientation</source>
         <translation>Orientação</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="331"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="333"/>
         <source>Portrait</source>
         <translation>Retrato</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="347"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="349"/>
         <source>Landscape</source>
         <translation>Paisagem</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="360"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="362"/>
         <source>Margins</source>
         <translation>Margens</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="371"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="373"/>
         <source>Left:</source>
         <translation>Esquerda:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="384"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="424"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="455"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="495"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="386"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="426"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="457"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="497"/>
         <source>0.75</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="391"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="431"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="462"/>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="502"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="393"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="433"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="464"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="504"/>
         <source>mm</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="411"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="413"/>
         <source>Right:</source>
         <translation>Direita:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="442"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="444"/>
         <source>Top:</source>
         <translation>Superior:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="482"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="484"/>
         <source>Bottom:</source>
         <translation>Inferior:</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="518"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="520"/>
         <source>Preview</source>
         <translation>Pré-visualizar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1011"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1013"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -1487,7 +1481,7 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1021"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1023"/>
         <source>nononononon
 
 nonon
@@ -1516,24 +1510,29 @@ nononon</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1062"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1064"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1065"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1067"/>
         <source>Alt+H</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1088"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1090"/>
         <source>&amp;Apply</source>
         <translation>&amp;Aplicar</translation>
     </message>
     <message>
-        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1091"/>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1093"/>
         <source>Alt+O</source>
         <translation></translation>
+    </message>
+    <message>
+        <location filename="../../../src/terralib/layout/qt/ui/PageSetup.ui" line="1100"/>
+        <source>Close</source>
+        <translation>Fechar</translation>
     </message>
 </context>
 <context>
