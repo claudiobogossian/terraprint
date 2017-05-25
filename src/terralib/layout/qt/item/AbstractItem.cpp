@@ -206,7 +206,7 @@ void te::layout::AbstractItem::drawBackground(QPainter * painter)
   painter->restore();
 }
 
-void te::layout::AbstractItem::drawFrame(QPainter* painter, const QRectF& frameRect, const QColor& frameColor, double frameThickness)
+void te::layout::AbstractItem::drawFrame(QPainter* painter, const QRectF& frameRect, const QColor& frameColor, double frameThickness, bool adjust)
 {
   if (frameRect.isValid() == false || frameRect.isNull() == true || frameRect.isEmpty() == true)
   {
@@ -220,7 +220,11 @@ void te::layout::AbstractItem::drawFrame(QPainter* painter, const QRectF& frameR
   painter->setRenderHint(QPainter::Antialiasing, true);
 
   //gets the adjusted rectangle based of the painter settings to avoid drawing outside of the bounding rect
-  QRectF rectAdjusted = getAdjustedRect(painter, frameRect);
+  QRectF rectAdjusted = frameRect;
+  if (adjust)
+  {
+    rectAdjusted = getAdjustedRect(painter, frameRect);
+  }
 
   //draws the frame
   painter->drawRect(rectAdjusted);
@@ -228,7 +232,7 @@ void te::layout::AbstractItem::drawFrame(QPainter* painter, const QRectF& frameR
   painter->restore();
 }
 
-void te::layout::AbstractItem::drawFrame(QPainter * painter)
+void te::layout::AbstractItem::drawFrame(QPainter * painter, bool adjust)
 {
   if (!painter)
   {
@@ -247,7 +251,7 @@ void te::layout::AbstractItem::drawFrame(QPainter * painter)
 
   QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
 
-  drawFrame(painter, boundingRect(), qFrameColor, frameThickness);
+  drawFrame(painter, boundingRect(), qFrameColor, frameThickness, adjust);
 }
 
 void te::layout::AbstractItem::drawSelection(QPainter* painter)

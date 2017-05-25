@@ -147,7 +147,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   }
 }
 
-void te::layout::MapItem::drawFrame(QPainter * painter)
+void te::layout::MapItem::drawFrame(QPainter * painter, bool adjust)
 {
   if (!painter)
   {
@@ -173,10 +173,10 @@ void te::layout::MapItem::drawFrame(QPainter * painter)
     QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
     QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
 
-    AbstractItem::drawFrame(painter, qBoundingRect, qFrameColor, frameThickness);
+    AbstractItem::drawFrame(painter, qBoundingRect, qFrameColor, frameThickness, false);
   }
 
-  AbstractItem::drawFrame(painter);
+  AbstractItem::drawFrame(painter, adjust);
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
