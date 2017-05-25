@@ -172,12 +172,12 @@ namespace te
         /*!
         \brief Draws the frame of the item
         */
-        virtual void drawFrame(QPainter* painter, const QRectF& frameRect, const QColor& frameColor, double frameThickness);
+        virtual void drawFrame(QPainter* painter, const QRectF& frameRect, const QColor& frameColor, double frameThickness, bool adjust = true);
 
         /*!
           \brief Draws the frame of the item
          */
-        virtual void drawFrame(QPainter* painter);
+        virtual void drawFrame(QPainter* painter, bool adjust = true);
 
         /*!
           \brief Draws the selection of the item
