@@ -255,21 +255,11 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateVerticalLines
     //as the grid lines an be curved, texts must only de drawn in the cases that the grid line reaches the top or the botton of the item bounding rect
     if (lineString->intersects(&bottomBorderLine) == true)
     {
-      te::gm::Envelope bottomBound = calculateBottom(QPointF(firstPoint->getX(), firstPoint->getY()), rectF, qText, bBottomRotate, verticalDisplacement);
-      double newBottom = bottomBound.getHeight() + verticalDisplacement;
-      if (newBottom > m_biggestBottomText && bottomBound.getHeight() > 0.)
-      {
-        m_biggestBottomText = newBottom;
-      }
+      calculateBottom(QPointF(firstPoint->getX(), firstPoint->getY()), rectF, qText, bBottomRotate, horizontalDisplacement);
     }
     if (lineString->intersects(&topBorderLine) == true)
     {
-      te::gm::Envelope topBound = calculateTop(QPointF(lastPoint->getX(), lastPoint->getY()), rectF, qText, bTopRotate, verticalDisplacement);
-      double newTop = topBound.getHeight() + verticalDisplacement;
-      if (newTop > m_biggestTopText && topBound.getHeight() > 0.)
-      {
-        m_biggestTopText = newTop;
-      }
+      calculateTop(QPointF(lastPoint->getX(), lastPoint->getY()), rectF, qText, bTopRotate, horizontalDisplacement);
     }
 
     if (line)
@@ -414,21 +404,11 @@ std::vector<te::gm::LineString> te::layout::GeodesicGrid::calculateHorizontalLin
     //as the grid lines an be curved, texts must only de drawn in the cases that the grid line reaches the top or the botton of the item bounding rect
     if (lineString->intersects(&leftBorderLine) == true)
     {
-      te::gm::Envelope leftBound = calculateLeft(QPointF(firstPoint->getX(), firstPoint->getY()), rectF, qText, bLeftRotate, horizontalDisplacement);
-      double newLeft = leftBound.getWidth() + horizontalDisplacement;
-      if (newLeft > m_biggestLeftText && leftBound.getWidth() > 0.)
-      {
-        m_biggestLeftText = newLeft;
-      }
+      calculateLeft(QPointF(firstPoint->getX(), firstPoint->getY()), rectF, qText, bLeftRotate, verticalDisplacement);
     }
     if (lineString->intersects(&rightBorderLine) == true)
     {
-      te::gm::Envelope rightBound = calculateRight(QPointF(lastPoint->getX(), lastPoint->getY()), rectF, qText, bRightRotate, horizontalDisplacement);
-      double newRight = rightBound.getWidth() + horizontalDisplacement;
-      if (newRight > m_biggestRightText && rightBound.getWidth() > 0.)
-      {
-        m_biggestRightText = newRight;
-      }
+      calculateRight(QPointF(lastPoint->getX(), lastPoint->getY()), rectF, qText, bRightRotate, verticalDisplacement);
     }
 
     if (line)

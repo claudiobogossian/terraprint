@@ -79,7 +79,6 @@ namespace te
         virtual void drawNorthArrow1(QPainter * painter);
         virtual void drawNorthArrow2(QPainter * painter);
         virtual void drawNorthArrow3(QPainter * painter);
-        virtual void drawNorthArrow4(QPainter * painter);
 
         QColor setBrush(QPainter* painter);
     };

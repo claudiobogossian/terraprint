@@ -37,11 +37,9 @@
 #include "ItemObserverFactory.h"
 #include "ItemObserverManager.h"
 #include "VariantPropertiesBrowser.h"
-#include "ColorEditorFactory.h"
 
 // QtPropertyBrowser
 #include <QtPropertyBrowser/QtStringPropertyManager>
-#include <QtPropertyBrowser/QtColorPropertyManager>
 #include <QtPropertyBrowser/QtProperty>
 #include <QtPropertyBrowser/QtBrowserItem>
 #include <QtPropertyBrowser/QtVariantPropertyManager>
@@ -114,13 +112,9 @@ void te::layout::PropertyBrowser::createManager( Scene* scene, AbstractProxyProj
   connect(m_itemObserverManager, SIGNAL(valueChanged(QtProperty*, const QVariant &)),
     this, SLOT(propertyEditorValueChanged(QtProperty *, const QVariant &)));
 
-  connect(m_dialogPropertiesBrowser->getColorPropertyManager(), SIGNAL(valueChanged(QtProperty*, const QColor&)),
-    this, SLOT(propertyEditorValueChanged(QtProperty *, const QColor&)));
-
-  ColorEditorFactory* colorEditorFactory = new ColorEditorFactory;
   ItemObserverFactory* itemObserverFactory = new ItemObserverFactory;
-
-  m_propertyEditor->setFactoryForManager(m_dialogPropertiesBrowser->getColorPropertyManager(), colorEditorFactory);
+  
+  
   m_propertyEditor->setFactoryForManager(m_dialogPropertiesBrowser->getStringPropertyManager(), m_dialogPropertiesBrowser->getDlgEditorFactory());
   m_propertyEditor->setFactoryForManager(m_variantPropertiesBrowser->getVariantPropertyManager(), m_variantPropertiesBrowser->getVariantEditorFactory());
   m_propertyEditor->setFactoryForManager(m_itemObserverManager, itemObserverFactory);
@@ -164,12 +158,6 @@ void te::layout::PropertyBrowser::propertyEditorValueChanged( QtProperty *proper
   m_ignoreExternalUpdates = true;
   emit changePropertyValue(prop);
   m_ignoreExternalUpdates = false;
-}
-
-void te::layout::PropertyBrowser::propertyEditorValueChanged(QtProperty *property, const QColor &value)
-{
-  QVariant variant(value);
-  propertyEditorValueChanged(property, variant);
 }
 
 void te::layout::PropertyBrowser::onChangeDlgProperty( const Property& property )

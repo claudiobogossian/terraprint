@@ -81,14 +81,12 @@
 
 // QtPropertyBrowser
 #include <QtPropertyBrowser/QtStringPropertyManager>
-#include <QtPropertyBrowser/QtColorPropertyManager>
 #include <QtPropertyBrowser/qteditorfactory.h>
 #include <QtPropertyBrowser/QtProperty>
 
 te::layout::DialogPropertiesBrowser::DialogPropertiesBrowser(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent) :
   AbstractPropertiesBrowser(scene, parent),
   m_strDlgManager(0),
-  m_colorDlgManager(0),
   m_dlgEditorFactory(0),
   m_proxyProject(proxyProject)
 {
@@ -110,12 +108,6 @@ te::layout::DialogPropertiesBrowser::~DialogPropertiesBrowser()
     m_strDlgManager = 0;
   }
 
-  if (m_colorDlgManager)
-  {
-    delete m_colorDlgManager;
-    m_colorDlgManager = 0;
-  }
-
   if(m_dlgEditorFactory)
   {
     delete m_dlgEditorFactory;
@@ -126,7 +118,6 @@ te::layout::DialogPropertiesBrowser::~DialogPropertiesBrowser()
 void te::layout::DialogPropertiesBrowser::createManager()
 {
   m_strDlgManager = new QtStringPropertyManager;
-  m_colorDlgManager = new QtColorPropertyManager;
   
   m_dlgEditorFactory = new QtDlgEditorFactory;
 
@@ -215,11 +206,6 @@ QtStringPropertyManager* te::layout::DialogPropertiesBrowser::getStringPropertyM
   return m_strDlgManager;
 }
 
-QtColorPropertyManager* te::layout::DialogPropertiesBrowser::getColorPropertyManager()
-{
-  return m_colorDlgManager;
-}
-
 QtDlgEditorFactory* te::layout::DialogPropertiesBrowser::getDlgEditorFactory()
 {
   return m_dlgEditorFactory;
@@ -245,26 +231,14 @@ QtProperty* te::layout::DialogPropertiesBrowser::addProperty( const Property& pr
 
   QString label = ItemUtils::convert2QString(stdLabel);
 
+  std::string stdValue = te::layout::Property::GetValueAs<std::string>(property);
+  QString value = ItemUtils::convert2QString(stdValue);
+
   std::string name = property.getName();
   QString qName = ItemUtils::convert2QString(name);
-
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-  if (property.getType()->getName() == dataType->getDataTypeColor()->getName())
-  {
-    const te::color::RGBAColor& cColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
-    QColor qColor(cColor.getRed(), cColor.getGreen(), cColor.getBlue(), cColor.getAlpha());
-
-    qproperty = m_colorDlgManager->addProperty(label);
-    m_colorDlgManager->setValue(qproperty, qColor);
-  }
-  else
-  {
-    std::string stdValue = te::layout::Property::GetValueAs<std::string>(property);
-    QString value = ItemUtils::convert2QString(stdValue);
-
-    qproperty = m_strDlgManager->addProperty(label);
-    m_strDlgManager->setValue(qproperty, value);
-  }
+  
+  qproperty = m_strDlgManager->addProperty(label);
+  m_strDlgManager->setValue(qproperty, value);
   addPropertyItem(qproperty, qName, label, property);
   /*The sub properties should not appear in this case, 
     because will be previewed in the dialog window will be opened.*/
@@ -506,8 +480,6 @@ void te::layout::DialogPropertiesBrowser::onShowColorDlg()
   {
     return;
   }
-
-  colorDialog->setWindowTitle(ItemUtils::convert2QString(m_currentPropertyClicked.getLabel()));
     
   model->setColorProperty(m_currentPropertyClicked);
 
@@ -795,15 +767,6 @@ te::layout::Property te::layout::DialogPropertiesBrowser::getProperty(QtProperty
   else if (prop.getType() == dataType->getDataTypeNorthSettings())
   {
     prop.setValue(variant.toString().toStdString(), prop.getType());
-  }
-  else if (prop.getType() == dataType->getDataTypeColor())
-  {
-    QColor qcolor = variant.value<QColor>();
-    if (qcolor.isValid())
-    {
-      te::color::RGBAColor color(qcolor.red(), qcolor.green(), qcolor.blue(), qcolor.alpha());
-      prop.setValue(color, dataType->getDataTypeColor());
-    }
   }
 
   return prop;

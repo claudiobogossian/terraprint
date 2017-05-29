@@ -45,7 +45,6 @@
 
 // QtPropertyBrowser
 class QtStringPropertyManager;
-class QtColorPropertyManager;
 class QtDlgEditorFactory;
 class QtProperty;
 
@@ -78,8 +77,6 @@ namespace te
         virtual ~DialogPropertiesBrowser();
 
         QtStringPropertyManager* getStringPropertyManager();
-
-        QtColorPropertyManager* getColorPropertyManager();
 
         QtDlgEditorFactory* getDlgEditorFactory();
 
@@ -163,7 +160,6 @@ namespace te
       protected:
 
         QtStringPropertyManager*        m_strDlgManager;
-        QtColorPropertyManager*         m_colorDlgManager;
         QtDlgEditorFactory*             m_dlgEditorFactory;
         Property                        m_currentPropertyClicked;
         QList<QWidget*>                 m_dialogs;

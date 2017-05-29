@@ -43,8 +43,6 @@ te::layout::ColorDialogOutside::ColorDialogOutside(AbstractOutsideController* co
   m_okClicked(false)
 {
   connect(this, SIGNAL(currentColorChanged(const QColor&)), this, SLOT(onCurrentColorChanged(const QColor&)));
-
-  this->setOption(QColorDialog::ShowAlphaChannel, true);
 }
 
 te::layout::ColorDialogOutside::~ColorDialogOutside()
@@ -68,8 +66,6 @@ void te::layout::ColorDialogOutside::init()
   color.setGreen(rgbColor.getGreen());
   color.setBlue(rgbColor.getBlue());
   color.setAlpha(rgbColor.getAlpha());
-
-  m_currentColor = color;
 
   setCurrentColor(color);
 }
@@ -114,8 +110,6 @@ void te::layout::ColorDialogOutside::accept()
   
   if(color == m_currentColor)
   {
-    // Temporarily, this window will close when the "ok" button is pressed
-    close();
     return;
   }
 
@@ -127,9 +121,6 @@ void te::layout::ColorDialogOutside::accept()
   model->setColorProperty(prop_color); // refresh property value
 
   emit updateProperty(prop_color);
-
-  // Temporarily, this window will close when the "ok" button is pressed
-  close();
 }
 
 void te::layout::ColorDialogOutside::onCurrentColorChanged( const QColor & color )

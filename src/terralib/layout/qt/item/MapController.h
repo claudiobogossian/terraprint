@@ -41,9 +41,6 @@ namespace te
     class AbstractProxyProject;
     class Property;
     class Properties;
-    class Grid;
-    class GridSettingsConfigProperties;
-
     /*!
     \brief Class that represents text controller.
     
@@ -112,14 +109,6 @@ namespace te
 
         virtual bool syncGridReferenceProperties(Properties& properties);
 
-        virtual bool syncFixedGapsProperties(Properties& properties);
-
-        virtual bool syncGapsProperties(Properties& properties);
-
-        virtual bool changeFixedGapsProperties(Properties& properties, const GridSettingsConfigProperties& settingsConfig);
-
-        virtual bool changeGapsProperties(Properties& properties, const GridSettingsConfigProperties& settingsConfig);
-        
         virtual AbstractProxyProject* getAbstractProxyProject();
 
         virtual void changedPropertyLayerURIFromDropEvent(const Properties& beforeProps);
@@ -145,8 +134,8 @@ namespace te
         virtual bool horizontalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialX, double gapX);
 
         virtual bool verticalDistanceBiggerThanGap(const te::gm::Envelope& worldBox, double initialY, double gapY);
-        
-        virtual te::gm::Envelope calculateGridOutsideBoundingBox(Grid* planarGrid, Grid* geodesicGrid, const QSizeF& mapSize);
+
+        virtual te::gm::Envelope calculateOutsideBoundingBox(const QPointF& originGrid, const QPointF& finalGrid, const QSizeF& mapSize);
 
         /*
           \brief Checks if the view part does not need to be redrawn

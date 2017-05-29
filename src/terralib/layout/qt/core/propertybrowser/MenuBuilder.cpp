@@ -90,43 +90,7 @@ te::layout::MenuBuilder::~MenuBuilder()
   }
 }
 
-void te::layout::MenuBuilder::createMenuItem(QMenu* menu, const std::vector<te::layout::Property>& vecProperties)
-{
-  EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-
-  foreach(const Property& prop, vecProperties)
-  {
-    const std::vector<te::layout::Property>& vecSubProperties = prop.getSubProperty();
-    if (vecSubProperties.empty() == false)
-    {
-      createMenuItem(m_menu, vecSubProperties);
-    }
-
-    if (!prop.isMenu() || !prop.isVisible())
-      continue;
-
-    std::string stdLabel = prop.getLabel();
-    if (stdLabel.compare("") == 0)
-      stdLabel = prop.getName();
-
-    std::string name = prop.getName();
-    std::string icon = prop.getIcon();
-
-    QString qLabel = ItemUtils::convert2QString(stdLabel);
-    QString qName = ItemUtils::convert2QString(stdLabel);
-    QString qIcon = ItemUtils::convert2QString(stdLabel);
-
-    QAction* action = createAction(qLabel, qName, qIcon);
-    m_menu->addAction(action);
-    if (prop.getType() == dataType->getDataTypeBool())
-    {
-      action->setCheckable(true);
-      action->setChecked(te::layout::Property::GetValueAs<bool>(prop));
-    }
-  }
-}
-
-void te::layout::MenuBuilder::createMenu( const QList<QGraphicsItem*>& items )
+void te::layout::MenuBuilder::createMenu( QList<QGraphicsItem*> items )
 {
   m_graphicsItems = items;
   
@@ -161,6 +125,8 @@ void te::layout::MenuBuilder::createMenu( const QList<QGraphicsItem*>& items )
 
     QAction* actionCut = createAction(tr("Cut"), "Cut", "Cut");
     m_menu->addAction(actionCut);
+
+
   }
 
   QAction* actionPaste = createAction(tr("Paste"), "Paste", "Paste");
@@ -173,7 +139,30 @@ void te::layout::MenuBuilder::createMenu( const QList<QGraphicsItem*>& items )
   }
   m_menu->addSeparator();
 
-  createMenuItem(m_menu, m_properties.getProperties());
+  foreach(Property prop, m_properties.getProperties()) 
+  {
+    if(!prop.isMenu() || !prop.isVisible())
+      continue;
+    
+    std::string stdLabel = prop.getLabel();
+    if (stdLabel.compare("") == 0)
+      stdLabel = prop.getName();
+
+    std::string name = prop.getName();
+    std::string icon = prop.getIcon();
+
+    QString qLabel = ItemUtils::convert2QString(stdLabel);
+    QString qName = ItemUtils::convert2QString(stdLabel);
+    QString qIcon = ItemUtils::convert2QString(stdLabel);
+
+    QAction* action = createAction(qLabel, qName, qIcon);
+    m_menu->addAction(action);
+    if(prop.getType() == dataType->getDataTypeBool())
+    {
+      action->setCheckable(true);
+      action->setChecked(te::layout::Property::GetValueAs<bool>(prop));
+    }
+  }
 }
 
 QAction* te::layout::MenuBuilder::createAction(const QString& text, const QString& objName, const QString& icon, const QString& tooltip)
@@ -267,28 +256,40 @@ void te::layout::MenuBuilder::changePropertyValue( const Property& property )
   m_scene->update();
 }
 
-te::layout::Property te::layout::MenuBuilder::findMnuProperty( const std::string& name )
+te::layout::Property te::layout::MenuBuilder::findMnuProperty( te::layout::EnumType* dataType )
 {
-  std::vector<te::layout::Property> vecProperties(m_properties.getProperties());
+  Property prop;
 
-  for(std::size_t i = 0; i < vecProperties.size(); ++i)
+  std::map<std::string, Property>::iterator it;
+
+  foreach( Property pro, m_properties.getProperties()) 
   {
-    const Property& property = vecProperties[i];
-
-    if (property.getName().compare(name) == 0 || property.getLabel().compare(name) == 0)
+    if(pro.getType() == dataType)
     {
-      return property;
-    }
-
-    const std::vector<te::layout::Property>& vecSubProperties = property.getSubProperty();
-    if (vecSubProperties.empty() == false)
-    {
-      vecProperties.insert(vecProperties.end(), vecSubProperties.begin(), vecSubProperties.end());
+      prop = pro;
+      break;
     }
   }
 
-  Property emptyProp;
-  return emptyProp;
+  return prop;
+}
+
+te::layout::Property te::layout::MenuBuilder::findMnuProperty( std::string name )
+{
+  Property prop;
+
+  std::map<std::string, Property>::iterator it;
+
+  foreach( Property pro, m_properties.getProperties()) 
+  {
+    if (pro.getName().compare(name) == 0 || pro.getLabel().compare(name) == 0)
+    {
+      prop = pro;
+      break;
+    }
+  }
+
+  return prop;
 }
 
 void te::layout::MenuBuilder::menuExec( int x, int y )

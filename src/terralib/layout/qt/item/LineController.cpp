@@ -200,9 +200,7 @@ void te::layout::LineController::setProperties(const te::layout::Properties& pro
       property.setValue(height, dataType->getDataTypeDouble());
       propertiesCopy.addProperty(property);
     }
-    /* Changes in the bounding rect or geometry should call the prepareGeometryChange() method, 
-    so that the boxes tree of the scene is correctly synchronized and does not give problems in the removal. */
-    m_view->prepareGeometryChange();
+    
   }
   AbstractItemController::setProperties(propertiesCopy);
 }

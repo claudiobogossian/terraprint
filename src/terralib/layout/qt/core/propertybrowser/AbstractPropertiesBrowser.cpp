@@ -84,16 +84,7 @@ QVariant te::layout::AbstractPropertiesBrowser::getPropertyValue(QtProperty* qtp
   }
   else
   {
-    QtColorPropertyManager* colorPropertyManager = dynamic_cast<QtColorPropertyManager*>(qtproperty->propertyManager());
-    if (colorPropertyManager != 0)
-    {
-      QColor color = colorPropertyManager->value(qtproperty);
-      variant.setValue(color);
-    }
-    else
-    {
-      variant.setValue(qtproperty->valueText());
-    }
+    variant.setValue(qtproperty->valueText());
   }
   
   return variant;

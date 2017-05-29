@@ -110,7 +110,7 @@ void te::layout::BalloonItem::drawRectangleBalloon(QPainter * painter)
   painter->save();
   setPainterParameters(painter);
 
-  QRectF adjustedBoundbox = getAdjustedRect(painter, boundingRect());
+  QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
 
   QPointF p1 = QPointF(adjustedBoundbox.x(), (margin * 2));
   QPointF p2 = QPointF(adjustedBoundbox.bottomLeft().x(), adjustedBoundbox.bottomLeft().y());
@@ -148,7 +148,7 @@ void te::layout::BalloonItem::drawRoundedRectangleBalloon(QPainter * painter)
   painter->save();
   setPainterParameters(painter);
 
-  QRectF adjustedBoundbox = getAdjustedRect(painter, boundingRect());
+  QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
 
   QPainterPath qPath;
 
@@ -220,7 +220,7 @@ void te::layout::BalloonItem::drawEllipseBalloon(QPainter * painter)
   painter->save();
   setPainterParameters(painter);
 
-  QRectF adjustedBoundbox = getAdjustedRect(painter, boundingRect());
+  QRectF adjustedBoundbox = getAdjustedBoundingRect(painter);
 
   QPointF p2 = QPointF(adjustedBoundbox.x(), adjustedBoundbox.y() + adjustedBoundbox.height());
   QPointF p3 = QPointF(adjustedBoundbox.x() + adjustedBoundbox.width(), adjustedBoundbox.y() + (margin * 2));

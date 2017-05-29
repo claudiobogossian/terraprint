@@ -50,7 +50,6 @@
 #include "tempDataStorage/TempDataStorageEditor.h"
 #include "tempDataStorage/TempFileInfo.h"
 #include "tools/CreateItemTool.h"
-#include "../../core/PaperConfig.h"
 
 #include "terralib/geometry/Envelope.h"
 #include "terralib/qt/widgets/Utils.h"
@@ -2008,31 +2007,5 @@ void te::layout::View::resetDraftPixmap(double width, double height)
   }
   m_draft = new QPixmap(width, height);
   m_draft->fill(Qt::transparent);
-}
-
-void te::layout::View::setPaperConfig(const PaperConfig& paperConfig)
-{
-  Scene* scene = getScene();
-  if (!scene)
-  {
-    return;
-  }
-
-  // refresh with new values
-
-  PaperConfig* currentConfig = scene->getPaperConfig();
-  currentConfig->setPaperOrientation(paperConfig.getPaperOrientantion());
-  currentConfig->setPaperType(paperConfig.getPaperType());
-
-  if (paperConfig.getPaperType() == te::layout::Custom)
-  {
-    double w = 0;
-    double h = 0;
-    paperConfig.getPaperSize(w, h);
-    currentConfig->setPaperSizeCustom(w, h);
-  }
-
-  // reset view and create a new paper item with the paper config changes
-  onChangeConfig();
 }
 

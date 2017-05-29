@@ -38,7 +38,6 @@
 te::layout::NorthModel::NorthModel()
   : AbstractItemModel()
 {
-  te::gm::Envelope boundingBox(0., 0., 20., 20.);
   te::color::RGBAColor color(0, 0, 0, 255);
   std::string name = TE_TR("Settings");
   double lineWidth = Utils::getLineWidthMinimumValue();
@@ -100,21 +99,6 @@ te::layout::NorthModel::NorthModel()
   prop_northsettings.setMenu(true);
   prop_northsettings.setValue(name, dataType->getDataTypeNorthSettings());
   this->m_properties.addProperty(prop_northsettings);
-
-  //updating properties
-  {
-    Property property(0);
-    property.setName("width");
-    property.setValue(boundingBox.getWidth(), dataType->getDataTypeDouble());
-    this->m_properties.updateProperty(property);
-  }
-
-  {
-    Property property(0);
-    property.setName("height");
-    property.setValue(boundingBox.getHeight(), dataType->getDataTypeDouble());
-    this->m_properties.updateProperty(property);
-  }
 
   reparentProperties(Enums::getInstance().getEnumObjectType()->getNorthItem());
 }

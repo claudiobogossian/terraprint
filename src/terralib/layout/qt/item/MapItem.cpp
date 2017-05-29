@@ -148,7 +148,7 @@ void te::layout::MapItem::drawItem(QPainter * painter, const QStyleOptionGraphic
   }
 }
 
-void te::layout::MapItem::drawFrame(QPainter * painter, bool adjust)
+void te::layout::MapItem::drawFrame(QPainter * painter)
 {
   if (!painter)
   {
@@ -160,24 +160,33 @@ void te::layout::MapItem::drawFrame(QPainter * painter, bool adjust)
     return;
   }
 
-  //draws the frame sorrounding the Map
-  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_map_frame")) == true)
+  if (te::layout::Property::GetValueAs<bool>(this->getProperty("show_frame")) == false)
   {
-    const Property& pMapLocalBox = this->getProperty("map_local_box");
-    const Property& pFrameColor = this->getProperty("map_frame_color");
-    const Property& pFrameThickness = this->getProperty("map_frame_thickness");
-
-    const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
-    const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
-    double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
-
-    QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
-    QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
-
-    AbstractItem::drawFrame(painter, qBoundingRect, qFrameColor, frameThickness, false);
+    return;
   }
 
-  AbstractItem::drawFrame(painter, adjust);
+  const Property& pMapLocalBox = this->getProperty("map_local_box");
+  const Property& pFrameColor = this->getProperty("frame_color");
+  const Property& pFrameThickness = this->getProperty("frame_thickness");
+
+  const te::gm::Envelope& mapLocalBox = te::layout::Property::GetValueAs<te::gm::Envelope>(pMapLocalBox);
+  const te::color::RGBAColor& frameColor = te::layout::Property::GetValueAs<te::color::RGBAColor>(pFrameColor);
+  double frameThickness = te::layout::Property::GetValueAs<double>(pFrameThickness);
+
+  QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
+
+  QRectF qBoundingRect(mapLocalBox.getLowerLeftX(), mapLocalBox.getLowerLeftY(), mapLocalBox.getWidth(), mapLocalBox.getHeight());
+
+  painter->save();
+  QPen pen(qFrameColor, frameThickness, Qt::SolidLine);
+  painter->setPen(pen);
+  painter->setBrush(Qt::NoBrush);
+  painter->setRenderHint(QPainter::Antialiasing, true);
+
+  //draws the frame
+  painter->drawRect(qBoundingRect);
+
+  painter->restore();
 }
 
 void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
@@ -192,7 +201,7 @@ void te::layout::MapItem::drawMapOnPainter(QPainter* painter)
 
   //here we render the layers on the given device
   painter->save();
-  painter->setClipRect(this->getAdjustedRect(painter, boundingRect()));
+  painter->setClipRect(this->getAdjustedBoundingRect(painter));
   
   ItemInputProxy* itemInputProxy = this->getItemInputProxy();
   if (itemInputProxy == 0)

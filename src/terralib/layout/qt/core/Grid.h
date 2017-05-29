@@ -82,46 +82,6 @@ namespace te
 
         virtual void drawGrid(QPainter* painter, const te::layout::Properties& properties, const GridSettingsConfigProperties& settingsConfig) const;
 
-        /*
-        \brief Larger text size on left
-        */
-        double getBiggestLeftText();
-
-        /*
-        \brief Larger text size on the right
-        */
-        double getBiggestRightText();
-
-        /*
-          \brief Larger text size at top
-        */
-        double getBiggestTopText();
-
-        /*
-          \brief Larger text size at bottom
-        */
-        double getBiggestBottomText();
-
-        /*
-        \brief Size of the space between the map and the left text
-        */
-        double getLeftSide();
-
-        /*
-        \brief Size of the space between the map and the right text
-        */
-        double getRightSide();
-
-        /*
-          \brief Size of the space between the map and the top text
-        */
-        double getTopSide();
-
-        /*
-        \brief Size of the space between the map and the bottom text
-        */
-        double getBottomSide();
-
     protected:
 
         //! Initializes the horizontal lines parameters
@@ -164,24 +124,19 @@ namespace te
 
     protected:
 
-      std::size_t                     m_maxGaps; //!< Maximum number of gaps in each axis
-      double                          m_defaultRotation; //!< Stores the default rotation of the texts
-      QSizeF                          m_size;
-      QPointF                         m_origin;
-      QPointF                         m_final;
+      std::size_t m_maxGaps; //!< Maximum number of gaps in each axis
+      double m_defaultRotation; //!< Stores the default rotation of the texts
+      QSizeF m_size;
+      QPointF m_origin;
+      QPointF m_final;
 
-      QPainterPath                    m_gridLines; //!< Stores all the grid lines
-      QPainterPath                    m_gridText; //!< Stores all the texts
+      QPainterPath m_gridLines; //!< Stores all the grid lines
+      QPainterPath m_gridText; //!< Stores all the texts
 
       std::vector<TextPosition>       m_topTexts;
       std::vector<TextPosition>       m_bottomTexts;
       std::vector<TextPosition>       m_rightTexts;
       std::vector<TextPosition>       m_leftTexts;
-
-      double                          m_biggestLeftText;
-      double                          m_biggestRightText;
-      double                          m_biggestTopText;
-      double                          m_biggestBottomText;
     };
   }
 }

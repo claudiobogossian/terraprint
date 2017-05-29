@@ -130,7 +130,7 @@ namespace te
         /*!
         \brief Draws the frame of the item
         */
-        virtual void drawFrame(QPainter* painter, bool adjust = true);
+        virtual void drawFrame(QPainter* painter);
 
         /*!
         \brief Draws the map in the given painter

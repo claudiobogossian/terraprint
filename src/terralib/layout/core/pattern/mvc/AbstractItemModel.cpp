@@ -83,14 +83,6 @@ te::layout::AbstractItemModel::AbstractItemModel()
 
   {
     Property property(0);
-    property.setName("show_frame");
-    property.setLabel(TE_TR("Show Frame"));
-    property.setValue<bool>(false, dataType->getDataTypeBool());
-    this->m_properties.addProperty(property);
-  }
-
-  {
-    Property property(0);
     property.setName("frame_color");
     property.setLabel(TE_TR("Frame Color"));
     property.setValue(frameColor, dataType->getDataTypeColor());

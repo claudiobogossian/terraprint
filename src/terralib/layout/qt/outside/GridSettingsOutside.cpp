@@ -411,12 +411,6 @@ void te::layout::GridSettingsOutside::load(const std::string& gridName)
 
   initBool(m_ui->chkVisibleTextsGeoText, m_geodesicGridSettings->getVisibleAllTexts(), 0);
 
-  /* Gaps general configuration */
-
-  initBool(m_ui->chkPlanarSyncGaps, m_planarGridSettings->getSyncGaps(), 0);
-
-  initBool(m_ui->chkGeoSyncGaps, m_geodesicGridSettings->getSyncGaps(), 0);
-
   m_ui->chkDegreesGeoText->setChecked(true);
   setGeodesicValues();
 }
@@ -588,9 +582,6 @@ void te::layout::GridSettingsOutside::on_lneHrzPlanarGap_editingFinished()
     prop.setValue(m_ui->lneHrzPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
-    // refresh (sync both gap)
-    initDouble(m_ui->lneVrtPlanarGap, m_planarGridSettings->getVerticalLineGap(), 0);
-
     /* Avoid executing unnecessary code in the editingFinished method
     when QLineEdit loses focus */
     m_ui->lneHrzPlanarGap->setModified(false);
@@ -614,9 +605,6 @@ void te::layout::GridSettingsOutside::on_lneVrtPlanarGap_editingFinished()
     Property prop = controller->getProperty(m_planarGridSettings->getVerticalLineGap());
     prop.setValue(m_ui->lneVrtPlanarGap->text().toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
-
-    // refresh (sync both gap)
-    initDouble(m_ui->lneHrzPlanarGap, m_planarGridSettings->getHorizontalLineGap(), 0);
 
     /* Avoid executing unnecessary code in the editingFinished method
     when QLineEdit loses focus */
@@ -647,9 +635,6 @@ void te::layout::GridSettingsOutside::on_lneHorizontalGap_editingFinished()
     prop.setValue(lneHorizontalGap.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
 
-    // refresh (sync both gap)
-    initDouble(m_ui->lneVerticalGap, m_geodesicGridSettings->getVerticalLineGap(), 0);
-
     /* Avoid executing unnecessary code in the editingFinished method
     when QLineEdit loses focus */
     m_ui->lneHorizontalGap->setModified(false);
@@ -679,9 +664,6 @@ void te::layout::GridSettingsOutside::on_lneVerticalGap_editingFinished()
     Property prop = controller->getProperty(m_geodesicGridSettings->getVerticalLineGap());
     prop.setValue(lneVerticalGap.toDouble(), dataType->getDataTypeDouble());
     emit updateProperty(prop);
-
-    // refresh (sync both gap)
-    initDouble(m_ui->lneHorizontalGap, m_geodesicGridSettings->getHorizontalLineGap(), 0);
 
     /* Avoid executing unnecessary code in the editingFinished method
     when QLineEdit loses focus */
@@ -1568,42 +1550,6 @@ void te::layout::GridSettingsOutside::on_ckDefineScale_clicked()
   }
 }
 
-void te::layout::GridSettingsOutside::on_chkPlanarSyncGaps_clicked()
-{
-  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
-  if (controller)
-  {
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_planarGridSettings->getSyncGaps());
-    prop.setValue(m_ui->chkPlanarSyncGaps->isChecked(), dataType->getDataTypeBool());
-    emit updateProperty(prop);
-
-    // refresh
-    if (m_ui->chkPlanarSyncGaps->isChecked())
-    {
-      initDouble(m_ui->lneVrtPlanarGap, m_planarGridSettings->getVerticalLineGap(), 0);
-    }
-  }
-}
-
-void te::layout::GridSettingsOutside::on_chkGeoSyncGaps_clicked()
-{
-  GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
-  if (controller)
-  {
-    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
-    Property prop = controller->getProperty(m_geodesicGridSettings->getSyncGaps());
-    prop.setValue(m_ui->chkGeoSyncGaps->isChecked(), dataType->getDataTypeBool());
-    emit updateProperty(prop);
-
-    // refresh
-    if (m_ui->chkGeoSyncGaps->isChecked())
-    {
-      initDouble(m_ui->lneVerticalGap, m_geodesicGridSettings->getVerticalLineGap(), 0);
-    }
-  }
-}
-
 void te::layout::GridSettingsOutside::on_cmbScale_currentIndexChanged( const QString & text )
 {
   GridSettingsController* controller = dynamic_cast<GridSettingsController*>(m_controller);
@@ -1968,16 +1914,6 @@ void te::layout::GridSettingsOutside::on_btnHorizontalGap_clicked()
         Property prop = controller->getProperty(m_geodesicGridSettings->getHorizontalLineGap());
         prop.setValue(dValue, dataType->getDataTypeDouble());
         emit updateProperty(prop);
-
-        // refresh (sync both gap)
-        Property propSyncGaps = controller->getProperty(m_geodesicGridSettings->getSyncGaps());
-        bool syncGaps = te::layout::Property::GetValueAs<bool>(propSyncGaps);
-        if (syncGaps)
-        {
-          m_ui->lneVerticalGap->blockSignals(true);
-          m_ui->lneVerticalGap->setText(lneHorizontalGap);
-          m_ui->lneVerticalGap->blockSignals(false);
-        }
       }
     }
   }
@@ -2012,18 +1948,10 @@ void te::layout::GridSettingsOutside::on_btnVerticalGap_clicked()
       prop.setValue(dValue, dataType->getDataTypeDouble());
       emit updateProperty(prop);
 
-      // refresh (sync both gap)
-      Property propSyncGaps = controller->getProperty(m_geodesicGridSettings->getSyncGaps());
-      bool syncGaps = te::layout::Property::GetValueAs<bool>(propSyncGaps);
-      if (syncGaps)
-      {
-        m_ui->lneHorizontalGap->blockSignals(true);
-        m_ui->lneHorizontalGap->setText(lneVerticalGap);
-        m_ui->lneHorizontalGap->blockSignals(false);
-      }
     }
   }
 }
+
 
 void te::layout::GridSettingsOutside::on_btnInitialPointX_clicked()
 {

@@ -40,6 +40,7 @@
 // Qt
 #include <QVariant>
 #include <QFont>
+#include <QColor>
 
 te::layout::VariantPropertiesBrowser::VariantPropertiesBrowser(Scene* scene, QObject* parent) :
   AbstractPropertiesBrowser(scene, parent),
@@ -199,6 +200,15 @@ te::layout::Property te::layout::VariantPropertiesBrowser::getProperty(QtPropert
   {
     prop.setValue(variant.toBool(), dataType->getDataTypeBool());
   }
+  else if(type == dataType->getDataTypeColor())
+  {
+    QColor qcolor = variant.value<QColor>();
+    if(qcolor.isValid()) 
+    {
+      te::color::RGBAColor color(qcolor.red(), qcolor.green(), qcolor.blue(), qcolor.alpha());
+      prop.setValue(color, dataType->getDataTypeColor());
+    }
+  }
   else if(type == dataType->getDataTypeFont())
   {
     QFont qfont = variant.value<QFont>();
@@ -267,6 +277,9 @@ te::layout::EnumType* te::layout::VariantPropertiesBrowser::getLayoutType(QVaria
     case QVariant::Bool:
       dataType = dtType->getDataTypeBool();
       break;
+    case QVariant::Color:
+      dataType = dtType->getDataTypeColor();
+      break;
     case QVariant::Font:
       dataType = dtType->getDataTypeFont();
       break;
@@ -314,6 +327,10 @@ int te::layout::VariantPropertiesBrowser::getVariantType( te::layout::EnumType* 
   else if(dataType == dtType->getDataTypeBool())
   {
     type = QVariant::Bool;
+  }
+  else if(dataType == dtType->getDataTypeColor())
+  {
+    type = QVariant::Color;
   }
   else if(dataType == dtType->getDataTypeFont())
   {
@@ -385,6 +402,17 @@ bool te::layout::VariantPropertiesBrowser::changeQtVariantPropertyValue( QtVaria
   else if(property.getType() == dataType->getDataTypeBool())
   {
     vproperty->setValue(te::layout::Property::GetValueAs<bool>(property));
+  }
+  else if(property.getType() == dataType->getDataTypeColor())
+  {
+    const te::color::RGBAColor& color = te::layout::Property::GetValueAs<te::color::RGBAColor>(property);
+
+    QColor qcolor;
+    qcolor.setRed(color.getRed());
+    qcolor.setGreen(color.getGreen());
+    qcolor.setBlue(color.getBlue());
+    qcolor.setAlpha(color.getAlpha());
+    vproperty->setValue(qcolor);
   }
   else if(property.getType() == dataType->getDataTypeFont())
   {

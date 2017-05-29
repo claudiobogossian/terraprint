@@ -293,8 +293,6 @@ else()
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/ColorDialogOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/LegendChoiceOutside.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/outside/FontDialogOutside.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ColorEditWidget.h
-								 ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ColorEditorFactory.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ItemObserverFactory.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ItemObserverProperty.h
                                  ${TERRALIB_ABSOLUTE_ROOT_DIR}/src/terralib/layout/qt/core/propertybrowser/ItemObserverManager.h

@@ -1821,24 +1821,6 @@ te::layout::ItemInputProxy* te::layout::Scene::getInputItemProxy()
   return m_itemInputProxy;
 }
 
-void te::layout::Scene::setDefaultPropertiesForItem(const std::string& typeName, const te::layout::Properties& properties)
-{
-  m_mapDefaultProperties[typeName] = properties;
-}
-
-te::layout::Properties te::layout::Scene::getDefaultPropertiesForItem(const std::string& typeName) const
-{
-  std::map<std::string, te::layout::Properties>::const_iterator it = m_mapDefaultProperties.find(typeName);
-  if (it == m_mapDefaultProperties.end())
-  {
-    te::layout::Properties emptyProperties;
-    return emptyProperties;
-  }
-
-  return it->second;
-}
-
-
 void te::layout::Scene::changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable)
 {
   foreach(QGraphicsItem* item, listItems)

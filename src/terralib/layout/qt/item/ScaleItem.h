@@ -78,10 +78,12 @@ namespace te
         virtual AbstractItemController* createController() const;
 
         virtual void drawItem ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+        
+        virtual void drawDoubleAlternatingScaleBar(QPainter * painter);
 
-        virtual void drawBreaks(QPainter * painter, int numberOfBreaks, double initialX, double initialY, double width, double height);
-
-        virtual void drawTexts(QPainter * painter, int numberOfBreaks, double initialX, double initialY, double width, double height);
+        virtual void drawAlternatingScaleBar(QPainter * painter);
+        
+        virtual void drawHollowScaleBar(QPainter * painter);
 
         /*!
         \brief Implemented from AbstractItem.

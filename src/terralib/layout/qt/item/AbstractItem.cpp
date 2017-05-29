@@ -166,7 +166,7 @@ void te::layout::AbstractItem::leaveEditionMode()
   }
 }
 
-QRectF te::layout::AbstractItem::getAdjustedRect(QPainter* painter, const QRectF& rect) const
+QRectF te::layout::AbstractItem::getAdjustedBoundingRect(QPainter* painter) const
 {
   qreal penWidth = painter->pen().widthF();
   if (painter->pen().style() == Qt::NoPen)
@@ -174,8 +174,10 @@ QRectF te::layout::AbstractItem::getAdjustedRect(QPainter* painter, const QRectF
     penWidth = 0.;
   }
 
-  qreal adjustmentValue = penWidth / 2.;
-  QRectF rectAdjusted = rect.adjusted(adjustmentValue, adjustmentValue, -adjustmentValue, -adjustmentValue);
+  QRectF bRect = boundingRect();
+
+  qreal adj = penWidth / 2.;
+  QRectF rectAdjusted = bRect.adjusted(adj, adj, -adj, -adj);
 
   return rectAdjusted;
 }
@@ -198,7 +200,7 @@ void te::layout::AbstractItem::drawBackground(QPainter * painter)
   painter->setRenderHint(QPainter::Antialiasing, true);
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
+  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
 
   //draws the background
   painter->drawRect(rectAdjusted);
@@ -206,33 +208,7 @@ void te::layout::AbstractItem::drawBackground(QPainter * painter)
   painter->restore();
 }
 
-void te::layout::AbstractItem::drawFrame(QPainter* painter, const QRectF& frameRect, const QColor& frameColor, double frameThickness, bool adjust)
-{
-  if (frameRect.isValid() == false || frameRect.isNull() == true || frameRect.isEmpty() == true)
-  {
-    return;
-  }
-
-  painter->save();
-  QPen pen(frameColor, frameThickness, Qt::SolidLine);
-  painter->setPen(pen);
-  painter->setBrush(Qt::NoBrush);
-  painter->setRenderHint(QPainter::Antialiasing, true);
-
-  //gets the adjusted rectangle based of the painter settings to avoid drawing outside of the bounding rect
-  QRectF rectAdjusted = frameRect;
-  if (adjust)
-  {
-    rectAdjusted = getAdjustedRect(painter, frameRect);
-  }
-
-  //draws the frame
-  painter->drawRect(rectAdjusted);
-
-  painter->restore();
-}
-
-void te::layout::AbstractItem::drawFrame(QPainter * painter, bool adjust)
+void te::layout::AbstractItem::drawFrame(QPainter * painter)
 {
   if (!painter)
   {
@@ -251,7 +227,19 @@ void te::layout::AbstractItem::drawFrame(QPainter * painter, bool adjust)
 
   QColor qFrameColor(frameColor.getRed(), frameColor.getGreen(), frameColor.getBlue(), frameColor.getAlpha());
 
-  drawFrame(painter, boundingRect(), qFrameColor, frameThickness, adjust);
+  painter->save();
+  QPen pen(qFrameColor, frameThickness, Qt::SolidLine);
+  painter->setPen(pen);
+  painter->setBrush(Qt::NoBrush);
+  painter->setRenderHint(QPainter::Antialiasing, true);
+
+  //gets the adjusted boundigng rectangle based of the painter settings
+  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+
+  //draws the frame
+  painter->drawRect(rectAdjusted);
+
+  painter->restore();
 }
 
 void te::layout::AbstractItem::drawSelection(QPainter* painter)

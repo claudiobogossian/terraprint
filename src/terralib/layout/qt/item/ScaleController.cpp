@@ -737,7 +737,6 @@ int te::layout::ScaleController::calculateNewNumBreaks(const Properties& propert
 
   const Property& pDisplacement = getProperty("displacementBetweenScaleAndText");
   const Property& pScaleWidth = getProperty("scale_width_rect_gap");
-  const Property& pWidthInMapUnit = getProperty("scale_in_unit_width_rect_gap");
   const Property& pWidth = properties.getProperty("width");
   const Property& pTextFont = getProperty("font", properties);
   const Property& pUnit = getProperty("Unit", properties);
@@ -745,38 +744,22 @@ int te::layout::ScaleController::calculateNewNumBreaks(const Properties& propert
   Property pNumberOfBreaks = getProperty("number_of_breaks", properties);
 
   double scaleWidth = te::layout::Property::GetValueAs<double>(pScaleWidth);
-  double widthInMapUnit = te::layout::Property::GetValueAs<double>(pWidthInMapUnit);
   double displacementBetweenScaleAndText = te::layout::Property::GetValueAs<double>(pDisplacement);
   double width = te::layout::Property::GetValueAs<double>(pWidth);
   int numberOfBreaks = te::layout::Property::GetValueAs<int>(pNumberOfBreaks);
-  const Font& font = te::layout::Property::GetValueAs<Font>(pTextFont);
+  Font font = te::layout::Property::GetValueAs<Font>(pTextFont);
   std::string strUnit = te::layout::Property::GetValueAs<std::string>(pUnit);
   double scale = te::layout::Property::GetValueAs<double>(pScale);
 
-  QFont qFont = ItemUtils::convertToQfont(font);
-
   strUnit = "(" + strUnit + ")";
 
-  double probableNumberOfBreaks = (int)(width / scaleWidth);
+  double finalGap = getGap(initialGap, font, numberOfBreaks, scaleWidth, strUnit, scale);
 
-  std::stringstream ss_value;
-  ss_value.precision(15);
-  ss_value << (widthInMapUnit * probableNumberOfBreaks);
-  std::string text = ss_value.str();
-  std::string textAndUnit = text + " " + strUnit;;
-
-  //get the size of the text considering only the number
-  QPainterPath number = ItemUtils::textToVector(text.c_str(), qFont);
-
-  //get the size of the text considering the number and the unit
-  QPainterPath numberAndUnit = ItemUtils::textToVector(textAndUnit.c_str(), qFont);
-
-  //here we calculate the width (for the last text and unit) that must exist after the last break.
-  double finalGap = numberAndUnit.boundingRect().width() - (number.boundingRect().width() / 2.);
-
-  double newWidth = width - (finalGap + displacementBetweenScaleAndText);
-  int newBreaks = (int)(newWidth / scaleWidth); 
+  // calculate: width - (initialGap + finalGap + (2*displacementBetweenScaleAndText)) to remove spaces
+  double newWidth = width - (initialGap + finalGap + (2*displacementBetweenScaleAndText));
+  int newBreaks = (int)(newWidth / scaleWidth);
   biggerBreak = ((initialGap + finalGap) / width) + scaleWidth;
 
   return newBreaks;
 }
+

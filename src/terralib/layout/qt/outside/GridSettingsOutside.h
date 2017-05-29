@@ -254,12 +254,6 @@ namespace te
 
         virtual void on_lneY4_editingFinished();
         
-        /* Gaps general configuration */
-
-        virtual void on_chkPlanarSyncGaps_clicked();
-
-        virtual void on_chkGeoSyncGaps_clicked();
-
       signals:
 
         void updateProperty(Property prop);
