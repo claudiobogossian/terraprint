@@ -25,6 +25,11 @@
 te::layout::Grid::Grid()
   : m_maxGaps(30)
   , m_defaultRotation(90.)
+  , m_size(0, 0)
+  , m_biggestLeftText(0.)
+  , m_biggestRightText(0.)
+  , m_biggestTopText(0.)
+  , m_biggestBottomText(0.)
 {
 
 }
@@ -45,9 +50,14 @@ void te::layout::Grid::clear()
   m_rightTexts.clear();
   m_leftTexts.clear();
 
-  m_size = QSizeF();
+  m_size = QSizeF(0, 0);
   m_origin = QPointF();
   m_final = QPointF();
+
+  m_biggestBottomText = 0.;
+  m_biggestTopText = 0.;
+  m_biggestLeftText = 0.;
+  m_biggestRightText = 0.;
 }
 
 QSizeF te::layout::Grid::getSize() const
@@ -829,6 +839,10 @@ void te::layout::Grid::calculateTexts(const Properties& properties, const GridSe
 
   if(visibleAllTexts == false)
   {
+    m_biggestLeftText = 0.;
+    m_biggestRightText = 0.;
+    m_biggestBottomText = 0.;
+    m_biggestTopText = 0.;
     return;
   }
 
@@ -836,20 +850,36 @@ void te::layout::Grid::calculateTexts(const Properties& properties, const GridSe
   {
     calculateLeftTexts(properties, settingsConfig);
   }
+  else
+  {
+    m_biggestLeftText = 0.;
+  }
 
   if(rightText == true)
   {
     calculateRightTexts(properties, settingsConfig);
+  }
+  else
+  {
+    m_biggestRightText = 0.;
   }
 
   if(bottomText == true)
   {
     calculateBottomTexts(properties, settingsConfig);
   }
+  else
+  {
+    m_biggestBottomText = 0.;
+  }
 
   if(topText == true)
   {
     calculateTopTexts(properties, settingsConfig);
+  }
+  else
+  {
+    m_biggestTopText = 0.;
   }
 }
 
@@ -915,3 +945,87 @@ void te::layout::Grid::configTextPainter(QPainter* painter, const te::layout::Pr
   painter->setBrush(brush);
 }
 
+double te::layout::Grid::getBiggestLeftText()
+{
+  return m_biggestLeftText;
+}
+
+double te::layout::Grid::getBiggestRightText()
+{
+  return m_biggestRightText;
+}
+
+double te::layout::Grid::getBiggestTopText()
+{
+  return m_biggestTopText;
+}
+
+double te::layout::Grid::getBiggestBottomText()
+{
+  return m_biggestBottomText;
+}
+
+double te::layout::Grid::getLeftSide()
+{
+  /*
+  The checks are to return the correct value to the indicated side, the reason is: with the two grids drawn,
+  if one of the grids have both sides at the same time without texts,
+  example left and right, the size of the texts of the top and below that exceeds the size of the map are cut
+  */
+
+  double biggestLeftText = getBiggestLeftText();
+  if (biggestLeftText <= 0.)
+  {
+    biggestLeftText = getOrigin().x();
+  }
+  return biggestLeftText;
+}
+
+double te::layout::Grid::getRightSide()
+{
+  /*
+  The checks are to return the correct value to the indicated side, the reason is: with the two grids drawn,
+  if one of the grids have both sides at the same time without texts,
+  example left and right, the size of the texts of the top and below that exceeds the size of the map are cut
+  */
+
+  double biggestRightText = getBiggestRightText();
+  if (biggestRightText <= 0.)
+  {
+    biggestRightText = getSize().width() - getFinal().x();
+  }
+  return biggestRightText;
+}
+
+double te::layout::Grid::getTopSide()
+{
+  /*
+  The checks are to return the correct value to the indicated side, the reason is: with the two grids drawn,
+  if one of the grids have both sides at the same time without texts,
+  example left and right, the size of the texts of the top and below that exceeds the size of the map are cut
+  */
+
+  double biggestTopText = getBiggestTopText();
+  double textTop = getSize().height() - getFinal().y();
+  if (biggestTopText <= 0. || biggestTopText < textTop)
+  {
+    biggestTopText = textTop;
+  }
+  return biggestTopText;
+}
+
+double te::layout::Grid::getBottomSide()
+{
+  /*
+  The checks are to return the correct value to the indicated side, the reason is: with the two grids drawn, 
+  if one of the grids have both sides at the same time without texts,
+  example left and right, the size of the texts of the top and below that exceeds the size of the map are cut
+  */
+
+  double biggestBottomText = getBiggestBottomText();
+  if (biggestBottomText <= 0. || biggestBottomText < getOrigin().y())
+  {
+    biggestBottomText = getOrigin().y();
+  }
+  return biggestBottomText;
+}

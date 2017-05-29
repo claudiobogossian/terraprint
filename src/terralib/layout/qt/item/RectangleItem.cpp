@@ -102,7 +102,7 @@ void te::layout::RectangleItem::drawRectangle( QPainter * painter )
   painter->setBrush(brush);
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
 
   QPainterPath rect_path;
   rect_path.addRect(rectAdjusted);
@@ -136,7 +136,7 @@ void te::layout::RectangleItem::drawRoundedRectangle(QPainter * painter)
   painter->setBrush(brush);
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
 
   QPainterPath rect_path;
   rect_path.addRoundRect(rectAdjusted,30,30);
@@ -170,7 +170,7 @@ void te::layout::RectangleItem::drawSingleCornerTrimmedRectangle(QPainter * pain
   painter->setBrush(brush);
 
   //gets the adjusted boundigng rectangle based of the painter settings
-  QRectF rectAdjusted = getAdjustedBoundingRect(painter);
+  QRectF rectAdjusted = getAdjustedRect(painter, boundingRect());
 
   QPointF p1 = QPointF(rectAdjusted.width() - rectAdjusted.width() / 4., rectAdjusted.center().y()+ rectAdjusted.height() / 2.);
   QPointF p2 = QPointF(rectAdjusted.bottomRight().x() - rectAdjusted.bottomRight().x()/250.,rectAdjusted.height() - rectAdjusted.height() / 4.);

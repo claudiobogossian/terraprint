@@ -31,6 +31,8 @@
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
+#include <algorithm>
+
 te::layout::NorthItem::NorthItem(te::layout::ItemInputProxy* itemInputProxy)
   : AbstractItem(itemInputProxy)
 {
@@ -68,6 +70,10 @@ void te::layout::NorthItem::drawItem( QPainter * painter, const QStyleOptionGrap
     else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType3())
     {
       drawNorthArrow3(painter);
+    }
+    else if (currentNorthArrowType == enumNorthArrowType.getNorthArrowType4())
+    {
+      drawNorthArrow4(painter);
     }
   }
 }
@@ -174,14 +180,108 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
   double symbolCenterX = (boundingRect().width() / 2.);
   double symbolCenterY = (boundingRect().height() / 2.) - (boundingRect().height() / 10.); //we translate the reference a little bit to fit the North letter
 
-  QPointF p5 = QPointF(symbolCenterX, symbolCenterY + boundingRect().height()/2.7);
-  QPointF p6 = QPointF(symbolCenterX, symbolCenterY - boundingRect().height()/2.5);
-  QPointF p7 = QPointF(symbolCenterX +boundingRect().width()/2.5, symbolCenterY);
-  QPointF p8 = QPointF(symbolCenterX -boundingRect().width()/2.5, symbolCenterY);
-  QPointF p9 = QPointF(symbolCenterX +boundingRect().width()/40, symbolCenterY);
-  QPointF p10 = QPointF(symbolCenterX -boundingRect().width()/40, symbolCenterY);
-  QPointF p11 = QPointF(symbolCenterX, symbolCenterY + boundingRect().height()/40);
-  QPointF p12 = QPointF(symbolCenterX, symbolCenterY - boundingRect().height()/40);
+  QPointF p5 = QPointF(symbolCenterX, symbolCenterY + boundingRect().height() / 2.7);
+  QPointF p6 = QPointF(symbolCenterX, symbolCenterY - boundingRect().height() / 2.5);
+  QPointF p7 = QPointF(symbolCenterX + boundingRect().width() / 2.5, symbolCenterY);
+  QPointF p8 = QPointF(symbolCenterX - boundingRect().width() / 2.5, symbolCenterY);
+  QPointF p9 = QPointF(symbolCenterX + boundingRect().width() / 40, symbolCenterY);
+  QPointF p10 = QPointF(symbolCenterX - boundingRect().width() / 40, symbolCenterY);
+  QPointF p11 = QPointF(symbolCenterX, symbolCenterY + boundingRect().height() / 40);
+  QPointF p12 = QPointF(symbolCenterX, symbolCenterY - boundingRect().height() / 40);
+
+  QPolygonF north4;
+  north4 << p5 << p9 << p10;
+  north4 << p6 << p9 << p10;
+
+  QPolygonF north5;
+  north5 << p8 << p11 << p12;
+  north5 << p7 << p11 << p12;
+
+  painter->setPen(pn);
+  painter->drawPolygon(north4);
+  painter->drawPolygon(north5);
+
+  painter->fillPath(northLetter, QBrush(cpen));
+  painter->restore();
+}
+
+void te::layout::NorthItem::drawNorthArrow4(QPainter * painter)
+{
+  QRectF boundingBoxMM = this->boundingRect();
+  double fontNQ = boundingBoxMM.height() / 2.;
+  QFont font("Arial");
+  font.setPointSizeF(fontNQ);
+
+  //creates the letters
+  QPainterPath northLetter = ItemUtils::textToVector(TR_LAYOUT("N"), font);
+  QPainterPath southLetter = ItemUtils::textToVector(TR_LAYOUT("S"), font);
+  QPainterPath eastLetter = ItemUtils::textToVector(TR_LAYOUT("E"), font);
+  QPainterPath westLetter = ItemUtils::textToVector(TR_LAYOUT("W"), font);
+
+  //we must calculate the size of the biggest letter
+  double maxLetterWidth = northLetter.boundingRect().width();
+  maxLetterWidth = std::max(maxLetterWidth, southLetter.boundingRect().width());
+  maxLetterWidth = std::max(maxLetterWidth, eastLetter.boundingRect().width());
+  maxLetterWidth = std::max(maxLetterWidth, westLetter.boundingRect().width());
+
+  double maxLetterHeight = northLetter.boundingRect().height();
+  maxLetterHeight = std::max(maxLetterHeight, southLetter.boundingRect().height());
+  maxLetterHeight = std::max(maxLetterHeight, eastLetter.boundingRect().height());
+  maxLetterHeight = std::max(maxLetterHeight, westLetter.boundingRect().height());
+
+  //adjusts the north letter
+  double northLetterX = boundingBoxMM.center().x() - (northLetter.boundingRect().width() / 2.);
+  double northLetterY = boundingBoxMM.height() - maxLetterHeight;
+  northLetter.translate(northLetterX, northLetterY);
+
+  //adjusts the south letter
+  double southLetterX = boundingBoxMM.center().x() - (southLetter.boundingRect().width() / 2.);
+  double southLetterY = maxLetterHeight - southLetter.boundingRect().height();
+  southLetter.translate(southLetterX, southLetterY);
+
+  //adjusts the east letter
+  double eastLetterX = boundingBoxMM.width() - maxLetterWidth;
+  double eastLetterY = boundingBoxMM.center().y() - (eastLetter.boundingRect().height() / 2.);
+  eastLetter.translate(eastLetterX, eastLetterY);
+
+  //adjusts the west letter
+  double westLetterX = maxLetterWidth - westLetter.boundingRect().width();
+  double westLetterY = boundingBoxMM.center().y() - (westLetter.boundingRect().height() / 2.);
+  westLetter.translate(westLetterX, westLetterY);
+
+  const Property& lineWidth = this->getProperty("line_width");
+  double lnew = te::layout::Property::GetValueAs<double>(lineWidth);
+
+  painter->save();
+  painter->setRenderHint(QPainter::Antialiasing, true);
+  QColor cpen = setBrush(painter);
+  QPen pn(cpen, lnew, Qt::SolidLine);
+  painter->setPen(pn);
+
+  double symbolCenterX = (boundingRect().width() / 2.);
+  double symbolCenterY = (boundingRect().height() / 2.); //we translate the reference a little bit to fit the North letter
+
+  double symbolWidth = boundingRect().width() - (2 * maxLetterWidth);
+  double symbolHeight = boundingRect().height() - (2 * maxLetterHeight);
+
+  double symbolArrowLengthW = symbolWidth / 2.;
+  double symbolArrowLengthH = symbolHeight / 2.;
+
+  //for stetic purposes, we reduce in 2% the size of the arrows
+  symbolArrowLengthW -= boundingRect().width() * 0.02;
+  symbolArrowLengthH -= boundingRect().height() * 0.02;
+
+  double symbolArrowThicknessW = boundingRect().width() / 40.;
+  double symbolArrowThicknessH = boundingRect().height() / 40.;
+
+  QPointF p5 = QPointF(symbolCenterX, symbolCenterY + symbolArrowLengthH);
+  QPointF p6 = QPointF(symbolCenterX, symbolCenterY - symbolArrowLengthH);
+  QPointF p7 = QPointF(symbolCenterX + symbolArrowLengthW, symbolCenterY);
+  QPointF p8 = QPointF(symbolCenterX - symbolArrowLengthW, symbolCenterY);
+  QPointF p9 = QPointF(symbolCenterX + symbolArrowThicknessW, symbolCenterY);
+  QPointF p10 = QPointF(symbolCenterX - symbolArrowThicknessW, symbolCenterY);
+  QPointF p11 = QPointF(symbolCenterX, symbolCenterY + symbolArrowThicknessH);
+  QPointF p12 = QPointF(symbolCenterX, symbolCenterY - symbolArrowThicknessH);
 
   QPolygonF north4;
   north4<<p5<<p9<<p10;
@@ -196,6 +296,10 @@ void te::layout::NorthItem::drawNorthArrow3(QPainter * painter)
   painter->drawPolygon(north5);
 
   painter->fillPath(northLetter, QBrush(cpen));
+  painter->fillPath(southLetter, QBrush(cpen));
+  painter->fillPath(eastLetter, QBrush(cpen));
+  painter->fillPath(westLetter, QBrush(cpen));
+
   painter->restore();
 }
 
