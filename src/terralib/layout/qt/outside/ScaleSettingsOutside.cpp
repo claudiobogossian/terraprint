@@ -92,6 +92,7 @@ void te::layout::ScaleSettingsOutside::load()
   
   initBool(m_ui->chkOnlyFirstAndLastValue, "only_first_and_last_value");
   initBool(m_ui->chkByBreaks, "by_breaks");
+  initBool(m_ui->chkDrawTextsBelowTheBar, "draw_texts_below_the_bar");
 
   bool byBreaks = m_ui->chkByBreaks->isChecked();
   m_ui->txtNumberOfBreaks->setEnabled(byBreaks);
@@ -414,6 +415,21 @@ void te::layout::ScaleSettingsOutside::on_chkByBreaks_clicked()
     m_ui->txtNumberOfBreaks->setEnabled(byBreaks);
   }
 }
+
+void te::layout::ScaleSettingsOutside::on_chkDrawTextsBelowTheBar_clicked()
+{
+  ScaleSettingsController* controller = dynamic_cast<ScaleSettingsController*>(m_controller);
+  if (controller)
+  {
+    bool drawTextsBelowTheBar = m_ui->chkDrawTextsBelowTheBar->isChecked();
+
+    EnumDataType* dataType = Enums::getInstance().getEnumDataType();
+    Property prop = controller->getScaleProperty("draw_texts_below_the_bar");
+    prop.setValue(drawTextsBelowTheBar, dataType->getDataTypeBool());
+    emit updateProperty(prop);
+  }
+}
+
 
 void te::layout::ScaleSettingsOutside::initString(QWidget* widget, std::string nameComponent)
 {

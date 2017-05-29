@@ -73,6 +73,8 @@ namespace te
 
         virtual void on_cmbPageSize_currentIndexChanged ( const QString & text );
 
+        virtual void on_pbClose_clicked();
+
         virtual void on_pbApply_clicked();
 
         virtual void on_rdbLandscape_clicked();

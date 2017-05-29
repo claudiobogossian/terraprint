@@ -222,6 +222,11 @@ void te::layout::PageSetupOutside::on_cmbPageSize_currentIndexChanged( const QSt
   m_ui->gbCustom->setEnabled(custom);
 }
 
+void te::layout::PageSetupOutside::on_pbClose_clicked()
+{
+  accept();
+}
+
 void te::layout::PageSetupOutside::on_pbApply_clicked()
 {
   PaperConfig* pConfig = m_scene->getPaperConfig();

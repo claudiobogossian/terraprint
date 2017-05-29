@@ -66,8 +66,10 @@ namespace te
       MenuBuilder(Scene* scene, AbstractProxyProject* proxyProject, QObject* parent = 0);
 
       virtual ~MenuBuilder();
-         
-      virtual void createMenu(QList<QGraphicsItem*> items);
+
+      virtual void createMenuItem(QMenu* menu, const std::vector<te::layout::Property>& vecProperties);
+
+      virtual void createMenu(const QList<QGraphicsItem*>& items);
 
       virtual void menuExec(int x = 0, int y = 0);
 
@@ -97,9 +99,7 @@ namespace te
       
         virtual void changePropertyValue(const Property& property);
 
-        virtual Property findMnuProperty(EnumType* dataType);
-
-        virtual Property findMnuProperty(std::string name);
+        virtual Property findMnuProperty(const std::string& name);
 
         virtual void checkedBool(bool checked);
 
