@@ -58,7 +58,8 @@ te::layout::GridSettingsConfigProperties::GridSettingsConfigProperties(const std
     m_crossOffset(m_prefix + "grid_crossOffset"),
     m_borderIntersection(m_prefix + "grid_borderIntersections"),
     m_gridSettings(m_prefix + "grid_settings"),
-    m_planarSRID(m_prefix + "planar_srid")
+    m_planarSRID(m_prefix + "planar_srid"),
+    m_syncGaps(m_prefix + "grid_sync_gaps")
 {
 
 }
@@ -212,3 +213,9 @@ const std::string& te::layout::GridSettingsConfigProperties::getPlanarSRID() con
 {
   return m_planarSRID;
 }
+
+const std::string& te::layout::GridSettingsConfigProperties::getSyncGaps() const
+{
+  return m_syncGaps;
+}
+

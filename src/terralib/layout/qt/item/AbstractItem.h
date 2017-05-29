@@ -157,7 +157,7 @@ namespace te
           \brief  Gets the adjusted boundigned rectangle which considers the current state of the QPen that will be used to draw it. 
                   The returned rect will be in the item coordinate system.
          */
-        virtual QRectF getAdjustedBoundingRect(QPainter* painter) const;
+        virtual QRectF getAdjustedRect(QPainter* painter, const QRectF& rect) const;
 
         /*!
           \brief For any specific drawing, the item must reimplement this function
@@ -170,9 +170,14 @@ namespace te
         virtual void drawBackground( QPainter* painter );
 
         /*!
+        \brief Draws the frame of the item
+        */
+        virtual void drawFrame(QPainter* painter, const QRectF& frameRect, const QColor& frameColor, double frameThickness, bool adjust = true);
+
+        /*!
           \brief Draws the frame of the item
          */
-        virtual void drawFrame(QPainter* painter);
+        virtual void drawFrame(QPainter* painter, bool adjust = true);
 
         /*!
           \brief Draws the selection of the item

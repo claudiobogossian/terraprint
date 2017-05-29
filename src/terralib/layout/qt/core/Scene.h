@@ -404,6 +404,9 @@ namespace te
         
         virtual te::layout::ItemInputProxy* getInputItemProxy();
 
+        virtual void setDefaultPropertiesForItem(const std::string& typeName, const te::layout::Properties& properties);
+        virtual te::layout::Properties getDefaultPropertiesForItem(const std::string& typeName) const;
+
       public slots:
 
         void onUndoStackHasChanged();
@@ -535,7 +538,7 @@ namespace te
         void changeUndoEnable(const QList<QGraphicsItem *> & listItems, bool enable);
 
         void destroyItemsWithoutScene();
-                
+
     protected:
 
         QTransform                            m_matrix; //!< transformation matrix of the scene.
@@ -552,6 +555,7 @@ namespace te
         double                                m_increasedUnprintableArea;
         std::map<QGraphicsItem*, Properties>  m_resizeWatches;
         te::layout::ItemInputProxy*           m_itemInputProxy;
+        std::map<std::string, te::layout::Properties> m_mapDefaultProperties; //!< This is a map the hold the [optional] default properties for each item typename
     };
   }
 }
