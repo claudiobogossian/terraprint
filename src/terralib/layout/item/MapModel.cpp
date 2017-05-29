@@ -82,13 +82,6 @@ te::layout::MapModel::MapModel()
 //updating properties
   {
     Property property(0);
-    property.setName("show_frame");
-    property.setValue<bool>(true, dataType->getDataTypeBool());
-    this->m_properties.updateProperty(property);
-  }
-
-  {
-    Property property(0);
     property.setName("width");
     property.setValue(width, dataType->getDataTypeDouble());
     this->m_properties.updateProperty(property);
@@ -157,6 +150,8 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   bool showBouderIntersections = true;
 
   double crossOffSet = 2.;
+
+  bool syncGaps = true;
 
   std::string itemName = "";
 
@@ -461,6 +456,15 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
     property.setVisible(false);
     prop_gridsettings.addSubProperty(property);
   }
+  {
+    Property property(0);
+    property.setName(settingsConfig->getSyncGaps());
+    property.setLabel(TR_LAYOUT("Sync Gaps"));
+    property.setComposeWidget(true);
+    property.setValue(syncGaps, dataType->getDataTypeBool());
+    property.setVisible(false);
+    prop_gridsettings.addSubProperty(property);
+  }
 
   return prop_gridsettings;
 }
@@ -478,6 +482,10 @@ void te::layout::MapModel::initializeMapSettings()
   //double map
   double mapWidth = 120.;
   double mapHeight = 120.;
+
+  bool showMapFrame = true;
+  double mapFrameThickness = 0.5; //in mm
+  te::color::RGBAColor mapFrameColor(0, 0, 0, 255);
 
   EnumDataType* dataType = Enums::getInstance().getEnumDataType();
 
@@ -561,6 +569,32 @@ void te::layout::MapModel::initializeMapSettings()
     property.setName("fixed_scale");
     property.setLabel(TE_TR("Fixed Scale"));
     property.setValue(fixedScale, dataType->getDataTypeBool());
+    pro_mapSettings.addSubProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("show_map_frame");
+    property.setLabel(TR_LAYOUT("Show Map Frame"));
+    property.setValue<bool>(showMapFrame, dataType->getDataTypeBool());
+    pro_mapSettings.addSubProperty(property);
+  }
+  {
+    Property property(0);
+    property.setName("map_frame_thickness");
+    property.setLabel(TR_LAYOUT("Map Frame Thickness"));
+    property.setValue(mapFrameThickness, dataType->getDataTypeDouble());
+    property.setVisible(false);
+    property.setEditable(false);
+    pro_mapSettings.addSubProperty(property);
+  }
+
+  {
+    Property property(0);
+    property.setName("map_frame_color");
+    property.setLabel(TR_LAYOUT("Map Frame Color"));
+    property.setValue(mapFrameColor, dataType->getDataTypeColor());
+    property.setMenu(true);
     pro_mapSettings.addSubProperty(property);
   }
 

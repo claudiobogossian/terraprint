@@ -99,6 +99,8 @@ namespace te
 
         void on_chkByBreaks_clicked();
 
+        void on_chkDrawTextsBelowTheBar_clicked();
+
       protected:
 
         /*!
