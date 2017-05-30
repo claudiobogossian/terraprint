@@ -459,7 +459,7 @@ te::layout::Property te::layout::MapModel::getBasicGridSettings(GridSettingsConf
   {
     Property property(0);
     property.setName(settingsConfig->getSyncGaps());
-    property.setLabel(TR_LAYOUT("Sync Gaps"));
+    property.setLabel(TE_TR("Sync Gaps"));
     property.setComposeWidget(true);
     property.setValue(syncGaps, dataType->getDataTypeBool());
     property.setVisible(false);
@@ -575,14 +575,14 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property(0);
     property.setName("show_map_frame");
-    property.setLabel(TR_LAYOUT("Show Map Frame"));
+    property.setLabel(TE_TR("Show Map Frame"));
     property.setValue<bool>(showMapFrame, dataType->getDataTypeBool());
     pro_mapSettings.addSubProperty(property);
   }
   {
     Property property(0);
     property.setName("map_frame_thickness");
-    property.setLabel(TR_LAYOUT("Map Frame Thickness"));
+    property.setLabel(TE_TR("Map Frame Thickness"));
     property.setValue(mapFrameThickness, dataType->getDataTypeDouble());
     property.setVisible(false);
     property.setEditable(false);
@@ -592,7 +592,7 @@ void te::layout::MapModel::initializeMapSettings()
   {
     Property property(0);
     property.setName("map_frame_color");
-    property.setLabel(TR_LAYOUT("Map Frame Color"));
+    property.setLabel(TE_TR("Map Frame Color"));
     property.setValue(mapFrameColor, dataType->getDataTypeColor());
     property.setMenu(true);
     pro_mapSettings.addSubProperty(property);

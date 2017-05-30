@@ -82,7 +82,7 @@ TerraLib Team at <terralib-team@terralib.org>.
 #include "../core/pattern/factory/propertyeditor/editor/StringLineEditorFactory.h"
 #include "../core/pattern/factory/propertyeditor/editor/StringListComboBoxEditorFactory.h"
 #include "../core/pattern/factory/propertyeditor/editor/FontEditorFactory.h"
-#include "../core/pattern/factory/propertyeditor/editor/ColorEditorFactory.h"
+#include "../core/pattern/factory/propertyeditor/editor/ColorPickerEditorFactory.h"
 #include "../core/pattern/factory/propertyeditor/editor/MapSettingsEditorFactory.h"
 #include "../core/pattern/factory/propertyeditor/editor/GridSettingsEditorFactory.h"
 
@@ -200,7 +200,7 @@ namespace te
         static StringLineEditorFactory StringLineEditorFactory_instance;
         static StringListComboBoxEditorFactory StringListComboBoxEditorFactory_instance;
         static FontEditorFactory FontEditorFactory_instance;
-        static ColorEditorFactory ColorEditorFactory_instance;
+        static ColorPickerEditorFactory ColorPickerEditorFactory_instance;
       }
     }
 

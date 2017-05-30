@@ -26,7 +26,7 @@
 */
 
 // TerraLib
-#include "ColorEditor.h"
+#include "ColorPickerEditor.h"
 #include "../../../../core/enum/Enums.h"
 #include "../../../../core/property/Property.h"
 
@@ -47,7 +47,7 @@
 #include <QFontDialog>
 #include <QColorDialog>
 
-te::layout::ColorEditor::ColorEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
+te::layout::ColorPickerEditor::ColorPickerEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent) :
   QWidget(parent),
   AbstractEditor(index, Enums::getInstance().getEnumDataType()->getDataTypeColor(), context),
   m_textLabel(0),
@@ -57,17 +57,17 @@ te::layout::ColorEditor::ColorEditor(const QModelIndex& index, ContextPropertyEd
   changeEditorData(index);
 }
 
-te::layout::ColorEditor::~ColorEditor()
+te::layout::ColorPickerEditor::~ColorPickerEditor()
 {
 
 }
 
-QVariant te::layout::ColorEditor::getValue()
+QVariant te::layout::ColorPickerEditor::getValue()
 {
   return m_textLabel->text();
 }
 
-void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
+void te::layout::ColorPickerEditor::changeEditorData(const QModelIndex& index)
 {
   int propertyType = qMetaTypeId<te::layout::Property>();
   QVariant variant = index.data(propertyType);
@@ -90,7 +90,7 @@ void te::layout::ColorEditor::changeEditorData(const QModelIndex& index)
   }
 }
 
-void te::layout::ColorEditor::createGroupBox()
+void te::layout::ColorPickerEditor::createGroupBox()
 {
   QHBoxLayout* hlayout = new QHBoxLayout(this);
 
@@ -121,7 +121,7 @@ void te::layout::ColorEditor::createGroupBox()
   setLayout(hlayout);
 }
 
-bool te::layout::ColorEditor::eventFilter(QObject * watched, QEvent * event)
+bool te::layout::ColorPickerEditor::eventFilter(QObject * watched, QEvent * event)
 {
   if (watched == m_button)
   {
@@ -141,7 +141,7 @@ bool te::layout::ColorEditor::eventFilter(QObject * watched, QEvent * event)
   return QWidget::eventFilter(watched, event);
 }
 
-void te::layout::ColorEditor::paintEvent(QPaintEvent * event)
+void te::layout::ColorPickerEditor::paintEvent(QPaintEvent * event)
 {
   QStyleOption opt;
   opt.init(this);
@@ -149,13 +149,13 @@ void te::layout::ColorEditor::paintEvent(QPaintEvent * event)
   style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
 }
 
-void te::layout::ColorEditor::onButtonClicked(bool checked)
+void te::layout::ColorPickerEditor::onButtonClicked(bool checked)
 {
   emit showDlg();
   getColor();
 }
 
-void te::layout::ColorEditor::getColor()
+void te::layout::ColorPickerEditor::getColor()
 {
   QColor color = configColor(m_textLabel);
   
@@ -170,7 +170,7 @@ void te::layout::ColorEditor::getColor()
   }
 }
 
-void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
+void te::layout::ColorPickerEditor::setupTreeViewEditorMargin(QLayout* layout)
 {
   int decorationMargin = 4;
 
@@ -184,7 +184,7 @@ void te::layout::ColorEditor::setupTreeViewEditorMargin(QLayout* layout)
   }
 }
 
-QColor te::layout::ColorEditor::configColor(QWidget* widget)
+QColor te::layout::ColorPickerEditor::configColor(QWidget* widget)
 {
   QPalette ptt(widget->palette());
   QBrush brush = ptt.brush(widget->backgroundRole());

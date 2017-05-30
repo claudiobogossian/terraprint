@@ -223,7 +223,7 @@ te::layout::ScaleModel::ScaleModel()
   {
     Property property(0);
     property.setName("draw_texts_below_the_bar");
-    property.setLabel(TR_LAYOUT("Draw texts below the bar"));
+    property.setLabel(TE_TR("Draw texts below the bar"));
     property.setValue(drawTextsBelowTheBar, dataType->getDataTypeBool());
     m_properties.addProperty(property);
   }
