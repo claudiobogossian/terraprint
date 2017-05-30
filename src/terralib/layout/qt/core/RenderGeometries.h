@@ -74,6 +74,8 @@ namespace te
         */
         virtual ~RenderGeometries();
 
+        DrawGeometries getTypeGeometry();
+
         void setTypeGeometry(DrawGeometries type);
 
         void setPen(const QPen& pen);

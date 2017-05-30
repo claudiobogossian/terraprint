@@ -20,7 +20,7 @@
 /*!
   \file AddCommand.h
    
-  \brief Undo/Redo for add one components.
+  \brief Undo/Redo of the line/polygon creation tool.
 
   \ingroup layout
 */
@@ -46,7 +46,7 @@ namespace te
   {
     class View;
     /*!
-      \brief Undo/Redo for add one components.
+      \brief Undo/Redo of the line/polygon creation tool.
     
       \ingroup layout
     */
@@ -60,7 +60,7 @@ namespace te
           \param item
           \param parent
         */
-        AddCoordCommand(View* view, const std::vector<te::gm::Point>& coords, DrawGeometries type, QUndoCommand *parent = 0);
+        AddCoordCommand(View* view, const std::vector<te::gm::Point>& oldCoords, const std::vector<te::gm::Point>& newCoords, QUndoCommand *parent = 0);
 
         /*!
           \brief Destructor
@@ -81,11 +81,13 @@ namespace te
 
         virtual QString createCommandString(const std::vector<te::gm::Point>& coords);
 
+        virtual void changeCoords(const std::vector<te::gm::Point>& coords);
+
       protected:
 
         View*                       m_view;
         std::vector<te::gm::Point>  m_coords;
-        DrawGeometries              m_geometryType;
+        std::vector<te::gm::Point>  m_oldCoords;
     };
   }
 }

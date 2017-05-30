@@ -27,6 +27,7 @@
 #include "../Scene.h"
 #include "../RenderGeometries.h"
 #include "../BuildGraphicsItem.h"
+#include "../pattern/command/AddCoordCommand.h"
 
 // STL
 #include <string>
@@ -101,7 +102,15 @@ bool te::layout::CreateLineItemTool::mousePressEvent(QMouseEvent* e)
   
   QPointF scenePos = m_view->mapToScene(e->pos());
   te::gm::Point p(scenePos.x(), scenePos.y());
+
+  std::vector<te::gm::Point> oldCoords(m_coords);
+
   m_coords.push_back(p);
+
+  // Create Undo/Redo on Stack
+  QUndoCommand* command = new AddCoordCommand(m_view, oldCoords, m_coords);
+  scne->addUndoStack(command);
+
   return true;
 }
 
@@ -112,17 +121,30 @@ bool te::layout::CreateLineItemTool::mouseMoveEvent(QMouseEvent* e)
 
 bool te::layout::CreateLineItemTool::mouseReleaseEvent(QMouseEvent* e)
 {
-  /* When the tools need to draw in the pixmap, this function must be called, 
-  so the View itself will call the redraw() method of the current tool. */
-  m_view->makeDraftPixmapDirty();
+  /* The AddCoordCommand calls the view's makeDraftPixmapDirty() method
+  that warns that the draft needs to be redrawn */
   return false;
 }
 
 bool te::layout::CreateLineItemTool::keyPressEvent( QKeyEvent* keyEvent )
 {
+  Scene* scne = dynamic_cast<Scene*>(m_view->scene());
+  if (!scne)
+    return false;
+
   if(keyEvent->key() == Qt::Key_Escape)
   {
     finalizeCreation();
+  }
+  else if (keyEvent->matches(QKeySequence::Undo))
+  {
+    scne->getUndoStack()->undo();
+    keyEvent->setAccepted(true);
+  }
+  else if (keyEvent->matches(QKeySequence::Redo))
+  {
+    scne->getUndoStack()->redo();
+    keyEvent->setAccepted(true);
   }
   return true;
 }
@@ -260,8 +282,26 @@ void te::layout::CreateLineItemTool::redraw()
     draftPixmap->fill(Qt::transparent);
     if (m_render)
     {
+      DrawGeometries type = m_render->getTypeGeometry();
+      if (m_coords.size() == 1)
+      {
+        m_render->setTypeGeometry(te::layout::DRAW_POINT);
+      }
       m_render->drawGeometries(draftPixmap, m_coords);
+
+      m_render->setTypeGeometry(type);
     }
   }
+}
+
+void te::layout::CreateLineItemTool::setCoords(const std::vector<te::gm::Point>& coords)
+{
+  m_coords.clear();
+  m_coords = coords;
+}
+
+std::vector<te::gm::Point> te::layout::CreateLineItemTool::getCoords()
+{
+  return m_coords;
 }
 

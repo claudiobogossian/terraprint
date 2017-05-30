@@ -76,17 +76,20 @@ void te::layout::RenderGeometries::draw(QPainter& p, const std::vector<te::gm::P
   if (m_geometryType == te::layout::DRAW_POINT)
   {
     QVector<QPointF> points = getQPoints(coords);
-    p.drawPoints(points);
+    if (!points.isEmpty())
+      p.drawPoints(points);
   }
   if (m_geometryType == te::layout::DRAW_LINE)
   {
     QPainterPath path = getQLines(coords);
-    p.drawPath(path);
+    if (!path.isEmpty())
+      p.drawPath(path);
   }
   if (m_geometryType == te::layout::DRAW_POLYGON)
   {
     QPolygonF poly = getQPolygon(coords);
-    p.drawPolygon(poly);
+    if (!poly.isEmpty())
+      p.drawPolygon(poly);
   }
 }
 
@@ -108,11 +111,16 @@ QVector<QPointF> te::layout::RenderGeometries::getQPoints(const std::vector<te::
 QPainterPath te::layout::RenderGeometries::getQLines(const std::vector<te::gm::Point>& coords)
 {
   QVector<QPointF> points = getQPoints(coords);
-  QPainterPath path(points.front());
+  QPainterPath path;
 
-  for (int i = 1; i < points.size(); ++i)
+  if (!points.isEmpty())
   {
-    path.lineTo(points[i]);
+    path = QPainterPath(points.front());
+
+    for (int i = 1; i < points.size(); ++i)
+    {
+      path.lineTo(points[i]);
+    }
   }
   return path;
 }
@@ -140,6 +148,11 @@ void te::layout::RenderGeometries::setPen(const QPen& pen)
 void te::layout::RenderGeometries::setBrush(const QBrush& brush)
 {
   m_brush = brush;
+}
+
+te::layout::DrawGeometries te::layout::RenderGeometries::getTypeGeometry()
+{
+  return m_geometryType;
 }
 
 void te::layout::RenderGeometries::setTypeGeometry(DrawGeometries type)

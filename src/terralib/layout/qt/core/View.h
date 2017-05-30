@@ -240,6 +240,8 @@ namespace te
         */
         void setCurrentTool(AbstractLayoutTool* currentTool);
 
+        AbstractLayoutTool* getCurrentTool();
+
         virtual ContextObject getContext();
 
         virtual Scene* getScene();
@@ -301,6 +303,8 @@ namespace te
           \param update View
         */
         virtual void makeDraftPixmapDirty(bool update = true);
+
+        virtual void clearDraftPixmap();
 
         QRectF viewportVisibleRect();
 
