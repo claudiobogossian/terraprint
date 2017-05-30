@@ -31,6 +31,7 @@
 #include "../../../../core/pattern/mvc/AbstractItemController.h"
 #include "../../../../core/pattern/mvc/AbstractItemModel.h"
 #include "../../../../core/enum/EnumType.h"
+#include "../../../../core/enum/Enums.h"
 #include "../../ItemUtils.h"
 #include "../../Scene.h"
 #include "../../View.h"
@@ -226,24 +227,23 @@ te::layout::CreateLineItemTool* te::layout::AddCommand::activateTool(AbstractIte
   if (!scene)
     return tool;
 
+  EnumObjectType* objectType = Enums::getInstance().getEnumObjectType();
+
   // Type of items like line/polygon need a current tool to create
   if (scene->getView())
   {
-    LineItem* line = dynamic_cast<LineItem*>(item);
-    if (line)
+    View* view = scene->getView();
+    const Properties& props = item->getProperties();
+
+    if (props.getTypeObj() == objectType->getLineItem())
     {
-      View* view = scene->getView();
-      PolygonItem* poly = dynamic_cast<PolygonItem*>(item);
-      if (poly)
-      {
-        view->createPolygonItem();
-      }
-      else
-      {
-        view->createLineItem();
-      }
-      tool = getLineActiveTool();
+      view->createLineItem();
     }
+    else if (props.getTypeObj() == objectType->getPolygonItem())
+    {
+      view->createPolygonItem();
+    }
+    tool = getLineActiveTool();
   }
   return tool;
 }
