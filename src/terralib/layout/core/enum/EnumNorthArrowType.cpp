@@ -55,7 +55,7 @@ void te::layout::EnumNorthArrowType::init()
 
   m_northArrow3 = createEnum("NorthArrow3", this, TE_TR("North Arrow 3"));
 
-  m_northArrow4 = createEnum("NorthArrow4", this, TR_LAYOUT("North Arrow 4"));
+  m_northArrow4 = createEnum("NorthArrow4", this, TE_TR("North Arrow 4"));
 
 }
 

@@ -25,8 +25,8 @@
   \ingroup layout
 */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_COLOR_EDITOR_H 
-#define __TERRALIB_LAYOUT_INTERNAL_COLOR_EDITOR_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_COLOR_PICKER_EDITOR_H 
+#define __TERRALIB_LAYOUT_INTERNAL_COLOR_PICKER_EDITOR_H
 
 // TerraLib
 #ifndef Q_MOC_RUN
@@ -58,15 +58,15 @@ namespace te
     
     \ingroup layout
     */
-    class TELAYOUTEXPORT ColorEditor : public QWidget, public AbstractEditor
+    class TELAYOUTEXPORT ColorPickerEditor : public QWidget, public AbstractEditor
     {
       Q_OBJECT //for slots/signals
 
       public:
 
-        ColorEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
+        ColorPickerEditor(const QModelIndex& index, ContextPropertyEditor* context, QWidget* parent = 0);
 
-        virtual ~ColorEditor();
+        virtual ~ColorPickerEditor();
         
         virtual QVariant getValue();
 

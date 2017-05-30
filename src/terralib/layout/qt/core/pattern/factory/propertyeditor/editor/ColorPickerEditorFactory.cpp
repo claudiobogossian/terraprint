@@ -24,28 +24,28 @@
 */
 
 // TerraLib
-#include "ColorEditorFactory.h"
+#include "ColorPickerEditorFactory.h"
 #include "../../../../../../core/enum/Enums.h"
 #include "../../../../View.h"
-#include "../../../../propertyeditor/editor/ColorEditor.h"
+#include "../../../../propertyeditor/editor/ColorPickerEditor.h"
 
-te::layout::AbstractEditor* te::layout::ColorEditorFactory::build(EditorFactoryParamsCreate params)
+te::layout::AbstractEditor* te::layout::ColorPickerEditorFactory::build(EditorFactoryParamsCreate params)
 {
   QModelIndex index = params.getModelIndex();
   QWidget* parent = params.getParent();
   ContextPropertyEditor* context = params.getContextPropertyEditor();
 
-  ColorEditor* editor = new ColorEditor(index, context, parent);
+  ColorPickerEditor* editor = new ColorPickerEditor(index, context, parent);
   return editor;
 }
 
-te::layout::ColorEditorFactory::ColorEditorFactory() :
+te::layout::ColorPickerEditorFactory::ColorPickerEditorFactory() :
   EditorFactory(Enums::getInstance().getEnumDataType()->getDataTypeColor()->getName())
 {
 
 }
 
-te::layout::ColorEditorFactory::~ColorEditorFactory()
+te::layout::ColorPickerEditorFactory::~ColorPickerEditorFactory()
 {
 
 }

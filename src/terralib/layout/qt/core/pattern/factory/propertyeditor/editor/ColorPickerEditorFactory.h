@@ -23,8 +23,8 @@
   \brief This is the concrete factory for create editors.
  */
 
-#ifndef __TERRALIB_LAYOUT_INTERNAL_COLOR_EDITOR_FACTORY_H
-#define __TERRALIB_LAYOUT_INTERNAL_COLOR_EDITOR_FACTORY_H
+#ifndef __TERRALIB_LAYOUT_INTERNAL_COLOR_PICKER_EDITOR_FACTORY_H
+#define __TERRALIB_LAYOUT_INTERNAL_COLOR_PICKER_EDITOR_FACTORY_H
 
 // TerraLib
 #include "../../../../../../core/Config.h"
@@ -42,15 +42,15 @@ namespace te
 
       \sa EditorFactory, ParameterizedAbstractFactory, AbstractEditor
     */
-    class TELAYOUTEXPORT ColorEditorFactory : public EditorFactory
+    class TELAYOUTEXPORT ColorPickerEditorFactory : public EditorFactory
     {
       public:
 
         /*! It register the factory in the abstract dictionary. */
-        ColorEditorFactory();
+        ColorPickerEditorFactory();
 
         /*! \brief Destructor. */
-        ~ColorEditorFactory();
+        ~ColorPickerEditorFactory();
 
       protected:
 

@@ -31,6 +31,8 @@
 #include "../../item/NorthModel.h"
 #include "../../core/enum/EnumNorthArrowType.h"
 
+#include <terralib/core/translator/Translator.h>
+
 #include <algorithm>
 
 te::layout::NorthItem::NorthItem(te::layout::ItemInputProxy* itemInputProxy)
@@ -213,10 +215,10 @@ void te::layout::NorthItem::drawNorthArrow4(QPainter * painter)
   font.setPointSizeF(fontNQ);
 
   //creates the letters
-  QPainterPath northLetter = ItemUtils::textToVector(TR_LAYOUT("N"), font);
-  QPainterPath southLetter = ItemUtils::textToVector(TR_LAYOUT("S"), font);
-  QPainterPath eastLetter = ItemUtils::textToVector(TR_LAYOUT("E"), font);
-  QPainterPath westLetter = ItemUtils::textToVector(TR_LAYOUT("W"), font);
+  QPainterPath northLetter = ItemUtils::textToVector(TE_TR("N"), font);
+  QPainterPath southLetter = ItemUtils::textToVector(TE_TR("S"), font);
+  QPainterPath eastLetter = ItemUtils::textToVector(TE_TR("E"), font);
+  QPainterPath westLetter = ItemUtils::textToVector(TE_TR("W"), font);
 
   //we must calculate the size of the biggest letter
   double maxLetterWidth = northLetter.boundingRect().width();
