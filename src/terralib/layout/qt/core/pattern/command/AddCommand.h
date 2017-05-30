@@ -30,6 +30,10 @@
 
 // TerraLib
 #include "../../../../core/Config.h"
+#include <terralib/geometry/Point.h>
+
+// STL
+#include <vector>
 
 // Qt
 #include <QUndoCommand>
@@ -43,6 +47,9 @@ namespace te
 {
   namespace layout
   {
+    class AbstractItemView;
+    class CreateLineItemTool;
+
     /*!
       \brief Undo/Redo for add one components.
     
@@ -79,9 +86,22 @@ namespace te
 
         virtual QString createCommandString(QGraphicsItem* item, const QPointF &pos);
 
-        QGraphicsScene* m_scene;
-        QGraphicsItem*  m_item;
-        QPointF         m_initialPosition;
+        virtual bool reactivateTool(AbstractItemView* item);
+
+        virtual void deactivateTool();
+
+        virtual std::vector<te::gm::Point> getCoordsTool();
+
+        virtual CreateLineItemTool* getLineActiveTool();
+
+        virtual CreateLineItemTool* activateTool(AbstractItemView* item);
+
+      protected:
+
+        QGraphicsScene*             m_scene;
+        QGraphicsItem*              m_item;
+        QPointF                     m_initialPosition;
+        std::vector<te::gm::Point>  m_coords;
     };
   }
 }

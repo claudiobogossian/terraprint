@@ -97,9 +97,14 @@ namespace te
 
           bool keyPressEvent(QKeyEvent* e);
 
+          //@}
+
           virtual void redraw();
 
-          //@}
+          void setCoords(const std::vector<te::gm::Point>& coords);
+
+          std::vector<te::gm::Point> getCoords();
+
         protected:
 
           virtual void setGeometry();

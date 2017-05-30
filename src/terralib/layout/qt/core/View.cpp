@@ -403,7 +403,7 @@ void te::layout::View::keyPressEvent( QKeyEvent* keyEvent )
       }
     }
   }
-  else if(keyEvent->key() == Qt::Key_Escape)
+  else if (keyEvent->key() == Qt::Key_Escape || keyEvent->matches(QKeySequence::Undo) || keyEvent->matches(QKeySequence::Redo))
   {
     if (m_currentTool != NULL)
     {
@@ -1337,6 +1337,11 @@ void te::layout::View::setCurrentTool(AbstractLayoutTool* currentTool)
     }
 }
 
+te::layout::AbstractLayoutTool* te::layout::View::getCurrentTool()
+{
+  return m_currentTool;
+}
+
 void te::layout::View::applyScale(double horizontalScale, double verticalScale)
 {
   if((horizontalScale <= 0)||(verticalScale <= 0))
@@ -1998,6 +2003,14 @@ void te::layout::View::makeDraftPixmapDirty(bool update)
   {
     viewport()->update();
   }  
+}
+
+void te::layout::View::clearDraftPixmap()
+{
+  if (m_draft)
+  {
+    m_draft->fill(Qt::transparent);
+  }
 }
 
 void te::layout::View::resetDraftPixmap(double width, double height)

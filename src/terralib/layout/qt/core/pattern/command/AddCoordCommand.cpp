@@ -29,17 +29,21 @@
 #include "AddCoordCommand.h"
 #include "../../View.h"
 #include "../../RenderGeometries.h"
+#include "../../tools/CreateLineItemTool.h"
+
+// STL
+#include <algorithm>
 
 // Qt
 #include <QPixmap>
 
-te::layout::AddCoordCommand::AddCoordCommand(View* view, const std::vector<te::gm::Point>& coords, DrawGeometries type, QUndoCommand *parent) :
+te::layout::AddCoordCommand::AddCoordCommand(View* view, const std::vector<te::gm::Point>& oldCoords, const std::vector<te::gm::Point>& newCoords, QUndoCommand *parent) :
   QUndoCommand(parent),
   m_view(view),
-  m_coords(coords),
-  m_geometryType(type)
+  m_coords(newCoords),
+  m_oldCoords(oldCoords)
 {
-  setText(QObject::tr("Add %1").arg(createCommandString(coords)));
+  setText(QObject::tr("Add %1").arg(createCommandString(newCoords)));
 }
 
 te::layout::AddCoordCommand::~AddCoordCommand()
@@ -49,29 +53,36 @@ te::layout::AddCoordCommand::~AddCoordCommand()
 
 void te::layout::AddCoordCommand::undo()
 {
-  if (!m_view)
-    return;
-
-  QPixmap* draftPixmap = m_view->getDraftPixmap();
-  if (draftPixmap)
-  {
-    draftPixmap->fill(Qt::transparent);
-    RenderGeometries render(m_view, m_geometryType);
-    render.drawGeometries(draftPixmap, m_coords);
-  }
+  changeCoords(m_oldCoords);
 }
 
 void te::layout::AddCoordCommand::redo()
 {
+  changeCoords(m_coords);
+}
+
+void te::layout::AddCoordCommand::changeCoords(const std::vector<te::gm::Point>& coords)
+{
+  // Undo/Redo of the line/polygon creation tool.
+
   if (!m_view)
     return;
 
   QPixmap* draftPixmap = m_view->getDraftPixmap();
   if (draftPixmap)
   {
-    draftPixmap->fill(Qt::transparent);
-    RenderGeometries render(m_view, m_geometryType);
-    render.drawGeometries(draftPixmap, m_coords);
+    AbstractLayoutTool* tool = m_view->getCurrentTool();
+    if (tool)
+    {
+      CreateLineItemTool* lineTool = dynamic_cast<CreateLineItemTool*>(tool);
+      if (lineTool)
+      {
+        lineTool->setCoords(coords);
+        /* When the tools need to draw in the pixmap, this function must be called,
+        so the View itself will call the update() method and redraw() method of the current tool. */
+        m_view->makeDraftPixmapDirty(true);
+      }
+    }
   }
 }
 
